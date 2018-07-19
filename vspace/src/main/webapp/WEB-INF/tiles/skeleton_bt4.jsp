@@ -56,6 +56,12 @@
                   Spaces
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link ${currentPage == "module" ? "active" : ""}" href="<c:url value="/staff/module/list" />">
+                  <span data-feather="share-2"></span>
+                  Modules
+                </a>
+              </li>
             </ul>
 
             <tiles:insertAttribute name="sidemenu" />

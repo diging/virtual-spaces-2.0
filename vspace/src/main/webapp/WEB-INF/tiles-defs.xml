@@ -36,11 +36,25 @@
 	</definition>
 	
 	<definition name="staff/space/list" extends="space.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/list.jsp" />	
+		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/spacelist.jsp" />	
 	</definition>
 	
 	<definition name="staff/space/add" extends="space.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/add.jsp" />
+	</definition>
+	
+	<!-- Modules -->
+	<definition name="module.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="module" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/modules/menu/modules_menu.jsp" />
+	</definition>
+	
+	<definition name="staff/module/list" extends="module.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/modulelist.jsp" />	
+	</definition>
+	
+	<definition name="staff/module/add" extends="module.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
 	
 	

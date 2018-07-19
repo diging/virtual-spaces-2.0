@@ -5,20 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.ModuleRepository;
 
 @Controller
-public class ListSpacesController {
-	
+public class ListModulesController {
+
 	@Autowired
-	private SpaceRepository spaceRepo;
+	private ModuleRepository moduleRepo;
 	
-	@RequestMapping("/staff/space/list")
+	@RequestMapping("/staff/module/list")
 	public String listSpaces(Model model) {
 		
-		model.addAttribute("spaces", spaceRepo.findAll());
+		model.addAttribute("vspacMmodules", moduleRepo.findAll());
 		
 		
-		return "staff/space/list";
+		return "staff/module/list";
 	}
 }
