@@ -29,6 +29,8 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .failureUrl("/?error=bad_credentials")
                 // Configures the logout function
                 .and()
+                .csrf()
+                .and()
                 .logout()
                 .deleteCookies("JSESSIONID")
                 .logoutUrl("/logout")

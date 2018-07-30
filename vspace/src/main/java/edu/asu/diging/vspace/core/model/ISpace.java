@@ -19,4 +19,8 @@ public interface ISpace extends IVSpaceElement {
 
 	void setModuleLinks(List<ModuleLink> moduleLinks);
 
+	void setImage(IVSImage image);
+
+	IVSImage getImage();
+
 }

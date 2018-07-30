@@ -43,6 +43,10 @@
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/add.jsp" />
 	</definition>
 	
+	<definition name="staff/space" extends="space.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
+	</definition>
+	
 	<!-- Modules -->
 	<definition name="module.base.def" extends="base.definition.bt4">	
 		<put-attribute name="currentPage" value="module" />

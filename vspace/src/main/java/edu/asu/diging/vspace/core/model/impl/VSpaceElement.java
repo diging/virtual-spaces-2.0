@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.time.OffsetDateTime;
 
+import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
@@ -10,7 +11,7 @@ import edu.asu.diging.vspace.core.model.IVSpaceElement;
 public class VSpaceElement implements IVSpaceElement {
 
 	private String name;
-	private String description;
+	@Lob private String description;
 	private String createdBy;
 	private OffsetDateTime creationDate;
 	private String modifiedBy;

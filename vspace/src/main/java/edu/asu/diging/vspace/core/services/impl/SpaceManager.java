@@ -1,33 +1,88 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.transaction.Transactional;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
+@PropertySource("classpath:/config.properties")
 public class SpaceManager implements ISpaceManager {
-	
+
 	@Autowired
 	private SpaceRepository spaceRepo;
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.diging.vspace.core.model.ISpace, java.lang.String)
+	@Autowired
+	private ImageRepository imageRepo;
+
+	@Autowired
+	private IStorageEngine storage;
+
+	@Autowired
+	private IImageFactory imageFactory;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
+	 * diging.vspace.core.model.ISpace, java.lang.String)
 	 */
 	@Override
-	public ISpace storeSpace(ISpace space, String username) {
+	public CreationReturnValue storeSpace(ISpace space, String username, byte[] image, String filename) {
 		space.setCreatedBy(username);
 		space.setCreationDate(OffsetDateTime.now());
-		return spaceRepo.save((Space)space);
+
+		IVSImage bgImage = null;
+		if (image != null && image.length > 0) {
+			Tika tika = new Tika();
+			String contentType = tika.detect(image);
+
+			bgImage = imageFactory.createImage(filename, contentType);
+			bgImage.setCreatedBy(username);
+			bgImage.setCreationDate(OffsetDateTime.now());
+			bgImage = imageRepo.save((VSImage) bgImage);
+		}
+
+		CreationReturnValue returnValue = new CreationReturnValue();
+		returnValue.setErrorMsgs(new ArrayList<>());
+		
+		if (bgImage != null) {
+			String relativePath = null;
+			try {
+				relativePath = storage.storeFile(image, filename, bgImage.getId());
+			} catch (FileStorageException e) {
+				returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
+			}
+			bgImage.setParentPath(relativePath);
+			imageRepo.save((VSImage) bgImage);
+			space.setImage(bgImage);
+		}
+
+		space = spaceRepo.save((Space) space);
+		returnValue.setElement(space);
+		return returnValue;
 	}
 
+	@Override
+	public ISpace getSpace(String id) {
+		return spaceRepo.findById(id).get();
+	}
 }

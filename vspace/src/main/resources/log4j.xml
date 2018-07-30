@@ -16,12 +16,12 @@
 	</logger>
 	
 	<logger name="org.springframework.scheduling">
-		<level value="${log.level}" />
+		<level value="info" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
-		<level value="${log.level}" />
+		<level value="info" />
 	</logger>
 	
 	<logger name="org.springframework.beans">
@@ -33,7 +33,11 @@
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="${log.level}" />
+		<level value="info" />
+	</logger>
+	
+	<logger name="org.hibernate">
+		<level value="debug" />
 	</logger>
 
 	<!-- Root Logger -->

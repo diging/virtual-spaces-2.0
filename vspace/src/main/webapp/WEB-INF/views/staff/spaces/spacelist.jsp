@@ -12,6 +12,10 @@ This virtual exhibition contains the following spaces.
 
 <ul class="list-group list-group-flush">
 <c:forEach items="${spaces}" var="space">
-	<li class="list-group-item">${space.name}</li>
+	<li class="list-group-item">
+		<a href="<c:url value="/staff/space/${space.id}" />">
+		<span data-feather="box"></span> ${space.name}
+		</a>
+	</li>
 </c:forEach>
 </ul>

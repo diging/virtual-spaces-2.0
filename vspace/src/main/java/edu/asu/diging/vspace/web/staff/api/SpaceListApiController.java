@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff;
+package edu.asu.diging.vspace.web.staff.api;
 
 import java.util.ArrayList;
 import java.util.List;

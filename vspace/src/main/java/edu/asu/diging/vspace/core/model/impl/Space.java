@@ -5,13 +5,14 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 @Entity
@@ -31,6 +32,9 @@ public class Space extends VSpaceElement implements ISpace {
 
 	@OneToMany(mappedBy = "space")
 	private List<ModuleLink> moduleLinks;
+	
+	@OneToOne(targetEntity=VSImage.class)
+	private IVSImage image;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
@@ -78,6 +82,14 @@ public class Space extends VSpaceElement implements ISpace {
 	@Override
 	public void setModuleLinks(List<ModuleLink> moduleLinks) {
 		this.moduleLinks = moduleLinks;
+	}
+
+	public IVSImage getImage() {
+		return image;
+	}
+
+	public void setImage(IVSImage image) {
+		this.image = image;
 	}
 
 }
