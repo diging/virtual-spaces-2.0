@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="edu.asu.template">
+	<logger name="edu.asu.diging">
 		<level value="${log.level}" />
 	</logger>
 	
@@ -37,7 +37,7 @@
 	</logger>
 	
 	<logger name="org.hibernate">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<!-- Root Logger -->

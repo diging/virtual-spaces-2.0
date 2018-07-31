@@ -11,14 +11,21 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.SpaceLinkDisplayRepository;
+import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
@@ -31,12 +38,24 @@ public class SpaceManager implements ISpaceManager {
 
 	@Autowired
 	private ImageRepository imageRepo;
+	
+	@Autowired
+	private SpaceLinkRepository spaceLinkRepo;
+	
+	@Autowired
+	private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
 	@Autowired
 	private IStorageEngine storage;
 
 	@Autowired
 	private IImageFactory imageFactory;
+	
+	@Autowired
+	private ISpaceLinkFactory spaceLinkFactory;
+	
+	@Autowired
+	private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
 
 	/*
 	 * (non-Javadoc)
@@ -84,5 +103,14 @@ public class SpaceManager implements ISpaceManager {
 	@Override
 	public ISpace getSpace(String id) {
 		return spaceRepo.findById(id).get();
+	}
+	
+	public void createSpaceLink(String title, ISpace source, float positionX, float positionY) {
+		ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
+		spaceLinkRepo.save((SpaceLink) link);
+		
+		ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
+		display.setPositionX(positionX);
+		display.setPositionX(positionY);
 	}
 }

@@ -16,7 +16,7 @@
 		<javers.version>3.10.1</javers.version>
 		<admin.password>admin</admin.password>
 
-		<log.level>debug</log.level>
+		<log.level>info</log.level>
 
 		<db.driver>com.mysql.jdbc.Driver</db.driver>
 		<db.url>jdbc:mysql://localhost:3306/vspace</db.url>
