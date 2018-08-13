@@ -7,10 +7,6 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 
 public interface ISpace extends IVSpaceElement {
 
-	String getId();
-
-	void setId(String id);
-
 	List<SpaceLink> getSpaceLinks();
 
 	void setSpaceLinks(List<SpaceLink> spaceLinks);

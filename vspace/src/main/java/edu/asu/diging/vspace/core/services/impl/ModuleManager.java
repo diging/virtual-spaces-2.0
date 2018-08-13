@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.time.OffsetDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +18,7 @@ public class ModuleManager implements IModuleManager {
 	 * @see edu.asu.diging.vspace.core.services.impl.IModuleManager#storeModule(edu.asu.diging.vspace.core.model.IModule, java.lang.String)
 	 */
 	@Override
-	public IModule storeModule(IModule module, String username) {
-		module.setCreatedBy(username);
-		module.setCreationDate(OffsetDateTime.now());
+	public IModule storeModule(IModule module) {
 		return moduleRepo.save((Module)module);
 	}
 }

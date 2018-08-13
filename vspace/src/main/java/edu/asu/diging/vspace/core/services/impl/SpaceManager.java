@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 import javax.transaction.Transactional;
@@ -23,6 +22,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -65,18 +65,13 @@ public class SpaceManager implements ISpaceManager {
 	 * diging.vspace.core.model.ISpace, java.lang.String)
 	 */
 	@Override
-	public CreationReturnValue storeSpace(ISpace space, String username, byte[] image, String filename) {
-		space.setCreatedBy(username);
-		space.setCreationDate(OffsetDateTime.now());
-
+	public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
 		IVSImage bgImage = null;
 		if (image != null && image.length > 0) {
 			Tika tika = new Tika();
 			String contentType = tika.detect(image);
 
 			bgImage = imageFactory.createImage(filename, contentType);
-			bgImage.setCreatedBy(username);
-			bgImage.setCreationDate(OffsetDateTime.now());
 			bgImage = imageRepo.save((VSImage) bgImage);
 		}
 
@@ -105,12 +100,16 @@ public class SpaceManager implements ISpaceManager {
 		return spaceRepo.findById(id).get();
 	}
 	
-	public void createSpaceLink(String title, ISpace source, float positionX, float positionY) {
+	@Override
+	public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY) {
+		source = spaceRepo.findById(source.getId()).get();
 		ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
 		spaceLinkRepo.save((SpaceLink) link);
 		
 		ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
 		display.setPositionX(positionX);
-		display.setPositionX(positionY);
+		display.setPositionY(positionY);
+		spaceLinkDisplayRepo.save((SpaceLinkDisplay)display);
+		return display;
 	}
 }

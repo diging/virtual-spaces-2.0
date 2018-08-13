@@ -152,4 +152,11 @@ justify-content: center;
   background-color: #bfb168;
   border-color: #bfb168;
 }
+
+.btn-group-xs > .btn, .btn-xs {
+    padding  : .25rem .4rem;
+    font-size  : .75rem;
+    line-height  : .5;
+    border-radius : .2rem;
+}
  

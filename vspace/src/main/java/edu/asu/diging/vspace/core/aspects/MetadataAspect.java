@@ -24,8 +24,16 @@ public class MetadataAspect {
 		// we know there is exactly one argument for the save method
 		Object arg = jp.getArgs()[0];
 		if (arg instanceof IVSpaceElement) {
-			((IVSpaceElement)arg).setModifiedBy(authenticationFacade.getAuthenticatedUser());
-			((IVSpaceElement)arg).setModificationDate(OffsetDateTime.now());
+			OffsetDateTime time = OffsetDateTime.now();
+			String user = authenticationFacade.getAuthenticatedUser();
+			((IVSpaceElement)arg).setModifiedBy(user);
+			((IVSpaceElement)arg).setModificationDate(time);
+			
+			// if this is a new object, store creation data
+			if (((IVSpaceElement) arg).getId() == null) {
+				((IVSpaceElement)arg).setCreatedBy(user);
+				((IVSpaceElement)arg).setCreationDate(time);
+			}
 		}
 	}
 }

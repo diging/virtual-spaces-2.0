@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 @MappedSuperclass
-public class VSpaceElement implements IVSpaceElement {
+public abstract class VSpaceElement implements IVSpaceElement {
 
 	private String name;
 	@Lob private String description;

@@ -43,7 +43,7 @@ public class AddSpaceController {
 			bgImage = file.getBytes();
 			filename = file.getOriginalFilename();
 		}
-		spaceManager.storeSpace(space, principal.getName(), bgImage, filename);
+		spaceManager.storeSpace(space, bgImage, filename);
 
 		return "redirect:/staff/space/list";
 	}
