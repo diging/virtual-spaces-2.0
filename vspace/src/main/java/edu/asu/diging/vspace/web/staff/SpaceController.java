@@ -17,8 +17,10 @@ public class SpaceController {
 
 	@RequestMapping("/staff/space/{id}")
 	public String showSpace(@PathVariable String id, Model model) {
-		ISpace space = spaceManager.getSpace(id);
+		ISpace space = spaceManager.getFullyLoadedSpace(id);
 		model.addAttribute("space", space);
+		model.addAttribute("spaceLinks", spaceManager.getSpaceLinkDisplays(id));
+		model.addAttribute("spaces", spaceManager.getAllSpaces());
 		
 		return "staff/space";
 	}

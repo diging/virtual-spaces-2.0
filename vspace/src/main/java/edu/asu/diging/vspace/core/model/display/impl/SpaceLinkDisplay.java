@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -26,6 +25,8 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
 	
 	private float positionX;
 	private float positionY;
+	private int rotation;
+	
 	
 	@OneToOne(targetEntity=SpaceLink.class)
 	private ISpaceLink link;
@@ -79,6 +80,14 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
 	@Override
 	public void setLink(ISpaceLink link) {
 		this.link = link;
+	}
+	@Override
+	public int getRotation() {
+		return rotation;
+	}
+	@Override
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
 	}
 	
 }

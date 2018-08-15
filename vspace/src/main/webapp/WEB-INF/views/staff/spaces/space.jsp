@@ -7,36 +7,50 @@
 //# sourceURL=click.js
 $( document ).ready(function() {
 	
+	<c:forEach items="${spaceLinks}" var="link">
+	{
+		var posX = $("#bgImage").position().left
+        var posY = $("#bgImage").position().top;
+		var icon = $('<span data-feather="navigation-2" class="flex"></span>');
+	    icon.css('position', 'absolute');
+	    icon.css('left', ${link.positionX});
+	    icon.css('top', ${link.positionY} + posY);
+	    icon.css('transform', 'rotate(${link.rotation}deg)');
+	    icon.css('fill', 'red');
+	    icon.css('color', 'red');
+	    icon.css('font-size', "15px");
+	    
+	    $("#space").append(icon);
+	}
+	</c:forEach>
+	
 	var storeX;
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
+		$("#bgImage").on("click", function(e){
+		    e.preventDefault();
+		    var icon = $('<span data-feather="navigation-2" class="flex"></span>');
+		    icon.css('position', 'absolute');
+		    
+		    var posX = $(this).position().left
+            var posY = $(this).position().top;
+		    
+		    storeX = e.pageX - $(this).offset().left;
+		    storeY = e.pageY - $(this).offset().top;
+		    icon.css('left', storeX);
+		    icon.css('top', storeY + posY);
+		    icon.css('color', 'red');
+		    icon.css('font-size', "15px");
+		    
+		    $("#space").append(icon);
+		    feather.replace();
+		});
 		$("#createSpaceLinkAlert").show();
 	});
 	
 	$("#createSpaceLinkAlert").draggable();
 	
-	$("#bgImage").on("click", function(e){
-	    e.preventDefault();
-	    var icon = $('<span data-feather="arrow-up" class="flex"></span>');
-	    icon.css('position', 'fixed');
-	    
-	    icon.css('left', e.pageX);
-	    icon.css('top', e.pageY);
-	    storeX = e.pageX - $(this).offset().left;
-	    storeY = e.pageY - $(this).offset().top;
-	    icon.css('color', 'red');
-	    icon.css('font-size', "15px");
-	    icon.css('transform', 'rotate(45deg)');
-	    
-	    $("#space").append(icon);
-	    feather.replace();
-	});
-	
-	$('#spaceLinkCreationModal.draggable>.modal-dialog').draggable({
-	    cursor: 'move',
-	    handle: '.modal-header'
-	});
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$("#cancelSpaceLinkBtn").click(function() {
@@ -49,9 +63,13 @@ $( document ).ready(function() {
 		var payload = {};
 		payload["x"] = storeX;
 		payload["y"] = storeY;
+		payload["rotation"] = $("#spaceLinkRotation").val();
+		payload["linkedSpace"] = $("#linkedSpace").val();
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-			console.log(data);
+			// TODO: show success/error message
 		});
+		$("#bgImage").on("click", function(e){});
+		$("#createSpaceLinkAlert").hide();
 	});
 });
 </script>
@@ -68,6 +86,16 @@ $( document ).ready(function() {
   <h6 class="alert-heading"><small>Create new Space Link</small></h6>
   <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
   <hr>
+  <label style="margin-right: 5px;"><small>Rotation:</small> </label>
+  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0">
+  <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
+  <select id="linkedSpace" class="form-control-xs">
+        <option selected value="">Choose...</option>
+        <c:forEach items="${spaces}" var="space">
+        <option value="${space.id}">${space.name}</option>
+        </c:forEach>
+  </select>
+  <HR>
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
@@ -84,28 +112,4 @@ $( document ).ready(function() {
 </c:if>
 
 
-
-<div id="spaceLinkModel" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- dialog body -->
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        Please click on the image where you want to place the new space link. Then click "Create Space Link".
-      </div>
-      <!-- dialog buttons -->
-      <div class="modal-footer"><button id="spaceLinkDlgClose" type="button" class="btn btn-primary">Got it!</button></div>
-    </div>
-  </div>
-</div>
-
-<div id="spaceLinkCreationModal" class="modal draggable fade ">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">Create new Space Link.</div>
-            <div class="modal-body">Please click on the image where you want to place the new space link. Then click "Create Space Link".</div>
-            <div class="modal-footer"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-sm">Cancel</button><button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-sm">Create Space Link</button></div>
-        </div>
-    </div>
-</div>
 

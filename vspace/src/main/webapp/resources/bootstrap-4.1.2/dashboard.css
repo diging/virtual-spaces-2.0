@@ -159,4 +159,11 @@ justify-content: center;
     line-height  : .5;
     border-radius : .2rem;
 }
+
+.form-control-xs {
+	font-size: .75em;
+	border-radius: .2rem;
+	border-style: none;
+    padding: 2px;
+}
  

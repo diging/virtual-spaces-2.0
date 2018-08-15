@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.core.services;
 
+import java.util.List;
+
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -10,6 +13,13 @@ public interface ISpaceManager {
 
 	ISpace getSpace(String id);
 
-	ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY);
+	ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation,
+			String linkedSpaceId) throws SpaceDoesNotExistException;
+
+	ISpace getFullyLoadedSpace(String id);
+
+	List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId);
+
+	List<ISpace> getAllSpaces();
 
 }

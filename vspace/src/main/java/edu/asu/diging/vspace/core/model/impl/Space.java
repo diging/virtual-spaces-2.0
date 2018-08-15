@@ -12,8 +12,10 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Entity
 public class Space extends VSpaceElement implements ISpace {
@@ -26,12 +28,11 @@ public class Space extends VSpaceElement implements ISpace {
 			)
 	private String id;
 
-	@OneToMany
-	@JoinTable
-	private List<SpaceLink> spaceLinks;
+	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
+	private List<ISpaceLink> spaceLinks;
 
-	@OneToMany(mappedBy = "space")
-	private List<ModuleLink> moduleLinks;
+	@OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
+	private List<IModuleLink> moduleLinks;
 	
 	@OneToOne(targetEntity=VSImage.class)
 	private IVSImage image;
@@ -56,7 +57,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpaceLinks()
 	 */
 	@Override
-	public List<SpaceLink> getSpaceLinks() {
+	public List<ISpaceLink> getSpaceLinks() {
 		return spaceLinks;
 	}
 
@@ -64,7 +65,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setSpaceLinks(java.util.List)
 	 */
 	@Override
-	public void setSpaceLinks(List<SpaceLink> spaceLinks) {
+	public void setSpaceLinks(List<ISpaceLink> spaceLinks) {
 		this.spaceLinks = spaceLinks;
 	}
 
@@ -72,7 +73,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getModuleLinks()
 	 */
 	@Override
-	public List<ModuleLink> getModuleLinks() {
+	public List<IModuleLink> getModuleLinks() {
 		return moduleLinks;
 	}
 
@@ -80,7 +81,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setModuleLinks(java.util.List)
 	 */
 	@Override
-	public void setModuleLinks(List<ModuleLink> moduleLinks) {
+	public void setModuleLinks(List<IModuleLink> moduleLinks) {
 		this.moduleLinks = moduleLinks;
 	}
 

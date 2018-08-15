@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -14,10 +15,12 @@ import edu.asu.diging.vspace.core.data.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -101,15 +104,43 @@ public class SpaceManager implements ISpaceManager {
 	}
 	
 	@Override
-	public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY) {
+	public ISpace getFullyLoadedSpace(String id) {
+		ISpace space = getSpace(id);
+		// load lazy loaded collections
+		space.getSpaceLinks().size();
+		space.getModuleLinks().size();
+		return space;
+	}
+	
+	@Override
+	public List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId) {
+		return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
+	}
+	
+	@Override
+	public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation, String linkedSpaceId) throws SpaceDoesNotExistException {
+		// we need this to fully load the space
 		source = spaceRepo.findById(source.getId()).get();
+		ISpace target = spaceRepo.findById(linkedSpaceId).get();
+		if (target == null) {
+			throw new SpaceDoesNotExistException();
+		}
 		ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
+		link.setTargetSpace(target);
 		spaceLinkRepo.save((SpaceLink) link);
 		
 		ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
 		display.setPositionX(positionX);
 		display.setPositionY(positionY);
+		display.setRotation(rotation);
 		spaceLinkDisplayRepo.save((SpaceLinkDisplay)display);
 		return display;
+	}
+	
+	@Override
+	public List<ISpace> getAllSpaces() {
+		List<ISpace> spaces = new ArrayList<>();
+		spaceRepo.findAll().forEach(s -> spaces.add(s));
+		return spaces;
 	}
 }
