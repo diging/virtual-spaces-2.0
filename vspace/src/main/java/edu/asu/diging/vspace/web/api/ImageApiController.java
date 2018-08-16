@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff.api;
+package edu.asu.diging.vspace.web.api;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class ImageApiController {
 	@Autowired
 	private IStorageEngine storage;
 	
-	@RequestMapping("/staff/api/image/{id}")
+	@RequestMapping("/api/image/{id}")
 	public ResponseEntity<byte[]> getImage(@PathVariable String id) {
 		IVSImage image = imageRepo.findById(id).get();
 		byte[] imageContent = null;

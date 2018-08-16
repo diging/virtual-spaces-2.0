@@ -5,7 +5,7 @@
 <tiles-definitions>
 
 	<!-- Base definitions -->
-	<definition name="base.definition" template="/WEB-INF/tiles/skeleton.jsp">
+	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -26,6 +26,12 @@
 	
 	<definition name="home" extends="base.definition">
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
+	</definition>
+	
+	<!--  Exhibition  -->
+	<definition name="space" extends="base.definition">	
+		<put-attribute name="currentPage" value="space" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
 	
 	<!-- Staff -->

@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -100,7 +101,11 @@ public class SpaceManager implements ISpaceManager {
 
 	@Override
 	public ISpace getSpace(String id) {
-		return spaceRepo.findById(id).get();
+		Optional<Space> space = spaceRepo.findById(id);
+		if (space.isPresent()) {
+			return space.get();
+		}
+		return null;
 	}
 	
 	@Override

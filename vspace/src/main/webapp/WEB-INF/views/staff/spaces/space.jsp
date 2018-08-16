@@ -107,7 +107,7 @@ $( document ).ready(function() {
 
 <c:if test="${not empty space.image}">
 <div id="space">
-<img id="bgImage" width="800px" src="<c:url value="/staff/api/image/${space.image.id}" />" />
+<img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
 </div>
 </c:if>
 
