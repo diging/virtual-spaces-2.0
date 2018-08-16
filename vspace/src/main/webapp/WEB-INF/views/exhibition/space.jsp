@@ -14,7 +14,7 @@ $( document ).ready(function() {
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		var icon = $('<span data-feather="navigation-2" class="flex"></span>');
 	    icon.css('position', 'absolute');
-	    icon.css('left', ${link.positionX});
+	    icon.css('left', ${link.positionX} + posX);
 	    icon.css('top', ${link.positionY} + posY);
 	    icon.css('transform', 'rotate(${link.rotation}deg)');
 	    icon.css('fill', 'red');
@@ -31,7 +31,7 @@ $( document ).ready(function() {
 
 <div class="row">
 <div class="col-md-12 text-center">
-<div id="space">
+<div id="space" style="width: 800px; margin: auto">
 	<img id="bgImage" class="rounded" style="width: 800px" src="<c:url value="/api/image/${space.image.id}" />" >
 </div>
 </div>

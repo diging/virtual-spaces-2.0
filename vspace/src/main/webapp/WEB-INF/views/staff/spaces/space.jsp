@@ -13,7 +13,7 @@ $( document ).ready(function() {
         var posY = $("#bgImage").position().top;
 		var icon = $('<span data-feather="navigation-2" class="flex"></span>');
 	    icon.css('position', 'absolute');
-	    icon.css('left', ${link.positionX});
+	    icon.css('left', ${link.positionX} + posX);
 	    icon.css('top', ${link.positionY} + posY);
 	    icon.css('transform', 'rotate(${link.rotation}deg)');
 	    icon.css('fill', 'red');
@@ -38,7 +38,7 @@ $( document ).ready(function() {
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
-		    icon.css('left', storeX);
+		    icon.css('left', storeX + posX);
 		    icon.css('top', storeY + posY);
 		    icon.css('color', 'red');
 		    icon.css('font-size', "15px");
