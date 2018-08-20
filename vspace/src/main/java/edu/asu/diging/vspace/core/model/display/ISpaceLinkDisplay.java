@@ -25,4 +25,8 @@ public interface ISpaceLinkDisplay extends IVSpaceElement {
 
 	int getRotation();
 
+	void setType(DisplayType type);
+
+	DisplayType getType();
+
 }

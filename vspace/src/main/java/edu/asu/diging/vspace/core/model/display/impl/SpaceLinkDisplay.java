@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
@@ -26,6 +27,7 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
 	private float positionX;
 	private float positionY;
 	private int rotation;
+	private DisplayType type;
 	
 	
 	@OneToOne(targetEntity=SpaceLink.class)
@@ -88,6 +90,14 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
 	@Override
 	public void setRotation(int rotation) {
 		this.rotation = rotation;
+	}
+	@Override
+	public DisplayType getType() {
+		return type;
+	}
+	@Override
+	public void setType(DisplayType type) {
+		this.type = type;
 	}
 	
 }

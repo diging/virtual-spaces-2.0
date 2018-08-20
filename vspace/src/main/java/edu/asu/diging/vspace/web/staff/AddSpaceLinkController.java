@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -26,15 +27,18 @@ public class AddSpaceLinkController {
 
 	@RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
 	public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
-			@RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("linkedSpace") String linkedSpaceId) throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
+			@RequestParam("y") String y, @RequestParam("rotation") String rotation,
+			@RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("type") String displayType)
+			throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
 
 		ISpace source = spaceManager.getSpace(id);
 		if (source == null) {
 			return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
 		}
 
+		DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
 		ISpaceLinkDisplay display = spaceManager.createSpaceLink("test", source, new Float(x), new Float(y),
-				new Integer(rotation), linkedSpaceId);
+				new Integer(rotation), linkedSpaceId, type);
 		display.setRotation(new Integer(rotation));
 
 		ObjectMapper mapper = new ObjectMapper();

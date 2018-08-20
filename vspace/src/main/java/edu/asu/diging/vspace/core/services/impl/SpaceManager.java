@@ -25,6 +25,7 @@ import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -42,10 +43,10 @@ public class SpaceManager implements ISpaceManager {
 
 	@Autowired
 	private ImageRepository imageRepo;
-	
+
 	@Autowired
 	private SpaceLinkRepository spaceLinkRepo;
-	
+
 	@Autowired
 	private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
@@ -54,10 +55,10 @@ public class SpaceManager implements ISpaceManager {
 
 	@Autowired
 	private IImageFactory imageFactory;
-	
+
 	@Autowired
 	private ISpaceLinkFactory spaceLinkFactory;
-	
+
 	@Autowired
 	private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
 
@@ -81,7 +82,7 @@ public class SpaceManager implements ISpaceManager {
 
 		CreationReturnValue returnValue = new CreationReturnValue();
 		returnValue.setErrorMsgs(new ArrayList<>());
-		
+
 		if (bgImage != null) {
 			String relativePath = null;
 			try {
@@ -107,7 +108,7 @@ public class SpaceManager implements ISpaceManager {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public ISpace getFullyLoadedSpace(String id) {
 		ISpace space = getSpace(id);
@@ -116,14 +117,15 @@ public class SpaceManager implements ISpaceManager {
 		space.getModuleLinks().size();
 		return space;
 	}
-	
+
 	@Override
 	public List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId) {
 		return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
 	}
-	
+
 	@Override
-	public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation, String linkedSpaceId) throws SpaceDoesNotExistException {
+	public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
+			int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
 		// we need this to fully load the space
 		source = spaceRepo.findById(source.getId()).get();
 		ISpace target = spaceRepo.findById(linkedSpaceId).get();
@@ -133,15 +135,16 @@ public class SpaceManager implements ISpaceManager {
 		ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
 		link.setTargetSpace(target);
 		spaceLinkRepo.save((SpaceLink) link);
-		
+
 		ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
 		display.setPositionX(positionX);
 		display.setPositionY(positionY);
 		display.setRotation(rotation);
-		spaceLinkDisplayRepo.save((SpaceLinkDisplay)display);
+		display.setType(displayType != null ? displayType : DisplayType.ARROW);
+		spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
 		return display;
 	}
-	
+
 	@Override
 	public List<ISpace> getAllSpaces() {
 		List<ISpace> spaces = new ArrayList<>();
