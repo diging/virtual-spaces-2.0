@@ -8,8 +8,11 @@ $( document ).ready(function() {
 	
 	<c:forEach items="${spaceLinks}" var="link">
 	{
-		var posX = $("#bgImage").position().left
-        var posY = $("#bgImage").position().top;
+		var posX = $("#space").offset().left - $("#space-container").offset().left;
+        var posY = $("#space").position().top;
+		console.log("x " + ${link.positionX})
+		console.log("offset " + $("#space").offset().left)
+		console.log("container: " + $("#space-container").offset().left)
 		var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		var icon = $('<span data-feather="navigation-2" class="flex"></span>');
@@ -20,6 +23,8 @@ $( document ).ready(function() {
 	    icon.css('fill', 'red');
 	    icon.css('color', 'red');
 	    icon.css('font-size', "15px");
+	    icon.css('width', 16);
+	    icon.css('height', 16);
 	    
 	    link.append(icon);
 	    $("#space").append(link);
@@ -30,9 +35,9 @@ $( document ).ready(function() {
 </script>
 
 <div class="row">
-<div class="col-md-12 text-center">
-<div id="space" style="width: 800px; margin: auto">
-	<img id="bgImage" class="rounded" style="width: 800px" src="<c:url value="/api/image/${space.image.id}" />" >
+<div id="space-container" class="col-md-12 text-center">
+<div id="space" style="width: 800px; height: 600px; margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
+	
 </div>
 </div>
 </div>
