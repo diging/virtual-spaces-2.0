@@ -22,7 +22,7 @@
 		<db.url>jdbc:mysql://localhost:3306/vspace</db.url>
 		<db.user>vspace</db.user>
 		<db.password>vspace</db.password>
-		<uploaded.files.path>/Users/jdamerow/Software/VirtualSpaces2.0/uploads/</uploaded.files.path>
+		<uploaded.files.path>/Users/namrathaov/Projects/upload/</uploaded.files.path>
 	</properties>
 
 	<dependencyManagement>

@@ -96,8 +96,8 @@
 		<form name='f' class="form-inline pull-right" action="<c:url value="/login/authenticate" />" method="POST">
 			Login:
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-  			<input placeholder="Username" class="form-control input-sm" type="text" id="username" name="username"/>        
-		    <input placeholder="Password" class="form-control input-sm" type="password" id="password" name="password"/>    
+  			<br><input placeholder="Username" class="form-control input-sm" type="text" id="username" name="username"/>        
+		    <br><input placeholder="Password" class="form-control input-sm" type="password" id="password" name="password"/>    
 		    <button type="submit" class="btn btn-default btn-sm">Log in</button>
 		</form>
 		</sec:authorize>

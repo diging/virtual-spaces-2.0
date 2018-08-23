@@ -38,7 +38,7 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="<%=request.getContextPath()+"#"%>">Home <span class="sr-only">(current)</span></a>
           </li>
           
         </ul>
@@ -50,13 +50,7 @@
          	</form>
           </sec:authorize>
           <sec:authorize access="isAnonymous()">
-			<form name='f' class="form-inline pull-right" action="<c:url value="/login/authenticate" />" method="POST">
-				Login:
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-	  			<input placeholder="Username" class="form-control input-sm" type="text" id="username" name="username"/>        
-			    <input placeholder="Password" class="form-control input-sm" type="password" id="password" name="password"/>    
-			    <button type="submit" class="btn btn-link"><i class="fas fa-sign-in-alt"></i></button>
-			</form>
+			<a href="<%=request.getContextPath()+"/login/authenticate" %>">Login here!</a>
 		  </sec:authorize>
         </div>
       </div>
