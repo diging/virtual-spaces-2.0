@@ -70,7 +70,7 @@ $( document ).ready(function() {
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		$("#arrow").removeAttr("id");
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-			// TODO: show success/error message
+		 // TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
