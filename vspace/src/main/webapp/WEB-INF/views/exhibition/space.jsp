@@ -1,6 +1,7 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <script>
 //# sourceURL=click.js
@@ -35,9 +36,10 @@ $( document ).ready(function() {
 </script>
 
 <div class="row">
-<div id="space-container" class="col-md-12 text-center">
-<div id="space" style="width: 800px; height: 600px; margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
-	
-</div>
-</div>
+	<div id="space-container" class="col-md-12 text-center">
+		<div id="space"
+			style="width: 800px; height: 600px; margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+
+		</div>
+	</div>
 </div>
