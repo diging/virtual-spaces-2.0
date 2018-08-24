@@ -64,6 +64,12 @@
                   Modules
                 </a>
               </li>
+            <li class="nav-item">
+                <a class="nav-link ${currentPage == "exhibit" ? "active" : ""}" href="<c:url value="/staff/exhibit/exhibit_config" />">
+                  <span data-feather="settings"></span>
+                  Exhibition Configuration
+                </a>
+              </li>
             </ul>
 
             <tiles:insertAttribute name="sidemenu" />
