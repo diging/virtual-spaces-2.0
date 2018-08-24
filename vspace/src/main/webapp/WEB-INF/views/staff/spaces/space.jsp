@@ -21,6 +21,7 @@ $( document ).ready(function() {
 	    icon.css('font-size', "15px");
 	    
 	    $("#space").append(icon);
+
 	}
 	</c:forEach>
 	
@@ -28,7 +29,7 @@ $( document ).ready(function() {
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
-		$("#bgImage").on("click", function(e){
+		$("#bgImage").one("click", function(e){
 		    e.preventDefault();
 		    var icon = $('<span data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
@@ -42,11 +43,11 @@ $( document ).ready(function() {
 		    icon.css('top', storeY + posY);
 		    icon.css('color', 'red');
 		    icon.css('font-size', "15px");
-		    
+
 		    $("#space").append(icon);
-		    feather.replace();
+		    feather.replace(); 
 		});
-		$("#createSpaceLinkAlert").show();
+		$("#createSpaceLinkAlert").show();	
 	});
 	
 	$("#createSpaceLinkAlert").draggable();
