@@ -65,7 +65,7 @@
                 </a>
               </li>
             <li class="nav-item">
-                <a class="nav-link ${currentPage == "exhibit" ? "active" : ""}" href="<c:url value="/staff/exhibit/exhibit_config" />">
+                <a class="nav-link ${currentPage == "exhibit" ? "active" : ""}" href="<c:url value="/staff/exhibit/econfig" />">
                   <span data-feather="settings"></span>
                   Exhibition Configuration
                 </a>

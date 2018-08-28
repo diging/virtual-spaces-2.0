@@ -60,7 +60,7 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
+ 
 	<session-config>
 		<!-- 2 hours -->
 		<session-timeout>120</session-timeout>

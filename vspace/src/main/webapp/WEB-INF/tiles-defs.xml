@@ -33,10 +33,6 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
-	<definition name="staff/exhibit/exhibit_config" extends="space.base.def">	
-		<put-attribute name="currentPage" value="exhibit" />
-		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/exhibit_config.jsp" />	
-	</definition>
 	
 	<!-- Staff -->
 	<!-- Spaces -->
@@ -71,5 +67,15 @@
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
 	
-	
+	<!-- Exhibition Config -->
+	<definition name="exhibit.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="exhibit" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/exhibit/menu/econfig_menu.jsp" />
+	</definition>
+	<definition name="staff/exhibit/econfig" extends="exhibit.base.def">	
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/econfig.jsp" />	
+	</definition>
+	<definition name="staff/exhibit/config_add" extends="exhibit.base.def">	
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/econfig.jsp" />	
+	</definition>
 </tiles-definitions>
