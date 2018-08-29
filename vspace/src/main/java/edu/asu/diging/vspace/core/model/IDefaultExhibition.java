@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model;
 
+import edu.asu.diging.vspace.core.model.impl.Space;
+
 public interface IDefaultExhibition {
 
 	/* (non-Javadoc)
@@ -15,11 +17,11 @@ public interface IDefaultExhibition {
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpaceLinks()
 	 */
-	ISpace getSpace();
+	Space getSpace();
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setSpaceLinks(java.util.List)
 	 */
-	void setSpace(ISpace space);
+	void setSpace(Space space);
 
 }

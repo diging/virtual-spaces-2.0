@@ -23,19 +23,12 @@ public class DefaultExhibition extends VSpaceElement implements IDefaultExhibiti
 	@Id
 	@GeneratedValue(generator = "id-generator")
 	@GenericGenerator(name = "id-generator", 	
-					parameters = @Parameter(name = "prefix", value = "SPA"), 
+					parameters = @Parameter(name = "prefix", value = "EXH"), 
 					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
 			)
 	private String id;
-
-	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
-	private List<ISpaceLink> spaceLinks;
-
-	@OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
-	private List<IModuleLink> moduleLinks;
-	
-	@OneToOne(targetEntity=VSImage.class)
-	private IVSImage image;
+	@OneToOne(targetEntity=Space.class)
+	private Space space;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
@@ -67,15 +60,13 @@ public class DefaultExhibition extends VSpaceElement implements IDefaultExhibiti
 	 */
 	
 	@Override
-	public ISpace getSpace() {
-		// TODO Auto-generated method stub
-		return null;
+	public Space getSpace() {
+		return this.space;
 	}
 
 	@Override
-	public void setSpace(ISpace space) {
-		// TODO Auto-generated method stub
-		
+	public void setSpace(Space space) {
+		this.space = space;
 	}
 
 }

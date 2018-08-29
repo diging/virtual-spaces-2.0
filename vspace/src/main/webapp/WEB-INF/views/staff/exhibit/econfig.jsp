@@ -13,7 +13,7 @@ Select your default space here.
 <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="spaces">
     <select class="form-control" name="dspace">
 	<c:forEach items="${spaces}" var="space">
-		<option id=${space.id}>${space.name}</option>
+		<option id=${space.id} value=${space.id}>${space.name}</option>
 	</c:forEach>
 	</select>
 <input type="submit" value="submit" />
