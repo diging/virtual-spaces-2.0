@@ -68,6 +68,7 @@ $( document ).ready(function() {
 		payload["y"] = storeY;
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
+		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		$("#arrow").removeAttr("id");
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 		 // TODO: show success/error message
@@ -92,8 +93,13 @@ $( document ).ready(function() {
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
   <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"> <br>
+  
+  <label style="margin-right: 5px;"><small>Label:</small> </label>
+  <input class="form-control-xs" type="text" id="spaceLinkLabel">
+  
   <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
   <select id="linkedSpace" class="form-control-xs">
+  
         <option selected value="">Choose...</option>
         <c:forEach items="${spaces}" var="space">
         <option value="${space.id}">${space.name}</option>
