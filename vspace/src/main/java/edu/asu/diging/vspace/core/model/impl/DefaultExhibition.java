@@ -1,21 +1,13 @@
 package edu.asu.diging.vspace.core.model.impl;
-
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IDefaultExhibition;
-import edu.asu.diging.vspace.core.model.IModuleLink;
-import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.ISpaceLink;
-import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Entity
 public class DefaultExhibition extends VSpaceElement implements IDefaultExhibition {
@@ -27,6 +19,7 @@ public class DefaultExhibition extends VSpaceElement implements IDefaultExhibiti
 					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
 			)
 	private String id;
+	
 	@OneToOne(targetEntity=Space.class)
 	private Space space;
 

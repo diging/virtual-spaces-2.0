@@ -7,6 +7,6 @@ import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface IDefaultExhibitionManager {
 
-	DefaultExhibition storeSpace(DefaultExhibition exhibit);
+	CreationReturnValue storeSpace(DefaultExhibition exhibit);
 
 }

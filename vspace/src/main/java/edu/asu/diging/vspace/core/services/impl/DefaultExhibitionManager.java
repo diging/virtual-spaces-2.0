@@ -1,11 +1,18 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.DefaultExhibitionRepository;
 import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
 import edu.asu.diging.vspace.core.services.IDefaultExhibitionManager;
 
+@Service
 public class DefaultExhibitionManager implements IDefaultExhibitionManager {
 
 /* (non-Javadoc)
@@ -15,8 +22,13 @@ public class DefaultExhibitionManager implements IDefaultExhibitionManager {
 	private DefaultExhibitionRepository exhibitRepo;
 	
 @Override
-public DefaultExhibition storeSpace(DefaultExhibition exhibit) {
-	return exhibitRepo.save((DefaultExhibition) exhibit);
+public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
+
+	CreationReturnValue returnValue = new CreationReturnValue();
+	returnValue.setErrorMsgs(new ArrayList<>());
+	exhibit = exhibitRepo.save(exhibit);
+	returnValue.setElement(exhibit);
+	return returnValue;
 	
 }
 }

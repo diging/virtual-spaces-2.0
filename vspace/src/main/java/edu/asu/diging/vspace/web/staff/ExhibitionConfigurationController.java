@@ -6,21 +6,18 @@ import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.factory.ISpaceFactory;
-import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.factory.impl.DefaultExhibitionFactory;
+import edu.asu.diging.vspace.core.model.IDefaultExhibition;
 import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.DefaultExhibitionManager;
 import edu.asu.diging.vspace.core.services.impl.SpaceManager;
-import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
+import edu.asu.diging.vspace.web.staff.forms.DefaultExhibitionForm;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -29,30 +26,36 @@ public class ExhibitionConfigurationController {
 	private SpaceRepository spaceRepo;
 	@Autowired
 	private SpaceManager spaceManager;
-	
+	@Autowired
 	private DefaultExhibitionManager exhibitManager;
+	
+	@Autowired
+	private DefaultExhibitionFactory exhibitFactory;
 	
 	@RequestMapping("/staff/exhibit/econfig")
 	public String listSpaces(Model model) {
 		
-		model.addAttribute("exhibit", spaceRepo.findAll());
+		model.addAttribute("exhibit", new DefaultExhibitionForm());
 		model.addAttribute("spaces", spaceRepo.findAll());
 		return "staff/exhibit/econfig";
 	}
 	@RequestMapping(value = "/staff/exhibit/config_add", method = RequestMethod.POST)
-	public String addDefaultSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("dspace") String spaceID) throws IOException {
+	public String addDefaultSpace(Model model, @RequestParam("dspace") String spaceID, Principal principal) throws IOException {
 
 		System.out.println("Default " + spaceID);
-		DefaultExhibition exhibit = new DefaultExhibition();
+		//DefaultExhibition exhibit = exhibitFactory.createDefaultExhibition();
+		DefaultExhibition exhibit = new DefaultExhibition(); 
+		System.out.println("exhibit@@@" + exhibit.getCreationDate());
+		
 		Space space = (Space) spaceManager.getSpace(spaceID);
-		System.out.println("Default Name "+space.getName());
+		//System.out.println("Default Name "+space.getName());
 		exhibitManager = new DefaultExhibitionManager(); 
-		if(space!=null)
+		if(spaceID!=null)
 		{
 			exhibit.setSpace(space);
-			exhibitManager.storeSpace(exhibit);
+			exhibitManager.storeSpace((DefaultExhibition)exhibit);
 		}
-		
+		System.out.println("Default Name "+exhibit.getSpace());
 		return "redirect:/staff/exhibit/econfig";
 	}
 }
