@@ -56,7 +56,6 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$("#cancelSpaceLinkBtn").click(function() {
-		alert("working");
 		storeX = null;
 		storeY = null;
 		$("#arrow").remove();
