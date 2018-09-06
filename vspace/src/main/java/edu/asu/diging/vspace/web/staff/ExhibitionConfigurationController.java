@@ -6,6 +6,7 @@ import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,22 +41,17 @@ public class ExhibitionConfigurationController {
 		return "staff/exhibit/econfig";
 	}
 	@RequestMapping(value = "/staff/exhibit/config_add", method = RequestMethod.POST)
-	public String addDefaultSpace(Model model, @RequestParam("dspace") String spaceID, Principal principal) throws IOException {
+	public String addDefaultSpace(Model model, @ModelAttribute DefaultExhibitionForm defaultExhibitionForm, @RequestParam("dspace") String spaceID, Principal principal) throws IOException {
 
 		System.out.println("Default " + spaceID);
-		//DefaultExhibition exhibit = exhibitFactory.createDefaultExhibition();
-		DefaultExhibition exhibit = new DefaultExhibition(); 
-		System.out.println("exhibit@@@" + exhibit.getCreationDate());
-		
 		Space space = (Space) spaceManager.getSpace(spaceID);
-		//System.out.println("Default Name "+space.getName());
+		
+		DefaultExhibition exhibit = exhibitFactory.createDefaultExhibition(defaultExhibitionForm, space);
+		System.out.println("Default Name "+exhibit.getSpace().getName());
+		System.out.println("Default ID  "+exhibit.getId());
 		exhibitManager = new DefaultExhibitionManager(); 
-		if(spaceID!=null)
-		{
-			exhibit.setSpace(space);
-			exhibitManager.storeSpace((DefaultExhibition)exhibit);
-		}
-		System.out.println("Default Name "+exhibit.getSpace());
+		exhibitManager.storeSpace((DefaultExhibition)exhibit);
+		System.out.println("Default Space Name "+exhibit.getSpace());
 		return "redirect:/staff/exhibit/econfig";
 	}
 }

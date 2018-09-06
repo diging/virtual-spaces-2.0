@@ -12,7 +12,9 @@ import edu.asu.diging.vspace.core.data.DefaultExhibitionRepository;
 import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
 import edu.asu.diging.vspace.core.services.IDefaultExhibitionManager;
 
+@Transactional
 @Service
+@PropertySource("classpath:/config.properties")
 public class DefaultExhibitionManager implements IDefaultExhibitionManager {
 
 /* (non-Javadoc)
@@ -26,7 +28,7 @@ public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
 
 	CreationReturnValue returnValue = new CreationReturnValue();
 	returnValue.setErrorMsgs(new ArrayList<>());
-	exhibit = exhibitRepo.save(exhibit);
+	exhibitRepo.save(exhibit);
 	returnValue.setElement(exhibit);
 	return returnValue;
 	
