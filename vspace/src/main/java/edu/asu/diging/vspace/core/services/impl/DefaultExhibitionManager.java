@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -28,7 +29,7 @@ public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
 
 	CreationReturnValue returnValue = new CreationReturnValue();
 	returnValue.setErrorMsgs(new ArrayList<>());
-	exhibitRepo.save(exhibit);
+	exhibit = exhibitRepo.save(exhibit);
 	returnValue.setElement(exhibit);
 	return returnValue;
 	
