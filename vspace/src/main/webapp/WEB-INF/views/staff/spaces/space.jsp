@@ -21,7 +21,6 @@ $( document ).ready(function() {
 	    icon.css('font-size', "15px");
 	    
 	    $("#space").append(icon);
-
 	}
 	</c:forEach>
 	
@@ -59,7 +58,6 @@ $( document ).ready(function() {
 		storeX = null;
 		storeY = null;
 		$("#arrow").remove();
-		$("#arrow").removeAttr("id");
 		$("#createSpaceLinkAlert").hide();
 	});
 	
