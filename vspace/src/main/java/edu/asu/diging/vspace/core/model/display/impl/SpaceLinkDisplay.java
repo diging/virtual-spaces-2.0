@@ -26,6 +26,7 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
 	private float positionX;
 	private float positionY;
 	private int rotation;
+	private String spaceLinkLable;
 	
 	
 	@OneToOne(targetEntity=SpaceLink.class)
@@ -88,6 +89,12 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
 	@Override
 	public void setRotation(int rotation) {
 		this.rotation = rotation;
+	}
+	public String getSpaceLinkLable() {
+		return spaceLinkLable;
+	}
+	public void setSpaceLinkLable(String spaceLinkLable) {
+		this.spaceLinkLable = spaceLinkLable;
 	}
 	
 }
