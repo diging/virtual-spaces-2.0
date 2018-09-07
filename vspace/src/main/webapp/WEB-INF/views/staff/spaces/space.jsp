@@ -58,6 +58,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
+		$("#arrow").remove();
 		$("#arrow").removeAttr("id");
 		$("#createSpaceLinkAlert").hide();
 	});
