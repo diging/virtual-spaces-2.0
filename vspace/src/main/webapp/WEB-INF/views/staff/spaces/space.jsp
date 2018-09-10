@@ -29,9 +29,10 @@ $( document ).ready(function() {
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
-		$("#bgImage").one("click", function(e){
-		    e.preventDefault();
-		    var icon = $('<span data-feather="navigation-2" class="flex"></span>');
+		$("#bgImage").on("click", function(e){
+			e.preventDefault();			
+		    $("#arrow").remove();
+		    var icon = $('<span id="arrow" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
@@ -57,6 +58,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
+		$("#arrow").removeAttr("id");
 		$("#createSpaceLinkAlert").hide();
 	});
 	
@@ -66,8 +68,9 @@ $( document ).ready(function() {
 		payload["y"] = storeY;
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
+		$("#arrow").removeAttr("id");
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-			// TODO: show success/error message
+		 // TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
@@ -88,7 +91,7 @@ $( document ).ready(function() {
   <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0">
+  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"> <br>
   <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
   <select id="linkedSpace" class="form-control-xs">
         <option selected value="">Choose...</option>
