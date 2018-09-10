@@ -10,17 +10,17 @@ import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface ISpaceManager {
 
-	CreationReturnValue storeSpace(ISpace space, byte[] image, String filename);
+    CreationReturnValue storeSpace(ISpace space, byte[] image, String filename);
 
-	ISpace getSpace(String id);
+    ISpace getSpace(String id);
 
-	ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation,
-			String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException;
+    ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation,
+            String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException;
 
-	ISpace getFullyLoadedSpace(String id);
+    ISpace getFullyLoadedSpace(String id);
 
-	List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId);
+    List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId);
 
-	List<ISpace> getAllSpaces();
+    List<ISpace> getAllSpaces();
 
 }

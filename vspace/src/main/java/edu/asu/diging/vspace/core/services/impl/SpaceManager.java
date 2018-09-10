@@ -38,117 +38,117 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @PropertySource("classpath:/config.properties")
 public class SpaceManager implements ISpaceManager {
 
-	@Autowired
-	private SpaceRepository spaceRepo;
+    @Autowired
+    private SpaceRepository spaceRepo;
 
-	@Autowired
-	private ImageRepository imageRepo;
+    @Autowired
+    private ImageRepository imageRepo;
 
-	@Autowired
-	private SpaceLinkRepository spaceLinkRepo;
+    @Autowired
+    private SpaceLinkRepository spaceLinkRepo;
 
-	@Autowired
-	private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    @Autowired
+    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
-	@Autowired
-	private IStorageEngine storage;
+    @Autowired
+    private IStorageEngine storage;
 
-	@Autowired
-	private IImageFactory imageFactory;
+    @Autowired
+    private IImageFactory imageFactory;
 
-	@Autowired
-	private ISpaceLinkFactory spaceLinkFactory;
+    @Autowired
+    private ISpaceLinkFactory spaceLinkFactory;
 
-	@Autowired
-	private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
+    @Autowired
+    private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
-	 * diging.vspace.core.model.ISpace, java.lang.String)
-	 */
-	@Override
-	public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
-		IVSImage bgImage = null;
-		if (image != null && image.length > 0) {
-			Tika tika = new Tika();
-			String contentType = tika.detect(image);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
+     * diging.vspace.core.model.ISpace, java.lang.String)
+     */
+    @Override
+    public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
+        IVSImage bgImage = null;
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
 
-			bgImage = imageFactory.createImage(filename, contentType);
-			bgImage = imageRepo.save((VSImage) bgImage);
-		}
+            bgImage = imageFactory.createImage(filename, contentType);
+            bgImage = imageRepo.save((VSImage) bgImage);
+        }
 
-		CreationReturnValue returnValue = new CreationReturnValue();
-		returnValue.setErrorMsgs(new ArrayList<>());
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
 
-		if (bgImage != null) {
-			String relativePath = null;
-			try {
-				relativePath = storage.storeFile(image, filename, bgImage.getId());
-			} catch (FileStorageException e) {
-				returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
-			}
-			bgImage.setParentPath(relativePath);
-			imageRepo.save((VSImage) bgImage);
-			space.setImage(bgImage);
-		}
+        if (bgImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, bgImage.getId());
+            } catch (FileStorageException e) {
+                returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
+            }
+            bgImage.setParentPath(relativePath);
+            imageRepo.save((VSImage) bgImage);
+            space.setImage(bgImage);
+        }
 
-		space = spaceRepo.save((Space) space);
-		returnValue.setElement(space);
-		return returnValue;
-	}
+        space = spaceRepo.save((Space) space);
+        returnValue.setElement(space);
+        return returnValue;
+    }
 
-	@Override
-	public ISpace getSpace(String id) {
-		Optional<Space> space = spaceRepo.findById(id);
-		if (space.isPresent()) {
-			return space.get();
-		}
-		return null;
-	}
+    @Override
+    public ISpace getSpace(String id) {
+        Optional<Space> space = spaceRepo.findById(id);
+        if (space.isPresent()) {
+            return space.get();
+        }
+        return null;
+    }
 
-	@Override
-	public ISpace getFullyLoadedSpace(String id) {
-		ISpace space = getSpace(id);
-		// load lazy loaded collections
-		space.getSpaceLinks().size();
-		space.getModuleLinks().size();
-		return space;
-	}
+    @Override
+    public ISpace getFullyLoadedSpace(String id) {
+        ISpace space = getSpace(id);
+        // load lazy loaded collections
+        space.getSpaceLinks().size();
+        space.getModuleLinks().size();
+        return space;
+    }
 
-	@Override
-	public List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId) {
-		return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
-	}
+    @Override
+    public List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId) {
+        return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
+    }
 
-	@Override
-	public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
-			int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
-		// we need this to fully load the space
-		source = spaceRepo.findById(source.getId()).get();
-		ISpace target = spaceRepo.findById(linkedSpaceId).get();
-		if (target == null) {
-			throw new SpaceDoesNotExistException();
-		}
-		ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
-		link.setTargetSpace(target);
-		spaceLinkRepo.save((SpaceLink) link);
+    @Override
+    public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
+            int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
+        // we need this to fully load the space
+        source = spaceRepo.findById(source.getId()).get();
+        ISpace target = spaceRepo.findById(linkedSpaceId).get();
+        if (target == null) {
+            throw new SpaceDoesNotExistException();
+        }
+        ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
+        link.setTargetSpace(target);
+        spaceLinkRepo.save((SpaceLink) link);
 
-		ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
-		display.setPositionX(positionX);
-		display.setPositionY(positionY);
-		display.setRotation(rotation);
-		display.setType(displayType != null ? displayType : DisplayType.ARROW);
-		spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
-		return display;
-	}
+        ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        display.setRotation(rotation);
+        display.setType(displayType != null ? displayType : DisplayType.ARROW);
+        spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
+        return display;
+    }
 
-	@Override
-	public List<ISpace> getAllSpaces() {
-		List<ISpace> spaces = new ArrayList<>();
-		spaceRepo.findAll().forEach(s -> spaces.add(s));
-		return spaces;
-	}
+    @Override
+    public List<ISpace> getAllSpaces() {
+        List<ISpace> spaces = new ArrayList<>();
+        spaceRepo.findAll().forEach(s -> spaces.add(s));
+        return spaces;
+    }
 }
