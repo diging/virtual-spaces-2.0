@@ -7,10 +7,10 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IDefaultExhibition;
+import edu.asu.diging.vspace.core.model.IExhibition;
 
 @Entity
-public class DefaultExhibition extends VSpaceElement implements IDefaultExhibition {
+public class Exhibition extends VSpaceElement implements IExhibition {
 
 	@Id
 	@GeneratedValue(generator = "id-generator")
@@ -23,35 +23,16 @@ public class DefaultExhibition extends VSpaceElement implements IDefaultExhibiti
 	@OneToOne(targetEntity=Space.class)
 	private Space space;
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
-	 */
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IDefaultExhibition#getId()
-	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setId(java.lang.String)
-	 */
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IDefaultExhibition#setId(java.lang.String)
-	 */
 	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpaceLinks()
-	 */
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IDefaultExhibition#getSpaceLinks()
-	 */
-	
 	@Override
 	public Space getSpace() {
 		return this.space;

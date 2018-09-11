@@ -1,5 +1,6 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="t"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -7,9 +8,9 @@
 <h1>Exhibition Configuration</h1>
 
 <div style="padding-bottom: 20px;">
-	This virtual exhibition contains the following spaces. Select your
-	default space here.
-	<c:url value="/staff/exhibit/config_add" var="postUrl" />
+	Select your exhibition and default space here
+	<c:url value="/staff/exhibit/config" var="postUrl" />
+	<t:htmlTag value="br" />
 	<form:form method="POST"
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
 		modelAttribute="exhibit,spaces">

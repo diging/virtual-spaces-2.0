@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.data.DefaultExhibitionRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.services.impl.DefaultExhibitionManager;
+import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 
 @Controller
@@ -24,29 +24,27 @@ public class ExhibitionConfigurationController {
 	@Autowired
 	private SpaceManager spaceManager;
 	@Autowired
-	private DefaultExhibitionManager exhibitManager;
+	private ExhibitionManager exhibitManager;
 	@Autowired
-	private DefaultExhibitionRepository exhibitRepo;
+	private ExhibitionRepository exhibitRepo;
 	
-	@RequestMapping("/staff/exhibit/econfig")
-	public String listSpaces(Model model) {
-		if(exhibitRepo.count()>0) {
-		model.addAttribute("exhibit", exhibitRepo.findAll());
-		}
+	@RequestMapping("/staff/exhibit/config")
+	public String showExhibitions(Model model) {
+		model.addAttribute("exhibit",exhibitRepo.findAll());
 		model.addAttribute("spaces", spaceRepo.findAll());
-		return "staff/exhibit/econfig";
+		return "staff/exhibit/config";
 	}
 	
-	@RequestMapping(value = "/staff/exhibit/config_add", method = RequestMethod.POST)
+	@RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
 	public String addDefaultSpace(@RequestParam(required=false,name="dexhibit") String exhibitID, @RequestParam("dspace") String spaceID) throws IOException {
-		DefaultExhibition exhibit;
+		Exhibition exhibit;
 		Space space = (Space) spaceManager.getSpace(spaceID);
 		if(exhibitID.equals("New"))
-			exhibit = new DefaultExhibition();
+			exhibit = new Exhibition();
 		else
-			exhibit = (DefaultExhibition)exhibitManager.getExhibitionbyId(exhibitID);
+			exhibit = (Exhibition)exhibitManager.getExhibitionById(exhibitID);
 		exhibit.setSpace(space);
-		exhibitManager.storeSpace(exhibit);
-		return "redirect:/staff/space/list";
+		exhibitManager.storeExhibition(exhibit);
+		return "redirect:/staff/exhibit/config";
 	}
 }

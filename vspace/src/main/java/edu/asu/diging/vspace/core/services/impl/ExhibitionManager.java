@@ -10,24 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.DefaultExhibitionRepository;
-import edu.asu.diging.vspace.core.model.IDefaultExhibition;
-import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
-import edu.asu.diging.vspace.core.services.IDefaultExhibitionManager;
+import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Transactional
 @Service
 @PropertySource("classpath:/config.properties")
-public class DefaultExhibitionManager implements IDefaultExhibitionManager {
+public class ExhibitionManager implements IExhibitionManager {
 
 /* (non-Javadoc)
  * @see edu.asu.diging.vspace.core.services.impl.IDefaultExhibitionManager#storeSpace(edu.asu.diging.vspace.core.model.ISpace, byte[], java.lang.String)
  */
 	@Autowired
-	private DefaultExhibitionRepository exhibitRepo;
+	private ExhibitionRepository exhibitRepo;
 	
 @Override
-public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
+public CreationReturnValue storeExhibition(Exhibition exhibit) {
 
 	CreationReturnValue returnValue = new CreationReturnValue();
 	returnValue.setErrorMsgs(new ArrayList<>());
@@ -38,9 +38,9 @@ public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
 }
 
 @Override
-public IDefaultExhibition getExhibitionbyId(String id){
+public IExhibition getExhibitionById(String id){
 	
-	Optional<DefaultExhibition> defaultExhibition = exhibitRepo.findById(id);
+	Optional<Exhibition> defaultExhibition = exhibitRepo.findById(id);
 	if (defaultExhibition.isPresent()) {
 		return defaultExhibition.get();
 	}
@@ -48,8 +48,8 @@ public IDefaultExhibition getExhibitionbyId(String id){
 }
 
 @Override
-public List<IDefaultExhibition> getAllExhibitions() {
-	List<IDefaultExhibition> defaultExhibition = new ArrayList<>();
+public List<IExhibition> getAllExhibitions() {
+	List<IExhibition> defaultExhibition = new ArrayList<>();
 	exhibitRepo.findAll().forEach(s -> defaultExhibition.add(s));
 	return defaultExhibition;
 	}

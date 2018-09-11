@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model;
 
 import edu.asu.diging.vspace.core.model.impl.Space;
 
-public interface IDefaultExhibition extends IVSpaceElement {
+public interface IExhibition extends IVSpaceElement {
 
 	Space getSpace();
 
