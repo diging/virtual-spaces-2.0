@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -37,12 +38,13 @@ public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
 }
 
 @Override
-public IDefaultExhibition getExhibition(){
-	List<IDefaultExhibition> defaultExhibition = getAllExhibitions();
-	if(defaultExhibition.size()>0) {
-	return defaultExhibition.get(0);
+public IDefaultExhibition getExhibitionbyId(String id){
+	
+	Optional<DefaultExhibition> defaultExhibition = exhibitRepo.findById(id);
+	if (defaultExhibition.isPresent()) {
+		return defaultExhibition.get();
 	}
-	return new DefaultExhibition();
+	return null;
 }
 
 @Override
@@ -50,5 +52,5 @@ public List<IDefaultExhibition> getAllExhibitions() {
 	List<IDefaultExhibition> defaultExhibition = new ArrayList<>();
 	exhibitRepo.findAll().forEach(s -> defaultExhibition.add(s));
 	return defaultExhibition;
-}
+	}
 }

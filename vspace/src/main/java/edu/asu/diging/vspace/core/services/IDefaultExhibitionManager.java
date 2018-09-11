@@ -12,6 +12,6 @@ public interface IDefaultExhibitionManager {
 
 	List<IDefaultExhibition> getAllExhibitions();
 
-	IDefaultExhibition getExhibition();
+	IDefaultExhibition getExhibitionbyId(String id);
 
 }

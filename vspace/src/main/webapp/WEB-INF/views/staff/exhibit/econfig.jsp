@@ -12,7 +12,13 @@
 	<c:url value="/staff/exhibit/config_add" var="postUrl" />
 	<form:form method="POST"
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
-		modelAttribute="spaces">
+		modelAttribute="exhibit,spaces">
+		<select class="form-control" name="dexhibit">
+		<option id="New" value="New">New Exhibition</option>
+			<c:forEach items="${exhibit}" var="exhibit">
+				<option id=${exhibit.id } value=${exhibit.id}>${exhibit.id}</option>
+			</c:forEach>
+		</select>
 		<select class="form-control" name="dspace">
 			<c:forEach items="${spaces}" var="space">
 				<option id=${space.id } value=${space.id}>${space.name}</option>
