@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.factory.impl.DefaultExhibitionFactory;
-import edu.asu.diging.vspace.core.model.IDefaultExhibition;
 import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.impl.DefaultExhibitionManager;
@@ -30,9 +28,6 @@ public class ExhibitionConfigurationController {
 	@Autowired
 	private DefaultExhibitionManager exhibitManager;
 	
-	@Autowired
-	private DefaultExhibitionFactory exhibitFactory;
-	
 	@RequestMapping("/staff/exhibit/econfig")
 	public String listSpaces(Model model) {
 		
@@ -40,11 +35,13 @@ public class ExhibitionConfigurationController {
 		model.addAttribute("spaces", spaceRepo.findAll());
 		return "staff/exhibit/econfig";
 	}
+	
 	@RequestMapping(value = "/staff/exhibit/config_add", method = RequestMethod.POST)
 	public String addDefaultSpace(Model model, @ModelAttribute DefaultExhibitionForm defaultExhibitionForm, @RequestParam("dspace") String spaceID, Principal principal) throws IOException {
 		Space space = (Space) spaceManager.getSpace(spaceID);
 		
-		DefaultExhibition exhibit = exhibitFactory.createDefaultExhibition(defaultExhibitionForm, space);
+		DefaultExhibition exhibit = (DefaultExhibition)exhibitManager.getExhibition();
+		exhibit.setSpace(space);
 		exhibitManager.storeSpace((DefaultExhibition)exhibit);
 		return "redirect:/staff/space/list";
 	}

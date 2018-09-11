@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.DefaultExhibitionRepository;
+import edu.asu.diging.vspace.core.model.IDefaultExhibition;
 import edu.asu.diging.vspace.core.model.impl.DefaultExhibition;
 import edu.asu.diging.vspace.core.services.IDefaultExhibitionManager;
 
@@ -33,5 +34,21 @@ public CreationReturnValue storeSpace(DefaultExhibition exhibit) {
 	returnValue.setElement(exhibit);
 	return returnValue;
 	
+}
+
+@Override
+public IDefaultExhibition getExhibition(){
+	List<IDefaultExhibition> defaultExhibition = getAllExhibitions();
+	if(defaultExhibition.size()>0) {
+	return defaultExhibition.get(0);
+	}
+	return new DefaultExhibition();
+}
+
+@Override
+public List<IDefaultExhibition> getAllExhibitions() {
+	List<IDefaultExhibition> defaultExhibition = new ArrayList<>();
+	exhibitRepo.findAll().forEach(s -> defaultExhibition.add(s));
+	return defaultExhibition;
 }
 }
