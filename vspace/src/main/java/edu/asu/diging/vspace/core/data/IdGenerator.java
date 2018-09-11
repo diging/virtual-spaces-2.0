@@ -25,9 +25,7 @@ public class IdGenerator implements IdentifierGenerator, Configurable {
 		String query = String.format("select count(*) from %s",
 	            obj.getClass().getSimpleName());
 		long count = (Long) session.createQuery(query).uniqueResult();
-		Serializable ss = prefix + (count + 1);
-		System.out.println("ID @@@ "+ss);
-		return ss;
+		return prefix + (count + 1);
 	}
 
 }
