@@ -23,6 +23,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 	@OneToOne(targetEntity=Space.class)
 	private Space space;
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IDefaultExhibition#getId()
+	 */
 	@Override
 	public String getId() {
 		return id;

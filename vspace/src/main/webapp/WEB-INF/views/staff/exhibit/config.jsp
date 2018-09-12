@@ -10,7 +10,6 @@
 <div style="padding-bottom: 20px;">
 	Select your exhibition and default space here
 	<c:url value="/staff/exhibit/config" var="postUrl" />
-	<t:htmlTag value="br" />
 	<form:form method="POST"
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
 		modelAttribute="exhibit,spaces">
