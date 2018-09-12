@@ -67,5 +67,15 @@
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
 	
-	
+	<!-- Exhibition Config -->
+	<definition name="exhibit.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="exhibit" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/exhibit/menu/config_menu.jsp" />
+	</definition>
+	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
+	</definition>
+	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
+	</definition>
 </tiles-definitions>
