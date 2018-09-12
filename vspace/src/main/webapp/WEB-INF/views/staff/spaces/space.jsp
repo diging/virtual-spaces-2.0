@@ -21,6 +21,7 @@ $( document ).ready(function() {
 	    icon.css('font-size', "15px");
 	    
 	    $("#space").append(icon);
+	    $("#space").append(link);
 
 	}
 	</c:forEach>
@@ -93,6 +94,12 @@ $( document ).ready(function() {
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
   <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"> <br>
+  
+  <label style="margin-right: 5px;"><small>Type:</small> </label>
+  <select id="type" class="form-control-xs">
+  	<option selected value="">Choose...</option>
+  	<option value="ALERT">Alert</option>
+  </select><br>
   
   <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
   <select id="linkedSpace" class="form-control-xs">
