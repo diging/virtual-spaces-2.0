@@ -38,7 +38,7 @@ public class ExhibitionConfigurationController {
 	}
 	
 	@RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
-	public String addDefaultSpace(@RequestParam(required=false,name="dexhibit") String exhibitID, @RequestParam("dspace") String spaceID) throws IOException {
+	public String createOrUpdateExhibition(@RequestParam(required=false,name="dexhibit") String exhibitID, @RequestParam("dspace") String spaceID) throws IOException {
 		Exhibition exhibit;
 		Space space = (Space) spaceManager.getSpace(spaceID);
 		exhibit = (Exhibition)exhibitFactory.createSpace(exhibitID);
