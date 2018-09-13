@@ -63,6 +63,10 @@ $( document ).ready(function() {
 		$("#createSpaceLinkAlert").hide();
 	});
 	
+	$("#cancelBgImgBtn").click(function() {
+		$("#changeBgImgAlert").hide();
+	});
+	
 	$("#createSpaceLinkBtn").click(function(e) {
 		var payload = {};
 		payload["x"] = storeX;
@@ -75,6 +79,20 @@ $( document ).ready(function() {
 		});
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
+	});
+	
+		$('#spaceLinkRotation').change(function() {
+			$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		});
+		
+		$('#changeBgImgButton').click(function() {
+			$("#createSpaceLinkAlert").hide();
+			$("#changeBgImgAlert").show();
+		});
+		
+		$("#changeBgImgAlert").draggable();
+		
+		$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	});
 });
 </script>
@@ -111,8 +129,17 @@ $( document ).ready(function() {
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
+div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+  <label for="description" class="col-md-2 col-form-label">Background Image:</label>
+		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30"
+			id="file" />
+  <hr>
+  <p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button> &nbsp <button id="changeBgImgBtn" type="button" class="btn btn-primary btn-xs">Change Background Image</button></p>
+</div>
+
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button>
+<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image </button>
 </nav>
 
 <p></p>
