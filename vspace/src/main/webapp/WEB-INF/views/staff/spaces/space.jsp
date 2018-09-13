@@ -140,6 +140,7 @@ div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="curs
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button>
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image </button>
+
 </nav>
 
 <p></p>
