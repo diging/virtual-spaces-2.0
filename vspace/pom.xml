@@ -25,6 +25,7 @@
         <uploaded.files.path>/Users/jdamerow/Software/VirtualSpaces2.0/uploads/</uploaded.files.path>
     </properties>
 
+
     <dependencyManagement>
         <dependencies>
             <dependency>
