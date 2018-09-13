@@ -1,4 +1,5 @@
 package edu.asu.diging.vspace.core.model.impl;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,34 +14,50 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 public class Exhibition extends VSpaceElement implements IExhibition {
 
 	@Id
-	@GeneratedValue(generator = "id-generator")
-	@GenericGenerator(name = "id-generator", 	
-					parameters = @Parameter(name = "prefix", value = "EXH"), 
-					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
-			)
+	@GeneratedValue(generator = "exhibit-id-generator")
+	@GenericGenerator(name = "exhibit-id-generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
-	
-	@OneToOne(targetEntity=Space.class)
+
+	@OneToOne(targetEntity = Space.class)
 	private Space space;
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IDefaultExhibition#getId()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.diging.vspace.core.model.IVSpaceElement#getId()
 	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.diging.vspace.core.model.IVSpaceElement#setId(java.lang.String)
+	 */
 	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.diging.vspace.core.model.IExhibition#getSpace()
+	 */
 	@Override
 	public Space getSpace() {
 		return this.space;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.diging.vspace.core.model.IExhibition#setSpace(edu.asu.diging.vspace.
+	 * core.model.impl.Space)
+	 */
 	@Override
 	public void setSpace(Space space) {
 		this.space = space;

@@ -14,7 +14,7 @@
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
 		modelAttribute="exhibit,spaces">
 		<select class="form-control" name="dexhibit">
-		<option id="New" value="New">New Exhibition</option>
+		<option id="New" value="">New Exhibition</option>
 			<c:forEach items="${exhibit}" var="exhibit">
 				<option id=${exhibit.id } value=${exhibit.id}>${exhibit.id}</option>
 			</c:forEach>
