@@ -125,7 +125,7 @@ public class SpaceManager implements ISpaceManager {
 
     @Override
     public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
-            int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
+            int rotation, String linkedSpaceId, String spaceLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceRepo.findById(source.getId()).get();
         ISpace target = spaceRepo.findById(linkedSpaceId).get();
@@ -140,6 +140,7 @@ public class SpaceManager implements ISpaceManager {
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setRotation(rotation);
+        display.setSpaceLinkLabel(spaceLinkLabel);
         display.setType(displayType != null ? displayType : DisplayType.ARROW);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
         return display;

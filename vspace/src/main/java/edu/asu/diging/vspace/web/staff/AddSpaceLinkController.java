@@ -28,7 +28,7 @@ public class AddSpaceLinkController {
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
-            @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("type") String displayType)
+            @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("type") String displayType)
             throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
 
         ISpace source = spaceManager.getSpace(id);
@@ -38,7 +38,7 @@ public class AddSpaceLinkController {
 
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = spaceManager.createSpaceLink("test", source, new Float(x), new Float(y),
-                new Integer(rotation), linkedSpaceId, type);
+                new Integer(rotation), linkedSpaceId, spaceLinkLabel, type);
         display.setRotation(new Integer(rotation));
 
         ObjectMapper mapper = new ObjectMapper();
