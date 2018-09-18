@@ -36,6 +36,10 @@ public class ExhibitionConfigurationController {
 	@Autowired
 	private ExhibitionFactory exhibitFactory;
 
+	/**
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/staff/exhibit/config")
 	public String showExhibitions(Model model) {
 		model.addAttribute("exhibit", exhibitRepo.findAll());
@@ -43,7 +47,13 @@ public class ExhibitionConfigurationController {
 		return "staff/exhibit/config";
 	}
 
-	// exhibit Id is required when default space of existing exhibition is updated.
+	/**
+	 * exhibitID is used when default space of existing exhibition is updated.
+	 * 
+	 * @param exhibitID
+	 * @param spaceID
+	 * @return
+	 */
 	@RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
 	public String createOrUpdateExhibition(@RequestParam(required = false, name = "dexhibit") String exhibitID,
 			@RequestParam("dspace") String spaceID) throws IOException {

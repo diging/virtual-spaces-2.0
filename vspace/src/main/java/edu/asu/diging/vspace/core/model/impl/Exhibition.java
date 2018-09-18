@@ -10,6 +10,10 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 
+/*
+ * Represents an exhibition that can have a default space.
+ * @see edu.asu.diging.vspace.core.model.Exhibition
+ */
 @Entity
 public class Exhibition extends VSpaceElement implements IExhibition {
 
@@ -34,7 +38,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see edu.asu.diging.vspace.core.model.IVSpaceElement#setId(java.lang.String)
+	 * @see cIVSpaceElement#setId(java.lang.String)
 	 */
 	@Override
 	public void setId(String id) {
