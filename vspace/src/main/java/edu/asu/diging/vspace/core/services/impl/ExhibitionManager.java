@@ -28,6 +28,9 @@ public class ExhibitionManager implements IExhibitionManager {
 	@Autowired
 	private ExhibitionRepository exhibitRepo;
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.asu.diging.vspace.core.model.impl.Exhibition)
+	 */
 	@Override
 	public IExhibition storeExhibition(Exhibition exhibit) {
 		exhibit = exhibitRepo.save(exhibit);
@@ -35,6 +38,9 @@ public class ExhibitionManager implements IExhibitionManager {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java.lang.String)
+	 */
 	@Override
 	public IExhibition getExhibitionById(String id) {
 
