@@ -18,13 +18,6 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 @PropertySource("classpath:/config.properties")
 public class ExhibitionManager implements IExhibitionManager {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.asu.diging.vspace.core.services.impl.IDefaultExhibitionManager#storeSpace
-	 * (edu.asu.diging.vspace.core.model.ISpace, byte[], java.lang.String)
-	 */
 	@Autowired
 	private ExhibitionRepository exhibitRepo;
 
