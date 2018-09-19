@@ -134,13 +134,13 @@ public class SpaceManager implements ISpaceManager {
         }
         ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
         link.setTargetSpace(target);
+        link.setName(spaceLinkLabel);
         spaceLinkRepo.save((SpaceLink) link);
 
         ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setRotation(rotation);
-        display.setSpaceLinkLabel(spaceLinkLabel);
         display.setType(displayType != null ? displayType : DisplayType.ARROW);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
         return display;

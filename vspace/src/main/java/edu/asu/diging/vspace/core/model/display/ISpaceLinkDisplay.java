@@ -24,10 +24,6 @@ public interface ISpaceLinkDisplay extends IVSpaceElement {
     void setRotation(int rotation);
 
     int getRotation();
-    
-    void setSpaceLinkLabel(String spaceLinkLabel);
-	
-	String getSpaceLinkLabel();
 
     void setType(DisplayType type);
 
