@@ -23,62 +23,52 @@
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
 	</definition>
-
+	
 	<definition name="home" extends="base.definition">
-		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
 	</definition>
-
+	
 	<definition name="login" extends="base.definition">
-		<put-attribute name="content"
-			value="/WEB-INF/views/authenticate/login.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/authenticate/login.jsp" />
 	</definition>
-
-	<!-- Exhibition -->
-	<definition name="space" extends="base.definition">
+	<!--  Exhibition  -->
+	<definition name="space" extends="base.definition">	
 		<put-attribute name="currentPage" value="space" />
-		<put-attribute name="content"
-			value="/WEB-INF/views/exhibition/space.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
-
+	
 	<!-- Staff -->
 	<!-- Spaces -->
-	<definition name="space.base.def" extends="base.definition.bt4">
+	<definition name="space.base.def" extends="base.definition.bt4">	
 		<put-attribute name="currentPage" value="space" />
-		<put-attribute name="sidemenu"
-			value="/WEB-INF/views/staff/spaces/menu/spaces_menu.jsp" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/spaces/menu/spaces_menu.jsp" />
 	</definition>
-
+	
 	<definition name="staff/space/list" extends="space.base.def">
-		<put-attribute name="content"
-			value="/WEB-INF/views/staff/spaces/spacelist.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/spacelist.jsp" />	
 	</definition>
-
+	
 	<definition name="staff/space/add" extends="space.base.def">
-		<put-attribute name="content"
-			value="/WEB-INF/views/staff/spaces/add.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/add.jsp" />
 	</definition>
-
+	
 	<definition name="staff/space" extends="space.base.def">
-		<put-attribute name="content"
-			value="/WEB-INF/views/staff/spaces/space.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
 	</definition>
-
+	
 	<!-- Modules -->
-	<definition name="module.base.def" extends="base.definition.bt4">
+	<definition name="module.base.def" extends="base.definition.bt4">	
 		<put-attribute name="currentPage" value="module" />
-		<put-attribute name="sidemenu"
-			value="/WEB-INF/views/staff/modules/menu/modules_menu.jsp" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/modules/menu/modules_menu.jsp" />
 	</definition>
-
+	
 	<definition name="staff/module/list" extends="module.base.def">
-		<put-attribute name="content"
-			value="/WEB-INF/views/staff/modules/modulelist.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/modulelist.jsp" />	
 	</definition>
-
+	
 	<definition name="staff/module/add" extends="module.base.def">
-		<put-attribute name="content"
-			value="/WEB-INF/views/staff/modules/add.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
-
-
+	
+	
 </tiles-definitions>
