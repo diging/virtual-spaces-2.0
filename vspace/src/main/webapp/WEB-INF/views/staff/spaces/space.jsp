@@ -87,7 +87,7 @@ $( document ).ready(function() {
   <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"> 
+  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0">
   <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
   <select id="linkedSpace" class="form-control-xs">
         <option selected value="">Choose...</option>

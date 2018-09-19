@@ -16,20 +16,18 @@ $( document ).ready(function() {
 		var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		
-		if ("${link.type}" == 'ALERT') {
-			var linkDisplay = $('<div class="alert alert-primary" role="alert">');
-		} else {
-			var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
-		}
-		linkDisplay.css('position', 'absolute');
-		linkDisplay.css('left', ${link.positionX} + posX);
-		linkDisplay.css('top', ${link.positionY} + posY);
-		linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-		linkDisplay.css('fill', 'red');
-		linkDisplay.css('color', 'red');
-		linkDisplay.css('font-size', "15px");
-		 
-	    link.append(linkDisplay);
+		var icon = $('<span data-feather="navigation-2" class="flex"></span>');
+	    icon.css('position', 'absolute');
+	    icon.css('left', ${link.positionX} + posX);
+	    icon.css('top', ${link.positionY} + posY);
+	    icon.css('transform', 'rotate(${link.rotation}deg)');
+	    icon.css('fill', 'red');
+	    icon.css('color', 'red');
+	    icon.css('font-size', "15px");
+	    icon.css('width', 16);
+	    icon.css('height', 16);
+	    
+	    link.append(icon);
 	    $("#space").append(link);
 	}
 	</c:forEach>
