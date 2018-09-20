@@ -6,7 +6,7 @@
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {
-	alert("welcome");
+	
 	<c:forEach items="${spaceLinks}" var="link">
 	{
 		var posX = $("#bgImage").position().left
@@ -32,10 +32,10 @@ $( document ).ready(function() {
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
+		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
-			alert("hi1");
 		    e.preventDefault();
-		    var icon = $('<span id = "arrow" data-feather="navigation-2" class="flex"></span>');
+		    var icon = $('<span data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
@@ -79,23 +79,24 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
-		$("#createSpaceLinkAlert").hide();
+		$("#createSpaceLinkAlert").hide();	
 	});
 	
-		$('#spaceLinkRotation').change(function() {
-			$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-		});
-		
-		$('#changeBgImgButton').click(function() {
-			alert("hi2");
-			$("#createSpaceLinkAlert").hide();
-			$("#changeBgImgAlert").show();
-		});
-		
-		$("#changeBgImgAlert").draggable();
-		
-		$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
+
+	
+	
+	$('#spaceLinkRotation').change(function() {
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
+		
+	$('#changeBgImgButton').click(function() {
+		$("#createSpaceLinkAlert").hide();
+		$("#changeBgImgAlert").show();
+	});
+		
+	$("#changeBgImgAlert").draggable();
+		
+	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 });
 </script>
 
@@ -128,20 +129,39 @@ $( document ).ready(function() {
         </c:forEach>
   </select>
   <HR>
-  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
+  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> 
+  
+  <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
-<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-  <label for="description" class="col-md-2 col-form-label">Background Image:</label>
+
+
+<%-- <c:url value="/staff/space/${space.id}/spacelink" var="postUrl" />
+<form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
+
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<label for="description" class="col-md-2 col-form-label">Background image:</label>
 		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30"
 			id="file" />
-  <hr>
-  <p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button> &nbsp <button id="changeBgImgBtn" type="button" class="btn btn-primary btn-xs">Change Background Image</button></p>
-</div>
+	</div>
+	<p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button> &nbsp
+	<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image</button> </p>
+</form:form> --%>
+
+
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<label for="description" class="col-md-2 col-form-label">Background image:</label>
+		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30"
+			id="file" />
+	</div>
+	<p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button> &nbsp
+	<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image</button> </p>
+
+
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
-<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image </button>
+<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> ChangeBgImage</button>
 
 </nav>
 
