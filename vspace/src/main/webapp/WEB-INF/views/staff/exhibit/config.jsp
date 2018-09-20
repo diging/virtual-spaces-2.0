@@ -11,16 +11,15 @@
 	Select your exhibition and default space here
 	<c:url value="/staff/exhibit/config" var="postUrl" />
 	<form:form method="POST"
-		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
-		modelAttribute="exhibit,spaces">
-		<select class="form-control" name="dexhibit">
-		<option id="New" value="">New Exhibition</option>
-			<c:forEach items="${exhibit}" var="exhibit">
-				<option id=${exhibit.id } value=${exhibit.id}>${exhibit.id}</option>
+		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+		<select class="form-control" name="exhibitParam">
+			<option id="New" value="">New Exhibition</option>
+			<c:forEach items="${exhibitionsList}" var="exhibition">
+				<option id=${exhibition.id } value=exhibition.id}>${exhibition.id}</option>
 			</c:forEach>
 		</select>
-		<select class="form-control" name="dspace">
-			<c:forEach items="${spaces}" var="space">
+		<select class="form-control" name="spaceParam">
+			<c:forEach items="${spacesList}" var="space">
 				<option id=${space.id } value=${space.id}>${space.name}</option>
 			</c:forEach>
 		</select>

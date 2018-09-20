@@ -36,14 +36,10 @@ public class ExhibitionConfigurationController {
 	@Autowired
 	private ExhibitionFactory exhibitFactory;
 
-	/**
-	 * @param model
-	 * @return
-	 */
 	@RequestMapping("/staff/exhibit/config")
 	public String showExhibitions(Model model) {
-		model.addAttribute("exhibit", exhibitRepo.findAll());
-		model.addAttribute("spaces", spaceRepo.findAll());
+		model.addAttribute("exhibitionsList", exhibitRepo.findAll());
+		model.addAttribute("spacesList", spaceRepo.findAll());
 		return "staff/exhibit/config";
 	}
 
@@ -55,8 +51,8 @@ public class ExhibitionConfigurationController {
 	 * @return
 	 */
 	@RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
-	public String createOrUpdateExhibition(@RequestParam(required = false, name = "dexhibit") String exhibitID,
-			@RequestParam("dspace") String spaceID) throws IOException {
+	public String createOrUpdateExhibition(@RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+			@RequestParam("spaceParam") String spaceID) throws IOException {
 
 		Exhibition exhibit;
 		ISpace space = spaceManager.getSpace(spaceID);

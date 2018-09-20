@@ -75,7 +75,4 @@
 	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
 		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
 	</definition>
-	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
-		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
-	</definition>
 </tiles-definitions>

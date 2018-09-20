@@ -10,9 +10,13 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 
+/**
+ * @author Namratha
+ *
+ */
 /*
  * Represents an exhibition that can have a default space.
- * @see edu.asu.diging.vspace.core.model.Exhibition
+ * @see edu.asu.diging.vspace.core.model.impl.Exhibition
  */
 @Entity
 public class Exhibition extends VSpaceElement implements IExhibition {

@@ -15,7 +15,6 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Transactional
 @Service
-@PropertySource("classpath:/config.properties")
 public class ExhibitionManager implements IExhibitionManager {
 
 	@Autowired
@@ -30,9 +29,7 @@ public class ExhibitionManager implements IExhibitionManager {
 	 */
 	@Override
 	public IExhibition storeExhibition(Exhibition exhibit) {
-		exhibit = exhibitRepo.save(exhibit);
-		return exhibit;
-
+		return exhibitRepo.save(exhibit);
 	}
 
 	/*
