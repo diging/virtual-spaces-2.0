@@ -24,8 +24,8 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
        http.formLogin()
-                .loginPage("/")
-                .loginProcessingUrl("/login/")
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
                 .failureUrl("/?error=bad_credentials")
                 // Configures the logout function
                 .and()
