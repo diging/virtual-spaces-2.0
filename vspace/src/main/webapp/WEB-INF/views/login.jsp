@@ -10,7 +10,7 @@
 
 	<sec:authorize access="isAnonymous()">
 		<form name='f' class="form-horizontal pull-right"
-			action="<c:url value="authenticate" />" method="POST">
+			action="<c:url value="" />" method="POST">
 			<h2 class="col-sm-10">Login</h2>
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />

@@ -50,7 +50,7 @@
          	</form>
           </sec:authorize>
           <sec:authorize access="isAnonymous()">
-			<a href="<%=request.getContextPath()+"/login/authenticate" %>">Login here!</a>
+         	 <a href="<%=request.getContextPath()+"/login" %>">Login here!</a>
 		  </sec:authorize>
         </div>
       </div>

@@ -15,7 +15,6 @@ $( document ).ready(function() {
 		console.log("container: " + $("#space-container").offset().left)
 		var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
-		
 		var icon = $('<span data-feather="navigation-2" class="flex"></span>');
 	    icon.css('position', 'absolute');
 	    icon.css('left', ${link.positionX} + posX);

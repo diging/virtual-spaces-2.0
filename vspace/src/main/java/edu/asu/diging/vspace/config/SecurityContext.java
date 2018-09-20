@@ -25,7 +25,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
        http.formLogin()
                 .loginPage("/")
-                .loginProcessingUrl("/login/authenticate")
+                .loginProcessingUrl("/login/")
                 .failureUrl("/?error=bad_credentials")
                 // Configures the logout function
                 .and()
@@ -40,7 +40,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // Anyone can access the urls
-                .antMatchers("/", "/exhibit/**", "/api/**", "/resources/**", "/login/authenticate",
+                .antMatchers("/", "/exhibit/**", "/api/**", "/resources/**", "/login",
                         "/logout").permitAll()
                 // The rest of the our application is protected.
                 .antMatchers("/users/**", "/admin/**").hasRole("ADMIN")
