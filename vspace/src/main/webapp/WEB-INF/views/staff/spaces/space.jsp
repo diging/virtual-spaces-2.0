@@ -81,22 +81,43 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();	
 	});
-	
 
-	
-	
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 		
-	$('#changeBgImgButton').click(function() {
+	$('#changeBgImgButton').click(function(file) {
 		$("#createSpaceLinkAlert").hide();
-		$("#changeBgImgAlert").show();
+		$("#changeBgImgAlert").show();	
+		
 	});
+	
+	
 		
 	$("#changeBgImgAlert").draggable();
 		
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
+	
+	$("#changeBgImgBtn").click(function(file)) {
+		alert("choose image");
+		var file = document.getElementById('myFile').files[0];
+	    if (file) {
+	        // create reader
+	        var reader = new FileReader();
+	        alert("1");
+	        reader.readAsText(file);
+	        alert("2");
+	        reader.onload = function(e) {
+	        	alert("3");
+	            // browser completed reading file - display it
+	            alert(e.target.result);
+	        };
+	    }
+	    /* $.post("<c:url value="/staff/space/add?${_csrf.parameterName}=${_csrf.token}" />", function(data) {
+		// TODO: show success/error message
+		console.log("data is", data);
+	}); */
+	});
 });
 </script>
 
@@ -134,33 +155,17 @@ $( document ).ready(function() {
   <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
-
-
-<%-- <c:url value="/staff/space/${space.id}/spacelink" var="postUrl" />
-<form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
-
-	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-		<label for="description" class="col-md-2 col-form-label">Background image:</label>
-		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30"
-			id="file" />
-	</div>
-	<p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button> &nbsp
-	<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image</button> </p>
-</form:form> --%>
-
-
-	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-		<label for="description" class="col-md-2 col-form-label">Background image:</label>
-		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30"
-			id="file" />
-	</div>
-	<p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button> &nbsp
-	<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm">Change Background Image</button> </p>
+<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	<label for="description" class="col-md-2 col-form-label">Background image:</label>
+	<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />	
+    <button type="button" id="changeBgImgBtn" class="btn btn-primary btn-sm">Choose Image</button> </p>  &nbsp
+    <p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button>
+</div>
 
 
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-<button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
+<button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp 
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> ChangeBgImage</button>
 
 </nav>
