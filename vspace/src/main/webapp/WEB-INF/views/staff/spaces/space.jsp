@@ -91,33 +91,18 @@ $( document ).ready(function() {
 		$("#changeBgImgAlert").show();	
 		
 	});
-	
-	
-		
+			
 	$("#changeBgImgAlert").draggable();
 		
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
-	$("#changeBgImgBtn").click(function(file)) {
-		alert("choose image");
-		var file = document.getElementById('myFile').files[0];
-	    if (file) {
-	        // create reader
-	        var reader = new FileReader();
-	        alert("1");
-	        reader.readAsText(file);
-	        alert("2");
-	        reader.onload = function(e) {
-	        	alert("3");
-	            // browser completed reading file - display it
-	            alert(e.target.result);
-	        };
-	    }
-	    /* $.post("<c:url value="/staff/space/add?${_csrf.parameterName}=${_csrf.token}" />", function(data) {
+	/* $("#changeBgImgBtn").click(function(file) {
+		 alert("hi");
+	     $.post("<c:url value="/staff/space/add?${_csrf.parameterName}=${_csrf.token}" />", file, function(data) {
 		// TODO: show success/error message
 		console.log("data is", data);
-	}); */
-	});
+		}); 
+	});  */
 });
 </script>
 
@@ -155,13 +140,14 @@ $( document ).ready(function() {
   <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
+<form method="post" action="$/staff/space/add?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 <div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 	<label for="description" class="col-md-2 col-form-label">Background image:</label>
 	<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />	
     <button type="button" id="changeBgImgBtn" class="btn btn-primary btn-sm">Choose Image</button> </p>  &nbsp
     <p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button>
 </div>
-
+</form>
 
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
