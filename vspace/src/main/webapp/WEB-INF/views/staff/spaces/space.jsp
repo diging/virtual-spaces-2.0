@@ -34,7 +34,8 @@ $( document ).ready(function() {
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    var icon = $('<span data-feather="navigation-2" class="flex"></span>');
+		    $("#arrow").remove();
+		    var icon = $('<span id="arrow" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
@@ -60,6 +61,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
+		$("#arrow").remove();
 		$("#createSpaceLinkAlert").hide();
 	});
 	
@@ -70,6 +72,7 @@ $( document ).ready(function() {
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["type"] = $("#type").val();
+		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
