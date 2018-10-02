@@ -28,5 +28,6 @@ public interface ISpaceLinkDisplay extends IVSpaceElement {
     void setType(DisplayType type);
 
     DisplayType getType();
+    
 
 }
