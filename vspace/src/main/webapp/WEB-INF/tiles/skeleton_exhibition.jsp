@@ -46,11 +46,11 @@
           <sec:authorize access="isAuthenticated()">
           	<form action="<c:url value="/logout" />" method="POST">
          	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-  				<button class="btn btn-link" type="submit" title="Logout">Logout</button>
+  				<button class="btn btn-link" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
          	</form>
           </sec:authorize>
           <sec:authorize access="isAnonymous()">
-         	 <a href="<%=request.getContextPath()+"/login" %>">Login here!</a>
+         	 <a href="<%=request.getContextPath()+"/login" %>"><i class="fas fa-sign-in-alt"></i></a>
 		  </sec:authorize>
         </div>
       </div>
