@@ -36,7 +36,24 @@ public class AddSpaceController {
 	@RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
 	public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
 
+		//System.out.println("Inside Controller");
 		ISpace space = spaceFactory.createSpace(spaceForm);
+		byte[] bgImage = null;
+		String filename = null;
+		if (file  != null) {
+			bgImage = file.getBytes();
+			filename = file.getOriginalFilename();
+		}
+		spaceManager.storeSpace(space, bgImage, filename);
+
+		return "redirect:/staff/space/list";
+	}
+	
+	@RequestMapping(value = "/staff/space/update", method = RequestMethod.POST)
+	public String updateSpace(Model model, @ModelAttribute ISpace space, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+
+		System.out.println("Inside update Controller");
+		//ISpace space = spaceFactory.createSpace(spaceForm);
 		byte[] bgImage = null;
 		String filename = null;
 		if (file  != null) {

@@ -1,6 +1,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
 <script>
@@ -140,19 +141,21 @@ $( document ).ready(function() {
   <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
-<form method="post" action="$/staff/space/add?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+<c:url value="/staff/space/update" var="postUrl" />
+<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
 <div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 	<label for="description" class="col-md-2 col-form-label">Background image:</label>
 	<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />	
-    <button type="button" id="changeBgImgBtn" class="btn btn-primary btn-sm">Choose Image</button> </p>  &nbsp
+	<input type="hidden" id="space" name="space" value=space>
+    <button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-sm">Choose Image</button> </p>
     <p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button>
 </div>
-</form>
+</form:form>
 
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp 
-<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> ChangeBgImage</button>
+<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
 
 </nav>
 
