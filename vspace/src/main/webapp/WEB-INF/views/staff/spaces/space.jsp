@@ -34,7 +34,6 @@ $( document ).ready(function() {
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    $("#arrow").remove();
 		    var icon = $('<span id="arrow" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
@@ -78,6 +77,10 @@ $( document ).ready(function() {
 		});
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
+	});
+	
+	$('#spaceLinkRotation').change(function() {
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 });
 </script>
