@@ -60,6 +60,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
+		$("#arrow").remove();
 		$("#createSpaceLinkAlert").hide();
 	});
 	
@@ -70,6 +71,7 @@ $( document ).ready(function() {
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["type"] = $("#type").val();
+		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
