@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,8 +50,8 @@ public class AddSpaceController {
 		return "redirect:/staff/space/list";
 	}
 	
-	@RequestMapping(value = "/staff/space/update", method = RequestMethod.POST)
-	public String updateSpace(Model model, @ModelAttribute ISpace space, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+	@RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
+	public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
 
 		System.out.println("Inside update Controller");
 		//ISpace space = spaceFactory.createSpace(spaceForm);
@@ -60,7 +61,8 @@ public class AddSpaceController {
 			bgImage = file.getBytes();
 			filename = file.getOriginalFilename();
 		}
-		spaceManager.storeSpace(space, bgImage, filename);
+		ISpace currentSpace = spaceManager.getSpace(id);
+        spaceManager.storeSpace(currentSpace, bgImage, filename);
 
 		return "redirect:/staff/space/list";
 	}

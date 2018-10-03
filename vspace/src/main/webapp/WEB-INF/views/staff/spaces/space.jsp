@@ -141,7 +141,7 @@ $( document ).ready(function() {
   <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
-<c:url value="/staff/space/update" var="postUrl" />
+<c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
 <div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 	<label for="description" class="col-md-2 col-form-label">Background image:</label>
