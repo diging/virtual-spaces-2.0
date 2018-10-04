@@ -54,7 +54,7 @@ public class ExhibitionConfigurationController {
       @RequestParam("spaceParam") String spaceID) throws IOException {
 
     Exhibition exhibit;
-    String success = "?success=";
+    boolean success = false;
     ISpace space = spaceManager.getSpace(spaceID);
     if (exhibitID.isEmpty()) {
       exhibit = (Exhibition) exhibitFactory.createExhibition();
@@ -64,12 +64,8 @@ public class ExhibitionConfigurationController {
     exhibit.setSpace((Space) space);
     exhibit = (Exhibition) exhibitManager.storeExhibition(exhibit);
     if(exhibit.getSpace()!=null) {
-      success+=1;
+      success=true;
     }
-    else {
-      success+=0;
-    }
-      
-    return "redirect:/staff/exhibit/config"+success;
+    return "redirect:/staff/exhibit/config?success="+success;
   }
 }

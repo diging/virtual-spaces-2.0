@@ -8,13 +8,18 @@
 <h1>Exhibition Configuration</h1>
 
 <div style="padding-bottom: 20px;">
-	Select your exhibition and default space here
 	<c:url value="/staff/exhibit/config" var="postUrl" />
-	<c:if test="${param.success eq 1}">
+	<c:if test="${param.success eq true}">
     	<div class="alert alert-success">
-  			<strong>Success!</strong>
+  			<strong>Successfully saved!</strong>
 		</div>
 	</c:if>
+	<c:if test="${param.success eq false}">
+    	<div class="alert alert-danger">
+  			<strong>Error: Could not save default space!</strong>
+		</div>
+	</c:if>
+	Select your exhibition and default space here.
 	<form:form method="POST"
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
 		<select class="form-control" name="exhibitionParam">
