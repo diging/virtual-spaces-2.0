@@ -38,9 +38,7 @@
 	href="<c:url value="/resources/bootstrap-4.1.2/navbar-top-fixed.css" />"
 	rel="stylesheet">
 </head>
-
 <body>
-
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark-blue">
 		<a class="navbar-brand" href="#">VSpace</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
