@@ -9,12 +9,13 @@ $( document ).ready(function() {
 	
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
+		
 		var posX = $("#bgImage").position().left
         var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
-			var link = $('<div class="alert alert-primary" role="alert"><p class="label-arrow-${loop.index}">Sample</p>');
+			var link = $('<div class="alert alert-primary" role="alert"><p class="label-${loop.index}">Sample</p>');
 		} else {
-			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-arrow-${loop.index}">Sample</p>');
+			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">Sample</p>'); 
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -23,15 +24,16 @@ $( document ).ready(function() {
 		link.css('fill', 'red');
 		link.css('color', 'red');
 		link.css('font-size', "10px");
-
-		 $(".label-arrow-${loop.index}").css({
-            'transform': 'rotate(0)',
-            'left': ${link.positionX} + posX,
-            'top': ${link.positionY} + posY,
-            'color': 'black'
-        }); 
-	    
+ 
 	    $("#space").append(link);
+	    
+	    $(".label-${loop.index}").css({
+        'transform': 'rotate(0deg)',
+        'left': ${link.positionX} + posX - 10,
+        'top': ${link.positionY} + posY + 16,
+        'color': 'white'
+    	});  
+     
 	}
 	</c:forEach>
 	
