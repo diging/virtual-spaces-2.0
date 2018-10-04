@@ -54,7 +54,6 @@ public class AddSpaceController {
 	public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
 
 		System.out.println("Inside update Controller");
-		//ISpace space = spaceFactory.createSpace(spaceForm);
 		byte[] bgImage = null;
 		String filename = null;
 		if (file  != null) {
