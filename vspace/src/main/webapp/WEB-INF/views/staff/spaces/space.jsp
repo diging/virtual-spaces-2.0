@@ -13,9 +13,9 @@ $( document ).ready(function() {
 		var posX = $("#bgImage").position().left
         var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
-			var link = $('<div class="alert alert-primary" role="alert"><p class="label-${loop.index}">Sample</p>');
+			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
-			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">Sample</p>'); 
+			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
