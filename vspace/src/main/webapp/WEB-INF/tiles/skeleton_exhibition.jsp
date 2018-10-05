@@ -56,8 +56,8 @@
          	</form>
           </sec:authorize>
           <sec:authorize access="isAnonymous()">
-            <a href="<%=request.getContextPath()+"/login" %>"><i class="fas fa-sign-in-alt"></i></a>
-		      </sec:authorize>
+         	<a href="<%=request.getContextPath()+"/login" %>"><i class="fas fa-sign-in-alt"></i></a>
+	  </sec:authorize>
         </div>
       </div>
     </nav>
