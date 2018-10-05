@@ -134,9 +134,7 @@ $( document ).ready(function() {
         </c:forEach>
   </select>
   <HR>
-  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> 
-  
-  <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
+  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
