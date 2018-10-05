@@ -56,14 +56,14 @@
          	</form>
           </sec:authorize>
           <sec:authorize access="isAnonymous()">
-		<form name='f' class="form-inline pull-right" action="<c:url value="/login/authenticate" />" method="POST">
-			Login:
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-	  		<input placeholder="Username" class="form-control input-sm" type="text" id="username" name="username"/>        
-			<input placeholder="Password" class="form-control input-sm" type="password" id="password" name="password"/>    
-			<button type="submit" class="btn btn-link"><i class="fas fa-sign-in-alt"></i></button>
-		</form>
-	    </sec:authorize>
+			<form name='f' class="form-inline pull-right" action="<c:url value="/login/authenticate" />" method="POST">
+				Login:
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+	  			<input placeholder="Username" class="form-control input-sm" type="text" id="username" name="username"/>        
+				<input placeholder="Password" class="form-control input-sm" type="password" id="password" name="password"/>    
+				<button type="submit" class="btn btn-link"><i class="fas fa-sign-in-alt"></i></button>
+			</form>
+	    	</sec:authorize>
         </div>
       </div>
     </nav>
