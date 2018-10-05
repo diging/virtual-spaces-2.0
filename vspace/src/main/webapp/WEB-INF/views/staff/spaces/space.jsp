@@ -97,13 +97,11 @@ $( document ).ready(function() {
 		
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
-	/* $("#changeBgImgBtn").click(function(file) {
-		 alert("hi");
-	     $.post("<c:url value="/staff/space/add?${_csrf.parameterName}=${_csrf.token}" />", file, function(data) {
-		// TODO: show success/error message
-		console.log("data is", data);
-		}); 
-	});  */
+	$("#changeBgImgBtn").click(function() {
+		 if ($("#file").val() === "") {
+			 alert("Please Select an Image");	 
+		 }    
+	});  
 });
 </script>
 
@@ -143,20 +141,19 @@ $( document ).ready(function() {
 
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
-<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-	<label for="description" class="col-md-2 col-form-label">Background image:</label>
-	<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />	
-	<input type="hidden" id="space" name="space" value=space>
-    <button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-sm">Choose Image</button> </p>
-    <p class="mb-0 text-right"><button id="cancelBgImgBtn" type="button" class="btn btn-light btn-xs">Cancel</button>
-</div>
-</form:form>
 
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 140px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<h6 class="alert-heading"><small>Change Background Image: </small></h6>
+		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" /><br>
+	    <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Choose Image</button> &nbsp
+		<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+	</div>
+	
+</form:form>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp 
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
-
 </nav>
 
 <p></p>
