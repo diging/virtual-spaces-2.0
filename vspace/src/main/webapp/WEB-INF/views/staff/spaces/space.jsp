@@ -79,6 +79,10 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
 	});
+	
+	$('#spaceLinkRotation').change(function() {
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	});
 });
 </script>
 
