@@ -22,9 +22,12 @@ public class ExhibitionManagerTest {
   }
   
   @Test
-  public void testStoreExhibitionForNull() {
+  public void testStoreExhibitionForSuccess() {
     Exhibition exhibition = new Exhibition();
-    when(exhibitRepo.save(exhibition)).thenThrow(new NullPointerException());  
+    Space space = mock(Space.class);
+    exhibition.setSpace(space);
+    assertNotNull(exhibition);
+    when(exhibitRepo.save(exhibition)).thenReturn(exhibition);   
   }
   
   @Test
@@ -34,13 +37,11 @@ public class ExhibitionManagerTest {
     exhibition.setSpace(space);
     when(exhibitRepo.save(exhibition)).thenThrow(new NullPointerException());  
   }
+  
   @Test
-  public void testStoreExhibitionForSuccess() {
+  public void testStoreExhibitionForNull() {
     Exhibition exhibition = new Exhibition();
-    Space space = mock(Space.class);
-    exhibition.setSpace(space);
-    assertNotNull(exhibition);
-    when(exhibitRepo.save(exhibition)).thenReturn(exhibition);   
+    when(exhibitRepo.save(exhibition)).thenThrow(new NullPointerException());  
   }
   
   @Test
@@ -56,7 +57,6 @@ public class ExhibitionManagerTest {
   
   @Test
   public void testGetExhibitionByIdAbsent() {
-    String id = null;
-    when(exhibitRepo.findById(id)).thenReturn(null);
+    when(exhibitRepo.findById(null)).thenReturn(null);
   }
 }
