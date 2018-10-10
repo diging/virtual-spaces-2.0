@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import static org.junit.Assert.assertNotNull;
@@ -15,6 +16,9 @@ public class ExhibitionManagerTest {
 
   @Mock
   private ExhibitionRepository exhibitRepo;
+  
+  @Mock
+  private ExhibitionManager exhibitManager;
   
   @Before
   public void init() {
@@ -48,11 +52,11 @@ public class ExhibitionManagerTest {
   public void testGetExhibitionByIdPresent() {
     Exhibition exhibition = new Exhibition();
     Space space = mock(Space.class);
+    Optional<Exhibition> foundExhibition;
     exhibition.setSpace(space);
-    assertNotNull(exhibition);
-    exhibition = exhibitRepo.save(exhibition);
-    Optional<Exhibition> foundExhibition = exhibitRepo.findById(exhibition.getId());
-    when(exhibitRepo.findById(foundExhibition.get().getId())).thenReturn(foundExhibition);
+    exhibitManager.storeExhibition(exhibition);
+    foundExhibition = exhibitRepo.findById(exhibition.getId());
+    when(exhibitRepo.findById(exhibition.getId())).thenReturn(foundExhibition);
   }
   
   @Test
