@@ -9,6 +9,7 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
+import java.util.Optional;
 
 public class ExhibitionManagerTest {
 
@@ -19,16 +20,43 @@ public class ExhibitionManagerTest {
   public void init() {
     MockitoAnnotations.initMocks(this);
   }
+  
   @Test
-  public void storeExhibition() {
-    Exhibition exhibit = new Exhibition();
-    assertNotNull(exhibit);
-    Space space = mock(Space.class);
-    exhibit.setSpace(space);
-    when(exhibitRepo.save(exhibit)).thenReturn(exhibit);
-        
+  public void testStoreExhibitionForNull() {
+    Exhibition exhibition = new Exhibition();
+    when(exhibitRepo.save(exhibition)).thenThrow(new NullPointerException());  
   }
-  public void getExhibitionById() {
-    
+  
+  @Test
+  public void testStoreExhibitionForNullSpace() {
+    Exhibition exhibition = new Exhibition();
+    Space space = mock(Space.class);
+    exhibition.setSpace(space);
+    when(exhibitRepo.save(exhibition)).thenThrow(new NullPointerException());  
+  }
+  @Test
+  public void testStoreExhibitionForSuccess() {
+    Exhibition exhibition = new Exhibition();
+    Space space = mock(Space.class);
+    exhibition.setSpace(space);
+    assertNotNull(exhibition);
+    when(exhibitRepo.save(exhibition)).thenReturn(exhibition);   
+  }
+  
+  @Test
+  public void testGetExhibitionByIdPresent() {
+    Exhibition exhibition = new Exhibition();
+    Space space = mock(Space.class);
+    exhibition.setSpace(space);
+    assertNotNull(exhibition);
+    exhibition = exhibitRepo.save(exhibition);
+    Optional<Exhibition> foundExhibition = exhibitRepo.findById(exhibition.getId());
+    when(exhibitRepo.findById(foundExhibition.get().getId())).thenReturn(foundExhibition);
+  }
+  
+  @Test
+  public void testGetExhibitionByIdAbsent() {
+    String id = null;
+    when(exhibitRepo.findById(id)).thenReturn(null);
   }
 }
