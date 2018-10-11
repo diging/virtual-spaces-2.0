@@ -26,7 +26,7 @@ This virtual exhibition contains the following spaces.
 <div style="padding-bottom: 20px;">
 This virtual exhibition contains the following modules.
 </div>
-<<ul class="list-group list-group-flush">
+<ul class="list-group list-group-flush">
 <c:forEach items="${recentModules}" var="module">
 	<li class="list-group-item">
 		<a href="<c:url value="/staff/space/${module.id}" />">
