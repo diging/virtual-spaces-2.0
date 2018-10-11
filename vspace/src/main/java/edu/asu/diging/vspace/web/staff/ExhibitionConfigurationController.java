@@ -12,7 +12,6 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 
@@ -43,7 +42,6 @@ public class ExhibitionConfigurationController {
 
   /**
    * exhibitID is used when default space of existing exhibition is updated.
-   * 
    * @param exhibitID
    * @param spaceID
    * @return
@@ -53,19 +51,17 @@ public class ExhibitionConfigurationController {
       @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
       @RequestParam("spaceParam") String spaceID) throws IOException {
 
-    Exhibition exhibit;
-    boolean success = false;
-    ISpace space = spaceManager.getSpace(spaceID);
-    if (exhibitID.isEmpty()) {
-      exhibit = (Exhibition) exhibitFactory.createExhibition();
+    Exhibition exhibition;
+    boolean success;
+    ISpace startSpace = spaceManager.getSpace(spaceID);
+    if (exhibitID==null || exhibitID.isEmpty()) {
+      exhibition = (Exhibition) exhibitFactory.createExhibition();
     } else {
-      exhibit = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
-    }
-    exhibit.setSpace((Space) space);
-    exhibit = (Exhibition) exhibitManager.storeExhibition(exhibit);
-    if(exhibit.getSpace()!=null) {
-      success=true;
-    }
+      exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
+    }  
+    exhibition.setSpace(startSpace);
+    exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+    success=true;
     return "redirect:/staff/exhibit/config?success="+success;
   }
 }

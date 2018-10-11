@@ -24,13 +24,8 @@ public class ExhibitionManager implements IExhibitionManager {
    */
   @Override
   public IExhibition storeExhibition(Exhibition exhibit) {
-    Exhibition savedExhibition = new Exhibition();
-    try {
-      savedExhibition = exhibitRepo.save(exhibit);
-    }
-    catch(NullPointerException e) {
-      e.printStackTrace();
-    }
+    Exhibition savedExhibition;
+    savedExhibition = exhibitRepo.save(exhibit);
     return savedExhibition;
   }
 

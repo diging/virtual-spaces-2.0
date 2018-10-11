@@ -7,15 +7,12 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ISpace;
 
 /**
+ * Represents an exhibition that can have a default start space.
+ * @see edu.asu.diging.vspace.core.model.IExhibition
  * @author Namratha
- *
- */
-/**
- * Represents an exhibition that can have a default space.
- * 
- * @see edu.asu.diging.vspace.core.model.impl.Exhibition
  */
 @Entity
 public class Exhibition extends VSpaceElement implements IExhibition {
@@ -27,8 +24,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
   private String id;
 
-  @OneToOne(targetEntity = Space.class)
-  private Space space;
+  @OneToOne(targetEntity = ISpace.class)
+  private ISpace startSpace;
 
   /*
    * (non-Javadoc)
@@ -43,7 +40,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
   /*
    * (non-Javadoc)
    * 
-   * @see cIVSpaceElement#setId(java.lang.String)
+   * @see edu.asu.diging.vspace.core.model.IVSpaceElement#setId(java.lang.String)
    */
   @Override
   public void setId(String id) {
@@ -56,19 +53,19 @@ public class Exhibition extends VSpaceElement implements IExhibition {
    * @see edu.asu.diging.vspace.core.model.IExhibition#getSpace()
    */
   @Override
-  public Space getSpace() {
-    return this.space;
+  public ISpace getSpace() {
+    return this.startSpace;
   }
 
   /*
    * (non-Javadoc)
    * 
    * @see edu.asu.diging.vspace.core.model.IExhibition#setSpace(edu.asu.diging.vspace.
-   * core.model.impl.Space)
+   * core.model.ISpace)
    */
   @Override
-  public void setSpace(Space space) {
-    this.space = space;
+  public void setSpace(ISpace space) {
+    this.startSpace = space;
   }
 
 }

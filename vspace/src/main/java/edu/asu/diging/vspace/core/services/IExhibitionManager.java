@@ -4,9 +4,8 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 
 /**
- * 
- * @see edu.asu.diging.vspace.core.services.IExhibitionManager
- *
+ * IExhibitionManager allows to store and manage Exhibition.
+ * @see edu.asu.diging.vspace.core.model.IExhibition
  */
 public interface IExhibitionManager {
 

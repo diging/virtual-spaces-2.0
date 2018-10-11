@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.model;
 
-import edu.asu.diging.vspace.core.model.impl.Space;
-
 public interface IExhibition extends IVSpaceElement {
 
 	/*
@@ -9,7 +7,7 @@ public interface IExhibition extends IVSpaceElement {
 	 * 
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpace()
 	 */
-	Space getSpace();
+	ISpace getSpace();
 
 	/*
 	 * (non-Javadoc)
@@ -18,5 +16,5 @@ public interface IExhibition extends IVSpaceElement {
 	 * edu.asu.diging.vspace.core.model.impl.ISpacee#setSpace(edu.asu.diging.vspace.
 	 * core.model.impl.Space)
 	 */
-	void setSpace(Space space);
+	void setSpace(ISpace space);
 }
