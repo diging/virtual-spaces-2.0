@@ -41,11 +41,11 @@
 	<!-- Staff -->
 	<!-- Dashboard -->
 	<definition name="dashboard.base.def" extends="base.definition.bt4">	
-		<put-attribute name="currentPage" value="dashboard" />
+		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/dashboard/menu/dashboard_menu.jsp" />
 	</definition>
 	
-	<definition name="staff/dashboard/list" extends="dashboard.base.def">
+	<definition name="staff/dashboard" extends="dashboard.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/dashboard/dashboardlist.jsp" />	
 	</definition>
 	
