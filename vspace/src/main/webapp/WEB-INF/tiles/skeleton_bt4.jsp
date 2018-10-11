@@ -47,7 +47,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link ${currentPage == "home" ? "active" : ""}" href="#">
+                <a class="nav-link ${currentPage == "home" ? "active" : ""}" href="<c:url value="/staff/dashboard/list" />">
                   <span data-feather="home"></span>
                   Dashboard <span class="sr-only">(current)</span>
                 </a>
