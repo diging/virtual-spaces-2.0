@@ -9,6 +9,5 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 @Repository
 @JaversSpringDataAuditable
 public interface SpaceRepository extends PagingAndSortingRepository<Space, String> {
-
   List<Space> findTop5ByOrderByCreationDateDesc();
 }
