@@ -24,7 +24,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
   private String id;
 
-  @OneToOne(targetEntity = ISpace.class)
+  @OneToOne(targetEntity = Space.class)
   private ISpace startSpace;
 
   /*

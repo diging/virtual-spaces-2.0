@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
@@ -47,12 +49,11 @@ public class ExhibitionConfigurationController {
    * @return
    */
   @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
-  public String createOrUpdateExhibition(
+  public RedirectView createOrUpdateExhibition(
       @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-      @RequestParam("spaceParam") String spaceID) throws IOException {
+      @RequestParam("spaceParam") String spaceID, RedirectAttributes attributes) throws IOException {
 
     Exhibition exhibition;
-    boolean success;
     ISpace startSpace = spaceManager.getSpace(spaceID);
     if (exhibitID==null || exhibitID.isEmpty()) {
       exhibition = (Exhibition) exhibitFactory.createExhibition();
@@ -61,7 +62,7 @@ public class ExhibitionConfigurationController {
     }  
     exhibition.setSpace(startSpace);
     exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-    success=true;
-    return "redirect:/staff/exhibit/config?success="+success;
+    attributes.addAttribute("success", "true");
+    return new RedirectView("/vspace/staff/exhibit/config");
   }
 }

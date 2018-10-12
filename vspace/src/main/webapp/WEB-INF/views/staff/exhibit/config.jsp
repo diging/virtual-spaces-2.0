@@ -19,15 +19,16 @@
   			<strong>Error: Could not save default space!</strong>
 		</div>
 	</c:if>
-	Select your exhibition and default space here.
 	<form:form method="POST"
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+		Select the exhibition you would like to configure:
 		<select class="form-control" name="exhibitionParam">
 			<option id="New" value="">New Exhibition</option>
 			<c:forEach items="${exhibitionsList}" var="exhibition">
 				<option id=${exhibition.id} value=${exhibition.id}>${exhibition.id}</option>
 			</c:forEach>
 		</select>
+		Select the start space of the exhibition:
 		<select class="form-control" name="spaceParam">
 			<c:forEach items="${spacesList}" var="space">
 				<option id=${space.id} value=${space.id}>${space.name}</option>
