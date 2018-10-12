@@ -2,11 +2,9 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.Choice;
-
 public interface IBranchingPoint {
 
-	List<Choice> getChoices();
+	List<IChoice> getChoices();
 	
-	void setChoices(List<Choice> choices);
+	void setChoices(List<IChoice> choices);
 }

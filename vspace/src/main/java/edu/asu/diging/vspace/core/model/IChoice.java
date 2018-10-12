@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model;
 
 public interface IChoice extends IVSpaceElement{
 	
-	ISequence getLink();
+	ISequence getSequence();
 	
-	void setLink(ISequence link);
+	void setSequence(ISequence link);
 }

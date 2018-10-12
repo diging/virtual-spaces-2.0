@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -12,11 +13,12 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 
+@Entity
 public class Sequence extends VSpaceElement implements ISequence{
 
 	@Id
 	@GeneratedValue(generator = "id-generator")
-	@GenericGenerator(name = "id-generator", 	
+	@GenericGenerator(name = "sequence-id-generator", 	
 					parameters = @Parameter(name = "prefix", value = "SEQ"), 
 					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
 			)

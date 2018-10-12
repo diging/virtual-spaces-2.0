@@ -14,7 +14,6 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ISpaceLink;
 
 @Entity
 public class Module extends VSpaceElement implements IModule {
