@@ -71,6 +71,18 @@
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <c:if test="${param.showAttribute eq true}"
+	        <c:if test="${param.success eq true}">
+	    	<div class="alert alert-${param.success}">
+	  			<strong>Successfully saved!</strong>
+			</div>
+			</c:if>
+			<c:if test="${param.success eq false}">
+		    	<div class="alert alert-danger">
+		  			<strong>Error: Could not save default space!</strong>
+				</div>
+			</c:if>
+		</c:if>
           <div class="row">
           <div class="col-sm" style="padding-top: 20px;">
           <tiles:insertAttribute name="content" />
