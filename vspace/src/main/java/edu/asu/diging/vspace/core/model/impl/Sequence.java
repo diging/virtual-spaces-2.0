@@ -36,7 +36,7 @@ public class Sequence extends VSpaceElement implements ISequence{
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#setId()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#setId(java.lang.String)
 	 */
 	@Override
 	public void setId(String id) {
@@ -52,7 +52,7 @@ public class Sequence extends VSpaceElement implements ISequence{
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#setSlides()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#setSlides(java.util.List)
 	 */
 	@Override
 	public void setSlides(List<ISlide> slides) {

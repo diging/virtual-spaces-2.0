@@ -58,7 +58,7 @@ public class Module extends VSpaceElement implements IModule {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setSlides()
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setSlides(java.util.List)
 	 */
 	@Override
 	public void setSlides(List<ISlide> slides) {
@@ -74,7 +74,7 @@ public class Module extends VSpaceElement implements IModule {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setSequences()
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setSequences(java.util.List)
 	 */
 	@Override
 	public void setSequences(List<ISequence> sequences) {
@@ -90,7 +90,7 @@ public class Module extends VSpaceElement implements IModule {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setStartSequence()
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setStartSequence(edu.asu.diging.vspace.core.model.ISequence)
 	 */
 	@Override
 	public void setStartSequence(ISequence startSequence) {

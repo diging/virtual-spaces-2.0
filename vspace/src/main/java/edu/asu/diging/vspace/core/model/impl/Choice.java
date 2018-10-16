@@ -34,7 +34,7 @@ public class Choice extends VSpaceElement implements IChoice{
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#setId()
+	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#setId(java.lang.String)
 	 */
 	@Override
 	public void setId(String id) {
@@ -50,7 +50,7 @@ public class Choice extends VSpaceElement implements IChoice{
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#setSequence()
+	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#setSequence(edu.asu.diging.vspace.core.model.ISequence)
 	 */
 	@Override
 	public void setSequence(ISequence sequence) {

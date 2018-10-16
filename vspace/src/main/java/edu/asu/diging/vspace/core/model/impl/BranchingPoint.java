@@ -28,6 +28,22 @@ public class BranchingPoint extends Slide implements IBranchingPoint{
 	private List<IChoice> choices;
 	
 	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#getId()
+	 */
+	@Override
+	public String getId() {
+		return id;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#setId(java.lang.String)
+	 */
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#getChoices()
 	 */
 	@Override
@@ -36,7 +52,7 @@ public class BranchingPoint extends Slide implements IBranchingPoint{
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#setChoices()
+	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#setChoices(java.util.List)
 	 */
 	@Override
 	public void setChoices(List<IChoice> choices) {

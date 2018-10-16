@@ -34,7 +34,7 @@ public class Slide extends VSpaceElement implements ISlide {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setId()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setId(java.lang.String)
 	 */
 	@Override
 	public void setId(String id) {
@@ -50,7 +50,7 @@ public class Slide extends VSpaceElement implements ISlide {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.vspace.core.model.IVSImage)
 	 */
 	@Override
 	public void setImage(IVSImage image) {
