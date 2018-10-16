@@ -25,21 +25,36 @@ public class Slide extends VSpaceElement implements ISlide {
 	@OneToOne(targetEntity=VSImage.class)
 	private IVSImage image;
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#getId()
+	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setId()
+	 */
 	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#getImage()
+	 */
+	@Override
 	public IVSImage getImage() {
 		return image;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage()
+	 */
+	@Override
 	public void setImage(IVSImage image) {
 		this.image = image;
 	}
+	
 }

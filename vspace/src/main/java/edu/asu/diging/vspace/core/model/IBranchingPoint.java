@@ -7,4 +7,5 @@ public interface IBranchingPoint {
 	List<IChoice> getChoices();
 	
 	void setChoices(List<IChoice> choices);
+	
 }

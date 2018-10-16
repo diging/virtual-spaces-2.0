@@ -27,24 +27,37 @@ public class Sequence extends VSpaceElement implements ISequence{
 	@OneToMany(mappedBy = "sequence", targetEntity=Slide.class)
 	private List<ISlide> slides;
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#getId()
+	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#setId()
+	 */
 	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#getSlides()
+	 */
 	@Override
 	public List<ISlide> getSlides() {
 		return slides;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISequence#setSlides()
+	 */
 	@Override
 	public void setSlides(List<ISlide> slides) {
 		this.slides = slides;
 	}
+	
 }
 

@@ -5,4 +5,5 @@ public interface IChoice extends IVSpaceElement{
 	ISequence getSequence();
 	
 	void setSequence(ISequence link);
+	
 }

@@ -27,14 +27,20 @@ public class BranchingPoint extends Slide implements IBranchingPoint{
 	@OneToMany(mappedBy = "branchingpoint", targetEntity=Choice.class)
 	private List<IChoice> choices;
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#getChoices()
+	 */
 	@Override
 	public List<IChoice> getChoices() {
 		return choices;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IBranchingPoint#setChoices()
+	 */
 	@Override
 	public void setChoices(List<IChoice> choices) {
-		this.choices = choices;
-		
+		this.choices = choices;		
 	}
+	
 }

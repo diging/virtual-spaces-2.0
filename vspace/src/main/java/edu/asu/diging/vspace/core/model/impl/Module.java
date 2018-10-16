@@ -49,31 +49,49 @@ public class Module extends VSpaceElement implements IModule {
 		this.id = id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#getSlides()
+	 */
 	@Override
 	public List<ISlide> getSlides() {
 		return slides;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setSlides()
+	 */
 	@Override
 	public void setSlides(List<ISlide> slides) {
 		this.slides = slides;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#getSequences()
+	 */
 	@Override
 	public List<ISequence> getSequences() {
 		return sequences;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setSequences()
+	 */
 	@Override
 	public void setSequences(List<ISequence> sequences) {
 		this.sequences = sequences;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#getStartSequence()
+	 */
 	@Override
 	public ISequence getStartSequence() {
 		return startSequence;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IModule#setStartSequence()
+	 */
 	@Override
 	public void setStartSequence(ISequence startSequence) {
 		this.startSequence = startSequence;

@@ -25,21 +25,33 @@ public class Choice extends VSpaceElement implements IChoice{
 	@OneToOne(targetEntity=Sequence.class)
 	private ISequence sequence;
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#getId()
+	 */
 	@Override
 	public String getId() {
 		return id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#setId()
+	 */
 	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#getSequence()
+	 */
 	@Override
 	public ISequence getSequence() {
 		return sequence;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.IChoice#setSequence()
+	 */
 	@Override
 	public void setSequence(ISequence sequence) {
 		this.sequence = sequence;
