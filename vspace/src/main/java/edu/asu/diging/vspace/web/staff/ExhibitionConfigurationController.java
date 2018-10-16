@@ -43,9 +43,10 @@ public class ExhibitionConfigurationController {
   }
 
   /**
-   * exhibitID is used when default space of existing exhibition is updated.
-   * @param exhibitID
-   * @param spaceID
+   * exhibitionParam is used when default space of existing exhibition is updated.
+   * @param exhibitionParam
+   * @param spaceParam
+   * @param attributes
    * @return
    */
   @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
@@ -55,14 +56,19 @@ public class ExhibitionConfigurationController {
 
     Exhibition exhibition;
     ISpace startSpace = spaceManager.getSpace(spaceID);
+    
     if (exhibitID==null || exhibitID.isEmpty()) {
       exhibition = (Exhibition) exhibitFactory.createExhibition();
     } else {
       exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
-    }  
+    } 
+    
     exhibition.setSpace(startSpace);
     exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-    attributes.addAttribute("success", "true");
+    attributes.addAttribute("alertType", "success");
+    attributes.addAttribute("message", "Successfully Saved!");
+    attributes.addAttribute("showAlert", "true");
     return new RedirectView("/vspace/staff/exhibit/config");
   }
+  
 }

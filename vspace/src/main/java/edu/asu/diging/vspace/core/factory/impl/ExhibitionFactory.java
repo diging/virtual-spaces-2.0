@@ -12,7 +12,7 @@ public class ExhibitionFactory implements IExhibitionFactory {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see edu.asu.diging.vspace.core.factory.IExhibitionFactory#createExhibition()
+	 * @see edu.asu.diging.vspace.core.model.impl.Exhibition
 	 */
 	@Override
 	public IExhibition createExhibition() {

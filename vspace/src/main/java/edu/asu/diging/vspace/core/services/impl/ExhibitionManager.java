@@ -23,10 +23,8 @@ public class ExhibitionManager implements IExhibitionManager {
    * asu.diging.vspace.core.model.impl.Exhibition)
    */
   @Override
-  public IExhibition storeExhibition(Exhibition exhibit) {
-    Exhibition savedExhibition;
-    savedExhibition = exhibitRepo.save(exhibit);
-    return savedExhibition;
+  public IExhibition storeExhibition(Exhibition exhibition) {
+    return exhibitRepo.save(exhibition);
   }
 
   /*
@@ -37,11 +35,7 @@ public class ExhibitionManager implements IExhibitionManager {
    */
   @Override
   public IExhibition getExhibitionById(String id) {
-
     Optional<Exhibition> exhibition = exhibitRepo.findById(id);
-    if (exhibition.isPresent()) {
-      return exhibition.get();
-    }
-    return null;
+    return exhibition.get();
   }
 }
