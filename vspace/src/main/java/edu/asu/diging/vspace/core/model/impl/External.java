@@ -12,9 +12,9 @@ public class External extends VSpaceElement implements IExternal {
 
 	@Id 
 	@GeneratedValue(generator = "id-generator")
-    @GenericGenerator(name = "external-id-generator", 
-      parameters = @Parameter(name = "prefix", value = "EXT"), 
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    	@GenericGenerator(name = "external-id-generator", 
+     	parameters = @Parameter(name = "prefix", value = "EXT"), 
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	/* (non-Javadoc)
