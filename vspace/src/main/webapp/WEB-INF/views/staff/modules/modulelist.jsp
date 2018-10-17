@@ -12,6 +12,15 @@ This virtual exhibition contains the following modules.
 
 <ul class="list-group list-group-flush">
 <c:forEach items="${vspacMmodules}" var="module">
-	<li class="list-group-item">${module.name}</li>
+	<li class="list-group-item">
+		<a href="<c:url value="/staff/module/${module.id}" />">
+		<span data-feather="grid"></span> ${module.name}
+		</a>
+		
+		(Created on <span class="date">${module.creationDate}</span> by ${module.createdBy})
+	</li>
 </c:forEach>
 </ul>
+
+
+

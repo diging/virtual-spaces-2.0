@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +23,13 @@ public class ModuleManager implements IModuleManager {
 	public IModule storeModule(IModule module) {
 		return moduleRepo.save((Module)module);
 	}
+	
+
+    public IModule getModule(String id) {
+        Optional<Module> module = moduleRepo.findById(id);
+        if (module.isPresent()) {
+            return module.get();
+        }
+        return null;
+    }
 }
