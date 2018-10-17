@@ -7,14 +7,15 @@
 //# sourceURL=click.js
 $( document ).ready(function() {
 	
-	<c:forEach items="${spaceLinks}" var="link">
+	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
+		
 		var posX = $("#bgImage").position().left
         var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
-			var link = $('<div class="alert alert-primary" role="alert">');
+			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
-			var link = $('<span data-feather="navigation-2" class="flex"></span>');
+			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -22,9 +23,17 @@ $( document ).ready(function() {
 		link.css('transform', 'rotate(${link.rotation}deg)');
 		link.css('fill', 'red');
 		link.css('color', 'red');
-		link.css('font-size', "15px");
-	    
+		link.css('font-size', "10px");
+ 
 	    $("#space").append(link);
+	    
+	    $(".label-${loop.index}").css({
+        'transform': 'rotate(0deg)',
+        'left': ${link.positionX} + posX - 10,
+        'top': ${link.positionY} + posY + 16,
+        'color': 'white'
+    	});  
+     
 	}
 	</c:forEach>
 	
@@ -71,6 +80,7 @@ $( document ).ready(function() {
 		payload["y"] = storeY;
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
+		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
 		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
@@ -100,6 +110,9 @@ $( document ).ready(function() {
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
   <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
+  
+  <label style="margin-right: 5px;"><small>Label:</small> </label>
+  <input class="form-control-xs" type="text" id="spaceLinkLabel"><br>
   
   <label style="margin-right: 5px;"><small>Type:</small> </label>
   <select id="type" class="form-control-xs">
