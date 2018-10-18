@@ -11,6 +11,9 @@ body {
 }
 
 .btn-link {
-	color: #ffcc01;	
+	color: white;
 }
 
+.href-attr {
+	color: white;
+}

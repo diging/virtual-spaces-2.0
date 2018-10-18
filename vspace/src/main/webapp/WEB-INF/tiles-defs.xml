@@ -28,6 +28,10 @@
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
 	</definition>
 	
+	<definition name="login" extends="base.definition">
+		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
+	</definition>
+	
 	<!--  Exhibition  -->
 	<definition name="space" extends="base.definition">	
 		<put-attribute name="currentPage" value="space" />

@@ -22,7 +22,11 @@
         <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path>/Users/jdamerow/Software/VirtualSpaces2.0/uploads/</uploaded.files.path>
+        <uploaded.files.path></uploaded.files.path>
+        
+        <tomcat.deploy.path></tomcat.deploy.path>
+        <tomcat.app.name>vspace</tomcat.app.name>
+        <tomcat.server.id>TomcatServer</tomcat.server.id>
     </properties>
 
     <dependencyManagement>
@@ -172,7 +176,7 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
+        
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -223,14 +227,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.3.2.Final</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.11</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -324,6 +326,16 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>${tomcat.deploy.path}</url>
+                    <server>${tomcat.server.id}</server>
+                    <path>/${tomcat.app.name}</path>
                 </configuration>
             </plugin>
         </plugins>
