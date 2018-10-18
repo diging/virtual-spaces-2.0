@@ -14,7 +14,6 @@ $( document ).ready(function() {
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
-			//alert(link.link.name);
 			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
 		}
 		link.css('position', 'absolute');
@@ -87,11 +86,8 @@ $( document ).ready(function() {
 		$("#createSpaceLinkAlert").hide();
 		setTimeout(function() {
             window.location.reload();
-            
-       },1000);
-		
+        },1000);		
 	});
-
 });
 
 </script>
