@@ -42,7 +42,7 @@
           </li>
           <sec:authorize access="hasRole('ROLE_STAFF')">
 		<li class="nav-item active">
-			<a class="nav-link href="<c:url value="/staff/space/list" />">Menu
+			<a class="nav-link" href="<c:url value="/staff/space/list" />">Menu
 				<span class="sr-only">(current)</span>
 			</a>
 		</li>
