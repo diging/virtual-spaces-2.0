@@ -151,7 +151,7 @@ $( document ).ready(function() {
 	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 140px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 		<h6 class="alert-heading"><small>Change Background Image: </small></h6>
 		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" /><br>
-	    <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Choose Image</button> &nbsp
+	        <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Choose Image</button> &nbsp
 		<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
 	</div>
 	
