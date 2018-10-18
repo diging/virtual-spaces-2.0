@@ -59,7 +59,7 @@ public class AddSpaceController {
 			filename = file.getOriginalFilename();
 		}
 		ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
-        spaceManager.storeSpace(currentSpace, bgImage, filename);
+		spaceManager.storeSpace(currentSpace, bgImage, filename);
 
 		return "redirect:/staff/space/{id}";
 	}
