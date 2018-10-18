@@ -18,4 +18,5 @@ public class ExhibitionFactory implements IExhibitionFactory {
 	public IExhibition createExhibition() {
 		return new Exhibition();
 	}
+
 }

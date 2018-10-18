@@ -4,15 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 /**
  * Represents an exhibition that can have a default start space.
+ * 
  * @see edu.asu.diging.vspace.core.model.IExhibition
  * @author Namratha
  */
@@ -31,7 +30,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
   /*
    * (non-Javadoc)
-   *  
+   * 
    * @see edu.asu.diging.vspace.core.model.IVSpaceElement#getId()
    */
   @Override

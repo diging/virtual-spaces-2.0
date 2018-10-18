@@ -76,7 +76,7 @@
 	          <div class="col-sm" style="padding-top: 20px;">
 		          <tiles:insertAttribute name="content" />
 		          <c:if test="${param.showAlert eq true}">
-			        <div class="alert alert-${param.alertType}">
+			        <div id=deleteAlert class="alert alert-${param.alertType}">
 			  			<strong>${param.message}</strong>
 					</div>
 				  </c:if>
@@ -98,6 +98,10 @@
 	            jQuery(elem).text(DateFormat.format.date(jQuery(elem).text(), longDateFormat));
 	        }
 	    });
+	    
+	    $(document).ready( function() {
+	        $('#deleteAlert').delay(2000).fadeOut();
+	      });
 	});
 	</script>
 	

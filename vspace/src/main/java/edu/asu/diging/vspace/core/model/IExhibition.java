@@ -17,4 +17,5 @@ public interface IExhibition extends IVSpaceElement {
 	 * core.model.impl.Space)
 	 */
 	void setSpace(ISpace space);
+
 }

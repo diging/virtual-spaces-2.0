@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +51,7 @@ public class ExhibitionConfigurationController {
    * @return
    */
   @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
-  public RedirectView createOrUpdateExhibition(
+  public RedirectView createOrUpdateExhibition(HttpServletRequest request,
       @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
       @RequestParam("spaceParam") String spaceID, RedirectAttributes attributes) throws IOException {
 
@@ -68,7 +69,7 @@ public class ExhibitionConfigurationController {
     attributes.addAttribute("alertType", "success");
     attributes.addAttribute("message", "Successfully Saved!");
     attributes.addAttribute("showAlert", "true");
-    return new RedirectView("/vspace/staff/exhibit/config");
+    return new RedirectView(request.getContextPath()+"/staff/exhibit/config");
   }
   
 }
