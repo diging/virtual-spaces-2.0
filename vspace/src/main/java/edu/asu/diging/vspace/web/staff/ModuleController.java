@@ -17,8 +17,7 @@ public class ModuleController {
 
 	@RequestMapping("/staff/module/{id}")
 	public String showModule(@PathVariable String id, Model model) {
-		IModule module = moduleManager.getModule(id);
-		model.addAttribute("module", module);
+		model.addAttribute("module", moduleManager.getModule(id));
 		
 		return "staff/module";
 	}
