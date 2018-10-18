@@ -28,6 +28,6 @@ public class DashboardController {
         model.addAttribute("recentSpaces", recentSpaces);
         model.addAttribute("recentModules", recentModules);
         return "staff/dashboard";
-  }
+    }
 
 }
