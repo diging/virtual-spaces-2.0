@@ -5,16 +5,16 @@
 
 <script>
 //# sourceURL=click.js
-$( document ).ready(function() {
+$( document ).ready(function() {	
 	
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
-	{
-		
+	{	
 		var posX = $("#bgImage").position().left
         var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
+			//alert(link.link.name);
 			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
 		}
 		link.css('position', 'absolute');
@@ -85,8 +85,15 @@ $( document ).ready(function() {
 		});
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
+		setTimeout(function() {
+            window.location.reload();
+            
+       },1000);
+		
 	});
+
 });
+
 </script>
 
  <h1>Space: ${space.name}</h1> 
