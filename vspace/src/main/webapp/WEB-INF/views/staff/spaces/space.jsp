@@ -40,8 +40,8 @@ $( document ).ready(function() {
 		    var icon = $('<span id="arrow" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
-		    var posX = $(this).position().left
-            var posY = $(this).position().top;
+		    var posX = $(this).position().left;
+                    var posY = $(this).position().top;
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
@@ -101,8 +101,8 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$("#changeBgImgBtn").click(function() {
-		 if ($("#file").val() === "") {
-			 alert("Please Select an Image");	 
+		if ($("#file").val() === "") {
+			alert("Please Select an Image");	 
 		 }    
 	});  
 	
