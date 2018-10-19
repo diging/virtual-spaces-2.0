@@ -11,7 +11,7 @@ $( document ).ready(function() {
 	<c:forEach items="${spaceLinks}" var="link">
 	{
 		var posX = $("#bgImage").position().left
-        var posY = $("#bgImage").position().top;
+                var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert">');
 		} else {
