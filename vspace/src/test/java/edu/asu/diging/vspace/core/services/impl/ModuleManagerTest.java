@@ -37,4 +37,5 @@ public class ModuleManagerTest {
 		IModule moduleTest = managerToTest.getModule(findModule.get().getId());
 		Assert.assertEquals(moduleTest, newModule);
 	}
+	
 }
