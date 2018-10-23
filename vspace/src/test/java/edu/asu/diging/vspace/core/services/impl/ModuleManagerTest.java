@@ -38,4 +38,11 @@ public class ModuleManagerTest {
 		Assert.assertEquals(moduleTest, newModule);
 	}
 	
+	@Test
+	public void test_getModule_fail() {
+		
+		String str1 = "newString";
+		IModule moduleTest = managerToTest.getModule(str1);
+		Assert.assertEquals(null, moduleTest);
+	}
 }

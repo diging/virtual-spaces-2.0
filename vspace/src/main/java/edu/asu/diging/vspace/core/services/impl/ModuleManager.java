@@ -27,7 +27,7 @@ public class ModuleManager implements IModuleManager {
 	@Override
     public IModule getModule(String id) {
         Optional<Module> module = moduleRepo.findById(id);
-        if (module.isPresent()) {
+        if (module != null && module.isPresent()) {
             return module.get();
         }
         return null;
