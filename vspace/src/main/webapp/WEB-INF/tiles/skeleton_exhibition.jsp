@@ -41,12 +41,12 @@
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
           <sec:authorize access="hasRole('ROLE_STAFF')">
-		<li class="nav-item active">
-			<a class="nav-link" href="<c:url value="/staff/space/list" />">Menu
+		    <li class="nav-item active">
+			  <a class="nav-link" href="<c:url value="/staff/space/list" />">Menu
 				<span class="sr-only">(current)</span>
-			</a>
-		</li>
-	  </sec:authorize>
+			  </a>
+		    </li>
+	      </sec:authorize>
         </ul>
         <div class="form-inline mt-2 mt-md-0">
           <sec:authorize access="isAuthenticated()">
