@@ -4,6 +4,6 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 
 public interface IExhibitionFactory {
 
-	IExhibition createExhibition();
+    IExhibition createExhibition();
 
 }

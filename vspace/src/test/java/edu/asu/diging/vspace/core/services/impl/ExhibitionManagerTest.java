@@ -18,35 +18,35 @@ import java.util.Optional;
 
 public class ExhibitionManagerTest {
 
-  @Mock
-  private ExhibitionRepository exhibitRepo;
-  
-  @InjectMocks
-  private ExhibitionManager exhibitManager = new ExhibitionManager();
-  
-  @Before
-  public void init() {
-    MockitoAnnotations.initMocks(this);
-  }
-  
-  @Test
-  public void test_storeExhibition_success() {
-    Exhibition exhibition = new Exhibition();
-    when(exhibitRepo.save(exhibition)).thenReturn(exhibition);  
-    IExhibition exhibitionTest = exhibitManager.storeExhibition(exhibition);
-    assertNotNull(exhibitionTest);
-    verify(exhibitRepo).save(exhibition);
-  }
-  
-  @Test
-  public void test_getExhibitionById_success() {
-    Exhibition exhibition = new Exhibition(); 
-    Optional<Exhibition> findExhibition = Optional.of(exhibition);;
-    exhibitManager.storeExhibition(exhibition);
-    when(exhibitRepo.findById(exhibition.getId())).thenReturn(findExhibition);
-    IExhibition exhibitionTest = exhibitManager.getExhibitionById(findExhibition.get().getId()); 
-    assertEquals(exhibitionTest, exhibition);
-    verify(exhibitRepo).findById(exhibition.getId());
-  }
-  
+    @Mock
+    private ExhibitionRepository exhibitRepo;
+
+    @InjectMocks
+    private ExhibitionManager exhibitManager = new ExhibitionManager();
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void test_storeExhibition_success() {
+        Exhibition exhibition = new Exhibition();
+        when(exhibitRepo.save(exhibition)).thenReturn(exhibition);
+        IExhibition exhibitionTest = exhibitManager.storeExhibition(exhibition);
+        assertNotNull(exhibitionTest);
+        verify(exhibitRepo).save(exhibition);
+    }
+
+    @Test
+    public void test_getExhibitionById_success() {
+        Exhibition exhibition = new Exhibition();
+        Optional<Exhibition> findExhibition = Optional.of(exhibition);;
+        exhibitManager.storeExhibition(exhibition);
+        when(exhibitRepo.findById(exhibition.getId())).thenReturn(findExhibition);
+        IExhibition exhibitionTest = exhibitManager.getExhibitionById(findExhibition.get().getId());
+        assertEquals(exhibitionTest, exhibition);
+        verify(exhibitRepo).findById(exhibition.getId());
+    }
+
 }

@@ -73,14 +73,14 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         
           <div class="row">
-	          <div class="col-sm" style="padding-top: 20px;">
-		          <tiles:insertAttribute name="content" />
-		          <c:if test="${param.showAlert eq true}">
-			        <div id=deleteAlert class="alert alert-${param.alertType}">
-			  			<strong>${param.message}</strong>
-					</div>
-				  </c:if>
-	          </div>
+	        <div class="col-sm" style="padding-top: 20px;">
+		      <tiles:insertAttribute name="content" />
+		      <c:if test="${param.showAlert eq true}">
+			    <div id=deleteAlert class="alert alert-${param.alertType}">
+			  	  <strong>${param.message}</strong>
+				</div>
+			  </c:if>
+	        </div>
           </div>
         </main>
       </div>
@@ -99,9 +99,7 @@
 	        }
 	    });
 	    
-	    $(document).ready( function() {
-	        $('#deleteAlert').delay(2000).fadeOut();
-	      });
+	    $('#deleteAlert').delay(2000).fadeOut();
 	});
 	</script>
 	

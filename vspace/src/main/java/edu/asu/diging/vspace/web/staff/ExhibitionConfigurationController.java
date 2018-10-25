@@ -21,55 +21,57 @@ import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 @Controller
 public class ExhibitionConfigurationController {
 
-  @Autowired
-  private SpaceRepository spaceRepo;
+    @Autowired
+    private SpaceRepository spaceRepo;
 
-  @Autowired
-  private SpaceManager spaceManager;
+    @Autowired
+    private SpaceManager spaceManager;
 
-  @Autowired
-  private ExhibitionManager exhibitManager;
+    @Autowired
+    private ExhibitionManager exhibitManager;
 
-  @Autowired
-  private ExhibitionRepository exhibitRepo;
+    @Autowired
+    private ExhibitionRepository exhibitRepo;
 
-  @Autowired
-  private ExhibitionFactory exhibitFactory;
+    @Autowired
+    private ExhibitionFactory exhibitFactory;
 
-  @RequestMapping("/staff/exhibit/config")
-  public String showExhibitions(Model model) {
-    model.addAttribute("exhibitionsList", exhibitRepo.findAll());
-    model.addAttribute("spacesList", spaceRepo.findAll());
-    return "staff/exhibit/config";
-  }
+    @RequestMapping("/staff/exhibit/config")
+    public String showExhibitions(Model model) {
+        model.addAttribute("exhibitionsList", exhibitRepo.findAll());
+        model.addAttribute("spacesList", spaceRepo.findAll());
+        return "staff/exhibit/config";
+    }
 
-  /**
-   * exhibitionParam is used when default space of existing exhibition is updated.
-   * @param exhibitionParam
-   * @param spaceParam
-   * @param attributes
-   * @return
-   */
-  @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
-  public RedirectView createOrUpdateExhibition(HttpServletRequest request,
-      @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-      @RequestParam("spaceParam") String spaceID, RedirectAttributes attributes) throws IOException {
+    /**
+     * exhibitionParam is used when default space of existing exhibition is updated.
+     * 
+     * @param exhibitionParam
+     * @param spaceParam
+     * @param attributes
+     * @return
+     */
+    @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
+    public RedirectView createOrUpdateExhibition(HttpServletRequest request,
+            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+            @RequestParam("spaceParam") String spaceID, RedirectAttributes attributes)
+            throws IOException {
 
-    Exhibition exhibition;
-    ISpace startSpace = spaceManager.getSpace(spaceID);
-    
-    if (exhibitID==null || exhibitID.isEmpty()) {
-      exhibition = (Exhibition) exhibitFactory.createExhibition();
-    } else {
-      exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
-    } 
-    
-    exhibition.setSpace(startSpace);
-    exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-    attributes.addAttribute("alertType", "success");
-    attributes.addAttribute("message", "Successfully Saved!");
-    attributes.addAttribute("showAlert", "true");
-    return new RedirectView(request.getContextPath()+"/staff/exhibit/config");
-  }
-  
+        Exhibition exhibition;
+        ISpace startSpace = spaceManager.getSpace(spaceID);
+
+        if (exhibitID == null || exhibitID.isEmpty()) {
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+        } else {
+            exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
+        }
+
+        exhibition.setSpace(startSpace);
+        exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        attributes.addAttribute("alertType", "success");
+        attributes.addAttribute("message", "Successfully Saved!");
+        attributes.addAttribute("showAlert", "true");
+        return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+
 }

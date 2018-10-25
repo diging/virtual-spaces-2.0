@@ -13,29 +13,29 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 @Service
 public class ExhibitionManager implements IExhibitionManager {
 
-  @Autowired
-  private ExhibitionRepository exhibitRepo;
+    @Autowired
+    private ExhibitionRepository exhibitRepo;
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
-   * asu.diging.vspace.core.model.impl.Exhibition)
-   */
-  @Override
-  public IExhibition storeExhibition(Exhibition exhibition) {
-    return exhibitRepo.save(exhibition);
-  }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
+     * asu.diging.vspace.core.model.impl.Exhibition)
+     */
+    @Override
+    public IExhibition storeExhibition(Exhibition exhibition) {
+        return exhibitRepo.save(exhibition);
+    }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
-   * .lang.String)
-   */
-  @Override
-  public IExhibition getExhibitionById(String id) {
-    Optional<Exhibition> exhibition = exhibitRepo.findById(id);
-    return exhibition.get();
-  }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
+     * .lang.String)
+     */
+    @Override
+    public IExhibition getExhibitionById(String id) {
+        Optional<Exhibition> exhibition = exhibitRepo.findById(id);
+        return exhibition.get();
+    }
 }
