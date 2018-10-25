@@ -5,7 +5,7 @@
 <h3>Spaces</h3>
 
 <div style="padding-bottom: 20px;">
-	This virtual exhibition contains the following spaces.
+	Recently created spaces:
 </div>
 
 <ul class="list-group list-group-flush">
@@ -23,7 +23,7 @@
 <h3>Modules</h3>
 
 <div style="padding-bottom: 20px;">
-	This virtual exhibition contains the following modules.
+	Recently created modules:
 </div>
 
 <ul class="list-group list-group-flush">
