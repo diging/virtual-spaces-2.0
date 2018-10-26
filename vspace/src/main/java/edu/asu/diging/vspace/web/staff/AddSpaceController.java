@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -52,7 +53,7 @@ public class AddSpaceController {
 
     @RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
     public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file,
-            Principal principal) throws IOException {
+            Principal principal, RedirectAttributes attributes) throws IOException {
 
         byte[] bgImage = null;
         String filename = null;
@@ -60,6 +61,8 @@ public class AddSpaceController {
             bgImage = file.getBytes();
             filename = file.getOriginalFilename();
         } else {
+            attributes.addAttribute("message", "No File Found to Update");
+            attributes.addAttribute("showAlert", "true");
             return "redirect:/staff/space/{id}";
         }
         ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);

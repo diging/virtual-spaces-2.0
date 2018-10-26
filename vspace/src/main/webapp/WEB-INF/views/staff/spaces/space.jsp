@@ -28,6 +28,11 @@ $( document ).ready(function() {
 	    $("#space").append(link);
 	}
 	</c:forEach>
+
+	<c:if test="${param.showAlert eq true}">
+	alert("hi");
+	   Error: ${param.message}
+	</c:if> 
 	
 	var storeX;
 	var storeY;
@@ -100,16 +105,16 @@ $( document ).ready(function() {
 		
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
-	$("#changeBgImgBtn").click(function() {
+	/* $("#changeBgImgBtn").click(function() {
 		if ($("#file").val() === "") {
 			alert("Please Select an Image");	 
 		 }    
-	});  
+	});   */
 	
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
-	
+
 });
 </script>
 
@@ -148,10 +153,10 @@ $( document ).ready(function() {
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
 
-	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 140px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 		<h6 class="alert-heading"><small>Change Background Image: </small></h6>
-		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" /><br>
-	        <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Choose Image</button> &nbsp
+		<input type="file" name="file" class="btn btn-primary btn-sm" rows="5" cols="500" id="file" /><br><br>
+	        <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
 		<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
 	</div>
 	
