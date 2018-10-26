@@ -57,6 +57,8 @@ public class AddSpaceController {
 		if (file  != null) {
 			bgImage = file.getBytes();
 			filename = file.getOriginalFilename();
+		} else if (file == null) {
+			return "redirect:/staff/space/{id}";
 		}
 		ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
         spaceManager.storeSpace(currentSpace, bgImage, filename);
