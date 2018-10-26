@@ -11,7 +11,7 @@ $( document ).ready(function() {
 	<c:forEach items="${spaceLinks}" var="link">
 	{
 		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
+        var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert">');
 		} else {
@@ -85,6 +85,7 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();	
 	});
+	
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
@@ -108,14 +109,18 @@ $( document ).ready(function() {
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
+	
 });
 </script>
+
  <h1>Space: ${space.name}</h1> 
+ 
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
   <br>
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
 </div>
+
 <div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
   <h6 class="alert-heading"><small>Create new Space Link</small></h6>
   <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
@@ -139,8 +144,10 @@ $( document ).ready(function() {
   <HR>
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
+
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
+
 	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:350px; height: 140px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 		<h6 class="alert-heading"><small>Change Background Image: </small></h6>
 		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" /><br>
@@ -149,11 +156,14 @@ $( document ).ready(function() {
 	</div>
 	
 </form:form>
+
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp 
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
 </nav>
+
 <p></p>
+
 <c:if test="${not empty space.image}">
 <div id="space">
 <img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
