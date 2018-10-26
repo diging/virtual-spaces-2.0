@@ -61,7 +61,7 @@ public class AddSpaceController {
 			return "redirect:/staff/space/{id}";
 		}
 		ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
-        spaceManager.storeSpace(currentSpace, bgImage, filename);
+		spaceManager.storeSpace(currentSpace, bgImage, filename);
 
 		return "redirect:/staff/space/{id}";
 	}
