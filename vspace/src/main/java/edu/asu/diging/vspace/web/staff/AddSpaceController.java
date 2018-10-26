@@ -21,48 +21,50 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 @Controller
 public class AddSpaceController {
 
-	@Autowired
-	private ISpaceManager spaceManager;
+    @Autowired
+    private ISpaceManager spaceManager;
 
-	@Autowired
-	private ISpaceFactory spaceFactory;
+    @Autowired
+    private ISpaceFactory spaceFactory;
 
-	@RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
-	public String showAddSpace(Model model) {
-		model.addAttribute("space", new SpaceForm());
+    @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
+    public String showAddSpace(Model model) {
+        model.addAttribute("space", new SpaceForm());
 
-		return "staff/space/add";
-	}
+        return "staff/space/add";
+    }
 
-	@RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
-	public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+    @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
+    public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
+            Principal principal) throws IOException {
 
-		ISpace space = spaceFactory.createSpace(spaceForm);
-		byte[] bgImage = null;
-		String filename = null;
-		if (file  != null) {
-			bgImage = file.getBytes();
-			filename = file.getOriginalFilename();
-		}
-		spaceManager.storeSpace(space, bgImage, filename);
+        ISpace space = spaceFactory.createSpace(spaceForm);
+        byte[] bgImage = null;
+        String filename = null;
+        if (file != null) {
+            bgImage = file.getBytes();
+            filename = file.getOriginalFilename();
+        }
+        spaceManager.storeSpace(space, bgImage, filename);
 
-		return "redirect:/staff/space/list";
-	}
-	
-	@RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
-	public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+        return "redirect:/staff/space/list";
+    }
 
-		byte[] bgImage = null;
-		String filename = null;
-		if (file  != null) {
-			bgImage = file.getBytes();
-			filename = file.getOriginalFilename();
-		} else {
-			return "redirect:/staff/space/{id}";
-		}
-		ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
-		spaceManager.storeSpace(currentSpace, bgImage, filename);
+    @RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
+    public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file,
+            Principal principal) throws IOException {
 
-		return "redirect:/staff/space/{id}";
-	}
+        byte[] bgImage = null;
+        String filename = null;
+        if (file != null) {
+            bgImage = file.getBytes();
+            filename = file.getOriginalFilename();
+        } else {
+            return "redirect:/staff/space/{id}";
+        }
+        ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
+        spaceManager.storeSpace(currentSpace, bgImage, filename);
+
+        return "redirect:/staff/space/{id}";
+    }
 }
