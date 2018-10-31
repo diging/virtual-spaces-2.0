@@ -1,6 +1,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
@@ -29,10 +30,10 @@ $( document ).ready(function() {
 	}
 	</c:forEach>
 
-	<c:if test="${param.showAlert eq true}">
+/* 	<c:if test="${param.showAlert eq true}">
 	alert("hi");
 	   Error: ${param.message}
-	</c:if> 
+	</c:if>  */
 	
 	var storeX;
 	var storeY;
@@ -124,7 +125,19 @@ $( document ).ready(function() {
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
   <br>
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
+  
+<%--   <c:if test="${param.showAlert eq true}">
+  <p><strong> id : ${param.message}</strong></p>
+  </c:if>  --%>
+
+	      <c:if test="${param.showAlert eq true}">
+			    <div id=deleteAlert class="alert alert-${param.alertType}">
+			  	 <p> <strong>MESSAGE : ${param.message}</strong></p>
+				</div>
+		  </c:if> 
+  
 </div>
+
 
 <div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
   <h6 class="alert-heading"><small>Create new Space Link</small></h6>
@@ -150,6 +163,9 @@ $( document ).ready(function() {
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
+
+
+	        
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
 
