@@ -13,21 +13,25 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 @Service
 public class ModuleManager implements IModuleManager {
 
-	@Autowired
-	private ModuleRepository moduleRepo;
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.services.impl.IModuleManager#storeModule(edu.asu.diging.vspace.core.model.IModule, java.lang.String)
-	 */
-	@Override
-	public IModule storeModule(IModule module) {
-		return moduleRepo.save((Module)module);
-	}
-	
-	@Override
+    @Autowired
+    private ModuleRepository moduleRepo;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IModuleManager#storeModule(edu.asu.
+     * diging.vspace.core.model.IModule, java.lang.String)
+     */
+    @Override
+    public IModule storeModule(IModule module) {
+        return moduleRepo.save((Module) module);
+    }
+
+    @Override
     public IModule getModule(String id) {
         Optional<Module> module = moduleRepo.findById(id);
-        if (module != null && module.isPresent()) {
+        if (module.isPresent()) {
             return module.get();
         }
         return null;

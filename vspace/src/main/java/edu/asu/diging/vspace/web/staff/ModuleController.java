@@ -12,13 +12,13 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 @Controller
 public class ModuleController {
 
-	@Autowired
-	private IModuleManager moduleManager;
+    @Autowired
+    private IModuleManager moduleManager;
 
-	@RequestMapping("/staff/module/{id}")
-	public String showModule(@PathVariable String id, Model model) {
-		model.addAttribute("module", moduleManager.getModule(id));
-		
-		return "staff/module";
-	}
+    @RequestMapping("/staff/module/{id}")
+    public String showModule(@PathVariable String id, Model model) {
+        model.addAttribute("module", moduleManager.getModule(id));
+
+        return "staff/module";
+    }
 }
