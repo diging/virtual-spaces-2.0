@@ -2,12 +2,12 @@ package edu.asu.diging.vspace.core.model;
 
 public interface IModuleLink extends IVSpaceElement {
 
-	ISpace getSpace();
+    ISpace getSpace();
 
-	void setSpace(ISpace space);
+    void setSpace(ISpace space);
 
-	IModule getModule();
+    IModule getModule();
 
-	void setModule(IModule module);
+    void setModule(IModule module);
 
 }

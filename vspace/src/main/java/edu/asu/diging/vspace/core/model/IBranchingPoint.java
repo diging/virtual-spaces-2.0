@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface IBranchingPoint {
 
-	List<IChoice> getChoices();
-	
-	void setChoices(List<IChoice> choices);
-	
+    List<IChoice> getChoices();
+
+    void setChoices(List<IChoice> choices);
+
 }

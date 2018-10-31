@@ -1,10 +1,9 @@
 package edu.asu.diging.vspace.core.model;
 
+public interface ISlide extends IVSpaceElement {
 
-public interface ISlide extends IVSpaceElement{
-	
-	void setImage(IVSImage image);
+    void setImage(IVSImage image);
 
-	IVSImage getImage();
-	
+    IVSImage getImage();
+
 }

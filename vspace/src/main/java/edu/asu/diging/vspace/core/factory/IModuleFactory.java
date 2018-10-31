@@ -5,6 +5,6 @@ import edu.asu.diging.vspace.web.staff.forms.ModuleForm;
 
 public interface IModuleFactory {
 
-	IModule createModule(ModuleForm form);
+    IModule createModule(ModuleForm form);
 
 }
