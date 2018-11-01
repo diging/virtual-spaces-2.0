@@ -55,7 +55,7 @@ public class AddSpaceController {
     }
 
     @RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
-    public RedirectView updateSpace(HttpServletRequest request, @PathVariable("id") String id, Model model,
+    public String updateSpace(HttpServletRequest request, @PathVariable("id") String id, Model model,
             @RequestParam("file") MultipartFile file, Principal principal, RedirectAttributes attributes)
             throws IOException {
 
@@ -64,8 +64,8 @@ public class AddSpaceController {
         if (file.isEmpty() || file.equals(null)) {
             attributes.addAttribute("alertType", "warning");
             attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "File Not Found");
-            return new RedirectView(request.getContextPath() + "/staff/space/{id}");
+            attributes.addAttribute("message", "Please Select a Background Image");
+            return "redirect:/staff/space/{id}";
 
         } else if (file != null) {
             bgImage = file.getBytes();
@@ -74,6 +74,6 @@ public class AddSpaceController {
         ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
         spaceManager.storeSpace(currentSpace, bgImage, filename);
 
-        return new RedirectView(request.getContextPath() + "/staff/space/{id}");
+        return "redirect:/staff/space/{id}";
     }
 }

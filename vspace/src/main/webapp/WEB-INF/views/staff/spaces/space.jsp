@@ -29,11 +29,6 @@ $( document ).ready(function() {
 	    $("#space").append(link);
 	}
 	</c:forEach>
-
-/* 	<c:if test="${param.showAlert eq true}">
-	alert("hi");
-	   Error: ${param.message}
-	</c:if>  */
 	
 	var storeX;
 	var storeY;
@@ -106,16 +101,10 @@ $( document ).ready(function() {
 		
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
-	$("#changeBgImgBtn").click(function() {
-		if ($("#file").val() === "") {
-			alert("Please Select an Image");	 
-		 }    
-	});  
-	
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
-		$('#errorMsg').delay(3000).fadeOut();
+		$('#errorMsg').delay(2000).fadeOut();
 });
 </script>
 
@@ -131,7 +120,6 @@ $( document ).ready(function() {
 	</div>
   </c:if>     
 </div>
-
 
 <div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
   <h6 class="alert-heading"><small>Create new Space Link</small></h6>
@@ -156,9 +144,6 @@ $( document ).ready(function() {
   <HR>
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
-
-
-
 	        
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="space" enctype="multipart/form-data">
