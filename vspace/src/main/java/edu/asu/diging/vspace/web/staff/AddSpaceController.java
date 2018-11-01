@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -52,22 +55,25 @@ public class AddSpaceController {
     }
 
     @RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
-    public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file,
-            Principal principal, RedirectAttributes attributes) throws IOException {
+    public RedirectView updateSpace(HttpServletRequest request, @PathVariable("id") String id, Model model,
+            @RequestParam("file") MultipartFile file, Principal principal, RedirectAttributes attributes)
+            throws IOException {
 
         byte[] bgImage = null;
         String filename = null;
-        if (file != null) {
+        if (file.isEmpty() || file.equals(null)) {
+            attributes.addAttribute("alertType", "warning");
+            attributes.addAttribute("showAlert", "true");
+            attributes.addAttribute("message", "File Not Found");
+            return new RedirectView(request.getContextPath() + "/staff/space/{id}");
+
+        } else if (file != null) {
             bgImage = file.getBytes();
             filename = file.getOriginalFilename();
-        } else {
-            attributes.addAttribute("message", "No File Found to Update");
-            attributes.addAttribute("showAlert", "true");
-            return "redirect:/staff/space/{id}";
         }
         ISpace currentSpace = spaceManager.getFullyLoadedSpace(id);
         spaceManager.storeSpace(currentSpace, bgImage, filename);
 
-        return "redirect:/staff/space/{id}";
+        return new RedirectView(request.getContextPath() + "/staff/space/{id}");
     }
 }

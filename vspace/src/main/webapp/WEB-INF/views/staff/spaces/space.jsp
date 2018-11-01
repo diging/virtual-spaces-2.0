@@ -106,16 +106,16 @@ $( document ).ready(function() {
 		
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
-	/* $("#changeBgImgBtn").click(function() {
+	$("#changeBgImgBtn").click(function() {
 		if ($("#file").val() === "") {
 			alert("Please Select an Image");	 
 		 }    
-	});   */
+	});  
 	
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
-
+		$('#errorMsg').delay(3000).fadeOut();
 });
 </script>
 
@@ -124,18 +124,12 @@ $( document ).ready(function() {
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
   <br>
-  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
-  
-<%--   <c:if test="${param.showAlert eq true}">
-  <p><strong> id : ${param.message}</strong></p>
-  </c:if>  --%>
-
-	      <c:if test="${param.showAlert eq true}">
-			    <div id=deleteAlert class="alert alert-${param.alertType}">
-			  	 <p> <strong>MESSAGE : ${param.message}</strong></p>
-				</div>
-		  </c:if> 
-  
+  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}. 
+  <c:if test="${param.showAlert eq true}">
+  	<div id=errorMsg class="alert alert-${param.alertType}">
+		<h3><strong>ERROR : ${param.message}</strong></h3>
+	</div>
+  </c:if>     
 </div>
 
 
