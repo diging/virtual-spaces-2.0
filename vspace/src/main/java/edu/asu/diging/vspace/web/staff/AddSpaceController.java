@@ -55,14 +55,13 @@ public class AddSpaceController {
     }
 
     @RequestMapping(value = "/staff/space/update/{id}", method = RequestMethod.POST)
-    public String updateSpace(HttpServletRequest request, @PathVariable("id") String id, Model model,
-            @RequestParam("file") MultipartFile file, Principal principal, RedirectAttributes attributes)
-            throws IOException {
+    public String updateSpace(@PathVariable("id") String id, Model model, @RequestParam("file") MultipartFile file,
+            Principal principal, RedirectAttributes attributes) throws IOException {
 
         byte[] bgImage = null;
         String filename = null;
         if (file.isEmpty() || file.equals(null)) {
-            attributes.addAttribute("alertType", "warning");
+            attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
             attributes.addAttribute("message", "Please Select a Background Image");
             return "redirect:/staff/space/{id}";
