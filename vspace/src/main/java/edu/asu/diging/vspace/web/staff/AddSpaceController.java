@@ -63,7 +63,7 @@ public class AddSpaceController {
         if (file.isEmpty() || file.equals(null)) {
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Please Select a Background Image");
+            attributes.addAttribute("message", "Please select a background image.");
             return "redirect:/staff/space/{id}";
 
         } else if (file != null) {

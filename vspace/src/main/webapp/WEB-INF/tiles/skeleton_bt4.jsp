@@ -75,7 +75,7 @@
           <div class="col-sm" style="padding-top: 20px;">
             <c:if test="${param.showAlert eq true}">
           	  <div id="errorMsg" class="alert alert-${param.alertType}">
-			    ERROR : ${param.message}
+			  	${param.message}
 			  </div>
  		    </c:if>     
           <tiles:insertAttribute name="content" />
