@@ -73,6 +73,11 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <div class="row">
           <div class="col-sm" style="padding-top: 20px;">
+            <c:if test="${param.showAlert eq true}">
+          	  <div id="errorMsg" class="alert alert-${param.alertType}">
+			  	${param.message}
+			  </div>
+ 		    </c:if>     
           <tiles:insertAttribute name="content" />
           </div>
           </div>
