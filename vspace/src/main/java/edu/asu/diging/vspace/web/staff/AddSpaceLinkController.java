@@ -31,6 +31,7 @@ public class AddSpaceLinkController {
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("type") String displayType)
             throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
 
+        System.out.println("hi----------------");
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
