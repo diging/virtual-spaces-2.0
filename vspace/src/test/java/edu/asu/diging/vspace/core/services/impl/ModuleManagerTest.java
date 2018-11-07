@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.junit.Assert.assertNull;
+
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -17,7 +19,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 public class ModuleManagerTest {
 
     @Mock
-    private ModuleRepository moduleRepo;
+    private ModuleRepository mockModuleRepo;
 
     @InjectMocks
     private ModuleManager managerToTest = new ModuleManager();
@@ -28,14 +30,26 @@ public class ModuleManagerTest {
     }
 
     @Test
-    public void test_getModule_success() {
+    public void test_getModule_idExists() {
 
         Module newModule = new Module();
-        Optional<Module> findModule = Optional.of(newModule);
-        managerToTest.storeModule(newModule);
-        Mockito.when(moduleRepo.findById(newModule.getId())).thenReturn(findModule);
-        IModule moduleTest = managerToTest.getModule(findModule.get().getId());
-        Assert.assertEquals(moduleTest, newModule);
+        Optional<Module> mockModule = Optional.of(newModule);
+        Mockito.when(mockModuleRepo.existsById("mockString")).thenReturn(true);
+        Mockito.when(mockModuleRepo.findById("mockString")).thenReturn(mockModule);
+
+        IModule iModuleActual = managerToTest.getModule("mockString");
+        Assert.assertEquals(mockModule.get(), iModuleActual);
+    }
+
+    @Test
+    public void test_getModule_idNotExists() {
+        Module newModule = new Module();
+        Optional<Module> mockModule = Optional.of(newModule);
+        Mockito.when(mockModuleRepo.existsById("mockString")).thenReturn(false);
+        Mockito.when(mockModuleRepo.findById("mockString")).thenReturn(mockModule);
+
+        IModule iModuleActual = managerToTest.getModule("mockString");
+        assertNull(iModuleActual);
     }
 
 }
