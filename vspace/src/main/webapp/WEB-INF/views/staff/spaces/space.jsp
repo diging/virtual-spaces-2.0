@@ -79,45 +79,27 @@ $( document ).ready(function() {
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
-	  /*   $.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+	  /*   $.post("<c:url value="/staff/space/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		}); */ 
-		$.ajax( {
-			url: '/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}/',
+		//alert("hi");
+		//console.log(“Event Called”);
+		 $.ajax({
+			//console.log("debuggging start");
+			url: '/staff/space/${space.id}/spacelink',
 		    type: 'post',
-		    contentType: 'application/json; charset=utf-8',
-		    data: JSON.stringify( { "x": storeX, "y": storeY , "rotation": $("#spaceLinkRotation").val(), "linkedSpace": $("#linkedSpace").val(), "spaceLinkLabel": $("#spaceLinkLabel").val(), "type": $("#type").val() } ),
-	           success:function(data) {
-	               <c:forEach items="${spaceLinks}" var="link" varStatus="loop">
-	               {   
-	            	   //alert("3");
-	                   var posX = $("#bgImage").position().left;
-	                   var posY = $("#bgImage").position().top;
-	                   if ("${link.type}" == "ALERT") {
-	                       var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
-	                   } else {
-	                       var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>');
-	                   }
-	                   link.css('position', 'absolute');
-	                   link.css('left', ${link.positionX} + posX);
-	                   link.css('top', ${link.positionY} + posY);
-	                   link.css('transform', 'rotate(${link.rotation}deg)');
-	                   link.css('fill', 'red');
-	                   link.css('color', 'red');
-	                   link.css('font-size', "10px");
-
-	                   $("#space").append(link);
-	                   
-	                   $(".label-${loop.index}").css({
-	                   'transform': 'rotate(0deg)',
-	                   'left': ${link.positionX} + posX - 10,
-	                   'top': ${link.positionY} + posY + 16,
-	                   'color': 'white'
-	                   });
-
-	               }
-	               </c:forEach>
-	           }
+		    data: 'this is a message',
+		    contentType: "text/plain",
+		    success: function(result) { //we got the response
+	             alert('Successfully called');
+		    alert(result);
+	             console.log(result); 
+	         },
+	         error: function(result, exception) {
+	             alert('Exception:', exception);
+	
+	             console.log("heloooooooo"); 
+	         }
 	        });	
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
