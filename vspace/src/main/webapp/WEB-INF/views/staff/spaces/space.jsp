@@ -98,9 +98,9 @@ $( document ).ready(function() {
 		}); 
 	    
 	    if (payload["type"] == "ALERT") {
-			var icon = $('<div id="arrow1" class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
+			var icon = $('<div class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span id="arrow1" data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
+			var icon = $('<span data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
 		}	    
 	    icon.css('position', 'absolute');
 	    icon.css('left', storeX + posX);
@@ -125,7 +125,7 @@ $( document ).ready(function() {
 	});
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#arrow1').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
