@@ -9,7 +9,7 @@
 //# sourceURL=click.js
 $( document ).ready(function() {	
 	
-	<c:forEach items="${spaceLinks}" var="link">
+	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
@@ -37,7 +37,7 @@ $( document ).ready(function() {
     	});  
      
 	}
-	</c:forEach>
+	</c:forEach> 
 	
 	var storeX;
 	var storeY;
@@ -51,7 +51,7 @@ $( document ).ready(function() {
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left;
-                    var posY = $(this).position().top;
+		    var posY = $(this).position().top;
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
@@ -91,7 +91,6 @@ $( document ).ready(function() {
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
-
 		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 
@@ -99,16 +98,17 @@ $( document ).ready(function() {
 		}); 
 	    
 	    if (payload["type"] == "ALERT") {
-			var icon = $('<div class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
+			var icon = $('<div id="arrow1" class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
+			var icon = $('<span id="arrow1" data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
 		}	    
 	    icon.css('position', 'absolute');
 	    icon.css('left', storeX + posX);
 	    icon.css('top', storeY + posY);
 	    icon.css('fill', 'red');
 	    icon.css('color', 'red');
-	    link.css('font-size', "10px");
+	    icon.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	    icon.css('font-size', "10px");
 	    
 	    $("#space").append(icon);
 	    feather.replace();
@@ -125,7 +125,7 @@ $( document ).ready(function() {
 	});
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		$('#arrow1').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
