@@ -1,16 +1,19 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {	
 	
-	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
-	{	
+	<c:forEach items="${spaceLinks}" var="link">
+	{
 		var posX = $("#bgImage").position().left;
-        var posY = $("#bgImage").position().top;
+		var posY = $("#bgImage").position().top;
+
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
@@ -40,13 +43,15 @@ $( document ).ready(function() {
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
+		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    var icon = $('<span data-feather="navigation-2" class="flex"></span>');
+		    $("#arrow").remove();
+		    var icon = $('<span id="arrow" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
-		    var posX = $(this).position().left
-            var posY = $(this).position().top;
+		    var posX = $(this).position().left;
+                    var posY = $(this).position().top;
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
@@ -68,7 +73,12 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
+		$("#arrow").remove();
 		$("#createSpaceLinkAlert").hide();
+	});
+	
+	$("#cancelBgImgBtn").click(function() {
+		$("#changeBgImgAlert").hide();
 	});
 	
 	$("#createSpaceLinkBtn").click(function(e) {
@@ -81,7 +91,10 @@ $( document ).ready(function() {
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
-	    $.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+
+		$("#arrow").remove();
+		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+
 			// TODO: show success/error message
 		}); 
 	    
@@ -100,6 +113,7 @@ $( document ).ready(function() {
 	    $("#space").append(icon);
 	    feather.replace();
 		$("#bgImage").on("click", function(e){});
+
 		$("#createSpaceLinkAlert").hide();
 		
 		$(".label-visibility").css({
@@ -109,16 +123,35 @@ $( document ).ready(function() {
 	        'color': 'white'
 	    	});  
 	});
+	
+	$('#spaceLinkRotation').change(function() {
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	});
+		
+	$('#changeBgImgButton').click(function(file) {
+		$("#createSpaceLinkAlert").hide();
+		$("#changeBgImgAlert").show();	
+		
+	});
+			
+	$("#changeBgImgAlert").draggable();
+		
+	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
+	
+	$('#spaceLinkRotation').change(function() {
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	});
+	
 });
 
 </script>
 
  <h1>Space: ${space.name}</h1> 
-
+ 
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
   <br>
-  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
+  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
 
 <div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
@@ -147,9 +180,22 @@ $( document ).ready(function() {
   <HR>
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
+	        
+<c:url value="/staff/space/update/${space.id}" var="postUrl" />
+<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<h6><small>Change Background Image: </small></h6>
+		<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
+	        <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
+		<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+	</div>
+	
+</form:form>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-<button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button>
+<button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp 
+<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
 </nav>
 
 <p></p>
@@ -159,6 +205,3 @@ $( document ).ready(function() {
 <img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
 </div>
 </c:if>
-
-
-
