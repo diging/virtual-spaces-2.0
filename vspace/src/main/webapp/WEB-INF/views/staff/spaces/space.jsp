@@ -53,7 +53,7 @@ $( document ).ready(function() {
 		    icon.css('left', storeX + posX);
 		    icon.css('top', storeY + posY);
 		    icon.css('color', 'red');
-		    icon.css('font-size', "15px");
+		    icon.css('font-size', "10px");
 		    
 		    $("#space").append(icon);
 		    feather.replace();
@@ -86,21 +86,28 @@ $( document ).ready(function() {
 		}); 
 	    
 	    if (payload["type"] == "ALERT") {
-			var icon = $('<div class="alert alert-primary" role="alert">');
+			var icon = $('<div class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span data-feather="navigation-2" class="flex"></span>'); 
+			var icon = $('<span data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
 		}	    
 	    icon.css('position', 'absolute');
 	    icon.css('left', storeX + posX);
 	    icon.css('top', storeY + posY);
 	    icon.css('fill', 'red');
-	    //icon.css('color', 'red');
+	    icon.css('color', 'red');
+	    link.css('font-size', "10px");
 	    
 	    $("#space").append(icon);
 	    feather.replace();
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
 		
+		$(".label-visibility").css({
+	        'transform': 'rotate(0deg)',
+	        'left': payload["x"] + posX - 10,
+	        'top': payload["y"] + posY + 16,
+	        'color': 'white'
+	    	});  
 	});
 });
 
