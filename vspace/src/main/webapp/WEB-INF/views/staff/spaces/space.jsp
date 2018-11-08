@@ -73,34 +73,31 @@ $( document ).ready(function() {
 	
 	$("#createSpaceLinkBtn").click(function(e) {
 		var payload = {};
+		var posX = $("#bgImage").position().left;
+        var posY = $("#bgImage").position().top;
 		payload["x"] = storeX;
 		payload["y"] = storeY;
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
-	  /*   $.post("<c:url value="/staff/space/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+	    $.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
-		}); */ 
-		//alert("hi");
-		//console.log(“Event Called”);
-		 $.ajax({
-			//console.log("debuggging start");
-			url: '/staff/space/${space.id}/spacelink',
-		    type: 'post',
-		    data: 'this is a message',
-		    contentType: "text/plain",
-		    success: function(result) { //we got the response
-	             alert('Successfully called');
-		    alert(result);
-	             console.log(result); 
-	         },
-	         error: function(result, exception) {
-	             alert('Exception:', exception);
-	
-	             console.log("heloooooooo"); 
-	         }
-	        });	
+		}); 
+	    
+	    if (payload["type"] == "ALERT") {
+			var icon = $('<div class="alert alert-primary" role="alert">');
+		} else {
+			var icon = $('<span data-feather="navigation-2" class="flex"></span>'); 
+		}	    
+	    icon.css('position', 'absolute');
+	    icon.css('left', storeX + posX);
+	    icon.css('top', storeY + posY);
+	    icon.css('fill', 'red');
+	    //icon.css('color', 'red');
+	    
+	    $("#space").append(icon);
+	    feather.replace();
 		$("#bgImage").on("click", function(e){});
 		$("#createSpaceLinkAlert").hide();
 		

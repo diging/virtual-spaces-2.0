@@ -25,37 +25,31 @@ public class AddSpaceLinkController {
     @Autowired
     private ISpaceManager spaceManager;
 
-//    @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
-//    public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
-//            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
-//            @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("type") String displayType)
-//            throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
-//
-//        System.out.println("hi----------------");
-//        ISpace source = spaceManager.getSpace(id);
-//        if (source == null) {
-//            return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
-//        }
-//
-//        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-//        ISpaceLinkDisplay display = spaceManager.createSpaceLink("test", source, new Float(x), new Float(y),
-//                new Integer(rotation), linkedSpaceId, spaceLinkLabel, type);
-//        display.setRotation(new Integer(rotation));
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        ObjectNode linkNode = mapper.createObjectNode();
-//        linkNode.put("id", display.getLink().getId());
-//        linkNode.put("displayId", display.getId());
-//        linkNode.put("x", display.getPositionX());
-//        linkNode.put("y", display.getPositionY());
-//
-//        return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
-//    }
-
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
-    public String createSpaceLink(String data) {
+    public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
+            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
+            @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel,
+            @RequestParam("type") String displayType)
+            throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
 
-        System.out.println("hi----------------");
-        return "Working fine";
+        ISpace source = spaceManager.getSpace(id);
+        if (source == null) {
+            return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
+        }
+
+        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+        ISpaceLinkDisplay display = spaceManager.createSpaceLink("test", source, new Float(x), new Float(y),
+                new Integer(rotation), linkedSpaceId, spaceLinkLabel, type);
+        display.setRotation(new Integer(rotation));
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode linkNode = mapper.createObjectNode();
+        linkNode.put("id", display.getLink().getId());
+        linkNode.put("displayId", display.getId());
+        linkNode.put("x", display.getPositionX());
+        linkNode.put("y", display.getPositionY());
+
+        return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }
+
 }
