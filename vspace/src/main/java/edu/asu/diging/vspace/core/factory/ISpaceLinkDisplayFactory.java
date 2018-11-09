@@ -5,6 +5,6 @@ import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 
 public interface ISpaceLinkDisplayFactory {
 
-	ISpaceLinkDisplay createSpaceLinkDisplay(ISpaceLink link);
+    ISpaceLinkDisplay createSpaceLinkDisplay(ISpaceLink link);
 
 }

@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IExternal;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 
@@ -27,9 +26,9 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     @JoinColumn(name="space_id", nullable=false)
 	private ISpace space;
 	
-	@ManyToOne(targetEntity=External.class)
-    @JoinColumn(name="external_id", nullable=false)
-	private IExternal external;
+	@ManyToOne(targetEntity=ExternalLink.class)
+    @JoinColumn(name="external_link", nullable=false)
+	private String externalLink;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getId()
@@ -64,19 +63,19 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getExternal()
+	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getExternalLink()
 	 */
 	@Override
-	public IExternal getExternal() {
-		return external;
+	public String getExternalLink() {
+		return externalLink;
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#setExternal(edu.asu.diging.vspace.core.model.IExternal)
+	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#setExternalLink(java.lang.String)
 	 */
 	@Override
-	public void setExternal(IExternal external) {
-		this.external = external;
+	public void setExternalLink(String externalLink) {
+		this.externalLink = externalLink;
 	}
 
 }
