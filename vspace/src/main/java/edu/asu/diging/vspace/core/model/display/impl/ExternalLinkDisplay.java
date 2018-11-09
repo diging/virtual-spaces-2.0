@@ -64,7 +64,7 @@ public class ExternalLinkDisplay extends VSpaceElement implements IExternalLinkD
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.model.display.impl.IExternalLinkDisplay#
-     * setPositionX( float)
+     * setPositionX(float)
      */
     @Override
     public void setPositionX(float positionX) {
@@ -86,7 +86,7 @@ public class ExternalLinkDisplay extends VSpaceElement implements IExternalLinkD
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.model.display.impl.IExternalLinkDisplay#
-     * setPositionY( float)
+     * setPositionY(float)
      */
     @Override
     public void setPositionY(float positionY) {
@@ -97,7 +97,7 @@ public class ExternalLinkDisplay extends VSpaceElement implements IExternalLinkD
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.model.display.impl.IExternalLinkDisplay#
-     * getExternalLink( float)
+     * getExternalLink(float)
      */
     @Override
     public IExternalLink getExternalLink() {
@@ -108,7 +108,7 @@ public class ExternalLinkDisplay extends VSpaceElement implements IExternalLinkD
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.model.display.impl.IExternalLinkDisplay#
-     * setExternalLink( IExternalLink)
+     * setExternalLink(IExternalLink)
      */
     @Override
     public void setExternalLink(IExternalLink externalLink) {
