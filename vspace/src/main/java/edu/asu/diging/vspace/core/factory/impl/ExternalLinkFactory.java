@@ -5,10 +5,13 @@ import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 
-public class ExternalLinkFactory implements IExternalLinkFactory{
+public class ExternalLinkFactory implements IExternalLinkFactory {
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.factory.impl.IExternalLinkFactory#createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.factory.impl.IExternalLinkFactory#
+     * createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
      */
     @Override
     public IExternalLink createExternalLink(String title, ISpace space) {

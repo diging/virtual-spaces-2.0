@@ -7,8 +7,11 @@ import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 
 public class ExternalLinkDisplayFactory implements IExternalLinkDisplayFactory {
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.factory.impl.IExternalLinkDisplayFactory#createExternalLinkDisplay(edu.asu.diging.vspace.core.model.IExternalLink)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.factory.impl.IExternalLinkDisplayFactory#
+     * createExternalLinkDisplay(edu.asu.diging.vspace.core.model.IExternalLink)
      */
     @Override
     public IExternalLinkDisplay createExternalLinkDisplay(IExternalLink link) {

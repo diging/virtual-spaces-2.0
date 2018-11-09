@@ -59,7 +59,7 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
+
     @Autowired
     private ExternalLinkDisplayRepository externalLinkDisplayRepo;
 
@@ -74,10 +74,10 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IExternalLinkFactory externalLinkFactory;
-    
+
     @Autowired
     private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
-    
+
     @Autowired
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
@@ -147,7 +147,7 @@ public class SpaceManager implements ISpaceManager {
     public List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId) {
         return new ArrayList<>(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId));
     }
-    
+
     @Override
     public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
             int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
@@ -169,15 +169,13 @@ public class SpaceManager implements ISpaceManager {
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
         return display;
     }
-    
+
     @Override
-    public IExternalLinkDisplay createExternalLink(String title, ISpace space, float positionX, float positionY, String url) throws SpaceDoesNotExistException {
+    public IExternalLinkDisplay createExternalLink(String title, ISpace space, float positionX, float positionY,
+            String url) throws SpaceDoesNotExistException {
         // we need this to fully load the space
         space = spaceRepo.findById(space.getId()).get();
-//       // ISpace target = spaceRepo.findById(linkedSpaceId).get();
-//        if (target == null) {
-//            throw new SpaceDoesNotExistException();
-//        }
+
         IExternalLink link = externalLinkFactory.createExternalLink(title, space);
         link.setExternalLink(url);
         externalLinkRepo.save((ExternalLink) link);

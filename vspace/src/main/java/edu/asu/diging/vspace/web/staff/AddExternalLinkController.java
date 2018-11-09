@@ -33,7 +33,7 @@ public class AddExternalLinkController {
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+
         IExternalLinkDisplay display = spaceManager.createExternalLink("test", space, new Float(x), new Float(y), url);
 
         ObjectMapper mapper = new ObjectMapper();

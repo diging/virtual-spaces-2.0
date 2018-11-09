@@ -3,7 +3,7 @@ package edu.asu.diging.vspace.core.model.display;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
-public interface IExternalLinkDisplay extends IVSpaceElement{
+public interface IExternalLinkDisplay extends IVSpaceElement {
 
     String getId();
 
