@@ -12,18 +12,15 @@ import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
-import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 
 @Entity
-public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay {
+public class SpaceLinkDisplay extends Display implements ISpaceLinkDisplay {
 
     @Id
     @GeneratedValue(generator = "link-display-id-generator")
     @GenericGenerator(name = "link-display-id-generator", parameters = @Parameter(name = "prefix", value = "SPLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    private float positionX;
-    private float positionY;
     private int rotation;
     private DisplayType type;
 
@@ -50,54 +47,6 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
     @Override
     public void setId(String id) {
         this.id = id;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.display.impl.ISpaceLinkDisplay#getPositionX(
-     * )
-     */
-    @Override
-    public float getPositionX() {
-        return positionX;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.display.impl.ISpaceLinkDisplay#setPositionX(
-     * float)
-     */
-    @Override
-    public void setPositionX(float positionX) {
-        this.positionX = positionX;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.display.impl.ISpaceLinkDisplay#getPositionY(
-     * )
-     */
-    @Override
-    public float getPositionY() {
-        return positionY;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.display.impl.ISpaceLinkDisplay#setPositionY(
-     * float)
-     */
-    @Override
-    public void setPositionY(float positionY) {
-        this.positionY = positionY;
     }
 
     @Override
@@ -129,5 +78,4 @@ public class SpaceLinkDisplay extends VSpaceElement implements ISpaceLinkDisplay
     public void setType(DisplayType type) {
         this.type = type;
     }
-
 }

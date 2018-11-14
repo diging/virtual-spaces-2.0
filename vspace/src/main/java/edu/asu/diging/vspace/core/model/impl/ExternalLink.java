@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -23,11 +24,11 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
 	private String id;
 	
 	@ManyToOne(targetEntity=Space.class)
-    @JoinColumn(name="space_id", nullable=false)
+	@JoinColumn(name="space_id", nullable=false)
 	private ISpace space;
 	
-	@ManyToOne(targetEntity=ExternalLink.class)
-    @JoinColumn(name="external_link", nullable=false)
+	@OneToOne(targetEntity=ExternalLink.class)
+	@JoinColumn(name="external_link", nullable=false)
 	private String externalLink;
 
 	/* (non-Javadoc)
@@ -77,5 +78,4 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
 	public void setExternalLink(String externalLink) {
 		this.externalLink = externalLink;
 	}
-
 }
