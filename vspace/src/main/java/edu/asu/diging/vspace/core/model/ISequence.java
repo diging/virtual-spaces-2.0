@@ -7,5 +7,4 @@ public interface ISequence extends IVSpaceElement {
     List<ISlide> getSlides();
 
     void setSlides(List<ISlide> slides);
-
 }

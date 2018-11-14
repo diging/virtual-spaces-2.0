@@ -91,5 +91,4 @@ public class Space extends VSpaceElement implements ISpace {
 	public void setImage(IVSImage image) {
 		this.image = image;
 	}
-
 }

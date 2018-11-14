@@ -9,5 +9,4 @@ public interface IModuleLink extends IVSpaceElement {
     IModule getModule();
 
     void setModule(IModule module);
-
 }

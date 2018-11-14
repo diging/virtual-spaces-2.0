@@ -15,5 +15,4 @@ public interface ISpace extends IVSpaceElement {
 	void setImage(IVSImage image);
 
 	IVSImage getImage();
-
 }

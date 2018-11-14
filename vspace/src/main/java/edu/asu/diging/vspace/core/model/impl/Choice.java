@@ -15,7 +15,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 public class Choice extends VSpaceElement implements IChoice {
 
     @Id
-    @GeneratedValue(generator = "id-generator")
+    @GeneratedValue(generator = "choice-id-generator")
     @GenericGenerator(name = "choice-id-generator", 
       parameters = @Parameter(name = "prefix", value = "CHO"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -65,5 +65,4 @@ public class Choice extends VSpaceElement implements IChoice {
     public void setSequence(ISequence sequence) {
         this.sequence = sequence;
     }
-
 }

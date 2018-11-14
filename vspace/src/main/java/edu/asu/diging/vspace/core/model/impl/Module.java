@@ -116,5 +116,4 @@ public class Module extends VSpaceElement implements IModule {
     public void setStartSequence(ISequence startSequence) {
         this.startSequence = startSequence;
     }
-
 }

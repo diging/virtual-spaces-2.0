@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,14 +17,14 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class Slide extends VSpaceElement implements ISlide {
 	
 	@Id
-	@GeneratedValue(generator = "id-generator")
+	@GeneratedValue(generator = "slide-id-generator")
 	@GenericGenerator(name = "slide-id-generator", 	
 	  parameters = @Parameter(name = "prefix", value = "SLI"),
 	  strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	@OneToOne(targetEntity=VSImage.class)
-	private IVSImage image;
+	private List<IVSImage> image;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#getId()
@@ -44,16 +46,15 @@ public class Slide extends VSpaceElement implements ISlide {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#getImage()
 	 */
 	@Override
-	public IVSImage getImage() {
+	public List<IVSImage> getImage() {
 		return image;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.vspace.core.model.IVSImage)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(java.util.List)
 	 */
 	@Override
-	public void setImage(IVSImage image) {
+	public void setImage(List<IVSImage> image) {
 		this.image = image;
-	}
-	
+	}	
 }

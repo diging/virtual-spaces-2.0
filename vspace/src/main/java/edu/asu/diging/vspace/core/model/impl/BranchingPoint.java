@@ -17,7 +17,7 @@ import edu.asu.diging.vspace.core.model.IChoice;
 public class BranchingPoint extends Slide implements IBranchingPoint {
 
     @Id
-    @GeneratedValue(generator = "id-generator")
+    @GeneratedValue(generator = "branchingpoint-id-generator")
     @GenericGenerator(name = "branchingpoint-id-generator",
       parameters = @Parameter(name = "prefix", value = "BPNT"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -68,5 +68,4 @@ public class BranchingPoint extends Slide implements IBranchingPoint {
     public void setChoices(List<IChoice> choices) {
         this.choices = choices;
     }
-
 }

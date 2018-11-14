@@ -73,5 +73,4 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
 	public void setModule(IModule module) {
 		this.module = module;
 	}
-	
 }

@@ -1,9 +1,10 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+
 public interface ISlide extends IVSpaceElement {
 
-    void setImage(IVSImage image);
+    void setImage(List<IVSImage> image);
 
-    IVSImage getImage();
-
+    List<IVSImage> getImage();
 }

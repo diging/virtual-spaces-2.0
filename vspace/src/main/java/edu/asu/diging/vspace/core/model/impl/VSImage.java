@@ -74,6 +74,5 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Override
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
-	}
-	
+	}	
 }

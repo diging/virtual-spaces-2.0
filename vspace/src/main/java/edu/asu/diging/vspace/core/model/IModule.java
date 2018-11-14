@@ -15,5 +15,4 @@ public interface IModule extends IVSpaceElement {
     ISequence getStartSequence();
 
     void setStartSequence(ISequence startSequence);
-
 }

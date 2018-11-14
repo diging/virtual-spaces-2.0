@@ -72,5 +72,4 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
 	public void setTargetSpace(ISpace targetSpace) {
 		this.targetSpace = targetSpace;
 	}
-
 }
