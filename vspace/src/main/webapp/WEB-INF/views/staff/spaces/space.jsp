@@ -43,20 +43,46 @@ $( document ).ready(function() {
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
-		var icon;
+		var icon = null;
+		var temp;
+		var xyz = "abc";
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#icon").remove();
 		    icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
+		    temp = $(icon);
 		    
 		    $('#type').change(function() {
-		    	if ($("#type").val() == "ALERT") {
-			    	alert("hi");
-		    		icon = $('<div id="icon" class="alert alert-primary" role="alert">');
-		    	} 		    	
-		    });		
-		    
+		    	if ($("#type").val() == "ARROW") {
+			    	icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
+		    	} else if ($("#type").val() == "ALERT") {
+		    	
+		    		alert("alert");
+		    		//$("#icon").remove();
+		    		temp.find('#icon').replaceWith('<span id="icon" data-feather="alert-circle" class="flex"></span>');
+		    		icon = temp.prop("outerHTML");		
+		    		xyz = xyz + "123";
+		    		alert(xyz);
+		    		icon.css('position', 'absolute');
+				    
+				    var posX = $(this).position().left;
+				    var posY = $(this).position().top;
+				    
+				    storeX = e.pageX - $(this).offset().left;
+				    storeY = e.pageY - $(this).offset().top;
+				    icon.css('left', storeX + posX);
+				    icon.css('top', storeY + posY);
+				    icon.css('color', 'red');
+				    icon.css('font-size', "10px");
+				    
+				    $("#space").append(icon);
+				   feather.replace();
+		    		
+		    		
+		    	} 	 		    	
+		    });	
+		   // alert();
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left;
@@ -173,6 +199,7 @@ $( document ).ready(function() {
   <label style="margin-right: 5px;"><small>Type:</small> </label>
   <select id="type" class="form-control-xs">
   	<option selected value="">Choose...</option>
+  	<option value="ARROW">ARROW</option>
   	<option value="ALERT">Alert</option>
   </select><br>
   
