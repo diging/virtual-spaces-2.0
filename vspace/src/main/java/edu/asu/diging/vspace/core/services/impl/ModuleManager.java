@@ -30,9 +30,9 @@ public class ModuleManager implements IModuleManager {
 
     @Override
     public IModule getModule(String id) {
-        boolean isExists = moduleRepo.existsById(id);
-        if (isExists) {
-            return moduleRepo.findById(id).get();
+        Optional<Module> module = moduleRepo.findById(id);
+        if (module.isPresent()) {
+            return module.get();
         }
         return null;
     }
