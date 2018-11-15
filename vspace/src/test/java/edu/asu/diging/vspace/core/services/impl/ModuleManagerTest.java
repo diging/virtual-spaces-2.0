@@ -49,7 +49,8 @@ public class ModuleManagerTest {
         Optional<Module> mockModule = Optional.of(newModule);
         Mockito.when(mockModuleRepo.findById("mockString")).thenReturn(mockModule);
 
-        //IModule iModuleActual = managerToTest.getModule("mockString");
-        assertNull(mockModule);
+        IModule iModuleActual = managerToTest.getModule("mockString");
+        Assert.assertEquals(mockModule.get().getId(), iModuleActual.getId());
+        Assert.assertEquals(mockModule.get().getName(), iModuleActual.getName());
     }
 }
