@@ -1,7 +1,10 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,8 @@ public class ModuleManager implements IModuleManager {
 
     @Autowired
     private ModuleRepository moduleRepo;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /*
      * (non-Javadoc)
@@ -32,7 +37,11 @@ public class ModuleManager implements IModuleManager {
     public IModule getModule(String id) {
         Optional<Module> module = moduleRepo.findById(id);
         if (module.isPresent()) {
-            return module.get();
+            try {
+                return module.get();
+            } catch(NoSuchElementException e) {
+                logger.error("No Such Element Exception", e);
+            }            
         }
         return null;
     }

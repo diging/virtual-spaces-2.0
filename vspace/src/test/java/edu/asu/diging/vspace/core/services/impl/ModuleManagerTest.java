@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import static org.junit.Assert.assertNull;
-
 import java.util.Optional;
 
 import org.junit.Assert;
