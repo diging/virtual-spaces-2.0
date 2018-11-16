@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -23,7 +23,7 @@ public class Slide extends VSpaceElement implements ISlide {
 	  strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
-	@OneToOne(targetEntity=VSImage.class)
+	@OneToMany(targetEntity=VSImage.class)
 	private List<IVSImage> image;
 
 	/* (non-Javadoc)
