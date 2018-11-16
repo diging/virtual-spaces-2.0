@@ -30,10 +30,10 @@ $( document ).ready(function() {
 	    $("#space").append(link);
 	    
 	    $(".label-${loop.index}").css({
-        'transform': 'rotate(0deg)',
-        'left': ${link.positionX} + posX - 10,
-        'top': ${link.positionY} + posY + 16,
-        'color': 'red'
+	    	'transform': 'rotate(0deg)',
+	    	'left': ${link.positionX} + posX - 10,
+	    	'top': ${link.positionY} + posY + 16,
+	    	'color': 'red'
     	});  
      
 	}
@@ -61,8 +61,7 @@ $( document ).ready(function() {
 		    icon.css('font-size', "10px");
 		    
 		    $("#space").append(icon);
-		   feather.replace();
-		        
+		   feather.replace();	        
 		});
 		$("#createSpaceLinkAlert").show();
 	});
@@ -108,8 +107,7 @@ $( document ).ready(function() {
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 
 			// TODO: show success/error message
-		}); 
-	    
+		}); 	    
 		makeItVisible(payload);
 		$("#createSpaceLinkAlert").hide();
 		
@@ -155,7 +153,8 @@ $( document ).ready(function() {
 	        'top': payload["y"] + posY + 16,
 	        'color': 'red'
 	    });  
-	}		
+	}	
+	
 });
 
 </script>
