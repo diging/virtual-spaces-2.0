@@ -43,46 +43,11 @@ $( document ).ready(function() {
 	var storeY;
 	
 	$("#addSpaceLinkButton").click(function(e) {
-		var icon = null;
-		var temp;
-		var xyz = "abc";
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#icon").remove();
-		    icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
-		    temp = $(icon);
-		    
-		    $('#type').change(function() {
-		    	if ($("#type").val() == "ARROW") {
-			    	icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
-		    	} else if ($("#type").val() == "ALERT") {
-		    	
-		    		alert("alert");
-		    		//$("#icon").remove();
-		    		temp.find('#icon').replaceWith('<span id="icon" data-feather="alert-circle" class="flex"></span>');
-		    		icon = temp.prop("outerHTML");		
-		    		xyz = xyz + "123";
-		    		alert(xyz);
-		    		icon.css('position', 'absolute');
-				    
-				    var posX = $(this).position().left;
-				    var posY = $(this).position().top;
-				    
-				    storeX = e.pageX - $(this).offset().left;
-				    storeY = e.pageY - $(this).offset().top;
-				    icon.css('left', storeX + posX);
-				    icon.css('top', storeY + posY);
-				    icon.css('color', 'red');
-				    icon.css('font-size', "10px");
-				    
-				    $("#space").append(icon);
-				   feather.replace();
-		    		
-		    		
-		    	} 	 		    	
-		    });	
-		   // alert();
+		    var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left;
@@ -101,6 +66,18 @@ $( document ).ready(function() {
 		});
 		$("#createSpaceLinkAlert").show();
 	});
+	
+	$('#type').change(function() {		
+		if ($("#type").val() == "ALERT") {
+			$("#icon").remove();
+			var payload = {};
+			payload["x"] = storeX;
+			payload["y"] = storeY;
+			payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+			payload["type"] = $("#type").val();
+		    makeItVisible(payload);
+		} 	
+	});	
 	
 	$("#createSpaceLinkAlert").draggable();
 	
@@ -133,31 +110,9 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		}); 
 	    
-	    if (payload["type"] == "ALERT") {
-			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
-		} else {
-			var icon = $('<span data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
-		}	    
-	    icon.css('position', 'absolute');
-	    icon.css('left', storeX + posX);
-	    icon.css('top', storeY + posY);
-	    icon.css('fill', 'red');
-	    icon.css('color', 'red');
-	    icon.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-	    icon.css('font-size', "10px");
-	    
-	    $("#space").append(icon);
-	    feather.replace();
-		$("#bgImage").on("click", function(e){});
-
+		makeItVisible(payload);
 		$("#createSpaceLinkAlert").hide();
 		
-		$(".label-visibility").css({
-	        'transform': 'rotate(0deg)',
-	        'left': payload["x"] + posX - 10,
-	        'top': payload["y"] + posY + 16,
-	        'color': 'red'
-	    	});  
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -174,6 +129,33 @@ $( document ).ready(function() {
 		$('#icon').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
+	function makeItVisible(payload) {
+		
+		var posX = $("#bgImage").position().left;
+        var posY = $("#bgImage").position().top;
+	    if (payload["type"] == "ALERT") {
+			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
+		} else {
+			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
+		}	    
+	    icon.css('position', 'absolute');
+	    icon.css('left', storeX + posX);
+	    icon.css('top', storeY + posY);
+	    icon.css('fill', 'red');
+	    icon.css('color', 'red');
+	    icon.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	    icon.css('font-size', "10px");
+	    
+	    $("#space").append(icon);
+	    feather.replace();
+	
+		$(".label-visibility").css({
+	        'transform': 'rotate(0deg)',
+	        'left': payload["x"] + posX - 10,
+	        'top': payload["y"] + posY + 16,
+	        'color': 'red'
+	    });  
+	}		
 });
 
 </script>
@@ -199,7 +181,6 @@ $( document ).ready(function() {
   <label style="margin-right: 5px;"><small>Type:</small> </label>
   <select id="type" class="form-control-xs">
   	<option selected value="">Choose...</option>
-  	<option value="ARROW">ARROW</option>
   	<option value="ALERT">Alert</option>
   </select><br>
   
