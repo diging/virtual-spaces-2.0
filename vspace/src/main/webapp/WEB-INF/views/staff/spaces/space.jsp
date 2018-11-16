@@ -67,15 +67,14 @@ $( document ).ready(function() {
 	});
 	
 	$('#type').change(function() {		
-		if ($("#type").val() == "ALERT") {
-			$("#icon").remove();
-			var payload = {};
-			payload["x"] = storeX;
-			payload["y"] = storeY;
-			payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-			payload["type"] = $("#type").val();
-		    makeItVisible(payload);
-		} 	
+		$("#icon").remove();
+		$("#label").remove();
+		var payload = {};
+		payload["x"] = storeX;
+		payload["y"] = storeY;
+		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		payload["type"] = $("#type").val();		
+		makeItVisible(payload);
 	});	
 	
 	$("#createSpaceLinkAlert").draggable();
@@ -85,7 +84,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#arrow").remove();
+		$("#icon").remove();
 		$("#createSpaceLinkAlert").hide();
 	});
 	
@@ -134,7 +133,7 @@ $( document ).ready(function() {
 	    if (payload["type"] == "ALERT") {
 			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+payload["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
+			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label" class="label-visibility">'+payload["spaceLinkLabel"]+'</p>'); 
 		}	    
 	    icon.css('position', 'absolute');
 	    icon.css('left', storeX + posX);
@@ -180,6 +179,7 @@ $( document ).ready(function() {
   <label style="margin-right: 5px;"><small>Type:</small> </label>
   <select id="type" class="form-control-xs">
   	<option selected value="">Choose...</option>
+  	<option value="Arrow">Link</option>
   	<option value="ALERT">Alert</option>
   </select><br>
   
