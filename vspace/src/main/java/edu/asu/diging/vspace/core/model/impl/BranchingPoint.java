@@ -23,7 +23,7 @@ public class BranchingPoint extends Slide implements IBranchingPoint {
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToMany(mappedBy = "branchingpoint", targetEntity = Choice.class)
+    @OneToMany(targetEntity = Choice.class)
     private List<IChoice> choices;
 
     /*

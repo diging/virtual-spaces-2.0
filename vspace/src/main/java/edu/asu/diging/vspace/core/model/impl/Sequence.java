@@ -21,7 +21,7 @@ public class Sequence extends VSpaceElement implements ISequence {
     @GenericGenerator(name = "sequence-id-generator", parameters = @Parameter(name = "prefix", value = "SEQ"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToMany(mappedBy = "sequence", targetEntity = Slide.class)
+    @OneToMany(targetEntity = Slide.class)
     private List<ISlide> slides;
 
     /*
