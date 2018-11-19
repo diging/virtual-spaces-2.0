@@ -154,15 +154,17 @@ public class SpaceManager implements ISpaceManager {
         // we need this to fully load the space
         ISpace target;
         source = spaceRepo.findById(source.getId()).get();
-        boolean isExists = spaceRepo.existsById(linkedSpaceId);
-        if(!isExists) {
-            throw new SpaceDoesNotExistException();
-        } else {
-        target = spaceRepo.findById(linkedSpaceId).get();
-            if (target == null) {
-                throw new SpaceDoesNotExistException();
-            }
-        }
+        target = getSpace(linkedSpaceId);
+        
+//        boolean isExists = spaceRepo.existsById(linkedSpaceId);
+//        if(!isExists) {
+//            throw new SpaceDoesNotExistException();
+//        } else {
+//        target = spaceRepo.findById(linkedSpaceId).get();
+//            if (target == null) {
+//                throw new SpaceDoesNotExistException();
+//            }
+//        }
         ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
         link.setTargetSpace(target);
         spaceLinkRepo.save((SpaceLink) link);

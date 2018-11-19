@@ -118,8 +118,18 @@ $( document ).ready(function() {
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
 
+<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+ <h6 class="alert-heading"><small>Create new External Link</small></h6>
+  <p><small>Please click on the image where you want to place the new space link. Then click "Create External Link".</small></p>
+  <hr>  
+  <label style="margin-right: 5px;"><small>External Link</small> </label>
+  <HR>
+  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="button" class="btn btn-primary btn-xs">Create External Link</button></p>
+</div>
+
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button>
+<button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button>
 </nav>
 
 <p></p>

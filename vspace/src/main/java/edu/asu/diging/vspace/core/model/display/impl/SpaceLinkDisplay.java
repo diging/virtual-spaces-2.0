@@ -14,7 +14,7 @@ import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 
 @Entity
-public class SpaceLinkDisplay extends Display implements ISpaceLinkDisplay {
+public class SpaceLinkDisplay extends LinkDisplay implements ISpaceLinkDisplay {
 
     @Id
     @GeneratedValue(generator = "link-display-id-generator")

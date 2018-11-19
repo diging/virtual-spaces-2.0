@@ -17,8 +17,8 @@ import edu.asu.diging.vspace.core.model.ISpace;
 public class ExternalLink extends VSpaceElement implements IExternalLink {
 	
 	@Id 
-	@GeneratedValue(generator = "id-generator")
-    @GenericGenerator(name = "extlink-id-generator", 
+	@GeneratedValue(generator = "extlink-id-generator")
+	@GenericGenerator(name = "extlink-id-generator", 
       parameters = @Parameter(name = "prefix", value = "EXL"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;

@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model.display;
 
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 
-public interface ISpaceLinkDisplay extends IDisplay {
+public interface ISpaceLinkDisplay extends ILinkDisplay {
 
     String getId();
 

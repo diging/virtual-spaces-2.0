@@ -1,9 +1,9 @@
 package edu.asu.diging.vspace.core.model.display.impl;
 
-import edu.asu.diging.vspace.core.model.display.IDisplay;
+import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 
-public abstract class Display extends VSpaceElement implements IDisplay {
+public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay {
 
     private float positionX;
     private float positionY;

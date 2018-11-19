@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model.display;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
 
-public interface IExternalLinkDisplay extends IDisplay {
+public interface IExternalLinkDisplay extends ILinkDisplay {
 
     String getId();
 

@@ -11,7 +11,7 @@ import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 
-public class ExternalLinkDisplay extends Display implements IExternalLinkDisplay {
+public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDisplay {
 
     @Id
     @GeneratedValue(generator = "link-display-id-generator")
