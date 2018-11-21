@@ -28,6 +28,8 @@ public class AddExternalLinkController {
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("url") String url)
             throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
+        
+        System.out.println("in ecternal kink controleev---------");
 
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {

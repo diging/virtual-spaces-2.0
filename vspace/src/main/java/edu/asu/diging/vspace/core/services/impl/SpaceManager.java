@@ -153,7 +153,11 @@ public class SpaceManager implements ISpaceManager {
             int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
         // we need this to fully load the space
         ISpace target;
-        source = spaceRepo.findById(source.getId()).get();
+        Optional<Space> optional_source = spaceRepo.findById(source.getId());
+        if(!optional_source.isPresent()) {
+            throw new SpaceDoesNotExistException();
+        }
+        source = optional_source.get();
         target = getSpace(linkedSpaceId);
         
 //        boolean isExists = spaceRepo.existsById(linkedSpaceId);

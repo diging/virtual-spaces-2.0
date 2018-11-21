@@ -11,6 +11,9 @@ import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 
+import javax.persistence.Entity;
+
+@Entity
 public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDisplay {
 
     @Id
