@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -29,10 +30,8 @@ public class ModuleManagerTest {
 
     @Test
     public void test_getModule_idExists() {
-
         Module newModule = new Module();
         Optional<Module> mockModule = Optional.of(newModule);
-        managerToTest.storeModule(newModule);
         Mockito.when(mockModuleRepo.findById(newModule.getId())).thenReturn(mockModule);
 
         IModule iModuleActual = managerToTest.getModule(newModule.getId());
@@ -40,15 +39,9 @@ public class ModuleManagerTest {
         Assert.assertEquals(mockModule.get().getName(), iModuleActual.getName());
     }
     
-    @Test
-    public void test_getModule_idNotExists() {
-
-        Module newModule = new Module();
-        Optional<Module> mockModule = Optional.of(newModule);
-        Mockito.when(mockModuleRepo.findById("mockString")).thenReturn(mockModule);
-
-        IModule iModuleActual = managerToTest.getModule("mockString");
-        Assert.assertEquals(mockModule.get().getId(), iModuleActual.getId());
-        Assert.assertEquals(mockModule.get().getName(), iModuleActual.getName());
+    @Test(expected = NoSuchElementException.class)
+    public void test_getModule_idNotExists() throws Exception {
+        Mockito.when(mockModuleRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(mockModuleRepo.findById(Mockito.anyString()).get()).thenThrow(new NoSuchElementException());;
     }
 }
