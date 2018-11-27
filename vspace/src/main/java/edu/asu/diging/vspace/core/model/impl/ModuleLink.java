@@ -24,11 +24,11 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
 	private String id;
 	
 	@ManyToOne(targetEntity=Space.class)
-    @JoinColumn(name="space_id", nullable=false)
+	@JoinColumn(name="space_id", nullable=false)
 	private ISpace space;
 	
 	@ManyToOne(targetEntity=Module.class)
-    @JoinColumn(name="module_id", nullable=false)
+	@JoinColumn(name="module_id", nullable=false)
 	private IModule module;
 	
 	/* (non-Javadoc)
