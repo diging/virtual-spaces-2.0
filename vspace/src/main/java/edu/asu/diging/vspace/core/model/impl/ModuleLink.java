@@ -18,7 +18,7 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
 
 	@Id 
 	@GeneratedValue(generator = "modlink-id-generator")
-    @GenericGenerator(name = "modlink-id-generator", 
+	@GenericGenerator(name = "modlink-id-generator", 
       parameters = @Parameter(name = "prefix", value = "MOL"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
