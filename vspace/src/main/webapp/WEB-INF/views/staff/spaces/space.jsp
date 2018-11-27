@@ -30,11 +30,11 @@ $( document ).ready(function() {
 		$("#space").append(link);
 		
 		$(".label-${loop.index}").css({
-			'transform': 'rotate(0deg)',
-	    	'left': ${link.positionX} + posX - 10,
-	    	'top': ${link.positionY} + posY + 16,
-	    	'color': 'red'
-		});  
+	    	'transform': 'rotate(0deg)',
+	        'left': ${link.positionX} + posX - 10,
+	        'top': ${link.positionY} + posY + 16,
+	        'color': 'red'
+	    });  
 	}
 	</c:forEach> 
 	
@@ -106,8 +106,7 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		}); 	    
 		makeItVisible(payload);
-		$("#createSpaceLinkAlert").hide();
-		
+		$("#createSpaceLinkAlert").hide();		
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
