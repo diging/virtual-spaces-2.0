@@ -19,8 +19,8 @@ import edu.asu.diging.vspace.core.model.ISlide;
 public class Module extends VSpaceElement implements IModule {
 
     @Id
-    @GeneratedValue(generator = "id-generator")
-    @GenericGenerator(name = "id-generator", 
+    @GeneratedValue(generator = "module-id-generator")
+    @GenericGenerator(name = "module-id-generator", 
       parameters = @Parameter(name = "prefix", value = "MOD"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;

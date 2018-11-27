@@ -20,8 +20,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class Space extends VSpaceElement implements ISpace {
 
 	@Id
-	@GeneratedValue(generator = "id-generator")
-	@GenericGenerator(name = "id-generator", 
+	@GeneratedValue(generator = "space-id-generator")
+	@GenericGenerator(name = "space-id-generator", 
 	  parameters = @Parameter(name = "prefix", value = "SPA"), 
 	  strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
