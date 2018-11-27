@@ -30,12 +30,11 @@ $( document ).ready(function() {
 		$("#space").append(link);
 		
 		$(".label-${loop.index}").css({
-	    	'transform': 'rotate(0deg)',
+			'transform': 'rotate(0deg)',
 	    	'left': ${link.positionX} + posX - 10,
 	    	'top': ${link.positionY} + posY + 16,
 	    	'color': 'red'
-	    	});  
-     
+		});  
 	}
 	</c:forEach> 
 	
@@ -127,7 +126,7 @@ $( document ).ready(function() {
 	
 	function makeItVisible(spaceLink) {
 		var posX = $("#bgImage").position().left;
-        var posY = $("#bgImage").position().top;
+		var posY = $("#bgImage").position().top;
         if (spaceLink["type"] == "ALERT") {
         	var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
         } else {
