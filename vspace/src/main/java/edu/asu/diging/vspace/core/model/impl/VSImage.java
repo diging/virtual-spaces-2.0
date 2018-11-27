@@ -16,8 +16,8 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Id 
 	@GeneratedValue(generator = "image-id-generator")
     @GenericGenerator(name = "image-id-generator", 
-      parameters = @Parameter(name = "prefix", value = "IMG"), 
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+        parameters = @Parameter(name = "prefix", value = "IMG"), 
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	@Lob private String filename;

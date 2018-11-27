@@ -19,8 +19,8 @@ public class BranchingPoint extends Slide implements IBranchingPoint {
     @Id
     @GeneratedValue(generator = "branchingpoint-id-generator")
     @GenericGenerator(name = "branchingpoint-id-generator",
-      parameters = @Parameter(name = "prefix", value = "BPNT"), 
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+        parameters = @Parameter(name = "prefix", value = "BPNT"), 
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToMany(targetEntity = Choice.class)

@@ -17,8 +17,8 @@ public class Choice extends VSpaceElement implements IChoice {
     @Id
     @GeneratedValue(generator = "choice-id-generator")
     @GenericGenerator(name = "choice-id-generator", 
-      parameters = @Parameter(name = "prefix", value = "CHO"), 
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+        parameters = @Parameter(name = "prefix", value = "CHO"), 
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = Sequence.class)

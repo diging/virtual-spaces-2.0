@@ -19,8 +19,8 @@ public class Slide extends VSpaceElement implements ISlide {
 	@Id
 	@GeneratedValue(generator = "slide-id-generator")
 	@GenericGenerator(name = "slide-id-generator", 	
-	  parameters = @Parameter(name = "prefix", value = "SLI"),
-	  strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+	    parameters = @Parameter(name = "prefix", value = "SLI"),
+	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	@OneToMany(targetEntity=VSImage.class)
