@@ -26,15 +26,15 @@ $( document ).ready(function() {
 		link.css('fill', 'red');
 		link.css('color', 'red');
 		link.css('font-size', "10px");
- 
-	    $("#space").append(link);
-	    
-	    $(".label-${loop.index}").css({
+		
+		$("#space").append(link);
+		
+		$(".label-${loop.index}").css({
 	    	'transform': 'rotate(0deg)',
 	    	'left': ${link.positionX} + posX - 10,
 	    	'top': ${link.positionY} + posY + 16,
 	    	'color': 'red'
-    	});  
+	    });  
      
 	}
 	</c:forEach> 
@@ -127,13 +127,12 @@ $( document ).ready(function() {
 	});
 	
 	function makeItVisible(spaceLink) {
-		
 		var posX = $("#bgImage").position().left;
         var posY = $("#bgImage").position().top;
-	    if (spaceLink["type"] == "ALERT") {
-			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
-		} else {
-			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label" class="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>'); 
+        if (spaceLink["type"] == "ALERT") {
+        	var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
+        } else {
+        	var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label" class="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>'); 
 		}	    
 	    icon.css('position', 'absolute');
 	    icon.css('left', storeX + posX);
