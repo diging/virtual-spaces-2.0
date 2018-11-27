@@ -127,9 +127,9 @@ $( document ).ready(function() {
 		var posY = $("#bgImage").position().top;
 		if (spaceLink["type"] == "ALERT") {
 			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
-			} else {
-				var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label" class="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
-				}	    
+		} else {
+			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label" class="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
+		}	    
 	    icon.css('position', 'absolute');
 	    icon.css('left', storeX + posX);
 	    icon.css('top', storeY + posY);
