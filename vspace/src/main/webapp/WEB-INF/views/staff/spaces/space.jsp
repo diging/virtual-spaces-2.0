@@ -34,7 +34,7 @@ $( document ).ready(function() {
 	    	'left': ${link.positionX} + posX - 10,
 	    	'top': ${link.positionY} + posY + 16,
 	    	'color': 'red'
-	    });  
+	    	});  
      
 	}
 	</c:forEach> 
@@ -95,8 +95,8 @@ $( document ).ready(function() {
 	$("#createSpaceLinkBtn").click(function(e) {
 		var payload = {};
 		var posX = $("#bgImage").position().left;
-        var posY = $("#bgImage").position().top;
-			["x"] = storeX;
+		var posY = $("#bgImage").position().top;
+		payload["x"] = storeX;
 		payload["y"] = storeY;
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
@@ -104,7 +104,6 @@ $( document ).ready(function() {
 		payload["type"] = $("#type").val();
 		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-
 			// TODO: show success/error message
 		}); 	    
 		makeItVisible(payload);
@@ -151,8 +150,7 @@ $( document ).ready(function() {
 	        'top': spaceLink["y"] + posY + 16,
 	        'color': 'red'
 	    });  
-	}	
-	
+	}		
 });
 
 </script>
