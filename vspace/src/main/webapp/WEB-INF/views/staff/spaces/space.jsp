@@ -126,8 +126,9 @@ $( document ).ready(function() {
 		var payload = {};
 		payload["x"] = storeX;
 		payload["y"] = storeY;
+		payload["url"] = $("#externalLinkLabel").val();
 		$("#arrow").remove();
-		//$.post("<c:url value="/staff/space/{id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});

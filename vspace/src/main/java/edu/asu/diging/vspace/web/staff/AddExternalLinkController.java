@@ -29,8 +29,6 @@ public class AddExternalLinkController {
             @RequestParam("y") String y, @RequestParam("url") String url)
             throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
         
-        System.out.println("in ecternal kink controleev---------");
-
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
@@ -40,6 +38,7 @@ public class AddExternalLinkController {
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
+        linkNode.put("id", display.getExternalLink().getId());
         linkNode.put("displayId", display.getId());
         linkNode.put("x", display.getPositionX());
         linkNode.put("y", display.getPositionY());

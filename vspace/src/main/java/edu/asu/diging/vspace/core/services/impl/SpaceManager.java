@@ -159,16 +159,6 @@ public class SpaceManager implements ISpaceManager {
         }
         source = optional_source.get();
         target = getSpace(linkedSpaceId);
-        
-//        boolean isExists = spaceRepo.existsById(linkedSpaceId);
-//        if(!isExists) {
-//            throw new SpaceDoesNotExistException();
-//        } else {
-//        target = spaceRepo.findById(linkedSpaceId).get();
-//            if (target == null) {
-//                throw new SpaceDoesNotExistException();
-//            }
-//        }
         ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
         link.setTargetSpace(target);
         spaceLinkRepo.save((SpaceLink) link);
@@ -183,12 +173,15 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public IExternalLinkDisplay createExternalLink(String title, ISpace space, float positionX, float positionY,
-            String url) {
+    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
+            String url) throws SpaceDoesNotExistException {
         // we need this to fully load the space
-        space = spaceRepo.findById(space.getId()).get();
-
-        IExternalLink link = externalLinkFactory.createExternalLink(title, space);
+        Optional<Space> optional_source = spaceRepo.findById(source.getId());
+        if(!optional_source.isPresent()) {
+            throw new SpaceDoesNotExistException();
+        }
+        source = optional_source.get();
+        IExternalLink link = externalLinkFactory.createExternalLink(title, source);
         link.setExternalLink(url);
         externalLinkRepo.save((ExternalLink) link);
 
