@@ -20,6 +20,7 @@ public class SpaceController {
 		ISpace space = spaceManager.getFullyLoadedSpace(id);
 		model.addAttribute("space", space);
 		model.addAttribute("spaceLinks", spaceManager.getSpaceLinkDisplays(id));
+		model.addAttribute("externalLinks", spaceManager.getExternalLinkDisplays(id));
 		model.addAttribute("spaces", spaceManager.getAllSpaces());
 		
 		return "staff/space";
