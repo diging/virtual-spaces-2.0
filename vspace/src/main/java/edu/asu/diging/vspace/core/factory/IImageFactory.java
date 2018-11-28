@@ -4,6 +4,6 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 
 public interface IImageFactory {
 
-	IVSImage createImage(String filename, String fileType);
+    IVSImage createImage(String filename, String fileType);
 
 }

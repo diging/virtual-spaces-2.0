@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -21,11 +20,10 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class Space extends VSpaceElement implements ISpace {
 
 	@Id
-	@GeneratedValue(generator = "id-generator")
-	@GenericGenerator(name = "id-generator", 	
-					parameters = @Parameter(name = "prefix", value = "SPA"), 
-					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
-			)
+	@GeneratedValue(generator = "space-id-generator")
+	@GenericGenerator(name = "space-id-generator", 
+	    parameters = @Parameter(name = "prefix", value = "SPA"), 
+	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 
 	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
@@ -92,5 +90,4 @@ public class Space extends VSpaceElement implements ISpace {
 	public void setImage(IVSImage image) {
 		this.image = image;
 	}
-
 }
