@@ -124,8 +124,8 @@ $( document ).ready(function() {
 	
 	$("#createExternalLinkBtn").click(function(e) {
 		var payload = {};
-		payload["x"] = storeX;
-		payload["y"] = storeY;
+		payload["x"] = "45";
+		payload["y"] = "48";
 		payload["url"] = $("#externalLinkLabel").val();
 		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {

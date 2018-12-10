@@ -22,10 +22,11 @@ public class IdGenerator implements IdentifierGenerator, Configurable {
 
 	@Override
 	public Serializable generate(SharedSessionContractImplementor session, Object obj) throws HibernateException {
-		String query = String.format("select count(*) from %s",
+		String query = String.format("SELECT * FROM %s ORDER BY creationDate DESC LIMIT 1",
 	            obj.getClass().getSimpleName());
-		long count = (Long) session.createQuery(query).uniqueResult();
-		return prefix + (count + 1);
+		String id = (String) session.createQuery(query).uniqueResult();
+		int value = Integer.parseInt(id.substring(3));
+		return prefix + ( value + 1 );
 	}
 
 }
