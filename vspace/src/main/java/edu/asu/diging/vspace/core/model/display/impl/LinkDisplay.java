@@ -1,7 +1,10 @@
 package edu.asu.diging.vspace.core.model.display.impl;
 
+import javax.persistence.MappedSuperclass;
+
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
+
 
 public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay {
 

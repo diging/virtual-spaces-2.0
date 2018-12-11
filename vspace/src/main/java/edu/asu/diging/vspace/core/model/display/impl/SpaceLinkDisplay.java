@@ -18,7 +18,7 @@ public class SpaceLinkDisplay extends LinkDisplay implements ISpaceLinkDisplay {
 
     @Id
     @GeneratedValue(generator = "link-display-id-generator")
-    @GenericGenerator(name = "link-display-id-generator", parameters = @Parameter(name = "prefix", value = "SPLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "link-display-id-generator", parameters = @Parameter(name = "prefix", value = "SPLD00000000"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     private int rotation;
