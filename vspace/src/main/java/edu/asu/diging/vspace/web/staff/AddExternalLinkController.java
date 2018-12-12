@@ -29,14 +29,11 @@ public class AddExternalLinkController {
             @RequestParam("y") String y, @RequestParam("url") String url)
             throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
         
-        //System.out.println("helloo---------------");
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-
         IExternalLinkDisplay display = spaceManager.createExternalLink("test", space, new Float(x), new Float(y), url);
-        //System.out.println("after creatingg ---------------");
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());
