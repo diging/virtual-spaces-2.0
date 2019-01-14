@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -38,10 +37,10 @@ public class ModuleManagerTest {
         Assert.assertEquals(mockModule.get().getId(), iModuleActual.getId());
         Assert.assertEquals(mockModule.get().getName(), iModuleActual.getName());
     }
-    
-    @Test(expected = NoSuchElementException.class)
+
+    @Test(expected = NullPointerException.class)
     public void test_getModule_idNotExists() throws Exception {
-        Mockito.when(mockModuleRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(mockModuleRepo.findById(Mockito.anyString()).get()).thenThrow(new NoSuchElementException());;
+        Assert.assertEquals(mockModuleRepo.findById(Mockito.anyString()).get(),
+                managerToTest.getModule(Mockito.anyString()).getId());
     }
 }

@@ -15,8 +15,6 @@ public class ModuleManager implements IModuleManager {
 
     @Autowired
     private ModuleRepository moduleRepo;
-    
-    //private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /*
      * (non-Javadoc)
