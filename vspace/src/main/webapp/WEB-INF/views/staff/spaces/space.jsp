@@ -84,6 +84,7 @@ $( document ).ready(function() {
 		storeX = null;
 		storeY = null;
 		$("#icon").remove();
+		$("#label").remove();
 		$("#createSpaceLinkAlert").hide();
 	});
 	
