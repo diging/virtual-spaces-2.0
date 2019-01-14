@@ -17,7 +17,7 @@ $( document ).ready(function() {
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
-			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
+			var link = $('<span data-feather="navigation-2" class="flex"></span><p id="label-${loop.index}">${link.link.name}</p>'); 
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -29,7 +29,7 @@ $( document ).ready(function() {
 		
 		$("#space").append(link);
 		
-		$(".label-${loop.index}").css({
+		$("#label-${loop.index}").css({
 		'transform': 'rotate(0deg)',
 		'left': ${link.positionX} + posX - 10,
 		'top': ${link.positionY} + posY + 16,
