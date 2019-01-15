@@ -30,10 +30,10 @@ $( document ).ready(function() {
 		$("#space").append(link);
 		
 		$("#label-${loop.index}").css({
-		'transform': 'rotate(0deg)',
-		'left': ${link.positionX} + posX - 10,
-		'top': ${link.positionY} + posY + 16,
-		'color': 'red'
+			'transform': 'rotate(0deg)',
+			'left': ${link.positionX} + posX - 10,
+			'top': ${link.positionY} + posY + 16,
+			'color': 'red'
 		});  
 	}
 	</c:forEach> 
@@ -60,7 +60,7 @@ $( document ).ready(function() {
 		    icon.css('font-size', "10px");
 		    
 		    $("#space").append(icon);
-		   feather.replace();	        
+		    feather.replace();	        
 		});
 		$("#createSpaceLinkAlert").show();
 	});
@@ -142,10 +142,10 @@ $( document ).ready(function() {
 		feather.replace();
 		
 		$("#label-visibility").css({
-		'transform': 'rotate(0deg)',
-		'left': spaceLink["x"] + posX - 10,
-		'top': spaceLink["y"] + posY + 16,
-		'color': 'red'
+			'transform': 'rotate(0deg)',
+			'left': spaceLink["x"] + posX - 10,
+			'top': spaceLink["y"] + posY + 16,
+			'color': 'red'
 		});
 	}
 });
