@@ -38,9 +38,9 @@ public class ModuleManagerTest {
         Assert.assertEquals(mockModule.get().getName(), iModuleActual.getName());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void test_getModule_idNotExists() throws Exception {
-        Assert.assertEquals(mockModuleRepo.findById(Mockito.anyString()).get(),
-                managerToTest.getModule(Mockito.anyString()).getId());
+        Mockito.when(mockModuleRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
+        Assert.assertEquals(null, managerToTest.getModule(Mockito.anyString()));
     }
 }
