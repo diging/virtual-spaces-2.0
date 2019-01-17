@@ -67,7 +67,7 @@ $( document ).ready(function() {
 	
 	$('#type').change(function() {		
 		$("#icon").remove();
-		$("#label").remove();
+		$("#label-visibility").remove();
 		var spaceLink = {};
 		spaceLink["x"] = storeX;
 		spaceLink["y"] = storeY;
@@ -84,8 +84,8 @@ $( document ).ready(function() {
 		storeX = null;
 		storeY = null;
 		$("#icon").remove();
-		$("#label").remove();
-		$("#createSpaceLinkAlert").hide();
+		$("#label-visibility").remove();
+		$("#createSpaceLinkAlert").hide();		
 	});
 	
 	$("#cancelBgImgBtn").click(function() {
@@ -106,7 +106,6 @@ $( document ).ready(function() {
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		}); 	    
-		makeItVisible(payload);
 		$("#createSpaceLinkAlert").hide();		
 	});
 		
@@ -125,10 +124,11 @@ $( document ).ready(function() {
 	
 	function makeItVisible(spaceLink) {
 		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;if (spaceLink["type"] == "ALERT") {
+		var posY = $("#bgImage").position().top;
+		if (spaceLink["type"] == "ALERT") {
 			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label" id="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
+			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
 		}
 		icon.css('position', 'absolute');
 		icon.css('left', storeX + posX);
@@ -165,10 +165,10 @@ $( document ).ready(function() {
   <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
+  <input class="form-control-xs" type="number" id="spaceLinkRotation" onfocus="this.value=''" value="0"><br>
   
   <label style="margin-right: 5px;"><small>Label:</small> </label>
-  <input class="form-control-xs" type="text" id="spaceLinkLabel"><br>
+  <input class="form-control-xs" type="text" id="spaceLinkLabel" onfocus="this.value=''"><br>
   
   <label style="margin-right: 5px;"><small>Type:</small> </label>
   <select id="type" class="form-control-xs">
