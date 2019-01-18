@@ -30,6 +30,7 @@ public class ModuleManagerTest {
     @Test
     public void test_getModule_idExists() {
         Module newModule = new Module();
+        newModule.setId("module1");
         Optional<Module> mockModule = Optional.of(newModule);
         Mockito.when(mockModuleRepo.findById(newModule.getId())).thenReturn(mockModule);
 
@@ -41,6 +42,6 @@ public class ModuleManagerTest {
     @Test
     public void test_getModule_idNotExists() throws Exception {
         Mockito.when(mockModuleRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
-        Assert.assertEquals(null, managerToTest.getModule(Mockito.anyString()));
+        Assert.assertNull(managerToTest.getModule(Mockito.anyString()));
     }
 }
