@@ -39,12 +39,12 @@ $( document ).ready(function() {
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var link = $('<span data-feather="navigation-2" class="flex"></span><p id="label-${loop.index}"><a href ="http://www.google.com" style="color:blue;">${link.externalLink.name}</a></p>'); 
+		var link = $('<span data-feather="arrow-right-circle" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.name}" style="color:blue;">${link.externalLink.name}</a></p>'); 
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
-		link.css('transform', 'rotate(45deg)');
-		link.css('fill', 'blue');
+		//link.css('transform', 'rotate(45deg)');
+		//link.css('fill', 'blue');
 		link.css('color', 'blue');
 		link.css('font-size', "10px");
 		
@@ -93,10 +93,12 @@ $( document ).ready(function() {
 	
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
+		$("#arrow").remove();
+		
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#arrow").remove();
-		    var icon = $('<span id="arrow" data-feather="navigation" class="flex"></span>');
+		    var icon = $('<span id="arrow" data-feather="arrow-right-circle" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
@@ -169,13 +171,11 @@ $( document ).ready(function() {
 	function makeItVisible(externalLink) {
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label-visibility"><a href ="http://www.google.com" style="color:blue;">'+externalLink["url"]+'</a></p>');
+		var icon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility"><a href ="' +externalLink["url"]+ '" style="color:blue;">'+externalLink["url"]+'</a></p>');
 		icon.css('position', 'absolute');
 		icon.css('left', storeX + posX);
 		icon.css('top', storeY + posY);
-		icon.css('fill', 'blue');
 		icon.css('color', 'blue');
-		icon.css('transform', 'rotate(45deg)');
 		icon.css('font-size', "10px");
 		
 		$("#space").append(icon);
@@ -187,9 +187,7 @@ $( document ).ready(function() {
 			'top': externalLink["y"] + posY + 16,
 			'color': 'none'
 		});
-
-	} 	
-	
+	} 		
 });
 </script>
 

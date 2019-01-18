@@ -34,18 +34,5 @@ public class IdGenerator implements IdentifierGenerator, Configurable {
             String prefix = (String) prevId.subSequence(0, prevId.length() - 9);
             return prefix + String.format("%09d", value);
         }
-
     }
-
 }
-/*
- * 
- * String prevId = (String)
- * session.createQuery(query).setMaxResults(1).uniqueResult();
- * System.out.println(prevId); int pre = prevId.length() - 9; int value =
- * Integer.parseInt(prevId.substring(pre)) + 1; //int length =
- * String.valueOf(value).length();
- * 
- * String padded = String.format("%09d" , value); String pref = (String)
- * prevId.subSequence(0, pre); return pref + (padded);
- */
