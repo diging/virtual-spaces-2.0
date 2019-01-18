@@ -182,7 +182,8 @@ public class SpaceManager implements ISpaceManager {
         }
         source = optional_source.get();
         IExternalLink link = externalLinkFactory.createExternalLink(title, source);
-        link.setExternalLink(url);
+        //link.setExternalLink(url);
+        link.setName(url);
         externalLinkRepo.save((ExternalLink) link);
 
         IExternalLinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay(link);

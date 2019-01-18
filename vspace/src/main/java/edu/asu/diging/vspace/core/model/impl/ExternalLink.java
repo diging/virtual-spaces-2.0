@@ -18,17 +18,13 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
 	@Id 
 	@GeneratedValue(generator = "extlink-id-generator")
 	@GenericGenerator(name = "extlink-id-generator", 
-      parameters = @Parameter(name = "prefix", value = "EXL"), 
+      parameters = @Parameter(name = "prefix", value = "EXL000000000"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	@ManyToOne(targetEntity=Space.class)
 	@JoinColumn(name="space_id", nullable=false)
 	private ISpace space;
-	
-//	@OneToOne(targetEntity=ExternalLink.class)
-//	@JoinColumn(name="external_link", nullable=false)
-	private String externalLink;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getId()
@@ -65,16 +61,16 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getExternalLink()
 	 */
-	@Override
-	public String getExternalLink() {
-		return externalLink;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#setExternalLink(java.lang.String)
-	 */
-	@Override
-	public void setExternalLink(String externalLink) {
-		this.externalLink = externalLink;
-	}
+//	@Override
+//	public String getExternalLink() {
+//		return externalLink;
+//	}
+//	
+//	/* (non-Javadoc)
+//	 * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#setExternalLink(java.lang.String)
+//	 */
+//	@Override
+//	public void setExternalLink(String externalLink) {
+//		this.externalLink = externalLink;
+//	}
 }

@@ -36,6 +36,30 @@ $( document ).ready(function() {
 	}
 	</c:forEach>
 	
+	<c:forEach items="${externalLinks}" var="link" varStatus="loop">
+	{
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		var link = $('<span data-feather="navigation-2" class="flex"></span><p id="label-${loop.index}"><a href ="http://www.google.com">${link.externalLink.name}</a></p>'); 
+		link.css('position', 'absolute');
+		link.css('left', ${link.positionX} + posX);
+		link.css('top', ${link.positionY} + posY);
+		link.css('transform', 'rotate(45deg)');
+		link.css('fill', 'blue');
+		link.css('color', 'blue');
+		link.css('font-size', "10px");
+ 
+	    $("#space").append(link);
+	    
+	    $("#label-${loop.index}").css({
+	    	'transform': 'rotate(0deg)',
+	    	'left': ${link.positionX} + posX - 10,
+	    	'top': ${link.positionY} + posY + 16,
+	    	'text-color': 'blue'
+    	});  
+     
+	}
+	</c:forEach>
 	var storeX;
 	var storeY;
 	
@@ -82,7 +106,7 @@ $( document ).ready(function() {
 		    storeY = e.pageY - $(this).offset().top;
 		    icon.css('left', storeX + posX);
 		    icon.css('top', storeY + posY);
-		    icon.css('color', 'black');
+		    icon.css('color', 'blue');
 		    icon.css('font-size', "15px");
 		    
 		    $("#space").append(icon);
@@ -104,6 +128,8 @@ $( document ).ready(function() {
 		storeX = null;
 		storeY = null;
 		$("#arrow").remove();
+		$("#icon").remove();
+		$("#label-visibility").remove();
 		$("#createExternalLinkAlert").hide();
 	});
 	
@@ -124,20 +150,46 @@ $( document ).ready(function() {
 	
 	$("#createExternalLinkBtn").click(function(e) {
 		var payload = {};
-		payload["x"] = "45";
-		payload["y"] = "48";
+		payload["x"] = storeX;
+		payload["y"] = storeY;
 		payload["url"] = $("#externalLinkLabel").val();
 		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
+		makeItVisible(payload);
 		$("#createExternalLinkAlert").hide();
 	});
 	
 	$('#spaceLinkRotation').change(function() {
 		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
+	
+	function makeItVisible(externalLink) {
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label-visibility"><a href ="http://www.google.com">'+externalLink["url"]+'</a></p>');
+		icon.css('position', 'absolute');
+		icon.css('left', storeX + posX);
+		icon.css('top', storeY + posY);
+		icon.css('fill', 'blue');
+		icon.css('color', 'blue');
+		icon.css('transform', 'rotate(45deg)');
+		icon.css('font-size', "10px");
+		
+		$("#space").append(icon);
+		feather.replace();
+		
+		$("#label-visibility").css({
+		'transform': 'rotate(0deg)',
+		'left': externalLink["x"] + posX - 10,
+		'top': externalLink["y"] + posY + 16,
+		'color': 'none'
+		});
+
+	} 	
+	
 });
 </script>
 

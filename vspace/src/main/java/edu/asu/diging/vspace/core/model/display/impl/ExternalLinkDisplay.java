@@ -19,7 +19,7 @@ public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDis
     @Id
     @GeneratedValue(generator = "link-display-id-generator")
     @GenericGenerator(name = "externallink-display-id-generator", 
-      parameters = @Parameter(name = "prefix", value = "EXLD"),
+      parameters = @Parameter(name = "prefix", value = "EXLD000000000"),
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 

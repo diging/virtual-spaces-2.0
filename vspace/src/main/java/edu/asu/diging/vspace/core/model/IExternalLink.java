@@ -6,8 +6,8 @@ public interface IExternalLink extends IVSpaceElement {
 
     void setSpace(ISpace space);
 
-    String getExternalLink();
-
-    void setExternalLink(String externallink);
+//    String getExternalLink();
+//
+//    void setExternalLink(String externallink);
 
 }
