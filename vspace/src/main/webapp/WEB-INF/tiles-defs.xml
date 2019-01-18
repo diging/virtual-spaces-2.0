@@ -81,5 +81,9 @@
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
 	
+	<definition name="staff/module" extends="module.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition>
+	
 	
 </tiles-definitions>
