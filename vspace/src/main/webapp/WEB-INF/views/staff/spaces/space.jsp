@@ -65,8 +65,18 @@ $( document ).ready(function() {
 		$("#createSpaceLinkAlert").show();
 	});
 	
-	$('#type').change(function() {		
+	$('#type').change(function() {
 		$("#icon").remove();
+		$("#label-visibility").remove();
+		var spaceLink = {};
+		spaceLink["x"] = storeX;
+		spaceLink["y"] = storeY;
+		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		spaceLink["type"] = $("#type").val();	
+		makeItVisible(spaceLink);
+	});	
+	
+	$('#spaceLinkLabel').change(function() {
 		$("#label-visibility").remove();
 		var spaceLink = {};
 		spaceLink["x"] = storeX;
@@ -74,7 +84,7 @@ $( document ).ready(function() {
 		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		spaceLink["type"] = $("#type").val();		
 		makeItVisible(spaceLink);
-	});	
+	});
 	
 	$("#createSpaceLinkAlert").draggable();
 	
@@ -83,9 +93,10 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#icon").remove();
+		$("#alerticon").remove();
+		$("#linkicon").remove();
 		$("#label-visibility").remove();
-		$("#createSpaceLinkAlert").hide();		
+		$("#createSpaceLinkAlert").hide();	
 	});
 	
 	$("#cancelBgImgBtn").click(function() {
@@ -123,12 +134,14 @@ $( document ).ready(function() {
 	});
 	
 	function makeItVisible(spaceLink) {
+		$("#alerticon").remove();
+		$("#linkicon").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		if (spaceLink["type"] == "ALERT") {
-			var icon = $('<div id="icon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
+			var icon = $('<div id="alerticon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
+			var icon = $('<span id="linkicon" data-feather="navigation-2" class="flex"></span><p id="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
 		}
 		icon.css('position', 'absolute');
 		icon.css('left', storeX + posX);
@@ -165,10 +178,10 @@ $( document ).ready(function() {
   <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
   <hr>
   <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-  <input class="form-control-xs" type="number" id="spaceLinkRotation" onfocus="this.value=''" value="0"><br>
+  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
   
   <label style="margin-right: 5px;"><small>Label:</small> </label>
-  <input class="form-control-xs" type="text" id="spaceLinkLabel" onfocus="this.value=''"><br>
+  <input class="form-control-xs" type="text" id="spaceLinkLabel"><br>
   
   <label style="margin-right: 5px;"><small>Type:</small> </label>
   <select id="type" class="form-control-xs">
