@@ -23,16 +23,15 @@ $( document ).ready(function() {
 		link.css('fill', 'red');
 		link.css('color', 'red');
 		link.css('font-size', "10px");
- 
-	    $("#space").append(link);
-	    
-	    $(".label-${loop.index}").css({
-	    	'transform': 'rotate(0deg)',
-	    	'left': ${link.positionX} + posX - 10,
-	    	'top': ${link.positionY} + posY + 16,
-	    	'color': 'red'
-    	});  
-     
+		
+		$("#space").append(link);
+		$(".label-${loop.index}").css({
+			'transform': 'rotate(0deg)',
+			'left': ${link.positionX} + posX - 10,
+			'top': ${link.positionY} + posY + 16,
+			'color': 'red'
+		});
+		
 	}
 	</c:forEach>
 	
@@ -40,7 +39,7 @@ $( document ).ready(function() {
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var link = $('<span data-feather="navigation-2" class="flex"></span><p id="label-${loop.index}"><a href ="http://www.google.com">${link.externalLink.name}</a></p>'); 
+		var link = $('<span data-feather="navigation-2" class="flex"></span><p id="label-${loop.index}"><a href ="http://www.google.com" style="color:blue;">${link.externalLink.name}</a></p>'); 
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
@@ -48,18 +47,19 @@ $( document ).ready(function() {
 		link.css('fill', 'blue');
 		link.css('color', 'blue');
 		link.css('font-size', "10px");
- 
-	    $("#space").append(link);
-	    
-	    $("#label-${loop.index}").css({
-	    	'transform': 'rotate(0deg)',
-	    	'left': ${link.positionX} + posX - 10,
-	    	'top': ${link.positionY} + posY + 16,
-	    	'text-color': 'blue'
-    	});  
-     
+		
+		$("#space").append(link);
+		
+		$("#label-${loop.index}").css({
+			'transform': 'rotate(0deg)',
+			'left': ${link.positionX} + posX - 10,
+			'top': ${link.positionY} + posY + 16,
+			'text-color': 'blue'
+		});
+		
 	}
 	</c:forEach>
+	
 	var storeX;
 	var storeY;
 	
@@ -72,7 +72,7 @@ $( document ).ready(function() {
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
-            var posY = $(this).position().top;
+		    var posY = $(this).position().top;
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
@@ -100,7 +100,7 @@ $( document ).ready(function() {
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
-            var posY = $(this).position().top;
+		    var posY = $(this).position().top;
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
@@ -169,7 +169,7 @@ $( document ).ready(function() {
 	function makeItVisible(externalLink) {
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label-visibility"><a href ="http://www.google.com">'+externalLink["url"]+'</a></p>');
+		var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span><p id="label-visibility"><a href ="http://www.google.com" style="color:blue;">'+externalLink["url"]+'</a></p>');
 		icon.css('position', 'absolute');
 		icon.css('left', storeX + posX);
 		icon.css('top', storeY + posY);
@@ -182,10 +182,10 @@ $( document ).ready(function() {
 		feather.replace();
 		
 		$("#label-visibility").css({
-		'transform': 'rotate(0deg)',
-		'left': externalLink["x"] + posX - 10,
-		'top': externalLink["y"] + posY + 16,
-		'color': 'none'
+			'transform': 'rotate(0deg)',
+			'left': externalLink["x"] + posX - 10,
+			'top': externalLink["y"] + posY + 16,
+			'color': 'none'
 		});
 
 	} 	
