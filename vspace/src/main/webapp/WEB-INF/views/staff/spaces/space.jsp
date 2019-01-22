@@ -136,6 +136,12 @@ $( document ).ready(function() {
 	function makeItVisible(spaceLink) {
 		$("#alerticon").remove();
 		$("#linkicon").remove();
+		$("#icon").remove();	
+		$("#bgImage").click(function() {
+			$("#alerticon").remove();
+			$("#linkicon").remove();
+			$("#label-visibility").remove();
+		});		
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		if (spaceLink["type"] == "ALERT") {
