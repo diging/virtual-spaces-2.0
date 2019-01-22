@@ -17,9 +17,9 @@ import javax.persistence.Entity;
 public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDisplay {
 
     @Id
-    @GeneratedValue(generator = "link-display-id-generator")
+    @GeneratedValue(generator = "externallink-display-id-generator")
     @GenericGenerator(name = "externallink-display-id-generator", 
-      parameters = @Parameter(name = "prefix", value = "EXLD000000000"),
+      parameters = @Parameter(name = "prefix", value = "EXLD"),
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 

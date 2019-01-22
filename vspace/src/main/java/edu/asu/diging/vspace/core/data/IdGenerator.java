@@ -8,10 +8,11 @@ import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
 
-public class IdGenerator implements IdentifierGenerator, Configurable {
+public class IdGenerator extends SequenceStyleGenerator implements IdentifierGenerator, Configurable {
 
     private String prefix;
 
@@ -22,17 +23,10 @@ public class IdGenerator implements IdentifierGenerator, Configurable {
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object obj) throws HibernateException {
-        int value = 0;
-        String query = String.format("SELECT id FROM %s ORDER BY creationDate DESC", obj.getClass().getSimpleName());
-        String prevId = (String) session.createQuery(query).setMaxResults(1).uniqueResult();
-        if (prevId == null) {
-            value = 1;
-            String prefix = (String) this.prefix.subSequence(0, this.prefix.length() - 9);
-            return prefix + String.format("%09d", value);
-        } else {
-            value = Integer.parseInt(prevId.substring(prevId.length() - 9)) + 1;
-            String prefix = (String) prevId.subSequence(0, prevId.length() - 9);
-            return prefix + String.format("%09d", value);
-        }
+        //String query = String.format("select count(*) from %s",
+                //obj.getClass().getSimpleName());
+        //long count = (Long) session.createQuery(query).uniqueResult();
+        //return prefix + (count + 1);
+          return prefix + String.format("%09d", super.generate(session, obj));
     }
 }

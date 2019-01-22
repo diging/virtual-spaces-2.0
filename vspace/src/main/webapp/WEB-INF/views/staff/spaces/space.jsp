@@ -43,8 +43,6 @@ $( document ).ready(function() {
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
-		//link.css('transform', 'rotate(45deg)');
-		//link.css('fill', 'blue');
 		link.css('color', 'blue');
 		link.css('font-size', "10px");
 		
