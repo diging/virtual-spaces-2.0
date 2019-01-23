@@ -9,5 +9,4 @@ public interface ISpaceLink extends IVSpaceElement {
 	ISpace getTargetSpace();
 
 	void setTargetSpace(ISpace targetSpace);
-
 }

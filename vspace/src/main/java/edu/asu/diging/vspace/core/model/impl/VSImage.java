@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -74,6 +73,5 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Override
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
-	}
-	
+	}	
 }

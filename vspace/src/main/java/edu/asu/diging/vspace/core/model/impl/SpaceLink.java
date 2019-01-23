@@ -16,10 +16,10 @@ import edu.asu.diging.vspace.core.model.ISpaceLink;
 public class SpaceLink extends VSpaceElement implements ISpaceLink {
 		
 	@Id 
-	@GeneratedValue(generator = "id_generator")
-    @GenericGenerator(name = "id_generator", 
-      parameters = @Parameter(name = "prefix", value = "SPL"), 
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+	@GeneratedValue(generator = "spalink_id_generator")
+	@GenericGenerator(name = "spalink_id_generator", 
+	    parameters = @Parameter(name = "prefix", value = "SPL"), 
+	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	@ManyToOne(targetEntity=Space.class)
@@ -72,5 +72,4 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
 	public void setTargetSpace(ISpace targetSpace) {
 		this.targetSpace = targetSpace;
 	}
-
 }

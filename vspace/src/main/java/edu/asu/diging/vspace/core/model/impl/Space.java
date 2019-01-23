@@ -21,11 +21,10 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class Space extends VSpaceElement implements ISpace {
 
 	@Id
-	@GeneratedValue(generator = "id_generator")
-	@GenericGenerator(name = "id_generator", 	
-					parameters = @Parameter(name = "prefix", value = "SPA"), 
-					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
-			)
+	@GeneratedValue(generator = "space_id_generator")
+	@GenericGenerator(name = "space_id_generator", 
+	    parameters = @Parameter(name = "prefix", value = "SPA"), 
+	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 
 	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
@@ -111,5 +110,4 @@ public class Space extends VSpaceElement implements ISpace {
 	public void setImage(IVSImage image) {
 		this.image = image;
 	}
-
 }

@@ -1,6 +1,8 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
 <script>
@@ -63,6 +65,7 @@ $( document ).ready(function() {
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#createExternalLinkAlert").hide();
+		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#arrow").remove();
@@ -145,7 +148,7 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
-		$("#createSpaceLinkAlert").hide();
+		$("#createSpaceLinkAlert").hide();	
 	});
 	
 	$("#createExternalLinkBtn").click(function(e) {
@@ -160,10 +163,6 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){});
 		makeItVisible(payload);
 		$("#createExternalLinkAlert").hide();
-	});
-	
-	$('#spaceLinkRotation').change(function() {
-		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
 	function makeItVisible(externalLink) {
@@ -186,15 +185,30 @@ $( document ).ready(function() {
 			'color': 'none'
 		});
 	} 		
+		
+	$('#changeBgImgButton').click(function(file) {
+		$("#createSpaceLinkAlert").hide();
+		$("#changeBgImgAlert").show();	
+		
+	});
+			
+	$("#changeBgImgAlert").draggable();
+		
+	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
+	
+	$('#spaceLinkRotation').change(function() {
+		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	});
+	
 });
 </script>
 
  <h1>Space: ${space.name}</h1> 
-
+ 
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
   <br>
-  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
+  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
 
 <div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
@@ -220,6 +234,18 @@ $( document ).ready(function() {
   <HR>
   <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
 </div>
+	        
+<c:url value="/staff/space/update/${space.id}" var="postUrl" />
+<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<h6><small>Change Background Image: </small></h6>
+		<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
+	        <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
+		<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+	</div>
+	
+</form:form>
 
 <div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
  <h6 class="alert-heading"><small>Create new External Link</small></h6>
@@ -234,6 +260,7 @@ $( document ).ready(function() {
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button>
+<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
 </nav>
 
 <p></p>
@@ -243,3 +270,4 @@ $( document ).ready(function() {
 <img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
 </div>
 </c:if>
+

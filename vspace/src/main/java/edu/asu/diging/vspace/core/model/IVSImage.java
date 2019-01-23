@@ -13,5 +13,4 @@ public interface IVSImage extends IVSpaceElement {
 	void setFileType(String fileType);
 
 	String getFileType();
-
 }
