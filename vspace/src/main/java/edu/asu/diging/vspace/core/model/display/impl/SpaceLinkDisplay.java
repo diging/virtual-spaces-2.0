@@ -17,8 +17,8 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 public class SpaceLinkDisplay extends LinkDisplay implements ISpaceLinkDisplay {
 
     @Id
-    @GeneratedValue(generator = "link-display-id-generator")
-    @GenericGenerator(name = "link-display-id-generator", parameters = @Parameter(name = "prefix", value = "SPLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GeneratedValue(generator = "link_display_id_generator")
+    @GenericGenerator(name = "link_display_id_generator", parameters = @Parameter(name = "prefix", value = "SPLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     private int rotation;
