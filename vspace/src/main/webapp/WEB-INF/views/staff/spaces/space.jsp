@@ -27,6 +27,7 @@ $( document ).ready(function() {
 		link.css('font-size', "10px");
 		
 		$("#space").append(link);
+		
 		$(".label-${loop.index}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
@@ -95,7 +96,6 @@ $( document ).ready(function() {
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
 		$("#arrow").remove();
-		
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#arrow").remove();
@@ -156,7 +156,6 @@ $( document ).ready(function() {
 		payload["x"] = storeX;
 		payload["y"] = storeY;
 		payload["url"] = $("#externalLinkLabel").val();
-		$("#arrow").remove();
 		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
@@ -167,21 +166,21 @@ $( document ).ready(function() {
 	
 	function makeItVisible(externalLink) {
 		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		var icon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility"><a href ="' +externalLink["url"]+ '" style="color:blue;">'+externalLink["url"]+'</a></p>');
-		icon.css('position', 'absolute');
-		icon.css('left', storeX + posX);
-		icon.css('top', storeY + posY);
-		icon.css('color', 'blue');
-		icon.css('font-size', "10px");
+		var posY = $("#bgImage").position().top;		
+		var linkicon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility"><a href ="' +externalLink["url"]+ '" style="color:blue;">'+externalLink["url"]+'</a></p>');
+		console.log(linkicon);
+		linkicon.css('position', 'absolute');
+		linkicon.css('left', storeX + posX);
+		linkicon.css('top', storeY + posY);
+		linkicon.css('color', 'blue');
+		linkicon.css('font-size', "10px");
 		
-		$("#space").append(icon);
-		feather.replace();
-		
+		$("#space").append(linkicon);
+
 		$("#label-visibility").css({
 			'transform': 'rotate(0deg)',
-			'left': externalLink["x"] + posX - 10,
-			'top': externalLink["y"] + posY + 16,
+			'left': storeX + posX - 10,
+			'top': storeY + posY + 16,
 			'color': 'none'
 		});
 	} 		
@@ -259,7 +258,7 @@ $( document ).ready(function() {
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
-<button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button>
+<button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
 </nav>
 

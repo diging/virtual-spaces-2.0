@@ -17,8 +17,8 @@ import edu.asu.diging.vspace.core.model.IChoice;
 public class BranchingPoint extends Slide implements IBranchingPoint {
 
     @Id
-    @GeneratedValue(generator = "branchingpoint-id-generator")
-    @GenericGenerator(name = "branchingpoint-id-generator",
+    @GeneratedValue(generator = "branchingpoint_id_generator")
+    @GenericGenerator(name = "branchingpoint_id_generator",
         parameters = @Parameter(name = "prefix", value = "BPNT"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
