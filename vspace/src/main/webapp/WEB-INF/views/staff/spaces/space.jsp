@@ -63,6 +63,7 @@ $( document ).ready(function() {
 	
 	var storeX;
 	var storeY;
+	const externalLinks = [];
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#createExternalLinkAlert").hide();
@@ -95,7 +96,6 @@ $( document ).ready(function() {
 	
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
-		$("#arrow").remove();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#arrow").remove();
@@ -164,25 +164,29 @@ $( document ).ready(function() {
 		$("#createExternalLinkAlert").hide();
 	});
 	
-	function makeItVisible(externalLink) {
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;		
-		var linkicon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility"><a href ="' +externalLink["url"]+ '" style="color:blue;">'+externalLink["url"]+'</a></p>');
-		console.log(linkicon);
-		linkicon.css('position', 'absolute');
-		linkicon.css('left', storeX + posX);
-		linkicon.css('top', storeY + posY);
-		linkicon.css('color', 'blue');
-		linkicon.css('font-size', "10px");
+	function makeItVisible(externalLink) {	
+		externalLinks.push(externalLink);			
+		for (i = 0; i < externalLinks.length; i++) { 
+			var posX = $("#bgImage").position().left;
+			var posY = $("#bgImage").position().top;
+			console.log(externalLinks);
+			var linkicon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility" + i><a href ="' +externalLinks[i].url+ '" style="color:blue;">'+externalLinks[i].url+'</a></p>');
+			console.log(externalLinks);
+			linkicon.css('position', 'absolute');
+			linkicon.css('left', externalLinks[i].x + posX);
+			linkicon.css('top', externalLinks[i].y + posY);
+			linkicon.css('color', 'blue');
+			linkicon.css('font-size', "10px");
 		
-		$("#space").append(linkicon);
+			$("#space").append(linkicon);
 
-		$("#label-visibility").css({
-			'transform': 'rotate(0deg)',
-			'left': storeX + posX - 10,
-			'top': storeY + posY + 16,
-			'color': 'none'
-		});
+			$("#label-visibility" + i).css({
+				'transform': 'rotate(0deg)',
+				'left': storeX + posX - 10,
+				'top': storeY + posY + 16,
+				'color': 'none'
+			});
+		}
 	} 		
 		
 	$('#changeBgImgButton').click(function(file) {
