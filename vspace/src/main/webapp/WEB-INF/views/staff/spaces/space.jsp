@@ -40,13 +40,14 @@ $( document ).ready(function() {
 	
 	var storeX;
 	var storeY;
+	var counter = 1;
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    $("#icon").remove();
-		    var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
+		    $('#icon'+counter).remove(); 
+		    var icon = $('<span id="icon'+counter+'" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left;
@@ -66,8 +67,9 @@ $( document ).ready(function() {
 	});
 	
 	$('#type').change(function() {
-		$("#icon").remove();
-		$("#label-visibility").remove();
+		counter = counter+1;
+		$('#icon'+counter).remove();
+		$("#label-visibility"+counter).remove();
 		var spaceLink = {};
 		spaceLink["x"] = storeX;
 		spaceLink["y"] = storeY;
@@ -77,6 +79,8 @@ $( document ).ready(function() {
 	});	
 	
 	$('#spaceLinkLabel').change(function() {
+		//$("#icon"+counter).remove();
+		counter = counter++;
 		$("#label-visibility").remove();
 		var spaceLink = {};
 		spaceLink["x"] = storeX;
@@ -93,8 +97,9 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#alerticon").remove();
-		$("#linkicon").remove();
+		$("#icon"+counter).remove();
+		//$("#alerticon").remove();
+		//$("#linkicon").remove();
 		$("#label-visibility").remove();
 		$("#createSpaceLinkAlert").hide();	
 	});
@@ -104,6 +109,7 @@ $( document ).ready(function() {
 	});
 	
 	$("#createSpaceLinkBtn").click(function(e) {
+		counter = counter++;
 		var payload = {};
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
@@ -113,10 +119,11 @@ $( document ).ready(function() {
 		payload["linkedSpace"] = $("#linkedSpace").val();
 		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
-		$("#arrow").remove();
+
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
-		}); 	    
+		}); 	  
+		//makeItVisible(payload);
 		$("#createSpaceLinkAlert").hide();		
 	});
 		
@@ -130,28 +137,28 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#icon').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		$('#icon'+counter).css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
-	function makeItVisible(spaceLink) {
-		$("#alerticon").remove();
-		$("#linkicon").remove();
-		$("#icon").remove();	
-		$("#bgImage").click(function() {
+	function makeItVisible(spaceLink) { 
+		//$("#icon"+counter1).remove();	
+		var counter1 = counter+1;
+		//counter = counter++;
+		/* $("#bgImage").click(function() {
 			$("#alerticon").remove();
 			$("#linkicon").remove();
 			$("#label-visibility").remove();
-		});		
+		});		 */
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		if (spaceLink["type"] == "ALERT") {
-			var icon = $('<div id="alerticon" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
+			var icon = $('<div id="icon'+counter1+'" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
 		} else {
-			var icon = $('<span id="linkicon" data-feather="navigation-2" class="flex"></span><p id="label-visibility">'+spaceLink["spaceLinkLabel"]+'</p>');
+			var icon = $('<span id="icon'+counter1+'" data-feather="navigation-2" class="flex"></span><p id="label-visibility'+counter1+'">'+spaceLink["spaceLinkLabel"]+'</p>');
 		}
 		icon.css('position', 'absolute');
-		icon.css('left', storeX + posX);
-		icon.css('top', storeY + posY);
+		icon.css('left', spaceLink["x"] + posX);
+		icon.css('top', spaceLink["y"] + posY);
 		icon.css('fill', 'red');
 		icon.css('color', 'red');
 		icon.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
@@ -160,7 +167,7 @@ $( document ).ready(function() {
 		$("#space").append(icon);
 		feather.replace();
 		
-		$("#label-visibility").css({
+		$("#label-visibility" + counter1).css({
 			'transform': 'rotate(0deg)',
 			'left': spaceLink["x"] + posX - 10,
 			'top': spaceLink["y"] + posY + 16,
@@ -179,33 +186,35 @@ $( document ).ready(function() {
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
 
-<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-  <h6 class="alert-heading"><small>Create new Space Link</small></h6>
-  <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
-  <hr>
-  <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
-  
-  <label style="margin-right: 5px;"><small>Label:</small> </label>
-  <input class="form-control-xs" type="text" id="spaceLinkLabel"><br>
-  
-  <label style="margin-right: 5px;"><small>Type:</small> </label>
-  <select id="type" class="form-control-xs">
-  	<option selected value="">Choose...</option>
-  	<option value="ARROW">Link</option>
-  	<option value="ALERT">Alert</option>
-  </select><br>
-  
-  <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
-  <select id="linkedSpace" class="form-control-xs">
-        <option selected value="">Choose...</option>
-        <c:forEach items="${spaces}" var="space">
-        <option value="${space.id}">${space.name}</option>
-        </c:forEach>
-  </select>
-  <HR>
-  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
-</div>
+<form>
+	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	  <h6 class="alert-heading"><small>Create new Space Link</small></h6>
+	  <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
+	  <hr>
+	  <label style="margin-right: 5px;"><small>Rotation:</small> </label>
+	  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
+	  
+	  <label style="margin-right: 5px;"><small>Label:</small> </label>
+	  <input class="form-control-xs" type="text" id="spaceLinkLabel"><br>
+	  
+	  <label style="margin-right: 5px;"><small>Type:</small> </label>
+	  <select id="type" class="form-control-xs">
+	  	<option selected value="">Choose...</option>
+	  	<option value="ARROW">Link</option>
+	  	<option value="ALERT">Alert</option>
+	  </select><br>
+	  
+	  <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
+	  <select id="linkedSpace" class="form-control-xs">
+	        <option selected value="">Choose...</option>
+	        <c:forEach items="${spaces}" var="space">
+	        <option value="${space.id}">${space.name}</option>
+	        </c:forEach>
+	  </select>
+	  <HR>
+	  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="reset" class="btn btn-primary btn-xs">Create Space Link</button></p>
+	</div>
+</form>
 	        
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
