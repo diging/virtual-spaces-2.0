@@ -160,17 +160,16 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
-		makeItVisible(payload);
+		externalLinks.push(payload);
+		makeItVisible(externalLinks);
 		$("#createExternalLinkAlert").hide();
 	});
 	
-	function makeItVisible(externalLink) {	
-		externalLinks.push(externalLink);			
-		for (i = 0; i < externalLinks.length; i++) { 
+	function makeItVisible(externalLinks) {			
+		for (i = externalLinks.length-1; i < externalLinks.length; i++) { 
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
-			console.log(externalLinks);
-			var linkicon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility" + i><a href ="' +externalLinks[i].url+ '" style="color:blue;">'+externalLinks[i].url+'</a></p>');
+			var linkicon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility'+i+'"><a href ="' +externalLinks[i].url+ '" style="color:blue;">'+externalLinks[i].url+'</a></p>');
 			console.log(externalLinks);
 			linkicon.css('position', 'absolute');
 			linkicon.css('left', externalLinks[i].x + posX);
@@ -179,11 +178,11 @@ $( document ).ready(function() {
 			linkicon.css('font-size', "10px");
 		
 			$("#space").append(linkicon);
-
-			$("#label-visibility" + i).css({
+			
+			$("#label-visibility"+i).css({
 				'transform': 'rotate(0deg)',
-				'left': storeX + posX - 10,
-				'top': storeY + posY + 16,
+				'left': externalLinks[i].x + posX - 10,
+				'top': externalLinks[i].y + posY + 16,
 				'color': 'none'
 			});
 		}
