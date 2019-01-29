@@ -248,16 +248,17 @@ $( document ).ready(function() {
 	</div>
 	
 </form:form>
-
-<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
- <h6 class="alert-heading"><small>Create new External Link</small></h6>
-  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
-  <hr>  
-  <label style="margin-right: 5px;"><small>External Link</small> </label>
-  <input class="form-control-xs" type="text" id="externalLinkLabel"><br>
-  <HR>
-  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="button" class="btn btn-primary btn-xs">Create External Link</button></p>
-</div>
+<form>
+	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	 <h6 class="alert-heading"><small>Create new External Link</small></h6>
+	  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
+	  <hr>  
+	  <label style="margin-right: 5px;"><small>External Link</small> </label>
+	  <input class="form-control-xs" type="text" id="externalLinkLabel"><br>
+	  <HR>
+	  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
+	</div>
+</form>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
