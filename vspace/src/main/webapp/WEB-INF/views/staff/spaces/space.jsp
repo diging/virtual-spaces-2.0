@@ -41,13 +41,14 @@ $( document ).ready(function() {
 	var storeX;
 	var storeY;
 	var counter = 1;
+	const spaceLinks = [];
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    $('#icon'+counter).remove(); 
-		    var icon = $('<span id="icon'+counter+'" data-feather="navigation-2" class="flex"></span>');
+		    $("#icon").remove(); 
+		    var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left;
@@ -66,30 +67,6 @@ $( document ).ready(function() {
 		$("#createSpaceLinkAlert").show();
 	});
 	
-	$('#type').change(function() {
-		counter = counter+1;
-		$('#icon'+counter).remove();
-		$("#label-visibility"+counter).remove();
-		var spaceLink = {};
-		spaceLink["x"] = storeX;
-		spaceLink["y"] = storeY;
-		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-		spaceLink["type"] = $("#type").val();	
-		makeItVisible(spaceLink);
-	});	
-	
-	$('#spaceLinkLabel').change(function() {
-		//$("#icon"+counter).remove();
-		counter = counter++;
-		$("#label-visibility").remove();
-		var spaceLink = {};
-		spaceLink["x"] = storeX;
-		spaceLink["y"] = storeY;
-		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-		spaceLink["type"] = $("#type").val();		
-		makeItVisible(spaceLink);
-	});
-	
 	$("#createSpaceLinkAlert").draggable();
 	
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
@@ -97,9 +74,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#icon"+counter).remove();
-		//$("#alerticon").remove();
-		//$("#linkicon").remove();
+		$("#link").remove();
 		$("#label-visibility").remove();
 		$("#createSpaceLinkAlert").hide();	
 	});
@@ -109,7 +84,6 @@ $( document ).ready(function() {
 	});
 	
 	$("#createSpaceLinkBtn").click(function(e) {
-		counter = counter++;
 		var payload = {};
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
@@ -123,8 +97,9 @@ $( document ).ready(function() {
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		}); 	  
-		//makeItVisible(payload);
-		$("#createSpaceLinkAlert").hide();		
+		spaceLinks.push(payload);
+		makeSpaceLinksVisible(spaceLinks);
+		$("#createSpaceLinkAlert").hide();
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -137,43 +112,69 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#icon'+counter).css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		$('#icon').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
-	function makeItVisible(spaceLink) { 
-		//$("#icon"+counter1).remove();	
-		var counter1 = counter+1;
-		//counter = counter++;
-		/* $("#bgImage").click(function() {
-			$("#alerticon").remove();
-			$("#linkicon").remove();
-			$("#label-visibility").remove();
-		});		 */
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		if (spaceLink["type"] == "ALERT") {
-			var icon = $('<div id="icon'+counter1+'" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
-		} else {
-			var icon = $('<span id="icon'+counter1+'" data-feather="navigation-2" class="flex"></span><p id="label-visibility'+counter1+'">'+spaceLink["spaceLinkLabel"]+'</p>');
-		}
-		icon.css('position', 'absolute');
-		icon.css('left', spaceLink["x"] + posX);
-		icon.css('top', spaceLink["y"] + posY);
-		icon.css('fill', 'red');
-		icon.css('color', 'red');
-		icon.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-		icon.css('font-size', "10px");
+	$(".target").change(function() {
+		$("#icon").remove();
+		$("#link").remove();
+
+		//$("#label-visibility".match('^(0|[1-9][0-9]*)$')).remove();
+		//var s = $("#label-visibility");
+		$(".label-visibility").remove();
 		
-		$("#space").append(icon);
-		feather.replace();
+		var spaceLink = {};
+		spaceLink["x"] = storeX;
+		spaceLink["y"] = storeY;
+		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		spaceLink["type"] = $("#type").val();
+
+		spaceLinks.push(spaceLink)
+		makeSpaceLinksVisible(spaceLinks);
+	});
+	
+	function makeSpaceLinksVisible(spaceLinks) { 
+		//console.log(spaceLinks);
 		
-		$("#label-visibility" + counter1).css({
-			'transform': 'rotate(0deg)',
-			'left': spaceLink["x"] + posX - 10,
-			'top': spaceLink["y"] + posY + 16,
-			'color': 'red'
-		});
-	}
+		
+		for (i = spaceLinks.length-1; i < spaceLinks.length; i++) { 
+			var posX = $("#bgImage").position().left;
+			var posY = $("#bgImage").position().top;
+			var label = $("<p class='label-visibility'></p>");
+			label.text(spaceLinks[i].spaceLinkLabel);
+			var links;
+			if (spaceLinks[i].type == "ALERT") {
+				links = $('<div id="link" class="alert alert-primary" role="alert">');
+			} else {
+				$(label).css({
+					'transform': 'rotate(0deg)',
+					'left': spaceLinks[i].x + posX - 10,
+					'top': spaceLinks[i].y + posY + 16,
+					'color': 'red'
+				});
+				
+				links = $('<span id="link" data-feather="navigation-2" class="flex"></span>');
+			}
+			links.css('position', 'absolute');
+			links.css('left', spaceLinks[i].x + posX);
+			links.css('top', spaceLinks[i] .y+ posY);
+			links.css('fill', 'red');
+			links.css('color', 'red');
+			links.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+			links.css('font-size', "10px");
+			
+			$("#space").append(links);
+			$("#space").append(label);
+			feather.replace();
+			
+			/*$("#label-visibility" + i).css({
+				'transform': 'rotate(0deg)',
+				'left': spaceLinks[i].x + posX - 10,
+				'top': spaceLinks[i].y + posY + 16,
+				'color': 'red'
+			});*/
+		 }
+	 }
 });
 
 </script>
@@ -195,10 +196,10 @@ $( document ).ready(function() {
 	  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
 	  
 	  <label style="margin-right: 5px;"><small>Label:</small> </label>
-	  <input class="form-control-xs" type="text" id="spaceLinkLabel"><br>
+	  <input class="form-control-xs target" type="text" id="spaceLinkLabel"><br>
 	  
 	  <label style="margin-right: 5px;"><small>Type:</small> </label>
-	  <select id="type" class="form-control-xs">
+	  <select id="type" class="form-control-xs target" >
 	  	<option selected value="">Choose...</option>
 	  	<option value="ARROW">Link</option>
 	  	<option value="ALERT">Alert</option>
