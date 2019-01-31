@@ -40,8 +40,6 @@ $( document ).ready(function() {
 	
 	var storeX;
 	var storeY;
-	var counter = 1;
-	const spaceLinks = [];
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
@@ -97,8 +95,7 @@ $( document ).ready(function() {
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		}); 	  
-		spaceLinks.push(payload);
-		makeSpaceLinksVisible(spaceLinks);
+		show(payload);
 		$("#createSpaceLinkAlert").hide();
 	});
 		
@@ -116,65 +113,50 @@ $( document ).ready(function() {
 	});
 	
 	$(".target").change(function() {
-		$("#icon").remove();
-		$("#link").remove();
-
-		//$("#label-visibility".match('^(0|[1-9][0-9]*)$')).remove();
-		//var s = $("#label-visibility");
-		$(".label-visibility").remove();
-		
+		//$("#icon").remove();
+		$("#link").empty();
+		//$("#label-visibility").remove();	
 		var spaceLink = {};
 		spaceLink["x"] = storeX;
 		spaceLink["y"] = storeY;
 		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		spaceLink["type"] = $("#type").val();
-
-		spaceLinks.push(spaceLink)
-		makeSpaceLinksVisible(spaceLinks);
+		show(spaceLink);
 	});
-	
-	function makeSpaceLinksVisible(spaceLinks) { 
-		//console.log(spaceLinks);
-		
-		
-		for (i = spaceLinks.length-1; i < spaceLinks.length; i++) { 
+
+	function show(spaceLinks) { 
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
-			var label = $("<p class='label-visibility'></p>");
-			label.text(spaceLinks[i].spaceLinkLabel);
+			var label = $("<p id='label-visibility'></p>");
+			label.text(spaceLinks["spaceLinkLabel"]);
+			$(label).css({
+				'position': 'absolute',
+				'font-size': "10px",
+				'transform': 'rotate(0deg)',
+				'left': spaceLinks["x"] + posX - 10,
+				'top': spaceLinks["y"] + posY + 16,
+				'color': 'red'
+			});
 			var links;
-			if (spaceLinks[i].type == "ALERT") {
-				links = $('<div id="link" class="alert alert-primary" role="alert">');
+			if (spaceLinks["type"] == "ALERT") {
+				links = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLinks["spaceLinkLabel"]+'</p>');
 			} else {
-				$(label).css({
-					'transform': 'rotate(0deg)',
-					'left': spaceLinks[i].x + posX - 10,
-					'top': spaceLinks[i].y + posY + 16,
-					'color': 'red'
-				});
 				
-				links = $('<span id="link" data-feather="navigation-2" class="flex"></span>');
+				links = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
 			}
+
 			links.css('position', 'absolute');
-			links.css('left', spaceLinks[i].x + posX);
-			links.css('top', spaceLinks[i] .y+ posY);
+			links.css('left', spaceLinks["x"] + posX);
+			links.css('top', spaceLinks["y"] + posY);
 			links.css('fill', 'red');
 			links.css('color', 'red');
 			links.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 			links.css('font-size', "10px");
-			
+
 			$("#space").append(links);
 			$("#space").append(label);
 			feather.replace();
-			
-			/*$("#label-visibility" + i).css({
-				'transform': 'rotate(0deg)',
-				'left': spaceLinks[i].x + posX - 10,
-				'top': spaceLinks[i].y + posY + 16,
-				'color': 'red'
-			});*/
 		 }
-	 }
 });
 
 </script>
@@ -200,7 +182,7 @@ $( document ).ready(function() {
 	  
 	  <label style="margin-right: 5px;"><small>Type:</small> </label>
 	  <select id="type" class="form-control-xs target" >
-	  	<option selected value="">Choose...</option>
+	  	<option disabled selected value>Choose...</option>
 	  	<option value="ARROW">Link</option>
 	  	<option value="ALERT">Alert</option>
 	  </select><br>
