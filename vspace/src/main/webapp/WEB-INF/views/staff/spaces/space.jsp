@@ -100,8 +100,7 @@ $( document ).ready(function() {
 		$("#label-visibility").attr("id","");
 		$("#link").attr("id","");
 		$("#icon").attr("id","");
-		show(payload);
-		
+		show(payload);		
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
