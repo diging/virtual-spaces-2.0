@@ -18,7 +18,7 @@ public interface ISpaceManager {
     ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation,
             String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException;
 
-    IExternalLinkDisplay createExternalLink(String title, ISpace space, float positionX, float positionY)
+    IExternalLinkDisplay createExternalLink(String title, ISpace space, float positionX, float positionY, String externalLink)
             throws SpaceDoesNotExistException;
 
     ISpace getFullyLoadedSpace(String id);

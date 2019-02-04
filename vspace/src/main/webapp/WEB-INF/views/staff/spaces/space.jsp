@@ -63,8 +63,7 @@ $( document ).ready(function() {
 	
 	var storeX;
 	var storeY;
-	const externalLinks = [];
-	
+
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#createExternalLinkAlert").hide();
 		$("#changeBgImgAlert").hide();
@@ -130,9 +129,8 @@ $( document ).ready(function() {
 	$("#cancelExternalLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#arrow").remove();
-		$("#icon").remove();
-		$("#label-visibility").remove();
+		$("#link").remove();
+		$("#title").remove();
 		$("#createExternalLinkAlert").hide();
 	});
 	
@@ -155,37 +153,49 @@ $( document ).ready(function() {
 		var payload = {};
 		payload["x"] = storeX;
 		payload["y"] = storeY;
-		payload["url"] = $("#externalLinkLabel").val();
+		payload["externalLinkLabel"] = $("#externalLinkLabel").val();
+		payload["url"] = $("#externalLink").val();
 		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
-		externalLinks.push(payload);
-		makeItVisible(externalLinks);
+
 		$("#createExternalLinkAlert").hide();
+		("#title").attr("id"," ");
+		showExternalLinks(payload);
 	});
 	
-	function makeItVisible(externalLinks) {			
-		for (i = externalLinks.length-1; i < externalLinks.length; i++) { 
+	$(".target").change(function() {
+		var externalLink = {};
+		externalLink["x"] = storeX;
+		externalLink["y"] = storeY;
+		externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
+		showExternalLinks(externalLink);
+	});
+	
+	function showExternalLinks(externalLink) {			
 			var posX = $("#bgImage").position().left;
-			var posY = $("#bgImage").position().top;
-			var linkicon = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span><p id="label-visibility'+i+'"><a href ="' +externalLinks[i].url+ '" style="color:blue;">'+externalLinks[i].url+'</a></p>');
-			console.log(externalLinks);
-			linkicon.css('position', 'absolute');
-			linkicon.css('left', externalLinks[i].x + posX);
-			linkicon.css('top', externalLinks[i].y + posY);
-			linkicon.css('color', 'blue');
-			linkicon.css('font-size', "10px");
-		
-			$("#space").append(linkicon);
-			
-			$("#label-visibility"+i).css({
+			var posY = $("#bgImage").position().top;		
+			var label = $("<p id='title'></p>").append('<a href="' + externalLink["externalLinkLabel"] + '" style=\"color:blue;\"></a>');
+			label.text(externalLink["externalLinkLabel"]);
+			label.css({
+				'position': 'absolute',
+				'font-size': "10px",
 				'transform': 'rotate(0deg)',
-				'left': externalLinks[i].x + posX - 10,
-				'top': externalLinks[i].y + posY + 16,
-				'color': 'none'
+				'left': externalLink["x"] + posX - 10,
+				'top': externalLink["y"] + posY + 16,
+				'color': 'blue'
 			});
-		}
+			var link = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span>');
+
+			link.css('position', 'absolute');
+			link.css('left', externalLink["x"] + posX);
+			link.css('top', externalLink["y"] + posY);
+			link.css('color', 'blue');
+			link.css('font-size', "10px");
+		
+			$("#space").append(link);
+			$("#space").append(label);
 	} 		
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -253,8 +263,11 @@ $( document ).ready(function() {
 	 <h6 class="alert-heading"><small>Create new External Link</small></h6>
 	  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
 	  <hr>  
+	  <label style="margin-right: 5px;"><small>Label:</small> </label>
+	  <input class="form-control-xs target" type="text" id="externalLinkLabel"><br>
+	  
 	  <label style="margin-right: 5px;"><small>External Link</small> </label>
-	  <input class="form-control-xs" type="text" id="externalLinkLabel"><br>
+	  <input class="form-control-xs" type="text" size="15" id="externalLink"><br>
 	  <HR>
 	  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
 	</div>

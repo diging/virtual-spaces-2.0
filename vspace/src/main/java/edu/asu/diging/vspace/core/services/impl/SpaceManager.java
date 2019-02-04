@@ -172,19 +172,20 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY) throws SpaceDoesNotExistException {
+    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY, String externalLink) throws SpaceDoesNotExistException {
         // we need this to fully load the space
         Optional<Space> sourceSpace = spaceRepo.findById(source.getId());
         if(!sourceSpace.isPresent()) {
             throw new SpaceDoesNotExistException();
         }
         source = sourceSpace.get();
-        IExternalLink link = externalLinkFactory.createExternalLink(title, source);
+        IExternalLink link = externalLinkFactory.createExternalLink(title, source, externalLink);
         externalLinkRepo.save((ExternalLink) link);
 
         IExternalLinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay(link);
         display.setPositionX(positionX);
         display.setPositionY(positionY);
+        display.setName(title);
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
         return display;
     }

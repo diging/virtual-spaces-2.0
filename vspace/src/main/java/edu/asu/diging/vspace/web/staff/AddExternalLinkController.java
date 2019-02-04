@@ -26,14 +26,14 @@ public class AddExternalLinkController {
 
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("url") String url)
+            @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title, @RequestParam("url") String externalLink)
             throws JsonProcessingException, NumberFormatException, SpaceDoesNotExistException {
         
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        IExternalLinkDisplay display = spaceManager.createExternalLink(url, space, new Float(x), new Float(y));
+        IExternalLinkDisplay display = spaceManager.createExternalLink(title, space, new Float(x), new Float(y), externalLink);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());
