@@ -72,6 +72,7 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
+		$("#icon").remove();
 		$("#link").remove();
 		$("#label-visibility").remove();
 		$("#createSpaceLinkAlert").hide();	
@@ -94,9 +95,13 @@ $( document ).ready(function() {
 
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
-		}); 	  
-		show(payload);
+		});
 		$("#createSpaceLinkAlert").hide();
+		$("#label-visibility").attr("id","");
+		$("#link").attr("id","");
+		$("#icon").attr("id","");
+		show(payload);
+		
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -109,13 +114,10 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#icon').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		$('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
 	$(".target").change(function() {
-		//$("#icon").remove();
-		$("#link").empty();
-		//$("#label-visibility").remove();	
 		var spaceLink = {};
 		spaceLink["x"] = storeX;
 		spaceLink["y"] = storeY;
@@ -124,11 +126,19 @@ $( document ).ready(function() {
 		show(spaceLink);
 	});
 
-	function show(spaceLinks) { 
-			var posX = $("#bgImage").position().left;
-			var posY = $("#bgImage").position().top;
-			var label = $("<p id='label-visibility'></p>");
-			label.text(spaceLinks["spaceLinkLabel"]);
+	function show(spaceLinks) {
+		$("#label-visibility").remove();
+		$("#link").remove();
+		$("#icon").remove();
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		var label = $("<p id='label-visibility'></p>");
+		label.text(spaceLinks["spaceLinkLabel"]);
+			
+		var links;
+		if (spaceLinks["type"] == "ALERT") {
+			links = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLinks["spaceLinkLabel"]+'</p>');
+		} else {
 			$(label).css({
 				'position': 'absolute',
 				'font-size': "10px",
@@ -137,26 +147,21 @@ $( document ).ready(function() {
 				'top': spaceLinks["y"] + posY + 16,
 				'color': 'red'
 			});
-			var links;
-			if (spaceLinks["type"] == "ALERT") {
-				links = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLinks["spaceLinkLabel"]+'</p>');
-			} else {
-				
-				links = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
-			}
+			links = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+		}
 
-			links.css('position', 'absolute');
-			links.css('left', spaceLinks["x"] + posX);
-			links.css('top', spaceLinks["y"] + posY);
-			links.css('fill', 'red');
-			links.css('color', 'red');
-			links.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-			links.css('font-size', "10px");
+		links.css('position', 'absolute');
+		links.css('left', spaceLinks["x"] + posX);
+		links.css('top', spaceLinks["y"] + posY);
+		links.css('fill', 'red');
+		links.css('color', 'red');
+		links.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		links.css('font-size', "10px");
 
-			$("#space").append(links);
-			$("#space").append(label);
-			feather.replace();
-		 }
+		$("#space").append(links);
+		$("#space").append(label);
+		feather.replace();
+	}
 });
 
 </script>
@@ -182,7 +187,7 @@ $( document ).ready(function() {
 	  
 	  <label style="margin-right: 5px;"><small>Type:</small> </label>
 	  <select id="type" class="form-control-xs target" >
-	  	<option disabled selected value>Choose...</option>
+	  	<option selected value="">Choose...</option>
 	  	<option value="ARROW">Link</option>
 	  	<option value="ALERT">Alert</option>
 	  </select><br>
