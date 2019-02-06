@@ -44,24 +44,18 @@ $( document ).ready(function() {
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
-		    e.preventDefault();
-		    $("#icon").remove();
-		    $("#link").remove(); 
-		    $("#label").remove(); 
-		    var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
-		    icon.css('position', 'absolute');
-		    
+		    e.preventDefault();		    
 		    var posX = $(this).position().left;
 		    var posY = $(this).position().top;
 		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
-		    icon.css('left', storeX + posX);
-		    icon.css('top', storeY + posY);
-		    icon.css('color', 'red');
-		    icon.css('font-size', "10px");
 		    
-		    $("#space").append(icon);
+		    var spaceLink = {};
+			spaceLink["x"] = storeX;
+			spaceLink["y"] = storeY;
+			spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		    show(spaceLink);
 		    feather.replace();	        
 		});
 		$("#createSpaceLinkAlert").show();
@@ -74,7 +68,6 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#icon").remove();
 		$("#link").remove();
 		$("#label").remove();
 		$("#createSpaceLinkAlert").hide();	
@@ -102,7 +95,6 @@ $( document ).ready(function() {
 
   		$("#label").attr("id","");
 		$("#link").attr("id","");
-		$("#icon").attr("id","");  
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -115,7 +107,6 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#icon').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		$('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
@@ -131,7 +122,6 @@ $( document ).ready(function() {
 	function show(spaceLink) {
 		$("#label").remove();
 		$("#link").remove();
-		$("#icon").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		var label = $("<p id='label'></p>");
