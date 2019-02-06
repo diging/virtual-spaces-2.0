@@ -45,7 +45,9 @@ $( document ).ready(function() {
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    $("#icon").remove(); 
+		    $("#icon").remove();
+		    $("#link").remove(); 
+		    $("#label").remove(); 
 		    var icon = $('<span id="icon" data-feather="navigation-2" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
@@ -74,7 +76,7 @@ $( document ).ready(function() {
 		storeY = null;
 		$("#icon").remove();
 		$("#link").remove();
-		$("#label-visibility").remove();
+		$("#label").remove();
 		$("#createSpaceLinkAlert").hide();	
 	});
 	
@@ -97,10 +99,10 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#createSpaceLinkAlert").hide();
-		$("#label-visibility").attr("id","");
+
+  		$("#label").attr("id","");
 		$("#link").attr("id","");
-		$("#icon").attr("id","");
-		show(payload);		
+		$("#icon").attr("id","");  
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -113,6 +115,7 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$('#spaceLinkRotation').change(function() {
+		$('#icon').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		$('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
@@ -125,40 +128,41 @@ $( document ).ready(function() {
 		show(spaceLink);
 	});
 
-	function show(spaceLinks) {
-		$("#label-visibility").remove();
+	function show(spaceLink) {
+		$("#label").remove();
 		$("#link").remove();
 		$("#icon").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var label = $("<p id='label-visibility'></p>");
-		label.text(spaceLinks["spaceLinkLabel"]);
+		var label = $("<p id='label'></p>");
+		label.text(spaceLink["spaceLinkLabel"]);
 			
-		var links;
-		if (spaceLinks["type"] == "ALERT") {
-			links = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLinks["spaceLinkLabel"]+'</p>');
+		var link;
+		if (spaceLink["type"] == "ALERT") {
+			link = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
 		} else {
 			$(label).css({
 				'position': 'absolute',
 				'font-size': "10px",
 				'transform': 'rotate(0deg)',
-				'left': spaceLinks["x"] + posX - 10,
-				'top': spaceLinks["y"] + posY + 16,
+				'left': spaceLink["x"] + posX - 10,
+				'top': spaceLink["y"] + posY + 16,
 				'color': 'red'
 			});
-			links = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+			link = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
 		}
 
-		links.css('position', 'absolute');
-		links.css('left', spaceLinks["x"] + posX);
-		links.css('top', spaceLinks["y"] + posY);
-		links.css('fill', 'red');
-		links.css('color', 'red');
-		links.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-		links.css('font-size', "10px");
+		link.css('position', 'absolute');
+		link.css('left', spaceLink["x"] + posX);
+		link.css('top', spaceLink["y"] + posY);
+		link.css('fill', 'red');
+		link.css('color', 'red');
+		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		link.css('font-size', "10px");
 
-		$("#space").append(links);
+		$("#space").append(link);
 		$("#space").append(label);
+
 		feather.replace();
 	}
 });
