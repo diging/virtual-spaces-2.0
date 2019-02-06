@@ -42,7 +42,7 @@ $( document ).ready(function() {
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var link = $('<span data-feather="arrow-right-circle" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.externalLink}" style="color:blue;">${link.externalLink.name}</a></p>'); 
+		var link = $('<span data-feather="external-link" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.externalLink}" style="color:blue;">${link.externalLink.name}</a></p>'); 
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
@@ -99,7 +99,7 @@ $( document ).ready(function() {
 		    e.preventDefault();
 		    $("#external-arrow").remove();
 		    $("#title").remove();
-		    var icon = $('<span id="external-arrow" data-feather="arrow-right-circle" class="flex"></span>');
+		    var icon = $('<span id="external-arrow" data-feather="external-link" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
@@ -188,7 +188,7 @@ $( document ).ready(function() {
 			'top': externalLink["y"] + posY + 16,
 			'color': 'blue'
 		});
-		var link = $('<span id="external-link" data-feather="arrow-right-circle" class="flex"></span>');
+		var link = $('<span id="external-link" data-feather="external-link" class="flex"></span>');
 
 		link.css('position', 'absolute');
 		link.css('left', externalLink["x"] + posX);
