@@ -42,7 +42,7 @@ $( document ).ready(function() {
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var link = $('<span data-feather="arrow-right-circle" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.name}" style="color:blue;">${link.externalLink.name}</a></p>'); 
+		var link = $('<span data-feather="arrow-right-circle" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.externalLink}" style="color:blue;">${link.externalLink.name}</a></p>'); 
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
@@ -97,9 +97,9 @@ $( document ).ready(function() {
 		$("#createSpaceLinkAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
-		    $("#arrow").remove();
+		    $("#external-arrow").remove();
 		    $("#title").remove();
-		    var icon = $('<span id="arrow" data-feather="arrow-right-circle" class="flex"></span>');
+		    var icon = $('<span id="external-arrow" data-feather="arrow-right-circle" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
 		    var posX = $(this).position().left
@@ -123,15 +123,15 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#arrow").remove();
+		$("#external-arrow").remove();
 		$("#createSpaceLinkAlert").hide();
 	});
 	
 	$("#cancelExternalLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#icon").remove();
-		$("#arrow").remove();
+		$("#external-link").remove();
+		$("#external-arrow").remove();
 		$("#title").remove();
 		$("#createExternalLinkAlert").hide();
 	});
@@ -163,7 +163,7 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){});
 		$("#createExternalLinkAlert").hide();
 		$("#title").attr("id","");
-		$("#arrow").attr("id","");
+		$("#external-arrow").attr("id","");
 	});
 	
 	$(".target").change(function() {
@@ -171,6 +171,7 @@ $( document ).ready(function() {
 		externalLink["x"] = storeX;
 		externalLink["y"] = storeY;
 		externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
+		externalLink["url"] = $("#externalLink").val();
 		showExternalLinks(externalLink);
 	});
 	
@@ -178,8 +179,7 @@ $( document ).ready(function() {
 		$("#title").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;		
-		var label = $("<p id='title'></p>").append('<a href="' + externalLink["externalLinkLabel"] + '" style=\"color:blue;\"></a>');
-		label.text(externalLink["externalLinkLabel"]);
+		var label = $("<p id='title'></p>").append('<a href="' + externalLink["url"] + '" style=\"color:blue;\">'+externalLink["externalLinkLabel"]+'</a>');
 		label.css({
 			'position': 'absolute',
 			'font-size': "10px",
@@ -188,7 +188,7 @@ $( document ).ready(function() {
 			'top': externalLink["y"] + posY + 16,
 			'color': 'blue'
 		});
-		var link = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span>');
+		var link = $('<span id="external-link" data-feather="arrow-right-circle" class="flex"></span>');
 
 		link.css('position', 'absolute');
 		link.css('left', externalLink["x"] + posX);
@@ -198,7 +198,7 @@ $( document ).ready(function() {
 		
 		$("#space").append(link);
 		$("#space").append(label);
-		$("#icon").remove();
+		$("#external-link").remove();
 	} 		
 		
 	$('#changeBgImgButton').click(function(file) {
