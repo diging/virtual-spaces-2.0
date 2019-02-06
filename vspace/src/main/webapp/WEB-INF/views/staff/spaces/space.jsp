@@ -44,17 +44,17 @@ $( document ).ready(function() {
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
-		    e.preventDefault();		    
-		    var posX = $(this).position().left;
-		    var posY = $(this).position().top;
+		    e.preventDefault();	
 		    
+		    var posX = $(this).position().left;
+		    var posY = $(this).position().top;    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
 		    
 		    var spaceLink = {};
-			spaceLink["x"] = storeX;
-			spaceLink["y"] = storeY;
-			spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		    spaceLink["x"] = storeX;
+		    spaceLink["y"] = storeY;
+		    spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		    show(spaceLink);
 		    feather.replace();	        
 		});
