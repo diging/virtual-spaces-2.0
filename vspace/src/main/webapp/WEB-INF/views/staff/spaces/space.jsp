@@ -98,6 +98,7 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#arrow").remove();
+		    $("#title").remove();
 		    var icon = $('<span id="arrow" data-feather="arrow-right-circle" class="flex"></span>');
 		    icon.css('position', 'absolute');
 		    
@@ -129,7 +130,8 @@ $( document ).ready(function() {
 	$("#cancelExternalLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#link").remove();
+		$("#icon").remove();
+		$("#arrow").remove();
 		$("#title").remove();
 		$("#createExternalLinkAlert").hide();
 	});
@@ -161,8 +163,8 @@ $( document ).ready(function() {
 		$("#bgImage").on("click", function(e){});
 
 		$("#createExternalLinkAlert").hide();
-		("#title").attr("id"," ");
-		showExternalLinks(payload);
+		$("#title").attr("id","");
+		$("#arrow").attr("id","");
 	});
 	
 	$(".target").change(function() {
@@ -173,7 +175,8 @@ $( document ).ready(function() {
 		showExternalLinks(externalLink);
 	});
 	
-	function showExternalLinks(externalLink) {			
+	function showExternalLinks(externalLink) {	
+			$("#title").remove();
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;		
 			var label = $("<p id='title'></p>").append('<a href="' + externalLink["externalLinkLabel"] + '" style=\"color:blue;\"></a>');
@@ -196,6 +199,7 @@ $( document ).ready(function() {
 		
 			$("#space").append(link);
 			$("#space").append(label);
+			$("#icon").remove();
 	} 		
 		
 	$('#changeBgImgButton').click(function(file) {
