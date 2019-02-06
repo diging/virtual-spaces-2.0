@@ -161,7 +161,6 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
-
 		$("#createExternalLinkAlert").hide();
 		$("#title").attr("id","");
 		$("#arrow").attr("id","");
@@ -175,31 +174,31 @@ $( document ).ready(function() {
 		showExternalLinks(externalLink);
 	});
 	
-	function showExternalLinks(externalLink) {	
-			$("#title").remove();
-			var posX = $("#bgImage").position().left;
-			var posY = $("#bgImage").position().top;		
-			var label = $("<p id='title'></p>").append('<a href="' + externalLink["externalLinkLabel"] + '" style=\"color:blue;\"></a>');
-			label.text(externalLink["externalLinkLabel"]);
-			label.css({
-				'position': 'absolute',
-				'font-size': "10px",
-				'transform': 'rotate(0deg)',
-				'left': externalLink["x"] + posX - 10,
-				'top': externalLink["y"] + posY + 16,
-				'color': 'blue'
-			});
-			var link = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span>');
+	function showExternalLinks(externalLink) {
+		$("#title").remove();
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;		
+		var label = $("<p id='title'></p>").append('<a href="' + externalLink["externalLinkLabel"] + '" style=\"color:blue;\"></a>');
+		label.text(externalLink["externalLinkLabel"]);
+		label.css({
+			'position': 'absolute',
+			'font-size': "10px",
+			'transform': 'rotate(0deg)',
+			'left': externalLink["x"] + posX - 10,
+			'top': externalLink["y"] + posY + 16,
+			'color': 'blue'
+		});
+		var link = $('<span id="icon" data-feather="arrow-right-circle" class="flex"></span>');
 
-			link.css('position', 'absolute');
-			link.css('left', externalLink["x"] + posX);
-			link.css('top', externalLink["y"] + posY);
-			link.css('color', 'blue');
-			link.css('font-size', "10px");
+		link.css('position', 'absolute');
+		link.css('left', externalLink["x"] + posX);
+		link.css('top', externalLink["y"] + posY);
+		link.css('color', 'blue');
+		link.css('font-size', "10px");
 		
-			$("#space").append(link);
-			$("#space").append(label);
-			$("#icon").remove();
+		$("#space").append(link);
+		$("#space").append(label);
+		$("#icon").remove();
 	} 		
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -264,16 +263,16 @@ $( document ).ready(function() {
 </form:form>
 <form>
 	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-	 <h6 class="alert-heading"><small>Create new External Link</small></h6>
-	  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
-	  <hr>  
-	  <label style="margin-right: 5px;"><small>Label:</small> </label>
-	  <input class="form-control-xs target" type="text" id="externalLinkLabel"><br>
-	  
-	  <label style="margin-right: 5px;"><small>External Link</small> </label>
-	  <input class="form-control-xs" type="text" size="15" id="externalLink"><br>
-	  <HR>
-	  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
+		 <h6 class="alert-heading"><small>Create new External Link</small></h6>
+		  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
+		  <hr>  
+		  <label style="margin-right: 5px;"><small>Label:</small> </label>
+		  <input class="form-control-xs target" type="text" id="externalLinkLabel"><br>
+		  
+		  <label style="margin-right: 5px;"><small>External Link</small> </label>
+		  <input class="form-control-xs" type="text" size="15" id="externalLink"><br>
+		  <HR>
+		  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
 	</div>
 </form>
 
