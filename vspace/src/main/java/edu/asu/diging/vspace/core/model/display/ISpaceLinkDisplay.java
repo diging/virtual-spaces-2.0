@@ -19,5 +19,6 @@ public interface ISpaceLinkDisplay extends ILinkDisplay {
     void setType(DisplayType type);
 
     DisplayType getType();
+    
 
 }

@@ -7,12 +7,13 @@
 
 <script>
 //# sourceURL=click.js
-$( document ).ready(function() {
+$( document ).ready(function() {	
 	
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
+
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
 		} else {
@@ -33,8 +34,7 @@ $( document ).ready(function() {
 			'left': ${link.positionX} + posX - 10,
 			'top': ${link.positionY} + posY + 16,
 			'color': 'red'
-		});
-		
+		});		
 	}
 	</c:forEach>
 	
@@ -57,9 +57,8 @@ $( document ).ready(function() {
 			'top': ${link.positionY} + posY + 16,
 			'text-color': 'blue'
 		});
-		
 	}
-	</c:forEach>
+	</c:forEach> 
 	
 	var storeX;
 	var storeY;
@@ -68,23 +67,44 @@ $( document ).ready(function() {
 		$("#createExternalLinkAlert").hide();
 		$("#changeBgImgAlert").hide();
 		$("#bgImage").on("click", function(e){
-		    e.preventDefault();
-		    $("#arrow").remove();
-		    var icon = $('<span id="arrow" data-feather="navigation-2" class="flex"></span>');
-		    icon.css('position', 'absolute');
-		    
-		    var posX = $(this).position().left
-		    var posY = $(this).position().top;
-		    
-		    storeX = e.pageX - $(this).offset().left;
-		    storeY = e.pageY - $(this).offset().top;
+			e.preventDefault();
+			$("#external-arrow").remove();
+			$("#space_label").remove();
+			$("#link").remove();
+			var icon;
+			var posX = $(this).position().left;
+			var posY = $(this).position().top;    
+			storeX = e.pageX - $(this).offset().left;
+			storeY = e.pageY - $(this).offset().top;
+			
+			var space_label = $("<p id='space_label'></p>");
+			space_label.text($("#spaceLinkLabel").val());
+					
+			if ($("#type").val() == "ARROW" || $("#type").val() == "") {
+				$(space_label).css({
+					'position': 'absolute',
+					'font-size': "10px",
+					'transform': 'rotate(0deg)',
+					'left': storeX + posX - 10,
+					'top': storeY + posY + 16,
+					'color': 'red'
+				});
+				icon = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+			} else { 
+				icon = $('<div id="link" class="alert alert-primary" role="alert"><p>'+$("#spaceLinkLabel").val()+'</p>');
+			}
+			    
+		    icon.css('position', 'absolute');			    
+		    icon.css('transform','rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		    icon.css('left', storeX + posX);
 		    icon.css('top', storeY + posY);
 		    icon.css('color', 'red');
-		    icon.css('font-size', "15px");
+		    icon.css('font-size', "10px");
 		    
 		    $("#space").append(icon);
-		    feather.replace();
+		    $("#space").append(space_label);
+		    feather.replace(); 
+			
 		});
 		$("#createSpaceLinkAlert").show();
 	});
@@ -97,22 +117,35 @@ $( document ).ready(function() {
 		$("#createSpaceLinkAlert").hide();
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
+		    $("#link").remove();
 		    $("#external-arrow").remove();
-		    $("#title").remove();
+		    $("#ext_label").remove();
 		    var icon = $('<span id="external-arrow" data-feather="external-link" class="flex"></span>');
-		    icon.css('position', 'absolute');
-		    
+		    	    
 		    var posX = $(this).position().left
 		    var posY = $(this).position().top;
-		    
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
-		    icon.css('left', storeX + posX);
+		    
+		    if ($("#externalLinkLabel").val() != "") {
+				var ext_label = $("<p id='ext_label'></p>").append('<a href="' + $("#url").val() + '" style=\"color:blue;\">'+$("#externalLinkLabel").val()+'</a>');
+				$(ext_label).css({
+					'position': 'absolute',
+					'font-size': "10px",
+					'transform': 'rotate(0deg)',
+					'left': storeX + posX - 10,
+					'top': storeY + posY + 16,
+					'color': 'blue'
+				});
+			}
+			icon.css('position', 'absolute');
+			icon.css('left', storeX + posX);
 		    icon.css('top', storeY + posY);
 		    icon.css('color', 'blue');
 		    icon.css('font-size', "15px");
 		    
 		    $("#space").append(icon);
+		    $("#space").append(ext_label);
 		    feather.replace();
 		});
 		$("#createExternalLinkAlert").show();
@@ -123,8 +156,9 @@ $( document ).ready(function() {
 	$("#cancelSpaceLinkBtn").click(function() {
 		storeX = null;
 		storeY = null;
-		$("#external-arrow").remove();
-		$("#createSpaceLinkAlert").hide();
+		$("#link").remove();
+		$("#space_label").remove();
+		$("#createSpaceLinkAlert").hide();	
 	});
 	
 	$("#cancelExternalLinkBtn").click(function() {
@@ -132,22 +166,28 @@ $( document ).ready(function() {
 		storeY = null;
 		$("#external-link").remove();
 		$("#external-arrow").remove();
-		$("#title").remove();
+		$("#ext_label").remove();
 		$("#createExternalLinkAlert").hide();
 	});
 	
-	$("#createSpaceLinkBtn").click(function(e) {
+	$("#createSpaceLinkBtn").click(function(e) {		
 		var payload = {};
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
 		payload["x"] = storeX;
 		payload["y"] = storeY;
 		payload["rotation"] = $("#spaceLinkRotation").val();
 		payload["linkedSpace"] = $("#linkedSpace").val();
+		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		payload["type"] = $("#type").val();
-		$("#arrow").remove();
+
 		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
 		$("#bgImage").on("click", function(e){});
+		showSpaceLink(payload, true);
+		$("#space_label").attr("id","");
+		$("#link").attr("id","");
 		$("#createSpaceLinkAlert").hide();	
 	});
 	
@@ -162,11 +202,11 @@ $( document ).ready(function() {
 		});
 		$("#bgImage").on("click", function(e){});
 		$("#createExternalLinkAlert").hide();
-		$("#title").attr("id","");
+		$("#ext_label").attr("id","");
 		$("#external-arrow").attr("id","");
 	});
 	
-	$(".target").change(function() {
+	$(".extlink-target").change(function() {
 		var externalLink = {};
 		externalLink["x"] = storeX;
 		externalLink["y"] = storeY;
@@ -176,11 +216,11 @@ $( document ).ready(function() {
 	});
 	
 	function showExternalLinks(externalLink) {
-		$("#title").remove();
+		$("#ext_label").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;		
-		var label = $("<p id='title'></p>").append('<a href="' + externalLink["url"] + '" style=\"color:blue;\">'+externalLink["externalLinkLabel"]+'</a>');
-		label.css({
+		var ext_label = $("<p id='ext_label'></p>").append('<a href="' + externalLink["url"] + '" style=\"color:blue;\">'+externalLink["externalLinkLabel"]+'</a>');
+		ext_label.css({
 			'position': 'absolute',
 			'font-size': "10px",
 			'transform': 'rotate(0deg)',
@@ -197,14 +237,13 @@ $( document ).ready(function() {
 		link.css('font-size', "10px");
 		
 		$("#space").append(link);
-		$("#space").append(label);
+		$("#space").append(ext_label);
 		$("#external-link").remove();
 	} 		
 		
 	$('#changeBgImgButton').click(function(file) {
 		$("#createSpaceLinkAlert").hide();
-		$("#changeBgImgAlert").show();	
-		
+		$("#changeBgImgAlert").show();			
 	});
 			
 	$("#changeBgImgAlert").draggable();
@@ -212,10 +251,83 @@ $( document ).ready(function() {
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$('#spaceLinkRotation').change(function() {
-		$('#arrow').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		$('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
 	
+	$(".target").change(function() {
+		var spaceLink = {};
+		spaceLink["x"] = storeX;
+		spaceLink["y"] = storeY;
+		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		spaceLink["type"] = $("#type").val();
+		showSpaceLink(spaceLink);
+	}); 
+
+	function showSpaceLink(spaceLink, show) {
+		$("#space_label").remove();
+		$("#link").remove();
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		var space_label = $("<p id='space_label'></p>");
+		space_label.text(spaceLink["spaceLinkLabel"]);
+			
+		var link;
+		if (spaceLink["type"] == "ALERT") {
+			link = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
+		} else {
+			$(space_label).css({
+				'position': 'absolute',
+				'font-size': "10px",
+				'transform': 'rotate(0deg)',
+				'left': spaceLink["x"] + posX - 10,
+				'top': spaceLink["y"] + posY + 16,
+				'color': 'red'
+			});
+			link = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+		}
+		if(show) {
+			link.css('fill', 'red');
+		}
+		link.css('position', 'absolute');
+		link.css('left', spaceLink["x"] + posX);
+		link.css('top', spaceLink["y"] + posY);
+		link.css('color', 'red');
+		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		link.css('font-size', "10px");
+
+		$("#space").append(link);
+		$("#space").append(space_label);
+
+		feather.replace();
+	}
+	
+	function showExternalLinks(externalLink) {
+		$("#ext_label").remove();
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;		
+		var ext_label = $("<p id='ext_label'></p>").append('<a href="' + externalLink["url"] + '" style=\"color:blue;\">'+externalLink["externalLinkLabel"]+'</a>');
+		ext_label.css({
+			'position': 'absolute',
+			'font-size': "10px",
+			'transform': 'rotate(0deg)',
+			'left': externalLink["x"] + posX - 10,
+			'top': externalLink["y"] + posY + 16,
+			'color': 'blue'
+		});
+		var link = $('<span id="external-link" data-feather="external-link" class="flex"></span>');
+
+		link.css('position', 'absolute');
+		link.css('left', externalLink["x"] + posX);
+		link.css('top', externalLink["y"] + posY);
+		link.css('color', 'blue');
+		link.css('font-size', "10px");
+		
+		$("#space").append(link);
+		$("#space").append(ext_label);
+		$("#external-link").remove();
+	}
 });
+
 </script>
 
  <h1>Space: ${space.name}</h1> 
@@ -226,29 +338,35 @@ $( document ).ready(function() {
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
 
-<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-  <h6 class="alert-heading"><small>Create new Space Link</small></h6>
-  <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
-  <hr>
-  <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
-  
-  <label style="margin-right: 5px;"><small>Type:</small> </label>
-  <select id="type" class="form-control-xs">
-  	<option selected value="">Choose...</option>
-  	<option value="ALERT">Alert</option>
-  </select><br>
-  
-  <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
-  <select id="linkedSpace" class="form-control-xs">
-        <option selected value="">Choose...</option>
-        <c:forEach items="${spaces}" var="space">
-        <option value="${space.id}">${space.name}</option>
-        </c:forEach>
-  </select>
-  <HR>
-  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="button" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="button" class="btn btn-primary btn-xs">Create Space Link</button></p>
-</div>
+<form>
+	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	  <h6 class="alert-heading"><small>Create new Space Link</small></h6>
+	  <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
+	  <hr>
+	  <label style="margin-right: 5px;"><small>Rotation:</small> </label>
+	  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
+	  
+	  <label style="margin-right: 5px;"><small>Label:</small> </label>
+	  <input class="form-control-xs target" type="text" id="spaceLinkLabel"><br>
+	  
+	  <label style="margin-right: 5px;"><small>Type:</small> </label>
+	  <select id="type" class="form-control-xs target" >
+	  	<option selected value="">Choose...</option>
+	  	<option value="ARROW">Link</option>
+	  	<option value="ALERT">Alert</option>
+	  </select><br>
+	  
+	  <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
+	  <select id="linkedSpace" class="form-control-xs">
+	        <option selected value="">Choose...</option>
+	        <c:forEach items="${spaces}" var="space">
+	        <option value="${space.id}">${space.name}</option>
+	        </c:forEach>
+	  </select>
+	  <HR>
+	  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="reset" class="btn btn-primary btn-xs">Create Space Link</button></p>
+	</div>
+</form>
 	        
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
@@ -267,7 +385,7 @@ $( document ).ready(function() {
 		  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
 		  <hr>  
 		  <label style="margin-right: 5px;"><small>Label:</small> </label>
-		  <input class="form-control-xs target" type="text" id="externalLinkLabel"><br>
+		  <input class="form-control-xs extlink-target" type="text" id="externalLinkLabel"><br>
 		  
 		  <label style="margin-right: 5px;"><small>External Link</small> </label>
 		  <input class="form-control-xs" type="text" size="15" id="externalLink"><br>
