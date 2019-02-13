@@ -40,23 +40,48 @@ $( document ).ready(function() {
 	
 	var storeX;
 	var storeY;
+	var flag =0;
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
-		$("#bgImage").on("click", function(e){
-		    e.preventDefault();	
-		    
-		    var posX = $(this).position().left;
+		$("#bgImage").on("click", function(e){		
+			e.preventDefault();
+			$("#label").remove();
+			$("#link").remove();
+			var icon;
+			var posX = $(this).position().left;
 		    var posY = $(this).position().top;    
-		    storeX = e.pageX - $(this).offset().left;
-		    storeY = e.pageY - $(this).offset().top;
+			storeX = e.pageX - $(this).offset().left;
+			storeY = e.pageY - $(this).offset().top;
+			
+			var label = $("<p id='label'></p>");
+			label.text($("#spaceLinkLabel").val());
+					
+			if ($("#type").val() == "ARROW" || $("#type").val() == "") {
+				$(label).css({
+					'position': 'absolute',
+					'font-size': "10px",
+					'transform': 'rotate(0deg)',
+					'left': storeX + posX - 10,
+					'top': storeY + posY + 16,
+					'color': 'red'
+				});
+				icon = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+			} else { 
+				icon = $('<div id="link" class="alert alert-primary" role="alert"><p>'+$("#spaceLinkLabel").val()+'</p>');
+			}
+			    
+		    icon.css('position', 'absolute');			    
+		    icon.css('transform','rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		    icon.css('left', storeX + posX);
+		    icon.css('top', storeY + posY);
+		    icon.css('color', 'red');
+		    icon.css('font-size', "10px");
 		    
-		    var spaceLink = {};
-		    spaceLink["x"] = storeX;
-		    spaceLink["y"] = storeY;
-		    spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-		    show(spaceLink);
-		    feather.replace();	        
+		  	$("#space").append(icon);
+		  	$("#space").append(label);
+		    feather.replace(); 
+			
 		});
 		$("#createSpaceLinkAlert").show();
 	});
@@ -78,6 +103,7 @@ $( document ).ready(function() {
 	});
 	
 	$("#createSpaceLinkBtn").click(function(e) {
+		
 		var payload = {};
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
@@ -92,9 +118,11 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#createSpaceLinkAlert").hide();
-
+		flag = 1;
+		show(payload);
   		$("#label").attr("id","");
 		$("#link").attr("id","");
+		flag = 0;
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -117,7 +145,7 @@ $( document ).ready(function() {
 		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		spaceLink["type"] = $("#type").val();
 		show(spaceLink);
-	});
+	}); 
 
 	function show(spaceLink) {
 		$("#label").remove();
@@ -142,10 +170,12 @@ $( document ).ready(function() {
 			link = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
 		}
 
+		if(flag == 1) {
+			link.css('fill', 'red');
+		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
 		link.css('top', spaceLink["y"] + posY);
-		link.css('fill', 'red');
 		link.css('color', 'red');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		link.css('font-size', "10px");
@@ -154,7 +184,7 @@ $( document ).ready(function() {
 		$("#space").append(label);
 
 		feather.replace();
-	}
+	}	
 });
 
 </script>

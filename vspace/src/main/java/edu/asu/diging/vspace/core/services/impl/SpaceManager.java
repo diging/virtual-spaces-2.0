@@ -21,7 +21,6 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
