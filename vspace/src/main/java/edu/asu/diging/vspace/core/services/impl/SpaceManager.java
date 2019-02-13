@@ -21,7 +21,6 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -125,7 +124,7 @@ public class SpaceManager implements ISpaceManager {
 
     @Override
     public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
-            int rotation, String linkedSpaceId, DisplayType displayType) throws SpaceDoesNotExistException {
+            int rotation, String linkedSpaceId, String spaceLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceRepo.findById(source.getId()).get();
         ISpace target = spaceRepo.findById(linkedSpaceId).get();
@@ -134,6 +133,7 @@ public class SpaceManager implements ISpaceManager {
         }
         ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
         link.setTargetSpace(target);
+        link.setName(spaceLinkLabel);
         spaceLinkRepo.save((SpaceLink) link);
 
         ISpaceLinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
