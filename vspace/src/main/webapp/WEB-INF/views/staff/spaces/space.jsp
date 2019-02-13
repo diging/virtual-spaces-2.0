@@ -40,7 +40,6 @@ $( document ).ready(function() {
 	
 	var storeX;
 	var storeY;
-	var flag =0;
 	
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#changeBgImgAlert").hide();
@@ -50,7 +49,7 @@ $( document ).ready(function() {
 			$("#link").remove();
 			var icon;
 			var posX = $(this).position().left;
-		    var posY = $(this).position().top;    
+			var posY = $(this).position().top;    
 			storeX = e.pageX - $(this).offset().left;
 			storeY = e.pageY - $(this).offset().top;
 			
@@ -78,8 +77,8 @@ $( document ).ready(function() {
 		    icon.css('color', 'red');
 		    icon.css('font-size', "10px");
 		    
-		  	$("#space").append(icon);
-		  	$("#space").append(label);
+		    $("#space").append(icon);
+		    $("#space").append(label);
 		    feather.replace(); 
 			
 		});
@@ -102,8 +101,7 @@ $( document ).ready(function() {
 		$("#changeBgImgAlert").hide();
 	});
 	
-	$("#createSpaceLinkBtn").click(function(e) {
-		
+	$("#createSpaceLinkBtn").click(function(e) {		
 		var payload = {};
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
@@ -118,11 +116,10 @@ $( document ).ready(function() {
 			// TODO: show success/error message
 		});
 		$("#createSpaceLinkAlert").hide();
-		flag = 1;
-		show(payload);
+
+		show(payload, true);
   		$("#label").attr("id","");
 		$("#link").attr("id","");
-		flag = 0;
 	});
 		
 	$('#changeBgImgButton').click(function(file) {
@@ -147,7 +144,7 @@ $( document ).ready(function() {
 		show(spaceLink);
 	}); 
 
-	function show(spaceLink) {
+	function show(spaceLink, showSpaceLink) {
 		$("#label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
@@ -170,7 +167,7 @@ $( document ).ready(function() {
 			link = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
 		}
 
-		if(flag == 1) {
+		if(showSpaceLink) {
 			link.css('fill', 'red');
 		}
 		link.css('position', 'absolute');
