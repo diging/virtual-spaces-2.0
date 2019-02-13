@@ -128,9 +128,9 @@ $( document ).ready(function() {
 		    storeY = e.pageY - $(this).offset().top;
 		    
 		    if ($("#externalLinkLabel").val() != "") {
-				var ext_label = $("<p id='ext_label'></p>").append('<a href="' + $("#url").val() + '" style=\"color:blue;\">'+$("#externalLinkLabel").val()+'</a>');
-				$(ext_label).css({
-					'position': 'absolute',
+		    	var ext_label = $("<p id='ext_label'></p>").append('<a href="' + $("#url").val() + '" style=\"color:blue;\">'+$("#externalLinkLabel").val()+'</a>');
+		    	$(ext_label).css({
+		    		'position': 'absolute',
 					'font-size': "10px",
 					'transform': 'rotate(0deg)',
 					'left': storeX + posX - 10,
@@ -138,8 +138,8 @@ $( document ).ready(function() {
 					'color': 'blue'
 				});
 			}
-			icon.css('position', 'absolute');
-			icon.css('left', storeX + posX);
+		    icon.css('position', 'absolute');
+		    icon.css('left', storeX + posX);
 		    icon.css('top', storeY + posY);
 		    icon.css('color', 'blue');
 		    icon.css('font-size', "15px");
