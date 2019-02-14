@@ -17,8 +17,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class Slide extends VSpaceElement implements ISlide {
 	
 	@Id
-	@GeneratedValue(generator = "slide-id-generator")
-	@GenericGenerator(name = "slide-id-generator", 	
+	@GeneratedValue(generator = "slide_id_generator")
+	@GenericGenerator(name = "slide_id_generator", 	
 	    parameters = @Parameter(name = "prefix", value = "SLI"),
 	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;

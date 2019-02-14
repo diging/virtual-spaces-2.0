@@ -17,8 +17,8 @@ import edu.asu.diging.vspace.core.model.ISlide;
 public class Sequence extends VSpaceElement implements ISequence {
 
     @Id
-    @GeneratedValue(generator = "sequence-id-generator")
-    @GenericGenerator(name = "sequence-id-generator", 
+    @GeneratedValue(generator = "sequence_id_generator")
+    @GenericGenerator(name = "sequence_id_generator", 
         parameters = @Parameter(name = "prefix", value = "SEQ"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;

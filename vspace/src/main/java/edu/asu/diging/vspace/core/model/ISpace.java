@@ -12,7 +12,12 @@ public interface ISpace extends IVSpaceElement {
 
 	void setModuleLinks(List<IModuleLink> moduleLinks);
 
-	void setImage(IVSImage image);
+	List<IExternalLink> getExternalLinks();
+	
+	void setExternalLinks(List<IExternalLink> externalLinks);
 
 	IVSImage getImage();
+	
+	void setImage(IVSImage image);
+
 }

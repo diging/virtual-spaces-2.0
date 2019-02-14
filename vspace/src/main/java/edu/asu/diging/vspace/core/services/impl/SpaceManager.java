@@ -11,22 +11,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
+import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
+import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -47,7 +55,13 @@ public class SpaceManager implements ISpaceManager {
     private SpaceLinkRepository spaceLinkRepo;
 
     @Autowired
+    private ExternalLinkRepository externalLinkRepo;
+
+    @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+
+    @Autowired
+    private ExternalLinkDisplayRepository externalLinkDisplayRepo;
 
     @Autowired
     private IStorageEngine storage;
@@ -59,7 +73,13 @@ public class SpaceManager implements ISpaceManager {
     private ISpaceLinkFactory spaceLinkFactory;
 
     @Autowired
+    private IExternalLinkFactory externalLinkFactory;
+
+    @Autowired
     private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
+
+    @Autowired
+    private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
     /*
      * (non-Javadoc)
@@ -114,6 +134,7 @@ public class SpaceManager implements ISpaceManager {
         // load lazy loaded collections
         space.getSpaceLinks().size();
         space.getModuleLinks().size();
+        space.getExternalLinks().size();
         return space;
     }
 
@@ -123,14 +144,20 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
+    public List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId) {
+        return new ArrayList<>(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId));
+    }
+
+    @Override
     public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
             int rotation, String linkedSpaceId, String spaceLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException {
         // we need this to fully load the space
-        source = spaceRepo.findById(source.getId()).get();
-        ISpace target = spaceRepo.findById(linkedSpaceId).get();
-        if (target == null) {
+        Optional<Space> sourceSpace = spaceRepo.findById(source.getId());
+        if (!sourceSpace.isPresent()) {
             throw new SpaceDoesNotExistException();
         }
+        source = sourceSpace.get();
+        ISpace target = getSpace(linkedSpaceId);
         ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
         link.setTargetSpace(target);
         link.setName(spaceLinkLabel);
@@ -142,6 +169,25 @@ public class SpaceManager implements ISpaceManager {
         display.setRotation(rotation);
         display.setType(displayType != null ? displayType : DisplayType.ARROW);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
+        return display;
+    }
+
+    @Override
+    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY, String externalLink) throws SpaceDoesNotExistException {
+        // we need this to fully load the space
+        Optional<Space> sourceSpace = spaceRepo.findById(source.getId());
+        if(!sourceSpace.isPresent()) {
+            throw new SpaceDoesNotExistException();
+        }
+        source = sourceSpace.get();
+        IExternalLink link = externalLinkFactory.createExternalLink(title, source, externalLink);
+        externalLinkRepo.save((ExternalLink) link);
+
+        IExternalLinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay(link);
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        display.setName(title);
+        externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
         return display;
     }
 
