@@ -16,7 +16,7 @@
         <javers.version>3.10.1</javers.version>
         <admin.password>admin</admin.password>         
         <username>staff</username>
-      	<password>staff</password> 
+        <staff.password>staff</staff.password> 
 
         <log.level>info</log.level>
 
