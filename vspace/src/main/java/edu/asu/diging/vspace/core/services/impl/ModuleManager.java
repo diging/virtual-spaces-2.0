@@ -6,7 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 
@@ -35,5 +39,8 @@ public class ModuleManager implements IModuleManager {
             return module.get();           
         }
         return null;
-    }       
+    }  
+    
+//    @Override
+//    public ISlide createSlide(String title, String description) throws ModuleDoesNotExistException {
 }
