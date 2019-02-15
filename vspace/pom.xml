@@ -15,6 +15,9 @@
         <spring-security-version>4.1.3.RELEASE</spring-security-version>
         <javers.version>3.10.1</javers.version>
         <admin.password>admin</admin.password>
+         
+        <username>staff</username>
+      	<password>staff</password> 
 
         <log.level>info</log.level>
 
@@ -22,7 +25,7 @@
         <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path></uploaded.files.path>
+        <uploaded.files.path>/Users/neehaarikadasari/Documents</uploaded.files.path>
         
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
