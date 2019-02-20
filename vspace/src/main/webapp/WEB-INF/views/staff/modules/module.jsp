@@ -7,13 +7,23 @@
 <script>
 $( document ).ready(function() { 
 	$("#addSlideButton").on("click", function(e){ 	
-		$("#createSlideAlert").show();		
+		$("#createSlideAlert").show();
+		//myFunction();
 	});
 	$("#createSlideAlert").draggable();
 	
 	$("#cancelSlideBtn").click(function() {
 		$("#createSlideAlert").hide();	
 	});
+	
+	function myFunction() {
+		alert("working");
+		  var table = document.getElementById("myTable");
+		  var row = table.insertRow(0);
+		  var cell1 = row.insertCell(0);
+		  var cell2 = row.insertCell(1);
+		  cell1.innerHTML = "NEW CELL1";
+		}
 });
 
 </script>
@@ -45,7 +55,7 @@ $( document ).ready(function() {
 		  <input type="file" name="file" rows="5" cols="500" id="file" />		  
 		  <hr>
 		  <p class="mb-0 text-right"><button id="cancelSlideBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> 
-		  <button id="createSlideBtn" type="submit" class="btn btn-primary btn-xs">Create Slide</button></p>
+		  <button id="createSlideBtn" type="submit" class="btn btn-primary btn-xs" onclick="myFunction()">Create Slide</button></p>
 	</div>
 </form:form>
 
@@ -53,3 +63,127 @@ $( document ).ready(function() {
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add Slide</button>
 </nav>
+
+
+<body>
+
+<table width="100%" height="50%" style=" margin-top:50px;">
+<tr>
+
+<td>
+<table width="100%" height="100%" style="border: 1px solid blue;">
+	<tr>
+		<td><nav class="navbar navbar-expand-sm navbar-light bg-light">
+		<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add Slide</button>
+		</nav> </td>
+	</tr>
+	<tr>
+	<td>
+	<table style="border: 1px solid blue;">
+		<tr>
+		<td>
+		Step :1
+		
+		I am writing this in the sequence
+		</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<table style="border: 1px solid blue;">
+		<tr>
+		<td>
+		Step :1
+		
+		I am writing this in the sequence
+		</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<table style="border: 1px solid blue;">
+		<tr>
+		<td>
+		Step :1
+		
+		I am writing this in the sequence
+		</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<table style="border: 1px solid blue;">
+		<tr>
+		<td>
+		Step :1
+		
+		I am writing this in the sequence
+		</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+	
+</table>
+</td>
+
+<td>
+<table width="100%" height="100%" style="border: 1px solid blue;">
+	<tr>
+		<td> <nav class="navbar navbar-expand-sm navbar-light bg-light">
+		<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add Sequence</button>
+		</nav></td>
+	</tr>	
+	<tr>
+	<td>
+	<table  style="border: 1px solid blue;">
+		<tr>
+		<td>
+		Step :2
+		
+		I am writing this in the sequence
+		</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+
+</table>
+</td>
+
+<td>&nbsp;</td>
+
+<td>
+<table  width="100%" height="100%" style="border: 1px solid blue;">
+	
+	<tr>
+	<td>
+	<table style="border: 1px solid blue;">
+		<tr>
+		<td>
+		Step :3
+		
+		I am writing this in the sequence
+		</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+
+</table>
+</td>
+
+</tr>
+</table>
+
+
+</body>

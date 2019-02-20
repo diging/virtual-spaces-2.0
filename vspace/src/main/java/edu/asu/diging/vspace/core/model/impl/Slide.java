@@ -1,11 +1,9 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -23,8 +21,8 @@ public class Slide extends VSpaceElement implements ISlide {
 	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
-	@OneToMany(targetEntity=VSImage.class)
-	private List<IVSImage> image;
+	@OneToOne(targetEntity=VSImage.class)
+	private IVSImage image;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#getId()
@@ -46,7 +44,7 @@ public class Slide extends VSpaceElement implements ISlide {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#getImage()
 	 */
 	@Override
-	public List<IVSImage> getImage() {
+	public IVSImage getImage() {
 		return image;
 	}
 
@@ -54,7 +52,7 @@ public class Slide extends VSpaceElement implements ISlide {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(java.util.List)
 	 */
 	@Override
-	public void setImage(List<IVSImage> image) {
+	public void setImage(IVSImage image) {
 		this.image = image;
 	}	
 }

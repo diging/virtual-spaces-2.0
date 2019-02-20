@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.vspace.core.exception.ModuleDoesNotExistException;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class AddSlideController {
@@ -24,11 +25,11 @@ public class AddSlideController {
     
     @RequestMapping(value = "/staff/module/{id}/slide/", method = RequestMethod.POST)
     public String addSlide(@PathVariable("id") String id, @RequestParam("slideTitle") String title, @RequestParam("slideDescription") String description, Model model, @RequestParam("file") MultipartFile file,
-            Principal principal, RedirectAttributes attributes) throws IOException {
+            Principal principal, RedirectAttributes attributes) throws IOException, ModuleDoesNotExistException {
         
-        byte[] bgImage = null;
-        String filename = null;
-        
+        ISlide slide = moduleManager.createSlide(id,title,description);
+        byte[] image = null;
+        String filename = null;        
         if (file.isEmpty() || file.equals(null)) {
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
@@ -36,10 +37,10 @@ public class AddSlideController {
             return "redirect:/staff/module/{id}";
 
         } else if (file != null) {
-            bgImage = file.getBytes();
+            image = file.getBytes();
             filename = file.getOriginalFilename();
         }
-       // ISlide slide = moduleManager.createSlide(id,title,description);
+        moduleManager.storeSlide(slide, image, filename);
         return "redirect:/staff/module/{id}";
     }
 }

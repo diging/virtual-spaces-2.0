@@ -1,17 +1,27 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.ModuleDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ISlideFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IModule;
-import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 
 @Service
@@ -19,6 +29,21 @@ public class ModuleManager implements IModuleManager {
 
     @Autowired
     private ModuleRepository moduleRepo;
+    
+    @Autowired
+    private SlideRepository slideRepo;
+    
+    @Autowired
+    private ISlideFactory slideFactory;
+    
+    @Autowired
+    private IImageFactory imageFactory;
+    
+    @Autowired
+    private ImageRepository imageRepo;
+    
+    @Autowired
+    private IStorageEngine storage;
 
     /*
      * (non-Javadoc)
@@ -41,6 +66,51 @@ public class ModuleManager implements IModuleManager {
         return null;
     }  
     
+    @Override
+    public ISlide createSlide(String id, String title, String description) throws ModuleDoesNotExistException {
+        ISlide slide = slideFactory.createSlide(title, description);
+        return slide;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IModuleManager#storeSlide(edu.asu.
+     * diging.vspace.core.model.ISlide, java.lang.String)
+     */
+    public CreationReturnValue storeSlide(ISlide slide, byte[] image, String filename) {
+        IVSImage bgImage = null;
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+
+            bgImage = imageFactory.createImage(filename, contentType);
+            bgImage = imageRepo.save((VSImage) bgImage);
+        }
+
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+
+        if (bgImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, bgImage.getId());
+            } catch (FileStorageException e) {
+                returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
+            }
+            bgImage.setParentPath(relativePath);
+            imageRepo.save((VSImage) bgImage);
+            slide.setImage(bgImage);
+        }
+
+        slide = slideRepo.save((Slide) slide);
+        returnValue.setElement(slide);
+        return returnValue;
+    }
+    
 //    @Override
-//    public ISlide createSlide(String title, String description) throws ModuleDoesNotExistException {
+//    public List<ISlide> getModuleSlides(String moduleId) {
+//        return new ArrayList<>(slideRepo.findSlidesForModule(moduleId));
+//    }
 }
