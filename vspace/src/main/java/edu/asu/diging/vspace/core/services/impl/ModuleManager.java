@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 
+@Transactional
 @Service
 public class ModuleManager implements IModuleManager {
 
@@ -68,7 +71,8 @@ public class ModuleManager implements IModuleManager {
     
     @Override
     public ISlide createSlide(String id, String title, String description) throws ModuleDoesNotExistException {
-        ISlide slide = slideFactory.createSlide(title, description);
+        IModule module = getModule(id);
+        ISlide slide = slideFactory.createSlide(module, title, description);
         return slide;
     }
     
@@ -109,8 +113,9 @@ public class ModuleManager implements IModuleManager {
         return returnValue;
     }
     
-//    @Override
-//    public List<ISlide> getModuleSlides(String moduleId) {
-//        return new ArrayList<>(slideRepo.findSlidesForModule(moduleId));
-//    }
+    @Override
+    public List<ISlide> getModuleSlides(String moduleId) {
+        IModule module = getModule(moduleId);
+        return new ArrayList<>(slideRepo.findByModule((Module)module));
+    }
 }

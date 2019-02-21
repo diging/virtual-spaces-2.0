@@ -6,4 +6,8 @@ public interface ISlide extends IVSpaceElement {
 
     IVSImage getImage();
 
+    void setModule(IModule module);
+
+    IModule getModule();
+
 }

@@ -6,9 +6,25 @@
 
 <script>
 $( document ).ready(function() { 
+	
+	<c:forEach items="${slides}" var="link" varStatus="loop">
+	{		
+        // ADD ROWS TO THE TABLE.
+        $('table tr:last')
+            .after('<tr><td align="center"><a href="http://www.google.com">'+     
+            '<div class="card text-white bg-info mb-1" style="max-width: 22rem;">' +
+            '<div align="left" class="card-header"><h6 class="card-title">${link.name}</h6></div>'+
+            '<div class="card-body">'+         
+              '<p class="card-text">${link.description}</p>'+
+            '</div>'+
+          '</div>'+ 
+          '</td>');
+
+	}
+	</c:forEach> 
+	
 	$("#addSlideButton").on("click", function(e){ 	
 		$("#createSlideAlert").show();
-		//myFunction();
 	});
 	$("#createSlideAlert").draggable();
 	
@@ -66,123 +82,25 @@ $( document ).ready(function() {
 
 
 <body>
-
+<div id="result"></div>
 <table width="100%" height="50%" style=" margin-top:50px;">
-<tr>
-
-<td>
-<table width="100%" height="100%" style="border: 1px solid blue;">
 	<tr>
-		<td><nav class="navbar navbar-expand-sm navbar-light bg-light">
-		<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add Slide</button>
-		</nav> </td>
-	</tr>
-	<tr>
-	<td>
-	<table style="border: 1px solid blue;">
-		<tr>
-		<td>
-		Step :1
-		
-		I am writing this in the sequence
+		<td align="center">
+			<div class="card text-white bg-warning" style="max-width: 12rem;">
+  				<div class="card-header">Slides</div></div>
+			<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add</button>
 		</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-	
-	<tr>
-	<td>
-	<table style="border: 1px solid blue;">
-		<tr>
 		<td>
-		Step :1
-		
-		I am writing this in the sequence
+			<td align="center">
+			<div class="card text-white bg-warning" style="max-width: 12rem;">
+  				<div class="card-header">Sequences</div></div>
+			<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add</button>
 		</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-	
-	<tr>
-	<td>
-	<table style="border: 1px solid blue;">
-		<tr>
+		</td>
 		<td>
-		Step :1
-		
-		I am writing this in the sequence
+			Start Sequence
 		</td>
-		</tr>
-	</table>
-	</td>
 	</tr>
-	
-	<tr>
-	<td>
-	<table style="border: 1px solid blue;">
-		<tr>
-		<td>
-		Step :1
-		
-		I am writing this in the sequence
-		</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-	
-</table>
-</td>
-
-<td>
-<table width="100%" height="100%" style="border: 1px solid blue;">
-	<tr>
-		<td> <nav class="navbar navbar-expand-sm navbar-light bg-light">
-		<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add Sequence</button>
-		</nav></td>
-	</tr>	
-	<tr>
-	<td>
-	<table  style="border: 1px solid blue;">
-		<tr>
-		<td>
-		Step :2
-		
-		I am writing this in the sequence
-		</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-
-</table>
-</td>
-
-<td>&nbsp;</td>
-
-<td>
-<table  width="100%" height="100%" style="border: 1px solid blue;">
-	
-	<tr>
-	<td>
-	<table style="border: 1px solid blue;">
-		<tr>
-		<td>
-		Step :3
-		
-		I am writing this in the sequence
-		</td>
-		</tr>
-	</table>
-	</td>
-	</tr>
-
-</table>
-</td>
-
-</tr>
 </table>
 
 

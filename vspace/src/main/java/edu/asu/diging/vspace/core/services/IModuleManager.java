@@ -5,7 +5,6 @@ import java.util.List;
 import edu.asu.diging.vspace.core.exception.ModuleDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface IModuleManager {
@@ -18,6 +17,6 @@ public interface IModuleManager {
 
     CreationReturnValue storeSlide(ISlide space, byte[] image, String filename);
 
-    //List<ISlide> getModuleSlides(String moduleId);
+    List<ISlide> getModuleSlides(String moduleId);
 
 }

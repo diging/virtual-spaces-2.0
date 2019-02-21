@@ -25,7 +25,7 @@ public class Module extends VSpaceElement implements IModule {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToMany(targetEntity = Slide.class)
+    @OneToMany(targetEntity = Slide.class, mappedBy="module")
     private List<ISlide> slides;
 
     @OneToMany(targetEntity = Sequence.class)
