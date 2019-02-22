@@ -19,4 +19,6 @@ public interface IModuleManager {
 
     List<ISlide> getModuleSlides(String moduleId);
 
+    ISlide getSlide(String slideId);
+
 }

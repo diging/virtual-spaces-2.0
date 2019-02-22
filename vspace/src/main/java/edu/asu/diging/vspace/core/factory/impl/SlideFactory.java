@@ -9,9 +9,13 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 
 @Service
 public class SlideFactory implements ISlideFactory {
-    
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createSlide(java.lang.String, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createSlide(java.lang.
+     * String, java.lang.String)
      */
     @Override
     public ISlide createSlide(IModule module, String title, String description) {

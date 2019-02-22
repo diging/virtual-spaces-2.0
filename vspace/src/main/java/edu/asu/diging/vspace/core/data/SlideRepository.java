@@ -13,5 +13,5 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 @JaversSpringDataAuditable
 public interface SlideRepository extends PagingAndSortingRepository<Slide, String> {
 
-      public List<Slide> findByModule(Module module);
+    public List<Slide> findByModule(Module module);
 }

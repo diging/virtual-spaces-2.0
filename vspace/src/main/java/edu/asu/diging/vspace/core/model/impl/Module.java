@@ -21,11 +21,11 @@ public class Module extends VSpaceElement implements IModule {
     @Id
     @GeneratedValue(generator = "module_id_generator")
     @GenericGenerator(name = "module_id_generator", 
-        parameters = @Parameter(name = "prefix", value = "MOD"), 
-        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+                      parameters = @Parameter(name = "prefix", value = "MOD"),
+                      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToMany(targetEntity = Slide.class, mappedBy="module")
+    @OneToMany(targetEntity = Slide.class, mappedBy = "module")
     private List<ISlide> slides;
 
     @OneToMany(targetEntity = Sequence.class)

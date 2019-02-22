@@ -9,12 +9,11 @@ $( document ).ready(function() {
 	
 	<c:forEach items="${slides}" var="link" varStatus="loop">
 	{		
-        // ADD ROWS TO THE TABLE.
         $('table tr:last')
-            .after('<tr><td align="center"><a href="http://www.google.com">'+     
-            '<div class="card text-white bg-info mb-1" style="max-width: 22rem;">' +
-            '<div align="left" class="card-header"><h6 class="card-title">${link.name}</h6></div>'+
-            '<div class="card-body">'+         
+        
+            .after('<tr><td style="padding-left: 22px; border-style:hidden; padding-top: 6px; padding-bottom: 6px;"><a href="<c:url value="/staff/module/slide/${link.id}" />">'+     
+            '<div class="card" style="max-width: 18rem;">' +          
+            '<div align="left" class="card-body"><h5 class="card-title">${link.name}</h5>'+                     
               '<p class="card-text">${link.description}</p>'+
             '</div>'+
           '</div>'+ 
@@ -31,15 +30,6 @@ $( document ).ready(function() {
 	$("#cancelSlideBtn").click(function() {
 		$("#createSlideAlert").hide();	
 	});
-	
-	function myFunction() {
-		alert("working");
-		  var table = document.getElementById("myTable");
-		  var row = table.insertRow(0);
-		  var cell1 = row.insertCell(0);
-		  var cell2 = row.insertCell(1);
-		  cell1.innerHTML = "NEW CELL1";
-		}
 });
 
 </script>
@@ -71,37 +61,28 @@ $( document ).ready(function() {
 		  <input type="file" name="file" rows="5" cols="500" id="file" />		  
 		  <hr>
 		  <p class="mb-0 text-right"><button id="cancelSlideBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> 
-		  <button id="createSlideBtn" type="submit" class="btn btn-primary btn-xs" onclick="myFunction()">Create Slide</button></p>
+		  <button id="createSlideBtn" type="submit" class="btn btn-primary btn-xs">Create Slide</button></p>
 	</div>
 </form:form>
 
-
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
-<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add Slide</button>
-</nav>
-
-
 <body>
 <div id="result"></div>
-<table width="100%" height="50%" style=" margin-top:50px;">
+<table border ="0" width="100%" height="50%" style=" margin-top:50px;">
 	<tr>
-		<td align="center">
-			<div class="card text-white bg-warning" style="max-width: 12rem;">
-  				<div class="card-header">Slides</div></div>
-			<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add</button>
+		<td style="width: 20rem; padding-left: 15px; border:1;">			
+  				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">SLIDES</span> 
+  					<span id="addSlideButton" data-feather="plus-circle" style="float:right; padding-top: 3px;"></span> </div>
 		</td>
-		<td>
-			<td align="center">
-			<div class="card text-white bg-warning" style="max-width: 12rem;">
-  				<div class="card-header">Sequences</div></div>
-			<button type="button" id="addSlideButton" class="btn btn-primary btn-sm">Add</button>
+		<td>&nbsp;</td>
+		<td style="width: 20rem; padding-left: 15px; border:1;">			
+  				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">SEQUENCES</span> 
+  					<span id="addSequenceButton" data-feather="plus-circle" style="float:right; padding-top: 3px;"></span> </div>
 		</td>
-		</td>
-		<td>
-			Start Sequence
+		<td>&nbsp;</td>
+		<td style="width: 20rem; padding-left: 15px; border:1;">			
+  				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">START SEQUENCE</span> 
+  					<span id="startSequence" style="float:right; padding-top: 3px;"></span> </div>
 		</td>
 	</tr>
 </table>
-
-
 </body>

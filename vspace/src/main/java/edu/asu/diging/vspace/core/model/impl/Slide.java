@@ -79,7 +79,9 @@ public class Slide extends VSpaceElement implements ISlide {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.vspace.core.model.IModule)
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.vspace.
+     * core.model.IModule)
      */
     @Override
     public void setModule(IModule module) {

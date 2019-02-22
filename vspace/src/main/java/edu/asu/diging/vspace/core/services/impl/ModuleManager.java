@@ -32,19 +32,19 @@ public class ModuleManager implements IModuleManager {
 
     @Autowired
     private ModuleRepository moduleRepo;
-    
+
     @Autowired
     private SlideRepository slideRepo;
-    
+
     @Autowired
     private ISlideFactory slideFactory;
-    
+
     @Autowired
     private IImageFactory imageFactory;
-    
+
     @Autowired
     private ImageRepository imageRepo;
-    
+
     @Autowired
     private IStorageEngine storage;
 
@@ -60,22 +60,36 @@ public class ModuleManager implements IModuleManager {
         return moduleRepo.save((Module) module);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IModuleManager#getModule(java.lang.
+     * String)
+     */
     @Override
     public IModule getModule(String id) {
         Optional<Module> module = moduleRepo.findById(id);
         if (module.isPresent()) {
-            return module.get();           
+            return module.get();
         }
         return null;
-    }  
-    
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IModuleManager#storeSlide(java.lang.
+     * String, java.lang.String, java.lang.String)
+     */
     @Override
     public ISlide createSlide(String id, String title, String description) throws ModuleDoesNotExistException {
         IModule module = getModule(id);
         ISlide slide = slideFactory.createSlide(module, title, description);
         return slide;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -112,10 +126,19 @@ public class ModuleManager implements IModuleManager {
         returnValue.setElement(slide);
         return returnValue;
     }
-    
+
     @Override
     public List<ISlide> getModuleSlides(String moduleId) {
         IModule module = getModule(moduleId);
-        return new ArrayList<>(slideRepo.findByModule((Module)module));
+        return new ArrayList<>(slideRepo.findByModule((Module) module));
+    }
+
+    @Override
+    public ISlide getSlide(String slideId) {
+        Optional<Slide> slide = slideRepo.findById(slideId);
+        if (slide.isPresent()) {
+            return slide.get();
+        }
+        return null;
     }
 }
