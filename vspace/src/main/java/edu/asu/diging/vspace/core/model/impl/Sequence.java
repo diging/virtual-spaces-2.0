@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 
@@ -25,6 +27,9 @@ public class Sequence extends VSpaceElement implements ISequence {
 
     @OneToMany(targetEntity = Slide.class)
     private List<ISlide> slides;
+    
+    @OneToOne(targetEntity = Module.class)
+    private IModule module;
 
     /*
      * (non-Javadoc)
@@ -65,5 +70,20 @@ public class Sequence extends VSpaceElement implements ISequence {
     @Override
     public void setSlides(List<ISlide> slides) {
         this.slides = slides;
+    }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISequence#getModule()
+     */
+    public IModule getModule() {
+        return module;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISequence#setModule(edu.asu.diging.vspace.
+     * core.model.IModule)
+     */
+    public void setModule(IModule module) {
+        this.module = module;
     }
 }
