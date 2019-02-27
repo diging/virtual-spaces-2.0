@@ -98,28 +98,28 @@ public class ModuleManager implements IModuleManager {
      * diging.vspace.core.model.ISlide, java.lang.String)
      */
     public CreationReturnValue storeSlide(ISlide slide, byte[] image, String filename) {
-        IVSImage bgImage = null;
+        IVSImage slideImage = null;
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
 
-            bgImage = imageFactory.createImage(filename, contentType);
-            bgImage = imageRepo.save((VSImage) bgImage);
+            slideImage = imageFactory.createImage(filename, contentType);
+            slideImage = imageRepo.save((VSImage) slideImage);
         }
 
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
 
-        if (bgImage != null) {
+        if (slideImage != null) {
             String relativePath = null;
             try {
-                relativePath = storage.storeFile(image, filename, bgImage.getId());
+                relativePath = storage.storeFile(image, filename, slideImage.getId());
             } catch (FileStorageException e) {
                 returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
             }
-            bgImage.setParentPath(relativePath);
-            imageRepo.save((VSImage) bgImage);
-            slide.setImage(bgImage);
+            slideImage.setParentPath(relativePath);
+            imageRepo.save((VSImage) slideImage);
+            slide.setImage(slideImage);
         }
 
         slide = slideRepo.save((Slide) slide);

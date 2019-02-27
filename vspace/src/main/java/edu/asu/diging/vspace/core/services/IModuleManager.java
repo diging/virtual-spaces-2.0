@@ -13,9 +13,9 @@ public interface IModuleManager {
 
     IModule getModule(String id);
     
-    ISlide createSlide(String id, String title, String description) throws ModuleDoesNotExistException;
+    ISlide createSlide(String moduleId, String title, String description) throws ModuleDoesNotExistException;
 
-    CreationReturnValue storeSlide(ISlide space, byte[] image, String filename);
+    CreationReturnValue storeSlide(ISlide slide, byte[] image, String filename);
 
     List<ISlide> getModuleSlides(String moduleId);
 

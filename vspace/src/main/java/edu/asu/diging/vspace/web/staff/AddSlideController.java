@@ -24,10 +24,10 @@ public class AddSlideController {
     private IModuleManager moduleManager;
     
     @RequestMapping(value = "/staff/module/{id}/slide/", method = RequestMethod.POST)
-    public String addSlide(@PathVariable("id") String id, @RequestParam("slideTitle") String title, @RequestParam("slideDescription") String description, Model model, @RequestParam("file") MultipartFile file,
+    public String addSlide(@PathVariable("id") String moduleId, @RequestParam("slideTitle") String title, @RequestParam("slideDescription") String description, Model model, @RequestParam("file") MultipartFile file,
             Principal principal, RedirectAttributes attributes) throws IOException, ModuleDoesNotExistException {
         
-        ISlide slide = moduleManager.createSlide(id,title,description);
+        ISlide slide = moduleManager.createSlide(moduleId,title,description);
         byte[] image = null;
         String filename = null;        
         if (file.isEmpty() || file.equals(null)) {

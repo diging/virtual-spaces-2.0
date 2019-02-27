@@ -13,6 +13,6 @@
 
 <c:if test="${not empty slide.image}">
 <div id="slide">
-<img id="bgImage" width="800px" src="<c:url value="/api/image/${slide.image.id}" />" />
+<img id="image" width="800px" src="<c:url value="/api/image/${slide.image.id}" />" />
 </div>
 </c:if>
