@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -15,8 +14,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class VSImage extends VSpaceElement implements IVSImage {
 
 	@Id 
-	@GeneratedValue(generator = "image-id-generator")
-    @GenericGenerator(name = "image-id-generator", 
+	@GeneratedValue(generator = "image_id_generator")
+    @GenericGenerator(name = "image_id_generator", 
       parameters = @Parameter(name = "prefix", value = "IMG"), 
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
@@ -74,6 +73,5 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Override
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
-	}
-	
+	}	
 }

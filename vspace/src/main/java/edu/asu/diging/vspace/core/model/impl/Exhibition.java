@@ -19,8 +19,8 @@ import edu.asu.diging.vspace.core.model.ISpace;
 public class Exhibition extends VSpaceElement implements IExhibition {
 
     @Id
-    @GeneratedValue(generator = "exhibit-id-generator")
-    @GenericGenerator(name = "exhibit-id-generator",
+    @GeneratedValue(generator = "exhibit_id_generator")
+    @GenericGenerator(name = "exhibit_id_generator",
             parameters = @Parameter(name = "prefix", value = "EXH"),
             strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;

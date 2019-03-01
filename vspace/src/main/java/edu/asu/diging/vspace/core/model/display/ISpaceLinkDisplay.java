@@ -1,28 +1,24 @@
 package edu.asu.diging.vspace.core.model.display;
 
 import edu.asu.diging.vspace.core.model.ISpaceLink;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
-public interface ISpaceLinkDisplay extends IVSpaceElement {
+public interface ISpaceLinkDisplay extends ILinkDisplay {
 
-	String getId();
+    String getId();
 
-	void setId(String id);
+    void setId(String id);
 
-	float getPositionX();
+    void setLink(ISpaceLink link);
 
-	void setPositionX(float positionX);
+    ISpaceLink getLink();
 
-	float getPositionY();
+    void setRotation(int rotation);
 
-	void setPositionY(float positionY);
+    int getRotation();
 
-	void setLink(ISpaceLink link);
+    void setType(DisplayType type);
 
-	ISpaceLink getLink();
-
-	void setRotation(int rotation);
-
-	int getRotation();
+    DisplayType getType();
+    
 
 }

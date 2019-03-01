@@ -5,6 +5,6 @@ import edu.asu.diging.vspace.core.model.ISpaceLink;
 
 public interface ISpaceLinkFactory {
 
-	ISpaceLink createSpaceLink(String title, ISpace source);
+    ISpaceLink createSpaceLink(String title, ISpace source);
 
 }

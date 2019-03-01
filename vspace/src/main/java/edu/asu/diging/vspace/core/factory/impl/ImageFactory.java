@@ -9,14 +9,18 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 @Service
 public class ImageFactory implements IImageFactory {
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.factory.impl.IImageFactory#createImage(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public IVSImage createImage(String filename, String fileType) {
-		IVSImage image = new VSImage();
-		image.setFilename(filename);
-		image.setFileType(fileType);
-		return image;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.factory.impl.IImageFactory#createImage(java.lang.
+     * String, java.lang.String)
+     */
+    @Override
+    public IVSImage createImage(String filename, String fileType) {
+        IVSImage image = new VSImage();
+        image.setFilename(filename);
+        image.setFileType(fileType);
+        return image;
+    }
 }

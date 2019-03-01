@@ -31,5 +31,4 @@ public interface IVSpaceElement {
 	OffsetDateTime getModificationDate();
 
 	void setModificationDate(OffsetDateTime modificationDate);
-
 }

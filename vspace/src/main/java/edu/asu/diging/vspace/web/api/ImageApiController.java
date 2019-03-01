@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.api;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +20,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 
 @RestController
 public class ImageApiController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private ImageRepository imageRepo;
@@ -32,8 +36,8 @@ public class ImageApiController {
 		try {
 			imageContent = storage.getImageContent(image.getId(), image.getFilename());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Could not retrieve image.", e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		HttpHeaders headers = new HttpHeaders();

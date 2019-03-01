@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
@@ -20,11 +21,10 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public class Space extends VSpaceElement implements ISpace {
 
 	@Id
-	@GeneratedValue(generator = "id-generator")
-	@GenericGenerator(name = "id-generator", 	
-					parameters = @Parameter(name = "prefix", value = "SPA"), 
-					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
-			)
+	@GeneratedValue(generator = "space_id_generator")
+	@GenericGenerator(name = "space_id_generator", 
+	    parameters = @Parameter(name = "prefix", value = "SPA"), 
+	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 
 	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
@@ -33,6 +33,9 @@ public class Space extends VSpaceElement implements ISpace {
 	@OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
 	private List<IModuleLink> moduleLinks;
 	
+	@OneToMany(mappedBy = "space", targetEntity=ExternalLink.class)
+	private List<IExternalLink> externalLinks;
+
 	@OneToOne(targetEntity=VSImage.class)
 	private IVSImage image;
 
@@ -83,6 +86,22 @@ public class Space extends VSpaceElement implements ISpace {
 	public void setModuleLinks(List<IModuleLink> moduleLinks) {
 		this.moduleLinks = moduleLinks;
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getExternalLinks()
+	 */
+	@Override
+	public List<IExternalLink> getExternalLinks() {
+		return externalLinks;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setExternalLinks(java.util.List)
+	 */
+	@Override
+	public void setExternalLinks(List<IExternalLink> externalLinks) {
+		this.externalLinks = externalLinks;
+	}
 
 	public IVSImage getImage() {
 		return image;
@@ -91,5 +110,4 @@ public class Space extends VSpaceElement implements ISpace {
 	public void setImage(IVSImage image) {
 		this.image = image;
 	}
-
 }
