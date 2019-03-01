@@ -85,6 +85,11 @@
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
 	</definition>
 	
+	<!-- Slides -->
+	<definition name="staff/module/slide/add" extends="module.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/add.jsp" />	
+	</definition>
+	
 	<definition name="staff/module/slide" extends="module.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slide.jsp" />
 	</definition>

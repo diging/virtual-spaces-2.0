@@ -14,9 +14,7 @@ import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
-import edu.asu.diging.vspace.core.exception.ModuleDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
-import edu.asu.diging.vspace.core.factory.ISlideFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -37,9 +35,6 @@ public class ModuleManager implements IModuleManager {
     private SlideRepository slideRepo;
 
     @Autowired
-    private ISlideFactory slideFactory;
-
-    @Autowired
     private IImageFactory imageFactory;
 
     @Autowired
@@ -53,7 +48,7 @@ public class ModuleManager implements IModuleManager {
      * 
      * @see
      * edu.asu.diging.vspace.core.services.impl.IModuleManager#storeModule(edu.asu.
-     * diging.vspace.core.model.IModule, java.lang.String)
+     * diging.vspace.core.model.IModule)
      */
     @Override
     public IModule storeModule(IModule module) {
@@ -74,20 +69,6 @@ public class ModuleManager implements IModuleManager {
             return module.get();
         }
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.impl.IModuleManager#storeSlide(java.lang.
-     * String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public ISlide createSlide(String id, String title, String description) throws ModuleDoesNotExistException {
-        IModule module = getModule(id);
-        ISlide slide = slideFactory.createSlide(module, title, description);
-        return slide;
     }
 
     /*

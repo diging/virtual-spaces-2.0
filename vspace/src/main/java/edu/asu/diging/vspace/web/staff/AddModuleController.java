@@ -31,9 +31,9 @@ public class AddModuleController {
 	}
 	
 	@RequestMapping(value="/staff/module/add", method=RequestMethod.POST)
-	public String addModule(Model model, @ModelAttribute ModuleForm spaceForm, Principal principal) {
+	public String addModule(Model model, @ModelAttribute ModuleForm moduleForm, Principal principal) {
 		
-		IModule module = moduleFactory.createModule(spaceForm);
+		IModule module = moduleFactory.createModule(moduleForm);
 		moduleManager.storeModule(module);
 		
 		return "redirect:/staff/module/list";

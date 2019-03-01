@@ -44,7 +44,7 @@ $( document ).ready(function() {
   Modified on <span class="date">${module.modificationDate}</span> by ${module.modifiedBy}.
 </div>
 
-<c:url value="/staff/module/${module.id}/slide/" var="postUrl" />
+<%-- <c:url value="/staff/module/${module.id}/slide/" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 
 	<div id="createSlideAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999"> 
@@ -58,12 +58,12 @@ $( document ).ready(function() {
 		  <input class="form-control-xs" type="text" id="slideDescription" name="slideDescription"><br>
 		  
 		  <label style="margin-right: 5px;"><small>Upload Image:</small> </label>
-		  <input type="file" name="file" rows="5" cols="500" id="file" />		  
+		  <input type="file" name="file" rows="5" cols="500" id="file" multiple="multiple" accept="image/*"/>		  
 		  <hr>
 		  <p class="mb-0 text-right"><button id="cancelSlideBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> 
 		  <button id="createSlideBtn" type="submit" class="btn btn-primary btn-xs">Create Slide</button></p>
 	</div>
-</form:form>
+</form:form> --%>
 
 <body>
 <div id="result"></div>
@@ -71,7 +71,9 @@ $( document ).ready(function() {
 	<tr>
 		<td style="width: 20rem; padding-left: 15px; border:1;">			
   				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">SLIDES</span> 
-  					<span id="addSlideButton" data-feather="plus-circle" style="float:right; padding-top: 3px;"></span> </div>
+  					<a class="d-flex align-items-center text-muted" href="<c:url value="staff/module/slide/add" />">
+    				<span data-feather="plus-circle"></span>
+  					</a></div>
 		</td>
 		<td>&nbsp;</td>
 		<td style="width: 20rem; padding-left: 15px; border:1;">			

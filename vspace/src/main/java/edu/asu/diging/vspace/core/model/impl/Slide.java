@@ -1,8 +1,11 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -11,6 +14,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.web.staff.ContentBlock;
 
 @Entity
 public class Slide extends VSpaceElement implements ISlide {
@@ -25,7 +29,10 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @OneToOne(targetEntity = Module.class)
     private IModule module;
-
+    
+    //@OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide")
+    //private List<ContentBlock> contents;
+    // list of contentblocks: contenntblock <- textblock, imageblock 
     /*
      * (non-Javadoc)
      * 
@@ -87,4 +94,12 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setModule(IModule module) {
         this.module = module;
     }
+    
+//    public List<ContentBlock> getContents() {
+//        return contents;
+//    }
+//
+//    public void setContents(List<ContentBlock> contents) {
+//        this.contents = contents;
+//    }
 }
