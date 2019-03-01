@@ -18,6 +18,6 @@
 		<option id=${space.id} value=${space.id} <c:if test="${space==exhibition.startSpace}">selected</c:if>>${space.name}</option>
 	  </c:forEach>
 	</select>
-	<input type="submit" value="submit" />
+	<p style="padding-top: 10px;"><input class="btn btn-primary" type="submit" value="submit" /></p>
   </form:form>
 </div>
