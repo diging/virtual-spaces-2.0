@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
+import java.util.List;
+
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 
@@ -27,5 +29,7 @@ public interface IExhibitionManager {
      * .lang.String)
      */
     IExhibition getExhibitionById(String id);
+
+    List<IExhibition> findAll();
 
 }

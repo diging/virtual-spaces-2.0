@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +23,7 @@ public class ExhibitionManagerTest {
     private ExhibitionRepository exhibitRepo;
 
     @InjectMocks
-    private ExhibitionManager exhibitManager = new ExhibitionManager();
+    private ExhibitionManager serviceToTest;
 
     @Before
     public void init() {
@@ -33,20 +34,22 @@ public class ExhibitionManagerTest {
     public void test_storeExhibition_success() {
         Exhibition exhibition = new Exhibition();
         when(exhibitRepo.save(exhibition)).thenReturn(exhibition);
-        IExhibition exhibitionTest = exhibitManager.storeExhibition(exhibition);
+        IExhibition exhibitionTest = serviceToTest.storeExhibition(exhibition);
         assertNotNull(exhibitionTest);
         verify(exhibitRepo).save(exhibition);
     }
 
     @Test
     public void test_getExhibitionById_success() {
+        String id = "ID";
         Exhibition exhibition = new Exhibition();
-        Optional<Exhibition> findExhibition = Optional.of(exhibition);;
-        exhibitManager.storeExhibition(exhibition);
-        when(exhibitRepo.findById(exhibition.getId())).thenReturn(findExhibition);
-        IExhibition exhibitionTest = exhibitManager.getExhibitionById(findExhibition.get().getId());
+        exhibition.setId(id);
+        Optional<Exhibition> exhibitionOptional = Optional.of(exhibition);;
+        when(exhibitRepo.findById(id)).thenReturn(exhibitionOptional);
+        
+        IExhibition exhibitionTest = serviceToTest.getExhibitionById(id);
         assertEquals(exhibitionTest, exhibition);
-        verify(exhibitRepo).findById(exhibition.getId());
+        verify(exhibitRepo).findById(id);
     }
 
 }

@@ -54,7 +54,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
      * @see edu.asu.diging.vspace.core.model.IExhibition#getSpace()
      */
     @Override
-    public ISpace getSpace() {
+    public ISpace getStartSpace() {
         return this.startSpace;
     }
 
@@ -65,7 +65,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
      * core.model.ISpace)
      */
     @Override
-    public void setSpace(ISpace space) {
+    public void setStartSpace(ISpace space) {
         this.startSpace = space;
     }
 

@@ -7,7 +7,7 @@ public interface IExhibition extends IVSpaceElement {
      * 
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpace()
      */
-    ISpace getSpace();
+    ISpace getStartSpace();
 
     /*
      * (non-Javadoc)
@@ -15,6 +15,6 @@ public interface IExhibition extends IVSpaceElement {
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setSpace(edu.asu.diging.vspace.
      * core.model.impl.Space)
      */
-    void setSpace(ISpace space);
+    void setStartSpace(ISpace space);
 
 }

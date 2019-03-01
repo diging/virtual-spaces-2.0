@@ -1,9 +1,14 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -36,6 +41,17 @@ public class ExhibitionManager implements IExhibitionManager {
     @Override
     public IExhibition getExhibitionById(String id) {
         Optional<Exhibition> exhibition = exhibitRepo.findById(id);
-        return exhibition.get();
+        if (exhibition.isPresent()) {
+            return exhibition.get();
+        } 
+        return null;
+    }
+    
+    @Override
+    public List<IExhibition> findAll() {
+        Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
+        List<IExhibition> results = new ArrayList<>();
+        exhibitions.forEach(e -> results.add((IExhibition)e));
+        return results;
     }
 }

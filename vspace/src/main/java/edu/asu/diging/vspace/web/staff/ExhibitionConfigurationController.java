@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +15,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 
 @Controller
@@ -28,17 +31,21 @@ public class ExhibitionConfigurationController {
     private SpaceManager spaceManager;
 
     @Autowired
-    private ExhibitionManager exhibitManager;
-
-    @Autowired
-    private ExhibitionRepository exhibitRepo;
+    private IExhibitionManager exhibitManager;
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
 
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
-        model.addAttribute("exhibitionsList", exhibitRepo.findAll());
+        // for now we assume there is just one exhibition
+        List<IExhibition> exhibitions = exhibitManager.findAll();
+        if (exhibitions.size() > 0) {
+            model.addAttribute("exhibition", exhibitions.get(0));
+        } else {
+            model.addAttribute("exhibition", new Exhibition());
+        }
+        
         model.addAttribute("spacesList", spaceRepo.findAll());
         return "staff/exhibit/config";
     }
@@ -57,16 +64,16 @@ public class ExhibitionConfigurationController {
             @RequestParam("spaceParam") String spaceID, RedirectAttributes attributes)
             throws IOException {
 
-        Exhibition exhibition;
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
+        Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
 
-        exhibition.setSpace(startSpace);
+        exhibition.setStartSpace(startSpace);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");

@@ -11,18 +11,11 @@
   <c:url value="/staff/exhibit/config" var="postUrl" />
   <form:form method="POST"
              action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
-	<label for="exhibition">Select the exhibition you would like to configure:
-	</label>
-	<select class="form-control" name="exhibitionParam">
-      <option id="New" value="">New Exhibition</option>
-	  <c:forEach items="${exhibitionsList}" var="exhibition">
-	    <option id=${exhibition.id} value=${exhibition.id}>${exhibition.id}</option>
-	  </c:forEach>
-	</select>
+	<input type="hidden" name="exhibitionParam" value="${exhibition.id}" />
 	<label for="space">Select the start space of the exhibition:</label>
 	<select class="form-control" name="spaceParam">
       <c:forEach items="${spacesList}" var="space">
-		<option id=${space.id} value=${space.id}>${space.name}</option>
+		<option id=${space.id} value=${space.id} <c:if test="${space==exhibition.startSpace}">selected</c:if>>${space.name}</option>
 	  </c:forEach>
 	</select>
 	<input type="submit" value="submit" />
