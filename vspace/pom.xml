@@ -15,7 +15,7 @@
         <spring-security-version>4.1.5.RELEASE</spring-security-version>
         <javers.version>3.10.1</javers.version>
         <admin.password>admin</admin.password>         
-        <staff.password>staff</staff.password> 
+        <staff.password>staff</staff.password>
 
         <log.level>info</log.level>
 

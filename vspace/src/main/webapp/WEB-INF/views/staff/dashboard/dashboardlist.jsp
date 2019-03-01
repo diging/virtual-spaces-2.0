@@ -2,6 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<div style="text-align:right">
+ <a href="<c:url value="/staff/exhibit/config" />"><span data-feather="settings"></span> Configure Exhibition</a>
+</div>
+
 <h3>Spaces</h3>
 
 <div style="padding-bottom: 20px;">
