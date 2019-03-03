@@ -54,4 +54,14 @@ public class ExhibitionManager implements IExhibitionManager {
         exhibitions.forEach(e -> results.add((IExhibition)e));
         return results;
     }
+    
+    @Override
+    public IExhibition getStartExhibition() {
+        // for now we just take the first one created, there shouldn't be more than one
+        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        if (exhibitions.size() > 0) {
+            return exhibitions.get(0);
+        }
+        return null;
+    }
 }

@@ -1,9 +1,9 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -39,9 +39,9 @@ public class ExhibitionConfigurationController {
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
-        List<IExhibition> exhibitions = exhibitManager.findAll();
-        if (exhibitions.size() > 0) {
-            model.addAttribute("exhibition", exhibitions.get(0));
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        if (exhibition != null) {
+            model.addAttribute("exhibition", exhibition);
         } else {
             model.addAttribute("exhibition", new Exhibition());
         }

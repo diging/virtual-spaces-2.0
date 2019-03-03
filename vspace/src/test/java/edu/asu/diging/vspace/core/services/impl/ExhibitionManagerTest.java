@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 public class ExhibitionManagerTest {
 
@@ -23,7 +24,7 @@ public class ExhibitionManagerTest {
     private ExhibitionRepository exhibitRepo;
 
     @InjectMocks
-    private ExhibitionManager serviceToTest;
+    private IExhibitionManager serviceToTest;
 
     @Before
     public void init() {
