@@ -17,4 +17,8 @@ public interface IExhibition extends IVSpaceElement {
      */
     void setStartSpace(ISpace space);
 
+	void setTitle(String title);
+
+	String getTitle();
+
 }

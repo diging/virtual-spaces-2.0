@@ -6,13 +6,20 @@
 //# sourceURL=click.js
 $( document ).ready(function() {
 	
+	drawLinks();
+	
+	$( window ).resize(function() {
+		$("#space a").remove();
+		drawLinks();
+	});
+});
+
+function drawLinks() {
 	<c:forEach items="${spaceLinks}" var="link">
 	{
-		var posX = $("#space").offset().left - $("#space-container").offset().left;
-        var posY = $("#space").position().top;
-		console.log("x " + ${link.positionX})
-		console.log("offset " + $("#space").offset().left)
-		console.log("container: " + $("#space-container").offset().left)
+		var posX = $("#space").offset().left + $("#space").position().left; // $("#space-container").offset().left;
+        var posY = $("#space").position().top ;//+ parseInt($("main").css("padding-top"));
+        console.log($("#space").css("margin-left"));
 		var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		
@@ -34,13 +41,24 @@ $( document ).ready(function() {
 	}
 	</c:forEach>
 	feather.replace();
-});
+}
 </script>
 
 <div class="row">
 <div id="space-container" class="col-md-12 text-center">
-<div id="space" style="width: 800px; height: 600px; margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
+<div id="space" style="max-width: 800px; min-width:800px; max-height:600px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
+	<c:if test="${not empty space.description}">
+	<a id="descriptionLink" href="#" data-toggle="collapse" data-target=".descriptionBox" class="nav-item float-left" style="margin-left: 0px; z-index: 99; position: relative"><i class="fas fa-info-circle"></i></a>
+	<div class="descriptionBox collapse">
+	${space.description}
+	</div>
+	</c:if>
+</div>
+</div>
+</div>
+
+<script>
+$(function() {
 	
-</div>
-</div>
-</div>
+});
+</script>

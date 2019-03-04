@@ -18,6 +18,12 @@
 		<option id=${space.id} value=${space.id} <c:if test="${space==exhibition.startSpace}">selected</c:if>>${space.name}</option>
 	  </c:forEach>
 	</select>
+	<div style="padding-top: 10px;" >
+	<label for="title">Exhibition Title:</label>
+	<input type="text" class="form-control" name="title" value="${exhibition.title}" />
+	</div>
+	
 	<p style="padding-top: 10px;"><input class="btn btn-primary" type="submit" value="submit" /></p>
+ 
   </form:form>
 </div>

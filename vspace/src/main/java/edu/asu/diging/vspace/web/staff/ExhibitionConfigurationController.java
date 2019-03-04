@@ -61,7 +61,7 @@ public class ExhibitionConfigurationController {
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, RedirectAttributes attributes)
+            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, RedirectAttributes attributes)
             throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
@@ -74,6 +74,7 @@ public class ExhibitionConfigurationController {
         }
 
         exhibition.setStartSpace(startSpace);
+        exhibition.setTitle(title);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");

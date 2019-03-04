@@ -27,6 +27,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     @OneToOne(targetEntity = Space.class)
     private ISpace startSpace;
+    
+    private String title;
 
     /*
      * (non-Javadoc)
@@ -68,5 +70,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setStartSpace(ISpace space) {
         this.startSpace = space;
     }
+
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	@Override
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 }
