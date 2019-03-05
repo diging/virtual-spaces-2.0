@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import javax.transaction.Transactional;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
-@Transactional
 @Service
 public class SlideManager implements ISlideManager {
     
@@ -25,8 +24,17 @@ public class SlideManager implements ISlideManager {
      * diging.vspace.core.model.ISlide)
      */
     @Override
-    public ISlide storeModule(ISlide slide) {
+    public ISlide storeSlide(ISlide slide) {
         return slideRepo.save((Slide) slide);
+    }
+    
+    @Override
+    public ISlide getSlide(String slideId) {
+        Optional<Slide> slide = slideRepo.findById(slideId);
+        if (slide.isPresent()) {
+            return slide.get();
+        }
+        return null;
     }
 
 }

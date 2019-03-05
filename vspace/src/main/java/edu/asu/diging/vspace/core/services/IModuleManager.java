@@ -12,10 +12,6 @@ public interface IModuleManager {
 
     IModule getModule(String id);
 
-    CreationReturnValue storeSlide(ISlide slide, byte[] image, String filename);
-
     List<ISlide> getModuleSlides(String moduleId);
-
-    ISlide getSlide(String slideId);
 
 }

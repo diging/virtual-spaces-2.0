@@ -4,6 +4,8 @@ import edu.asu.diging.vspace.core.model.ISlide;
 
 public interface ISlideManager {
 
-    ISlide storeModule(ISlide slide);
+    ISlide storeSlide(ISlide slide);
+
+    ISlide getSlide(String slideId);
 
 }

@@ -23,9 +23,7 @@ public class SlideFactory implements ISlideFactory {
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         return slide;
-    }
-    
-  
+    }  
 }
 
 

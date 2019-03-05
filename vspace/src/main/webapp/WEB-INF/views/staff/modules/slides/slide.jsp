@@ -8,6 +8,8 @@
 <body>
 <h1>slide creation</h1>
     <div id="editor"></div>
+    <h1>Module: ${slide.name}</h1>
+<h3>Description: ${slide.description}</h3>
 </body>
 
 

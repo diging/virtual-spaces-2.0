@@ -6,20 +6,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.diging.vspace.core.services.impl.ModuleManager;
+import edu.asu.diging.vspace.core.services.impl.SlideManager;
 
 @Controller
 public class SlideController {
 
     @Autowired
-    private ModuleManager moduleManager;
+    private SlideManager slideManager;
     
     @RequestMapping("/staff/module/slide/{id}")
     public String listSpaces(@PathVariable String id, Model model) {
         
-        model.addAttribute("slide", moduleManager.getSlide(id));
-        
-        
+        model.addAttribute("slide", slideManager.getSlide(id));
+                
         return "staff/module/slide";
     }
 }

@@ -71,7 +71,7 @@ $( document ).ready(function() {
 	<tr>
 		<td style="width: 20rem; padding-left: 15px; border:1;">			
   				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">SLIDES</span> 
-  					<a class="d-flex align-items-center text-muted" href="<c:url value="staff/module/slide/add" />">
+  					<a class="d-flex align-items-center text-muted" href="<c:url value="${module.id}/slide/add" />">
     				<span data-feather="plus-circle"></span>
   					</a></div>
 		</td>
