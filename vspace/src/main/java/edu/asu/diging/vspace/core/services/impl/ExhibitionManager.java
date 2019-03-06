@@ -24,7 +24,8 @@ public class ExhibitionManager implements IExhibitionManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
+     * @see
+     * edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
@@ -35,7 +36,8 @@ public class ExhibitionManager implements IExhibitionManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
+     * @see
+     * edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
      * .lang.String)
      */
     @Override
@@ -43,15 +45,25 @@ public class ExhibitionManager implements IExhibitionManager {
         Optional<Exhibition> exhibition = exhibitRepo.findById(id);
         if (exhibition.isPresent()) {
             return exhibition.get();
-        } 
+        }
         return null;
     }
-    
+
     @Override
     public List<IExhibition> findAll() {
         Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
         List<IExhibition> results = new ArrayList<>();
-        exhibitions.forEach(e -> results.add((IExhibition)e));
+        exhibitions.forEach(e -> results.add((IExhibition) e));
         return results;
+    }
+
+    @Override
+    public IExhibition getStartExhibition() {
+        // for now we just take the first one created, there shouldn't be more than one
+        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        if (exhibitions.size() > 0) {
+            return exhibitions.get(0);
+        }
+        return null;
     }
 }

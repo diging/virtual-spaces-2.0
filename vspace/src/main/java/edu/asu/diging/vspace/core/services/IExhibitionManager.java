@@ -32,4 +32,6 @@ public interface IExhibitionManager {
 
     List<IExhibition> findAll();
 
+    IExhibition getStartExhibition();
+
 }

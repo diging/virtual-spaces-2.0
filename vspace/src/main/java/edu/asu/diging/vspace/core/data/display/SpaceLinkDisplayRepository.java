@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.data;
+package edu.asu.diging.vspace.core.data.display;
 
 import java.util.List;
 

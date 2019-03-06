@@ -20,13 +20,13 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     @Id
     @GeneratedValue(generator = "exhibit_id_generator")
-    @GenericGenerator(name = "exhibit_id_generator",
-            parameters = @Parameter(name = "prefix", value = "EXH"),
-            strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "exhibit_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = Space.class)
     private ISpace startSpace;
+
+    private String title;
 
     /*
      * (non-Javadoc)
@@ -61,12 +61,23 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.IExhibition#setSpace(edu.asu.diging.vspace.
+     * @see
+     * edu.asu.diging.vspace.core.model.IExhibition#setSpace(edu.asu.diging.vspace.
      * core.model.ISpace)
      */
     @Override
     public void setStartSpace(ISpace space) {
         this.startSpace = space;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 }
