@@ -14,21 +14,30 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 public class SpaceManagerTest {
 
     @Mock
     private SpaceRepository spaceRepo;
+    
+    @Mock
+    private SpaceDisplayRepository spaceDisplayRepo;
 
     @Mock
     private ImageRepository imageRepo;
@@ -44,12 +53,18 @@ public class SpaceManagerTest {
 
     @Mock
     private IImageFactory imageFactory;
+    
+    @Mock
+    private IImageService imageService;
 
     @Mock
     private ISpaceLinkFactory spaceLinkFactory;
 
     @Mock
     private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
+    
+    @Mock
+    private ISpaceDisplayFactory spaceDisplayFactory;
 
     @InjectMocks
     private SpaceManager managerToTest;
@@ -69,6 +84,9 @@ public class SpaceManagerTest {
         image.setFileType(IMG_CONTENT_TYPE);
         Mockito.when(imageFactory.createImage(Mockito.anyString(), Mockito.anyString())).thenReturn(image);
         Mockito.when(imageRepo.save((VSImage) image)).thenReturn((VSImage) image);
+        ISpaceDisplay spaceDisplay = new SpaceDisplay();
+        Mockito.when(spaceDisplayFactory.createSpaceDisplay()).thenReturn(spaceDisplay);
+        Mockito.when(imageService.getImageData(Mockito.isA(byte[].class))).thenReturn(new ImageData(500, 300));
 
         byte[] imageBytes = new byte[100];
         Arrays.fill(imageBytes, (byte) 1);
@@ -85,6 +103,7 @@ public class SpaceManagerTest {
         CreationReturnValue returnVal = managerToTest.storeSpace((ISpace) space, imageBytes, filename);
         Assert.assertEquals(returnVal.getElement(), space);
         Assert.assertEquals(returnVal.getErrorMsgs(), new ArrayList<>());
-        ;
+        Mockito.verify(spaceRepo).save(space);
+        Mockito.verify(spaceDisplayRepo).save((SpaceDisplay)spaceDisplay);
     }
 }
