@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,7 +26,7 @@ public class ImageServiceTest {
 
     @Test
     public void test_getImageData_success() throws IOException {
-        InputStream fis = getClass().getResourceAsStream("testImage.png");
+        InputStream fis = getClass().getResourceAsStream("/files/testImage.png");
         byte[] image = IOUtils.toByteArray(fis);
 
         ImageData data = serviceToTest.getImageData(image);
