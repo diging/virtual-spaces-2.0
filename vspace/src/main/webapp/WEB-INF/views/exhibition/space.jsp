@@ -46,7 +46,7 @@ function drawLinks() {
 
 <div class="row">
 <div id="space-container" class="col-md-12 text-center">
-<div id="space" style="max-width: 800px; min-width:800px; max-height:600px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
+<div id="space" style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
 	<c:if test="${not empty space.description}">
 	<a id="descriptionLink" href="#" data-toggle="collapse" data-target=".descriptionBox" class="nav-item float-left" style="margin-left: 0px; z-index: 99; position: relative"><i class="fas fa-info-circle"></i></a>
 	<div class="descriptionBox collapse">
