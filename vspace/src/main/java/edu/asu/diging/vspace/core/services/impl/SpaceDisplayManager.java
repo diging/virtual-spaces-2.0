@@ -17,63 +17,68 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Service
 @PropertySource("classpath:config.properties")
 public class SpaceDisplayManager implements ISpaceDisplayManager {
-	
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@Value("${bg_image_max_width}")
-	private int maxBgImageWidth;
-	
-	@Value("${bg_image_max_height}")
-	private int maxBgImageHeight;
 
-	@Autowired
-	private SpaceDisplayRepository spaceDisplayRepo;
-	
-	@Autowired
-	private ISpaceDisplayFactory displayFactory;
-	
-	@Autowired
-	private IImageService imageService;
-	
-	@Autowired
-	private IStorageEngine storage;
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.services.impl.ISpaceDisplayManager#getBySpace(edu.asu.diging.vspace.core.model.ISpace)
-	 */
-	@Override
-	public ISpaceDisplay getBySpace(ISpace space) {
-		IVSImage image = space.getImage();
-		ISpaceDisplay display = spaceDisplayRepo.getBySpace(space);
-		if (display == null) {
-			display = displayFactory.createSpaceDisplay();
-		}
-		if (image.getWidth() <= 0 || image.getHeight() <= 0) {
-			try {
-				ImageData data = imageService.getImageData(storage.getImageContent(image.getId(), image.getFilename()));
-				image.setWidth(data.getWidth());
-				image.setHeight(data.getHeight());
-			} catch (IOException e) {
-				logger.error("Could not get image.", e);
-				return display;
-			}
-		}
-		
-		if (image.getWidth() <= maxBgImageWidth && image.getHeight() <= maxBgImageHeight) {
-			display.setWidth(image.getWidth());
-			display.setHeight(image.getHeight());
-			return display;
-		}
-		 	
-		ImageData data = imageService.getImageDimensions(image, maxBgImageWidth, maxBgImageHeight);
-		display.setHeight(data.getHeight());
-		display.setWidth(data.getWidth());
-		spaceDisplayRepo.save((SpaceDisplay)display);
-		return display;
-	}
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Value("${bg_image_max_width}")
+    private int maxBgImageWidth;
+
+    @Value("${bg_image_max_height}")
+    private int maxBgImageHeight;
+
+    @Autowired
+    private SpaceDisplayRepository spaceDisplayRepo;
+
+    @Autowired
+    private ISpaceDisplayFactory displayFactory;
+
+    @Autowired
+    private IImageService imageService;
+
+    @Autowired
+    private IStorageEngine storage;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ISpaceDisplayManager#getBySpace(edu.
+     * asu.diging.vspace.core.model.ISpace)
+     */
+    @Override
+    public ISpaceDisplay getBySpace(ISpace space) {
+        IVSImage image = space.getImage();
+        ISpaceDisplay display = spaceDisplayRepo.getBySpace(space);
+        if (display == null) {
+            display = displayFactory.createSpaceDisplay();
+        }
+        if (image.getWidth() <= 0 || image.getHeight() <= 0) {
+            try {
+                ImageData data = imageService.getImageData(storage.getImageContent(image.getId(), image.getFilename()));
+                image.setWidth(data.getWidth());
+                image.setHeight(data.getHeight());
+            } catch (IOException e) {
+                logger.error("Could not get image.", e);
+                return display;
+            }
+        }
+
+        if (image.getWidth() <= maxBgImageWidth && image.getHeight() <= maxBgImageHeight) {
+            display.setWidth(image.getWidth());
+            display.setHeight(image.getHeight());
+            return display;
+        }
+
+        ImageData data = imageService.getImageDimensions(image, maxBgImageWidth, maxBgImageHeight);
+        display.setHeight(data.getHeight());
+        display.setWidth(data.getWidth());
+        spaceDisplayRepo.save((SpaceDisplay) display);
+        return display;
+    }
 }
