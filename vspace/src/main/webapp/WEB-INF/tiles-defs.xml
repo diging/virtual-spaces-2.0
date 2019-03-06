@@ -96,7 +96,7 @@
 	</definition>
 	
 	<definition name="staff/module/slide" extends="slide.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slide.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
 	</definition>
 	
 	

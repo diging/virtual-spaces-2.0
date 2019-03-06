@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -13,6 +14,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 
+@Entity
 public class ContentBlock extends Slide implements IContentBlock {
     
     @Id
@@ -25,11 +27,22 @@ public class ContentBlock extends Slide implements IContentBlock {
     @OneToOne(targetEntity = VSImage.class)
     private IVSImage imageblock;
     
-    //@OneToOne(targetEntity = Slide.class)
-    //private ISlide slide;
+    @OneToOne(targetEntity = Slide.class)
+    private ISlide slide;
     
-    
-    
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public ISlide getSlide() {
+        return slide;
+    }
+    public void setSlide(ISlide slide) {
+        this.slide = slide;
+    }
     public String getTextblock() {
         return textblock;
     }

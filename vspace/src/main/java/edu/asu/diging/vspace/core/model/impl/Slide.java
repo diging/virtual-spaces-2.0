@@ -11,9 +11,9 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.web.staff.ContentBlock;
 
 @Entity
@@ -23,16 +23,13 @@ public class Slide extends VSpaceElement implements ISlide {
     @GeneratedValue(generator = "slide_id_generator")
     @GenericGenerator(name = "slide_id_generator", parameters = @Parameter(name = "prefix", value = "SLI"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
-    @OneToOne(targetEntity = VSImage.class)
-    private IVSImage image;
-
+    
     @OneToOne(targetEntity = Module.class)
     private IModule module;
-    
+
     //@OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide")
-    //private List<ContentBlock> contents;
-    // list of contentblocks: contenntblock <- textblock, imageblock 
+    private List<IContentBlock> contents;
+
     /*
      * (non-Javadoc)
      * 
@@ -52,27 +49,7 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setId(String id) {
         this.id = id;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.ISlide#getImage()
-     */
-    @Override
-    public IVSImage getImage() {
-        return image;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(java.util.List)
-     */
-    @Override
-    public void setImage(IVSImage image) {
-        this.image = image;
-    }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -94,12 +71,12 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setModule(IModule module) {
         this.module = module;
     }
-    
-//    public List<ContentBlock> getContents() {
-//        return contents;
-//    }
-//
-//    public void setContents(List<ContentBlock> contents) {
-//        this.contents = contents;
-//    }
+
+    public List<IContentBlock> getContents() {
+        return contents;
+    }
+
+    public void setContents(List<IContentBlock> contents) {
+        this.contents = contents;
+    }
 }

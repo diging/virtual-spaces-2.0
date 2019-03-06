@@ -4,7 +4,7 @@
 
 <h1>Add new Slide</h1>
 
-<c:url value="/module/slide/add" var="postUrl" />
+<c:url value="/staff/module/slide/add" var="postUrl" />
 <form:form method="POST"
           action="${postUrl}" modelAttribute="slide">
           
