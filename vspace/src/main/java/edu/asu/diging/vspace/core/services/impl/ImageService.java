@@ -26,9 +26,11 @@ public class ImageService implements IImageService {
 	public ImageData getImageData(byte[] image) {
 		try {
 			BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(image));
-			int imageHeight = bufferedImage.getHeight();
-			int imageWidth = bufferedImage.getWidth();
-			return new ImageData(imageHeight, imageWidth);
+			if (bufferedImage != null) {
+				int imageHeight = bufferedImage.getHeight();
+				int imageWidth = bufferedImage.getWidth();
+				return new ImageData(imageHeight, imageWidth);
+			}
         } catch (IOException e) {
 			logger.error("Clould not get image data.", e);
 		}
