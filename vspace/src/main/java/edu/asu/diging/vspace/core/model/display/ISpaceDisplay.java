@@ -4,20 +4,20 @@ import edu.asu.diging.vspace.core.model.ISpace;
 
 public interface ISpaceDisplay {
 
-	String getId();
+    String getId();
 
-	void setId(String id);
+    void setId(String id);
 
-	ISpace getSpace();
+    ISpace getSpace();
 
-	void setSpace(ISpace space);
+    void setSpace(ISpace space);
 
-	int getWidth();
+    int getWidth();
 
-	void setWidth(int width);
+    void setWidth(int width);
 
-	int getHeight();
+    int getHeight();
 
-	void setHeight(int height);
+    void setHeight(int height);
 
 }

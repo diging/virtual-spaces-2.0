@@ -11,5 +11,5 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 @JaversSpringDataAuditable
 public interface SpaceDisplayRepository extends PagingAndSortingRepository<SpaceDisplay, String> {
 
-	public SpaceDisplay getBySpace(ISpace space);
+    public SpaceDisplay getBySpace(ISpace space);
 }

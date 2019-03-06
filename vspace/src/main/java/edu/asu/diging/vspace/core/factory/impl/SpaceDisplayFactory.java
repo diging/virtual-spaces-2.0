@@ -9,7 +9,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 @Component
 public class SpaceDisplayFactory implements ISpaceDisplayFactory {
 
-	public ISpaceDisplay createSpaceDisplay() {
-		return new SpaceDisplay();
-	}
+    public ISpaceDisplay createSpaceDisplay() {
+        return new SpaceDisplay();
+    }
 }

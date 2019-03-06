@@ -12,13 +12,14 @@ public interface IExhibition extends IVSpaceElement {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setSpace(edu.asu.diging.vspace.
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ISpacee#setSpace(edu.asu.diging.vspace.
      * core.model.impl.Space)
      */
     void setStartSpace(ISpace space);
 
-	void setTitle(String title);
+    void setTitle(String title);
 
-	String getTitle();
+    String getTitle();
 
 }

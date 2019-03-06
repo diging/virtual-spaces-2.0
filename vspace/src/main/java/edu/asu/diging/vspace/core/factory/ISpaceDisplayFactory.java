@@ -4,6 +4,6 @@ import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 
 public interface ISpaceDisplayFactory {
 
-	ISpaceDisplay createSpaceDisplay();
+    ISpaceDisplay createSpaceDisplay();
 
 }
