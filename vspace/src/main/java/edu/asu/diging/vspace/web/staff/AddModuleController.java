@@ -35,7 +35,6 @@ public class AddModuleController {
 		
 		IModule module = moduleFactory.createModule(moduleForm);
 		moduleManager.storeModule(module);
-		
 		return "redirect:/staff/module/list";
 	}
 }

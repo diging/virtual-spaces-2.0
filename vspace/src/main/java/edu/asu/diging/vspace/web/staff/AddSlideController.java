@@ -38,26 +38,3 @@ public class AddSlideController {
         return redirect;
     }
 }
-
-
-
-//@RequestMapping(value = "/staff/module/{id}/slide/", method = RequestMethod.POST)
-//public String addSlide(@PathVariable("id") String moduleId, @RequestParam("slideTitle") String title, @RequestParam("slideDescription") String description, Model model, @RequestParam("file") MultipartFile file,
-//      Principal principal, RedirectAttributes attributes) throws IOException, ModuleDoesNotExistException {
-//  
-//  ISlide slide = moduleManager.createSlide(moduleId,title,description);
-//  byte[] image = null;
-//  String filename = null;        
-//  if (file.isEmpty() || file.equals(null)) {
-//      attributes.addAttribute("alertType", "danger");
-//      attributes.addAttribute("showAlert", "true");
-//      attributes.addAttribute("message", "Please select an image for the Slide.");
-//      return "redirect:/staff/module/{id}";
-//
-//  } else if (file != null) {
-//      image = file.getBytes();
-//      filename = file.getOriginalFilename();
-//  }
-//  moduleManager.storeSlide(slide, image, filename);
-//  return "redirect:/staff/module/{id}";
-//}

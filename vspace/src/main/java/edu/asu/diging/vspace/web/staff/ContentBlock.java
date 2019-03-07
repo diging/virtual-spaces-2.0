@@ -27,8 +27,8 @@ public class ContentBlock extends Slide implements IContentBlock {
     @OneToOne(targetEntity = VSImage.class)
     private IVSImage imageblock;
     
-    @OneToOne(targetEntity = Slide.class)
-    private ISlide slide;
+//    @OneToOne(targetEntity = Slide.class)
+//    private ISlide slide;
     
 
     public String getId() {
@@ -37,12 +37,12 @@ public class ContentBlock extends Slide implements IContentBlock {
     public void setId(String id) {
         this.id = id;
     }
-    public ISlide getSlide() {
-        return slide;
-    }
-    public void setSlide(ISlide slide) {
-        this.slide = slide;
-    }
+//    public ISlide getSlide() {
+//        return slide;
+//    }
+//    public void setSlide(ISlide slide) {
+//        this.slide = slide;
+//    }
     public String getTextblock() {
         return textblock;
     }

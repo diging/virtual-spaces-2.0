@@ -6,9 +6,9 @@ public interface IContentBlock extends ISlide{
     
     void setId(String id);
     
-    ISlide getSlide();
-    
-    void setSlide(ISlide slide); 
+//    ISlide getSlide();
+//    
+//    void setSlide(ISlide slide); 
     
     String getTextblock();
     
