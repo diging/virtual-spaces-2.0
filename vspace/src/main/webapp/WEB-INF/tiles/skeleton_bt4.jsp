@@ -64,6 +64,12 @@
                   Modules
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link ${currentPage == "users" ? "active" : ""}" href="<c:url value="/staff/user/list" />">
+                  <span data-feather="users"></span>
+                  Users
+                </a>
+              </li>
             </ul>
 
             <tiles:insertAttribute name="sidemenu" />
