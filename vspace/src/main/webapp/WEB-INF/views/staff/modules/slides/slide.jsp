@@ -13,35 +13,49 @@ function addText() {
 	$("#addTextAlert").show();
 }
 
+function postData(formData) {
+alert("in ajax call");
+	$.ajax({
+    	enctype: 'multipart/form-data',
+        url: "<c:url value="/staff/module/slide/content?${_csrf.parameterName}=${_csrf.token}" />",
+        type: 'POST',
+        data: {
+            form: formData
+        },
+        processData: false, 
+        contentType: false,
+        
+        success: function(data) {
+            console.log("success");
+            console.log(data);
+        },
+        error: function(data) {
+            console.log("error");
+            console.log(data);
+        }
+    });    
+}
 $(document).ready(function() {
 
 	$("#uploadImage").on("click", function(e) {
 		$("#addImgAlert").hide();
-        e.preventDefault();
-
-		
-		var image = document.getElementById('file');
-	    var formData = new FormData();
+		e.preventDefault();
+        
+        var image = document.getElementById('file');
+        var formData = new FormData();
 	    formData.append('image', image);
-	    $.ajax({
-	    	enctype: 'multipart/form-data',
-	        url: "<c:url value="/staff/module/slide/content?${_csrf.parameterName}=${_csrf.token}" />",
-	        type: 'POST',
-	        data: {
-                form: formData
-            },
-	        processData: false, 
-	        contentType: false,
-	        
-	        success: function(data) {
-	            console.log("success");
-	            console.log(data);
-	        },
-	        error: function(data) {
-	            console.log("error");
-	            console.log(data);
-	        }
-	    });     
+	    formData.append('type',"image");
+	    postData(formData);     
+  });
+	$("#submitText").on("click", function(e) {
+		$("#addTextAlert").hide();
+		e.preventDefault();
+	
+		var text = document.getElementById('textarea');
+	    var formData = new FormData();
+	    formData.append('text', text);
+	    formData.append('type',"Text");
+	    postData(formData);	     
   });
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();
@@ -85,7 +99,7 @@ $(document).ready(function() {
 <form name="textForm"  id="textUploadForm" enctype="multipart/form-data" method="post">
 <div id="addTextAlert" class="alert alert-secondary form-group" role="alert" style="cursor:move; width:340px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 	<h6><small>Enter Text: </small></h6>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    <textarea class="form-control" id="textarea" rows="3"></textarea>
 	<p class="mb-0 text-right"><button type="submit" id="submitText" class="btn btn-primary btn-xs">Submit</button> &nbsp
 	<button id="cancelSubmitText" type="button" class="btn light btn-xs">Cancel</button></p>
 </div>

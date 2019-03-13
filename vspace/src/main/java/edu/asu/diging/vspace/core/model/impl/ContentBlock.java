@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff;
+package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +9,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
-import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -56,5 +55,4 @@ public class ContentBlock extends Slide implements IContentBlock {
         this.imageblock = imageblock;
     }
     
-
 }
