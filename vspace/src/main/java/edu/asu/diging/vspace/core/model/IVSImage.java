@@ -13,4 +13,12 @@ public interface IVSImage extends IVSpaceElement {
 	void setFileType(String fileType);
 
 	String getFileType();
+
+	void setWidth(int width);
+
+	int getWidth();
+
+	void setHeight(int height);
+
+	int getHeight();
 }

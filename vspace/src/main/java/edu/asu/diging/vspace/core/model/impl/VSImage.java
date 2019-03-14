@@ -24,6 +24,9 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Lob private String parentPath;
 	private String fileType;
 	
+	private int height;
+	private int width;
+	
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IImage#getId()
 	 */
@@ -73,5 +76,21 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Override
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
+	}
+	@Override
+	public int getHeight() {
+		return height;
+	}
+	@Override
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	@Override
+	public int getWidth() {
+		return width;
+	}
+	@Override
+	public void setWidth(int width) {
+		this.width = width;
 	}	
 }

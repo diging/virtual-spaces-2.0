@@ -1,9 +1,13 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
@@ -14,14 +18,16 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
@@ -31,14 +37,18 @@ import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Transactional
 @Service
@@ -47,6 +57,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceRepository spaceRepo;
+    
+    @Autowired
+    private SpaceDisplayRepository spaceDisplayRepo;
 
     @Autowired
     private ImageRepository imageRepo;
@@ -65,6 +78,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IStorageEngine storage;
+    
+    @Autowired
+    private ISpaceDisplayFactory spaceDisplayFactory;
 
     @Autowired
     private IImageFactory imageFactory;
@@ -80,6 +96,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
+    
+    @Autowired
+    private IImageService imageService;
 
     /*
      * (non-Javadoc)
@@ -91,12 +110,16 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
         IVSImage bgImage = null;
+        ISpaceDisplay spaceDisplay = spaceDisplayFactory.createSpaceDisplay();
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
 
             bgImage = imageFactory.createImage(filename, contentType);
+            
+            
             bgImage = imageRepo.save((VSImage) bgImage);
+            
         }
 
         CreationReturnValue returnValue = new CreationReturnValue();
@@ -110,11 +133,20 @@ public class SpaceManager implements ISpaceManager {
                 returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
             }
             bgImage.setParentPath(relativePath);
+            ImageData imageData = imageService.getImageData(image);
+            if (imageData != null) {
+            	bgImage.setHeight(imageData.getHeight());
+            	bgImage.setWidth(imageData.getWidth());
+            }
             imageRepo.save((VSImage) bgImage);
             space.setImage(bgImage);
         }
-
+        
         space = spaceRepo.save((Space) space);
+        spaceDisplay.setSpace(space);
+        spaceDisplay.setHeight(bgImage.getHeight());
+        spaceDisplay.setWidth(bgImage.getWidth());
+        spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
         returnValue.setElement(space);
         return returnValue;
     }

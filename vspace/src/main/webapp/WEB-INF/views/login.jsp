@@ -6,7 +6,9 @@
 <link href="<c:url value="/resources/bootstrap-4.1.2/login.css" />"
 	rel="stylesheet">
 
-<div class="jumbotron col-md-12">
+<div class="row">
+<div class="col-sm"></div>
+<div class="jumbotron col-sm">
 
 	<sec:authorize access="isAnonymous()">
 		<form name='f' class="form-horizontal pull-right"
@@ -36,3 +38,6 @@
 		</form>
 	</sec:authorize>
 </div>
+<div class="col-sm"></div>
+</div>
+
