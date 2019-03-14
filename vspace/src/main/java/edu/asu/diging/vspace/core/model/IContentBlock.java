@@ -1,20 +1,17 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface IContentBlock extends ISlide{
+public interface IContentBlock extends IVSpaceElement {
     
     String getId();
     
     void setId(String id);
+
+    void setSlide(ISlide slide);
+
+    ISlide getSlide();
     
 //    ISlide getSlide();
 //    
 //    void setSlide(ISlide slide); 
-    
-    String getTextblock();
-    
-    void setTextblock(String textblock);
-    
-    IVSImage getImageblock();
-    
-    void setImageblock(IVSImage imageblock);
+
 }

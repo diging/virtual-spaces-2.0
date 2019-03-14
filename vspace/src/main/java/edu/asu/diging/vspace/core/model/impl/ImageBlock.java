@@ -1,18 +1,24 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
+@Entity
 public class ImageBlock extends ContentBlock implements IImageBlock {
     
-    @Id
-    @GeneratedValue(generator = "imgblock_id_generator")
-    @GenericGenerator(name = "imgblock_id_generator", parameters = @Parameter(name = "prefix", value = "IBLK"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
-    private String id;
+    @OneToOne(targetEntity=VSImage.class)
+    private IVSImage image;
 
+    @Override
+    public IVSImage getImage() {
+        return image;
+    }
+
+    @Override
+    public void setImage(IVSImage image) {
+        this.image = image;
+    }
 }

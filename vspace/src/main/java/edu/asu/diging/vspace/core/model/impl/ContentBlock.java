@@ -3,56 +3,45 @@ package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
-import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
-public class ContentBlock extends Slide implements IContentBlock {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class ContentBlock extends VSpaceElement implements IContentBlock {
     
     @Id
     @GeneratedValue(generator = "content_id_generator")
     @GenericGenerator(name = "content_id_generator", parameters = @Parameter(name = "prefix", value = "CON"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
-    private String textblock;
+    @OneToOne(targetEntity = Slide.class)
+    private ISlide slide;
     
-    @OneToOne(targetEntity = VSImage.class)
-    private IVSImage imageblock;
-    
-//    @OneToOne(targetEntity = Slide.class)
-//    private ISlide slide;
-    
-
+    @Override
     public String getId() {
         return id;
     }
+    
+    @Override
     public void setId(String id) {
         this.id = id;
     }
-//    public ISlide getSlide() {
-//        return slide;
-//    }
-//    public void setSlide(ISlide slide) {
-//        this.slide = slide;
-//    }
-    public String getTextblock() {
-        return textblock;
-    }
-    public void setTextblock(String textblock) {
-        this.textblock = textblock;
-    }
-    public IVSImage getImageblock() {
-        return imageblock;
-    }
-    public void setImageblock(IVSImage imageblock) {
-        this.imageblock = imageblock;
+    
+    @Override
+    public ISlide getSlide() {
+        return slide;
     }
     
+    @Override
+    public void setSlide(ISlide slide) {
+        this.slide = slide;
+    }   
 }

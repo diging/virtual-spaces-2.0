@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -25,9 +26,9 @@ public class Slide extends VSpaceElement implements ISlide {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    //@OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide")
-    //private List<IContentBlock> contents;
-
+    @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide")
+    private List<IContentBlock> contents;
+    
     /*
      * (non-Javadoc)
      * 
@@ -70,11 +71,15 @@ public class Slide extends VSpaceElement implements ISlide {
         this.module = module;
     }
 
-//    public List<IContentBlock> getContents() {
-//        return contents;
-//    }
-//
-//    public void setContents(List<IContentBlock> contents) {
-//        this.contents = contents;
-//    }
+    @Override
+    public List<IContentBlock> getContents() {
+        return contents;
+    }
+
+    @Override
+    public void setContents(List<IContentBlock> contents) {
+        this.contents = contents;
+    }
+
+    
 }
