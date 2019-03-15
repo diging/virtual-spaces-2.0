@@ -129,7 +129,7 @@
         <dependency>
             <groupId>edu.asu.diging</groupId>
             <artifactId>simple-users</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
 
         <!-- Logging -->

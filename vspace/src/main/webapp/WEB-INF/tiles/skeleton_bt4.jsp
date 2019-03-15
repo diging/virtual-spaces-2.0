@@ -64,12 +64,14 @@
                   Modules
                 </a>
               </li>
+              <sec:authorize access="hasRole('ADMIN')">
               <li class="nav-item">
                 <a class="nav-link ${currentPage == "users" ? "active" : ""}" href="<c:url value="/staff/user/list" />">
                   <span data-feather="users"></span>
                   Users
                 </a>
               </li>
+              </sec:authorize>
             </ul>
 
             <tiles:insertAttribute name="sidemenu" />

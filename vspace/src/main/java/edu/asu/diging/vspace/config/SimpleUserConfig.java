@@ -10,7 +10,7 @@ public class SimpleUserConfig implements SimpleUsersConfiguration {
 
     @Override
     public void configure(SimpleUsers simpleUsers) {
-        simpleUsers.setListUsersEndpoint("/staff/user/list").userListView("staff/user/list");
+        simpleUsers.usersEndpointPrefix("/staff/user/").userListView("staff/user/list");
     }
 
 }
