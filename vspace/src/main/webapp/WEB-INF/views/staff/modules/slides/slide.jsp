@@ -17,11 +17,9 @@ function postData(formData) {
 alert("in ajax call");
 	$.ajax({
     	enctype: 'multipart/form-data',
-        url: "<c:url value="/staff/module/slide/content?${_csrf.parameterName}=${_csrf.token}" />",
+        url: "<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />",
         type: 'POST',
-        data: {
-            form: formData
-        },
+        data: formData,
         processData: false, 
         contentType: false,
         
@@ -40,22 +38,27 @@ $(document).ready(function() {
 	$("#uploadImage").on("click", function(e) {
 		$("#addImgAlert").hide();
 		e.preventDefault();
-        
-        var image = document.getElementById('file');
-        var formData = new FormData();
-	    formData.append('image', image);
-	    formData.append('type',"image");
-	    postData(formData);     
+
+        var payload = {};
+		payload["content"] = document.getElementById('file').value;
+		payload["type"] = "Image"
+
+		$.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+				// TODO: show success/error message
+			});  
   });
 	$("#submitText").on("click", function(e) {
 		$("#addTextAlert").hide();
 		e.preventDefault();
 	
-		var text = document.getElementById('textarea');
-	    var formData = new FormData();
-	    formData.append('text', text);
-	    formData.append('type',"Text");
-	    postData(formData);	     
+		var payload = {};
+		payload["content"] = document.getElementById('textarea').value;
+		payload["type"] = "String"
+		console.log(payload["content"]);
+		
+		$.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+				// TODO: show success/error message
+			});  
   });
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();

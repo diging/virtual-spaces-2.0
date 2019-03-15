@@ -107,8 +107,8 @@
 	<definition name="staff/module/slide" extends="slide.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
 	</definition>
-	
-	<definition name="staff/module/slide/content" extends="slide.base.def">
+
+	<definition name="staff/module/slide/contentBlocks" extends="slide.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
 	</definition>
 

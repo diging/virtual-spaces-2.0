@@ -27,13 +27,3 @@ public class SlideFactory implements ISlideFactory {
         return slide;
     }    
 }
-
-
-//@Override
-//public ISlide createSlide(IModule module, String title, String description) {
-//    ISlide slide = new Slide();
-//    slide.setName(title);
-//    slide.setDescription(description);
-//    slide.setModule(module);
-//    return slide;
-//}

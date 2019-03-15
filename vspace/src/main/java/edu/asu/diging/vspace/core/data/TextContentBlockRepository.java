@@ -4,10 +4,13 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 
 @Repository
 @JaversSpringDataAuditable
 public interface TextContentBlockRepository  extends PagingAndSortingRepository<TextBlock, String> {
+
+    ITextBlock save(ITextBlock textBlock);
 
 }

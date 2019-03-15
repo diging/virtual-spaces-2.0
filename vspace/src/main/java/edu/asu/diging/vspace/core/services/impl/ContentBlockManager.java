@@ -1,15 +1,32 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.factory.impl.TextBlockFactory;
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
+import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
+import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.model.IContentBlock;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ITextBlock;
+import edu.asu.diging.vspace.core.model.impl.ContentBlock;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
+@Service
 public class ContentBlockManager implements IContentBlockManager{
     
     @Autowired
-    private TextBlockFactory textBlockFactory;
+    private ITextBlockFactory textBlockFactory;
+    
+    @Autowired
+    private SlideManager slideManager;
+    
+    @Autowired
+    private TextContentBlockRepository textBlockRepo;
+    
+    @Autowired
+    private ContentBlockRepository contentBlockRepo;
 
 //    @Override
 //    public List<IContentBlock> getAllContentBlocks(String slideId) {
@@ -23,9 +40,30 @@ public class ContentBlockManager implements IContentBlockManager{
     
     @Override
     public IContentBlock createTextBlock(String slideId, String text) {
-        //IModule module = moduleManager.getSlide(moduleId);
-        IContentBlock textBlock = textBlockFactory.createTextBlock(slideId, text);
+        System.out.println("Inside Manager");
+        IContentBlock textBlock = textBlockFactory.createTextBlock(slideId,text);
+        System.out.println(textBlock.getSlide().getId());
+        storeTextBlock(textBlock);
         return textBlock;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IContentBlock#storeTextBlock(edu.asu.
+     * diging.vspace.core.model.ITextBlock)
+     */
+    @Override
+    public ITextBlock storeTextBlock(IContentBlock textBlock) {
+        return textBlockRepo.save((ITextBlock) textBlock);
+        
+    }
+
+    @Override
+    public void createImageBlock(String slideId, String value) {
+        // TODO Auto-generated method stub
+        
     }
     
     /*
