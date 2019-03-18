@@ -37,6 +37,12 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
+    
+    <!-- Register -->
+    <definition name="register" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
+    </definition>
 	
 	<!-- Staff -->
 	<!-- Dashboard -->
@@ -92,4 +98,9 @@
 	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
 		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
 	</definition>
+    
+    <!-- Users -->
+    <definition name="staff/user/list" extends="exhibit.base.def"> 
+        <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
+    </definition>
 </tiles-definitions>

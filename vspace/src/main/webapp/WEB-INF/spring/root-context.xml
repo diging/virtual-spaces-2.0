@@ -14,10 +14,7 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<mvc:annotation-driven />
-	<context:component-scan base-package="edu.asu.diging.vspace" />
-	
-	<import resource="spring-security.xml" />
-	
+	<context:component-scan base-package="edu.asu.diging.vspace, edu.asu.diging.simpleusers" />	
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:locale/messages" />
