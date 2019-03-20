@@ -62,10 +62,19 @@ $( document ).ready(function() {
 	}
 	</c:forEach> 
 	
+	// --------- draggable modals -----------
+	$("#createSpaceLinkAlert").draggable();
+	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
+	 
+	$("#createExternalLinkAlert").draggable();
+	$("#changeBgImgAlert").draggable();
+    
+    
 	// store where a user clicked on an image
 	var storeX;
 	var storeY;
 
+	// -------- buttons that open modals (e.g. to create space links) ------
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#createExternalLinkAlert").hide();
 		$("#changeBgImgAlert").hide();
@@ -85,10 +94,6 @@ $( document ).ready(function() {
 		});
 		$("#createSpaceLinkAlert").show();
 	});
-	
-	$("#createSpaceLinkAlert").draggable();
-	
-	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
@@ -129,8 +134,13 @@ $( document ).ready(function() {
 		$("#createExternalLinkAlert").show();
 	});
 	
-	$("#createExternalLinkAlert").draggable();
+	$('#changeBgImgButton').click(function(file) {
+        $("#createSpaceLinkAlert").hide();
+        $("#changeBgImgAlert").show();          
+    });
 	
+	
+	// ----------- submit buttons (e.g. to create space links) ------------------
 	$("#createSpaceLinkBtn").click(function(e) {
 		e.preventDefault();
 		
@@ -183,6 +193,9 @@ $( document ).ready(function() {
 		$("#external-arrow").attr("id","");
 	});
 	
+	
+	// ------------- adjust links on background image (e.g. when inputs are changed) ------------
+	// external links
 	$(".extlink-target").change(function() {
 		var externalLink = {};
 		externalLink["x"] = storeX;
@@ -192,15 +205,7 @@ $( document ).ready(function() {
 		showExternalLinks(externalLink);
 	});		
 		
-	$('#changeBgImgButton').click(function(file) {
-		$("#createSpaceLinkAlert").hide();
-		$("#changeBgImgAlert").show();			
-	});
-			
-	$("#changeBgImgAlert").draggable();
-		
-	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
-	
+	// space links	
 	$('#spaceLinkRotation').change(function() {
 		$('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 	});
@@ -218,13 +223,12 @@ $( document ).ready(function() {
 	}
 	
 	$("#spaceLinkImage").change(function() {
-		console.log(this.files);
 		if (this.files && this.files[0]) {
 			linkIconReader.readAsDataURL(this.files[0]);
 		}
 	});
 
-	// show links functions
+	// --------- show links functions --------------
 	function showSpaceLink(spaceLink, show) {
 		$("#space_label").remove();
 		$("#link").remove();
@@ -291,7 +295,7 @@ $( document ).ready(function() {
 		$("#external-link").remove();
 	}
 	
-	// Cancel buttons
+	// ------------ Cancel buttons -----------------
 	$("#cancelSpaceLinkBtn").click(function() {
         storeX = null;
         storeY = null;
@@ -314,7 +318,7 @@ $( document ).ready(function() {
         $("#changeBgImgAlert").hide();
     });
 	
-	// Utility function
+	// --------- Utility functions -------------
 	function createSpaceLinkInfo() {
 		var info = {};
 		info["x"] = storeX;
