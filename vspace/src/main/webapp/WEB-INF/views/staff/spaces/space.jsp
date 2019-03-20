@@ -16,7 +16,9 @@ $( document ).ready(function() {
 
 		if ("${link.type}" == "ALERT") {
 			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
-		} else {
+		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
+           var link = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+		}  else {
 			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
 		}
 		link.css('position', 'absolute');
@@ -410,6 +412,7 @@ $( document ).ready(function() {
       <div class="col-sm-8">
 	  <select id="type" name="type" class="form-control-xs target" >
 	  	<option selected value="">Choose...</option>
+	  	<option value="IMAGE">Image</option>
 	  	<option value="ARROW">Link</option>
 	  	<option value="ALERT">Alert</option>
 	  </select>
