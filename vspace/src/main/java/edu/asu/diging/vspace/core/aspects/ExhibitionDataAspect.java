@@ -7,6 +7,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -30,7 +31,7 @@ public class ExhibitionDataAspect {
         // (assuming that returning a string implies rendering of a view afterwards
         if (args != null && returnType == String.class) {
             for (Object obj : args) {
-                if (obj instanceof Model) {
+                if (obj instanceof Model && !(obj instanceof RedirectAttributes)) {
                     if (!((Model) obj).containsAttribute("exhibition")) {
                         ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
                     }

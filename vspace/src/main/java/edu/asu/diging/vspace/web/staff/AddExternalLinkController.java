@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -23,6 +24,9 @@ public class AddExternalLinkController {
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private ILinkManager linkManager;
 
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -33,7 +37,7 @@ public class AddExternalLinkController {
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        IExternalLinkDisplay display = spaceManager.createExternalLink(title, space, new Float(x), new Float(y), externalLink);
+        IExternalLinkDisplay display = linkManager.createExternalLink(title, space, new Float(x), new Float(y), externalLink);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());

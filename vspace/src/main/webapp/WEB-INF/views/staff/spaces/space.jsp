@@ -170,25 +170,47 @@ $( document ).ready(function() {
 		$("#createExternalLinkAlert").hide();
 	});
 	
-	$("#createSpaceLinkBtn").click(function(e) {		
+	$("#createSpaceLinkBtn").click(function(e) {
+		e.preventDefault();
+		
+		if (storeX == undefined || storeY == undefined) {
+			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+			$('#errorAlert').show();
+			return;
+		}
+		
+		$("#spaceLinkX").val(storeX);
+		$("#spaceLinkY").val(storeY);
+		
+		var form = $("#createSpaceLinkForm");
+		var formData = new FormData(form[0]);
+		
 		var payload = {};
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		payload["x"] = storeX;
-		payload["y"] = storeY;
-		payload["rotation"] = $("#spaceLinkRotation").val();
-		payload["linkedSpace"] = $("#linkedSpace").val();
-		payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-		payload["type"] = $("#type").val();
+        payload["x"] = storeX;
+        payload["y"] = storeY;
+        payload["rotation"] = $("#spaceLinkRotation").val();
+        payload["linkedSpace"] = $("#linkedSpace").val();
+        payload["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+        payload["type"] = $("#type").val();
 
-		$.post("<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-			// TODO: show success/error message
+		$.ajax({
+			type: "POST",
+			url: "<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />",
+			cache       : false,
+	        contentType : false,
+	        processData : false,
+	        enctype: 'multipart/form-data',
+	        data: formData, 
+	        success: function(data) {
+	        	$("#bgImage").on("click", function(e){});
+	            showSpaceLink(payload, true);
+	            $("#space_label").attr("id","");
+	            $("#link").attr("id","");
+	            $("#createSpaceLinkAlert").hide();  
+	            $("#errorMsg").text("")
+	            $('#errorAlert').hide();
+	        }
 		});
-		$("#bgImage").on("click", function(e){});
-		showSpaceLink(payload, true);
-		$("#space_label").attr("id","");
-		$("#link").attr("id","");
-		$("#createSpaceLinkAlert").hide();	
 	});
 	
 	$("#createExternalLinkBtn").click(function(e) {
@@ -330,7 +352,14 @@ $( document ).ready(function() {
 
 </script>
 
- <h1>Space: ${space.name}</h1> 
+<div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none; position: absolute; top: 10px; right: 50px;">
+           <strong>Error!</strong> <span id="errorMsg"></span>
+           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+
+<h1>Space: ${space.name}</h1> 
  
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
@@ -338,36 +367,84 @@ $( document ).ready(function() {
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
 
-<form>
+<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" var="postUrl" />
+<form id="createSpaceLinkForm">
 	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	  <div class="row">
+	  <div class="col">
 	  <h6 class="alert-heading"><small>Create new Space Link</small></h6>
-	  <p><small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
+	  </div>
+	  </div>
+	  <div class="row">
+      <div class="col">
+      <small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
 	  <hr>
-	  <label style="margin-right: 5px;"><small>Rotation:</small> </label>
-	  <input class="form-control-xs" type="number" id="spaceLinkRotation" value="0"><br>
+	  </div>
+	  </div>
 	  
-	  <label style="margin-right: 5px;"><small>Label:</small> </label>
-	  <input class="form-control-xs target" type="text" id="spaceLinkLabel"><br>
+	  <input type="hidden" name="x" id="spaceLinkX" />
+	  <input type="hidden" name="y" id="spaceLinkY"/>
 	  
-	  <label style="margin-right: 5px;"><small>Type:</small> </label>
-	  <select id="type" class="form-control-xs target" >
+	  <div class="row">
+      <div class="col-sm-4">
+	  <label><small>Rotation:</small> </label>
+	  </div>
+	  <div class="col-sm-8">
+	  <input class="form-control-xs" type="number" id="spaceLinkRotation" name="rotation" value="0"><br>
+	  </div>
+	  </div>
+	  
+	  <div class="row">
+      <div class="col-sm-4">
+	  <label><small>Label:</small> </label>
+	  </div>
+      <div class="col-sm-8">
+	  <input class="form-control-xs target" type="text" name="spaceLinkLabel" id="spaceLinkLabel"><br>
+	  </div>
+      </div>
+      
+      <div class="row">
+      <div class="col-sm-4">
+	  <label><small>Type:</small> </label>
+	  </div>
+      <div class="col-sm-8">
+	  <select id="type" name="type" class="form-control-xs target" >
 	  	<option selected value="">Choose...</option>
 	  	<option value="ARROW">Link</option>
 	  	<option value="ALERT">Alert</option>
-	  </select><br>
+	  </select>
+	  </div>
+      </div>
 	  
-	  <label style="margin-right: 5px;"><small>Linked Space:</small> </label>
-	  <select id="linkedSpace" class="form-control-xs">
+	  <div class="row">
+      <div class="col-sm-5" style="padding-right: 0px;">
+	  <label><small>Linked Space:</small> </label>
+	  </div>
+      <div class="col-sm-7" >
+	  <select id="linkedSpace" name="linkedSpace" class="form-control-xs">
 	        <option selected value="">Choose...</option>
 	        <c:forEach items="${spaces}" var="space">
 	        <option value="${space.id}">${space.name}</option>
 	        </c:forEach>
 	  </select>
+	  </div>
+      </div>
+      
+      <div class="row">
+      <div class="col-sm-3" style="padding-right: 0px;">
+	  <label><small>Image:</small> </label>
+	  </div>
+      <div class="col-sm-9">
+      <input type="file" class="form-control-xs target" type="text" name="spaceLinkImage" id="spaceLinkImage"><br>
+      </div>
+      </div>
+	  
 	  <HR>
 	  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="reset" class="btn btn-primary btn-xs">Create Space Link</button></p>
+	   
 	</div>
 </form>
-	        
+      
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 
