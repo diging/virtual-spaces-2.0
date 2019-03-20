@@ -353,11 +353,11 @@ $( document ).ready(function() {
 </script>
 
 <div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none; position: absolute; top: 10px; right: 50px;">
-           <strong>Error!</strong> <span id="errorMsg"></span>
-           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-           </button>
-        </div>
+   <strong>Error!</strong> <span id="errorMsg"></span>
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+   </button>
+</div>
 
 <h1>Space: ${space.name}</h1> 
  
