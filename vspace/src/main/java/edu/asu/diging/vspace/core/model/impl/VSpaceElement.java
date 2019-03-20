@@ -2,15 +2,16 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.time.OffsetDateTime;
 
+import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 @MappedSuperclass
-public class VSpaceElement implements IVSpaceElement {
+public abstract class VSpaceElement implements IVSpaceElement {
 
 	private String name;
-	private String description;
+	@Lob private String description;
 	private String createdBy;
 	private OffsetDateTime creationDate;
 	private String modifiedBy;

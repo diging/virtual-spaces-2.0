@@ -1,0 +1,19 @@
+/* Show it is fixed to the top */
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+  font-family: 'Catamaran', sans-serif;
+  background-color: black;
+}
+
+.bg-dark-blue {
+	background-color: #0e2d4c;
+}
+
+.btn-link {
+	color: white;
+}
+
+.href-attr {
+	color: white;
+}

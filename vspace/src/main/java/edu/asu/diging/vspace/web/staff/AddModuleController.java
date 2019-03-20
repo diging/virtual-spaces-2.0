@@ -34,7 +34,7 @@ public class AddModuleController {
 	public String addModule(Model model, @ModelAttribute ModuleForm spaceForm, Principal principal) {
 		
 		IModule module = moduleFactory.createModule(spaceForm);
-		moduleManager.storeModule(module, principal.getName());
+		moduleManager.storeModule(module);
 		
 		return "redirect:/staff/module/list";
 	}

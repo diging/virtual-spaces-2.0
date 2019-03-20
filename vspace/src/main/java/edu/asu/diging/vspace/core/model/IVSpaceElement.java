@@ -4,6 +4,10 @@ import java.time.OffsetDateTime;
 
 public interface IVSpaceElement {
 
+	String getId();
+
+	void setId(String id);
+
 	String getName();
 
 	void setName(String name);
@@ -27,5 +31,4 @@ public interface IVSpaceElement {
 	OffsetDateTime getModificationDate();
 
 	void setModificationDate(OffsetDateTime modificationDate);
-
 }

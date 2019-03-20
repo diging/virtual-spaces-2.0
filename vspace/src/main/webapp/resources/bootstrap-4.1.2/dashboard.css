@@ -3,10 +3,42 @@ body {
   font-family: 'Quicksand';
 }
 
+a {
+  color: #796d05;
+}
+
+a:hover {
+  color: #bfb168;
+  text-decoration: underline;
+}
+
 .feather {
   width: 16px;
   height: 16px;
   vertical-align: text-bottom;
+}
+
+.btn-link {
+	color: #796d05;
+}
+
+.btn-link:hover {
+    color: #bfb168;
+    text-decoration: underline;
+}
+
+.flex {
+display: -webkit-box;
+display: -moz-box;
+display: -ms-flexbox;
+display: -moz-flex;
+display: -webkit-flex;
+display: flex;
+-webkit-flex-direction: column;
+-ms-flex-direction: column;
+flex-direction: column;
+-webkit-justify-content: center;
+justify-content: center;
 }
 
 /* top */
@@ -128,5 +160,19 @@ body {
  .btn-primary:hover {
   background-color: #bfb168;
   border-color: #bfb168;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+    padding  : .25rem .4rem;
+    font-size  : .75rem;
+    line-height  : .5;
+    border-radius : .2rem;
+}
+
+.form-control-xs {
+	font-size: .75em;
+	border-radius: .2rem;
+	border-style: none;
+    padding: 2px;
 }
  

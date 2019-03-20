@@ -17,18 +17,18 @@ import edu.asu.diging.vspace.core.model.ISpace;
 public class ModuleLink extends VSpaceElement implements IModuleLink {
 
 	@Id 
-	@GeneratedValue(generator = "id-generator")
-    @GenericGenerator(name = "id-generator", 
-      parameters = @Parameter(name = "prefix", value = "MOL"), 
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+	@GeneratedValue(generator = "modlink_id_generator")
+	@GenericGenerator(name = "modlink_id_generator", 
+        parameters = @Parameter(name = "prefix", value = "MOL"), 
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
 	@ManyToOne(targetEntity=Space.class)
-    @JoinColumn(name="space_id", nullable=false)
+	@JoinColumn(name="space_id", nullable=false)
 	private ISpace space;
 	
 	@ManyToOne(targetEntity=Module.class)
-    @JoinColumn(name="module_id", nullable=false)
+	@JoinColumn(name="module_id", nullable=false)
 	private IModule module;
 	
 	/* (non-Javadoc)
@@ -73,5 +73,4 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
 	public void setModule(IModule module) {
 		this.module = module;
 	}
-	
 }

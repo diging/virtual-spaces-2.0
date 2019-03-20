@@ -5,32 +5,39 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Entity
 public class Space extends VSpaceElement implements ISpace {
 
 	@Id
-	@GeneratedValue(generator = "id-generator")
-	@GenericGenerator(name = "id-generator", 	
-					parameters = @Parameter(name = "prefix", value = "SPA"), 
-					strategy = "edu.asu.diging.vspace.core.data.IdGenerator"
-			)
+	@GeneratedValue(generator = "space_id_generator")
+	@GenericGenerator(name = "space_id_generator", 
+	    parameters = @Parameter(name = "prefix", value = "SPA"), 
+	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 
-	@OneToMany
-	@JoinTable
-	private List<SpaceLink> spaceLinks;
+	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
+	private List<ISpaceLink> spaceLinks;
 
-	@OneToMany(mappedBy = "space")
-	private List<ModuleLink> moduleLinks;
+	@OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
+	private List<IModuleLink> moduleLinks;
+	
+	@OneToMany(mappedBy = "space", targetEntity=ExternalLink.class)
+	private List<IExternalLink> externalLinks;
+
+	@OneToOne(targetEntity=VSImage.class)
+	private IVSImage image;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
@@ -52,7 +59,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpaceLinks()
 	 */
 	@Override
-	public List<SpaceLink> getSpaceLinks() {
+	public List<ISpaceLink> getSpaceLinks() {
 		return spaceLinks;
 	}
 
@@ -60,7 +67,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setSpaceLinks(java.util.List)
 	 */
 	@Override
-	public void setSpaceLinks(List<SpaceLink> spaceLinks) {
+	public void setSpaceLinks(List<ISpaceLink> spaceLinks) {
 		this.spaceLinks = spaceLinks;
 	}
 
@@ -68,7 +75,7 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getModuleLinks()
 	 */
 	@Override
-	public List<ModuleLink> getModuleLinks() {
+	public List<IModuleLink> getModuleLinks() {
 		return moduleLinks;
 	}
 
@@ -76,8 +83,31 @@ public class Space extends VSpaceElement implements ISpace {
 	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setModuleLinks(java.util.List)
 	 */
 	@Override
-	public void setModuleLinks(List<ModuleLink> moduleLinks) {
+	public void setModuleLinks(List<IModuleLink> moduleLinks) {
 		this.moduleLinks = moduleLinks;
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getExternalLinks()
+	 */
+	@Override
+	public List<IExternalLink> getExternalLinks() {
+		return externalLinks;
+	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setExternalLinks(java.util.List)
+	 */
+	@Override
+	public void setExternalLinks(List<IExternalLink> externalLinks) {
+		this.externalLinks = externalLinks;
+	}
+
+	public IVSImage getImage() {
+		return image;
+	}
+
+	public void setImage(IVSImage image) {
+		this.image = image;
+	}
 }

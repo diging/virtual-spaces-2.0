@@ -11,17 +11,17 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="edu.asu.template">
+	<logger name="edu.asu.diging">
 		<level value="${log.level}" />
 	</logger>
 	
 	<logger name="org.springframework.scheduling">
-		<level value="${log.level}" />
+		<level value="info" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
-		<level value="${log.level}" />
+		<level value="info" />
 	</logger>
 	
 	<logger name="org.springframework.beans">
@@ -33,7 +33,14 @@
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="${log.level}" />
+		<level value="info" />
+	</logger>
+    <logger name="org.springframework.security">
+        <level value="debug" />
+    </logger>
+	
+	<logger name="org.hibernate">
+		<level value="info" />
 	</logger>
 
 	<!-- Root Logger -->

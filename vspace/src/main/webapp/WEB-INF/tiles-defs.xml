@@ -5,7 +5,7 @@
 <tiles-definitions>
 
 	<!-- Base definitions -->
-	<definition name="base.definition" template="/WEB-INF/tiles/skeleton.jsp">
+	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -28,7 +28,33 @@
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
 	</definition>
 	
+	<definition name="login" extends="base.definition">
+		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
+	</definition>
+	
+	<!--  Exhibition  -->
+	<definition name="space" extends="base.definition">	
+		<put-attribute name="currentPage" value="space" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
+	</definition>
+    
+    <!-- Register -->
+    <definition name="register" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
+    </definition>
+	
 	<!-- Staff -->
+	<!-- Dashboard -->
+	<definition name="dashboard.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="home" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/dashboard/menu/dashboard_menu.jsp" />
+	</definition>
+	
+	<definition name="staff/dashboard" extends="dashboard.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/dashboard/dashboardlist.jsp" />	
+	</definition>
+	
 	<!-- Spaces -->
 	<definition name="space.base.def" extends="base.definition.bt4">	
 		<put-attribute name="currentPage" value="space" />
@@ -41,6 +67,10 @@
 	
 	<definition name="staff/space/add" extends="space.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/add.jsp" />
+	</definition>
+	
+	<definition name="staff/space" extends="space.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
 	</definition>
 	
 	<!-- Modules -->
@@ -56,6 +86,21 @@
 	<definition name="staff/module/add" extends="module.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
+    <definition name="staff/module" extends="module.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+    </definition>
 	
-	
+	<!-- Exhibition Config -->
+	<definition name="exhibit.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="exhibit" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/exhibit/menu/config_menu.jsp" />
+	</definition>
+	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
+	</definition>
+    
+    <!-- Users -->
+    <definition name="staff/user/list" extends="exhibit.base.def"> 
+        <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
+    </definition>
 </tiles-definitions>
