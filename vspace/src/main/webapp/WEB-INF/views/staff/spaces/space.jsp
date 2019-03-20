@@ -68,6 +68,7 @@ $( document ).ready(function() {
 	$("#addSpaceLinkButton").click(function(e) {
 		$("#createExternalLinkAlert").hide();
 		$("#changeBgImgAlert").hide();
+		$("#bgImage").off("click");
 		$("#bgImage").on("click", function(e){
 			e.preventDefault();
 			$("#external-arrow").remove();
@@ -79,7 +80,7 @@ $( document ).ready(function() {
 			storeX = e.pageX - $(this).offset().left;
 			storeY = e.pageY - $(this).offset().top;
 			
-			var space_label = $("<p id='space_label'></p>");
+			/*var space_label = $("<p id='space_label'></p>");
 			space_label.text($("#spaceLinkLabel").val());
 					
 			if ($("#type").val() == "ARROW" || $("#type").val() == "") {
@@ -105,7 +106,8 @@ $( document ).ready(function() {
 		    
 		    $("#space").append(icon);
 		    $("#space").append(space_label);
-		    feather.replace(); 
+		    feather.replace(); */
+		    showSpaceLink(createSpaceLinkInfo());
 			
 		});
 		$("#createSpaceLinkAlert").show();
@@ -117,6 +119,7 @@ $( document ).ready(function() {
 	
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
+		$("#bgImage").off("click");
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#link").remove();
@@ -279,13 +282,22 @@ $( document ).ready(function() {
 	});
 	
 	$(".target").change(function() {
-		var spaceLink = {};
-		spaceLink["x"] = storeX;
-		spaceLink["y"] = storeY;
-		spaceLink["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-		spaceLink["type"] = $("#type").val();
-		showSpaceLink(spaceLink);
+		showSpaceLink(createSpaceLinkInfo());
 	}); 
+	
+	var linkIconReader = new FileReader();
+	var linkIcon;
+	linkIconReader.onload = function(e) {
+		linkIcon = e.target.result;
+		showSpaceLink(createSpaceLinkInfo());
+	}
+	
+	$("#spaceLinkImage").change(function() {
+		console.log(this.files);
+		if (this.files && this.files[0]) {
+			linkIconReader.readAsDataURL(this.files[0]);
+		}
+	});
 
 	function showSpaceLink(spaceLink, show) {
 		$("#space_label").remove();
@@ -294,10 +306,12 @@ $( document ).ready(function() {
 		var posY = $("#bgImage").position().top;
 		var space_label = $("<p id='space_label'></p>");
 		space_label.text(spaceLink["spaceLinkLabel"]);
-			
+		
 		var link;
 		if (spaceLink["type"] == "ALERT") {
 			link = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
+		} else if(spaceLink["type"] == "IMAGE" && linkIcon) {
+			link = $('<div id="link" ><img src="' + linkIcon + '"></div>');
 		} else {
 			$(space_label).css({
 				'position': 'absolute',
@@ -349,6 +363,18 @@ $( document ).ready(function() {
 		$("#space").append(link);
 		$("#space").append(ext_label);
 		$("#external-link").remove();
+	}
+	
+	// Utility function
+	function createSpaceLinkInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		info["rotation"] = $("#spaceLinkRotation").val();
+		info["linkedSpace"] = $("#linkedSpace").val();
+		info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+		info["type"] = $("#type").val();
+	    return info;
 	}
 });
 
@@ -424,7 +450,7 @@ $( document ).ready(function() {
 	  <label><small>Linked Space:</small> </label>
 	  </div>
       <div class="col-sm-7" >
-	  <select id="linkedSpace" name="linkedSpace" class="form-control-xs">
+	  <select id="linkedSpace" name="linkedSpace" class="form-control-xs target">
 	        <option selected value="">Choose...</option>
 	        <c:forEach items="${spaces}" var="space">
 	        <option value="${space.id}">${space.name}</option>
@@ -438,7 +464,7 @@ $( document ).ready(function() {
 	  <label><small>Image:</small> </label>
 	  </div>
       <div class="col-sm-9">
-      <input type="file" class="form-control-xs target" type="text" name="spaceLinkImage" id="spaceLinkImage"><br>
+      <input type="file" class="form-control-xs" type="text" name="spaceLinkImage" id="spaceLinkImage"><br>
       </div>
       </div>
 	  
