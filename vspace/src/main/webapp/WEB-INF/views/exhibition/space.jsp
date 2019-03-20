@@ -25,6 +25,8 @@ function drawLinks() {
 		
 		if ("${link.type}" == 'ALERT') {
 			var linkDisplay = $('<div class="alert alert-primary" role="alert">');
+		} else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
+			var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		} else {
 			var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
 		}
