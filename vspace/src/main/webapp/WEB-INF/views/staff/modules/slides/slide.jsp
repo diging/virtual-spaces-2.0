@@ -3,46 +3,22 @@
 
 <script>
 //# sourceURL=click.js
-
-function addImage() {
-	$("#addImgAlert").show();
-}
-
-function addText() {
-	alert("inside add text");
-	$("#addTextAlert").show();
-}
-
-function postData(formData) {
-alert("in ajax call");
-	$.ajax({
-    	enctype: 'multipart/form-data',
-        url: "<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />",
-        type: 'POST',
-        data: formData,
-        processData: false, 
-        contentType: false,
-        
-        success: function(data) {
-            console.log("success");
-            console.log(data);
-        },
-        error: function(data) {
-            console.log("error");
-            console.log(data);
-        }
-    });    
-}
 $(document).ready(function() {
 
+	<c:forEach items="${contents}" var="link">
+	{
+		var valueDiv = $('<div class="valueDiv"><p>abcd</p></div>');
+		$(".content").append(valueDiv);
+	}
+	</c:forEach>
+	
 	$("#uploadImage").on("click", function(e) {
 		$("#addImgAlert").hide();
 		e.preventDefault();
 
         var payload = {};
 		payload["content"] = document.getElementById('file').value;
-		payload["type"] = "Image"
-
+		payload["type"] = "Image";
 		$.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 				// TODO: show success/error message
 			});  
@@ -50,24 +26,35 @@ $(document).ready(function() {
 	$("#submitText").on("click", function(e) {
 		$("#addTextAlert").hide();
 		e.preventDefault();
-	
+
 		var payload = {};
 		payload["content"] = document.getElementById('textarea').value;
 		payload["type"] = "String"
 		console.log(payload["content"]);
 		
-		$.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-				// TODO: show success/error message
-			});  
+		var contentblock = $('<div class="card" margin="20px"><div class="card-body"><span class='value'></span></div></div>');
+		$('#slideSpace').append(contentblock);
+
+	    $.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+	    	// TODO: show success/error message
+		});  
   });
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();
+
 });
 
+	function addImage() {
+		$("#addImgAlert").show();
+	}
 
+	function addText() {
+		alert("inside add text");
+		$("#addTextAlert").show();
+	}
 </script>
 
-
+<body>
 <h1>Slide: ${slide.name}</h1>
 <h3>Description: ${slide.description}</h3>
 	
@@ -108,3 +95,6 @@ $(document).ready(function() {
 </div>
 </form>
     
+<div id="slideSpace"></div>
+</body>
+
