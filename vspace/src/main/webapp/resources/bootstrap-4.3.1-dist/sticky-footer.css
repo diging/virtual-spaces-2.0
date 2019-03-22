@@ -71,11 +71,13 @@ body {
 .descriptionBox {
 	background-color: #eeeeee;
 	text-align: left;
-	border-radius: 10px;
+	border: solid 1px #dddddd;
 	z-index: 98;
 	position: relative;
 	padding: 10px;
 	opacity: 0.8;
+	margin-right: 10px;
+	font-size: 13px;
 }
 
 .container {
