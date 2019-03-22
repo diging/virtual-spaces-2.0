@@ -18,9 +18,7 @@ function drawLinks() {
 	<c:forEach items="${spaceLinks}" var="link">
 	{
 		var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-		console.log("position: " +  posX);
-		console.log("link pos: " + ${link.positionX})
-        var posY = $("#space").position().top;
+		var posY = $("#space").position().top;
         var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		
