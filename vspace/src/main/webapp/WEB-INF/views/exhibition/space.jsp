@@ -20,7 +20,7 @@ function drawLinks() {
 	{
 		var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
 		var posY = $("#space").position().top;
-        var link = $('<a></a>');
+	    var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		
 		if ("${link.type}" == 'ALERT') {
@@ -52,9 +52,7 @@ function drawLinks() {
 	<div id="space-container" class="col-md-8 text-center">
 		<div id="space"
 			style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
-
-
-		</div>
+        </div>
 	</div>
 	<div
 		class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
