@@ -17,10 +17,11 @@ $( document ).ready(function() {
 function drawLinks() {
 	<c:forEach items="${spaceLinks}" var="link">
 	{
-		var posX = $("#space").offset().left + $("#space").position().left; // $("#space-container").offset().left;
-        var posY = $("#space").position().top ;//+ parseInt($("main").css("padding-top"));
-        console.log($("#space").css("margin-left"));
-		var link = $('<a></a>');
+		var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+		console.log("position: " +  posX);
+		console.log("link pos: " + ${link.positionX})
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
 		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
 		
 		if ("${link.type}" == 'ALERT') {
@@ -47,15 +48,20 @@ function drawLinks() {
 </script>
 
 <div class="row">
-<div id="space-container" class="col-md-12 text-center">
+<div class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
+<div id="space-container" class="col-md-8 text-center">
 <div id="space" style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
-	<c:if test="${not empty space.description}">
-	<a id="descriptionLink" href="#" data-toggle="collapse" data-target=".descriptionBox" class="nav-item float-left" style="margin-left: 0px; z-index: 99; position: relative"><i class="fas fa-info-circle"></i></a>
-	<div class="descriptionBox collapse">
-	${space.description}
-	</div>
-	</c:if>
+	
+	
 </div>
+</div>
+<div class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
+<c:if test="${not empty space.description}">
+   <div class="descriptionBox" style="height: ${display.height - 20}px; overflow-y: scroll;">
+   <h5>${space.name}</h5>
+   ${space.description}
+   </div>
+</c:if>
 </div>
 </div>
 
