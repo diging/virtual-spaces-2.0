@@ -21,12 +21,13 @@
             var reader = new FileReader();
             
             reader.onload = function (e) {
-                $('#image1').attr('src', e.target.result);
+            	var imageblock = $('<img src="#" />');
+         		$('#slideSpace').append(imageblock);
+         		$(imageblock).attr('src', e.target.result);
             }           
             reader.readAsDataURL(input.files[0]);
         }
-        var imageblock = $('<img id="image1" src="#" />');
- 		$('#slideSpace').append(imageblock);
+        
  		
  		var file = input.files[0];
 	    var formData = new FormData();
@@ -55,7 +56,6 @@ $(document).ready(function() {
 	
 	<c:forEach items="${contents}" var="link">
 	{
-		alert("hi");
 		var valueDiv = $('<div class="valueDiv"><p>abcd</p></div>');
 		$("#slideSpace").append(valueDiv);
 	}

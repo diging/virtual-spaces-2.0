@@ -21,7 +21,9 @@ public class SlideController {
     public String listSpaces(@PathVariable String id, Model model) {
         
         model.addAttribute("slide", slideManager.getSlide(id));
+        model.addAttribute("contents", slideManager.getSlide(id).getContents());
         
+        System.out.println(slideManager.getSlide(id).getContents());
         //System.out.println(slideManager.getSlide(id).getContents());
              
         return "staff/module/slide";

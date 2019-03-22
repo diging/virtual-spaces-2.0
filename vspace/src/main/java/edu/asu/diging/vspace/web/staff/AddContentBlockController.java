@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +23,7 @@ public class AddContentBlockController {
 	private IContentBlockManager contentBlockManager;
 
 	@RequestMapping(value = "/staff/module/slide/{id}/textcontent", method = RequestMethod.POST)
-	public String addTextBlock(@PathVariable("id") String slideId, @RequestParam("content") String content,
+	public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId, @RequestParam("content") String content,
 			@RequestParam("type") String type) throws IOException {
 
 		System.out.print("inside controller");
@@ -30,7 +32,7 @@ public class AddContentBlockController {
 
 		contentBlockManager.createTextBlock(slideId, content);
 
-		return "redirect:content";
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/staff/module/slide/{id}/imagecontent", method = RequestMethod.POST)
