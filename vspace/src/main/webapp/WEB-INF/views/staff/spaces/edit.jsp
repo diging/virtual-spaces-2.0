@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<h1>Add new Space</h1>
+<h1>Edit Space: ${spaceForm.name}</h1>
 
 <c:url value="/staff/space/${spaceId}/edit" var="postUrl" />
 <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="spaceForm" enctype="multipart/form-data">
@@ -21,4 +21,5 @@
 	
 	<button class="btn btn-primary btn-sm" type="submit" value="submit">Save
 		Space</button>
+	<a href="<c:url value="/staff/space/${spaceId}" />" class="btn btn-light btn-sm">Cancel</a>
 </form:form>
