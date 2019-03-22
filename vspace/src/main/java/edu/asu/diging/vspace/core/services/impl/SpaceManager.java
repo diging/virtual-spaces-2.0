@@ -65,16 +65,20 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
         IVSImage bgImage = null;
-        ISpaceDisplay spaceDisplay = spaceDisplayFactory.createSpaceDisplay();
+        List<SpaceDisplay> displays = spaceDisplayRepo.getBySpace(space);
+        ISpaceDisplay spaceDisplay;
+        if (displays == null || displays.isEmpty()) {
+            spaceDisplay = spaceDisplayFactory.createSpaceDisplay();
+        } else {
+            spaceDisplay = displays.get(0);
+        }
+        
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
 
             bgImage = imageFactory.createImage(filename, contentType);
-            
-            
             bgImage = imageRepo.save((VSImage) bgImage);
-            
         }
 
         CreationReturnValue returnValue = new CreationReturnValue();
@@ -95,12 +99,12 @@ public class SpaceManager implements ISpaceManager {
             }
             imageRepo.save((VSImage) bgImage);
             space.setImage(bgImage);
+            spaceDisplay.setHeight(bgImage.getHeight());
+            spaceDisplay.setWidth(bgImage.getWidth());
         }
         
         space = spaceRepo.save((Space) space);
         spaceDisplay.setSpace(space);
-        spaceDisplay.setHeight(bgImage.getHeight());
-        spaceDisplay.setWidth(bgImage.getWidth());
         spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
         returnValue.setElement(space);
         return returnValue;
@@ -118,7 +122,10 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public ISpace getFullyLoadedSpace(String id) {
         ISpace space = getSpace(id);
-        // load lazy loaded collections
+        if (space == null) {
+            return null;
+        }
+        // load lazy collections
         space.getSpaceLinks().size();
         space.getModuleLinks().size();
         space.getExternalLinks().size();
