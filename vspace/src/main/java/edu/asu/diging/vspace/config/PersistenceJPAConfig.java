@@ -50,7 +50,7 @@ public class PersistenceJPAConfig{
       LocalContainerEntityManagerFactoryBean em 
         = new LocalContainerEntityManagerFactoryBean();
       em.setDataSource(dataSource());
-      em.setPackagesToScan(new String[] { "edu.asu.diging.vspace.core.model" });
+      em.setPackagesToScan(new String[] { "edu.asu.diging.vspace.core.model", "edu.asu.diging.simpleusers.core.model" });
  
       JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
       em.setJpaVendorAdapter(vendorAdapter);

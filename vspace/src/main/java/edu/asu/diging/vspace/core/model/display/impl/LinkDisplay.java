@@ -1,8 +1,11 @@
 package edu.asu.diging.vspace.core.model.display.impl;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 
 @MappedSuperclass
@@ -10,6 +13,9 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
 
     private float positionX;
     private float positionY;
+    
+    @OneToOne(targetEntity=VSImage.class)
+    private IVSImage image;
 
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.display.impl.IDisplay#getPositionX()
@@ -41,5 +47,15 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
     @Override
     public void setPositionY(float positionY) {
         this.positionY = positionY;
+    }
+
+    @Override
+    public IVSImage getImage() {
+        return image;
+    }
+
+    @Override
+    public void setImage(IVSImage image) {
+        this.image = image;
     }
 }

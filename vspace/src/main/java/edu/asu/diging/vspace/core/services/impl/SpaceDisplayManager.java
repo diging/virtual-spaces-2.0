@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,31 +55,35 @@ public class SpaceDisplayManager implements ISpaceDisplayManager {
     @Override
     public ISpaceDisplay getBySpace(ISpace space) {
         IVSImage image = space.getImage();
-        ISpaceDisplay display = spaceDisplayRepo.getBySpace(space);
-        if (display == null) {
+        List<SpaceDisplay> displays = spaceDisplayRepo.getBySpace(space);
+        ISpaceDisplay display = displays.isEmpty() ? null : displays.get(0);
+        if (display == null ) {
             display = displayFactory.createSpaceDisplay();
         }
-        if (image.getWidth() <= 0 || image.getHeight() <= 0) {
-            try {
-                ImageData data = imageService.getImageData(storage.getImageContent(image.getId(), image.getFilename()));
-                image.setWidth(data.getWidth());
-                image.setHeight(data.getHeight());
-            } catch (IOException e) {
-                logger.error("Could not get image.", e);
+        if (image != null) {
+            if (image.getWidth() <= 0 || image.getHeight() <= 0) {
+                try {
+                    ImageData data = imageService.getImageData(storage.getImageContent(image.getId(), image.getFilename()));
+                    image.setWidth(data.getWidth());
+                    image.setHeight(data.getHeight());
+                } catch (IOException e) {
+                    logger.error("Could not get image.", e);
+                    return display;
+                }
+            }
+    
+            if (image.getWidth() <= maxBgImageWidth && image.getHeight() <= maxBgImageHeight) {
+                display.setWidth(image.getWidth());
+                display.setHeight(image.getHeight());
                 return display;
             }
+            
+            ImageData data = imageService.getImageDimensions(image, maxBgImageWidth, maxBgImageHeight);
+            display.setHeight(data.getHeight());
+            display.setWidth(data.getWidth());
+            spaceDisplayRepo.save((SpaceDisplay) display);
         }
-
-        if (image.getWidth() <= maxBgImageWidth && image.getHeight() <= maxBgImageHeight) {
-            display.setWidth(image.getWidth());
-            display.setHeight(image.getHeight());
-            return display;
-        }
-
-        ImageData data = imageService.getImageDimensions(image, maxBgImageWidth, maxBgImageHeight);
-        display.setHeight(data.getHeight());
-        display.setWidth(data.getWidth());
-        spaceDisplayRepo.save((SpaceDisplay) display);
+        
         return display;
     }
 }

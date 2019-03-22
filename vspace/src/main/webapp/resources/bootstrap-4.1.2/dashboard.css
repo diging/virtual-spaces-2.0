@@ -18,6 +18,15 @@ a:hover {
   vertical-align: text-bottom;
 }
 
+.btn-link {
+	color: #796d05;
+}
+
+.btn-link:hover {
+    color: #bfb168;
+    text-decoration: underline;
+}
+
 .flex {
 display: -webkit-box;
 display: -moz-box;
