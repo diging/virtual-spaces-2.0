@@ -340,7 +340,7 @@ $( document ).ready(function() {
    </button>
 </div>
 
-<h1>Space: ${space.name}</h1> 
+<h1>Space: ${space.name} <small style="margin-left: 10px;"><a href="<c:url value="/staff/space/${space.id}/edit" />"><span data-feather="edit"></span></a></small></h1> 
  
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
@@ -348,9 +348,14 @@ $( document ).ready(function() {
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
 
+<h5>Description:</h5>
+<p style="max-height: 100px; overflow-y: scroll;">
+${space.description}
+</p>
+
 <c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" var="postUrl" />
 <form id="createSpaceLinkForm">
-	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
 	  <div class="row">
 	  <div class="col">
 	  <h6 class="alert-heading"><small>Create new Space Link</small></h6>

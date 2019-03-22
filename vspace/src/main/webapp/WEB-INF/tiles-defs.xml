@@ -72,6 +72,10 @@
 	<definition name="staff/space" extends="space.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
 	</definition>
+    
+    <definition name="staff/space/edit" extends="space.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/spaces/edit.jsp" />
+    </definition>
 	
 	<!-- Modules -->
 	<definition name="module.base.def" extends="base.definition.bt4">	
