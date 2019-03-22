@@ -1,48 +1,9 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <script>
 //# sourceURL=click.js
-$(document).ready(function() {
-
-	<c:forEach items="${contents}" var="link">
-	{
-		var valueDiv = $('<div class="valueDiv"><p>abcd</p></div>');
-		$(".content").append(valueDiv);
-	}
-	</c:forEach>
-	
-	$("#uploadImage").on("click", function(e) {
-		$("#addImgAlert").hide();
-		e.preventDefault();
-
-        var payload = {};
-		payload["content"] = document.getElementById('file').value;
-		payload["type"] = "Image";
-		$.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-				// TODO: show success/error message
-			});  
-  });
-	$("#submitText").on("click", function(e) {
-		$("#addTextAlert").hide();
-		e.preventDefault();
-
-		var payload = {};
-		payload["content"] = document.getElementById('textarea').value;
-		payload["type"] = "String"
-		console.log(payload["content"]);
-		
-		var contentblock = $('<div class="card" margin="20px"><div class="card-body"><span class='value'></span></div></div>');
-		$('#slideSpace').append(contentblock);
-
-	    $.post("<c:url value="/staff/module/slide/${slide.id}/content?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-	    	// TODO: show success/error message
-		});  
-  });
-    $("#addImgAlert").draggable();
-    $("#addTextAlert").draggable();
-
-});
 
 	function addImage() {
 		$("#addImgAlert").show();
@@ -52,9 +13,93 @@ $(document).ready(function() {
 		alert("inside add text");
 		$("#addTextAlert").show();
 	}
+	
+	 function uploadImage(input) {
+		 
+         if (input.files && input.files[0]) {
+    		 alert("uploading image");
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#image1').attr('src', e.target.result);
+            }           
+            reader.readAsDataURL(input.files[0]);
+        }
+        var imageblock = $('<img id="image1" src="#" />');
+ 		$('#slideSpace').append(imageblock);
+ 		
+ 		var file = input.files[0];
+	    var formData = new FormData();
+	    formData.append('file', file);
+	    $.ajax({
+	    	enctype: 'multipart/form-data',
+	        url: "<c:url value="/staff/module/slide/${slide.id}/imagecontent?${_csrf.parameterName}=${_csrf.token}" />",
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData, 
+	        
+	        success: function(data) {
+	            console.log("success");
+	            console.log(data);
+	        },
+	        error: function(data) {
+	            console.log("error");
+	            console.log(data);
+	        }
+	    });     
+    } 
+ 
+$(document).ready(function() {
+	
+	<c:forEach items="${contents}" var="link">
+	{
+		alert("hi");
+		var valueDiv = $('<div class="valueDiv"><p>abcd</p></div>');
+		$("#slideSpace").append(valueDiv);
+	}
+	</c:forEach>
+	
+	$("#file").change(function() {
+		$("#addImgAlert").hide();
+		uploadImage(this);
+  	});
+	
+	$("#cancelSubmitText").click(function() {
+		$("#addTextAlert").hide();	
+	});
+	
+	$("#cancelImageBtn").click(function() {
+		$("#image1").remove();
+		$("#addImgAlert").hide();	
+	});
+	
+	$("#submitText").on("click", function(e) {
+		$("#addTextAlert").hide();
+		e.preventDefault();
+
+		var payload = {};
+		payload["content"] = document.getElementById('textarea').value;
+		payload["type"] = "String";
+		console.log(payload["content"]);
+	
+		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
+    	$(textblock).css({
+    		'margin': "20px"
+		});
+		$('#slideSpace').append(textblock);
+
+	    $.post("<c:url value="/staff/module/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+	    	// TODO: show success/error message
+		});  
+  	});
+    $("#addImgAlert").draggable();
+    $("#addTextAlert").draggable();
+
+});
 </script>
 
-<body>
 <h1>Slide: ${slide.name}</h1>
 <h3>Description: ${slide.description}</h3>
 	
@@ -66,35 +111,50 @@ $(document).ready(function() {
 
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Add
-  </button>
+  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add</button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-  <ul>
-    <li class="dropdown-item" id="addImage" onclick="addImage()">Add Image</li>
-    <li class="dropdown-item" id="addText" onclick="addText()">Add Text</li>
-   </ul>
+	  <ul>
+	    <li class="dropdown-item" id="addImage" onclick="addImage()">Add Image</li>
+	    <li class="dropdown-item" id="addText" onclick="addText()">Add Text</li>
+	   </ul>
   </div>
 </nav>
+
+<%-- <c:url value="/staff/module/slide/${slide.id}/imagecontent" var="postUrl" /> 
+<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data" name="ImageForm" id="imageUploadForm">
+
+	<div id="addImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<h6><small>Upload Image: </small></h6>
+		<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
+	        <p class="mb-0 text-right"><button type="submit" id="uploadImage" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
+		<button id="cancelImageBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+	</div>
+	
+</form:form> --%>
 
 <form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
 <div id="addImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 	<h6><small>Upload Image: </small></h6>
 	<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
         <p class="mb-0 text-right"><button type="submit" id="uploadImage" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
-	<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+	<button id="cancelImageBtn" type="button" class="btn light btn-xs">Cancel</button></p>
 </div>
 </form>
 
 <form name="textForm"  id="textUploadForm" enctype="multipart/form-data" method="post">
-<div id="addTextAlert" class="alert alert-secondary form-group" role="alert" style="cursor:move; width:340px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-	<h6><small>Enter Text: </small></h6>
-    <textarea class="form-control" id="textarea" rows="3"></textarea>
-	<p class="mb-0 text-right"><button type="submit" id="submitText" class="btn btn-primary btn-xs">Submit</button> &nbsp
-	<button id="cancelSubmitText" type="button" class="btn light btn-xs">Cancel</button></p>
-</div>
+
+	<div id="addTextAlert" class="alert alert-secondary form-group" role="alert" style="cursor:move; width:340px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+		<h6><small>Enter Text: </small></h6>
+	    <textarea class="form-control" id="textarea" rows="3"></textarea>
+		<p class="mb-0 text-right"><button type="submit" id="submitText" class="btn btn-primary btn-xs">Submit</button> &nbsp
+		<button id="cancelSubmitText" type="reset" class="btn light btn-xs">Cancel</button></p>
+	</div>
+	
 </form>
     
 <div id="slideSpace"></div>
-</body>
+
+
+
+
 

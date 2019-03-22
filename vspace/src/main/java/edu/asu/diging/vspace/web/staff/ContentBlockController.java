@@ -13,14 +13,7 @@ public class ContentBlockController {
 
     @Autowired
     private SlideManager slideManager;
-        
-//    @RequestMapping(value = "/staff/module/slide/{id}/content", method = RequestMethod.GET)
-//    public String showAddSpace(Model model) {
-//
-//        System.out.println("inside controller");
-//        return "staff/module/slide/contentBlocks";
-//    }
-//    
+    
     @RequestMapping("/staff/module/slide/{id}/content")
     public String listTextBlocks(@PathVariable String id, Model model) {
         
