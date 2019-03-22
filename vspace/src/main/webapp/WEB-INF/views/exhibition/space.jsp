@@ -1,6 +1,7 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <script>
 //# sourceURL=click.js
@@ -46,21 +47,25 @@ function drawLinks() {
 </script>
 
 <div class="row">
-<div class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
-<div id="space-container" class="col-md-8 text-center">
-<div id="space" style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
-	
-	
-</div>
-</div>
-<div class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
-<c:if test="${not empty space.description}">
-   <div class="descriptionBox" style="height: ${display.height - 20}px; overflow-y: scroll;">
-   <h5>${space.name}</h5>
-   ${space.description}
-   </div>
-</c:if>
-</div>
+	<div
+		class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
+	<div id="space-container" class="col-md-8 text-center">
+		<div id="space"
+			style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+
+
+		</div>
+	</div>
+	<div
+		class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
+		<c:if test="${not empty space.description}">
+			<div class="descriptionBox"
+				style="height: ${display.height - 20}px; overflow-y: scroll;">
+				<h5>${space.name}</h5>
+				${space.description}
+			</div>
+		</c:if>
+	</div>
 </div>
 
 <script>
