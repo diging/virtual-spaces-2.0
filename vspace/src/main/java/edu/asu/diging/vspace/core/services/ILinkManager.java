@@ -21,4 +21,6 @@ public interface ILinkManager {
     IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
             String externalLink) throws SpaceDoesNotExistException;
 
+    void deleteSpaceLink(String linkId);
+
 }
