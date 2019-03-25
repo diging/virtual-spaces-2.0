@@ -20,13 +20,13 @@ $( document ).ready(function() {
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
            link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-feather="navigation-2" class="flex" data-link-id="${link.link.id}"></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
 		link.css('transform', 'rotate(${link.rotation}deg)');
-		link.css('fill', 'red');
+		link.find("span").css('fill', 'red');
 		link.css('color', 'red');
 		link.css('font-size', "10px");
 		
@@ -43,6 +43,12 @@ $( document ).ready(function() {
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
 			$("#spaceLinkInfoLabel").text("${link.link.name}");
 			$("#spaceLinkId").val("${link.link.id}");
+			resetHighlighting();
+			
+			$('[data-link-id="${link.link.id}"]').css("color", "#c1bb88");
+			$('div[data-link-id="${link.link.id}"]').removeClass("alert-primary");
+			$('div[data-link-id="${link.link.id}"]').addClass("alert-warning");
+			$('img[data-link-id="${link.link.id}"]').css("border", "solid 1px #c1bb88");
 			$("#spaceLinkInfo").show();
 		});
 	}
@@ -363,6 +369,7 @@ $( document ).ready(function() {
     	e.preventDefault();
     	$("#spaceLinkInfoLabel").text("");
         $("#spaceLinkId").val("");
+        resetHighlighting();
         $("#spaceLinkInfo").hide();
     });
 	
@@ -377,6 +384,18 @@ $( document ).ready(function() {
 		info["type"] = $("#type").val();
 	    return info;
 	}
+	
+	function resetHighlighting() {
+        // reset icon links
+        $('[data-link-id]').css("color", "red");
+        
+        // reset alert links
+        $('div[data-link-id]').removeClass("alert-warning");
+        $('div[data-link-id]').addClass("alert-primary");
+        
+        // reset image links
+        $('img[data-link-id]').css("border-width", "0px");
+    }
 });
 
 </script>
