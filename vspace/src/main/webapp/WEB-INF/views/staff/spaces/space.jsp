@@ -41,15 +41,7 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-			$("#spaceLinkInfoLabel").text("${link.link.name}");
-			$("#spaceLinkId").val("${link.link.id}");
-			resetHighlighting();
-			
-			$('[data-link-id="${link.link.id}"]').css("color", "#c1bb88");
-			$('div[data-link-id="${link.link.id}"]').removeClass("alert-primary");
-			$('div[data-link-id="${link.link.id}"]').addClass("alert-warning");
-			$('img[data-link-id="${link.link.id}"]').css("border", "solid 1px #c1bb88");
-			$("#spaceLinkInfo").show();
+			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}");
 		});
 	}
 	</c:forEach>
@@ -269,9 +261,9 @@ $( document ).ready(function() {
 		
 		var link;
 		if (spaceLink["type"] == "ALERT") {
-			link = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
+			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
 		} else if(spaceLink["type"] == "IMAGE" && linkIcon) {
-			link = $('<div id="link" ><img src="' + linkIcon + '"></div>');
+			link = $('<div id="link" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
 		} else {
 			$(space_label).css({
 				'position': 'absolute',
@@ -281,10 +273,10 @@ $( document ).ready(function() {
 				'top': spaceLink["y"] + posY + 16,
 				'color': 'red'
 			});
-			link = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+			link = $('<span data-link-id="' + spaceLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
 		}
 		if(show) {
-			link.css('fill', 'red');
+			link.find("div").css('fill', 'red');
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
@@ -297,16 +289,12 @@ $( document ).ready(function() {
 			link.attr("data-link-id", spaceLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
-	            $("#spaceLinkInfoLabel").text(spaceLink["spaceLinkLabel"]);
-	            $("#spaceLinkId").val(spaceLink["id"]);
-	            $("#spaceLinkInfo").show();
+				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"]);
 	        });
 			space_label.attr("data-link-id", spaceLink["id"]);
             space_label.css('cursor', 'pointer');
             space_label.click(function(e) {
-                $("#spaceLinkInfoLabel").text(spaceLink["spaceLinkLabel"]);
-                $("#spaceLinkId").val(spaceLink["id"]);
-                $("#spaceLinkInfo").show();
+                makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"]);
             });
 		}
 
@@ -383,6 +371,18 @@ $( document ).ready(function() {
 		info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		info["type"] = $("#type").val();
 	    return info;
+	}
+	
+	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId) {
+		$("#spaceLinkInfoLabel").text(spaceLinkName);
+        $("#spaceLinkId").val(spaceLinkId);
+        resetHighlighting();
+        
+        $('[data-link-id="' + spaceLinkId + '"]').css("color", "#c1bb88");
+        $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
+        $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
+        $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+        $("#spaceLinkInfo").show();
 	}
 	
 	function resetHighlighting() {
