@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
+import java.util.ArrayList;
+
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
@@ -14,5 +16,7 @@ public interface IContentBlockManager {
     IImageBlock storeImageBlock(IContentBlock imageBlock);
 
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename);
+
+    ArrayList<IContentBlock> getAllContentBlocks(String slideId);
 
 }

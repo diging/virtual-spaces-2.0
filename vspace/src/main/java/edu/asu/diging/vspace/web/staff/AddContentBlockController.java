@@ -32,7 +32,7 @@ public class AddContentBlockController {
 
 		contentBlockManager.createTextBlock(slideId, content);
 
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/staff/module/slide/{id}/imagecontent", method = RequestMethod.POST)

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.diging.vspace.core.services.impl.ContentBlockManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
 
 @Transactional
@@ -17,14 +18,21 @@ public class SlideController {
     @Autowired
     private SlideManager slideManager;
     
+    @Autowired
+    private ContentBlockManager contentBlockManager;
+    
+    
+    
     @RequestMapping("/staff/module/slide/{id}")
     public String listSpaces(@PathVariable String id, Model model) {
         
         model.addAttribute("slide", slideManager.getSlide(id));
-        model.addAttribute("contents", slideManager.getSlide(id).getContents());
+        //model.addAttribute("contents", slideManager.getSlide(id).getContents());
+        model.addAttribute("contentblocks", contentBlockManager.getAllContentBlocks(id));
         
         System.out.println(slideManager.getSlide(id).getContents());
-        //System.out.println(slideManager.getSlide(id).getContents());
+        System.out.println("Slidecontroller-----------");
+        System.out.println(contentBlockManager.getAllContentBlocks(id));
              
         return "staff/module/slide";
     }

@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -8,6 +9,7 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
@@ -22,6 +24,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
@@ -53,14 +56,14 @@ public class ContentBlockManager implements IContentBlockManager {
 	@Autowired
 	private IStorageEngine storage;
 
-//	@Autowired
-//	private ContentBlockRepository contentBlockRepo;
+	@Autowired
+	private ContentBlockRepository contentBlockRepo;
 
-	// @Override
-	// public List<IContentBlock> getAllContentBlocks(String slideId) {
-	// IModule slide = getSlide(slideId);
-	// return new ArrayList<>(slideRepo.findBySlide((Slide) slide));
-	// }
+	 @Override
+	 public ArrayList<IContentBlock> getAllContentBlocks(String slideId) {
+	 ISlide slide = slideManager.getSlide(slideId);
+	 return new ArrayList<IContentBlock>(contentBlockRepo.findBySlide((Slide) slide));
+	 }
 
 	// getAllImageContentBlocks
 

@@ -54,9 +54,9 @@
  
 $(document).ready(function() {
 	
-	<c:forEach items="${contents}" var="link">
+	<c:forEach items="${contentblocks}" var="content">
 	{
-		var valueDiv = $('<div class="valueDiv"><p>abcd</p></div>');
+		var valueDiv = $('<div class="valueDiv"><p>${content.id}</p></div>');
 		$("#slideSpace").append(valueDiv);
 	}
 	</c:forEach>
@@ -120,8 +120,7 @@ $(document).ready(function() {
   </div>
 </nav>
 
-<%-- <c:url value="/staff/module/slide/${slide.id}/imagecontent" var="postUrl" /> 
-<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data" name="ImageForm" id="imageUploadForm">
+<form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
 
 	<div id="addImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
 		<h6><small>Upload Image: </small></h6>
@@ -130,15 +129,6 @@ $(document).ready(function() {
 		<button id="cancelImageBtn" type="button" class="btn light btn-xs">Cancel</button></p>
 	</div>
 	
-</form:form> --%>
-
-<form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
-<div id="addImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-	<h6><small>Upload Image: </small></h6>
-	<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
-        <p class="mb-0 text-right"><button type="submit" id="uploadImage" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
-	<button id="cancelImageBtn" type="button" class="btn light btn-xs">Cancel</button></p>
-</div>
 </form>
 
 <form name="textForm"  id="textUploadForm" enctype="multipart/form-data" method="post">
@@ -154,7 +144,11 @@ $(document).ready(function() {
     
 <div id="slideSpace"></div>
 
-
+<c:if test="${not empty slide.image}">
+	<div id="slide">
+		<img id="bgImage" width="800px" src="<c:url value="/api/image/${slide.image.id}" />" />
+	</div>
+</c:if>
 
 
 
