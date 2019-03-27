@@ -1,8 +1,12 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.factory.ISlideFactory;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -21,6 +25,8 @@ public class SlideFactory implements ISlideFactory {
     @Override
     public ISlide createSlide(IModule module, SlideForm form) {
         ISlide slide = new Slide();
+        
+        slide.setContents(new HashSet<IContentBlock>());
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         slide.setModule(module);

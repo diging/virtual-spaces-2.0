@@ -54,12 +54,12 @@
  
 $(document).ready(function() {
 	
-	<c:forEach items="${contentblocks}" var="content">
+	<c:forEach items="${contents}" var="content">
 	{
-		var valueDiv = $('<div class="valueDiv"><p>${content.id}</p></div>');
-		$("#slideSpace").append(valueDiv);
+	
 	}
 	</c:forEach>
+	
 	
 	$("#file").change(function() {
 		$("#addImgAlert").hide();
@@ -86,7 +86,7 @@ $(document).ready(function() {
 	
 		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
     	$(textblock).css({
-    		'margin': "20px"
+    		'margin': "10px"
 		});
 		$('#slideSpace').append(textblock);
 
@@ -144,11 +144,6 @@ $(document).ready(function() {
     
 <div id="slideSpace"></div>
 
-<c:if test="${not empty slide.image}">
-	<div id="slide">
-		<img id="bgImage" width="800px" src="<c:url value="/api/image/${slide.image.id}" />" />
-	</div>
-</c:if>
 
 
 

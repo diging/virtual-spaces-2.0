@@ -9,9 +9,14 @@ public interface IContentBlock extends IVSpaceElement {
     void setSlide(ISlide slide);
 
     ISlide getSlide();
+
+    String getBlockInOrder();
+
+    void setBlockInOrder(String blockInOrder);
+
+//    ContentBlockType getType();
+//
+//    void setType(ContentBlockType type);
     
-//    ISlide getSlide();
-//    
-//    void setSlide(ISlide slide); 
 
 }

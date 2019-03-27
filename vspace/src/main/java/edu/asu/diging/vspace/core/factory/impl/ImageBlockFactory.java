@@ -24,7 +24,8 @@ public class ImageBlockFactory implements IImageBlockFactory {
     public IContentBlock createImageBlock(ISlide slide, IVSImage image) {
         IContentBlock imageblock = new ImageBlock();
         ((IImageBlock) imageblock).setImage(image);
-        imageblock.setSlide(slide);
+        //imageblock.setSlide(slide);
+//        imageblock.setType(ContentBlockType.IMAGE);
         System.out.println("inside image facorty");
         return (IContentBlock) imageblock;
     }
