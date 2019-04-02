@@ -10,14 +10,12 @@
 	}
 
 	function addText() {
-		alert("inside add text");
 		$("#addTextAlert").show();
 	}
 	
 	 function uploadImage(input) {
 		 
          if (input.files && input.files[0]) {
-    		 alert("uploading image");
             var reader = new FileReader();
             
             reader.onload = function (e) {

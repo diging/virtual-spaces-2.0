@@ -60,34 +60,32 @@ public class ContentBlockManager implements IContentBlockManager {
     @Autowired
     private ImageRepository imageRepo;
 
-    
     @Autowired
     private SlideRepository slideRepo;
-    
+
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private ContentBlockRepository contentBlockRepo;
 
-	 @Override
-	 public Set<IContentBlock> getAllContentBlocks(String slideId) {
-	     ISlide slide = slideManager.getSlide(slideId);
-    	 Set<IContentBlock> slideContents = slide.getContents();
+    @Override
+    public Set<IContentBlock> getAllContentBlocks(String slideId) {
+        ISlide slide = slideManager.getSlide(slideId);
+        Set<IContentBlock> slideContents = slide.getContents();
 
-    	 
-    	 return slideContents;
-
-	 }
+        return slideContents;
+    }
 
     @Override
-	 public IContentBlock getTextBlock(IContentBlock contentBlock) {
-	     Optional<TextBlock> textBlock = textBlockRepo.findById(contentBlock.getId());
-         if (textBlock.isPresent()) {
-             return textBlock.get();
-         }
-         return null;
-	 }
+    public IContentBlock getTextBlock(IContentBlock contentBlock) {
+        Optional<TextBlock> textBlock = textBlockRepo.findById(contentBlock.getId());
+        if (textBlock.isPresent()) {
+            return textBlock.get();
+        }
+        return null;
+    }
+
     @Override
     public IContentBlock getImageBlock(IContentBlock contentBlock) {
         Optional<ImageBlock> imageBlock = imageBlockRepo.findById(contentBlock.getId());
@@ -96,7 +94,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-    
+
 //    @Override
 //    public List<TextBlock> getTextBlocks(String slideId) {
 //        ISlide slide = slideManager.getSlide(slideId);
@@ -115,13 +113,15 @@ public class ContentBlockManager implements IContentBlockManager {
     public IContentBlock createTextBlock(String slideId, String text) {
         ISlide slide = slideManager.getSlide(slideId);
         IContentBlock textBlock = textBlockFactory.createTextBlock(text);
-        if(slide.getContents()==null) {
+       // textBlock.setBlockInOrder(BlockInOrder);
+        if (slide.getContents() == null) {
             slide.setContents(new HashSet<>());
         }
         slide.getContents().add(textBlock);
-        textBlock = textBlockRepo.save((TextBlock)textBlock);
-        slideRepo.save((Slide)slide);
-        
+        textBlock = textBlockRepo.save((TextBlock) textBlock);
+        slideRepo.save((Slide) slide);
+        //BlockInOrder++;
+
         return textBlock;
     }
 

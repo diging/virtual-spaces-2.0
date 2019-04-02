@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -26,45 +27,67 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
     @OneToOne(targetEntity = Slide.class)
     private ISlide slide;
     
-    private String blockInOrder;
+    //@GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer blockInOrder;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#getId()
+     */
     @Override
     public String getId() {
         return id;
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#setId(java.lang.String)
+     */
     @Override
     public void setId(String id) {
         this.id = id;
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#getSlide()
+     */
     @Override
     public ISlide getSlide() {
         return slide;
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#setSlide(edu.asu.diging.vspace.
+     * core.model.ISlide)
+     */
     @Override
     public void setSlide(ISlide slide) {
         this.slide = slide;
     }
-    
-//    @Override
-//    public ContentBlockType getType() {
-//        return type;
-//    }
-//
-//    @Override
-//    public void setType(ContentBlockType type) {
-//        this.type = type;
-//    }
-
+   
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#getBlockInOrder()
+     */
     @Override
-    public String getBlockInOrder() {
+    public Integer getBlockInOrder() {
         return blockInOrder;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#setBlockInOrder(java.lang.Integer)
+     */
     @Override
-    public void setBlockInOrder(String blockInOrder) {
+    public void setBlockInOrder(Integer blockInOrder) {
         this.blockInOrder = blockInOrder;
     }
 

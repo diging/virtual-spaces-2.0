@@ -17,6 +17,7 @@ public class TextBlockFactory implements ITextBlockFactory {
     public IContentBlock createTextBlock(String text) {
         IContentBlock textblock = new TextBlock();
         ((ITextBlock)textblock).setText(text);
+        textblock.setBlockInOrder(1);
         return (IContentBlock) textblock;
     }
 

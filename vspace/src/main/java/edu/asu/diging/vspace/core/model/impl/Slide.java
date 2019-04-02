@@ -24,16 +24,14 @@ public class Slide extends VSpaceElement implements ISlide {
     @GeneratedValue(generator = "slide_id_generator")
     @GenericGenerator(name = "slide_id_generator", parameters = @Parameter(name = "prefix", value = "SLI"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-    
+
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    
-    @OneToMany(targetEntity = ContentBlock.class, mappedBy="slide", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     @OrderBy("blockInOrder")
     private Set<IContentBlock> contents;
-    
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -53,7 +51,7 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setId(String id) {
         this.id = id;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -76,15 +74,25 @@ public class Slide extends VSpaceElement implements ISlide {
         this.module = module;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#getContents()
+     */
     @Override
     public Set<IContentBlock> getContents() {
         return contents;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setContents(edu.asu.diging.
+     * vspace. core.model.IContentBlock)
+     */
     @Override
     public void setContents(Set<IContentBlock> contents) {
         this.contents = contents;
     }
 
-    
 }

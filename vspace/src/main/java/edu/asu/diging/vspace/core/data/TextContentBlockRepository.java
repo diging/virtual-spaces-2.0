@@ -17,6 +17,6 @@ public interface TextContentBlockRepository  extends PagingAndSortingRepository<
 
     ITextBlock save(ITextBlock textBlock);
 
-    ArrayList<IContentBlock> findBySlideOrderByBlockSort(Slide slide);
+    ArrayList<IContentBlock> findBySlideOrderByBlockInOrder(Slide slide);
 
 }
