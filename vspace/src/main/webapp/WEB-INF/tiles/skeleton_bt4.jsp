@@ -64,6 +64,14 @@
                   Modules
                 </a>
               </li>
+               <sec:authorize access="hasRole('ADMIN')">
+              <li class="nav-item">
+                <a class="nav-link ${currentPage == "images" ? "active" : ""}" href="<c:url value="/staff/images/list/0" />">
+                  <span data-feather="image"></span>
+                  Images
+                </a>
+              </li>
+              </sec:authorize>
               <sec:authorize access="hasRole('ADMIN')">
               <li class="nav-item">
                 <a class="nav-link ${currentPage == "users" ? "active" : ""}" href="<c:url value="/staff/user/list" />">

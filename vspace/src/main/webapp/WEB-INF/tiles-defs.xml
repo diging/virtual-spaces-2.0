@@ -107,4 +107,8 @@
     <definition name="staff/user/list" extends="exhibit.base.def"> 
         <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
     </definition>
+    <!-- Images -->
+    <definition name="staff/images/list" extends="exhibit.base.def"> 
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
+    </definition>
 </tiles-definitions>
