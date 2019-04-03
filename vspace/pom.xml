@@ -14,16 +14,24 @@
         <spring-data.version>Kay-SR8</spring-data.version>
         <spring-security-version>4.1.5.RELEASE</spring-security-version>
         <javers.version>3.10.1</javers.version>
+        <simple-users-version>0.5-SNAPSHOT</simple-users-version>
         <admin.password>$2a$04$ug2wdYfAW8Ey/DwjUdPuLufgrMqbhNnTmr1QEUNZnoWF1xGitSBae</admin.password>
         <staff.password>$2a$04$QhdsxRoZPJw/G06aDkP6COLARKtbdTxVvxtKPZUE0dFlNKFMZsXRe</staff.password>
 
-        <log.level>info</log.level>
+        <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
         <uploaded.files.path></uploaded.files.path>
+        
+        <email.user></email.user>
+        <email.password></email.password>
+        <email.host></email.host>
+        <email.port></email.port>
+        <email.from></email.from>
+        <app.url></app.url>
 
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
@@ -129,7 +137,7 @@
         <dependency>
             <groupId>edu.asu.diging</groupId>
             <artifactId>simple-users</artifactId>
-            <version>0.3</version>
+            <version>${simple-users-version}</version>
         </dependency>
 
         <!-- Logging -->
