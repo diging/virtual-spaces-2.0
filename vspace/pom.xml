@@ -14,7 +14,7 @@
         <spring-data.version>Kay-SR8</spring-data.version>
         <spring-security-version>4.1.5.RELEASE</spring-security-version>
         <javers.version>3.10.1</javers.version>
-        <simple-users-version>0.5-SNAPSHOT</simple-users-version>
+        <simple-users-version>0.5</simple-users-version>
         <admin.password>$2a$04$ug2wdYfAW8Ey/DwjUdPuLufgrMqbhNnTmr1QEUNZnoWF1xGitSBae</admin.password>
         <staff.password>$2a$04$QhdsxRoZPJw/G06aDkP6COLARKtbdTxVvxtKPZUE0dFlNKFMZsXRe</staff.password>
 
