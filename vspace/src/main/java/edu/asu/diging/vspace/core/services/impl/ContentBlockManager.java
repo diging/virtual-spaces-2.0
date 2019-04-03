@@ -2,7 +2,6 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,8 +26,6 @@ import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.display.ContentBlockType;
-import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
@@ -68,6 +65,8 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private ContentBlockRepository contentBlockRepo;
+    
+    private int BlockInOrder = 0;
 
     @Override
     public Set<IContentBlock> getAllContentBlocks(String slideId) {
@@ -112,15 +111,18 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public IContentBlock createTextBlock(String slideId, String text) {
         ISlide slide = slideManager.getSlide(slideId);
-        IContentBlock textBlock = textBlockFactory.createTextBlock(text);
-       // textBlock.setBlockInOrder(BlockInOrder);
+        IContentBlock textBlock = textBlockFactory.createTextBlock(slide,text);
+        textBlock.setBlockInOrder(BlockInOrder);
         if (slide.getContents() == null) {
             slide.setContents(new HashSet<>());
         }
         slide.getContents().add(textBlock);
+
+        System.out.println(slide.getContents()+"-------------------");
+        
         textBlock = textBlockRepo.save((TextBlock) textBlock);
         slideRepo.save((Slide) slide);
-        //BlockInOrder++;
+        BlockInOrder++;
 
         return textBlock;
     }
@@ -178,7 +180,9 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
         IContentBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
-        ImageBlock imageBlock = (ImageBlock) storeImageBlock(imgBlock);
+        imgBlock.setBlockInOrder(BlockInOrder);
+        ImageBlock imageBlock = (ImageBlock) storeImageBlock(imgBlock);  
+        BlockInOrder++;
 
         returnValue.setElement(imageBlock);
         return returnValue;

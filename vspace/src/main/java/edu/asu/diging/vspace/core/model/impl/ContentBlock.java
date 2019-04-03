@@ -1,8 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -13,7 +13,6 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.display.ContentBlockType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -27,7 +26,6 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
     @OneToOne(targetEntity = Slide.class)
     private ISlide slide;
     
-    //@GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer blockInOrder;
 
     /*

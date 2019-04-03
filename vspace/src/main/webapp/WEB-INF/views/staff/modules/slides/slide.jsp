@@ -82,6 +82,8 @@ $(document).ready(function() {
 		payload["type"] = "String";
 		console.log(payload["content"]);
 	
+
+	   
 		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
     	$(textblock).css({
     		'margin': "10px"

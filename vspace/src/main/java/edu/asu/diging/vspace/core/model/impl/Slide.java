@@ -28,7 +28,7 @@ public class Slide extends VSpaceElement implements ISlide {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade=CascadeType.ALL)
     @OrderBy("blockInOrder")
     private Set<IContentBlock> contents;
 
