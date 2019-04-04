@@ -21,7 +21,7 @@
 <ul class="list-group list-group-flush">
 	<c:forEach items="${images}" var="image">
 		<li class="list-group-item"><a
-			href="<c:url value="/staff/images/${image.id}" />"> <span
+			href="<c:url value="/api/image/${image.id}" />"> <span
 				data-feather="box"></span> ${image.filename}
 		</a> <!-- (Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}) -->
 		</li>
@@ -29,7 +29,7 @@
 </ul>
 <nav aria-label="...">
 	<ul class="pagination">
-		<li class="${currentpage == 1 ? " page-item disabled" : "page-item"}">
+		<li class="${currentpage == 1 ? " page-itemdisabled" : "page-item"}">
 			<a class="page-link" aria-label="Previous"
 			href="<c:url value="/staff/images/list/${currentpage-1}" />"> <span
 				aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
@@ -41,7 +41,7 @@
 				href="<c:url value="/staff/images/list/${loop.index}" />">
 					${loop.index} </a></li>
 		</c:forEach>
-		<li class="${currentpage >= totalpages ? " page-item disabled" : "page-item"}">
+		<li class="${currentpage >= totalpages ? " page-itemdisabled" : "page-item"}">
 			<a class="page-link" aria-label="Next"
 			href="<c:url value="/staff/images/list/${currentpage+1}" />"> <span
 				aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
