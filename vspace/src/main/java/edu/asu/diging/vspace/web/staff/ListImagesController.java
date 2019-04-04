@@ -21,11 +21,11 @@ public class ListImagesController {
 	
 	@RequestMapping("/staff/images/list/{page}")
 	public String listSpaces(@PathVariable String page, Model model) {
-		int pageSize = 1; //need to move to a constant file
+		int pageSize = 2; //need to move to a constant file
 		long checker = imageRepo.count()%pageSize;
 		long totalPages = imageRepo.count()/pageSize;
 		totalPages = checker == 0? totalPages:totalPages+1;
-		Pageable sortedByName = PageRequest.of(Integer.parseInt(page)-1, pageSize, Sort.by("filename"));
+		Pageable sortedByName = PageRequest.of(Integer.parseInt(page)-1, pageSize, Sort.by("creationDate"));
 		Page<VSImage> images = imageRepo.findAll(sortedByName);
 		model.addAttribute("images", images.getContent());
 		System.out.println("Total" + totalPages);
