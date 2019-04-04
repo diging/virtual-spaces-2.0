@@ -121,4 +121,8 @@
     <definition name="staff/user/list" extends="exhibit.base.def"> 
         <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
     </definition>
+    <definition name="accessdenied" extends="exhibit.base.def"> 
+        <put-attribute name="content" value="/WEB-INF/views/staff/users/accessdenied.jsp" />    
+    </definition>
+    
 </tiles-definitions>
