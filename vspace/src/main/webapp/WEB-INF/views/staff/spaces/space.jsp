@@ -14,18 +14,19 @@ $( document ).ready(function() {
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 
+		var link;
 		if ("${link.type}" == "ALERT") {
-			var link = $('<div class="alert alert-primary" role="alert"><p>${link.link.name}</p>');
+			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           var link = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			var link = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}">${link.link.name}</p>'); 
+			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
 		link.css('transform', 'rotate(${link.rotation}deg)');
-		link.css('fill', 'red');
+		link.find("span").css('fill', 'red');
 		link.css('color', 'red');
 		link.css('font-size', "10px");
 		
@@ -37,6 +38,11 @@ $( document ).ready(function() {
 			'top': ${link.positionY} + posY + 16,
 			'color': 'red'
 		});		
+		
+		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
+		$('[data-link-id="${link.link.id}"]').click(function(e) {
+			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}");
+		});
 	}
 	</c:forEach>
 	
@@ -68,6 +74,7 @@ $( document ).ready(function() {
 	 
 	$("#createExternalLinkAlert").draggable();
 	$("#changeBgImgAlert").draggable();
+	$("#spaceLinkInfo").draggable();
     
     
 	// store where a user clicked on an image
@@ -167,7 +174,9 @@ $( document ).ready(function() {
 	        enctype: 'multipart/form-data',
 	        data: formData, 
 	        success: function(data) {
-	        	$("#bgImage").on("click", function(e){});
+	        	var linkData = JSON.parse(data);
+	        	$("#bgImage").off("click");
+	        	spaceLinkInfo["id"] = linkData["id"];
 	            showSpaceLink(spaceLinkInfo, true);
 	            $("#space_label").attr("id","");
 	            $("#link").attr("id","");
@@ -187,10 +196,23 @@ $( document ).ready(function() {
 		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 			// TODO: show success/error message
 		});
-		$("#bgImage").on("click", function(e){});
+		$("#bgImage").off("click");
 		$("#createExternalLinkAlert").hide();
 		$("#ext_label").attr("id","");
 		$("#external-arrow").attr("id","");
+	});
+	
+	// ------------- other buttons ------------
+	$("#deleteSpaceLinkButton").click(function() {
+		var linkId = $("#spaceLinkId").val();
+		$.ajax({
+		  url: "<c:url value="/staff/space/${space.id}/spacelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
+		  method: "DELETE",
+		  success:function(data) {
+			  $('[data-link-id="' + linkId + '"]').remove();
+	          $("#spaceLinkInfo").hide();
+		    }
+		});
 	});
 	
 	
@@ -239,9 +261,9 @@ $( document ).ready(function() {
 		
 		var link;
 		if (spaceLink["type"] == "ALERT") {
-			link = $('<div id="link" class="alert alert-primary" role="alert"><p>'+spaceLink["spaceLinkLabel"]+'</p>');
+			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
 		} else if(spaceLink["type"] == "IMAGE" && linkIcon) {
-			link = $('<div id="link" ><img src="' + linkIcon + '"></div>');
+			link = $('<div id="link" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
 		} else {
 			$(space_label).css({
 				'position': 'absolute',
@@ -251,10 +273,10 @@ $( document ).ready(function() {
 				'top': spaceLink["y"] + posY + 16,
 				'color': 'red'
 			});
-			link = $('<div id="link" data-feather="navigation-2" class="flex"></div>');
+			link = $('<span data-link-id="' + spaceLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
 		}
 		if(show) {
-			link.css('fill', 'red');
+			link.find("div").css('fill', 'red');
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
@@ -262,6 +284,19 @@ $( document ).ready(function() {
 		link.css('color', 'red');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		link.css('font-size', "10px");
+		
+		if (spaceLink["id"]) {
+			link.attr("data-link-id", spaceLink["id"]);
+			link.css('cursor', 'pointer');
+			link.click(function(e) {
+				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"]);
+	        });
+			space_label.attr("data-link-id", spaceLink["id"]);
+            space_label.css('cursor', 'pointer');
+            space_label.click(function(e) {
+                makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"]);
+            });
+		}
 
 		$("#space").append(link);
 		$("#space").append(space_label);
@@ -317,6 +352,14 @@ $( document ).ready(function() {
         $("#file").val('');
         $("#changeBgImgAlert").hide();
     });
+    
+    $("#closeSpaceLinkInfo").click(function(e) {
+    	e.preventDefault();
+    	$("#spaceLinkInfoLabel").text("");
+        $("#spaceLinkId").val("");
+        resetHighlighting();
+        $("#spaceLinkInfo").hide();
+    });
 	
 	// --------- Utility functions -------------
 	function createSpaceLinkInfo() {
@@ -329,6 +372,30 @@ $( document ).ready(function() {
 		info["type"] = $("#type").val();
 	    return info;
 	}
+	
+	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId) {
+		$("#spaceLinkInfoLabel").text(spaceLinkName);
+        $("#spaceLinkId").val(spaceLinkId);
+        resetHighlighting();
+        
+        $('[data-link-id="' + spaceLinkId + '"]').css("color", "#c1bb88");
+        $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
+        $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
+        $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+        $("#spaceLinkInfo").show();
+	}
+	
+	function resetHighlighting() {
+        // reset icon links
+        $('[data-link-id]').css("color", "red");
+        
+        // reset alert links
+        $('div[data-link-id]').removeClass("alert-warning");
+        $('div[data-link-id]').addClass("alert-primary");
+        
+        // reset image links
+        $('img[data-link-id]').css("border-width", "0px");
+    }
 });
 
 </script>
@@ -444,7 +511,7 @@ ${space.description}
 	
 </form:form>
 <form>
-	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
+	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
 		 <h6 class="alert-heading"><small>Create new External Link</small></h6>
 		  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
 		  <hr>  
@@ -457,6 +524,13 @@ ${space.description}
 		  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
 	</div>
 </form>
+
+<div id="spaceLinkInfo" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 200px; display:none; position: absolute; top: 400px; right: 50px; z-index:999">
+     <p class="float-right"><a href="#" id="closeSpaceLinkInfo"><span data-feather="x-square"></span></a></p>
+     <h6 class="alert-heading">Space Link: <span id="spaceLinkInfoLabel"></span></h6>
+     <input type="hidden" name="spaceLinkId" id="spaceLinkId" />
+     <button id="deleteSpaceLinkButton" type="reset" class="btn btn-primary btn-xs">Delete Link</button>
+</div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp

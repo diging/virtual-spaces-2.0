@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -127,6 +128,19 @@ public class LinkManager implements ILinkManager {
         
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
         return display;
+    }
+    
+    @Override
+    public void deleteSpaceLink(String linkId) {
+        Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(linkId);
+        if (!linkOptional.isPresent()) {
+            return;
+        }
+        
+        ISpace space = linkOptional.get().getSourceSpace();
+        ISpaceLink link = linkOptional.get();
+        space.getSpaceLinks().remove(link);
+        spaceLinkRepo.delete((SpaceLink) link);        
     }
     
     /* (non-Javadoc)
