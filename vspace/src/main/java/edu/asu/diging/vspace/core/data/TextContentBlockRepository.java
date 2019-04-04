@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.data;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -18,5 +20,7 @@ public interface TextContentBlockRepository  extends PagingAndSortingRepository<
     ITextBlock save(ITextBlock textBlock);
 
     ArrayList<IContentBlock> findBySlideOrderByBlockInOrder(Slide slide);
+
+    List<ITextBlock> findBySlideId(String slideId);
 
 }

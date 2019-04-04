@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-import java.util.Set;
+import java.util.List;
 
 public interface ISlide extends IVSpaceElement {
     
@@ -8,9 +8,9 @@ public interface ISlide extends IVSpaceElement {
 
     IModule getModule();
 
-    void setContents(Set<IContentBlock> contents);
+    void setContents(List<IContentBlock> contents);
 
-    Set<IContentBlock> getContents();
+    List<IContentBlock> getContents();
 
 
 }

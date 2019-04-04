@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -29,8 +32,7 @@ public class Slide extends VSpaceElement implements ISlide {
     private IModule module;
 
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade=CascadeType.ALL)
-    @OrderBy("blockInOrder")
-    private Set<IContentBlock> contents;
+    private List<IContentBlock> contents;
 
     /*
      * (non-Javadoc)
@@ -80,7 +82,14 @@ public class Slide extends VSpaceElement implements ISlide {
      * @see edu.asu.diging.vspace.core.model.impl.ISlide#getContents()
      */
     @Override
-    public Set<IContentBlock> getContents() {
+    public List<IContentBlock> getContents() {
+        Collections.sort(this.contents, new Comparator<IContentBlock>() {
+
+            @Override
+            public int compare(IContentBlock o1, IContentBlock o2) {
+                return o1.getBlockInOrder().compareTo(o2.getBlockInOrder());
+            }
+        });
         return contents;
     }
 
@@ -91,7 +100,7 @@ public class Slide extends VSpaceElement implements ISlide {
      * vspace. core.model.IContentBlock)
      */
     @Override
-    public void setContents(Set<IContentBlock> contents) {
+    public void setContents(List<IContentBlock> contents) {
         this.contents = contents;
     }
 

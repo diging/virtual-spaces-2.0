@@ -18,6 +18,7 @@ public class TextBlockFactory implements ITextBlockFactory {
     public IContentBlock createTextBlock(ISlide slide, String text) {
         IContentBlock textblock = new TextBlock();
         ((ITextBlock)textblock).setText(text);
+        textblock.setDescription("text");
         textblock.setSlide(slide);
         return (IContentBlock) textblock;
     }

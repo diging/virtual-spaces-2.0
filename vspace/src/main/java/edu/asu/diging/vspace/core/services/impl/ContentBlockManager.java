@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -69,20 +70,20 @@ public class ContentBlockManager implements IContentBlockManager {
     private int BlockInOrder = 0;
 
     @Override
-    public Set<IContentBlock> getAllContentBlocks(String slideId) {
+    public List<IContentBlock> getAllContentBlocks(String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        Set<IContentBlock> slideContents = slide.getContents();
+        List<IContentBlock> slideContents = slide.getContents();
 
         return slideContents;
     }
+    
+
 
     @Override
-    public IContentBlock getTextBlock(IContentBlock contentBlock) {
-        Optional<TextBlock> textBlock = textBlockRepo.findById(contentBlock.getId());
-        if (textBlock.isPresent()) {
-            return textBlock.get();
-        }
-        return null;
+    public List<ITextBlock> getAllTextBlocks(String slideId) {
+        List<ITextBlock> textBlocks = textBlockRepo.findBySlideId(slideId);
+        return textBlocks;
+        
     }
 
     @Override
@@ -114,12 +115,9 @@ public class ContentBlockManager implements IContentBlockManager {
         IContentBlock textBlock = textBlockFactory.createTextBlock(slide,text);
         textBlock.setBlockInOrder(BlockInOrder);
         if (slide.getContents() == null) {
-            slide.setContents(new HashSet<>());
+            slide.setContents(new ArrayList<>());
         }
         slide.getContents().add(textBlock);
-
-        System.out.println(slide.getContents()+"-------------------");
-        
         textBlock = textBlockRepo.save((TextBlock) textBlock);
         slideRepo.save((Slide) slide);
         BlockInOrder++;
@@ -186,6 +184,14 @@ public class ContentBlockManager implements IContentBlockManager {
 
         returnValue.setElement(imageBlock);
         return returnValue;
+    }
+
+
+
+    @Override
+    public IContentBlock getTextBlock(IContentBlock contentBlock) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

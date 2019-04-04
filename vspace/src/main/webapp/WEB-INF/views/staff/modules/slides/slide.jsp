@@ -54,7 +54,19 @@ $(document).ready(function() {
 	
 	<c:forEach items="${contents}" var="content">
 	{
-	
+		console.log("${content.name}")
+		console.log("${content.blockInOrder}")
+		console.log("${content.description}")
+		
+		if ("${content.description}" == 'text') {
+			var value = $('<div class="valueDiv card card-body"><p>${textBlocks.text}</p>');
+	    	$(value).css({
+	    		'margin': "10px"
+			});
+		} else if ("${content.description}" == "image") {
+			console.log("image")
+		}
+			$("#slideSpace").append(value);
 	}
 	</c:forEach>
 	

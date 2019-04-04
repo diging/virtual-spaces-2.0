@@ -26,6 +26,8 @@ public class SlideController {
 
         model.addAttribute("slide", slideManager.getSlide(id));
         model.addAttribute("contents", contentBlockManager.getAllContentBlocks(id));
+        model.addAttribute("textBlocks", contentBlockManager.getAllTextBlocks(id));
+        
         System.out.println(contentBlockManager.getAllContentBlocks(id));
 
         return "staff/module/slide";

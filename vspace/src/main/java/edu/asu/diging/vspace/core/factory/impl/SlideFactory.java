@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class SlideFactory implements ISlideFactory {
     public ISlide createSlide(IModule module, SlideForm form) {
         ISlide slide = new Slide();
         
-        slide.setContents(new HashSet<IContentBlock>());
+        slide.setContents(new ArrayList<IContentBlock>());
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         slide.setModule(module);
