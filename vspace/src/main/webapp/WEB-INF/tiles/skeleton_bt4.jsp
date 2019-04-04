@@ -66,7 +66,7 @@
               </li>
                <sec:authorize access="hasRole('ADMIN')">
               <li class="nav-item">
-                <a class="nav-link ${currentPage == "images" ? "active" : ""}" href="<c:url value="/staff/images/list/0" />">
+                <a class="nav-link ${currentPage == "images" ? "active" : ""}" href="<c:url value="/staff/images/list/1" />">
                   <span data-feather="image"></span>
                   Images
                 </a>
