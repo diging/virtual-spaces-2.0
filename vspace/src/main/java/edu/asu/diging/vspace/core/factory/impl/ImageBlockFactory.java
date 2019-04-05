@@ -26,6 +26,7 @@ public class ImageBlockFactory implements IImageBlockFactory {
         ((IImageBlock) imageblock).setImage(image);
         imageblock.setSlide(slide);
         imageblock.setDescription("image");
+
         return (IContentBlock) imageblock;
     }
 }

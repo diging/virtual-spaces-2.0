@@ -22,7 +22,8 @@ public class TextBlock extends ContentBlock implements ITextBlock {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.ITextBlock#setText(java.lang.String)
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ITextBlock#setText(java.lang.String)
      */
     @Override
     public void setText(String text) {

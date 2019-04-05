@@ -16,15 +16,15 @@ import edu.asu.diging.vspace.core.model.ISlide;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class ContentBlock extends VSpaceElement implements IContentBlock {
-    
+
     @Id
     @GeneratedValue(generator = "content_id_generator")
     @GenericGenerator(name = "content_id_generator", parameters = @Parameter(name = "prefix", value = "CON"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-    
+
     @OneToOne(targetEntity = Slide.class)
     private ISlide slide;
-    
+
     private Integer blockInOrder;
 
     /*
@@ -36,17 +36,18 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
     public String getId() {
         return id;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#setId(java.lang.String)
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IContentBlock#setId(java.lang.String)
      */
     @Override
     public void setId(String id) {
         this.id = id;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -56,18 +57,19 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
     public ISlide getSlide() {
         return slide;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#setSlide(edu.asu.diging.vspace.
-     * core.model.ISlide)
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IContentBlock#setSlide(edu.asu.diging.
+     * vspace. core.model.ISlide)
      */
     @Override
     public void setSlide(ISlide slide) {
         this.slide = slide;
     }
-   
+
     /*
      * (non-Javadoc)
      * 
@@ -81,7 +83,9 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#setBlockInOrder(java.lang.Integer)
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IContentBlock#setBlockInOrder(java.lang
+     * .Integer)
      */
     @Override
     public void setBlockInOrder(Integer blockInOrder) {

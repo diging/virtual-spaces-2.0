@@ -13,9 +13,8 @@
 		$("#addTextAlert").show();
 	}
 	
-	 function uploadImage(input) {
-		 
-         if (input.files && input.files[0]) {
+	function uploadImage(input) {
+		if (input.files && input.files[0]) {
             var reader = new FileReader();
             
             reader.onload = function (e) {
@@ -25,8 +24,7 @@
             }           
             reader.readAsDataURL(input.files[0]);
         }
-        
- 		
+        		
  		var file = input.files[0];
 	    var formData = new FormData();
 	    formData.append('file', file);
@@ -52,24 +50,25 @@
  
 $(document).ready(function() {
 	
-	<c:forEach items="${contents}" var="content">
+	<c:forEach items="${contents}" var="entry">
 	{
-		console.log("${content.name}")
-		console.log("${content.blockInOrder}")
-		console.log("${content.description}")
+		console.log("${entry.key.name}")
+		console.log("${entry.key.blockInOrder}")
+		console.log("${entry.key.description}")
 		
-		if ("${content.description}" == 'text') {
-			var value = $('<div class="valueDiv card card-body"><p>${textBlocks.text}</p>');
-	    	$(value).css({
-	    		'margin': "10px"
-			});
-		} else if ("${content.description}" == "image") {
-			console.log("image")
+		if ("${entry.key.description}" == "image") {
+			console.log("imagebloc");
+			var value = $('<div class="valueDiv"><img id="${entry.value}" width="800px" src="<c:url value="/api/image/${entry.value}" />" />');
+		} else {
+			var value = $('<div class="valueDiv card card-body"><p>${entry.value}</p>');
 		}
-			$("#slideSpace").append(value);
+		
+    	$(value).css({
+    		'margin': "10px"
+		});
+		$("#slideSpace").append(value);
 	}
 	</c:forEach>
-	
 	
 	$("#file").change(function() {
 		$("#addImgAlert").hide();
@@ -92,11 +91,8 @@ $(document).ready(function() {
 		var payload = {};
 		payload["content"] = document.getElementById('textarea').value;
 		payload["type"] = "String";
-		console.log(payload["content"]);
-	
 
-	   
-		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
+		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');	
     	$(textblock).css({
     		'margin': "10px"
 		});
@@ -123,6 +119,7 @@ $(document).ready(function() {
 
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
+
   <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add</button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 	  <ul>
@@ -130,6 +127,7 @@ $(document).ready(function() {
 	    <li class="dropdown-item" id="addText" onclick="addText()">Add Text</li>
 	   </ul>
   </div>
+  
 </nav>
 
 <form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">

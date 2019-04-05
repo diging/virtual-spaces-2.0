@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -12,7 +10,6 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
@@ -25,7 +22,6 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -64,55 +60,41 @@ public class ContentBlockManager implements IContentBlockManager {
     @Autowired
     private IStorageEngine storage;
 
-    @Autowired
-    private ContentBlockRepository contentBlockRepo;
-    
     private int BlockInOrder = 0;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.Map<edu.asu.diging.vspace.core.services.impl.IContentBlock,
+     * java.lang.String>#getAllContentBlocks(java.lang.String)
+     */
     @Override
-    public List<IContentBlock> getAllContentBlocks(String slideId) {
+    public Map<IContentBlock, String> getAllContentBlocks(String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        List<IContentBlock> slideContents = slide.getContents();
+        Map<IContentBlock, String> slideContentBlocks = new LinkedHashMap<IContentBlock, String>();
 
-        return slideContents;
-    }
-    
+        for (IContentBlock block : slide.getContents()) {
+            if (block.getDescription().equals("text")) {
+                slideContentBlocks.put(block, ((TextBlock) block).getText());
+            } else {
+                slideContentBlocks.put(block, ((ImageBlock) block).getImage().getId());
+            }
 
-
-    @Override
-    public List<ITextBlock> getAllTextBlocks(String slideId) {
-        List<ITextBlock> textBlocks = textBlockRepo.findBySlideId(slideId);
-        return textBlocks;
-        
-    }
-
-    @Override
-    public IContentBlock getImageBlock(IContentBlock contentBlock) {
-        Optional<ImageBlock> imageBlock = imageBlockRepo.findById(contentBlock.getId());
-        if (imageBlock.isPresent()) {
-            return imageBlock.get();
         }
-        return null;
+        return slideContentBlocks;
     }
 
-//    @Override
-//    public List<TextBlock> getTextBlocks(String slideId) {
-//        ISlide slide = slideManager.getSlide(slideId);
-//        return new ArrayList<TextBlock>(textBlockRepo.findBySlide((Slide) slide));
-//
-//    }
-
-//    @Override
-//    public List<ImageBlock> getImageBlocks(String slideId) {
-//        ISlide slide = slideManager.getSlide(slideId);
-//        return new ArrayList<ImageBlock>(imageBlockRepo.findBySlide((Slide) slide));
-//
-//    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IContentBlock#createTextBlock(java.
+     * lang.String, java.lang.String)
+     */
     @Override
     public IContentBlock createTextBlock(String slideId, String text) {
         ISlide slide = slideManager.getSlide(slideId);
-        IContentBlock textBlock = textBlockFactory.createTextBlock(slide,text);
+        IContentBlock textBlock = textBlockFactory.createTextBlock(slide, text);
         textBlock.setBlockInOrder(BlockInOrder);
         if (slide.getContents() == null) {
             slide.setContents(new ArrayList<>());
@@ -128,18 +110,6 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.ITextBlock#storeTextBlock(edu.
-     * asu.diging.vspace.core.model.IContentBlock)
-     */
-    @Override
-    public ITextBlock storeTextBlock(IContentBlock textBlock) {
-        return textBlockRepo.save((ITextBlock) textBlock);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * edu.asu.diging.vspace.core.services.impl.IImageBlock#storeImageBlock(edu.
      * asu.diging.vspace.core.model.IContentBlock)
@@ -150,6 +120,12 @@ public class ContentBlockManager implements IContentBlockManager {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
+     */
     @Override
     public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename) {
         // TODO Auto-generated method stub
@@ -179,19 +155,11 @@ public class ContentBlockManager implements IContentBlockManager {
 
         IContentBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setBlockInOrder(BlockInOrder);
-        ImageBlock imageBlock = (ImageBlock) storeImageBlock(imgBlock);  
+        ImageBlock imageBlock = (ImageBlock) storeImageBlock(imgBlock);
         BlockInOrder++;
 
         returnValue.setElement(imageBlock);
         return returnValue;
-    }
-
-
-
-    @Override
-    public IContentBlock getTextBlock(IContentBlock contentBlock) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }
