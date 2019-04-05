@@ -4,5 +4,5 @@ public final class Constants {
 	private Constants() {
 		
 	}
-	public static final int PAGE_SIZE = 1;
+	public static final int PAGE_SIZE = 10;
 }
