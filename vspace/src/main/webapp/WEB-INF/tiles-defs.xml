@@ -57,7 +57,7 @@
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
     </definition>
-	    <definition name="accessdenied" extends="exhibit.base.def"> 
+	<definition name="accessdenied" extends="exhibit.base.def"> 
         <put-attribute name="content" value="/WEB-INF/views/accessdenied.jsp" />    
     </definition>
 	<!-- Staff -->
