@@ -8,5 +8,7 @@ public interface IImageService {
     ImageData getImageData(byte[] image);
 
     ImageData getImageDimensions(IVSImage image, int width, int height);
+    
+    long getTotalPages(long totalImages, int pageSize);
 
 }

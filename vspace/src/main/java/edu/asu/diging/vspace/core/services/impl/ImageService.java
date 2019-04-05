@@ -62,4 +62,20 @@ public class ImageService implements IImageService {
         Float newHeight = (new Float(width) / new Float(imageWidth)) * new Float(imageHeight);
         return new ImageData(newHeight.intValue(), width);
     }
+    
+    /**
+     * Method to calculate the current page number
+     * 
+     * 
+     * @param totalImages  Number of images in the database.
+     * @param pageSize  maximum number of images to be displayed a page
+     * @return total page count
+     */
+    @Override
+    public long getTotalPages(long totalImages, int pageSize) {
+    	boolean areImgsPerfPacked = totalImages%pageSize == 0? true:false;
+		long totalPages = totalImages/pageSize;
+		totalPages = areImgsPerfPacked? totalPages:totalPages+1;
+		return totalPages;
+	    }
 }
