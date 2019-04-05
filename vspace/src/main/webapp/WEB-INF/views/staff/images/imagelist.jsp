@@ -54,7 +54,7 @@
   <tbody>
   <c:forEach items="${images}" var="image">
     <tr>
-      <th scope="row"><a href="<c:url value="/api/image/${image.id}" />"> <span data-feather="box"></span> ${image.filename}</a></th>
+      <th scope="row"><a href="<c:url value="/api/image/${image.id}" />"> <span data-feather="image"></span> ${image.filename}</a></th>
       <td>${image.name}</td>
       <td>${image.createdBy}</td>
       <td><span class="date">${image.creationDate}</span></td>
