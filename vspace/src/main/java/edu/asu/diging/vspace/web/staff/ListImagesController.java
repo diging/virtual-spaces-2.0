@@ -15,8 +15,8 @@ public class ListImagesController {
 
     @RequestMapping("/staff/images/list/{page}")
     public String listSpaces(@PathVariable String page, Model model) {
-        int currentPage;
         long totalPages = imageService.getTotalPages();
+        int currentPage;
         try {
             currentPage = Integer.parseInt(page);
             currentPage = (currentPage<1 || currentPage>totalPages)?1:currentPage;

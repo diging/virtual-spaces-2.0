@@ -81,7 +81,7 @@ public class ImageService implements IImageService {
     /**
      * Method to return the requested images  
      * 
-     * @param currentPage current page requested from ui
+     * @param currentPage current page requested from UI. Value always lies in the range -> 1 to total number of pages required to display all images
      * @return list of requested images
      */ 
     @Override
@@ -98,8 +98,7 @@ public class ImageService implements IImageService {
      */ 
     @Override
     public long getTotalPages() {
-        final long totalPages = (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize : (imageRepo.count() / pageSize) + 1;
-        return totalPages;
+        return (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize : (imageRepo.count() / pageSize) + 1;
     }
     
     /**
