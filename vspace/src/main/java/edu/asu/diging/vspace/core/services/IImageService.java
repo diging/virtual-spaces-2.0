@@ -1,9 +1,10 @@
 package edu.asu.diging.vspace.core.services;
 
-import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import java.util.List;
 
 public interface IImageService {
 
@@ -11,6 +12,10 @@ public interface IImageService {
 
     ImageData getImageDimensions(IVSImage image, int width, int height);
     
-    Map<String,Object> getImageListingAttr(int currPage);
+    long getTotalPages();
+    
+    List<VSImage> getRequestedImages(int currentPage);
+    
+    long getTotalImageCount();
 
 }

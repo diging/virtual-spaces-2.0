@@ -3,8 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -79,22 +78,37 @@ public class ImageService implements IImageService {
         return new ImageData(newHeight.intValue(), width);
     }
     
-    
     /**
-     * Method to return the required attributes of a requested page  
+     * Method to return the requested images  
      * 
-     * @param currPage current page requested from ui
-     * @return map of required attributes
+     * @param currentPage current page requested from ui
+     * @return list of requested images
      */ 
     @Override
-    public Map<String, Object> getImageListingAttr(int currPage) {
-        long totalImages = imageRepo.count();
-        boolean areImgsPerfPacked = totalImages % pageSize == 0 ? true : false;
-        long totalPossiblePages = totalImages / pageSize;
-        final long totalPages = areImgsPerfPacked ? totalPossiblePages : totalPossiblePages + 1;
-        Pageable sortByRequestedField = PageRequest.of(currPage-1, pageSize, Sort.by(SortByField.CREATION_DATE.toString()));
+    public List<VSImage> getRequestedImages(int currentPage) {
+        Pageable sortByRequestedField = PageRequest.of(currentPage-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()));
         Page<VSImage> requestedImages = imageRepo.findAll(sortByRequestedField);
-        Map<String, Object> attributesMap = new HashMap<String, Object>(){{put("images", requestedImages.getContent()); put("totalpages", totalPages); put("currentpage", currPage); }};
-        return attributesMap;
+        return requestedImages.getContent();   
+    }  
+    
+    /**
+     * Method to return the total pages sufficient to display all images  
+     * 
+     * @return totalPages required to display all images in DB
+     */ 
+    @Override
+    public long getTotalPages() {
+        final long totalPages = (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize : (imageRepo.count() / pageSize) + 1;
+        return totalPages;
+    }
+    
+    /**
+     * Method to return the total image count  
+     * 
+     * @return total count of images in DB
+     */ 
+    @Override
+    public long getTotalImageCount() {
+        return imageRepo.count();
     }
 }

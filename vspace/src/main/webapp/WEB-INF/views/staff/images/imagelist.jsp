@@ -6,8 +6,8 @@
   <script>
   $( document ).ready(function() {
   $('#page-selection').bootpag({
-	    total: ${totalpages},
-	    page: ${currentpage},
+	    total: ${totalPages},
+	    page: ${currentPage},
 	    maxVisible: 10,
 	    leaps: true,
 	    firstLastUse: true,
@@ -40,6 +40,8 @@
 	font-size: 15px;
 }
 </style>
+<c:choose>
+<c:when test="${totalImageCount gt 0}">
 <div style="padding-bottom: 20px;">This virtual exhibition
 	contains the following images.</div>
 <table class="table">
@@ -62,6 +64,10 @@
 	</c:forEach>
   </tbody>
 </table>
-
+</c:when>
+<c:otherwise>
+<div style="padding-bottom: 20px;">There are no images in Virtual Space.</div>
+</c:otherwise>
+</c:choose>
 <div id="page-selection"></div>
 

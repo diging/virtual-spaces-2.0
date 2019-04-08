@@ -67,7 +67,7 @@ public class SpaceManager implements ISpaceManager {
         IVSImage bgImage = null;
         List<SpaceDisplay> displays = null;
         if (space.getId() != null) {
-        	displays = spaceDisplayRepo.getBySpace(space);
+            displays = spaceDisplayRepo.getBySpace(space);
         }
         ISpaceDisplay spaceDisplay;
         if (displays == null || displays.isEmpty()) {
