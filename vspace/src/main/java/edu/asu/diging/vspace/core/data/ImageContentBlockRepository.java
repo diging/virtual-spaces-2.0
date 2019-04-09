@@ -11,6 +11,4 @@ import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 @JaversSpringDataAuditable
 public interface ImageContentBlockRepository extends PagingAndSortingRepository<ImageBlock, String> {
 
-    IImageBlock save(IImageBlock imageBlock);
-
 }

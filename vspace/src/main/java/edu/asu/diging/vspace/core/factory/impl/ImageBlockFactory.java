@@ -21,12 +21,12 @@ public class ImageBlockFactory implements IImageBlockFactory {
      * edu.asu.diging.vspace.core.model.IVSImage)
      */
     @Override
-    public IContentBlock createImageBlock(ISlide slide, IVSImage image) {
-        IContentBlock imageblock = new ImageBlock();
-        ((IImageBlock) imageblock).setImage(image);
-        imageblock.setSlide(slide);
-        imageblock.setDescription("image");
+    public IImageBlock createImageBlock(ISlide slide, IVSImage image) {
+        IImageBlock imageBlock = new ImageBlock();
+        imageBlock.setImage(image);
+        ((IContentBlock) imageBlock).setSlide(slide);
+        ((IContentBlock) imageBlock).setDescription("image");
 
-        return (IContentBlock) imageblock;
+        return imageBlock;
     }
 }

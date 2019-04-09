@@ -1,8 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -69,19 +68,11 @@ public class ContentBlockManager implements IContentBlockManager {
      * java.lang.String>#getAllContentBlocks(java.lang.String)
      */
     @Override
-    public Map<IContentBlock, String> getAllContentBlocks(String slideId) {
+    public List<IContentBlock> getAllContentBlocks(String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        Map<IContentBlock, String> slideContentBlocks = new LinkedHashMap<IContentBlock, String>();
+        List<IContentBlock> slideContents = slide.getContents();
 
-        for (IContentBlock block : slide.getContents()) {
-            if (block.getDescription().equals("text")) {
-                slideContentBlocks.put(block, ((TextBlock) block).getText());
-            } else {
-                slideContentBlocks.put(block, ((ImageBlock) block).getImage().getId());
-            }
-
-        }
-        return slideContentBlocks;
+        return slideContents;
     }
 
     /*
@@ -105,19 +96,6 @@ public class ContentBlockManager implements IContentBlockManager {
         BlockInOrder++;
 
         return textBlock;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.impl.IImageBlock#storeImageBlock(edu.
-     * asu.diging.vspace.core.model.IContentBlock)
-     */
-    @Override
-    public IImageBlock storeImageBlock(IContentBlock imageBlock) {
-        return imageBlockRepo.save((IImageBlock) imageBlock);
-
     }
 
     /*
@@ -153,9 +131,9 @@ public class ContentBlockManager implements IContentBlockManager {
             imageRepo.save((VSImage) slideContentImage);
         }
 
-        IContentBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
-        imgBlock.setBlockInOrder(BlockInOrder);
-        ImageBlock imageBlock = (ImageBlock) storeImageBlock(imgBlock);
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
+        ((IContentBlock) imgBlock).setBlockInOrder(BlockInOrder);
+        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
         BlockInOrder++;
 
         returnValue.setElement(imageBlock);

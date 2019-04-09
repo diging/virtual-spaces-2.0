@@ -49,9 +49,9 @@
  
 $(document).ready(function() {
 	
-	<c:forEach items="${contents}" var="entry">
+	<c:forEach items="${contents}" var="entry">xxx
 	{
-		if ("${entry.key.description}" == "image") {
+		if ("${entry.key['class'].simpleName ==  'TextBlock'}") {
 			var value = $('<div class="valueDiv"><img id="${entry.value}" width="800px" src="<c:url value="/api/image/${entry.value}" />" />');
 		} else {
 			var value = $('<div class="valueDiv card card-body"><p>${entry.value}</p>');
@@ -138,7 +138,21 @@ $(document).ready(function() {
 	</div>	
 </form>
     
-<div id="slideSpace"></div>
+<div id="slideSpace">
+<c:forEach items="${slideContents}" var="contents">
+	
+		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}"> 
+			<div class="valueDiv"><img id="${entry.value}" width="800px" src="<c:url value="/api/image/${contents.image.id}" />" />
+		</div>
+		</c:if>
+<%-- 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}"> 
+			<div class="valueDiv"><p id="${entry.value}" width="800px" src="<c:url value="/api/image/${contents.text}" />" />
+		</div>
+		</c:if> --%>
+			
+	
+	</c:forEach>
+</div>
 
 
 

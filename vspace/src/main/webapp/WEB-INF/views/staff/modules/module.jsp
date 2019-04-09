@@ -44,27 +44,6 @@ $( document ).ready(function() {
   Modified on <span class="date">${module.modificationDate}</span> by ${module.modifiedBy}.
 </div>
 
-<%-- <c:url value="/staff/module/${module.id}/slide/" var="postUrl" />
-<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
-
-	<div id="createSlideAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 100px; right: 50px; z-index:999"> 
-		  <h6 class="alert-heading"><small>Create new Slide</small></h6>
-		  <p><small>Please enter the following details of new Slide. Then click "Create Slide".</small></p>
-		  <hr>
-		  <label style="margin-right: 5px;"><small>Title:</small> </label>
-		  <input class="form-control-xs" type="text" id="slideTitle" name="slideTitle"><br>
-		  
-		  <label style="margin-right: 5px;"><small>Description:</small> </label>
-		  <input class="form-control-xs" type="text" id="slideDescription" name="slideDescription"><br>
-		  
-		  <label style="margin-right: 5px;"><small>Upload Image:</small> </label>
-		  <input type="file" name="file" rows="5" cols="500" id="file" multiple="multiple" accept="image/*"/>		  
-		  <hr>
-		  <p class="mb-0 text-right"><button id="cancelSlideBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> 
-		  <button id="createSlideBtn" type="submit" class="btn btn-primary btn-xs">Create Slide</button></p>
-	</div>
-</form:form> --%>
-
 <body>
 <div id="result"></div>
 <table border ="0" width="100%" height="50%" style=" margin-top:50px;">

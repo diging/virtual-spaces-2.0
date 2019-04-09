@@ -6,6 +6,7 @@ import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
+@Controller
 public class AddImageBlockController {
 
     @Autowired
@@ -28,6 +30,7 @@ public class AddImageBlockController {
             @RequestParam("file") MultipartFile file, Principal principal, RedirectAttributes attributes)
             throws IOException {
 
+        System.out.println("inside image block---------------");
         byte[] bgImage = null;
         String filename = null;
         if (file.isEmpty() || file.equals(null)) {

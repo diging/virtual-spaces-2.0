@@ -16,25 +16,23 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Controller
 public class AddSlideController {
-       
+
     @Autowired
     private ISlideManager slideManager;
-    
-    private static String modId;
-     
-    @RequestMapping(value="/staff/module/{id}/slide/add", method=RequestMethod.GET)
+
+    @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
+        model.addAttribute("moduleId", moduleId);
         model.addAttribute("slide", new SlideForm());
-        modId = moduleId;
         return "staff/module/slide/add";
     }
-    
-    @RequestMapping(value="/staff/module/slide/add", method=RequestMethod.POST)
-    public String addSlide(Model model, @ModelAttribute SlideForm slideForm, Principal principal) {
-        
-        ISlide slide = slideManager.createSlide(modId, slideForm);
+
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/add", method = RequestMethod.POST)
+    public String addSlide(Model model, @PathVariable("moduleId") String moduleId, @ModelAttribute SlideForm slideForm,
+            Principal principal) {
+
+        ISlide slide = slideManager.createSlide(moduleId, slideForm);
         slideManager.storeSlide(slide);
-        String redirect="redirect:/staff/module/"+modId;
-        return redirect;
+        return "redirect:/staff/module/{moduleId}";
     }
 }
