@@ -101,7 +101,7 @@ public class ImageServiceTest {
         image.setFileType(IMG_CONTENT_TYPE);
         List<VSImage> images = new ArrayList<>();
         images.add((VSImage)image);
-        Pageable sortByRequestedField = PageRequest.of(1, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<VSImage> requestedImages = serviceToTest.getRequestedImages(1);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
