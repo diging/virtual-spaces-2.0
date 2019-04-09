@@ -50,37 +50,38 @@ $( document ).ready(function() {
 	/* ---------------------- */
 	<c:forEach items="${moduleLinks}" var="link" varStatus="loop">
 	{
+		var link;
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var link;
 		if ("${link.type}" == "ALERT") {
-			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
+			link = $('<div class="alert alert-primary" role="alert" moduledata-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+           link = $('<img id="${link.image.id}" moduledata-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			/* link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>'); */
+			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="mlabel-${loop.index}" moduledata-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
 		link.css('transform', 'rotate(${link.rotation}deg)');
-		link.find("span").css('fill', 'red');
-		link.css('color', 'red');
+		link.find("span").css('fill', 'white');
+		link.css('color', 'white');
 		link.css('font-size', "10px");
 		
 		$("#space").append(link);
 		
-		$(".label-${loop.index}").css({
+		$(".mlabel-${loop.index}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
 			'top': ${link.positionY} + posY + 16,
-			'color': 'red'
+			'color': 'white'
 		});		
 		
-		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
-		/* $('[data-link-id="${link.link.id}"]').click(function(e) {
+		$('[moduledata-link-id="${link.link.id}"]').css('cursor', 'pointer');
+		$('[moduledata-link-id="${link.link.id}"]').click(function(e) {
 			makeModuleLinksEditable("${link.link.name}", "${link.link.id}");
-		}); */
+		});
 	}
 	</c:forEach> 
 	/* --------------------- */
@@ -326,7 +327,7 @@ $( document ).ready(function() {
 					  url: "<c:url value="/staff/space/${space.id}/modulelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
 					  method: "DELETE",
 					  success:function(data) {
-						  $('[data-link-id="' + linkId + '"]').remove();
+						  $('[moduledata-link-id="' + linkId + '"]').remove();
 				          $("#moduleLinkInfo").hide();
 					    }
 					});
@@ -350,6 +351,7 @@ $( document ).ready(function() {
 	
 	$(".target").change(function() {
 		showSpaceLink(createSpaceLinkInfo());
+		showModuleLink(createModuleLinkInfo());
 	}); 
 	
 	// link icons for space links
@@ -358,6 +360,8 @@ $( document ).ready(function() {
 	linkIconReader.onload = function(e) {
 		linkIcon = e.target.result;
 		showSpaceLink(createSpaceLinkInfo());
+		showModuleLink(createModuleLinkInfo());
+		
 	}
 	
 	$('#moduleLinkRotation').change(function() {
@@ -365,6 +369,12 @@ $( document ).ready(function() {
 	});
 	
 	$("#spaceLinkImage").change(function() {
+		if (this.files && this.files[0]) {
+			linkIconReader.readAsDataURL(this.files[0]);
+		}
+	});
+	
+	$("#moduleLinkImage").change(function() {
 		if (this.files && this.files[0]) {
 			linkIconReader.readAsDataURL(this.files[0]);
 		}
@@ -434,10 +444,10 @@ $( document ).ready(function() {
 		module_label.text(moduleLink["moduleLinkLabel"]);
 		
 		var link;
-		 if (moduleLink["type"] == "ALERT") {
-			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
+		if (moduleLink["type"] == "ALERT") {
+			link = $('<div id="link" class="alert alert-primary" role="alert" moduledata-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
 		} else if(moduleLink["type"] == "IMAGE" && linkIcon) {
-			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '"><img src="' + linkIcon + '"></div>');
+			link = $('<div id="link" moduledata-link-id="' + moduleLink["id"] + '"><img src="' + linkIcon + '"></div>');
 		} else { 
 			$(module_label).css({
 				'position': 'absolute',
@@ -445,27 +455,27 @@ $( document ).ready(function() {
 				'transform': 'rotate(0deg)',
 				'left': moduleLink["x"] + posX - 10,
 				'top': moduleLink["y"] + posY + 16,
-				'color': 'red'
+				'color': 'white'
 			});
-			link = $('<span data-link-id="' + ModuleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
-	 	} 
+			link = $('<span moduledata-link-id="' + ModuleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
+		} 
 		if(show) {
-			link.find("div").css('fill', 'red');
+			link.find("div").css('fill', 'white');
 		}
 		link.css('position', 'absolute');
 		link.css('left', moduleLink["x"] + posX);
 		link.css('top', moduleLink["y"] + posY);
-		link.css('color', 'red');
+		link.css('color', 'white');
 		link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
 		link.css('font-size', "10px");
 		
 		if (moduleLink["id"]) {
-			link.attr("data-link-id", moduleLink["id"]);
+			link.attr("moduledata-link-id", moduleLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
 				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
 	        });
-			module_label.attr("data-link-id", spaceLink["id"]);
+			module_label.attr("moduledata-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
 			module_label.click(function(e) {
                 makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
@@ -539,7 +549,7 @@ $( document ).ready(function() {
     	e.preventDefault();
     	$("#spaceLinkInfoLabel").text("");
         $("#spaceLinkId").val("");
-        resetHighlighting();
+        resetHighlighting("red","cccc");
         $("#spaceLinkInfo").hide();
     });
     
@@ -547,7 +557,7 @@ $( document ).ready(function() {
     	e.preventDefault();
     	$("#moduleLinkInfoLabel").text("");
         $("#moduleLinkId").val("");
-        resetHighlighting();
+        resetHighlighting("white","bbb");
         $("#moduleLinkInfo").hide();
     }); 
 	
@@ -577,7 +587,7 @@ $( document ).ready(function() {
 	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId) {
 		$("#spaceLinkInfoLabel").text(spaceLinkName);
         $("#spaceLinkId").val(spaceLinkId);
-        resetHighlighting();
+        resetHighlighting("red", "data-link-id"); 
         
         $('[data-link-id="' + spaceLinkId + '"]').css("color", "#c1bb88");
         $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
@@ -589,25 +599,36 @@ $( document ).ready(function() {
 	function makeModuleLinksEditable(moduleLinkName, moduleLinkId) {
 		$("#moduleLinkInfoLabel").text(moduleLinkName);
         $("#moduleLinkId").val(moduleLinkId);
-        resetHighlighting();
+        resetHighlighting("white", "asdasd");
         
-        $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
-        $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
-        $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
-        $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
+        $('[moduledata-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
+        $('div[moduledata-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
+        $('div[moduledata-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
+        $('img[moduledata-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
         $("#moduleLinkInfo").show();
 	}
 	
-	function resetHighlighting() {
+	function resetHighlighting(col, dataid) {
         // reset icon links
-        $('[data-link-id]').css("color", "red");
+        /* $('[data-link-id]').css("color", col);
         
         // reset alert links
         $('div[data-link-id]').removeClass("alert-warning");
         $('div[data-link-id]').addClass("alert-primary");
         
         // reset image links
-        $('img[data-link-id]').css("border-width", "0px");
+        $('img[data-link-id]').css("border-width", "0px"); */
+        
+		/* $(id).css("color", col); */
+        
+        console.log(col);
+        
+        /* // reset alert links
+        $('div[${id}]').removeClass("alert-warning");
+        $('div[${id}]').addClass("alert-primary");
+        
+        // reset image links
+        $('img[${id}]').css("border-width", "0px"); */ 
     }
 });
 
