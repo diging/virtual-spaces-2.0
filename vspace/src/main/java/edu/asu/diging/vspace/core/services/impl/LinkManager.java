@@ -168,6 +168,19 @@ public class LinkManager implements ILinkManager {
         spaceLinkRepo.delete((SpaceLink) link);        
     }
     
+    @Override
+    public void deleteModuleLink(String linkId) {
+        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
+        if (!linkOptional.isPresent()) {
+            return;
+        }
+        
+        ISpace space = linkOptional.get().getSpace();
+        IModuleLink link = linkOptional.get();
+        space.getModuleLinks().remove(link);
+        moduleLinkRepo.delete((ModuleLink) link);        
+    }
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#getSpaceLinkDisplays(java.lang.String)
      */

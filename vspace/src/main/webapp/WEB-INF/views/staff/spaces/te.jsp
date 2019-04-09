@@ -8,12 +8,12 @@
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {	
-
 	
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
+
 		var link;
 		if ("${link.type}" == "ALERT") {
 			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
@@ -46,45 +46,6 @@ $( document ).ready(function() {
 	}
 	</c:forEach>
 	
-	/* ---------------------- */
-	<c:forEach items="${moduleLinks}" var="link" varStatus="loop">
-	{
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		var link;
-		if ("${link.type}" == "ALERT") {
-			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
-		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
-		}  else {
-			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
-		}
-		link.css('position', 'absolute');
-		link.css('left', ${link.positionX} + posX);
-		link.css('top', ${link.positionY} + posY);
-		link.css('transform', 'rotate(${link.rotation}deg)');
-		link.find("span").css('fill', 'red');
-		link.css('color', 'red');
-		link.css('font-size', "10px");
-		
-		$("#space").append(link);
-		
-		$(".label-${loop.index}").css({
-			'transform': 'rotate(0deg)',
-			'left': ${link.positionX} + posX - 10,
-			'top': ${link.positionY} + posY + 16,
-			'color': 'red'
-		});		
-		
-		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
-		$('[data-link-id="${link.link.id}"]').click(function(e) {
-			makeModuleLinksEditable("${link.link.name}", "${link.link.id}");
-		});
-	}
-	</c:forEach>
-	/* --------------------- */
-	
-	
 	<c:forEach items="${externalLinks}" var="link" varStatus="loop">
 	{
 		var posX = $("#bgImage").position().left;
@@ -109,13 +70,11 @@ $( document ).ready(function() {
 	
 	// --------- draggable modals -----------
 	$("#createSpaceLinkAlert").draggable();
-	$("#createModuleLinkAlert").draggable();
 	$('#spaceLinkCreationModal.draggable>.modal-dialog>.modal-content>.modal-header').css('cursor', 'move');
 	 
 	$("#createExternalLinkAlert").draggable();
 	$("#changeBgImgAlert").draggable();
 	$("#spaceLinkInfo").draggable();
-	$("#moduleLinkInfo").draggable();
     
     
 	// store where a user clicked on an image
@@ -142,28 +101,6 @@ $( document ).ready(function() {
 		});
 		$("#createSpaceLinkAlert").show();
 	});
-	
-	/* ------------------------ */
-	$("#addModuleLinkButton").click(function(e) {
-		$("#createModuleLinkAlert").hide();
-		$("#changeBgImgAlert").hide();
-		$("#bgImage").off("click");
-		$("#bgImage").on("click", function(e){
-			e.preventDefault();
-			$("#external-arrow").remove();
-			$("#module_label").remove();
-			$("#link").remove();
-			var icon;
-			var posX = $(this).position().left;
-			var posY = $(this).position().top;    
-			storeX = e.pageX - $(this).offset().left;
-			storeY = e.pageY - $(this).offset().top;
-			
-		    showModuleLink(createModuleLinkInfo());
-		});
-		$("#createModuleLinkAlert").show();
-	});
-	/* ------------------------------ */
 	
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
@@ -250,47 +187,6 @@ $( document ).ready(function() {
 		});
 	});
 	
-	/* -------------------------- */
-	$("#createModuleLinkBtn").click(function(e) {
-		e.preventDefault();
-		
-		if (storeX == undefined || storeY == undefined) {
-			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-			$('#errorAlert').show();
-			return;
-		}
-		
-		$("#moduleLinkX").val(storeX);
-		$("#moduleLinkY").val(storeY);
-		
-		var form = $("#createModuleLinkForm");
-		var formData = new FormData(form[0]);
-		
-		var moduleLinkInfo = createModuleLinkInfo();
-        
-	    $.ajax({
-			type: "POST",
-			url: "<c:url value="/staff/space/${space.id}/modulelink?${_csrf.parameterName}=${_csrf.token}" />",
-			cache       : false,
-	        contentType : false,
-	        processData : false,
-	        enctype: 'multipart/form-data',
-	        data: formData, 
-	        success: function(data) {
-	        	var linkData = JSON.parse(data);
-	        	$("#bgImage").off("click");
-	        	moduleLinkInfo["id"] = linkData["id"];
-	            showModuleLink(moduleLinkInfo, true);
-	            $("#module_label").attr("id","");
-	            $("#link").attr("id","");
-	            $("#createModuleLinkAlert").hide();  
-	            $("#errorMsg").text("")
-	            $('#errorAlert').hide();
-	        }
-		});
-	});
-	/* --------------------------- */
-	
 	$("#createExternalLinkBtn").click(function(e) {
 		var payload = {};
 		payload["x"] = storeX;
@@ -348,10 +244,6 @@ $( document ).ready(function() {
 		showSpaceLink(createSpaceLinkInfo());
 	}
 	
-	$('#moduleLinkRotation').change(function() {
-		$('#link').css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-	});
-	
 	$("#spaceLinkImage").change(function() {
 		if (this.files && this.files[0]) {
 			linkIconReader.readAsDataURL(this.files[0]);
@@ -359,7 +251,7 @@ $( document ).ready(function() {
 	});
 
 	// --------- show links functions --------------
-	function showSpaceLink(moduleLink, show) {
+	function showSpaceLink(spaceLink, show) {
 		$("#space_label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
@@ -412,61 +304,6 @@ $( document ).ready(function() {
 		feather.replace();
 	}
 	
-	/* --------------------------------- */
-	function showModuleLink(moduleLink, show) {
-		$("#module_label").remove();
-		$("#link").remove();
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		var space_label = $("<p id='module_label'></p>");
-		module_label.text(moduleLink["moduleLinkLabel"]);
-		
-		var link;
-		if (moduleLink["type"] == "ALERT") {
-			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-		} else if(moduleLink["type"] == "IMAGE" && linkIcon) {
-			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '"><img src="' + linkIcon + '"></div>');
-		} else {
-			$(module_label).css({
-				'position': 'absolute',
-				'font-size': "10px",
-				'transform': 'rotate(0deg)',
-				'left': moduleLink["x"] + posX - 10,
-				'top': moduleLink["y"] + posY + 16,
-				'color': 'red'
-			});
-			link = $('<span data-link-id="' + ModuleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
-		}
-		if(show) {
-			link.find("div").css('fill', 'red');
-		}
-		link.css('position', 'absolute');
-		link.css('left', moduleLink["x"] + posX);
-		link.css('top', moduleLink["y"] + posY);
-		link.css('color', 'red');
-		link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-		link.css('font-size', "10px");
-		
-		if (moduleLink["id"]) {
-			link.attr("data-link-id", moduleLink["id"]);
-			link.css('cursor', 'pointer');
-			link.click(function(e) {
-				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
-	        });
-			module_label.attr("data-link-id", spaceLink["id"]);
-			module_label.css('cursor', 'pointer');
-			module_label.click(function(e) {
-                makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
-            });
-		}
-
-		$("#space").append(link);
-		$("#space").append(module_label);
-
-		feather.replace();
-	}
-	/* ------------------------------- */
-	
 	function showExternalLinks(externalLink) {
 		$("#ext_label").remove();
 		var posX = $("#bgImage").position().left;
@@ -501,14 +338,6 @@ $( document ).ready(function() {
         $("#space_label").remove();
         $("#createSpaceLinkAlert").hide();  
     });
-	
-	$("#cancelModuleLinkBtn").click(function() {
-        storeX = null;
-        storeY = null;
-        $("#link").remove();
-        $("#module_label").remove();
-        $("#createModuleLinkAlert").hide();  
-    });
     
     $("#cancelExternalLinkBtn").click(function() {
         storeX = null;
@@ -531,14 +360,6 @@ $( document ).ready(function() {
         resetHighlighting();
         $("#spaceLinkInfo").hide();
     });
-    
-    $("#closeModuleLinkInfo").click(function(e) {
-    	e.preventDefault();
-    	$("#moduleLinkInfoLabel").text("");
-        $("#moduleLinkId").val("");
-        resetHighlighting();
-        $("#moduleLinkInfo").hide();
-    });
 	
 	// --------- Utility functions -------------
 	function createSpaceLinkInfo() {
@@ -548,17 +369,6 @@ $( document ).ready(function() {
 		info["rotation"] = $("#spaceLinkRotation").val();
 		info["linkedSpace"] = $("#linkedSpace").val();
 		info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-		info["type"] = $("#type").val();
-	    return info;
-	}
-	
-	function createModuleLinkInfo() {
-		var info = {};
-		info["x"] = storeX;
-		info["y"] = storeY;
-		info["rotation"] = $("#moduleLinkRotation").val();
-		info["linkedModule"] = $("#linkedModule").val();
-		info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
 		info["type"] = $("#type").val();
 	    return info;
 	}
@@ -573,18 +383,6 @@ $( document ).ready(function() {
         $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
         $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
         $("#spaceLinkInfo").show();
-	}
-	
-	function makeModuleLinksEditable(moduleLinkName, moduleLinkId) {
-		$("#moduleLinkInfoLabel").text(moduleLinkName);
-        $("#moduleLinkId").val(moduleLinkId);
-        resetHighlighting();
-        
-        $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
-        $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
-        $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
-        $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
-        $("#moduleLinkInfo").show();
 	}
 	
 	function resetHighlighting() {
@@ -700,79 +498,6 @@ ${space.description}
 	   
 	</div>
 </form>
-
-<!-- --------------------------------------------- -->
-<c:url value="/staff/space/${space.id}/modulelink?${_csrf.parameterName}=${_csrf.token}" var="postUrl" />
-<form id="createModuleLinkForm">
-	<div id="createModuleLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
-	  <div class="row">
-	  <div class="col">
-	  <h6 class="alert-heading"><small>Create new Module Link</small></h6>
-	  </div>
-	  </div>
-	  <div class="row">
-      <div class="col">
-      <small>Please click on the image where you want to place the new module link. Then click "Create Module Link".</small></p>
-	  <hr>
-	  </div>
-	  </div>
-	  
-	  <input type="hidden" name="x" id="moduleLinkX" />
-	  <input type="hidden" name="y" id="moduleLinkY"/>
-	  
-	  <div class="row">
-      <div class="col-sm-4">
-	  <label><small>Rotation:</small> </label>
-	  </div>
-	  <div class="col-sm-8">
-	  <input class="form-control-xs" type="number" id="moduleLinkRotation" name="rotation" value="0"><br>
-	  </div>
-	  </div>
-	  
-	  <div class="row">
-      <div class="col-sm-4">
-	  <label><small>Label:</small> </label>
-	  </div>
-      <div class="col-sm-8">
-	  <input class="form-control-xs target" type="text" name="moduleLinkLabel" id="moduleLinkLabel"><br>
-	  </div>
-      </div>
-      
-      <div class="row">
-      <div class="col-sm-4">
-	  <label><small>Type:</small> </label>
-	  </div>
-      <div class="col-sm-8">
-	  <select id="type" name="type" class="form-control-xs target" >
-	  	<option selected value="">Choose...</option>
-	  	<option value="IMAGE">Image</option>
-	  	<option value="ARROW">Link</option>
-	  	<option value="ALERT">Alert</option>
-	  </select>
-	  </div>
-      </div>
-	  
-	  <div class="row">
-      <div class="col-sm-5" style="padding-right: 0px;">
-	  <label><small>Linked Modules:</small> </label>
-	  </div>
-      <div class="col-sm-7" >
-	  <select id="linkedModule" name="linkedModule" class="form-control-xs target">
-	        <option selected value="">Choose...</option>
-	        <c:forEach items="${modules}" var="module">
-	        <option value="${module.id}">${module.name}</option>
-	        </c:forEach>
-	  </select>
-	  </div>
-      </div>
-	  
-	  <HR>
-	  <p class="mb-0 text-right"><button id="cancelModuleLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createModuleLinkBtn" type="reset" class="btn btn-primary btn-xs">Create Module Link</button></p>
-	   
-	</div>
-</form>
-
-<!-- --------------------------------- -->
       
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
@@ -807,16 +532,8 @@ ${space.description}
      <button id="deleteSpaceLinkButton" type="reset" class="btn btn-primary btn-xs">Delete Link</button>
 </div>
 
-<div id="moduleLinkInfo" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 200px; display:none; position: absolute; top: 400px; right: 50px; z-index:999">
-     <p class="float-right"><a href="#" id="closeModuleLinkInfo"><span data-feather="x-square"></span></a></p>
-     <h6 class="alert-heading">Space Link: <span id="moduleLinkInfoLabel"></span></h6>
-     <input type="hidden" name="moduleLinkId" id="moduleLinkId" />
-     <button id="deleteModuleLinkButton" type="reset" class="btn btn-primary btn-xs">Delete Link</button>
-</div>
-
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
-<button type="button" id="addModuleLinkButton" class="btn btn-primary btn-sm">Add Module Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
 </nav>

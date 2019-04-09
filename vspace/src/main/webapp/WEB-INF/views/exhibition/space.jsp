@@ -42,6 +42,34 @@ function drawLinks() {
         $("#space").append(link);
     }
     </c:forEach>
+    
+    <c:forEach items="${moduleList}" var="link">
+    {
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
+        link.attr('href', '<c:url value="/exhibit/module/${link.link.module.id}" />');
+        
+        if ("${link.type}" == 'ALERT') {
+            var linkDisplay = $('<div class="alert alert-primary" role="alert">');
+        } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
+            var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+        } else {
+            var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
+        }
+        linkDisplay.css('position', 'absolute');
+        linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY);
+        linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
+        linkDisplay.css('fill', 'red');
+        linkDisplay.css('color', 'red');
+        linkDisplay.css('font-size', "15px");
+         
+        link.append(linkDisplay);
+        $("#space").append(link);
+    }
+    </c:forEach>
+    
     feather.replace();
 }
 </script>
