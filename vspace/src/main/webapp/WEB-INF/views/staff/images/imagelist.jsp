@@ -7,7 +7,7 @@
   $( document ).ready(function() {
   $('#page-selection').bootpag({
 	    total: ${totalPages},
-	    page: ${currentPage},
+	    page: ${currentPageNumber},
 	    maxVisible: 10,
 	    leaps: true,
 	    firstLastUse: true,
@@ -64,10 +64,10 @@
 	</c:forEach>
   </tbody>
 </table>
+<div id="page-selection"></div>
 </c:when>
 <c:otherwise>
 <div style="padding-bottom: 20px;">There are no images in Virtual Space.</div>
 </c:otherwise>
 </c:choose>
-<div id="page-selection"></div>
 

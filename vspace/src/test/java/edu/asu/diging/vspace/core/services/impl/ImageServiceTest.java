@@ -27,7 +27,6 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import static org.mockito.Mockito.times;
 
 public class ImageServiceTest {
 
@@ -89,7 +88,12 @@ public class ImageServiceTest {
     public void test_getTotalPages_success() {
         when(imageRepo.count()).thenReturn(12L);
         assertEquals(2, serviceToTest.getTotalPages());
-        verify(imageRepo, times(2)).count();
+    }
+    
+    @Test
+    public void test_getTotalPages_when_zero_images() {
+        when(imageRepo.count()).thenReturn(0L);
+        assertEquals(0, serviceToTest.getTotalPages());
     }
    
     @Test
@@ -102,15 +106,29 @@ public class ImageServiceTest {
         images.add((VSImage)image);
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getRequestedImages(1);
+        List<VSImage> requestedImages = serviceToTest.getRequestedImages(1, 0);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
   
     @Test
+    public void test_getRequestedImages_invalid_page() { 
+        IVSImage image = new VSImage();
+        image.setId(IMG_ID);
+        image.setFilename(IMG_FILENAME);
+        image.setFileType(IMG_CONTENT_TYPE);
+        List<VSImage> images = new ArrayList<>();
+        images.add((VSImage)image);
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
+        when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
+        List<VSImage> requestedImages = serviceToTest.getRequestedImages(-2, 0);
+        assertEquals(IMG_ID, requestedImages.get(0).getId());
+        verify(imageRepo).findAll(sortByRequestedField);
+    }
+    
+    @Test
     public void test_getTotalImageCount_success() {
         when(imageRepo.count()).thenReturn(5L);
         assertEquals(5L, serviceToTest.getTotalImageCount());
-        verify(imageRepo).count();
     }
 }

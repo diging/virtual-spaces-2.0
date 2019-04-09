@@ -24,9 +24,9 @@ public class ListImagesController {
             currentPage = 1;
         }
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("currentPageNumber", currentPage);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
-        model.addAttribute("images", imageService.getRequestedImages(currentPage));
+        model.addAttribute("images", imageService.getRequestedImages(currentPage, totalPages));
         return "staff/images/list";
     }
 }

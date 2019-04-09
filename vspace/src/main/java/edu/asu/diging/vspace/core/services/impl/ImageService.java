@@ -81,11 +81,13 @@ public class ImageService implements IImageService {
     /**
      * Method to return the requested images  
      * 
-     * @param currentPage current page requested from UI. Value always lies in the range -> 1 to total number of pages required to display all images
+     * @param currentPage current page requested from UI.
+     * @param totalPages required to display all images in DB
      * @return list of requested images
      */ 
     @Override
-    public List<VSImage> getRequestedImages(int currentPage) {
+    public List<VSImage> getRequestedImages(int currentPage, long totalPages) {
+        currentPage = (currentPage<1 || currentPage>totalPages)?1:currentPage;
         Pageable sortByRequestedField = PageRequest.of(currentPage-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()));
         Page<VSImage> requestedImages = imageRepo.findAll(sortByRequestedField);
         return requestedImages.getContent();   
