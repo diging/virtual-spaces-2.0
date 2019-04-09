@@ -88,8 +88,7 @@ public class ImageServiceTest {
     @Test
     public void test_getTotalPages_success() {
         when(imageRepo.count()).thenReturn(12L);
-        long totalPages = serviceToTest.getTotalPages();
-        assertEquals(2, totalPages);
+        assertEquals(2, serviceToTest.getTotalPages());
         verify(imageRepo, times(2)).count();
     }
    
@@ -111,8 +110,7 @@ public class ImageServiceTest {
     @Test
     public void test_getTotalImageCount_success() {
         when(imageRepo.count()).thenReturn(5L);
-        long totalImageCount = serviceToTest.getTotalImageCount();
-        assertEquals(5L, totalImageCount);
+        assertEquals(5L, serviceToTest.getTotalImageCount());
         verify(imageRepo).count();
     }
 }
