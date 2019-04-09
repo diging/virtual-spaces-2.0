@@ -183,7 +183,13 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+    		<artifactId>spring-test</artifactId>
+   		    <scope>test</scope>
+		</dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
             <groupId>org.mockito</groupId>
