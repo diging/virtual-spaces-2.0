@@ -7,6 +7,7 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 
 public interface ILinkManager {
@@ -22,5 +23,10 @@ public interface ILinkManager {
             String externalLink) throws SpaceDoesNotExistException;
 
     void deleteSpaceLink(String linkId);
+    
+    IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
+            String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
+    
+    List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 
 }

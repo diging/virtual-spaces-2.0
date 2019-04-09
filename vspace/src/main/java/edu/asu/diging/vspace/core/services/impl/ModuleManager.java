@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +38,11 @@ public class ModuleManager implements IModuleManager {
         }
         return null;
     }       
+    
+    @Override
+    public List<IModule> getAllModules() {
+        List<IModule> modules = new ArrayList<>();
+        moduleRepo.findAll().forEach(s -> modules.add(s));
+        return modules;
+    }
 }

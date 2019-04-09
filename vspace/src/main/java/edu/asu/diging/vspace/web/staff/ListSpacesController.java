@@ -16,8 +16,7 @@ public class ListSpacesController {
 	@RequestMapping("/staff/space/list")
 	public String listSpaces(Model model) {
 		
-		model.addAttribute("spaces", spaceRepo.findAll());
-		
+		model.addAttribute("spaces", spaceRepo.findAll());		
 		
 		return "staff/space/list";
 	}

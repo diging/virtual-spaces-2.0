@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
+import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
@@ -21,22 +23,30 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
+import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
@@ -78,6 +88,21 @@ public class LinkManager implements ILinkManager {
     
     @Autowired
     private IStorageEngine storage;
+    
+    @Autowired
+    private IModuleManager moduleManager;
+    
+    @Autowired
+    private IModuleLinkFactory moduleLinkFactory;
+
+    @Autowired
+    private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
+    
+    @Autowired
+    private ModuleLinkRepository moduleLinkRepo;
+    
+    @Autowired
+    private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
     
     /*
      * ==== Space links ====
@@ -183,4 +208,34 @@ public class LinkManager implements ILinkManager {
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
         return display;
     }
+    
+    
+    @Override
+	public IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY,
+			int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException {
+			
+		source = spaceManager.getSpace(source.getId());
+        if (source == null) {
+            throw new SpaceDoesNotExistException();
+        }
+        
+        IModule target = moduleManager.getModule(linkedModuleId);
+        IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
+        link.setModule(target);
+        moduleLinkRepo.save((ModuleLink) link);
+
+        IModuleLinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay(link);
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        display.setRotation(rotation);
+        display.setType(displayType != null ? displayType : DisplayType.ARROW);
+        
+        moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
+        return display;
+	}
+
+	@Override
+	public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
+		return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
+	}
 }

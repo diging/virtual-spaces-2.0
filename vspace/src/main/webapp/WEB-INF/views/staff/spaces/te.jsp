@@ -146,6 +146,7 @@ $( document ).ready(function() {
 	/* ------------------------ */
 	$("#addModuleLinkButton").click(function(e) {
 		$("#createModuleLinkAlert").hide();
+		$("#changeBgImgAlert").hide();
 		$("#bgImage").off("click");
 		$("#bgImage").on("click", function(e){
 			e.preventDefault();
@@ -417,15 +418,15 @@ $( document ).ready(function() {
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var module_label = $("<p id='module_label'></p>");
+		var space_label = $("<p id='module_label'></p>");
 		module_label.text(moduleLink["moduleLinkLabel"]);
 		
 		var link;
-		/* if (moduleLink["type"] == "ALERT") {
+		if (moduleLink["type"] == "ALERT") {
 			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
 		} else if(moduleLink["type"] == "IMAGE" && linkIcon) {
 			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '"><img src="' + linkIcon + '"></div>');
-		} else { */
+		} else {
 			$(module_label).css({
 				'position': 'absolute',
 				'font-size': "10px",
@@ -435,7 +436,7 @@ $( document ).ready(function() {
 				'color': 'red'
 			});
 			link = $('<span data-link-id="' + ModuleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
-	/* 	} */
+		}
 		if(show) {
 			link.find("div").css('fill', 'red');
 		}
@@ -512,6 +513,7 @@ $( document ).ready(function() {
     $("#cancelExternalLinkBtn").click(function() {
         storeX = null;
         storeY = null;
+        $("#external-link").remove();
         $("#external-arrow").remove();
         $("#ext_label").remove();
         $("#createExternalLinkAlert").hide();

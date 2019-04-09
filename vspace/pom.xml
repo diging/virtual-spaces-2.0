@@ -23,7 +23,7 @@
         <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path></uploaded.files.path>
+        <uploaded.files.path>/Users/renil/Documents/vspace_files</uploaded.files.path>
 
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
