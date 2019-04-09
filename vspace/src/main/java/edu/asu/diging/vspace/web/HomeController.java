@@ -29,6 +29,6 @@ public class HomeController {
     
     @RequestMapping(value = "/403") 
     public String accessDenied() {
-    	return "accessdenied";
+    	return "accessDenied";
     }
 }
