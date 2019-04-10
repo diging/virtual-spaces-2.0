@@ -21,9 +21,9 @@ public class AddTextBlockController {
 
     @RequestMapping(value = "/staff/module/slide/{id}/textcontent", method = RequestMethod.POST)
     public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
-            @RequestParam("content") String content, @RequestParam("type") String type) throws IOException {
+            @RequestParam("content") String content, @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 
-        contentBlockManager.createTextBlock(slideId, content);
+        contentBlockManager.createTextBlock(slideId, content, contentOrder);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }

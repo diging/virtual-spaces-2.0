@@ -10,8 +10,8 @@ public interface IContentBlock extends IVSpaceElement {
 
     ISlide getSlide();
 
-    Integer getBlockInOrder();
+    Integer getContentOrder();
 
-    void setBlockInOrder(Integer blockInOrder);
+    void setContentOrder(Integer contentOrder);
 
 }

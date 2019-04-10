@@ -85,7 +85,7 @@ public class Slide extends VSpaceElement implements ISlide {
 
             @Override
             public int compare(IContentBlock o1, IContentBlock o2) {
-                return o1.getBlockInOrder().compareTo(o2.getBlockInOrder());
+                return o1.getContentOrder().compareTo(o2.getContentOrder());
             }
         });
         return contents;

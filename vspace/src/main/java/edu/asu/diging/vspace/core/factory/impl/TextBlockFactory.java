@@ -19,13 +19,12 @@ public class TextBlockFactory implements ITextBlockFactory {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public IContentBlock createTextBlock(ISlide slide, String text) {
-        IContentBlock textblock = new TextBlock();
-        ((ITextBlock) textblock).setText(text);
-        textblock.setDescription("text");
-        textblock.setSlide(slide);
+    public ITextBlock createTextBlock(ISlide slide, String text) {
+        ITextBlock textBlock = new TextBlock();
+        textBlock.setText(text);
+        ((IContentBlock) textBlock).setSlide(slide);
 
-        return (IContentBlock) textblock;
+        return textBlock;
     }
 
 }

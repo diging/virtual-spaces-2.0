@@ -25,18 +25,17 @@ public class AddImageBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/slide/{id}/imagecontent", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/slide/{id}/image", method = RequestMethod.POST)
     public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
-            @RequestParam("file") MultipartFile file, Principal principal, RedirectAttributes attributes)
+            @RequestParam("file") MultipartFile file, @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
 
-        System.out.println("inside image block---------------");
-        byte[] bgImage = null;
+        byte[] image = null;
         String filename = null;
         if (file.isEmpty() || file.equals(null)) {
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Please select a background image.");
+            attributes.addAttribute("message", "Please select a image.");
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
@@ -44,11 +43,11 @@ public class AddImageBlockController {
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
 
         } else if (file != null) {
-            bgImage = file.getBytes();
+            image = file.getBytes();
             filename = file.getOriginalFilename();
         }
 
-        contentBlockManager.createImageBlock(slideId, bgImage, filename);
+        contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }

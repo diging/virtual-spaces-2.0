@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -59,13 +60,11 @@ public class ContentBlockManager implements IContentBlockManager {
     @Autowired
     private IStorageEngine storage;
 
-    private int BlockInOrder = 0;
-
     /*
      * (non-Javadoc)
      * 
-     * @see java.util.Map<edu.asu.diging.vspace.core.services.impl.IContentBlock,
-     * java.lang.String>#getAllContentBlocks(java.lang.String)
+     * @see java.util.List<edu.asu.diging.vspace.core.services.impl.IContentBlock>#
+     * getAllContentBlocks(java.lang.String)
      */
     @Override
     public List<IContentBlock> getAllContentBlocks(String slideId) {
@@ -83,17 +82,16 @@ public class ContentBlockManager implements IContentBlockManager {
      * lang.String, java.lang.String)
      */
     @Override
-    public IContentBlock createTextBlock(String slideId, String text) {
+    public ITextBlock createTextBlock(String slideId, String text, Integer contentOrder) {
         ISlide slide = slideManager.getSlide(slideId);
-        IContentBlock textBlock = textBlockFactory.createTextBlock(slide, text);
-        textBlock.setBlockInOrder(BlockInOrder);
+        ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
+        ((IContentBlock) textBlock).setContentOrder(contentOrder);
         if (slide.getContents() == null) {
             slide.setContents(new ArrayList<>());
         }
-        slide.getContents().add(textBlock);
+        slide.getContents().add((IContentBlock) textBlock);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
         slideRepo.save((Slide) slide);
-        BlockInOrder++;
 
         return textBlock;
     }
@@ -105,7 +103,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename) {
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) {
         // TODO Auto-generated method stub
         IVSImage slideContentImage = null;
         ISlide slide = slideManager.getSlide(slideId);
@@ -132,9 +130,8 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
-        ((IContentBlock) imgBlock).setBlockInOrder(BlockInOrder);
+        ((IContentBlock) imgBlock).setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
-        BlockInOrder++;
 
         returnValue.setElement(imageBlock);
         return returnValue;

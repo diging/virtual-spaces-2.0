@@ -11,7 +11,7 @@ $( document ).ready(function() {
 	{		
         $('table tr:last')
         
-            .after('<tr><td style="padding-left: 22px; border-style:hidden; padding-top: 6px; padding-bottom: 6px;"><a href="<c:url value="/staff/module/slide/${link.id}" />">'+     
+            .after('<tr><td style="padding-left: 22px; border-style:hidden; padding-top: 6px; padding-bottom: 6px;"><a href="<c:url value="/staff/module/${module.id}/slide/${link.id}" />">'+     
             '<div class="card" style="max-width: 18rem;">' +          
             '<div align="left" class="card-body"><h5 class="card-title">${link.name}</h5>'+                     
               '<p class="card-text">${link.description}</p>'+

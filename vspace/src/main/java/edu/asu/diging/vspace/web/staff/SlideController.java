@@ -21,13 +21,14 @@ public class SlideController {
     @Autowired
     private ContentBlockManager contentBlockManager;
 
-    @RequestMapping("/staff/module/slide/{id}")
+    @RequestMapping("/staff/module/slide/{id}/contents")
     public String listSpaces(@PathVariable String id, Model model) {
 
+        System.out.println("SLIDECONTROLLER");
         model.addAttribute("slide", slideManager.getSlide(id));
         model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(id));
 
-        return "staff/module/slide";
+        return "staff/module/slide/contents";
     }
 
 }

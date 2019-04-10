@@ -120,7 +120,7 @@
 	
 	<!-- Slides -->
 	<definition name="slide.base.def" extends="base.definition.bt4">	
-		<put-attribute name="content" value="slide" />
+		<put-attribute name="currentPage" value="slide" />
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
 	</definition> 
 	
@@ -128,7 +128,7 @@
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/add.jsp" />	
 	</definition>
 	
-	<definition name="staff/module/slide" extends="slide.base.def">
+	<definition name="staff/module/slide/contents" extends="slide.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
 	</definition>
     

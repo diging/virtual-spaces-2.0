@@ -1,10 +1,11 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <script>
 //# sourceURL=click.js
-
+	var contentCount = ${fn:length(slideContents)};
 	function addImage() {
 	$("#addImgAlert").show();
 	}
@@ -14,6 +15,7 @@
 	}
 	
 	function uploadImage(input) {
+		
 		if (input.files && input.files[0]) {
             var reader = new FileReader();
             
@@ -22,14 +24,18 @@
             	$('#slideSpace').append(imageblock);
             	$(imageblock).attr('src', e.target.result);
             }
+            ++contentCount;
             reader.readAsDataURL(input.files[0]);
         }
+
 		var file = input.files[0];
 		var formData = new FormData();
 		formData.append('file', file);
+		formData.append('contentOrder', contentCount);
 		$.ajax({
 	    	enctype: 'multipart/form-data',
-	        url: "<c:url value="/staff/module/slide/${slide.id}/imagecontent?${_csrf.parameterName}=${_csrf.token}" />",
+	    	// ------------- creating image content blocks ------------
+	        url: "<c:url value="/staff/module/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />",
 	        type: 'POST',
 	        cache       : false,
 	        contentType : false,
@@ -46,23 +52,8 @@
 	        }
 	    });
 	} 
- 
 $(document).ready(function() {
-	
-	<c:forEach items="${contents}" var="entry">xxx
-	{
-		if ("${entry.key['class'].simpleName ==  'TextBlock'}") {
-			var value = $('<div class="valueDiv"><img id="${entry.value}" width="800px" src="<c:url value="/api/image/${entry.value}" />" />');
-		} else {
-			var value = $('<div class="valueDiv card card-body"><p>${entry.value}</p>');
-		}
-		$(value).css({
-			'margin': "10px"
-		});
-		$("#slideSpace").append(value);
-	}
-	</c:forEach>
-	
+console.log(${moduleId});
 	$("#file").change(function() {
 		$("#addImgAlert").hide();
 		uploadImage(this);
@@ -83,20 +74,24 @@ $(document).ready(function() {
 
 		var payload = {};
 		payload["content"] = document.getElementById('textarea').value;
-		payload["type"] = "String";
-
+		
 		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
 		$(textblock).css({
 			'margin': "10px"
 		});
 		$('#slideSpace').append(textblock);
+		++contentCount;
+		payload["contentOrder"] = contentCount;
+		alert(contentCount);
+
+		// ------------- creating text content blocks ------------
 		$.post("<c:url value="/staff/module/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 	    	// TODO: show success/error message
 		});
 	});
 	$("#addImgAlert").draggable();
 	$("#addTextAlert").draggable();
-	
+
 });
 </script>
 
@@ -142,15 +137,14 @@ $(document).ready(function() {
 <c:forEach items="${slideContents}" var="contents">
 	
 		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}"> 
-			<div class="valueDiv"><img id="${entry.value}" width="800px" src="<c:url value="/api/image/${contents.image.id}" />" />
+			<div class="valueDiv"><img id="${contents.image.id}" width="800px" style="margin:10px;" src="<c:url value="/api/image/${contents.image.id}" />" />
 		</div>
 		</c:if>
-<%-- 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}"> 
-			<div class="valueDiv"><p id="${entry.value}" width="800px" src="<c:url value="/api/image/${contents.text}" />" />
+		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
+			<div class="valueDiv card card-body" style="margin:10px;"><p>${contents.text}</p>
 		</div>
-		</c:if> --%>
-			
-	
+		</c:if>
+				
 	</c:forEach>
 </div>
 

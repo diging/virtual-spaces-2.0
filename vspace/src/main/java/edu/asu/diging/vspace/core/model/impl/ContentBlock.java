@@ -25,7 +25,7 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
     @OneToOne(targetEntity = Slide.class)
     private ISlide slide;
 
-    private Integer blockInOrder;
+    private Integer contentOrder;
 
     /*
      * (non-Javadoc)
@@ -76,8 +76,8 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
      * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#getBlockInOrder()
      */
     @Override
-    public Integer getBlockInOrder() {
-        return blockInOrder;
+    public Integer getContentOrder() {
+        return contentOrder;
     }
 
     /*
@@ -88,8 +88,8 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
      * .Integer)
      */
     @Override
-    public void setBlockInOrder(Integer blockInOrder) {
-        this.blockInOrder = blockInOrder;
+    public void setContentOrder(Integer contentOrder) {
+        this.contentOrder = contentOrder;
     }
 
 }
