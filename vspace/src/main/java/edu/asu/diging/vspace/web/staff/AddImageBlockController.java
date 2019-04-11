@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
@@ -25,30 +26,27 @@ public class AddImageBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/slide/{id}/image", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image", method = RequestMethod.POST)
     public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
-            @RequestParam("file") MultipartFile file, @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
+            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
+            @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
 
         byte[] image = null;
         String filename = null;
-        if (file.isEmpty() || file.equals(null)) {
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Please select a image.");
-
+        if (file != null) {
+            image = file.getBytes();
+            filename = file.getOriginalFilename();
+        }
+        try {
+            contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
+        } catch(ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Image Content block cannot be stored.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-
-        } else if (file != null) {
-            image = file.getBytes();
-            filename = file.getOriginalFilename();
         }
-
-        contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
-
+        
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
@@ -103,7 +104,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) {
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException {
         // TODO Auto-generated method stub
         IVSImage slideContentImage = null;
         ISlide slide = slideManager.getSlide(slideId);
@@ -123,7 +124,7 @@ public class ContentBlockManager implements IContentBlockManager {
             try {
                 relativePath = storage.storeFile(image, filename, slideContentImage.getId());
             } catch (FileStorageException e) {
-                returnValue.getErrorMsgs().add("Image could not be stored: " + e.getMessage());
+                throw new ImageCouldNotBeStoredException(e);
             }
             slideContentImage.setParentPath(relativePath);
             imageRepo.save((VSImage) slideContentImage);
