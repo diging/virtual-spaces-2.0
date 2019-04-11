@@ -28,6 +28,7 @@ public class ExhibitionSpaceController {
 		ISpace space = spaceManager.getSpace(id);
 		model.addAttribute("space", space);
 		model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+		model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id));
 		model.addAttribute("display", spaceDisplayManager.getBySpace(space));
 		
 		return "space";
