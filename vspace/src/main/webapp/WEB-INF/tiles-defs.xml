@@ -57,7 +57,9 @@
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
     </definition>
-	
+    <definition name="accessDenied" extends="base.definition"> 
+        <put-attribute name="content" value="/WEB-INF/views/accessdenied.jsp" />    
+    </definition>
 	<!-- Staff -->
 	<!-- Dashboard -->
 	<definition name="dashboard.base.def" extends="base.definition.bt4">	
@@ -121,4 +123,6 @@
     <definition name="staff/user/list" extends="exhibit.base.def"> 
         <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
     </definition>
+
+    
 </tiles-definitions>
