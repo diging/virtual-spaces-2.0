@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
-<div style="padding-top:60px;text-align:center;">
-<h1>You dont seem to have the authority to access the requested page!</h1>
+<div class="d-flex justify-content-center">
+<h2>You dont seem to have the authority to access the requested page!</h2>
 </div>
 
