@@ -40,13 +40,13 @@ public class AddImageBlockController {
         }
         try {
             contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
-        } catch(ImageCouldNotBeStoredException e) {
+        } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Image Content block cannot be stored.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
+
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

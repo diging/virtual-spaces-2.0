@@ -18,7 +18,7 @@ public class SlideController {
 
     @Autowired
     private SlideManager slideManager;
-    
+
     @Autowired
     private ModuleManager moduleManager;
 

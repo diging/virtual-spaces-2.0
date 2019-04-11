@@ -6,22 +6,7 @@
 
 <script>
 $( document ).ready(function() { 
-	
-	<c:forEach items="${slides}" var="link" varStatus="loop">
-	{		
-        $('table tr:last')
-        
-            .after('<tr><td style="padding-left: 22px; border-style:hidden; padding-top: 6px; padding-bottom: 6px;"><a href="<c:url value="/staff/module/${module.id}/slide/${link.id}" />">'+     
-            '<div class="card" style="max-width: 18rem;">' +          
-            '<div align="left" class="card-body"><h5 class="card-title">${link.name}</h5>'+                     
-              '<p class="card-text">${link.description}</p>'+
-            '</div>'+
-          '</div>'+ 
-          '</td>');
 
-	}
-	</c:forEach> 
-	
 	$("#addSlideButton").on("click", function(e){ 	
 		$("#createSlideAlert").show();
 	});
@@ -33,7 +18,6 @@ $( document ).ready(function() {
 });
 
 </script>
-
 
 <h1>Module: ${module.name}</h1>
 <h3>Description: ${module.description}</h3>
@@ -65,5 +49,17 @@ $( document ).ready(function() {
   					<span id="startSequence" style="float:right; padding-top: 3px;"></span> </div>
 		</td>
 	</tr>
+	<c:forEach items="${slides}" var="slide">
+	<tr>
+		<td style="padding-left: 22px; border-style:hidden; padding-top: 6px; padding-bottom: 6px;">
+		 <div class="card" style="max-width: 18rem;">   
+           <div align="left" class="card-body">	<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+	            <h5 class="card-title">${slide.name}</h5>
+	            <p class="card-text">${slide.description}</p></a>        
+            </div>
+          </div> 
+        </td>
+	</tr>	
+	</c:forEach>
 </table>
 </body>

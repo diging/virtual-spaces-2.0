@@ -15,22 +15,15 @@
 	}
 	
 	function uploadImage(input) {
-		
-		if (input.files.length == 0) {
-			$("#errorMsg").text("Please select the slide image.")
-			$('#errorAlert').show();
-			return;
-		}
 		if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
             	var imageblock = $('<img src="#" />');
             	$('#slideSpace').append(imageblock);
             	$(imageblock).attr('src', e.target.result);
             }
-            ++contentCount;
-            reader.readAsDataURL(input.files[0]);
+			++contentCount;
+			reader.readAsDataURL(input.files[0]);
         }
 
 		var file = input.files[0];
@@ -50,7 +43,6 @@
 	        success: function(data) {
 	            console.log("success");
 	            console.log(data);
-	            $('#errorAlert').hide();
 	        },
 	        error: function(data) {
 	            console.log("error");
@@ -58,6 +50,7 @@
 	        }
 	    });
 	} 
+	
 $(document).ready(function() {
 	$("#file").change(function() {
 		$("#addImgAlert").hide();
@@ -87,8 +80,6 @@ $(document).ready(function() {
 		$('#slideSpace').append(textblock);
 		++contentCount;
 		payload["contentOrder"] = contentCount;
-	
-
 		// ------------- creating text content blocks ------------
 		$.post("<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 	    	// TODO: show success/error message
@@ -107,13 +98,6 @@ $(document).ready(function() {
   Created on <span class="date">${slide.creationDate}</span> by ${slide.createdBy}.
   <br>
   Modified on <span class="date">${slide.modificationDate}</span> by ${slide.modifiedBy}.
-</div>
-
-<div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none; position: absolute; top: 10px; right: 50px;">
-   <strong>Error!</strong> <span id="errorMsg"></span>
-   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-       <span aria-hidden="true">&times;</span>
-   </button>
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
@@ -145,8 +129,8 @@ $(document).ready(function() {
 </form>
     
 <div id="slideSpace">
-<c:forEach items="${slideContents}" var="contents">
-	
+<c:forEach items="${slideContents}" var="contents">	
+
 		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}"> 
 			<div class="valueDiv"><img id="${contents.image.id}" width="800px" style="margin:10px;" src="<c:url value="/api/image/${contents.image.id}" />" />
 		</div>
@@ -154,8 +138,8 @@ $(document).ready(function() {
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
 			<div class="valueDiv card card-body" style="margin:10px;"><p>${contents.text}</p>
 		</div>
-		</c:if>
-				
+		</c:if>	
+					
 	</c:forEach>
 </div>
 
