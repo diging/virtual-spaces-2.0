@@ -15,18 +15,16 @@ public class ListImagesController {
 
     @RequestMapping("/staff/images/list/{page}")
     public String listSpaces(@PathVariable String page, Model model) {
-        long totalPages = imageService.getTotalPages();
-        int currentPage;
+        int pageNo;
         try {
-            currentPage = Integer.parseInt(page);
-            currentPage = (currentPage<1 || currentPage>totalPages)?1:currentPage;
+            pageNo = imageService.validatePageNumber(Integer.parseInt(page));
         } catch (NumberFormatException numberFormatException) {
-            currentPage = 1;
+            pageNo = 1;
         }
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPageNumber", currentPage);
+        model.addAttribute("totalPages", imageService.getTotalPages());
+        model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
-        model.addAttribute("images", imageService.getRequestedImages(currentPage, totalPages));
+        model.addAttribute("images", imageService.getImages(pageNo));
         return "staff/images/list";
     }
 }

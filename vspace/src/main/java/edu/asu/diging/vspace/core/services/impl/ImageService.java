@@ -81,16 +81,15 @@ public class ImageService implements IImageService {
     /**
      * Method to return the requested images  
      * 
-     * @param currentPage current page requested from UI.
-     * @param totalPages required to display all images in DB
-     * @return list of requested images
+     * @param pageNo. if pageNo<1, 1st page is return, if pageNo>total pages,last page is return
+     * @return list of images in the requested pageNo
      */ 
     @Override
-    public List<VSImage> getRequestedImages(int currentPage, long totalPages) {
-        currentPage = (currentPage<1 || currentPage>totalPages)?1:currentPage;
-        Pageable sortByRequestedField = PageRequest.of(currentPage-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()));
-        Page<VSImage> requestedImages = imageRepo.findAll(sortByRequestedField);
-        return requestedImages.getContent();   
+    public List<VSImage> getImages(int pageNo) {
+        pageNo = validatePageNumber(pageNo);
+        Pageable sortByRequestedField = PageRequest.of(pageNo-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()));
+        Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
+        return images.getContent();   
     }  
     
     /**
@@ -111,5 +110,22 @@ public class ImageService implements IImageService {
     @Override
     public long getTotalImageCount() {
         return imageRepo.count();
+    }
+    
+    /**
+     * Method to return page number after validation   
+     * 
+     * @param pageNo page provided by calling method
+     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than totalPages. 
+     */ 
+    @Override
+    public int validatePageNumber(int pageNo) {
+        long totalPages = getTotalPages();
+        if(pageNo<1) {
+            return 1;
+        } else if(pageNo>totalPages) {
+            return (totalPages == 0)? 1:(int) totalPages;
+        }
+        return pageNo;
     }
 }

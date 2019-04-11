@@ -14,8 +14,9 @@ public interface IImageService {
     
     long getTotalPages();
     
-    List<VSImage> getRequestedImages(int currentPage, long totalPages);
+    List<VSImage> getImages(int pageNo);
     
     long getTotalImageCount();
 
+    int validatePageNumber(int pageNo);
 }
