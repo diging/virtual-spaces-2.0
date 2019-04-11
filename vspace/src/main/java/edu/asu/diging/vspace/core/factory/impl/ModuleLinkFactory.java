@@ -10,6 +10,10 @@ import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 @Service
 public class ModuleLinkFactory implements IModuleLinkFactory{
 
+	
+	/* (non-Javadoc)
+	 * @see edu.asu.diging.vspace.core.factory.impl.IModuleLinkFactory#createModuleLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
+	 */
 	@Override
 	public IModuleLink createModuleLink(String title, ISpace space) {
 		IModuleLink link = new ModuleLink();

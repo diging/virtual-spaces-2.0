@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.model.display;
 
 import edu.asu.diging.vspace.core.model.IModuleLink;
-import edu.asu.diging.vspace.core.model.ISpaceLink;
 
 public interface IModuleLinkDisplay extends ILinkDisplay{
 	String getId();

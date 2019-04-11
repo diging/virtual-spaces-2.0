@@ -59,7 +59,7 @@ $( document ).ready(function() {
            link = $('<img id="${link.image.id}" moduledata-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
 			/* link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>'); */
-			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="mlabel-${loop.index}" moduledata-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span moduledata-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="mlabel-${loop.index}" moduledata-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -261,6 +261,15 @@ $( document ).ready(function() {
 			return;
 		}
 		
+		var linkedModules = $("#linkedModule").val();
+		console.log(linkedModules);
+		
+		if (linkedModules == undefined || linkedModules == "") {
+			$("#errorMsg").text("Please select linked modules.")
+			$('#errorAlert').show();
+			return;
+		}
+		
 		$("#moduleLinkX").val(storeX);
 		$("#moduleLinkY").val(storeY);
 		
@@ -321,17 +330,17 @@ $( document ).ready(function() {
 	});
 	
 	
-			  $("#deleteModuleLinkButton").click(function() {
-					var linkId = $("#moduleLinkId").val();
-					$.ajax({
-					  url: "<c:url value="/staff/space/${space.id}/modulelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
-					  method: "DELETE",
-					  success:function(data) {
-						  $('[moduledata-link-id="' + linkId + '"]').remove();
-				          $("#moduleLinkInfo").hide();
-					    }
-					});
-				});
+	$("#deleteModuleLinkButton").click(function() {
+		var linkId = $("#moduleLinkId").val();
+		$.ajax({
+			url: "<c:url value="/staff/space/${space.id}/modulelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
+			method: "DELETE",
+				success:function(data) {
+					$('[moduledata-link-id="' + linkId + '"]').remove();
+					$("#moduleLinkInfo").hide();
+				}
+			});
+	});
 	
 	// ------------- adjust links on background image (e.g. when inputs are changed) ------------
 	// external links
@@ -381,7 +390,7 @@ $( document ).ready(function() {
 	});
 
 	// --------- show links functions --------------
-	function showSpaceLink(moduleLink, show) {
+	function showSpaceLink(spaceLink, show) {
 		$("#space_label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
@@ -457,7 +466,7 @@ $( document ).ready(function() {
 				'top': moduleLink["y"] + posY + 16,
 				'color': 'white'
 			});
-			link = $('<span moduledata-link-id="' + ModuleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
+			link = $('<span moduledata-link-id="' + moduleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
 		} 
 		if(show) {
 			link.find("div").css('fill', 'white');
@@ -549,7 +558,7 @@ $( document ).ready(function() {
     	e.preventDefault();
     	$("#spaceLinkInfoLabel").text("");
         $("#spaceLinkId").val("");
-        resetHighlighting("red","cccc");
+        resetHighlighting("red","data-link-id");
         $("#spaceLinkInfo").hide();
     });
     
@@ -557,7 +566,7 @@ $( document ).ready(function() {
     	e.preventDefault();
     	$("#moduleLinkInfoLabel").text("");
         $("#moduleLinkId").val("");
-        resetHighlighting("white","bbb");
+        resetHighlighting("white","moduledata-link-id");
         $("#moduleLinkInfo").hide();
     }); 
 	
@@ -599,7 +608,7 @@ $( document ).ready(function() {
 	function makeModuleLinksEditable(moduleLinkName, moduleLinkId) {
 		$("#moduleLinkInfoLabel").text(moduleLinkName);
         $("#moduleLinkId").val(moduleLinkId);
-        resetHighlighting("white", "asdasd");
+        resetHighlighting("white", "moduledata-link-id");
         
         $('[moduledata-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
         $('div[moduledata-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
@@ -610,25 +619,23 @@ $( document ).ready(function() {
 	
 	function resetHighlighting(col, dataid) {
         // reset icon links
-        /* $('[data-link-id]').css("color", col);
-        
+         /*$('[data-link-id]').css("color", col);
+         
         // reset alert links
         $('div[data-link-id]').removeClass("alert-warning");
         $('div[data-link-id]').addClass("alert-primary");
         
         // reset image links
         $('img[data-link-id]').css("border-width", "0px"); */
-        
-		/* $(id).css("color", col); */
-        
-        console.log(col);
-        
-        /* // reset alert links
-        $('div[${id}]').removeClass("alert-warning");
-        $('div[${id}]').addClass("alert-primary");
+       
+        $('['+dataid+']').css("color", col);
+         
+        // reset alert links
+        $('div['+dataid+']').removeClass("alert-warning");
+        $('div['+dataid+']').addClass("alert-primary");
         
         // reset image links
-        $('img[${id}]').css("border-width", "0px"); */ 
+        $('img['+dataid+']').css("border-width", "0px");  
     }
 });
 
