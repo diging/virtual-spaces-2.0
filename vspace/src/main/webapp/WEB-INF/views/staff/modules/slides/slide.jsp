@@ -21,7 +21,7 @@
             	var imageblock = $('<img src="#" />');
             	$('#slideSpace').append(imageblock);
             	$(imageblock).attr('src', e.target.result);
-            }
+			}
 			++contentCount;
 			reader.readAsDataURL(input.files[0]);
         }
