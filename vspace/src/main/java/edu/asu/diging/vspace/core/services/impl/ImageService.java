@@ -81,7 +81,7 @@ public class ImageService implements IImageService {
     /**
      * Method to return the requested images  
      * 
-     * @param pageNo. if pageNo<1, 1st page is return, if pageNo>total pages,last page is return
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last page is returned
      * @return list of images in the requested pageNo
      */ 
     @Override
