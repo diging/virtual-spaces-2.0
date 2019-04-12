@@ -109,6 +109,7 @@ public class ImageServiceTest {
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<VSImage> requestedImages = serviceToTest.getImages(1);
+        assertEquals(1, requestedImages.size());
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
@@ -125,10 +126,11 @@ public class ImageServiceTest {
     
     @Test
     public void test_getImages_pageGreaterThanTotalPages() { 
-        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
-        when(imageRepo.count()).thenReturn(1L);
+        ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
+        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()));
+        when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(5);
+        List<VSImage> requestedImages = serviceToTest.getImages(7);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
@@ -159,7 +161,8 @@ public class ImageServiceTest {
     
     @Test
     public void test_validatePageNumber_pageGreaterThanTotalPages() {
-        when(imageRepo.count()).thenReturn(1L);
-        assertEquals(1, serviceToTest.validatePageNumber(5));
+        ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
+        when(imageRepo.count()).thenReturn(5L);
+        assertEquals(5, serviceToTest.validatePageNumber(20));
     }
 }
