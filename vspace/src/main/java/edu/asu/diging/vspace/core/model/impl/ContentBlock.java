@@ -19,7 +19,9 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
 
     @Id
     @GeneratedValue(generator = "content_id_generator")
-    @GenericGenerator(name = "content_id_generator", parameters = @Parameter(name = "prefix", value = "CON"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "content_id_generator",
+        parameters = @Parameter(name = "prefix", value = "CON"),
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = Slide.class)

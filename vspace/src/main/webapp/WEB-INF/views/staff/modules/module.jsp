@@ -32,21 +32,20 @@ $( document ).ready(function() {
 <div id="result"></div>
 <table border ="0" width="100%" height="50%" style=" margin-top:50px;">
 	<tr>
-		<td style="width: 20rem; padding-left: 15px; border:1;">			
-  				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">SLIDES</span> 
-  					<a class="d-flex align-items-center text-muted" href="<c:url value="${module.id}/slide/add" />">
-  					<span data-feather="plus-circle"></span>
-  					</a></div>
+		<td style="width: 20rem; padding-left: 15px; border:1;">
+			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"><span style="float:left; font-size:medium; padding-top: 3px;">SLIDES</span>
+			<a class="d-flex align-items-center text-muted" href="<c:url value="${module.id}/slide/add" />">
+			<span data-feather="plus-circle"></span></a></div>
 		</td>
 		<td>&nbsp;</td>
-		<td style="width: 20rem; padding-left: 15px; border:1;">			
-  				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">SEQUENCES</span> 
-  					<span id="addSequenceButton" data-feather="plus-circle" style="float:right; padding-top: 3px;"></span> </div>
+		<td style="width: 20rem; padding-left: 15px; border:1;">
+			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"><span style="float:left; font-size:medium; padding-top: 3px;">SEQUENCES</span>
+			<span data-feather="plus-circle" style="float:right; padding-top: 3px;"></span></div>
 		</td>
 		<td>&nbsp;</td>
-		<td style="width: 20rem; padding-left: 15px; border:1;">			
-  				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">START SEQUENCE</span> 
-  					<span id="startSequence" style="float:right; padding-top: 3px;"></span> </div>
+		<td style="width: 20rem; padding-left: 15px; border:1;">
+			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"> <span style="float:left; font-size:medium; padding-top: 3px;">START SEQUENCE</span>
+			<span id="startSequence" style="float:right; padding-top: 3px;"></span></div>
 		</td>
 	</tr>
 	<c:forEach items="${slides}" var="slide">

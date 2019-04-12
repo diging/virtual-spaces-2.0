@@ -25,22 +25,11 @@ public class SlideManager implements ISlideManager {
     @Autowired
     private ModuleManager moduleManager;
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.impl.ISlideManager#storeSlide(edu.asu.
-     * diging.vspace.core.model.ISlide)
-     */
-    @Override
-    public ISlide storeSlide(ISlide slide) {
-        return slideRepo.save((Slide) slide);
-    }
-    
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
         ISlide slide = slideFactory.createSlide(module, slideForm);
+        slideRepo.save((Slide) slide);
         return slide;
     }
     

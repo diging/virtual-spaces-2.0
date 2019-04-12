@@ -86,7 +86,7 @@ public class ContentBlockManager implements IContentBlockManager {
     public ITextBlock createTextBlock(String slideId, String text, Integer contentOrder) {
         ISlide slide = slideManager.getSlide(slideId);
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
-        ((IContentBlock) textBlock).setContentOrder(contentOrder);
+        textBlock.setContentOrder(contentOrder);
         if (slide.getContents() == null) {
             slide.setContents(new ArrayList<>());
         }
@@ -105,7 +105,6 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException {
-        // TODO Auto-generated method stub
         IVSImage slideContentImage = null;
         ISlide slide = slideManager.getSlide(slideId);
         if (image != null && image.length > 0) {
@@ -131,7 +130,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
-        ((IContentBlock) imgBlock).setContentOrder(contentOrder);
+        imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
 
         returnValue.setElement(imageBlock);

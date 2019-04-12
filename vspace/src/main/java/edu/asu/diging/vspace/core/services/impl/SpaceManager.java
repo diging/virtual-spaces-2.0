@@ -41,7 +41,6 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private ImageRepository imageRepo;
-
     
     @Autowired
     private IStorageEngine storage;

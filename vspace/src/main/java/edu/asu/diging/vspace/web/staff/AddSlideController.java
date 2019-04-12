@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
@@ -31,8 +30,8 @@ public class AddSlideController {
     public String addSlide(Model model, @PathVariable("moduleId") String moduleId, @ModelAttribute SlideForm slideForm,
             Principal principal) {
 
-        ISlide slide = slideManager.createSlide(moduleId, slideForm);
-        slideManager.storeSlide(slide);
+        slideManager.createSlide(moduleId, slideForm);
+        
         return "redirect:/staff/module/{moduleId}";
     }
 }

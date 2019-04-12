@@ -26,7 +26,7 @@ public class SlideController {
     private ContentBlockManager contentBlockManager;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
-    public String listSpaces(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
+    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
 
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slideManager.getSlide(id));

@@ -23,7 +23,9 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @Id
     @GeneratedValue(generator = "slide_id_generator")
-    @GenericGenerator(name = "slide_id_generator", parameters = @Parameter(name = "prefix", value = "SLI"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "slide_id_generator", 
+        parameters = @Parameter(name = "prefix", value = "SLI"),
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = Module.class)
@@ -66,8 +68,8 @@ public class Slide extends VSpaceElement implements ISlide {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.vspace.
-     * core.model.IModule)
+     * edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.
+     * vspace. core.model.IModule)
      */
     @Override
     public void setModule(IModule module) {
@@ -94,7 +96,8 @@ public class Slide extends VSpaceElement implements ISlide {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setContents(edu.asu.diging.
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ISlide#setContents(edu.asu.diging.
      * vspace. core.model.IContentBlock)
      */
     @Override

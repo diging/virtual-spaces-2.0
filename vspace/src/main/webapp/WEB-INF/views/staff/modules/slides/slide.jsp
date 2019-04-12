@@ -5,56 +5,57 @@
 
 <script>
 //# sourceURL=click.js
-	var contentCount = ${fn:length(slideContents)};
-	function addImage() {
-	$("#addImgAlert").show();
-	}
-
-	function addText() {
-	$("#addTextAlert").show();
-	}
+var contentCount = ${fn:length(slideContents)};
 	
-	function uploadImage(input) {
-		if (input.files && input.files[0]) {
-			var reader = new FileReader();
-			reader.onload = function (e) {
-            	var imageblock = $('<img src="#" />');
-            	$('#slideSpace').append(imageblock);
-            	$(imageblock).attr('src', e.target.result);
-			}
-			++contentCount;
-			reader.readAsDataURL(input.files[0]);
-        }
-
-		var file = input.files[0];
-		var formData = new FormData();
-		formData.append('file', file);
-		formData.append('contentOrder', contentCount);
-		$.ajax({
-	    	enctype: 'multipart/form-data',
-	    	// ------------- creating image content blocks ------------
-	        url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />",
-	        type: 'POST',
-	        cache       : false,
-	        contentType : false,
-	        processData : false,
-	        data: formData, 
-	        
-	        success: function(data) {
-	            console.log("success");
-	            console.log(data);
-	        },
-	        error: function(data) {
-	            console.log("error");
-	            console.log(data);
-	        }
-	    });
-	} 
+function uploadImage() {
+	var file = document.getElementById('file').files[0];
+	var reader  = new FileReader();
+	
+	reader.onload = function () {
+		var imageblock = $('<img src="#" />');
+		$('#slideSpace').append(imageblock);
+		$(imageblock).attr('src', reader.result);
+	}
+	++contentCount;
+	reader.readAsDataURL(file);
+	
+	var file = document.getElementById('file').files[0];
+	var formData = new FormData();
+	formData.append('file', file);
+	formData.append('contentOrder', contentCount);
+	$.ajax({
+		enctype: 'multipart/form-data',
+		// ------------- creating image content blocks ------------
+		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />",
+		type: 'POST',
+		cache       : false,
+		contentType : false,
+		processData : false,
+		data: formData,
+		
+		success: function(data) {
+			console.log("success");
+			console.log(data);
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+		}
+	});
+} 
 	
 $(document).ready(function() {
-	$("#file").change(function() {
-		$("#addImgAlert").hide();
-		uploadImage(this);
+	$("#addText").click(function() {
+		$("#addTextAlert").show();
+  	});
+	
+	$("#addImage").click(function() {
+		$("#addImgAlert").show();
+  	});
+	
+	$("#uploadImage").click(function() {
+			$("#addImgAlert").hide();
+			uploadImage();
   	});
 	
 	$("#cancelSubmitText").click(function() {
@@ -82,7 +83,6 @@ $(document).ready(function() {
 		payload["contentOrder"] = contentCount;
 		// ------------- creating text content blocks ------------
 		$.post("<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-	    	// TODO: show success/error message
 		});
 	});
 	$("#addImgAlert").draggable();
@@ -95,19 +95,20 @@ $(document).ready(function() {
 <h3>Description: ${slide.description}</h3>
 	
 <div class="alert alert-light" role="alert">
-  Created on <span class="date">${slide.creationDate}</span> by ${slide.createdBy}.
-  <br>
+  Created on <span class="date">${slide.creationDate}</span> by ${slide.createdBy}.<br>
   Modified on <span class="date">${slide.modificationDate}</span> by ${slide.modifiedBy}.
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add</button>
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Add content
+  </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-	  <ul>
-		  <li class="dropdown-item" id="addImage" onclick="addImage()">Add Image</li>
-		  <li class="dropdown-item" id="addText" onclick="addText()">Add Text</li>
-	  </ul>
-  </div> 
+    <a id="addText" class="dropdown-item" href="#">Add Text</a>
+    <a id="addImage" class="dropdown-item" href="#">Add Image</a>
+  </div>
+</div>
 </nav>
 
 <form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
@@ -115,7 +116,7 @@ $(document).ready(function() {
 		<h6><small>Upload Image: </small></h6>
 		<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
 	        <p class="mb-0 text-right"><button type="submit" id="uploadImage" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
-		<button id="cancelImageBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+		<button id="cancelImageBtn" type="reset" class="btn light btn-xs">Cancel</button></p>
 	</div>	
 </form>
 
@@ -129,17 +130,13 @@ $(document).ready(function() {
 </form>
     
 <div id="slideSpace">
-<c:forEach items="${slideContents}" var="contents">	
-
-		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}"> 
-			<div class="valueDiv"><img id="${contents.image.id}" width="800px" style="margin:10px;" src="<c:url value="/api/image/${contents.image.id}" />" />
-		</div>
+	<c:forEach items="${slideContents}" var="contents">
+		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
+			<div class="valueDiv"><img id="${contents.image.id}" width="800px" style="margin:10px;" src="<c:url value="/api/image/${contents.image.id}" />" /></div>
 		</c:if>
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-			<div class="valueDiv card card-body" style="margin:10px;"><p>${contents.text}</p>
-		</div>
-		</c:if>	
-					
+			<div class="valueDiv card card-body" style="margin:10px;"><p>${contents.text}</p></div>
+		</c:if>
 	</c:forEach>
 </div>
 

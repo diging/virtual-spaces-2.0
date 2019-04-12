@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface IImageBlock {
+public interface IImageBlock extends IContentBlock {
 
     void setImage(IVSImage image);
 
