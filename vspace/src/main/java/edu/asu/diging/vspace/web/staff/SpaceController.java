@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ILinkManager;
@@ -12,21 +14,25 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class SpaceController {
-	
-	@Autowired
-	private ISpaceManager spaceManager;
-	
-	@Autowired
-	private ILinkManager linkManager;
 
-	@RequestMapping("/staff/space/{id}")
-	public String showSpace(@PathVariable String id, Model model) {
-		ISpace space = spaceManager.getFullyLoadedSpace(id);
-		model.addAttribute("space", space);
-		model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
-		model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
-		model.addAttribute("spaces", spaceManager.getAllSpaces());
-		
-		return "staff/space";
-	}
+    @Autowired
+    private ISpaceManager spaceManager;
+
+    @Autowired
+    private ILinkManager linkManager;
+
+    @RequestMapping("/staff/space/{id}")
+    public String showSpace(@PathVariable String id, Model model) {
+        ISpace space = spaceManager.getFullyLoadedSpace(id);
+        model.addAttribute("space", space);
+        model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+        model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
+        model.addAttribute("spaces", spaceManager.getAllSpaces());
+        return "staff/space";
+    }
+
+    @RequestMapping(value = "/staff/space/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody String deleteSpace(@PathVariable String id) {
+        return spaceManager.deleteSpaceById(id).getResponseMessage();
+    }
 }

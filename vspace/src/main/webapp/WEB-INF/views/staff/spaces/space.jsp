@@ -414,7 +414,12 @@ $( document ).ready(function() {
   <br>
   Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
 </div>
-
+<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+  <strong></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
 ${space.description}
@@ -535,7 +540,10 @@ ${space.description}
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
-<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button>
+<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
+<button type="button" class="btn btn-primary btn-sm" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete">
+Delete Space
+</button>
 </nav>
 
 <p></p>

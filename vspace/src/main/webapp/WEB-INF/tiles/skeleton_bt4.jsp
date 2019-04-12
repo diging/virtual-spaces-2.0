@@ -93,7 +93,7 @@
         </main>
       </div>
     </div>
-    
+    <tiles:insertAttribute name="deleteModal" />
     <script>
 	//# sourceURL=date.js
 	$( document ).ready(function() {

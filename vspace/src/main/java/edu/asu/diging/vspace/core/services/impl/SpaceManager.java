@@ -27,6 +27,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.CustomResponses;
 
 @Transactional
 @Service
@@ -65,7 +66,10 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
         IVSImage bgImage = null;
-        List<SpaceDisplay> displays = spaceDisplayRepo.getBySpace(space);
+        List<SpaceDisplay> displays = null;
+        if (space.getId() != null) {
+            displays = spaceDisplayRepo.getBySpace(space);
+        }
         ISpaceDisplay spaceDisplay;
         if (displays == null || displays.isEmpty()) {
             spaceDisplay = spaceDisplayFactory.createSpaceDisplay();
@@ -137,5 +141,25 @@ public class SpaceManager implements ISpaceManager {
         List<ISpace> spaces = new ArrayList<>();
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
+    }
+    
+    /**
+     * Method to delete space based on id
+     * 
+     * @param id  if id is null or space with input id is not found return corresponding error message, else delete and return success message
+     * @return response message  
+     */
+    @Override
+    public CustomResponses deleteSpaceById(String id) {
+        if(id!=null) {
+            if(!spaceRepo.findById(id).isPresent()){
+                return CustomResponses.NOT_FOUND;
+            } else {
+                spaceRepo.deleteById(id);
+                return CustomResponses.SUCCESS;
+            }
+        } else {
+            return CustomResponses.NULL_INPUT;
+        }
     }
 }

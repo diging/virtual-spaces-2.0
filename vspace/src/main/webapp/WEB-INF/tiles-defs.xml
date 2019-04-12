@@ -22,6 +22,7 @@
 		<put-attribute name="pageName" value="" />
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
+		<put-attribute name="deleteModal" value=""/>
 	</definition>
 	
 	<definition name="home" extends="base.definition">
@@ -77,6 +78,7 @@
 	
 	<definition name="staff/space/list" extends="space.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/spacelist.jsp" />	
+		<put-attribute name="deleteModal" value="/WEB-INF/views/deleteModal.jsp"/>
 	</definition>
 	
 	<definition name="staff/space/add" extends="space.base.def">
@@ -85,6 +87,7 @@
 	
 	<definition name="staff/space" extends="space.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
+		<put-attribute name="deleteModal" value="/WEB-INF/views/deleteModal.jsp"/>
 	</definition>
     
     <definition name="staff/space/edit" extends="space.base.def">
