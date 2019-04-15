@@ -65,7 +65,10 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
         IVSImage bgImage = null;
-        List<SpaceDisplay> displays = spaceDisplayRepo.getBySpace(space);
+        List<SpaceDisplay> displays = null;
+        if (space.getId() != null) {
+            displays = spaceDisplayRepo.getBySpace(space);
+        }
         ISpaceDisplay spaceDisplay;
         if (displays == null || displays.isEmpty()) {
             spaceDisplay = spaceDisplayFactory.createSpaceDisplay();
