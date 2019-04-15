@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityContext extends WebSecurityConfigurerAdapter {
@@ -40,10 +42,11 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // Anyone can access the urls
                 .antMatchers("/", "/exhibit/**", "/api/**", "/resources/**", "/login",
-                        "/logout", "/register").permitAll()
+                        "/logout", "/register", "/reset/**").permitAll()
                 // The rest of the our application is protected.
                 .antMatchers("/users/**", "/admin/**", "/staff/user/**").hasRole("ADMIN")
                 .antMatchers("/staff/**").hasAnyRole("STAFF", "ADMIN")
+                .antMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE)
                 .anyRequest().hasRole("USER");
     }
 

@@ -43,6 +43,20 @@
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
     </definition>
+    
+    <!-- Password Reset -->
+    <definition name="reset/password/request" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />    
+    </definition>
+    <definition name="reset/request/sent" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/resetRequestSent.jsp" />    
+    </definition>
+    <definition name="password/change" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
+    </definition>
 	
 	<!-- Staff -->
 	<!-- Dashboard -->
