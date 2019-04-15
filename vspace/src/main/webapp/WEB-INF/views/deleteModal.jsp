@@ -9,20 +9,13 @@
 				url : url,
 				type : 'DELETE',
 				success : function(response) {
-					console.log(response);
-					if(response == "Success") {
-						window.location.href = urlToLoadOnSuccess;
-					} else {
-						$('#closeButton').click();
-						$('#errorMessage').find("strong").text(response+", please reload the page and try again");
-						$('#errorMessage').show();							
-					}
+					window.location.href = urlToLoadOnSuccess;
 				}
 			});
 		});
 		$('#confirm-delete').on('show.bs.modal', function(e) {
 			var data = $(e.relatedTarget).data();
-			console.log(data);
+			$('.recordId', this).text(data.recordId);
 			$('.btn-ok', this).data('url', data.url);
 			$('.btn-ok', this).data('urlToLoadOnSuccess', data.callOnSuccess);
 		});
@@ -35,13 +28,23 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
-				<h4 class="modal-title" id="myModalLabel"></h4>
+				<h4 class="modal-title" id="deleteModalTitle">
+					Confirm
+					<%=request.getParameter("elementType")%>
+					Deletion?
+				</h4>
 			</div>
 			<div class="modal-body">
-				<p>Are you sure you want to delete?</p>
+				<p>
+					Are you sure you want to delete
+					<%=request.getParameter("elementType")%>
+				<b class="recordId"></b>
+				?
+				</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="closeButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" id="closeButton" class="btn btn-default"
+					data-dismiss="modal">Cancel</button>
 				<button type="button" class="btn btn-danger btn-ok">Delete</button>
 			</div>
 		</div>

@@ -27,7 +27,6 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import edu.asu.diging.vspace.web.CustomResponses;
 
 @Transactional
 @Service
@@ -36,23 +35,22 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceRepository spaceRepo;
-    
+
     @Autowired
     private SpaceDisplayRepository spaceDisplayRepo;
 
     @Autowired
     private ImageRepository imageRepo;
 
-    
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private ISpaceDisplayFactory spaceDisplayFactory;
 
     @Autowired
     private IImageFactory imageFactory;
-    
+
     @Autowired
     private IImageService imageService;
 
@@ -60,8 +58,8 @@ public class SpaceManager implements ISpaceManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
-     * diging.vspace.core.model.ISpace, java.lang.String)
+     * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.
+     * asu. diging.vspace.core.model.ISpace, java.lang.String)
      */
     @Override
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
@@ -76,7 +74,7 @@ public class SpaceManager implements ISpaceManager {
         } else {
             spaceDisplay = displays.get(0);
         }
-        
+
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
@@ -98,15 +96,15 @@ public class SpaceManager implements ISpaceManager {
             bgImage.setParentPath(relativePath);
             ImageData imageData = imageService.getImageData(image);
             if (imageData != null) {
-            	bgImage.setHeight(imageData.getHeight());
-            	bgImage.setWidth(imageData.getWidth());
+                bgImage.setHeight(imageData.getHeight());
+                bgImage.setWidth(imageData.getWidth());
             }
             imageRepo.save((VSImage) bgImage);
             space.setImage(bgImage);
             spaceDisplay.setHeight(bgImage.getHeight());
             spaceDisplay.setWidth(bgImage.getWidth());
         }
-        
+
         space = spaceRepo.save((Space) space);
         spaceDisplay.setSpace(space);
         spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
@@ -142,24 +140,17 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
     }
-    
+
     /**
      * Method to delete space based on id
      * 
-     * @param id  if id is null or space with input id is not found return corresponding error message, else delete and return success message
-     * @return response message  
+     * @param id
+     *            if id is null throws exception, else delete corresponding
+     *            space
      */
     @Override
-    public CustomResponses deleteSpaceById(String id) {
-        if(id!=null) {
-            if(!spaceRepo.findById(id).isPresent()){
-                return CustomResponses.NOT_FOUND;
-            } else {
-                spaceRepo.deleteById(id);
-                return CustomResponses.SUCCESS;
-            }
-        } else {
-            return CustomResponses.NULL_INPUT;
-        }
+    public void deleteSpaceById(String id) {
+        spaceRepo.deleteById(id);
+
     }
 }

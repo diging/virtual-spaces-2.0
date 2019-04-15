@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ILinkManager;
@@ -31,8 +29,4 @@ public class SpaceController {
         return "staff/space";
     }
 
-    @RequestMapping(value = "/staff/space/{id}", method = RequestMethod.DELETE)
-    public @ResponseBody String deleteSpace(@PathVariable String id) {
-        return spaceManager.deleteSpaceById(id).getResponseMessage();
-    }
 }

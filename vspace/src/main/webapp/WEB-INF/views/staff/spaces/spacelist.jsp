@@ -7,12 +7,6 @@
 <div style="padding-bottom: 20px;">
 This virtual exhibition contains the following spaces.
 </div>
-<div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-  <strong></strong>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 <ul class="list-group list-group-flush">
 <c:forEach items="${spaces}" var="space">
 	<li class="list-group-item">
@@ -21,7 +15,10 @@ This virtual exhibition contains the following spaces.
 		</a>
 		
 		(Created on <span class="date">${space.creationDate}</span> by ${space.createdBy})
-		<a href="#" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"  data-call-on-success = "<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete"><span data-feather="trash-2"></span></a>
+		<a href="#" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"  data-call-on-success = "<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete"><span data-feather="trash-2"></span></a>
 	</li>
 </c:forEach>
 </ul>
+<jsp:include page="../../deleteModal.jsp" >
+<jsp:param name="elementType" value="Space" /> 
+</jsp:include>

@@ -2,7 +2,6 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +30,6 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import edu.asu.diging.vspace.web.CustomResponses;
 
 public class SpaceManagerTest {
 
@@ -109,22 +107,11 @@ public class SpaceManagerTest {
         Mockito.verify(spaceDisplayRepo).save((SpaceDisplay)spaceDisplay);
     }
     
-    @Test
-    public void test_deleteSpaceById_success() {
-        Space space = new Space();
-        space.setId("SPA1");
-        Mockito.when(spaceRepo.findById("SPA1")).thenReturn(Optional.of(space));
-        Assert.assertEquals(CustomResponses.SUCCESS, managerToTest.deleteSpaceById("SPA1"));
-    }
+
     
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void test_deleteSpaceById_whenIdIsNull() {
-        Assert.assertEquals(CustomResponses.NULL_INPUT, managerToTest.deleteSpaceById(null));
+       managerToTest.deleteSpaceById(null);
     }
     
-    @Test
-    public void test_deleteSpaceById_whenIdIsNotPresent() {
-        Mockito.when(spaceRepo.findById("SPA1")).thenReturn(Optional.empty());
-        Assert.assertEquals(CustomResponses.NOT_FOUND, managerToTest.deleteSpaceById("SPA1"));
-    }
 }

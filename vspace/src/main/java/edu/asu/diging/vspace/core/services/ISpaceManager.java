@@ -4,7 +4,6 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.web.CustomResponses;
 
 public interface ISpaceManager {
 
@@ -16,5 +15,5 @@ public interface ISpaceManager {
 
     List<ISpace> getAllSpaces();
     
-    CustomResponses deleteSpaceById(String id);
+    void deleteSpaceById(String id);
 }
