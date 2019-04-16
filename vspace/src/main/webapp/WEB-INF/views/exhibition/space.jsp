@@ -48,7 +48,7 @@ function drawLinks() {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
         var link = $('<a></a>');
-        link.attr('href', '<c:url value="${link.externalLink.externalLink}"/>');
+        link.attr('href', "${link.externalLink.externalLink}");
         link.attr('target', "_blank");
         
         var linkDisplay = $('<span data-feather="navigation-2" class="fa fa-globe"></span>');
