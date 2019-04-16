@@ -31,13 +31,13 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
 				<h4 class="modal-title" id="deleteModalTitle">
 					Confirm
 					<%=request.getParameter("elementType")%>
 					Deletion?
 				</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
 			</div>
 			<div class="modal-body">
 				<p>
