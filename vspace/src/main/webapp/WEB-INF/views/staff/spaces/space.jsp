@@ -1,7 +1,6 @@
-<%@ page pageEncoding="UTF-8"%>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
@@ -15,6 +14,7 @@ $( document ).ready(function() {
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
+		
 		var link;
 		if ("${link.type}" == "ALERT") {
 			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');

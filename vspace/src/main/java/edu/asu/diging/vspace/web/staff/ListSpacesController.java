@@ -18,6 +18,7 @@ public class ListSpacesController {
 		
 		model.addAttribute("spaces", spaceRepo.findAll());		
 		
+		
 		return "staff/space/list";
 	}
 }
