@@ -11,7 +11,7 @@ import edu.asu.diging.vspace.web.staff.forms.ModuleForm;
 public class ModuleFactory implements IModuleFactory {
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.factory.impl.IModuleFactory#createModule(edu.asu.diging.vspace.web.staff.forms.ModuleForm, java.lang.String)
+	 * @see edu.asu.diging.vspace.core.factory.impl.IModuleFactory#createModule(edu.asu.diging.vspace.web.staff.forms.ModuleForm)
 	 */
 	@Override
 	public IModule createModule(ModuleForm form) {
