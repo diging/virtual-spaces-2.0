@@ -28,7 +28,7 @@ function drawLinks() {
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay = $('<span data-feather="navigation-2" class="fa fa-globe"></span>');
+            var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
         }
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
@@ -51,7 +51,7 @@ function drawLinks() {
         link.attr('href', '<c:url value="${link.externalLink.externalLink}"/>');
         link.attr('target', "_blank");
         
-        var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
+        var linkDisplay = $('<span data-feather="navigation-2" class="fa fa-globe"></span>');
        
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
