@@ -541,7 +541,7 @@ ${space.description}
 <button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
-<button type="button" class="btn btn-primary btn-sm" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete">
+<button type="button" class="btn btn-primary btn-sm" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete">
 Delete Space
 </button>
 </nav>

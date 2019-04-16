@@ -5,11 +5,15 @@
 		$('#confirm-delete').on('click', '.btn-ok', function(e) {
 			var url = $(this).data('url');
 			var urlToLoadOnSuccess = $(this).data('urlToLoadOnSuccess');
+			var urlToLoadOnError = $(this).data('urlToLoadOnError');
 			$.ajax({
 				url : url,
 				type : 'DELETE',
 				success : function(response) {
 					window.location.href = urlToLoadOnSuccess;
+				},
+				error : function(errorMessage) {
+					window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
 				}
 			});
 		});
@@ -18,6 +22,7 @@
 			$('.recordId', this).text(data.recordId);
 			$('.btn-ok', this).data('url', data.url);
 			$('.btn-ok', this).data('urlToLoadOnSuccess', data.callOnSuccess);
+			$('.btn-ok', this).data('urlToLoadOnError', data.callOnError);
 		});
 	});
 </script>
