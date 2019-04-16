@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ public class DeleteSpaceController {
     public ResponseEntity<?> deleteSpace(@PathVariable String id) {
         try {
             spaceManager.deleteSpaceById(id);
-        } catch(Exception exception) {
+        } catch(IllegalArgumentException | EmptyResultDataAccessException exception) {
             return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
         } 
         return new ResponseEntity<>(HttpStatus.OK);
