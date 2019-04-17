@@ -1,0 +1,94 @@
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	
+}
+
+.navbar {
+  max-height: 40px;
+  padding-top: 5px;
+}
+
+.navbar-brand {
+  padding: 5px 15px;
+  height: 30px;
+  line-height: 18px;
+  font-size: 18px;
+}
+
+.nav-item {
+	height: 30px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.navbar-nav {
+	padding: 0px 15px;
+  	height: 30px;
+  	line-height: 18px;
+  	font-size: 18px;
+}
+
+
+.navbar-toggle {
+  /* (40px - button height 30px) / 2 = 5px */
+  margin-top: 5px;
+  padding: 9px 10px !important;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav > li > a, .navbar-nav > li button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 18px;
+  }
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);
+    transform-origin: center left; /* Set the transformed position of sidebar to center left side. */
+	padding: 10px;
+	background-color: #f3f3f3;
+	border: 1px solid #efefef;
+	border-radius: 0 10px 10px 0;
+	margin-top: 10px;
+	z-index: 99;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+.spaceNav a {
+	padding: .3rem 1.25rem;
+} 
+
+.descriptionBox {
+	background-color: #eeeeee;
+	text-align: left;
+	border: solid 1px #dddddd;
+	z-index: 98;
+	position: relative;
+	padding: 10px;
+	opacity: 0.8;
+	margin-right: 10px;
+	font-size: 13px;
+}
+
+.container {
+  width: auto;
+  max-width: 680px;
+  padding: 0 15px;
+}
+
+.footer {
+  background-color: #f5f5f5;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 10px;
+}
