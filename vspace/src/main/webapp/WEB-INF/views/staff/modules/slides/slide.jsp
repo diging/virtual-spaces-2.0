@@ -53,7 +53,8 @@ $(document).ready(function() {
 		$("#addImgAlert").show();
   	});
 	
-	$("#uploadImage").click(function() {
+	$("#uploadImage").click(function(e) {
+		e.preventDefault();
 			$("#addImgAlert").hide();
 			uploadImage();
   	});
