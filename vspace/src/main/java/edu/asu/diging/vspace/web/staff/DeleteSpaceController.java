@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class DeleteSpaceController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -22,6 +26,7 @@ public class DeleteSpaceController {
         try {
             spaceManager.deleteSpaceById(id);
         } catch (SpaceDoesNotExistException spaceDoesNotExistException) {
+            logger.error("Could not delete space.", spaceDoesNotExistException);
             return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);

@@ -156,7 +156,7 @@ public class SpaceManager implements ISpaceManager {
         try {
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-            throw new SpaceDoesNotExistException();
+            throw new SpaceDoesNotExistException(exception);
         }
 
     }
