@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.FileNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 @Controller
 public class EditImageController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private ImageRepository imageRepo;
 
@@ -44,6 +48,7 @@ public class EditImageController {
         try {
             imageFactory.editImage(imageId, imageForm);
         } catch (FileNotFoundException | FileStorageException exception) {
+            logger.error("Edit Image Failed" + exception);
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
             if (exception instanceof FileStorageException)

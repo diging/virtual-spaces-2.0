@@ -36,18 +36,19 @@ public class ImageFactory implements IImageFactory {
         return image;
     }
     
-    /*
-     * (non-Javadoc)
+    /**
+     * Method to rename image   
      * 
-     * @see
-     * edu.asu.diging.vspace.core.factory.impl.IImageFactory#createImage(java.lang.
-     * String, java.lang.String)
-     */
+     * @param imageId - image unique identifier
+     * @param imageForm - ImageForm with updated values for image fields
+     * @return throws FileNotFoundException if no image exists with id, 
+     * throws FileStorageException if file renaming fails 
+     */ 
     @Override
     public void editImage(String imageId, ImageForm imageForm) throws FileNotFoundException, FileStorageException {
         if (imageRepo.findById(imageId).isPresent()) {
             VSImage image = imageRepo.findById(imageId).get();
-            if (storage.renameFile(imageId, image.getFilename(), imageForm.getFileName())) {
+            if (storage.renameImage(image, imageForm.getFileName())) {
                 image.setFilename(imageForm.getFileName());
                 image.setDescription(imageForm.getDescription());
                 imageRepo.save(image);

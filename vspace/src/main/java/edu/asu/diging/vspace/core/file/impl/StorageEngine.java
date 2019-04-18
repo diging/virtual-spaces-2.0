@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Component
 @PropertySource("classpath:/config.properties")
@@ -76,17 +77,16 @@ public class StorageEngine implements IStorageEngine {
     }
 	
     /**
-     * Method to rename file   
+     * Method to rename image   
      * 
-     * @param directory - directory to which the file belongs
-     * @param currentFileName - current name of file
+     * @param image - image file
      * @param newFileName - new name of the file
      * @return true if file renaming was successful, otherwise return false 
      */ 
 	@Override
-	public boolean renameFile(String directory, String currentFileName, String newFileName) {
-	    File currentFile = new File(path + File.separator + directory + File.separator + currentFileName);
-	    File renamedFile = new File(path + File.separator + directory + File.separator + newFileName);
+	public boolean renameImage(IVSImage image, String newFileName) {
+	    File currentFile = new File(path + File.separator + image.getId() + File.separator + image.getFilename());
+	    File renamedFile = new File(path + File.separator + image.getId() + File.separator + newFileName);
 	    return currentFile.renameTo(renamedFile);
 	}
 }
