@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
@@ -17,6 +18,7 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
@@ -106,4 +108,22 @@ public class SpaceManagerTest {
         Mockito.verify(spaceRepo).save(space);
         Mockito.verify(spaceDisplayRepo).save((SpaceDisplay)spaceDisplay);
     }
+    
+
+    
+    @Test(expected = SpaceDoesNotExistException.class)
+    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException {
+       Mockito.doThrow(IllegalArgumentException.class)
+        .when(spaceRepo).deleteById(null);
+       managerToTest.deleteSpaceById(null);
+    }
+    
+    @Test(expected = SpaceDoesNotExistException.class)
+    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {
+       String imgId = "imgId";
+       Mockito.doThrow(EmptyResultDataAccessException.class)
+        .when(spaceRepo).deleteById(imgId);
+       managerToTest.deleteSpaceById(imgId);
+    }
+    
 }
