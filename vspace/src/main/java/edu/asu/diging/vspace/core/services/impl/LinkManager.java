@@ -84,7 +84,7 @@ public class LinkManager implements ILinkManager {
      */
     
     /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#createSpaceLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, int, java.lang.String, java.lang.String, edu.asu.diging.vspace.core.model.display.DisplayType)
+     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#createSpaceLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, int, java.lang.String, java.lang.String, edu.asu.diging.vspace.core.model.display.DisplayType, byte[], java.lang.String)
      */
     @Override
     public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
@@ -164,10 +164,10 @@ public class LinkManager implements ILinkManager {
     }
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, java.lang.String)
+     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, java.lang.String, edu.asu.diging.vspace.core.model.display.DisplayType, byte[], java.lang.String)
      */
     @Override
-    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY, String externalLink) throws SpaceDoesNotExistException {
+    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY, String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceManager.getSpace(source.getId());
         if(source == null) {
@@ -180,6 +180,27 @@ public class LinkManager implements ILinkManager {
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setName(title);
+        display.setType(displayType != null ? displayType : DisplayType.ARROW);
+        
+        if (linkImage != null && linkImage.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(linkImage);
+
+            IVSImage image = imageFactory.createImage(imageFilename, contentType);
+            image = imageRepo.save((VSImage) image);
+            
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
+            } catch (FileStorageException e) {
+                throw new ImageCouldNotBeStoredException(e);
+            }
+            image.setParentPath(relativePath);
+            imageRepo.save((VSImage)image);
+            
+            display.setImage(image);
+        }
+        
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
         return display;
     }

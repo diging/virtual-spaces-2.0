@@ -11,4 +11,8 @@ public interface IExternalLinkDisplay extends ILinkDisplay {
     void setExternalLink(IExternalLink link);
 
     IExternalLink getExternalLink();
+    
+    void setType(DisplayType type);
+
+    DisplayType getType();
 }

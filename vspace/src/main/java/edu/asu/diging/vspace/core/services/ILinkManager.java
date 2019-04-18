@@ -19,7 +19,7 @@ public interface ILinkManager {
     List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId);
 
     IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
-            String externalLink) throws SpaceDoesNotExistException;
+            String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
     void deleteSpaceLink(String linkId);
 

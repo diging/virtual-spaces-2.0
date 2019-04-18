@@ -50,10 +50,16 @@ $( document ).ready(function() {
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var link = $('<span data-feather="external-link" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.externalLink}" style="color:blue;">${link.externalLink.name}</a></p>'); 
+		var link ;
+		if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
+	           link = $('<a href="${link.externalLink.externalLink}" target="_blank"><img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" /></a>');
+		}  else {
+				link = $('<span data-feather="external-link" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.externalLink}" style="color:blue;" target="_blank">${link.externalLink.name}</a></p>');
+		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
+		link.find("span").css('fill', 'red');
 		link.css('color', 'blue');
 		link.css('font-size', "10px");
 		
@@ -75,6 +81,7 @@ $( document ).ready(function() {
 	$("#createExternalLinkAlert").draggable();
 	$("#changeBgImgAlert").draggable();
 	$("#spaceLinkInfo").draggable();
+	$("#externalLinkInfo").draggable();
     
     
 	// store where a user clicked on an image
@@ -104,45 +111,28 @@ $( document ).ready(function() {
 	
 	$("#addExternalLinkButton").click(function(e) {
 		$("#createSpaceLinkAlert").hide();
+		$("#changeBgImgAlert").hide();
 		$("#bgImage").off("click");
 		$("#bgImage").on("click", function(e){
 		    e.preventDefault();
 		    $("#link").remove();
-		    $("#external-arrow").remove();
+		   	$("#external-arrow").remove();
 		    $("#ext_label").remove();
-		    var icon = $('<span id="external-arrow" data-feather="external-link" class="flex"></span>');
+		    var icon;
 		    	    
 		    var posX = $(this).position().left
 		    var posY = $(this).position().top;
 		    storeX = e.pageX - $(this).offset().left;
 		    storeY = e.pageY - $(this).offset().top;
 		    
-		    if ($("#externalLinkLabel").val() != "") {
-		    	var ext_label = $("<p id='ext_label'></p>").append('<a href="' + $("#url").val() + '" style=\"color:blue;\">'+$("#externalLinkLabel").val()+'</a>');
-		    	$(ext_label).css({
-		    		'position': 'absolute',
-					'font-size': "10px",
-					'transform': 'rotate(0deg)',
-					'left': storeX + posX - 10,
-					'top': storeY + posY + 16,
-					'color': 'blue'
-				});
-			}
-		    icon.css('position', 'absolute');
-		    icon.css('left', storeX + posX);
-		    icon.css('top', storeY + posY);
-		    icon.css('color', 'blue');
-		    icon.css('font-size', "15px");
-		    
-		    $("#space").append(icon);
-		    $("#space").append(ext_label);
-		    feather.replace();
+		    showExternalLinks(createExternalLinkInfo());
 		});
 		$("#createExternalLinkAlert").show();
 	});
 	
 	$('#changeBgImgButton').click(function(file) {
         $("#createSpaceLinkAlert").hide();
+        $("#createExternalLinkAlert").hide();
         $("#changeBgImgAlert").show();          
     });
 	
@@ -181,7 +171,7 @@ $( document ).ready(function() {
 	            $("#space_label").attr("id","");
 	            $("#link").attr("id","");
 	            $("#createSpaceLinkAlert").hide();  
-	            $("#errorMsg").text("")
+	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
 	        }
 		});
@@ -189,17 +179,42 @@ $( document ).ready(function() {
 	
 	$("#createExternalLinkBtn").click(function(e) {
 		var payload = {};
-		payload["x"] = storeX;
-		payload["y"] = storeY;
-		payload["externalLinkLabel"] = $("#externalLinkLabel").val();
-		payload["url"] = $("#externalLink").val();
-		$.post("<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-			// TODO: show success/error message
+		
+		if (storeX == undefined || storeY == undefined) {
+			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+			$('#errorAlert').show();
+			return;
+		}
+		
+		$("#externalLinkX").val(storeX);
+		$("#externalLinkY").val(storeY);
+		
+		var form = $("#createExternalLinkForm");
+		var formData = new FormData(form[0]);
+		
+		var externalLinkInfo = createExternalLinkInfo();
+        
+	    $.ajax({
+			type: "POST",
+			url: "<c:url value="/staff/space/${space.id}/externallink?${_csrf.parameterName}=${_csrf.token}" />",
+			cache       : false,
+	        contentType : false,
+	        processData : false,
+	        enctype: 'multipart/form-data',
+	        data: formData, 
+	        success: function(data) {
+	        	var linkData = JSON.parse(data);
+	        	$("#bgImage").off("click");
+	        	externalLinkInfo["id"] = linkData["id"];
+	            showExternalLinks(externalLinkInfo, true);
+	            $("#ext_label").attr("id","");
+	            $("#link").attr("id","");
+	            $("#createExternalLinkAlert").hide();  
+	            $("#errorMsg").text("");
+	            $('#errorAlert').hide();
+	            $("#external-arrow").attr("id","");
+	        }
 		});
-		$("#bgImage").off("click");
-		$("#createExternalLinkAlert").hide();
-		$("#ext_label").attr("id","");
-		$("#external-arrow").attr("id","");
 	});
 	
 	// ------------- other buttons ------------
@@ -224,6 +239,7 @@ $( document ).ready(function() {
 		externalLink["y"] = storeY;
 		externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
 		externalLink["url"] = $("#externalLink").val();
+		externalLink["type"] = $("#extType").val();
 		showExternalLinks(externalLink);
 	});		
 		
@@ -242,9 +258,24 @@ $( document ).ready(function() {
 	linkIconReader.onload = function(e) {
 		linkIcon = e.target.result;
 		showSpaceLink(createSpaceLinkInfo());
+		showExternalLinks(createExternalLinkInfo());
 	}
 	
 	$("#spaceLinkImage").change(function() {
+		if (this.files && this.files[0]) {
+			linkIconReader.readAsDataURL(this.files[0]);
+		}
+	});
+	
+	//link icons for external link
+	/* var linkIconReaderExt = new FileReader();
+	var linkIconExt;
+	linkIconReaderExt.onload = function(e) {
+		linkIconExt = e.target.result;
+		showExternalLinks(createExternalLinkInfo());
+	} */
+	
+	$("#externalLinkImage").change(function() {
 		if (this.files && this.files[0]) {
 			linkIconReader.readAsDataURL(this.files[0]);
 		}
@@ -302,32 +333,52 @@ $( document ).ready(function() {
 		$("#space").append(space_label);
 
 		feather.replace();
-	}
+	}			        
 	
-	function showExternalLinks(externalLink) {
+	function showExternalLinks(externalLink, show) {		
 		$("#ext_label").remove();
+		$("#link").remove();
 		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;		
-		var ext_label = $("<p id='ext_label'></p>").append('<a href="' + externalLink["url"] + '" style=\"color:blue;\">'+externalLink["externalLinkLabel"]+'</a>');
-		ext_label.css({
-			'position': 'absolute',
-			'font-size': "10px",
-			'transform': 'rotate(0deg)',
-			'left': externalLink["x"] + posX - 10,
-			'top': externalLink["y"] + posY + 16,
-			'color': 'blue'
-		});
-		var link = $('<span id="external-link" data-feather="external-link" class="flex"></span>');
-
+		var posY = $("#bgImage").position().top;
+		var ext_label = $("<p id='ext_label'></p>");
+		ext_label.text(externalLink["externalLinkLabel"]);
+		
+		var link;
+		if(externalLink["type"] == "IMAGE" && linkIcon) {
+			console.log(linkIcon);
+			link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + linkIcon + '"></div>');
+		} else {
+			$(ext_label).css({
+				'position': 'absolute',
+				'font-size': "10px",
+				'transform': 'rotate(0deg)',
+				'left': externalLink["x"] + posX - 10,
+				'top': externalLink["y"] + posY + 16,
+				'color': 'blue'
+			});
+			link = $('<span data-link-id="' + externalLink["id"] + '"><div id="link" data-feather="external-link" class="flex"></div></span>');
+		}
+		
 		link.css('position', 'absolute');
 		link.css('left', externalLink["x"] + posX);
 		link.css('top', externalLink["y"] + posY);
 		link.css('color', 'blue');
 		link.css('font-size', "10px");
 		
+		if (externalLink["id"]) {
+			link.attr("data-link-id", externalLink["id"]);
+			link.css('cursor', 'pointer');
+			link.attr('href', externalLink["url"]);
+			ext_label.attr("data-link-id", externalLink["id"]);
+            ext_label.css('cursor', 'pointer');
+		}
+
 		$("#space").append(link);
 		$("#space").append(ext_label);
 		$("#external-link").remove();
+
+		feather.replace();
+		
 	}
 	
 	// ------------ Cancel buttons -----------------
@@ -360,7 +411,7 @@ $( document ).ready(function() {
         resetHighlighting();
         $("#spaceLinkInfo").hide();
     });
-	
+    
 	// --------- Utility functions -------------
 	function createSpaceLinkInfo() {
 		var info = {};
@@ -370,6 +421,15 @@ $( document ).ready(function() {
 		info["linkedSpace"] = $("#linkedSpace").val();
 		info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
 		info["type"] = $("#type").val();
+	    return info;
+	}
+	
+	function createExternalLinkInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		info["type"] = $("#extType").val();
+		info["externalLinkLabel"] = $("#externalLinkLabel").val();
 	    return info;
 	}
 	
@@ -510,16 +570,43 @@ ${space.description}
 	</div>
 	
 </form:form>
-<form>
+<form id="createExternalLinkForm">
 	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
 		 <h6 class="alert-heading"><small>Create new External Link</small></h6>
 		  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
 		  <hr>  
+		  
+		  <input type="hidden" name="x" id="externalLinkX" />
+	  	  <input type="hidden" name="y" id="externalLinkY"/>
+		  
 		  <label style="margin-right: 5px;"><small>Label:</small> </label>
-		  <input class="form-control-xs extlink-target" type="text" id="externalLinkLabel"><br>
+		  <input class="form-control-xs target" type="text" name="externalLinkLabel" id="externalLinkLabel"><br>
 		  
 		  <label style="margin-right: 5px;"><small>External Link</small> </label>
-		  <input class="form-control-xs" type="text" size="15" id="externalLink"><br>
+		  <input class="form-control-xs extlink-target" type="text" size="15" name="url" id="externalLink"><br>
+		  
+		  <div class="row">
+	      <div class="col-sm-4">
+		  <label><small>Type:</small> </label>
+		  </div>
+	      <div class="col-sm-8">
+		  <select id="extType" name="type" class="form-control-xs extlink-target" >
+		  	<option selected value="">Choose...</option>
+		  	<option value="IMAGE">Image</option>
+		  	<option value="ARROW">Link</option>
+		  </select>
+		  </div>
+	      </div>
+	      
+	      <div class="row">
+	      <div class="col-sm-3" style="padding-right: 0px;">
+		  <label><small>Image:</small> </label>
+		  </div>
+	      <div class="col-sm-9">
+	      <input type="file" class="form-control-xs" type="text" name="externalLinkImage" id="externalLinkImage"><br>
+	      </div>
+	      </div>
+		  
 		  <HR>
 		  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
 	</div>
