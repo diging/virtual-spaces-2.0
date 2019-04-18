@@ -9,12 +9,14 @@ import javax.transaction.Transactional;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
@@ -147,10 +149,15 @@ public class SpaceManager implements ISpaceManager {
      * @param id
      *            if id is null throws exception, else delete corresponding
      *            space
+     * @throws SpaceDoesNotExistException 
      */
     @Override
-    public void deleteSpaceById(String id) {
-        spaceRepo.deleteById(id);
+    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
+        try {
+            spaceRepo.deleteById(id);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new SpaceDoesNotExistException();
+        }
 
     }
 }
