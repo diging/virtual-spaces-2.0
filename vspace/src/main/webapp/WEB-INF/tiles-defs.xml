@@ -131,4 +131,7 @@
     <definition name="staff/image" extends="exhibit.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/images/image.jsp" />
 	</definition>
+	<definition name="staff/image/edit" extends="exhibit.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/edit.jsp" />
+    </definition>
 </tiles-definitions>

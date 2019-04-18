@@ -10,4 +10,5 @@ public interface IStorageEngine {
 
 	byte[] getImageContent(String directory, String filename) throws IOException;
 
+	boolean renameFile(String directory, String currentFileName, String newFileName);
 }

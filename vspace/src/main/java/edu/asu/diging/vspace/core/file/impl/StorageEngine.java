@@ -74,4 +74,19 @@ public class StorageEngine implements IStorageEngine {
         byteOutput.close();
         return bytes;
     }
+	
+    /**
+     * Method to rename file   
+     * 
+     * @param directory - directory to which the file belongs
+     * @param currentFileName - current name of file
+     * @param newFileName - new name of the file
+     * @return true if file renaming was successful, otherwise return false 
+     */ 
+	@Override
+	public boolean renameFile(String directory, String currentFileName, String newFileName) {
+	    File currentFile = new File(path + File.separator + directory + File.separator + currentFileName);
+	    File renamedFile = new File(path + File.separator + directory + File.separator + newFileName);
+	    return currentFile.renameTo(renamedFile);
+	}
 }
