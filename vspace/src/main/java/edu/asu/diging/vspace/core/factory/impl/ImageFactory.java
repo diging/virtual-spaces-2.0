@@ -52,10 +52,10 @@ public class ImageFactory implements IImageFactory {
                 image.setDescription(imageForm.getDescription());
                 imageRepo.save(image);
             } else {
-                throw new FileNotFoundException();
+                throw new FileStorageException("File renaming unsuccessful.");
             }
         } else {
-            throw new FileStorageException();
+            throw new FileNotFoundException();
         }
     }
 }

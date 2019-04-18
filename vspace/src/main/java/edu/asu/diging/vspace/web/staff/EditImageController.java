@@ -22,7 +22,7 @@ public class EditImageController {
 
     @Autowired
     private ImageRepository imageRepo;
-    
+
     @Autowired
     private IImageFactory imageFactory;
 
@@ -43,11 +43,13 @@ public class EditImageController {
             RedirectAttributes attributes) {
         try {
             imageFactory.editImage(imageId, imageForm);
-        } catch (FileNotFoundException|FileStorageException exception) {
+        } catch (FileNotFoundException | FileStorageException exception) {
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
-            exception instanceof(FileNotFoundException)?attributes.addAttribute("message", "Error occured while renaming file name. Please try again.");
-            attributes.addAttribute("message", "The image id provided is invalid. Please try again");
+            if (exception instanceof FileStorageException)
+                attributes.addAttribute("message", "Error occured while renaming file name. Please try again.");
+            else
+                attributes.addAttribute("message", "The image id provided is invalid. Please try again");
             return "redirect:/staff/images/list/1";
         }
         return "redirect:/staff/display/image/{imageId}";
