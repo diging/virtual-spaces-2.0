@@ -17,7 +17,8 @@
 			data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"
 			data-call-on-success="<c:url value="/staff/space/list"/>"
 			data-call-on-error="<c:url value="/staff/space/list"/>"
-			data-toggle="modal" data-target="#confirm-delete"><span
+			data-warning="${space.spaceLinks.size()>0 || space.externalLinks.size()>0? 'Warning! There are links associated with space' : ''}"
+			data-toggle="modal" data-target="#confirm-delete"><span class ="float-right"
 				data-feather="trash-2"></span></a></li>
 	</c:forEach>
 </ul>

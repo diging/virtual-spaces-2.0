@@ -21,6 +21,7 @@
 			var data = $(e.relatedTarget).data();
 			$('.recordId', this).text(data.recordId);
 			$('.btn-ok', this).data('url', data.url);
+			$('#warning', this).text(data.warning);
 			$('.btn-ok', this).data('urlToLoadOnSuccess', data.callOnSuccess);
 			$('.btn-ok', this).data('urlToLoadOnError', data.callOnError);
 		});
@@ -46,6 +47,7 @@
 				<b class="recordId"></b>
 				?
 				</p>
+				<small class="text-danger" id="warning"></small>
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="closeButton" class="btn btn-default"

@@ -1,6 +1,7 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
@@ -400,153 +401,213 @@ $( document ).ready(function() {
 
 </script>
 
-<div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none; position: absolute; top: 10px; right: 50px;">
-   <strong>Error!</strong> <span id="errorMsg"></span>
-   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-       <span aria-hidden="true">&times;</span>
-   </button>
+<div id="errorAlert"
+	class="alert alert-danger alert-dismissible fade show" role="alert"
+	style="display: none; position: absolute; top: 10px; right: 50px;">
+	<strong>Error!</strong> <span id="errorMsg"></span>
+	<button type="button" class="close" data-dismiss="alert"
+		aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
 </div>
 
-<h1>Space: ${space.name} <small style="margin-left: 10px;"><a href="<c:url value="/staff/space/${space.id}/edit" />"><span data-feather="edit"></span></a></small></h1> 
- 
+<h1>
+	Space: ${space.name} <small style="margin-left: 10px;"><a
+		href="<c:url value="/staff/space/${space.id}/edit" />"><span
+			data-feather="edit"></span></a> <a href="#" data-record-id="${space.id}"
+		data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"
+		data-call-on-success="<c:url value="/staff/space/list"/>"
+		data-call-on-error="<c:url value="/staff/space/list"/>"
+		data-toggle="modal" data-target="#confirm-delete" 
+		data-warning="${spaceLinks.size()>0 || externalLinks.size()>0? 'Warning! There are links associated with space' : ''}"><span
+			data-feather="trash-2"></span></a></small>
+</h1>
 <div class="alert alert-light" role="alert">
-  Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}.
-  <br>
-  Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.     
+	Created on <span class="date">${space.creationDate}</span> by
+	${space.createdBy}. <br> Modified on <span class="date">${space.modificationDate}</span>
+	by ${space.modifiedBy}.
 </div>
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
-${space.description}
-</p>
+	${space.description}</p>
 
-<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" var="postUrl" />
+<c:url
+	value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}"
+	var="postUrl" />
 <form id="createSpaceLinkForm">
-	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
-	  <div class="row">
-	  <div class="col">
-	  <h6 class="alert-heading"><small>Create new Space Link</small></h6>
-	  </div>
-	  </div>
-	  <div class="row">
-      <div class="col">
-      <small>Please click on the image where you want to place the new space link. Then click "Create Space Link".</small></p>
-	  <hr>
-	  </div>
-	  </div>
-	  
-	  <input type="hidden" name="x" id="spaceLinkX" />
-	  <input type="hidden" name="y" id="spaceLinkY"/>
-	  
-	  <div class="row">
-      <div class="col-sm-4">
-	  <label><small>Rotation:</small> </label>
-	  </div>
-	  <div class="col-sm-8">
-	  <input class="form-control-xs" type="number" id="spaceLinkRotation" name="rotation" value="0"><br>
-	  </div>
-	  </div>
-	  
-	  <div class="row">
-      <div class="col-sm-4">
-	  <label><small>Label:</small> </label>
-	  </div>
-      <div class="col-sm-8">
-	  <input class="form-control-xs target" type="text" name="spaceLinkLabel" id="spaceLinkLabel"><br>
-	  </div>
-      </div>
-      
-      <div class="row">
-      <div class="col-sm-4">
-	  <label><small>Type:</small> </label>
-	  </div>
-      <div class="col-sm-8">
-	  <select id="type" name="type" class="form-control-xs target" >
-	  	<option selected value="">Choose...</option>
-	  	<option value="IMAGE">Image</option>
-	  	<option value="ARROW">Link</option>
-	  	<option value="ALERT">Alert</option>
-	  </select>
-	  </div>
-      </div>
-	  
-	  <div class="row">
-      <div class="col-sm-5" style="padding-right: 0px;">
-	  <label><small>Linked Space:</small> </label>
-	  </div>
-      <div class="col-sm-7" >
-	  <select id="linkedSpace" name="linkedSpace" class="form-control-xs target">
-	        <option selected value="">Choose...</option>
-	        <c:forEach items="${spaces}" var="space">
-	        <option value="${space.id}">${space.name}</option>
-	        </c:forEach>
-	  </select>
-	  </div>
-      </div>
-      
-      <div class="row">
-      <div class="col-sm-3" style="padding-right: 0px;">
-	  <label><small>Image:</small> </label>
-	  </div>
-      <div class="col-sm-9">
-      <input type="file" class="form-control-xs" type="text" name="spaceLinkImage" id="spaceLinkImage"><br>
-      </div>
-      </div>
-	  
-	  <HR>
-	  <p class="mb-0 text-right"><button id="cancelSpaceLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createSpaceLinkBtn" type="reset" class="btn btn-primary btn-xs">Create Space Link</button></p>
-	   
+	<div id="createSpaceLinkAlert" class="alert alert-secondary"
+		role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 300px; right: 50px; z-index: 999">
+		<div class="row">
+			<div class="col">
+				<h6 class="alert-heading">
+					<small>Create new Space Link</small>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<small>Please click on the image where you want to place the
+					new space link. Then click "Create Space Link".</small>
+				</p>
+				<hr>
+			</div>
+		</div>
+
+		<input type="hidden" name="x" id="spaceLinkX" /> <input type="hidden"
+			name="y" id="spaceLinkY" />
+
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Rotation:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs" type="number" id="spaceLinkRotation"
+					name="rotation" value="0"><br>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Label:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs target" type="text"
+					name="spaceLinkLabel" id="spaceLinkLabel"><br>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="type" name="type" class="form-control-xs target">
+					<option selected value="">Choose...</option>
+					<option value="IMAGE">Image</option>
+					<option value="ARROW">Link</option>
+					<option value="ALERT">Alert</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-5" style="padding-right: 0px;">
+				<label><small>Linked Space:</small> </label>
+			</div>
+			<div class="col-sm-7">
+				<select id="linkedSpace" name="linkedSpace"
+					class="form-control-xs target">
+					<option selected value="">Choose...</option>
+					<c:forEach items="${spaces}" var="space">
+						<option value="${space.id}">${space.name}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-3" style="padding-right: 0px;">
+				<label><small>Image:</small> </label>
+			</div>
+			<div class="col-sm-9">
+				<input type="file" class="form-control-xs" type="text"
+					name="spaceLinkImage" id="spaceLinkImage"><br>
+			</div>
+		</div>
+
+		<HR>
+		<p class="mb-0 text-right">
+			<button id="cancelSpaceLinkBtn" type="reset"
+				class="btn btn-light btn-xs">Cancel</button>
+			<button id="createSpaceLinkBtn" type="reset"
+				class="btn btn-primary btn-xs">Create Space Link</button>
+		</p>
+
 	</div>
 </form>
-      
-<c:url value="/staff/space/update/${space.id}" var="postUrl" />
-<form:form method="post" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 
-	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-		<h6><small>Change Background Image: </small></h6>
-		<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
-	        <p class="mb-0 text-right"><button type="submit" id="changeBgImgBtn" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
-		<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button></p>
+<c:url value="/staff/space/update/${space.id}" var="postUrl" />
+<form:form method="post"
+	action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
+	enctype="multipart/form-data">
+
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert"
+		style="cursor: move; width: 340px; height: 130px; display: none; position: absolute; top: 100px; right: 50px; z-index: 999">
+		<h6>
+			<small>Change Background Image: </small>
+		</h6>
+		<input type="file" name="file" rows="5" cols="500" id="file" /><br>
+		<br>
+		<p class="mb-0 text-right">
+			<button type="submit" id="changeBgImgBtn"
+				class="btn btn-primary btn-xs">Upload Image</button>
+			&nbsp
+			<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button>
+		</p>
 	</div>
-	
+
 </form:form>
 <form>
-	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
-		 <h6 class="alert-heading"><small>Create new External Link</small></h6>
-		  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
-		  <hr>  
-		  <label style="margin-right: 5px;"><small>Label:</small> </label>
-		  <input class="form-control-xs extlink-target" type="text" id="externalLinkLabel"><br>
-		  
-		  <label style="margin-right: 5px;"><small>External Link</small> </label>
-		  <input class="form-control-xs" type="text" size="15" id="externalLink"><br>
-		  <HR>
-		  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
+	<div id="createExternalLinkAlert" class="alert alert-secondary"
+		role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 300px; right: 50px; z-index: 999">
+		<h6 class="alert-heading">
+			<small>Create new External Link</small>
+		</h6>
+		<p>
+			<small>Please click on the image where you want to place the
+				new external link. Then click "Create External Link".</small>
+		</p>
+		<hr>
+		<label style="margin-right: 5px;"><small>Label:</small> </label> <input
+			class="form-control-xs extlink-target" type="text"
+			id="externalLinkLabel"><br> <label
+			style="margin-right: 5px;"><small>External Link</small> </label> <input
+			class="form-control-xs" type="text" size="15" id="externalLink"><br>
+		<HR>
+		<p class="mb-0 text-right">
+			<button id="cancelExternalLinkBtn" type="reset"
+				class="btn btn-light btn-xs">Cancel</button>
+			<button id="createExternalLinkBtn" type="reset"
+				class="btn btn-primary btn-xs">Create External Link</button>
+		</p>
 	</div>
 </form>
 
-<div id="spaceLinkInfo" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 200px; display:none; position: absolute; top: 400px; right: 50px; z-index:999">
-     <p class="float-right"><a href="#" id="closeSpaceLinkInfo"><span data-feather="x-square"></span></a></p>
-     <h6 class="alert-heading">Space Link: <span id="spaceLinkInfoLabel"></span></h6>
-     <input type="hidden" name="spaceLinkId" id="spaceLinkId" />
-     <button id="deleteSpaceLinkButton" type="reset" class="btn btn-primary btn-xs">Delete Link</button>
+<div id="spaceLinkInfo" class="alert alert-secondary" role="alert"
+	style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+	<p class="float-right">
+		<a href="#" id="closeSpaceLinkInfo"><span data-feather="x-square"></span></a>
+	</p>
+	<h6 class="alert-heading">
+		Space Link: <span id="spaceLinkInfoLabel"></span>
+	</h6>
+	<input type="hidden" name="spaceLinkId" id="spaceLinkId" />
+	<button id="deleteSpaceLinkButton" type="reset"
+		class="btn btn-primary btn-xs">Delete Link</button>
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-<button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
-<button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
-<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
-<button type="button" class="btn btn-primary btn-sm" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete">
-Delete Space
-</button>
+	<button type="button" id="addSpaceLinkButton"
+		class="btn btn-primary btn-sm">Add Space Link</button>
+	&nbsp
+	<button type="button" id="addExternalLinkButton"
+		class="btn btn-primary btn-sm">Add External Link</button>
+	&nbsp
+	<button type="button" id="changeBgImgButton"
+		class="btn btn-primary btn-sm">Change Image</button>
+	&nbsp
 </nav>
 
 <p></p>
 
 <c:if test="${not empty space.image}">
-<div id="space">
-<img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
-</div>
+	<div id="space">
+		<img id="bgImage" width="800px"
+			src="<c:url value="/api/image/${space.image.id}" />" />
+	</div>
 </c:if>
-<jsp:include page="../../deleteModal.jsp" >
-<jsp:param name="elementType" value="Space" /> 
+<jsp:include page="../../deleteModal.jsp">
+	<jsp:param name="elementType" value="Space" />
 </jsp:include>
