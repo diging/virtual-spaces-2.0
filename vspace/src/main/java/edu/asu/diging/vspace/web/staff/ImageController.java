@@ -16,7 +16,7 @@ public class ImageController {
     private ImageRepository imageRepo;
 
     @RequestMapping("/staff/display/image/{id}")
-    public String showSpace(@PathVariable String id, Model model) {
+    public String showImage(@PathVariable String id, Model model) {
         IVSImage image = imageRepo.findById(id).get();
         model.addAttribute("image", image);
         return "staff/image";
