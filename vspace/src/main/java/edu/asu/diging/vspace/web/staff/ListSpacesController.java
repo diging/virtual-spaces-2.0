@@ -6,19 +6,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ListSpacesController {
-	
-	@Autowired
-	private SpaceRepository spaceRepo;
-	
-	@RequestMapping("/staff/space/list")
-	public String listSpaces(Model model) {
-		
-		model.addAttribute("spaces", spaceRepo.findAll());
-		
-		
-		return "staff/space/list";
-	}
+
+    @Autowired
+    private SpaceRepository spaceRepo;
+
+    @Autowired
+    private ISpaceManager spaceManager;
+
+    @RequestMapping("/staff/space/list")
+    public String listSpaces(Model model) {
+        model.addAttribute("spaces", spaceRepo.findAll());
+        model.addAttribute("targetSpacesList", spaceManager.getAllTargetSpaceIds());
+        return "staff/space/list";
+    }
 }

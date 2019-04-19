@@ -9,5 +9,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 @Repository
 @JaversSpringDataAuditable
 public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLink, String> {
-
+    
+    void deleteBySourceSpaceId(String sourceId);
+    
 }

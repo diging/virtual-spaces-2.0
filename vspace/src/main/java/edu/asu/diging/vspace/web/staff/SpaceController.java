@@ -26,6 +26,7 @@ public class SpaceController {
         model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
+        model.addAttribute("isTargetSpace", spaceManager.getAllTargetSpaceIds().contains(id));
         return "staff/space";
     }
 

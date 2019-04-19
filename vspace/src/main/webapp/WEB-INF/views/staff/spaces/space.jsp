@@ -419,7 +419,7 @@ $( document ).ready(function() {
 		data-call-on-success="<c:url value="/staff/space/list"/>"
 		data-call-on-error="<c:url value="/staff/space/list"/>"
 		data-toggle="modal" data-target="#confirm-delete" 
-		data-warning="${spaceLinks.size()>0 || externalLinks.size()>0? 'Warning! There are links associated with space' : ''}"><span
+		data-warning="${isTargetSpace? 'Warning! Other spaces have links to this space' : ''}"><span
 			data-feather="trash-2"></span></a></small>
 </h1>
 <div class="alert alert-light" role="alert">

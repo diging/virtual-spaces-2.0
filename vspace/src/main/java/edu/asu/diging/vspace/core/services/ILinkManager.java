@@ -22,5 +22,7 @@ public interface ILinkManager {
             String externalLink) throws SpaceDoesNotExistException;
 
     void deleteSpaceLink(String linkId);
+    
+    void deleteSpaceLinkBySourceSpace(String sourceId);
 
 }

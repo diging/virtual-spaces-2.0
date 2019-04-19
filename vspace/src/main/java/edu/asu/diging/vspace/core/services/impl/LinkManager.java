@@ -143,6 +143,12 @@ public class LinkManager implements ILinkManager {
         spaceLinkRepo.delete((SpaceLink) link);        
     }
     
+    @Override
+    public void deleteSpaceLinkBySourceSpace(String sourceId) {
+        spaceLinkRepo.deleteBySourceSpaceId(sourceId);        
+    }
+    
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#getSpaceLinkDisplays(java.lang.String)
      */
