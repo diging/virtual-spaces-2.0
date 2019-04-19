@@ -101,7 +101,6 @@
         </main>
       </div>
     </div>
-    
     <script>
 	//# sourceURL=date.js
 	$( document ).ready(function() {

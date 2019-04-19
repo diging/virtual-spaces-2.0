@@ -9,12 +9,14 @@ import javax.transaction.Transactional;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
@@ -35,22 +37,22 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceRepository spaceRepo;
-    
+
     @Autowired
     private SpaceDisplayRepository spaceDisplayRepo;
 
     @Autowired
     private ImageRepository imageRepo;
-    
+
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private ISpaceDisplayFactory spaceDisplayFactory;
 
     @Autowired
     private IImageFactory imageFactory;
-    
+
     @Autowired
     private IImageService imageService;
 
@@ -74,7 +76,7 @@ public class SpaceManager implements ISpaceManager {
         } else {
             spaceDisplay = displays.get(0);
         }
-        
+
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
@@ -96,15 +98,15 @@ public class SpaceManager implements ISpaceManager {
             bgImage.setParentPath(relativePath);
             ImageData imageData = imageService.getImageData(image);
             if (imageData != null) {
-            	bgImage.setHeight(imageData.getHeight());
-            	bgImage.setWidth(imageData.getWidth());
+                bgImage.setHeight(imageData.getHeight());
+                bgImage.setWidth(imageData.getWidth());
             }
             imageRepo.save((VSImage) bgImage);
             space.setImage(bgImage);
             spaceDisplay.setHeight(bgImage.getHeight());
             spaceDisplay.setWidth(bgImage.getWidth());
         }
-        
+
         space = spaceRepo.save((Space) space);
         spaceDisplay.setSpace(space);
         spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
@@ -139,5 +141,23 @@ public class SpaceManager implements ISpaceManager {
         List<ISpace> spaces = new ArrayList<>();
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
+    }
+
+    /**
+     * Method to delete space based on id
+     * 
+     * @param id
+     *            if id is null throws exception, else delete corresponding
+     *            space
+     * @throws SpaceDoesNotExistException 
+     */
+    @Override
+    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
+        try {
+            spaceRepo.deleteById(id);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new SpaceDoesNotExistException(exception);
+        }
+
     }
 }
