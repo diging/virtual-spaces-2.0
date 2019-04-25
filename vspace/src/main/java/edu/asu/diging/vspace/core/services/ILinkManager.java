@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
@@ -23,6 +24,6 @@ public interface ILinkManager {
 
     void deleteSpaceLink(String linkId);
     
-    void deleteSpaceLinkBySourceSpace(String sourceId);
+    void deleteSpaceLinkBySource(String sourceId) throws SpaceLinkDoesNotExistException;
 
 }

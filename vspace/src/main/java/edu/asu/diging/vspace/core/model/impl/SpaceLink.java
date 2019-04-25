@@ -5,14 +5,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 
 @Entity
+@Table(name = "spacelink")
 public class SpaceLink extends VSpaceElement implements ISpaceLink {
 		
 	@Id 
@@ -27,7 +31,8 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
 	private ISpace sourceSpace;
 	
 	@ManyToOne(targetEntity=Space.class)
-	@JoinColumn(name = "target_space_id")
+	@JoinColumn(name = "target_space_id", nullable=true)
+	@NotFound(action = NotFoundAction.IGNORE)
 	private ISpace targetSpace;
 	
 	/* (non-Javadoc)

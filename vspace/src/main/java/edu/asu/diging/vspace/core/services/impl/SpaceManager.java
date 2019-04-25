@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
@@ -28,6 +29,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
@@ -60,6 +62,8 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
 
+    @Autowired
+    private ILinkManager linkManager;
     /*
      * (non-Javadoc)
      * 
@@ -154,13 +158,18 @@ public class SpaceManager implements ISpaceManager {
      *            if id is null throws exception, else delete corresponding
      *            space
      * @throws SpaceDoesNotExistException 
+     * @throws SpaceLinkDoesNotExistException 
      */
     @Override
-    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
+    public void deleteSpaceById(String id) throws SpaceDoesNotExistException, SpaceLinkDoesNotExistException {
         try {
             spaceRepo.deleteById(id);
-        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-            throw new SpaceDoesNotExistException(exception);
+            linkManager.deleteSpaceLinkBySource(id);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException | SpaceLinkDoesNotExistException exception) {
+            if(exception instanceof SpaceLinkDoesNotExistException)
+                throw new SpaceLinkDoesNotExistException(exception);
+            else
+                throw new SpaceDoesNotExistException(exception);
         }
 
     }

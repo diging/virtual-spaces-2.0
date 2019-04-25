@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -21,19 +21,15 @@ public class DeleteSpaceController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
-    @Autowired
-    private ILinkManager linkManager;
 
     @RequestMapping(value = "/staff/space/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteSpace(@PathVariable String id) {
         try {
             spaceManager.deleteSpaceById(id);
-        } catch (SpaceDoesNotExistException spaceDoesNotExistException) {
-            logger.error("Could not delete space.", spaceDoesNotExistException);
+        } catch (SpaceDoesNotExistException | SpaceLinkDoesNotExistException exception) {
+            logger.error("Could not delete space.", exception);
             return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
         }
-        linkManager.deleteSpaceLinkBySourceSpace(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -19,6 +19,7 @@ import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
@@ -31,6 +32,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 public class SpaceManagerTest {
@@ -68,12 +70,16 @@ public class SpaceManagerTest {
     @Mock
     private ISpaceDisplayFactory spaceDisplayFactory;
 
+    @Mock
+    private ILinkManager linkManager;
+
     @InjectMocks
     private SpaceManager managerToTest;
 
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
-
+    private String spaceId = "spaceId";
+    
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -112,18 +118,17 @@ public class SpaceManagerTest {
 
     
     @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException {
+    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException, SpaceLinkDoesNotExistException {
        Mockito.doThrow(IllegalArgumentException.class)
         .when(spaceRepo).deleteById(null);
        managerToTest.deleteSpaceById(null);
     }
     
     @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {
-       String imgId = "imgId";
+    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException, SpaceLinkDoesNotExistException {  
        Mockito.doThrow(EmptyResultDataAccessException.class)
-        .when(spaceRepo).deleteById(imgId);
-       managerToTest.deleteSpaceById(imgId);
+        .when(spaceRepo).deleteById(spaceId);
+       managerToTest.deleteSpaceById(spaceId);
     }
     
 }

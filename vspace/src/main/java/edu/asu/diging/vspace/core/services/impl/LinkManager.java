@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
@@ -18,6 +19,7 @@ import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -144,8 +146,12 @@ public class LinkManager implements ILinkManager {
     }
     
     @Override
-    public void deleteSpaceLinkBySourceSpace(String sourceId) {
-        spaceLinkRepo.deleteBySourceSpaceId(sourceId);        
+    public void deleteSpaceLinkBySource(String sourceId) throws SpaceLinkDoesNotExistException {
+        try{
+            spaceLinkRepo.deleteBySourceSpaceId(sourceId);      
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new SpaceLinkDoesNotExistException(exception);
+        }
     }
     
     
