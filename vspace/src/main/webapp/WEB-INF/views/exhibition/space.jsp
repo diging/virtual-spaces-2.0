@@ -51,7 +51,7 @@ function drawLinks() {
         link.attr('href', "${link.externalLink.externalLink}");
         link.attr('target', "_blank");
         
-        var linkDisplay = $('<span data-feather="navigation-2" class="fa fa-globe"></span>');
+        var linkDisplay = $('<span class="fa fa-globe"></span>');
        
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
