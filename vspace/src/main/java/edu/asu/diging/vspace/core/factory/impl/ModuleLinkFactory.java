@@ -8,18 +8,20 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 
 @Service
-public class ModuleLinkFactory implements IModuleLinkFactory{
+public class ModuleLinkFactory implements IModuleLinkFactory {
 
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.factory.impl.IModuleLinkFactory#createModuleLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
-	 */
-	@Override
-	public IModuleLink createModuleLink(String title, ISpace space) {
-		IModuleLink link = new ModuleLink();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.factory.impl.IModuleLinkFactory#createModuleLink(
+     * java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
+     */
+    @Override
+    public IModuleLink createModuleLink(String title, ISpace space) {
+        IModuleLink link = new ModuleLink();
         link.setName(title);
         link.setSpace(space);
         return link;
-	}
-
+    }
 }

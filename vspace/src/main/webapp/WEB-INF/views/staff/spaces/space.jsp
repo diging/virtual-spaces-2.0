@@ -4,7 +4,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-
+<script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {	
@@ -57,7 +57,7 @@ $( document ).ready(function() {
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
            link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="mlabel-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span data-link-id="${link.link.id}" ><span class="fas fa-book-open"></span></span><p class="mlabel-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -255,7 +255,6 @@ $( document ).ready(function() {
 		}
 		
 		var linkedModules = $("#linkedModule").val();
-		console.log(linkedModules);
 		
 		if (linkedModules == undefined || linkedModules == "") {
 			$("#errorMsg").text("Please select linked modules.")
@@ -287,7 +286,7 @@ $( document ).ready(function() {
 	            $("#module_label").attr("id","");
 	            $("#link").attr("id","");
 	            $("#createModuleLinkAlert").hide();  
-	            $("#errorMsg").text("")
+	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
 	        }
 		});
@@ -457,7 +456,7 @@ $( document ).ready(function() {
 				'top': moduleLink["y"] + posY + 16,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + moduleLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
+			link = $('<span data-link-id="' + moduleLink["id"] + '"><div id="link" class="fas fa-book-open"></div></span>');
 		} 
 		if(show) {
 			link.find("div").css('fill', 'red');
@@ -478,7 +477,7 @@ $( document ).ready(function() {
 			module_label.attr("data-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
 			module_label.click(function(e) {
-                makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
+            	makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
             });
 		}
 
@@ -776,9 +775,7 @@ ${space.description}
 			<div class="col-sm-8">
 				<select id="type" name="type" class="form-control-xs target">
 					<option selected value="">Choose...</option>
-					<option value="IMAGE">Image</option>
-					<option value="ARROW">Link</option>
-					<option value="ALERT">Alert</option>
+					<option value="MODULE">Module</option>
 				</select>
 			</div>
 		</div>

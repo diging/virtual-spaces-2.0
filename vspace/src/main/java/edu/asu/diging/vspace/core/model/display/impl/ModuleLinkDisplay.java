@@ -23,9 +23,6 @@ public class ModuleLinkDisplay extends LinkDisplay implements IModuleLinkDisplay
       strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    private int rotation;
-    private DisplayType type;
-
     @OneToOne(targetEntity = ModuleLink.class)
     private IModuleLink link;
 
@@ -59,25 +56,5 @@ public class ModuleLinkDisplay extends LinkDisplay implements IModuleLinkDisplay
     @Override
     public void setLink(IModuleLink link) {
         this.link = link;
-    }
-
-    @Override
-    public int getRotation() {
-        return rotation;
-    }
-
-    @Override
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
-    @Override
-    public DisplayType getType() {
-        return type;
-    }
-
-    @Override
-    public void setType(DisplayType type) {
-        this.type = type;
     }
 }

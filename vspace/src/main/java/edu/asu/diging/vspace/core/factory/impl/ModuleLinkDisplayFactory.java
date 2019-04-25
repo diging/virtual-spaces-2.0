@@ -9,18 +9,17 @@ import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 
 @Service
 public class ModuleLinkDisplayFactory implements IModuleLinkDisplayFactory {
-	
-	 /*
+
+    /*
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.factory.impl.IModuleLinkDisplayFactory#
      * createModuleLinkDisplay(edu.asu.diging.vspace.core.model.IModuleLink)
      */
-	@Override
-	public IModuleLinkDisplay createModuleLinkDisplay(IModuleLink link) {
-		IModuleLinkDisplay display = new ModuleLinkDisplay();
+    @Override
+    public IModuleLinkDisplay createModuleLinkDisplay(IModuleLink link) {
+        IModuleLinkDisplay display = new ModuleLinkDisplay();
         display.setLink(link);
         return display;
-	}
-  
+    }
 }

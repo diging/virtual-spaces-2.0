@@ -241,7 +241,7 @@ public class LinkManager implements ILinkManager {
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setRotation(rotation);
-        display.setType(displayType != null ? displayType : DisplayType.ARROW);
+        display.setType(displayType != null ? displayType : DisplayType.MODULE);
         
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
         return display;
