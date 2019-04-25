@@ -31,8 +31,8 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
 	private ISpace sourceSpace;
 	
 	@ManyToOne(targetEntity=Space.class)
-	@JoinColumn(name = "target_space_id", nullable=true)
-	@NotFound(action = NotFoundAction.IGNORE)
+	@JoinColumn(name = "target_space_id")
+	@NotFound(action=NotFoundAction.IGNORE)
 	private ISpace targetSpace;
 	
 	/* (non-Javadoc)
