@@ -16,4 +16,8 @@ public interface ILinkDisplay extends IVSpaceElement {
     void setImage(IVSImage image);
 
     IVSImage getImage();
+    
+    void setType(DisplayType type);
+
+    DisplayType getType();
 }

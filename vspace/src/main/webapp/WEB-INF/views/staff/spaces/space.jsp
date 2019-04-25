@@ -52,14 +52,13 @@ $( document ).ready(function() {
 		var posY = $("#bgImage").position().top;
 		var link ;
 		if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-	           link = $('<a href="${link.externalLink.externalLink}" target="_blank"><img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" /></a>');
+			link = $('<a href="${link.externalLink.externalLink}" target="_blank"><img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" /></a>');
 		}  else {
-				link = $('<span data-feather="external-link" class="flex"></span><p id="label-${loop.index}"><a href ="${link.externalLink.externalLink}" style="color:blue;" target="_blank">${link.externalLink.name}</a></p>');
+			link = $('<a href ="${link.externalLink.externalLink}" style="color:blue;" target="_blank">${link.externalLink.name}<span data-feather="external-link" class="flex"></span><p id="label-${loop.index}"></p></a>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
-		link.find("span").css('fill', 'red');
 		link.css('color', 'blue');
 		link.css('font-size', "10px");
 		
@@ -206,13 +205,13 @@ $( document ).ready(function() {
 	        	var linkData = JSON.parse(data);
 	        	$("#bgImage").off("click");
 	        	externalLinkInfo["id"] = linkData["id"];
-	            showExternalLinks(externalLinkInfo, true);
-	            $("#ext_label").attr("id","");
-	            $("#link").attr("id","");
-	            $("#createExternalLinkAlert").hide();  
-	            $("#errorMsg").text("");
-	            $('#errorAlert').hide();
-	            $("#external-arrow").attr("id","");
+	        	showExternalLinks(externalLinkInfo, true);
+	        	$("#ext_label").attr("id","");
+	        	$("#link").attr("id","");
+	        	$("#createExternalLinkAlert").hide();
+	        	$("#errorMsg").text("");
+	        	$('#errorAlert').hide();
+	        	$("#external-arrow").attr("id","");
 	        }
 		});
 	});
@@ -266,15 +265,7 @@ $( document ).ready(function() {
 			linkIconReader.readAsDataURL(this.files[0]);
 		}
 	});
-	
-	//link icons for external link
-	/* var linkIconReaderExt = new FileReader();
-	var linkIconExt;
-	linkIconReaderExt.onload = function(e) {
-		linkIconExt = e.target.result;
-		showExternalLinks(createExternalLinkInfo());
-	} */
-	
+
 	$("#externalLinkImage").change(function() {
 		if (this.files && this.files[0]) {
 			linkIconReader.readAsDataURL(this.files[0]);
@@ -345,7 +336,6 @@ $( document ).ready(function() {
 		
 		var link;
 		if(externalLink["type"] == "IMAGE" && linkIcon) {
-			console.log(linkIcon);
 			link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + linkIcon + '"></div>');
 		} else {
 			$(ext_label).css({
