@@ -2,14 +2,14 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 public class ImageForm {
 
-    private String fileName;
+    private String name;
     private String description;
     
-    public String getFileName() {
-        return fileName;
+    public String getName() {
+        return name;
     }
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.name = name;
     }
     public String getDescription() {
         return description;

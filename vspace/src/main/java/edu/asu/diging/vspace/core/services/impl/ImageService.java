@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
@@ -18,11 +19,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 @Service
 public class ImageService implements IImageService {
@@ -127,5 +130,26 @@ public class ImageService implements IImageService {
             return (totalPages == 0)? 1:(int) totalPages;
         }
         return pageNo;
+    }
+    
+    /**
+     * Method to rename image   
+     * 
+     * @param imageId - image unique identifier
+     * @param imageForm - ImageForm with updated values for image fields
+     * @return throws FileNotFoundException if no image exists with id, 
+     * throws FileStorageException if file renaming fails 
+     */ 
+    @Override
+    public void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException{
+        Optional<VSImage> mayBeImage = imageRepo.findById(imageId);
+        if (mayBeImage.isPresent()) {
+            VSImage image = mayBeImage.get();
+            image.setName(imageForm.getName());
+            image.setDescription(imageForm.getDescription());
+            imageRepo.save(image);
+        } else {
+            throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
+        }
     }
 }

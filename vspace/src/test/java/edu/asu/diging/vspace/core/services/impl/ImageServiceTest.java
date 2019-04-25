@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -15,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,24 +26,33 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 public class ImageServiceTest {
 
     @Mock
     private ImageRepository imageRepo;
     
+    @Mock
+    private IStorageEngine storage;
+    
     @InjectMocks
     private ImageService serviceToTest;
-    
+
+    private ImageForm imageForm;
     private List<VSImage> images;
     private final String IMG_ID = "id";
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
-    
+    private final String NEW_IMG_FILENAME = "newImg";
+    private final String DESCRIPTION = "description";
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -50,6 +62,9 @@ public class ImageServiceTest {
         image.setFileType(IMG_CONTENT_TYPE);
         images = new ArrayList<>();
         images.add((VSImage)image);
+        imageForm = new ImageForm();
+        imageForm.setFileName(NEW_IMG_FILENAME);
+        imageForm.setDescription(DESCRIPTION);
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 10);
     }
 
@@ -164,5 +179,25 @@ public class ImageServiceTest {
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
         when(imageRepo.count()).thenReturn(5L);
         assertEquals(5, serviceToTest.validatePageNumber(20));
+    }
+    
+    @Test(expected = Test.None.class)
+    public void test_editImage_success() throws FileNotFoundException, FileStorageException {
+        Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(0)));
+        Mockito.when(storage.renameImage(images.get(0), imageForm.getFileName())).thenReturn(true);
+        serviceToTest.editImage(IMG_ID, imageForm);
+    }
+    
+    @Test(expected = FileNotFoundException.class)
+    public void test_editImage_whenNoImageExist() throws FileNotFoundException, FileStorageException {
+        Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.empty());
+        serviceToTest.editImage(IMG_ID, imageForm);
+    }
+    
+    @Test(expected = FileStorageException.class)
+    public void test_editImage_whenRenameFails() throws FileNotFoundException, FileStorageException {
+        Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(0)));
+        Mockito.when(storage.renameImage(images.get(0), imageForm.getFileName())).thenReturn(false);
+        serviceToTest.editImage(IMG_ID, imageForm);
     }
 }
