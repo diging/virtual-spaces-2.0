@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class SpaceController {
-	
+
 	@Autowired
 	private ISpaceManager spaceManager;
 	

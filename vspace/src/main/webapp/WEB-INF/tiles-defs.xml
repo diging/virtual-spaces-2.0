@@ -47,7 +47,23 @@
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
     </definition>
-	
+    
+    <!-- Password Reset -->
+    <definition name="reset/password/request" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />    
+    </definition>
+    <definition name="reset/request/sent" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/resetRequestSent.jsp" />    
+    </definition>
+    <definition name="password/change" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
+    </definition>
+    <definition name="accessDenied" extends="base.definition"> 
+        <put-attribute name="content" value="/WEB-INF/views/accessdenied.jsp" />    
+    </definition>
 	<!-- Staff -->
 	<!-- Dashboard -->
 	<definition name="dashboard.base.def" extends="base.definition.bt4">	
@@ -110,5 +126,10 @@
     <!-- Users -->
     <definition name="staff/user/list" extends="exhibit.base.def"> 
         <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
+    </definition>
+    <!-- Images -->
+    <definition name="staff/images/list" extends="exhibit.base.def"> 
+        <put-attribute name="currentPage" value="images" />
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
     </definition>
 </tiles-definitions>
