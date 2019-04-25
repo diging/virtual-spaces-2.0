@@ -42,11 +42,11 @@ function drawLinks() {
         $("#space").append(link);
         
         $(".label-${loop.index}").css({
-			'transform': 'rotate(0deg)',
-			'left': ${link.positionX} + posX - 10,
-			'top': ${link.positionY} + posY + 16,
-			'color': 'red'
-		});	
+        	'transform': 'rotate(0deg)',
+        	'left': ${link.positionX} + posX - 10,
+        	'top': ${link.positionY} + posY + 16,
+        	'color': 'red'
+        });	
     }
     </c:forEach>
     feather.replace();
