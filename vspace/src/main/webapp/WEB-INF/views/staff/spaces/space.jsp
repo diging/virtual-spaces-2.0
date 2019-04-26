@@ -282,12 +282,12 @@ $( document ).ready(function() {
 	        	var linkData = JSON.parse(data);
 	        	$("#bgImage").off("click");
 	        	moduleLinkInfo["id"] = linkData["id"];
-	            showModuleLink(moduleLinkInfo, true);
-	            $("#module_label").attr("id","");
-	            $("#link").attr("id","");
-	            $("#createModuleLinkAlert").hide();  
-	            $("#errorMsg").text("");
-	            $('#errorAlert').hide();
+	        	showModuleLink(moduleLinkInfo, true);
+	        	$("#module_label").attr("id","");
+	        	$("#link").attr("id","");
+	        	$("#createModuleLinkAlert").hide();
+	        	$("#errorMsg").text("");
+	        	$('#errorAlert').hide();
 	        }
 		});
 	});
@@ -473,12 +473,12 @@ $( document ).ready(function() {
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
 				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
-	        });
+			});
 			module_label.attr("data-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
 			module_label.click(function(e) {
-            	makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
-            });
+				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
+			});
 		}
 
 		$("#space").append(link);
