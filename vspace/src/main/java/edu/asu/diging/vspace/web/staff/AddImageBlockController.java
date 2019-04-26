@@ -40,7 +40,6 @@ public class AddImageBlockController {
         }
         try {
             contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
-            
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

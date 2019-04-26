@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
@@ -25,7 +24,6 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
-import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
@@ -56,9 +54,6 @@ public class ContentBlockManager implements IContentBlockManager {
     private ImageRepository imageRepo;
 
     @Autowired
-    private SlideRepository slideRepo;
-
-    @Autowired
     private IStorageEngine storage;
 
     /*
@@ -70,9 +65,7 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public List<IContentBlock> getAllContentBlocks(String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        List<IContentBlock> slideContents = slide.getContents();
-
-        return slideContents;
+        return slide.getContents();
     }
 
     /*
@@ -87,13 +80,8 @@ public class ContentBlockManager implements IContentBlockManager {
         ISlide slide = slideManager.getSlide(slideId);
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
         textBlock.setContentOrder(contentOrder);
-        if (slide.getContents() == null) {
-            slide.setContents(new ArrayList<>());
-        }
-        slide.getContents().add((IContentBlock) textBlock);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
-        slideRepo.save((Slide) slide);
-
+        
         return textBlock;
     }
 

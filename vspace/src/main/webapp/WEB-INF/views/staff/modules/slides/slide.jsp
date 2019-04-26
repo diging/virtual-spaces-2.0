@@ -13,8 +13,9 @@ function uploadImage() {
 	
 	reader.onload = function () {
 		var imageblock = $('<img src="#" />');
-		$('#slideSpace').append(imageblock);
-		$(imageblock).attr('src', reader.result);
+		imageblock.attr('src', reader.result);
+		imageblock.attr('width', '800px');
+		$('#slideSpace').append(imageblock);        
 	}
 	++contentCount;
 	reader.readAsDataURL(file);
@@ -34,11 +35,9 @@ function uploadImage() {
 		data: formData,
 		
 		success: function(data) {
-			console.log("success");
-			console.log(data);
+			// do nothing for now
 		},
 		error: function(data) {
-			console.log("error");
 			console.log(data);
 		}
 	});
@@ -92,6 +91,13 @@ $(document).ready(function() {
 });
 </script>
 
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="<c:url value="/staff/dashboard" />">Dashboard</a></li>
+  <li class="breadcrumb-item"><a href="<c:url value="/staff/module/list" />">Modules</a></li>
+  <li class="breadcrumb-item"><a href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
+  <li class="breadcrumb-item active">${slide.name}</li>
+</ol>
+
 <h1>Slide: ${slide.name}</h1>
 <h3>Description: ${slide.description}</h3>
 	
@@ -112,23 +118,51 @@ $(document).ready(function() {
 </div>
 </nav>
 
-<form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
-	<div id="addImgAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:340px; height: 130px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-		<h6><small>Upload Image: </small></h6>
-		<input type="file" name="file" rows="5" cols="500" id="file" /><br><br>
-	        <p class="mb-0 text-right"><button type="submit" id="uploadImage" class="btn btn-primary btn-xs">Upload Image</button> &nbsp
-		<button id="cancelImageBtn" type="reset" class="btn light btn-xs">Cancel</button></p>
-	</div>	
-</form>
+<div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add new Text Block</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form name="textForm"  id="textUploadForm" enctype="multipart/form-data" method="post">
+          <div class="modal-body">
+            <h6><small>Enter Text: </small></h6>
+            <textarea class="form-control" id="textarea" rows="3"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
+	        <button type="submit" id="submitText" class="btn btn-primary">Submit</button>
+	      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-<form name="textForm"  id="textUploadForm" enctype="multipart/form-data" method="post">
-	<div id="addTextAlert" class="alert alert-secondary form-group" role="alert" style="cursor:move; width:340px; height: 180px; display:none; position: absolute; top: 100px; right: 50px; z-index:999">
-		<h6><small>Enter Text: </small></h6>
-		<textarea class="form-control" id="textarea" rows="3"></textarea>
-		<p class="mb-0 text-right"><button type="submit" id="submitText" class="btn btn-primary btn-xs">Submit</button> &nbsp
-		<button id="cancelSubmitText" type="reset" class="btn light btn-xs">Cancel</button></p>
-	</div>	
-</form>
+<div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add new Image Block</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
+        <div class="modal-body">
+            <h6><small>Upload Image: </small></h6>
+            <input class="form-control" type="file" name="file" rows="5" cols="500" id="file" />
+          </div>
+          <div class="modal-footer">
+            <button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
+            <button type="submit" id="uploadImage" class="btn btn-primary">Upload Image</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
     
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">

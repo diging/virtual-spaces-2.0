@@ -1,12 +1,14 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
 public class TextBlock extends ContentBlock implements ITextBlock {
 
+    @Lob
     private String text;
 
     /*
