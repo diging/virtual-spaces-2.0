@@ -68,8 +68,8 @@ public class SpaceManager implements ISpaceManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.
-     * asu. diging.vspace.core.model.ISpace, java.lang.String)
+     * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
+     * diging.vspace.core.model.ISpace,java.util.Arrays, java.lang.String)
      */
     @Override
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
