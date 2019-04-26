@@ -24,7 +24,7 @@
         <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path></uploaded.files.path>
+        <uploaded.files.path>/Users/neehaarikadasari/Documents</uploaded.files.path>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -36,6 +36,8 @@
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
         <tomcat.server.id>TomcatServer</tomcat.server.id>
+        
+        <hibernate.show_sql></hibernate.show_sql>
     </properties>
 
     <dependencyManagement>
