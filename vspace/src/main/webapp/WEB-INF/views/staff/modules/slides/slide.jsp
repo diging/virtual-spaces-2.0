@@ -72,7 +72,7 @@ $(document).ready(function() {
 		e.preventDefault();
 
 		var payload = {};
-		payload["content"] = document.getElementById('textarea').value;
+		payload["content"] = $("#textBlockText").val();
 		
 		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
 		$(textblock).css({
@@ -84,6 +84,8 @@ $(document).ready(function() {
 		// ------------- creating text content blocks ------------
 		$.post("<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
 		});
+		
+		$("#textBlockText").val('')
 	});
 	$("#addImgAlert").draggable();
 	$("#addTextAlert").draggable();
@@ -99,12 +101,14 @@ $(document).ready(function() {
 </ol>
 
 <h1>Slide: ${slide.name}</h1>
-<h3>Description: ${slide.description}</h3>
-	
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${slide.creationDate}</span> by ${slide.createdBy}.<br>
   Modified on <span class="date">${slide.modificationDate}</span> by ${slide.modifiedBy}.
 </div>
+<h5>Description:</h5>
+<p>${slide.description}</p>
+	
+
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <div class="dropdown">
@@ -130,7 +134,7 @@ $(document).ready(function() {
       <form name="textForm"  id="textUploadForm" enctype="multipart/form-data" method="post">
           <div class="modal-body">
             <h6><small>Enter Text: </small></h6>
-            <textarea class="form-control" id="textarea" rows="3"></textarea>
+            <textarea class="form-control" id="textBlockText" rows="3"></textarea>
 	      </div>
 	      <div class="modal-footer">
 	        <button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
