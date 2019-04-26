@@ -27,6 +27,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
@@ -182,22 +183,27 @@ public class ImageServiceTest {
     }
     
     @Test(expected = Test.None.class)
-    public void test_editImage_success() throws FileNotFoundException, FileStorageException {
+    public void test_editImage_success() throws ImageDoesNotExistException {
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(0)));
-        Mockito.when(storage.renameImage(images.get(0), imageForm.getFileName())).thenReturn(true);
         serviceToTest.editImage(IMG_ID, imageForm);
     }
     
-    @Test(expected = FileNotFoundException.class)
-    public void test_editImage_whenNoImageExist() throws FileNotFoundException, FileStorageException {
+    @Test(expected = ImageDoesNotExistException.class)
+    public void test_editImage_whenNoImageExist() throws ImageDoesNotExistException{
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.empty());
         serviceToTest.editImage(IMG_ID, imageForm);
     }
     
-    @Test(expected = FileStorageException.class)
-    public void test_editImage_whenRenameFails() throws FileNotFoundException, FileStorageException {
+    @Test
+    public void test_getImageById_success() throws ImageDoesNotExistException {
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(0)));
-        Mockito.when(storage.renameImage(images.get(0), imageForm.getFileName())).thenReturn(false);
-        serviceToTest.editImage(IMG_ID, imageForm);
+        assertEquals(images.get(0).getId(), serviceToTest.getImageById(IMG_ID).getId());
     }
+    
+    @Test(expected = ImageDoesNotExistException.class)
+    public void test_getImageById_whenNoImageExist() throws ImageDoesNotExistException {
+        Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.empty());
+        serviceToTest.getImageById(IMG_ID);
+    }
+
 }

@@ -25,6 +25,6 @@ public interface IImageService {
     
     void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
     
-    IVSImage getImageById(String imageId);
+    IVSImage getImageById(String imageId) throws ImageDoesNotExistException;
 
 }

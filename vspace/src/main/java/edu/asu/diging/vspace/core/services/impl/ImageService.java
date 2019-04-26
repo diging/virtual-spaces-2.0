@@ -133,23 +133,34 @@ public class ImageService implements IImageService {
     }
     
     /**
-     * Method to rename image   
+     * Method to edit image details   
      * 
      * @param imageId - image unique identifier
      * @param imageForm - ImageForm with updated values for image fields
-     * @return throws FileNotFoundException if no image exists with id, 
-     * throws FileStorageException if file renaming fails 
+     * @return throws ImageDoesNotExistException if no image exists with id, 
      */ 
     @Override
     public void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException{
+        IVSImage image = getImageById(imageId);
+        image.setName(imageForm.getName());
+        image.setDescription(imageForm.getDescription());
+        imageRepo.save((VSImage)image);
+    }
+
+    /**
+     * Method to lookup image by id   
+     * 
+     * @param imageId - image unique identifier
+     * @return image with provided image id if it exists,
+     * throws ImageDoesNotExistException if no image exists with id, 
+     */ 
+    @Override
+    public IVSImage getImageById(String imageId) throws ImageDoesNotExistException {
         Optional<VSImage> mayBeImage = imageRepo.findById(imageId);
-        if (mayBeImage.isPresent()) {
-            VSImage image = mayBeImage.get();
-            image.setName(imageForm.getName());
-            image.setDescription(imageForm.getDescription());
-            imageRepo.save(image);
+        if (mayBeImage.isPresent())  {
+            return mayBeImage.get();
         } else {
             throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
-        }
+        } 
     }
 }

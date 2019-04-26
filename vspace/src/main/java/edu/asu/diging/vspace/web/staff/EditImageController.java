@@ -25,14 +25,21 @@ public class EditImageController {
     private IImageService imageService;
 
     @RequestMapping(value = "/staff/image/{imageId}/edit", method = RequestMethod.GET)
-    public String show(Model model, @PathVariable("imageId") String imageId) {
-        IVSImage image = imageService.getImageById(imageId);
-        ImageForm imageForm = new ImageForm();
-        imageForm.setName(image.getFilename());
-        imageForm.setDescription(image.getDescription());
-        model.addAttribute("imageForm", imageForm);
-        model.addAttribute("imageId", imageId);
-
+    public String show(Model model, @PathVariable("imageId") String imageId, RedirectAttributes attributes) {
+        try {
+            IVSImage image = imageService.getImageById(imageId);
+            ImageForm imageForm = new ImageForm();
+            imageForm.setFileName(image.getFilename());
+            imageForm.setName(image.getName());
+            imageForm.setDescription(image.getDescription());
+            model.addAttribute("imageForm", imageForm);
+            model.addAttribute("imageId", imageId);
+        } catch(ImageDoesNotExistException imageDoesNotExistException) {
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("showAlert", "true");
+            attributes.addAttribute("message", "Image doesnt exist with given image id.");
+            return "redirect:/staff/images/list/1";  
+        }
         return "staff/image/edit";
     }
 

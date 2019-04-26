@@ -8,9 +8,9 @@
 <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="imageForm" enctype="multipart/form-data">
 
 	<div class="form-group row">
-		<label for="fileName" class="col-md-2 col-form-label">Image Name:</label>
-		<form:input type="text" class="form-control col-md-10" id="fileName"
-			path="fileName" />
+		<label for="name" class="col-md-2 col-form-label">Name:</label>
+		<form:input type="text" class="form-control col-md-10" id="name"
+			path="name" />
 	</div>
 
 	<div class="form-group row">

@@ -4,6 +4,7 @@ public class ImageForm {
 
     private String name;
     private String description;
+    private String fileName;
     
     public String getName() {
         return name;
@@ -17,4 +18,11 @@ public class ImageForm {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String getFileName() {
+        return fileName;
+    }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    
 }
