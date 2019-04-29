@@ -1,10 +1,19 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
@@ -12,6 +21,9 @@ public class ListImagesController {
 
     @Autowired
     private IImageService imageService;
+    
+    @Autowired
+    private ImageRepository imageRepo;
 
     @RequestMapping("/staff/images/list/{page}")
     public String listSpaces(@PathVariable String page, Model model) {
@@ -25,6 +37,23 @@ public class ListImagesController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
         model.addAttribute("images", imageService.getImages(pageNo));
+        
+        List<String> imageTags = new ArrayList<>();
+        imageTags.add("Space Background Image");imageTags.add("Slide Image"); imageTags.add("Link Image");
+        model.addAttribute("tagList", imageTags);
+        
         return "staff/images/list";
     }
+    
+    @RequestMapping(value = "/staff/images/tag/{page}", method = RequestMethod.POST)
+    public String updateTag(@PathVariable String page, Model model, @RequestParam("imageID") String imageID, @RequestParam("changeTag") String changeTag) {
+        
+        Optional<VSImage> imgContainer = imageRepo.findById(imageID);
+        VSImage img = imgContainer.get();
+        img.setTag(changeTag);
+        imageRepo.save(img);
+        
+        return listSpaces(page, model);
+    }
+    
 }

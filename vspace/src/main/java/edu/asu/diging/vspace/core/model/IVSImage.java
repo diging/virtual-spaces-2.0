@@ -21,4 +21,8 @@ public interface IVSImage extends IVSpaceElement {
 	void setHeight(int height);
 
 	int getHeight();
+	
+	void setTag(String Tag);
+
+    String getTag();
 }

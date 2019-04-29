@@ -27,6 +27,8 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	private int height;
 	private int width;
 	
+	private String tag;
+	
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IImage#getId()
 	 */
@@ -93,4 +95,13 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	public void setWidth(int width) {
 		this.width = width;
 	}	
+	
+	@Override
+    public String getTag() {
+        return tag;
+    }
+    @Override
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }

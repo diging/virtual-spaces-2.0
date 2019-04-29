@@ -24,7 +24,12 @@
 		window.location.assign("./"+num);
 	}); 
   });
-    </script>
+  
+  function toggleChange(form) {
+	  form.submit();
+  }
+</script>
+
 <h1>Images</h1>
 <style>
 .pagination>li>a {
@@ -56,6 +61,7 @@
 					<th scope="col">Name</th>
 					<th scope="col">Created By</th>
 					<th scope="col">Created Date</th>
+					<th scope="col">Tag</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -69,6 +75,17 @@
 						<td>${image.name}</td>
 						<td>${image.createdBy}</td>
 						<td><span class="date">${image.creationDate}</span></td>
+						<td><span class="tag">${image.tag}</span> 
+						<Form id="changeTagForm" action="/vspace/staff/images/tag/${currentPageNumber}?${_csrf.parameterName}=${_csrf.token}" method="post">
+							<input type="hidden" name="imageID" value="${image.id}" id="imageID" />
+							<select id="changeTag" name="changeTag" onChange="toggleChange(this.form)" style="width:68px;">
+								<option>Assign a tag</option>
+								<c:forEach items="${tagList}" var="tag">
+									<option value="${tag}">${tag}</option>
+								</c:forEach>
+							</select>
+						</Form>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
