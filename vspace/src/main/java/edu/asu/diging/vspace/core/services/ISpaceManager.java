@@ -4,11 +4,14 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface ISpaceManager {
 
     CreationReturnValue storeSpace(ISpace space, byte[] image, String filename);
+    
+    CreationReturnValue storeSpace(ISpace space, VSImage image);
 
     ISpace getSpace(String id);
 
