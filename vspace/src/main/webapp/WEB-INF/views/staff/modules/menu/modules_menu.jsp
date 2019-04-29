@@ -9,7 +9,7 @@ $( document ).ready(function() {
 		  jQuery.each(elements, function(index, element) {
 			  var li = $('<li class="nav-item"></li>');
 			  var a = $('<a class="nav-link"></a>');
-			  a.attr('href', element.id);
+			  a.attr('href', '<c:url value="/staff/module/" />'+ element.id);
 			  li.append(a);
 			  a.html('<span data-feather="grid"></span>' + element.name);
 			  $("#modulelist").append(li);

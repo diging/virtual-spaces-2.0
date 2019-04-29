@@ -24,13 +24,12 @@ public class Sequence extends VSpaceElement implements ISequence {
         parameters = @Parameter(name = "prefix", value = "SEQ"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
-    @OneToMany(targetEntity = Slide.class)
-    private List<ISlide> slides;
     
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
+    @OneToMany(targetEntity = Slide.class)
+    private List<ISlide> slides;
     /*
      * (non-Javadoc)
      * 
@@ -38,7 +37,7 @@ public class Sequence extends VSpaceElement implements ISequence {
      */
     @Override
     public String getId() {
-        return id;
+        return id;  
     }
 
     /*

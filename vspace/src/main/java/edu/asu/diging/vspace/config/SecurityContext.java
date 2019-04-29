@@ -7,7 +7,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 
 @Configuration
 @EnableWebSecurity
@@ -18,7 +19,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
         web
         // Spring Security ignores request to static resources such as CSS or JS
         // files.
-        .ignoring().antMatchers("/static/**");
+        .ignoring().antMatchers("/resources/**");
     }
 
     @Override
@@ -41,15 +42,16 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // Anyone can access the urls
                 .antMatchers("/", "/exhibit/**", "/api/**", "/resources/**", "/login",
-                        "/logout").permitAll()
+                        "/logout", "/register", "/reset/**").permitAll()
                 // The rest of the our application is protected.
-                .antMatchers("/users/**", "/admin/**").hasRole("ADMIN")
-                .antMatchers("/staff/**").hasRole("STAFF")
+                .antMatchers("/users/**", "/admin/**", "/staff/user/**").hasRole("ADMIN")
+                .antMatchers("/staff/**").hasAnyRole("STAFF", "ADMIN")
+                .antMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE)
                 .anyRequest().hasRole("USER");
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(4);
     }
 

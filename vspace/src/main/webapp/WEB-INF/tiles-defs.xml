@@ -5,7 +5,7 @@
 <tiles-definitions>
 
 	<!-- Base definitions -->
-	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition.jsp">
+	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -37,7 +37,29 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
-	
+    
+    <!-- Register -->
+    <definition name="register" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
+    </definition>
+    
+    <!-- Password Reset -->
+    <definition name="reset/password/request" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />    
+    </definition>
+    <definition name="reset/request/sent" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/resetRequestSent.jsp" />    
+    </definition>
+    <definition name="password/change" extends="base.definition"> 
+        <put-attribute name="currentPage" value="space" />
+        <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
+    </definition>
+    <definition name="accessDenied" extends="base.definition"> 
+        <put-attribute name="content" value="/WEB-INF/views/accessdenied.jsp" />    
+    </definition>
 	<!-- Staff -->
 	<!-- Dashboard -->
 	<definition name="dashboard.base.def" extends="base.definition.bt4">	
@@ -66,6 +88,10 @@
 	<definition name="staff/space" extends="space.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
 	</definition>
+    
+    <definition name="staff/space/edit" extends="space.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/spaces/edit.jsp" />
+    </definition>
 	
 	<!-- Modules -->
 	<definition name="module.base.def" extends="base.definition.bt4">	
@@ -80,10 +106,53 @@
 	<definition name="staff/module/add" extends="module.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
 	</definition>
+    <definition name="staff/module" extends="module.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+    </definition>
 	
-	<definition name="staff/module" extends="module.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+	<!-- Exhibition Config -->
+	<definition name="exhibit.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="exhibit" />
+		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/exhibit/menu/config_menu.jsp" />
 	</definition>
 	
+	<definition name="staff/exhibit/config" extends="exhibit.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />
+	</definition>
 	
+	<!-- Slides -->
+	<definition name="slide.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="slide" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition> 
+	
+	<definition name="staff/module/slide/add" extends="slide.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/add.jsp" />	
+	</definition>
+	
+	<definition name="staff/module/slide/contents" extends="slide.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
+	</definition>
+	
+	 <!-- Sequences -->
+	<definition name="sequence.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="sequence" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition> 
+
+	<definition name="staff/module/sequence/add" extends="sequence.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/sequences/add.jsp" />	
+	</definition>
+    
+    <!-- Users -->
+    <definition name="staff/user/list" extends="exhibit.base.def"> 
+        <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
+    </definition>
+
+    <!-- Images -->
+    <definition name="staff/images/list" extends="exhibit.base.def"> 
+        <put-attribute name="currentPage" value="images" />
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
+    </definition>
+
 </tiles-definitions>

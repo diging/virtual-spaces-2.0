@@ -1,46 +1,73 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+    uri="http://www.springframework.org/security/tags"%>
 
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {
-	
-	<c:forEach items="${spaceLinks}" var="link">
-	{
-		var posX = $("#space").offset().left - $("#space-container").offset().left;
-        var posY = $("#space").position().top;
-		console.log("x " + ${link.positionX})
-		console.log("offset " + $("#space").offset().left)
-		console.log("container: " + $("#space-container").offset().left)
-		var link = $('<a></a>');
-		link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
-		
-		if ("${link.type}" == 'ALERT') {
-			var linkDisplay = $('<div class="alert alert-primary" role="alert">');
-		} else {
-			var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
-		}
-		linkDisplay.css('position', 'absolute');
-		linkDisplay.css('left', ${link.positionX} + posX);
-		linkDisplay.css('top', ${link.positionY} + posY);
-		linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-		linkDisplay.css('fill', 'red');
-		linkDisplay.css('color', 'red');
-		linkDisplay.css('font-size', "15px");
-		 
-	    link.append(linkDisplay);
-	    $("#space").append(link);
-	}
-	</c:forEach>
-	feather.replace();
+    
+    drawLinks();
+    
+    $( window ).resize(function() {
+        $("#space a").remove();
+        drawLinks();
+    });
 });
+
+function drawLinks() {
+    <c:forEach items="${spaceLinks}" var="link">
+    {
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
+        link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
+        
+        if ("${link.type}" == 'ALERT') {
+            var linkDisplay = $('<div class="alert alert-primary" role="alert">');
+        } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
+            var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+        } else {
+            var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
+        }
+        linkDisplay.css('position', 'absolute');
+        linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY);
+        linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
+        linkDisplay.css('fill', 'red');
+        linkDisplay.css('color', 'red');
+        linkDisplay.css('font-size', "15px");
+         
+        link.append(linkDisplay);
+        $("#space").append(link);
+    }
+    </c:forEach>
+    feather.replace();
+}
 </script>
 
 <div class="row">
-<div id="space-container" class="col-md-12 text-center">
-<div id="space" style="width: 800px; height: 600px; margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')" >
-	
+    <div
+        class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
+    <div id="space-container" class="col-md-8 text-center">
+        <div id="space"
+            style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+        </div>
+    </div>
+    <div
+        class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
+        <c:if test="${not empty space.description}">
+            <div class="descriptionBox"
+                style="height: ${display.height - 20}px; overflow-y: scroll;">
+                <h5>${space.name}</h5>
+                ${space.description}
+            </div>
+        </c:if>
+    </div>
 </div>
-</div>
-</div>
+
+<script>
+$(function() {
+    
+});
+</script>
