@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IModule;
-import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -49,7 +48,6 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public List<ISlide> getSlidesInSequence(String sequenceId) {
-        ISequence sequence = sequenceManager.getSequence(sequenceId);
-        return sequence.getSlides();
+        return sequenceManager.getSequence(sequenceId).getSlides();
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.ISequenceFactory;
-import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
@@ -42,7 +41,6 @@ public class SequenceManager implements ISequenceManager {
     
     @Override
     public ISequence storeSequence(String moduleId, SequenceForm sequenceForm) {
-        IModule module = moduleManager.getModule(moduleId);
         String[] orderedSlideIds = sequenceForm.getOrderedSlideIds().split(",");        
         List<String> slideIds = Arrays.asList(orderedSlideIds);
         Map<String, Integer> idOrderMap = new HashMap<>();
@@ -53,7 +51,7 @@ public class SequenceManager implements ISequenceManager {
         slideRepo.findAllById(slideIds).forEach(slides::add);
         Collections.sort(slides, (ISlide s1, ISlide s2) 
                 -> idOrderMap.get(s1.getId()).compareTo(idOrderMap.get(s2.getId())));
-        ISequence sequence = sequenceFactory.createSequence(module, 
+        ISequence sequence = sequenceFactory.createSequence(moduleManager.getModule(moduleId), 
                 sequenceForm, slides);
         sequenceRepo.save((Sequence) sequence);
         return sequence;
