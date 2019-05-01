@@ -24,6 +24,6 @@ public interface ILinkManager {
 
     void deleteSpaceLink(String linkId);
     
-    void deleteSpaceLinkBySource(String sourceId) throws SpaceLinkDoesNotExistException;
+    void deleteSpaceLinksBySource(String sourceId) throws SpaceLinkDoesNotExistException;
 
 }

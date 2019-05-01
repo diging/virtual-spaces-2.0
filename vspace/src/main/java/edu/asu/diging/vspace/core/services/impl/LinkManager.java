@@ -146,7 +146,7 @@ public class LinkManager implements ILinkManager {
     }
     
     @Override
-    public void deleteSpaceLinkBySource(String sourceId) throws SpaceLinkDoesNotExistException {
+    public void deleteSpaceLinksBySource(String sourceId) throws SpaceLinkDoesNotExistException {
         try{
             spaceLinkRepo.deleteBySourceSpaceId(sourceId);      
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {

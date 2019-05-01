@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 
 @Entity
-@Table(name = "spacelink")
+@Table
 public class SpaceLink extends VSpaceElement implements ISpaceLink {
 		
 	@Id 

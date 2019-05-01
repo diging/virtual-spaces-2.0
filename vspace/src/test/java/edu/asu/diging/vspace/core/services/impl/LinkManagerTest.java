@@ -28,7 +28,7 @@ public class LinkManagerTest {
     public void test_deleteSpaceLinkBySource_whenIdNull() throws SpaceLinkDoesNotExistException {
        Mockito.doThrow(IllegalArgumentException.class)
         .when(spaceLinkRepo).deleteBySourceSpaceId(null);
-       managerToTest.deleteSpaceLinkBySource(null);
+       managerToTest.deleteSpaceLinksBySource(null);
     }
     
     @Test(expected = SpaceLinkDoesNotExistException.class)
@@ -36,7 +36,7 @@ public class LinkManagerTest {
        String sourceId = "sourceId";
        Mockito.doThrow(EmptyResultDataAccessException.class)
         .when(spaceLinkRepo).deleteBySourceSpaceId(sourceId);
-       managerToTest.deleteSpaceLinkBySource(sourceId);
+       managerToTest.deleteSpaceLinksBySource(sourceId);
     }
     
 }

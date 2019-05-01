@@ -161,32 +161,31 @@ public class SpaceManager implements ISpaceManager {
      * @throws SpaceLinkDoesNotExistException 
      */
     @Override
-    public void deleteSpaceById(String id) throws SpaceDoesNotExistException, SpaceLinkDoesNotExistException {
+    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
             spaceRepo.deleteById(id);
-            linkManager.deleteSpaceLinkBySource(id);
+            linkManager.deleteSpaceLinksBySource(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException | SpaceLinkDoesNotExistException exception) {
-            if(exception instanceof SpaceLinkDoesNotExistException)
-                throw new SpaceLinkDoesNotExistException(exception);
-            else
+            if(!(exception instanceof SpaceLinkDoesNotExistException)) {
                 throw new SpaceDoesNotExistException(exception);
+            }
         }
 
     }
     
     /**
-     * Method to return identifiers of target spaces of all spacelinks
+     * Method to return target spaces of all spacelinks
      * 
-     * @return list of identifiers corresponding to target spaces in each spacelink 
+     * @return list of target space in each spacelink 
      */
     @Override
-    public List<String> getAllTargetSpaceIds() {
-        List<String> targetSpaceIdsList = new ArrayList<>();
+    public List<ISpace> getAllTargetSpaces() {
+        List<ISpace> targetSpaces = new ArrayList<>();
         spaceLinkRepo.findAll().forEach(s -> {
             if (s.getTargetSpace() != null) {
-                targetSpaceIdsList.add(s.getTargetSpace().getId());
+                targetSpaces.add(s.getTargetSpace());
             }
         });
-        return targetSpaceIdsList;
+        return targetSpaces;
     }
 }
