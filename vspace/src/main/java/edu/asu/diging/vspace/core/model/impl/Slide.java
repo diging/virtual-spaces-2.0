@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -16,6 +18,7 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
@@ -30,9 +33,14 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @OneToOne(targetEntity = Module.class)
     private IModule module;
+    
+    @ManyToOne(targetEntity = Sequence.class)
+    @JoinColumn(name="sequence_id", nullable=true)
+    private ISequence sequence;
 
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     private List<IContentBlock> contents;
+  
 
     /*
      * (non-Javadoc)
@@ -103,6 +111,17 @@ public class Slide extends VSpaceElement implements ISlide {
     @Override
     public void setContents(List<IContentBlock> contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public ISequence getSequence() {
+        return sequence;
+    }
+
+    @Override
+    public void setSequence(ISequence sequence) {
+        this.sequence = sequence;
+        
     }
 
 }

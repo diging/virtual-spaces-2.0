@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -25,6 +27,9 @@ public class SlideManager implements ISlideManager {
     @Autowired
     private ModuleManager moduleManager;
     
+    @Autowired
+    private SequenceManager sequenceManager;
+    
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -40,5 +45,12 @@ public class SlideManager implements ISlideManager {
             return slide.get();
         }
         return null;
+    }
+
+    @Override
+    public List<ISlide> getAllSlidesInSequence(String sequenceId) {
+        ISequence sequence = sequenceManager.getSequence(sequenceId);
+        System.out.println("Sequence" + sequence.getId() + "Size" + sequence.getSlides().size());
+        return sequence.getSlides();
     }
 }

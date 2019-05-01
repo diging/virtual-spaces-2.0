@@ -62,6 +62,9 @@
 				</div>
 			</td>
 		</tr>
+		<tr>
+		<td>
+				<table width="100%" height="50%" style="margin-top: 50px;">
 		<c:forEach items="${slides}" var="slide">
 			<tr>
 				<td
@@ -78,6 +81,12 @@
 				</td>
 			</tr>
 		</c:forEach>
+					</table>
+		
+		</td>
+		<td>&nbsp;</td>
+		<td>
+		<table  width="100%" height="50%" style="margin-top: 50px;" align="top">
 		<c:forEach items="${sequences}" var="sequence">
 			<tr>
 				<td
@@ -94,5 +103,8 @@
 				</td>
 			</tr>
 		</c:forEach>
+					</table>
+		</td>
+		</tr>
 	</table>
 </body>

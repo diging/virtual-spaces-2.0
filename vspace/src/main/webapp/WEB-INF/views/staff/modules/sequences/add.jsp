@@ -3,9 +3,21 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <script>
-$( document ).ready(function() {
-	$('#ordered-slides').multiSelect({keepOrder: true})
-});
+	$(document).ready(function() {
+		$('#ordered-slides').multiSelect({
+			keepOrder : true,
+			afterSelect : function(value) {
+				var get_val = $("#orderedSlideIds").val();
+				var hidden_val = (get_val != "") ? get_val + "," : get_val;
+				$("#orderedSlideIds").val(hidden_val + "" + value);
+			},
+			afterDeselect : function(value, text) {
+				var get_val = $("#orderedSlideIds").val();
+				var new_val = get_val.replace(value, "");
+				$("#orderedSlideIds").val(new_val);
+			}
+		})
+	});
 </script>
 
 <h1>Add New Sequence</h1>
@@ -26,16 +38,17 @@ $( document ).ready(function() {
 			id="description" path="description" />
 	</div>
 	<div class="form-group row">
-	<label for="Slides" class="col-md-2 col-form-label">Select Slides:</label> 
-<form:select multiple="multiple" id="ordered-slides" path="orderedSlideIds">
-<c:forEach items="${slides}" var="slide">
-      <form:option value='${slide.id}'>${slide.name}</form:option>
-</c:forEach>
-</form:select>
-</div>
-  <button class="btn btn-primary btn-sm" type="submit" value="submit">Create Sequence</button>
-
+		<label for="Slides" class="col-md-2 col-form-label">Select
+			Slides:</label> <select multiple="multiple" id="ordered-slides">
+			<c:forEach items="${slides}" var="slide">
+				<option value='${slide.id}'>${slide.name}</option>
+			</c:forEach>
+			<select>
+	</div>
+	<button class="btn btn-primary btn-sm" type="submit" value="submit">Create
+		Sequence</button>
+	<form:input type="hidden" id="orderedSlideIds" path="orderedSlideIds"></form:input>
 </form:form>
 
-  </body>
+</body>
 </html>

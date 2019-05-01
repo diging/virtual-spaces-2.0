@@ -1,8 +1,12 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -40,10 +44,22 @@ public class SequenceManager implements ISequenceManager {
     @Override
     public ISequence storeSequence(String moduleId, SequenceForm sequenceForm) {
         IModule module = moduleManager.getModule(moduleId);
-        List<String> slideIds = new LinkedList<String>(Arrays.asList(sequenceForm.getOrderedSlideIds()));
-        List<ISlide> slides = new LinkedList<>();
+        String[] orderedSlideIds = sequenceForm.getOrderedSlideIds().split(",");        
+        List<String> slideIds = Arrays.asList(orderedSlideIds);
+        Map<String, Integer> idOrderMap = new HashMap<>();
+        for(int i = 0; i<orderedSlideIds.length; ++i) {
+            idOrderMap.put(orderedSlideIds[i], i);
+        }
+        slideIds.forEach(s -> System.out.println("BSlide" + s));
+        List<ISlide> slides = new ArrayList<>();
         slideRepo.findAllById(slideIds).forEach(slides::add);
-        slides.forEach(s -> System.out.println("Slide" + s.getId()));
+        Collections.sort(slides, new Comparator<ISlide>() {
+            @Override
+            public int compare(ISlide s1, ISlide s2) {
+                return idOrderMap.get(s1.getId()).compareTo(idOrderMap.get(s2.getId()));
+            }
+        });
+        slides.forEach(s -> System.out.println("ASlide" + s.getId()));
         ISequence sequence = sequenceFactory.createSequence(module, 
                 sequenceForm, slides);
         sequenceRepo.save((Sequence) sequence);

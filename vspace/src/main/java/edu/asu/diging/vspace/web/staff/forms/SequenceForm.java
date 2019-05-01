@@ -4,7 +4,7 @@ public class SequenceForm {
 
     private String name;
     private String description;
-    private String[] orderedSlideIds;
+    private String orderedSlideIds;
     
     public String getName() {
         return name;
@@ -18,10 +18,10 @@ public class SequenceForm {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String[] getOrderedSlideIds() {
+    public String getOrderedSlideIds() {
         return orderedSlideIds;
     }
-    public void setOrderedSlideIds(String[] orderedSlideIds) {
+    public void setOrderedSlideIds(String orderedSlideIds) {
         this.orderedSlideIds = orderedSlideIds;
     }
 }
