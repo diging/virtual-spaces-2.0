@@ -3,7 +3,6 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,16 +49,10 @@ public class SequenceManager implements ISequenceManager {
         for(int i = 0; i<orderedSlideIds.length; ++i) {
             idOrderMap.put(orderedSlideIds[i], i);
         }
-        slideIds.forEach(s -> System.out.println("BSlide" + s));
         List<ISlide> slides = new ArrayList<>();
         slideRepo.findAllById(slideIds).forEach(slides::add);
-        Collections.sort(slides, new Comparator<ISlide>() {
-            @Override
-            public int compare(ISlide s1, ISlide s2) {
-                return idOrderMap.get(s1.getId()).compareTo(idOrderMap.get(s2.getId()));
-            }
-        });
-        slides.forEach(s -> System.out.println("ASlide" + s.getId()));
+        Collections.sort(slides, (ISlide s1, ISlide s2) 
+                -> idOrderMap.get(s1.getId()).compareTo(idOrderMap.get(s2.getId())));
         ISequence sequence = sequenceFactory.createSequence(module, 
                 sequenceForm, slides);
         sequenceRepo.save((Sequence) sequence);

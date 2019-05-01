@@ -12,7 +12,4 @@ public interface ISlide extends IVSpaceElement {
 
     List<IContentBlock> getContents();
 
-    ISequence getSequence();
-
-    void setSequence(ISequence sequence);
 }

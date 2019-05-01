@@ -11,6 +11,6 @@ public interface ISlideManager {
 
     ISlide createSlide(String moduleId, SlideForm slideForm);
     
-    List<ISlide> getAllSlidesInSequence(String sequenceId);
+    List<ISlide> getSlidesInSequence(String sequenceId);
 
 }

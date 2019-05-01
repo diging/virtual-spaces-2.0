@@ -1,12 +1,16 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -28,8 +32,14 @@ public class Sequence extends VSpaceElement implements ISequence {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    @OneToMany(targetEntity = Slide.class)
-    private List<ISlide> slides;
+    @ManyToMany(targetEntity = Slide.class, cascade=CascadeType.ALL)
+    @OrderColumn(name = "slide_id")
+    @JoinTable(
+        name = "sequence_slide", 
+        joinColumns = { @JoinColumn(name = "sequence_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "slides_order") }
+    )
+    List<ISlide> slides = new ArrayList<>();
     /*
      * (non-Javadoc)
      * 

@@ -48,9 +48,8 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public List<ISlide> getAllSlidesInSequence(String sequenceId) {
+    public List<ISlide> getSlidesInSequence(String sequenceId) {
         ISequence sequence = sequenceManager.getSequence(sequenceId);
-        System.out.println("Sequence" + sequence.getId() + "Size" + sequence.getSlides().size());
         return sequence.getSlides();
     }
 }
