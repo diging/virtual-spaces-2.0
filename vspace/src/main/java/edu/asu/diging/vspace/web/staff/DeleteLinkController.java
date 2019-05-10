@@ -11,14 +11,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 
 @Controller
-public class DeleteSpaceLinkController {
+public class DeleteLinkController {
     
     @Autowired
     private ILinkManager linkManager;
 
+    @RequestMapping(value = "/staff/space/{id}/modulelink/{linkId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteModuleLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
+        linkManager.deleteModuleLink(linkId);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    
     @RequestMapping(value = "/staff/space/{id}/spacelink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSpaceLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
         linkManager.deleteSpaceLink(linkId);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/staff/space/{id}/externallink/{linkId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteExternalLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
+        linkManager.deleteExternalLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

@@ -62,7 +62,7 @@
 				<c:forEach items="${images}" var="image">
 				
 					<tr>
-						<th scope="row"><a href="<c:url value="/api/image/${image.id}"/>"><img
+						<th scope="row"><a href="<c:url value="/staff/display/image/${image.id}"/>"><img
 							src="<c:url value="/api/image/${image.id}"/>"
 							 class="img-thumbnail"> ${image.filename} 
 						</a></th>
