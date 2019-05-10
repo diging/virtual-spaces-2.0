@@ -64,6 +64,28 @@ function drawLinks() {
         $("#space").append(link);
     }
     </c:forEach>
+
+    <c:forEach items="${externalLinkList}" var="link">
+    {
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
+        link.attr('href', "${link.externalLink.externalLink}");
+        link.attr('target', "_blank");
+        
+        var linkDisplay = $('<span class="fa fa-globe"></span>');
+       
+        linkDisplay.css('position', 'absolute');
+        linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY);
+        linkDisplay.css('fill', 'red');
+        linkDisplay.css('color', 'red');
+        linkDisplay.css('font-size', "15px");
+         
+        link.append(linkDisplay);
+        $("#space").append(link);
+    }
+    </c:forEach>
     
     feather.replace();
 }
