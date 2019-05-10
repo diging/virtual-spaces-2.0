@@ -52,10 +52,10 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Transactional
 @Service
 public class LinkManager implements ILinkManager {
-    
+
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ISpaceLinkFactory spaceLinkFactory;
 
@@ -79,47 +79,54 @@ public class LinkManager implements ILinkManager {
 
     @Autowired
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
-    
+
     @Autowired
     private IImageFactory imageFactory;
-    
+
     @Autowired
     private ImageRepository imageRepo;
-    
+
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private IModuleManager moduleManager;
-    
+
     @Autowired
     private IModuleLinkFactory moduleLinkFactory;
 
     @Autowired
     private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
-    
+
     @Autowired
     private ModuleLinkRepository moduleLinkRepo;
-    
+
     @Autowired
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
-    
+
     /*
      * ==== Space links ====
      */
-    
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#createSpaceLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, int, java.lang.String, java.lang.String, edu.asu.diging.vspace.core.model.display.DisplayType)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ILinkManager#createSpaceLink(java.
+     * lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, int,
+     * java.lang.String, java.lang.String,
+     * edu.asu.diging.vspace.core.model.display.DisplayType)
      */
     @Override
     public ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY,
-            int rotation, String linkedSpaceId, String spaceLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+            int rotation, String linkedSpaceId, String spaceLinkLabel, DisplayType displayType, byte[] linkImage,
+            String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceManager.getSpace(source.getId());
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
-        
+
         ISpace target = spaceManager.getSpace(linkedSpaceId);
         ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
         link.setTargetSpace(target);
@@ -131,14 +138,14 @@ public class LinkManager implements ILinkManager {
         display.setPositionY(positionY);
         display.setRotation(rotation);
         display.setType(displayType != null ? displayType : DisplayType.ARROW);
-        
+
         if (linkImage != null && linkImage.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(linkImage);
 
             IVSImage image = imageFactory.createImage(imageFilename, contentType);
             image = imageRepo.save((VSImage) image);
-            
+
             String relativePath = null;
             try {
                 relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
@@ -146,69 +153,83 @@ public class LinkManager implements ILinkManager {
                 throw new ImageCouldNotBeStoredException(e);
             }
             image.setParentPath(relativePath);
-            imageRepo.save((VSImage)image);
-            
+            imageRepo.save((VSImage) image);
+
             display.setImage(image);
         }
-        
+
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
         return display;
     }
-    
+
     @Override
     public void deleteSpaceLink(String linkId) {
         Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(linkId);
         if (!linkOptional.isPresent()) {
             return;
         }
-        
+
         ISpace space = linkOptional.get().getSourceSpace();
         ISpaceLink link = linkOptional.get();
         space.getSpaceLinks().remove(link);
-        spaceLinkRepo.delete((SpaceLink) link);        
+        spaceLinkRepo.delete((SpaceLink) link);
     }
-    
+
     @Override
     public void deleteModuleLink(String linkId) {
         Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
         if (!linkOptional.isPresent()) {
             return;
         }
-        
+
         ISpace space = linkOptional.get().getSpace();
         IModuleLink link = linkOptional.get();
         space.getModuleLinks().remove(link);
-        moduleLinkRepo.delete((ModuleLink) link);        
+        moduleLinkRepo.delete((ModuleLink) link);
     }
-    
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#getSpaceLinkDisplays(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ILinkManager#getSpaceLinkDisplays(
+     * java.lang.String)
      */
     @Override
     public List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId) {
         return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
     }
-    
+
     /*
-     *  ===== External links ===== 
+     * ===== External links =====
      */
-    
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#getExternalLinkDisplays(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ILinkManager#getExternalLinkDisplays
+     * (java.lang.String)
      */
     @Override
     public List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId) {
         return new ArrayList<>(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId));
     }
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.impl.ILinkManager#createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ILinkManager#createExternalLink(java
+     * .lang.String, edu.asu.diging.vspace.core.model.ISpace, float, float,
+     * java.lang.String)
      */
     @Override
-    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY, String externalLink) throws SpaceDoesNotExistException {
+    public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
+            String externalLink) throws SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceManager.getSpace(source.getId());
-        if(source == null) {
+        if (source == null) {
             throw new SpaceDoesNotExistException();
         }
         IExternalLink link = externalLinkFactory.createExternalLink(title, source, externalLink);
@@ -221,17 +242,17 @@ public class LinkManager implements ILinkManager {
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
         return display;
     }
-    
-    
+
     @Override
-	public IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY,
-			int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException {
-			
-		source = spaceManager.getSpace(source.getId());
+    public IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY,
+            int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType)
+            throws SpaceDoesNotExistException {
+
+        source = spaceManager.getSpace(source.getId());
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
-        
+
         IModule target = moduleManager.getModule(linkedModuleId);
         IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
         link.setModule(target);
@@ -242,13 +263,13 @@ public class LinkManager implements ILinkManager {
         display.setPositionY(positionY);
         display.setRotation(rotation);
         display.setType(displayType != null ? displayType : DisplayType.MODULE);
-        
+
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
         return display;
-	}
+    }
 
-	@Override
-	public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
-		return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
-	}
+    @Override
+    public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
+        return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
+    }
 }

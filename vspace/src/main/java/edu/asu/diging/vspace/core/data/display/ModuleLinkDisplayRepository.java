@@ -13,6 +13,6 @@ import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 @JaversSpringDataAuditable
 public interface ModuleLinkDisplayRepository extends PagingAndSortingRepository<ModuleLinkDisplay, String> {
 
-	@Query("SELECT d FROM ModuleLinkDisplay d WHERE d.link.space.id = ?1")
-	public List<ModuleLinkDisplay> findModuleLinkDisplaysForSpace(String spaceId);
+    @Query("SELECT d FROM ModuleLinkDisplay d WHERE d.link.space.id = ?1")
+    public List<ModuleLinkDisplay> findModuleLinkDisplaysForSpace(String spaceId);
 }
