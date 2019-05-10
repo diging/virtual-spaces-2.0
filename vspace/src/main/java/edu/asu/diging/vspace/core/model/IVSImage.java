@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+
 public interface IVSImage extends IVSpaceElement {
 
 	String getFilename();
@@ -21,8 +23,13 @@ public interface IVSImage extends IVSpaceElement {
 	void setHeight(int height);
 
 	int getHeight();
-	
-	void setTag(String Tag);
 
-    String getTag();
+    void setCategories(List<ImageCategory> categories);
+
+    List<ImageCategory> getCategories();
+
+    void setTags(List<ITag> tags);
+
+    List<ITag> getTags();
+
 }

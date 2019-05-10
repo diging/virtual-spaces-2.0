@@ -1,14 +1,22 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.ITag;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.ImageCategory;
 
 @Entity
 public class VSImage extends VSpaceElement implements IVSImage {
@@ -27,7 +35,12 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	private int height;
 	private int width;
 	
-	private String tag;
+	@OneToMany(targetEntity=Tag.class)
+    private List<ITag> tags;
+	
+	@ElementCollection(targetClass = ImageCategory.class)
+	@Enumerated(EnumType.STRING)
+	private List<ImageCategory> categories;
 	
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IImage#getId()
@@ -94,14 +107,22 @@ public class VSImage extends VSpaceElement implements IVSImage {
 	@Override
 	public void setWidth(int width) {
 		this.width = width;
-	}	
-	
-	@Override
-    public String getTag() {
-        return tag;
+	}
+    @Override
+    public List<ITag> getTags() {
+        return tags;
     }
     @Override
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTags(List<ITag> tags) {
+        this.tags = tags;
     }
+    @Override
+    public List<ImageCategory> getCategories() {
+        return categories;
+    }
+    @Override
+    public void setCategories(List<ImageCategory> categories) {
+        this.categories = categories;
+    }	
+	
 }

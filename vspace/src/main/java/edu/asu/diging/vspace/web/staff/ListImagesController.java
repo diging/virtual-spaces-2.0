@@ -45,15 +45,4 @@ public class ListImagesController {
         return "staff/images/list";
     }
     
-    @RequestMapping(value = "/staff/images/tag/{page}", method = RequestMethod.POST)
-    public String updateTag(@PathVariable String page, Model model, @RequestParam("imageID") String imageID, @RequestParam("changeTag") String changeTag) {
-        
-        Optional<VSImage> imgContainer = imageRepo.findById(imageID);
-        VSImage img = imgContainer.get();
-        img.setTag(changeTag);
-        imageRepo.save(img);
-        
-        return listSpaces(page, model);
-    }
-    
 }
