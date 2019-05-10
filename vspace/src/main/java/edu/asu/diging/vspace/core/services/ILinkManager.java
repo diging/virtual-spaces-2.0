@@ -31,4 +31,6 @@ public interface ILinkManager {
     
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 
+    void deleteExternalLink(String linkId);
+
 }

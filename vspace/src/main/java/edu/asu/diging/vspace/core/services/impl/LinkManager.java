@@ -187,6 +187,19 @@ public class LinkManager implements ILinkManager {
         space.getModuleLinks().remove(link);
         moduleLinkRepo.delete((ModuleLink) link);
     }
+    
+    @Override
+    public void deleteExternalLink(String linkId) {
+        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(linkId);
+        if (!linkOptional.isPresent()) {
+            return;
+        }
+
+        ISpace space = linkOptional.get().getSpace();
+        IExternalLink link = linkOptional.get();
+        space.getExternalLinks().remove(link);
+        externalLinkRepo.delete((ExternalLink) link);
+    }
 
     /*
      * (non-Javadoc)

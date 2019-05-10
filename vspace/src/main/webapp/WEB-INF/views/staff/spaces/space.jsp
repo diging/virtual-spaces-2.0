@@ -89,15 +89,16 @@ $( document ).ready(function() {
 		var posY = $("#bgImage").position().top;
 		var link ;
 		if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-			link = $('<a href="${link.externalLink.externalLink}" target="_blank"><img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" /></a>');
-		}  else {
-			link = $('<a href ="${link.externalLink.externalLink}" style="color:blue;" target="_blank">${link.externalLink.name}<span data-feather="external-link" class="flex"></span><p id="label-${loop.index}"></p></a>');
+           link = $('<img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+        }  else {
+        	link = $('<span data-link-id="${link.externalLink.id}" ><span class="fa fa-globe"></span></span><p class="mlabel-${loop.index}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
+			
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
 		link.css('color', 'blue');
-		link.css('font-size', "10px");
+		link.css('font-size', "12px");
 		
 		$("#space").append(link);
 		
@@ -107,6 +108,11 @@ $( document ).ready(function() {
 			'top': ${link.positionY} + posY + 16,
 			'text-color': 'blue'
 		});
+		
+		$('[data-link-id="${link.externalLink.id}"]').css('cursor', 'pointer');
+        $('[data-link-id="${link.externalLink.id}"]').click(function(e) {
+            makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}");
+        });
 	}
 	</c:forEach> 
 	
@@ -347,6 +353,18 @@ $( document ).ready(function() {
 			});
 	});
 	
+	$("#deleteExternalLinkButton").click(function() {
+        var linkId = $("#externalLinkId").val();
+        $.ajax({
+            url: "<c:url value="/staff/space/${space.id}/externallink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
+            method: "DELETE",
+                success:function(data) {
+                    $('[data-link-id="' + linkId + '"]').remove();
+                    $("#externalLinkInfo").hide();
+                }
+            });
+    });
+	
 	// ------------- adjust links on background image (e.g. when inputs are changed) ------------
 	// external links
 	$(".extlink-target").change(function() {
@@ -366,8 +384,11 @@ $( document ).ready(function() {
 	
 	$(".target").change(function() {
 		showSpaceLink(createSpaceLinkInfo());
-		showModuleLink(createModuleLinkInfo());
 	}); 
+	
+	$(".modulelink-target").change(function() {
+        showModuleLink(createModuleLinkInfo());
+    }); 
 	
 	// link icons for space links
 	var linkIconReader = new FileReader();
@@ -375,8 +396,6 @@ $( document ).ready(function() {
 	linkIconReader.onload = function(e) {
 		linkIcon = e.target.result;
 		showSpaceLink(createSpaceLinkInfo());
-		showExternalLinks(createExternalLinkInfo());
-	    showModuleLink(createModuleLinkInfo());
 	}
 	
 	$('#moduleLinkRotation').change(function() {
@@ -389,15 +408,28 @@ $( document ).ready(function() {
 		}
 	});
 	
+	// link icons for module links
+	var moduleLinkIconReader = new FileReader();
+    var moduleLinkIcon;
+    moduleLinkIconReader.onload = function(e) {
+    	moduleLinkIcon = e.target.result;
+        showModuleLink(createModuleLinkInfo());
+    }
 	$("#moduleLinkImage").change(function() {
 		if (this.files && this.files[0]) {
-			linkIconReader.readAsDataURL(this.files[0]);
+			moduleLinkIconReader.readAsDataURL(this.files[0]);
 		}
 	});
 
+	var externalLinkIconReader = new FileReader();
+    var externalLinkIcon;
+    externalLinkIconReader.onload = function(e) {
+    	externalLinkIcon = e.target.result;
+        showExternalLinks(createExternalLinkInfo());
+    }
 	$("#externalLinkImage").change(function() {
 		if (this.files && this.files[0]) {
-			linkIconReader.readAsDataURL(this.files[0]);
+			externalLinkIconReader.readAsDataURL(this.files[0]);
 		}
 	});
 
@@ -466,8 +498,8 @@ $( document ).ready(function() {
 		var link;
 		if (moduleLink["type"] == "ALERT") {
 			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-		} else if(moduleLink["type"] == "IMAGE" && linkIcon) {
-			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '"><img src="' + linkIcon + '"></div>');
+		} else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
+			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
 		} else { 
 			$(module_label).css({
 				'position': 'absolute',
@@ -517,39 +549,47 @@ $( document ).ready(function() {
 		ext_label.text(externalLink["externalLinkLabel"]);
 		
 		var link;
-		if(externalLink["type"] == "IMAGE" && linkIcon) {
-			link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + linkIcon + '"></div>');
+		if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
+			link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
 		} else {
 			$(ext_label).css({
 				'position': 'absolute',
-				'font-size': "10px",
+				'font-size': "12px",
 				'transform': 'rotate(0deg)',
 				'left': externalLink["x"] + posX - 10,
 				'top': externalLink["y"] + posY + 16,
 				'color': 'blue'
 			});
-			link = $('<span data-link-id="' + externalLink["id"] + '"><div id="link" data-feather="external-link" class="flex"></div></span>');
+			link = $('<span data-link-id="' + externalLink["id"] + '"><div id="link" class="fa fa-globe"></div></span>');
 		}
 		
 		link.css('position', 'absolute');
 		link.css('left', externalLink["x"] + posX);
 		link.css('top', externalLink["y"] + posY);
 		link.css('color', 'blue');
-		link.css('font-size', "10px");
+		link.css('font-size', "12px");
 		
 		if (externalLink["id"]) {
 			link.attr("data-link-id", externalLink["id"]);
 			link.css('cursor', 'pointer');
 			link.attr('href', externalLink["url"]);
+			link.click(function(e) {
+                makeExternalLinksEditable(externalLink["spaceLinkLabel"], externalLink["id"]);
+            });
+			
 			ext_label.attr("data-link-id", externalLink["id"]);
             ext_label.css('cursor', 'pointer');
+            ext_label.attr("data-link-id", externalLink["id"]);
+            ext_label.css('cursor', 'pointer');
+            ext_label.click(function(e) {
+            	makeExternalLinksEditable(externalLink["spaceLinkLabel"], externalLink["id"]);
+            });
 		}
 
 		$("#space").append(link);
 		$("#space").append(ext_label);
 		$("#external-link").remove();
 
-		feather.replace();
 		
 	}
 	
@@ -598,6 +638,14 @@ $( document ).ready(function() {
         $("#moduleLinkId").val("");
         resetHighlighting();
         $("#moduleLinkInfo").hide();
+    }); 
+    
+    $("#closeExternalLinkInfo").click(function(e) {
+        e.preventDefault();
+        $("#externalLinkInfoLabel").text("");
+        $("#externalLinkId").val("");
+        resetHighlighting();
+        $("#externalLinkInfo").hide();
     }); 
 	
 	// --------- Utility functions -------------
@@ -655,6 +703,18 @@ $( document ).ready(function() {
 		$('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
 		$("#moduleLinkInfo").show();
 	}
+	
+	function makeExternalLinksEditable(linkName, linkId) {
+        $("#externalLinkInfoLabel").text(linkName);
+        $("#externalLinkId").val(linkId);
+        resetHighlighting();
+              
+        $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
+        $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
+        $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
+        $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
+        $("#externalLinkInfo").show();
+    }
 	
 	function resetHighlighting() {
         // reset icon links
@@ -793,15 +853,15 @@ ${space.description}
 			</div>
 		</div>
 
-		<input type="hidden" name="x" id="moduleLinkX" /> <input
-			type="hidden" name="y" id="moduleLinkY" />
+		<input type="hidden" name="x" id="moduleLinkX" /> 
+        <input type="hidden" name="y" id="moduleLinkY" />
 
 		<div class="row">
 			<div class="col-sm-4">
 				<label><small>Rotation:</small> </label>
 			</div>
 			<div class="col-sm-8">
-				<input class="form-control-xs" type="number" id="moduleLinkRotation"
+				<input class="form-control-xs modulelink-target" type="number" id="moduleLinkRotation"
 					name="rotation" value="0"><br>
 			</div>
 		</div>
@@ -811,7 +871,7 @@ ${space.description}
 				<label><small>Label:</small> </label>
 			</div>
 			<div class="col-sm-8">
-				<input class="form-control-xs target" type="text"
+				<input class="form-control-xs modulelink-target" type="text"
 					name="moduleLinkLabel" id="moduleLinkLabel"><br>
 			</div>
 		</div>
@@ -821,7 +881,7 @@ ${space.description}
 				<label><small>Type:</small> </label>
 			</div>
 			<div class="col-sm-8">
-				<select id="type" name="type" class="form-control-xs target">
+				<select id="type" name="type" class="form-control-xs modulelink-target">
 					<option selected value="">Choose...</option>
 					<option value="MODULE">Module</option>
 				</select>
@@ -834,7 +894,7 @@ ${space.description}
 			</div>
 			<div class="col-sm-7">
 				<select id="linkedModule" name="linkedModule"
-					class="form-control-xs target">
+					class="form-control-xs modulelink-target">
 					<option selected value="">Choose...</option>
 					<c:forEach items="${moduleList}" var="module">
 						<option value="${module.id}">${module.name}</option>
@@ -876,7 +936,7 @@ ${space.description}
 	  	  <input type="hidden" name="y" id="externalLinkY"/>
 		  
 		  <label style="margin-right: 5px;"><small>Label:</small> </label>
-		  <input class="form-control-xs target" type="text" name="externalLinkLabel" id="externalLinkLabel"><br>
+		  <input class="form-control-xs extlink-target" type="text" name="externalLinkLabel" id="externalLinkLabel"><br>
 		  
 		  <label style="margin-right: 5px;"><small>External Link</small> </label>
 		  <input class="form-control-xs extlink-target" type="text" size="15" name="url" id="externalLink"><br>
@@ -939,6 +999,19 @@ ${space.description}
 	<input type="hidden" name="moduleLinkId" id="moduleLinkId" />
 	<button id="deleteModuleLinkButton" type="reset"
 		class="btn btn-primary btn-xs">Delete Module Link</button>
+</div>
+
+<div id="externalLinkInfo" class="alert alert-secondary" role="alert"
+    style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+    <p class="float-right">
+        <a href="#" id="closeExternalLinkInfo"><span data-feather="x-square"></span></a>
+    </p>
+    <h6 class="alert-heading">
+        External Link: <span id="externalLinkInfoLabel"></span>
+    </h6>
+    <input type="hidden" name="externalLinkId" id="externalLinkId" />
+    <button id="deleteExternalLinkButton" type="reset"
+        class="btn btn-primary btn-xs">Delete External Link</button>
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
