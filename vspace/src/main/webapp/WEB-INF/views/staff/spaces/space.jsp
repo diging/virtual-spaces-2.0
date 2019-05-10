@@ -85,31 +85,30 @@ $( document ).ready(function() {
 	
 	<c:forEach items="${externalLinks}" var="link" varStatus="loop">
 	{
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		var link ;
-		if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+        var posX = $("#bgImage").position().left;
+        var posY = $("#bgImage").position().top;
+        var link ;
+        if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
+            link = $('<img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         }  else {
-        	link = $('<span data-link-id="${link.externalLink.id}" ><span class="fa fa-globe"></span></span><p class="mlabel-${loop.index}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
-			
-		}
-		link.css('position', 'absolute');
-		link.css('left', ${link.positionX} + posX);
-		link.css('top', ${link.positionY} + posY);
-		link.css('color', 'blue');
-		link.css('font-size', "12px");
-		
-		$("#space").append(link);
-		
-		$("#label-${loop.index}").css({
-			'transform': 'rotate(0deg)',
-			'left': ${link.positionX} + posX - 10,
-			'top': ${link.positionY} + posY + 16,
-			'text-color': 'blue'
-		});
-		
-		$('[data-link-id="${link.externalLink.id}"]').css('cursor', 'pointer');
+            link = $('<span data-link-id="${link.externalLink.id}" ><span class="fa fa-globe"></span></span><p class="mlabel-${loop.index}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
+        }
+        link.css('position', 'absolute');
+        link.css('left', ${link.positionX} + posX);
+        link.css('top', ${link.positionY} + posY);
+        link.css('color', 'blue');
+        link.css('font-size', "12px");
+        
+        $("#space").append(link);
+        
+        $("#label-${loop.index}").css({
+            'transform': 'rotate(0deg)',
+            'left': ${link.positionX} + posX - 10,
+            'top': ${link.positionY} + posY + 16,
+            'text-color': 'blue'
+        });
+        
+        $('[data-link-id="${link.externalLink.id}"]').css('cursor', 'pointer');
         $('[data-link-id="${link.externalLink.id}"]').click(function(e) {
             makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}");
         });
@@ -689,6 +688,8 @@ $( document ).ready(function() {
         $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
         $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
         $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+        $("#moduleLinkInfo").hide();
+        $("#externalLinkInfo").hide();
         $("#spaceLinkInfo").show();
 	}
 	
@@ -701,7 +702,9 @@ $( document ).ready(function() {
 		$('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
 		$('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
 		$('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
-		$("#moduleLinkInfo").show();
+		$("#externalLinkInfo").hide();
+        $("#spaceLinkInfo").hide();
+        $("#moduleLinkInfo").show();
 	}
 	
 	function makeExternalLinksEditable(linkName, linkId) {
@@ -713,6 +716,8 @@ $( document ).ready(function() {
         $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
         $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
         $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
+        $("#spaceLinkInfo").hide();
+        $("#moduleLinkInfo").hide();
         $("#externalLinkInfo").show();
     }
 	
