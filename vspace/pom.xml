@@ -24,7 +24,7 @@
         <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path>/Users/neehaarikadasari/Documents</uploaded.files.path>
+        <uploaded.files.path></uploaded.files.path>
         
         <email.user></email.user>
         <email.password></email.password>

@@ -37,6 +37,10 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
+	<definition name="module" extends="base.definition">	
+		<put-attribute name="currentPage" value="module" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
+	</definition>
     
     <!-- Register -->
     <definition name="register" extends="base.definition"> 
@@ -144,5 +148,10 @@
         <put-attribute name="currentPage" value="images" />
         <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
     </definition>
-
+    <definition name="staff/image" extends="exhibit.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/images/image.jsp" />
+	</definition>
+	<definition name="staff/image/edit" extends="exhibit.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/edit.jsp" />
+    </definition>
 </tiles-definitions>

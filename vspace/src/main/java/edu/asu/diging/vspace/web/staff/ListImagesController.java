@@ -25,8 +25,11 @@ public class ListImagesController {
     @Autowired
     private ImageRepository imageRepo;
 
-    @RequestMapping("/staff/images/list/{page}")
-    public String listSpaces(@PathVariable String page, Model model) {
+    @RequestMapping(value={"/staff/images/list/", "/staff/images/list/{page}"})
+    public String listSpaces(@PathVariable(required=false) String page, Model model) {
+        if (page == null || page.trim().isEmpty()) {
+            page = "1";
+        }
         int pageNo;
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page));
