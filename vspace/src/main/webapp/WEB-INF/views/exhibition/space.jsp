@@ -43,6 +43,28 @@ function drawLinks() {
     }
     </c:forEach>
     
+    <c:forEach items="${moduleList}" var="link">
+    {
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
+        link.attr('href', '<c:url value="/exhibit/module/${link.link.module.id}" />');
+        
+        var linkDisplay = $('<span class="fas fa-book-open"></span>');
+     
+        linkDisplay.css('position', 'absolute');
+        linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY);
+        linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
+        linkDisplay.css('fill', 'red');
+        linkDisplay.css('color', 'red');
+        linkDisplay.css('font-size', "15px");
+         
+        link.append(linkDisplay);
+        $("#space").append(link);
+    }
+    </c:forEach>
+
     <c:forEach items="${externalLinkList}" var="link">
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 

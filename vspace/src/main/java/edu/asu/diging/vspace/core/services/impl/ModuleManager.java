@@ -52,6 +52,13 @@ public class ModuleManager implements IModuleManager {
             return module.get();
         }
         return null;
+    }       
+    
+    @Override
+    public List<IModule> getAllModules() {
+        List<IModule> modules = new ArrayList<>();
+        moduleRepo.findAll().forEach(s -> modules.add(s));
+        return modules;
     }
 
     @Override
@@ -59,6 +66,4 @@ public class ModuleManager implements IModuleManager {
         IModule module = getModule(moduleId);
         return new ArrayList<>(slideRepo.findByModule((Module) module));
     }
-
-    
 }
