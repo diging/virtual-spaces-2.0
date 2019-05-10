@@ -16,7 +16,7 @@ $( document ).ready(function() {
 });
 
 function drawLinks() {
-    <c:forEach items="${spaceLinks}" var="link">
+    <c:forEach items="${spaceLinks}" var="link" varStatus="loop">
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
@@ -28,8 +28,37 @@ function drawLinks() {
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span>');
+            var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
         }
+        linkDisplay.css('position', 'absolute');
+        linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY);
+        linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
+        linkDisplay.css('fill', 'red'); 
+        linkDisplay.css('color', 'red');
+        linkDisplay.css('font-size', "12px");	
+         
+        link.append(linkDisplay);
+        $("#space").append(link);
+        
+        $(".label-${loop.index}").css({
+          'transform': 'rotate(0deg)',
+          'left': ${link.positionX} + posX - 10,
+          'top': ${link.positionY} + posY + 16,
+          'color': 'red'
+        });	
+    }
+    </c:forEach>
+    
+    <c:forEach items="${moduleList}" var="link">
+    {
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
+        link.attr('href', '<c:url value="/exhibit/module/${link.link.module.id}" />');
+        
+        var linkDisplay = $('<span class="fas fa-book-open"></span>');
+     
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
@@ -42,6 +71,29 @@ function drawLinks() {
         $("#space").append(link);
     }
     </c:forEach>
+
+    <c:forEach items="${externalLinkList}" var="link">
+    {
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+        var posY = $("#space").position().top;
+        var link = $('<a></a>');
+        link.attr('href', "${link.externalLink.externalLink}");
+        link.attr('target', "_blank");
+        
+        var linkDisplay = $('<span class="fa fa-globe"></span>');
+       
+        linkDisplay.css('position', 'absolute');
+        linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY);
+        linkDisplay.css('fill', 'red');
+        linkDisplay.css('color', 'red');
+        linkDisplay.css('font-size', "15px");
+         
+        link.append(linkDisplay);
+        $("#space").append(link);
+    }
+    </c:forEach>
+    
     feather.replace();
 }
 </script>
