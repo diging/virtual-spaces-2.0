@@ -187,6 +187,19 @@ public class LinkManager implements ILinkManager {
         space.getModuleLinks().remove(link);
         moduleLinkRepo.delete((ModuleLink) link);
     }
+    
+    @Override
+    public void deleteExternalLink(String linkId) {
+        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(linkId);
+        if (!linkOptional.isPresent()) {
+            return;
+        }
+
+        ISpace space = linkOptional.get().getSpace();
+        IExternalLink link = linkOptional.get();
+        space.getExternalLinks().remove(link);
+        externalLinkRepo.delete((ExternalLink) link);
+    }
 
     /*
      * (non-Javadoc)
@@ -226,7 +239,8 @@ public class LinkManager implements ILinkManager {
      */
     @Override
     public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
-            String externalLink) throws SpaceDoesNotExistException {
+            String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename)
+            throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceManager.getSpace(source.getId());
         if (source == null) {
@@ -239,6 +253,27 @@ public class LinkManager implements ILinkManager {
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setName(title);
+        display.setType(displayType != null ? displayType : DisplayType.ARROW);
+
+        if (linkImage != null && linkImage.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(linkImage);
+
+            IVSImage image = imageFactory.createImage(imageFilename, contentType);
+            image = imageRepo.save((VSImage) image);
+
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
+            } catch (FileStorageException e) {
+                throw new ImageCouldNotBeStoredException(e);
+            }
+            image.setParentPath(relativePath);
+            imageRepo.save((VSImage) image);
+
+            display.setImage(image);
+        }
+
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
         return display;
     }

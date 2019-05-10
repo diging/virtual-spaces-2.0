@@ -24,4 +24,5 @@ public interface ILinkDisplay extends IVSpaceElement {
     DisplayType getType();
     
     void setType(DisplayType type);
+
 }
