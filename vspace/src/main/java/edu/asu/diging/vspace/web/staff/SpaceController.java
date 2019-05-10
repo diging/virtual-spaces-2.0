@@ -14,25 +14,25 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Controller
 public class SpaceController {
 
-	@Autowired
-	private ISpaceManager spaceManager;
-	
-	@Autowired
-	private IModuleManager moduleManager;
-	
-	@Autowired
-	private ILinkManager linkManager;
+    @Autowired
+    private ISpaceManager spaceManager;
 
-	@RequestMapping("/staff/space/{id}")
-	public String showSpace(@PathVariable String id, Model model) {
-		ISpace space = spaceManager.getFullyLoadedSpace(id);
-		model.addAttribute("space", space);
-		model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
-		model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
-		model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
-		model.addAttribute("spaces", spaceManager.getAllSpaces());
-		model.addAttribute("moduleList", moduleManager.getAllModules());
-		
-		return "staff/space";
-	}
+    @Autowired
+    private IModuleManager moduleManager;
+
+    @Autowired
+    private ILinkManager linkManager;
+
+    @RequestMapping("/staff/space/{id}")
+    public String showSpace(@PathVariable String id, Model model) {
+        ISpace space = spaceManager.getFullyLoadedSpace(id);
+        model.addAttribute("space", space);
+        model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+        model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
+        model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
+        model.addAttribute("spaces", spaceManager.getAllSpaces());
+        model.addAttribute("moduleList", moduleManager.getAllModules());
+
+        return "staff/space";
+    }
 }
