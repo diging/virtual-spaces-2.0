@@ -36,7 +36,7 @@ function drawLinks() {
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'red'); 
         linkDisplay.css('color', 'red');
-        linkDisplay.css('font-size', "15px");	
+        linkDisplay.css('font-size', "14px");	
          
         link.append(linkDisplay);
         $("#space").append(link);
