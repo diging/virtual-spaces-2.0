@@ -156,9 +156,9 @@ public class ImageService implements IImageService {
      */ 
     @Override
     public IVSImage getImageById(String imageId) throws ImageDoesNotExistException {
-        Optional<VSImage> mayBeImage = imageRepo.findById(imageId);
-        if (mayBeImage.isPresent())  {
-            return mayBeImage.get();
+        Optional<VSImage> imageOptional = imageRepo.findById(imageId);
+        if (imageOptional.isPresent())  {
+            return imageOptional.get();
         } else {
             throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
         } 

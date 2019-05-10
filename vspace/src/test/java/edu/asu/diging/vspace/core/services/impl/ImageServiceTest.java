@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -48,6 +46,7 @@ public class ImageServiceTest {
 
     private ImageForm imageForm;
     private List<VSImage> images;
+    private IVSImage image;
     private final String IMG_ID = "id";
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
@@ -57,7 +56,7 @@ public class ImageServiceTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        IVSImage image = new VSImage();
+        image = new VSImage();
         image.setId(IMG_ID);
         image.setFilename(IMG_FILENAME);
         image.setFileType(IMG_CONTENT_TYPE);
@@ -182,10 +181,12 @@ public class ImageServiceTest {
         assertEquals(5, serviceToTest.validatePageNumber(20));
     }
     
-    @Test(expected = Test.None.class)
+    @Test
     public void test_editImage_success() throws ImageDoesNotExistException {
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(0)));
         serviceToTest.editImage(IMG_ID, imageForm);
+        Assert.assertEquals(imageForm.getName(), image.getName());
+        Assert.assertEquals(imageForm.getDescription(), image.getDescription());
     }
     
     @Test(expected = ImageDoesNotExistException.class)

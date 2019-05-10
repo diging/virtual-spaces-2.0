@@ -12,12 +12,13 @@
   <br>
   Modified on <span class="date">${image.modificationDate}</span> by ${image.modifiedBy}.     
 </div>
- <h5>Name:</h5>
+
 <p style="max-height: 100px; overflow-y: scroll;">
+ <b>Name:</b>
 ${image.name}
 </p>
-<h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
+<b>Description:</b>
 ${image.description}
 </p>
 <p></p>

@@ -38,7 +38,7 @@ public class EditImageController {
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
             attributes.addAttribute("message", "Image doesnt exist with given image id.");
-            return "redirect:/staff/images/list/1";  
+            return "redirect:/staff/images/list/";  
         }
         return "staff/image/edit";
     }
