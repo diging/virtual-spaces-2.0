@@ -82,6 +82,12 @@ function drawLinks() {
         
         var linkDisplay = $('<span class="fa fa-globe"></span>');
        
+        if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
+            var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+        } else {
+            var linkDisplay = $('<span class="fa fa-globe"></span>');
+        }
+        
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
