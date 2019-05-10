@@ -37,6 +37,10 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
+	<definition name="module" extends="base.definition">	
+		<put-attribute name="currentPage" value="module" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
+	</definition>
     
     <!-- Register -->
     <definition name="register" extends="base.definition"> 
@@ -115,17 +119,39 @@
 		<put-attribute name="currentPage" value="exhibit" />
 		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/exhibit/menu/config_menu.jsp" />
 	</definition>
-	<definition name="staff/exhibit/config" extends="exhibit.base.def">	
-		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />	
+	
+	<definition name="staff/exhibit/config" extends="exhibit.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />
+	</definition>
+	
+	<!-- Slides -->
+	<definition name="slide.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="slide" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition> 
+	
+	<definition name="staff/module/slide/add" extends="slide.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/add.jsp" />	
+	</definition>
+	
+	<definition name="staff/module/slide/contents" extends="slide.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
 	</definition>
     
     <!-- Users -->
     <definition name="staff/user/list" extends="exhibit.base.def"> 
         <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
     </definition>
+
     <!-- Images -->
     <definition name="staff/images/list" extends="exhibit.base.def"> 
         <put-attribute name="currentPage" value="images" />
         <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
+    </definition>
+    <definition name="staff/image" extends="exhibit.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/images/image.jsp" />
+	</definition>
+	<definition name="staff/image/edit" extends="exhibit.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/edit.jsp" />
     </definition>
 </tiles-definitions>

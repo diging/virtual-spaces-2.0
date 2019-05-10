@@ -17,7 +17,12 @@ public interface ILinkDisplay extends IVSpaceElement {
 
     IVSImage getImage();
     
+    int getRotation();
+    
+    void setRotation(int rotation);
+    
+    DisplayType getType();
+    
     void setType(DisplayType type);
 
-    DisplayType getType();
 }
