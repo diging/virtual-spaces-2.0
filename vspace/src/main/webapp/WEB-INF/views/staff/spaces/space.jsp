@@ -360,7 +360,7 @@ $( document ).ready(function() {
 	linkIconReader.onload = function(e) {
 		linkIcon = e.target.result;
 		showSpaceLink(createSpaceLinkInfo());
-		showModuleLink(createModuleLinkInfo());
+	    showModuleLink(createModuleLinkInfo());
 		
 	}
 	
@@ -580,7 +580,7 @@ $( document ).ready(function() {
 		info["linkedModule"] = $("#linkedModule").val();
 		info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
 		info["type"] = $("#type").val();
-	    return info;
+		return info;
 	}
 	
 	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId) {
@@ -597,14 +597,14 @@ $( document ).ready(function() {
 	
 	function makeModuleLinksEditable(moduleLinkName, moduleLinkId) {
 		$("#moduleLinkInfoLabel").text(moduleLinkName);
-        $("#moduleLinkId").val(moduleLinkId);
-        resetHighlighting();
-        
-        $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
-        $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
-        $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
-        $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
-        $("#moduleLinkInfo").show();
+		$("#moduleLinkId").val(moduleLinkId);
+		resetHighlighting();
+		      
+		$('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
+		$('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
+		$('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
+		$('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
+		$("#moduleLinkInfo").show();
 	}
 	
 	function resetHighlighting() {

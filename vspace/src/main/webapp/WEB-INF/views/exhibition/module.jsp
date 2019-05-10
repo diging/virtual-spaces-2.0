@@ -1,10 +1,12 @@
 
-	<h1>Module: ${module.name}</h1>
-	<h3>Description: ${module.description}</h3>
+<div class="container">
+<div class="row">
+<div class="col-sm">
+<h1>${module.name}</h1>	
 	
-<div class="alert alert-light" role="alert">
-  Created on <span class="date">${module.creationDate}</span> by ${module.createdBy}.
-  <br>
-  Modified on <span class="date">${module.modificationDate}</span> by ${module.modifiedBy}.
+<p>
+This feature is currently under active development. Please check back later!
+</p>
 </div>
- 
+</div>
+</div>
