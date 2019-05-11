@@ -30,6 +30,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
@@ -42,7 +43,7 @@ public class ImageServiceTest {
     private IStorageEngine storage;
     
     @InjectMocks
-    private ImageService serviceToTest;
+    private IImageService serviceToTest;
 
     private ImageForm imageForm;
     private List<VSImage> images;

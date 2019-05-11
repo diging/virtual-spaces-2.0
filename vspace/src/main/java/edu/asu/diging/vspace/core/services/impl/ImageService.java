@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -162,5 +164,17 @@ public class ImageService implements IImageService {
         } else {
             throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
         } 
+    }
+    
+    @Override
+    public void addCategory(IVSImage image, ImageCategory category) {
+        if (image.getCategories() == null) {
+            image.setCategories(new ArrayList<>());
+        }
+        
+        if (!image.getCategories().contains(category)) {
+            image.getCategories().add(category);
+        }
+        imageRepo.save((VSImage)image);
     }
 }

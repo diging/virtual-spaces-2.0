@@ -2,8 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <script src="<c:url value="/resources/bootpag/js/bootpag.min.js" />"></script>
 <script>
+//# sourceURL=js.js
   $( document ).ready(function() {
   $('#page-selection').bootpag({
 	    total: ${totalPages},
@@ -25,8 +28,13 @@
 	}); 
   });
   
-  function toggleChange(form) {
-	  form.submit();
+  function toggleChange(form, imageId) {
+	  $.post($(form).attr('action') + "&tag=" + $(form).find("option:selected").val(), function( data ) {
+		  category = $('<span class="badge badge-warning"></span>');
+		  category.text($(form).find("option:selected").text());
+		  $("#tags-" + imageId).append(category);
+		  $(form)[0].reset();
+	  });
   }
 </script>
 
@@ -75,16 +83,20 @@
 						<td>${image.name}</td>
 						<td>${image.createdBy}</td>
 						<td><span class="date">${image.creationDate}</span></td>
-						<td><span class="tag">${image.tag}</span> 
-						<Form id="changeTagForm" action="/vspace/staff/images/tag/${currentPageNumber}?${_csrf.parameterName}=${_csrf.token}" method="post">
+						<td><span id="tags-${image.id}" class="tag">
+                        <c:forEach items="${image.categories}" var="cat">
+                        <span class="badge badge-warning"><spring:eval expression="@configFile.getProperty('image_category_' + cat)"  /></span>
+                        </c:forEach>
+                        </span> 
+						<form id="changeTagForm" action="/vspace/staff/images/${image.id}/tag?${_csrf.parameterName}=${_csrf.token}" method="post">
 							<input type="hidden" name="imageID" value="${image.id}" id="imageID" />
-							<select id="changeTag" name="changeTag" onChange="toggleChange(this.form)" style="width:68px;">
+							<select id="changeTag" name="tag" onChange="toggleChange(this.form, '${image.id}')" class="form-control form-control-sm" style="width:68px;">
 								<option>Assign a tag</option>
-								<c:forEach items="${tagList}" var="tag">
-									<option value="${tag}">${tag}</option>
+								<c:forEach items="${imageCategories}" var="tag">
+									<option value="${tag}"><spring:eval expression="@configFile.getProperty('image_category_' + tag)"  /></option>
 								</c:forEach>
 							</select>
-						</Form>
+						</form>
 						</td>
 					</tr>
 				</c:forEach>
