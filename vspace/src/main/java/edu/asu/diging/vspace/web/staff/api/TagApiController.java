@@ -36,9 +36,11 @@ public class TagApiController {
             logger.error("Image not found.", e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!image.getCreatedBy().equals(principal.getName())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        
+//        We probably want to allow all staff to tag images
+//        if (!image.getCreatedBy().equals(principal.getName())) {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
         
         ImageCategory category;
         try {
@@ -61,9 +63,10 @@ public class TagApiController {
             logger.error("Image not found.", e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!image.getCreatedBy().equals(principal.getName())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+//        We probably want to allow all staff to tag images
+//        if (!image.getCreatedBy().equals(principal.getName())) {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
         
         ImageCategory category;
         try {
