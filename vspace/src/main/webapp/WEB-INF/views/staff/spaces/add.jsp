@@ -32,9 +32,9 @@ $(document).ready(function(){
     	if (!image.id) {
     		return image.text;
     	}
-    	var tbaseUrl = "/vspace/api/image";
+    	var tbaseUrl = '<c:url value="/api/image/" />';
     	var $image = $(
-    			'<span><img src="' + tbaseUrl + '/' + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+    			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
     	);
     	return $image;
     };
