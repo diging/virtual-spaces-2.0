@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 
@@ -25,6 +26,8 @@ public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDis
 
     @OneToOne(targetEntity = ExternalLink.class)
     private IExternalLink externalLink;
+    
+    private DisplayType type;
 
     /*
      * (non-Javadoc)
@@ -68,5 +71,27 @@ public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDis
     @Override
     public void setExternalLink(IExternalLink externalLink) {
         this.externalLink = externalLink;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.display.impl.IExternalLinkDisplay#
+     * getType()
+     */
+    @Override
+    public DisplayType getType() {
+        return type;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.display.impl.IExternalLinkDisplay#
+     * setType(DisplayType)
+     */
+    @Override
+    public void setType(DisplayType type) {
+        this.type = type;
     }
 }
