@@ -30,4 +30,6 @@ public interface IImageService {
 
     void addCategory(IVSImage image, ImageCategory category);
 
+    void removeCategory(IVSImage image, ImageCategory category);
+
 }

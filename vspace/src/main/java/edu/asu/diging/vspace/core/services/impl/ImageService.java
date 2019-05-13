@@ -177,4 +177,10 @@ public class ImageService implements IImageService {
         }
         imageRepo.save((VSImage)image);
     }
+    
+    @Override
+    public void removeCategory(IVSImage image, ImageCategory category) {
+        image.getCategories().remove(category);
+        imageRepo.save((VSImage)image);
+    }
 }
