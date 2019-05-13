@@ -43,7 +43,7 @@ public class ImageServiceTest {
     private IStorageEngine storage;
     
     @InjectMocks
-    private IImageService serviceToTest;
+    private ImageService serviceToTest;
 
     private ImageForm imageForm;
     private List<VSImage> images;
