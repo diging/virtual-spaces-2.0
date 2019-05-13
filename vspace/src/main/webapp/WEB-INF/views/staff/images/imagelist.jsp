@@ -92,7 +92,7 @@ $( document ).ready(function() {
                                 </c:forEach>
                         </span>
                             <form id="changeTagForm"
-                                action="/vspace/staff/images/${image.id}/tag?${_csrf.parameterName}=${_csrf.token}"
+                                action="<c:url value="/staff/images/" />${image.id}/tag?${_csrf.parameterName}=${_csrf.token}"
                                 method="post">
                                 <input type="hidden" name="imageID"
                                     value="${image.id}" id="imageID" />
