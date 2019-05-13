@@ -42,7 +42,7 @@ $(document).ready(function(){
     	if (!image.id) {
             return image.text;
         }
-        var tbaseUrl = "/vspace/api/image";
+        var tbaseUrl = '<c:url value="/api/image/" />';
         var $image = $(
                 '<span>' + image.text + '</span>'
         );
