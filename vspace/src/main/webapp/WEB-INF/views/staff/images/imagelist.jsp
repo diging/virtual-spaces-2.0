@@ -28,38 +28,6 @@ $( document ).ready(function() {
 	}); 
   });
   
-  console.log($(".removeTag"));
-  
-  $(".removeTag").each(function(idx, elem) {
-	 console.log(idx);
-	 console.log(elem);
-  });
-
-  $(".removeTag").click(function(e) {
-	 console.log("clicked" + e); 
-  });
-  
-  $(".removeTag").css('cursor', 'pointer');
-  
-  function toggleChange(form, imageId) {
-	  $.post($(form).attr('action') + "&tag=" + $(form).find("option:selected").val(), function( data ) {
-		  category = $('<span class="badge badge-warning"></span>');
-		  var catText = $(form).find("option:selected").text();
-		  var catValue = $(form).find("option:selected").val();
-		  category.text(catText);
-		  var isDuplicate = false;
-		  $("#tags-" + imageId).children().each(function(idx,elem) {
-			  if ($(elem).data('category') == catValue) {
-				  isDuplicate = true;
-			  }
-		  });
-		  if (!isDuplicate) {
-			  $("#tags-" + imageId).append(category);
-		  }
-		  
-		  $(form)[0].reset();
-	  });
-  }
 </script>
 
 <h1>Images</h1>
