@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,17 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
 public class AddSpaceController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -33,8 +41,6 @@ public class AddSpaceController {
     @Autowired
     private IImageService imageService;
     
-    @Autowired
-    private ImageRepository imageRepo;
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
@@ -46,7 +52,7 @@ public class AddSpaceController {
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
-            Principal principal, @RequestParam(value = "", required=false) String imageID) throws IOException {
+            Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
         byte[] bgImage = null;
         String filename = null;
@@ -55,15 +61,30 @@ public class AddSpaceController {
             filename = file.getOriginalFilename();
         }
         
-        if(!"".equalsIgnoreCase(imageID)) {
-            Optional<VSImage> imgContainer = imageRepo.findById(imageID);
-            VSImage img = imgContainer.get();
-            spaceManager.storeSpace(space, img);
+        CreationReturnValue creationValue = null;
+        if(imageId != null && !imageId.isEmpty()) {
+            IVSImage image;
+            try {
+                image = imageService.getImageById(imageId);
+            } catch (ImageDoesNotExistException e) {
+                logger.error("Image does not exist.", e);
+                redirectAttrs.addAttribute("showAlert", true);
+                redirectAttrs.addAttribute("alertType", "danger");
+                redirectAttrs.addAttribute("message", "Selected image does not exist.");
+                return "redirect:/staff/space/list";
+            }
+            creationValue = spaceManager.storeSpace(space, image);
         }else {
-            spaceManager.storeSpace(space, bgImage, filename);
+            creationValue = spaceManager.storeSpace(space, bgImage, filename);
         }
         
-
+        if (creationValue != null) {
+            return "redirect:/staff/space/" + creationValue.getElement().getId();
+        }
+        
+        redirectAttrs.addAttribute("showAlert", true);
+        redirectAttrs.addAttribute("alertType", "danger");
+        redirectAttrs.addAttribute("message", "Unkown error. Space could not be created.");
         return "redirect:/staff/space/list";
     }
 

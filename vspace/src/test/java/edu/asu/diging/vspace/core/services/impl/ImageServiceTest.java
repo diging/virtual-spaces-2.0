@@ -43,7 +43,7 @@ public class ImageServiceTest {
     private IStorageEngine storage;
     
     @InjectMocks
-    private ImageService serviceToTest;
+    private IImageService serviceToTest;
 
     private ImageForm imageForm;
     private List<VSImage> images;
@@ -124,7 +124,7 @@ public class ImageServiceTest {
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(1);
+        List<IVSImage> requestedImages = serviceToTest.getImages(1);
         assertEquals(1, requestedImages.size());
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
@@ -135,7 +135,7 @@ public class ImageServiceTest {
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(-2);
+        List<IVSImage> requestedImages = serviceToTest.getImages(-2);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
@@ -146,7 +146,7 @@ public class ImageServiceTest {
         Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(7);
+        List<IVSImage> requestedImages = serviceToTest.getImages(7);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }

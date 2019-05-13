@@ -11,20 +11,48 @@
 
 <script>
 $(document).ready(function(){
-	$("#imageID").select2({
-		templateResult: formatState,
-		});
-	});
-	function formatState (state) {
-		if (!state.id) {
-			return state.text;
-		}
-		var tbaseUrl = "/vspace/api/image";
-		var $state = $(
-				'<span><img src="' + tbaseUrl + '/' + state.id + '" class="img-thumbnail" /> ' + state.text + '</span>'
-		);
-		return $state;
-	};
+	$("#imageId").select2({
+		ajax: {
+		    url: function (params) {
+		      return '<c:url value="/staff/images/search" />';
+		    },
+		    dataType: 'json',
+		    processResults: function (data) {
+		        console.log(data);
+		        return {
+		          results: data,
+		        };
+		      },
+		},
+		templateResult: formatImage,
+		templateSelection: formatSelection
+    });
+    
+    function formatImage (image) {
+    	if (!image.id) {
+    		return image.text;
+    	}
+    	var tbaseUrl = "/vspace/api/image";
+    	var $image = $(
+    			'<span><img src="' + tbaseUrl + '/' + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+    	);
+    	return $image;
+    };
+    
+    function formatSelection(image) {
+    	if (!image.id) {
+            return image.text;
+        }
+        var tbaseUrl = "/vspace/api/image";
+        var $image = $(
+                '<span>' + image.text + '</span>'
+        );
+        $("#selectedImage").empty();
+        $("#selectedImage").append('<img width="300px" src="' + tbaseUrl + '/' + image.id + '" class="img-thumbnail" />');
+        return $image;
+    }
+
+});
 </script>
 </head>
 
@@ -47,16 +75,21 @@ $(document).ready(function(){
 
 	<div class="form-group row">
 		<label for="description" class="col-md-2 col-form-label">Background image:</label>
-		<div class="form-group row">
-			<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />
-			<select id="imageID" name="imageID" class="form-control-xs target" style="height:50px;width:300px;">
-		        <option selected value="">Choose from existing</option>
-		        <c:forEach items="${images}" var="image">
-		        	<option value="${image.id}">${image.filename}</option>
-		        </c:forEach>
-			</select>	
-		</div>
+		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />
+		
 	</div>
+    
+    <div class="form-group row">
+        <label for="description" class="col-md-2 col-form-label"></label>
+            <div>
+            <select id="imageId" name="imageId" class="form-control-xs target" style="height:50px;width:300px;">
+                <option selected value="">Choose from existing</option>
+            </select>   
+            </div>
+            <div>
+            <span id="selectedImage" width="300px"></span>
+            </div>
+    </div>
 
 	<button class="btn btn-primary btn-sm" type="submit" value="submit">Create
 		Space</button>

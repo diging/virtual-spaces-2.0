@@ -122,7 +122,7 @@ public class SpaceManager implements ISpaceManager {
      * diging.vspace.core.model.ISpace,edu.asu.diging.vspace.core.model.impl.VSImage)
      */
     @Override
-    public CreationReturnValue storeSpace(ISpace space, VSImage image) {
+    public CreationReturnValue storeSpace(ISpace space, IVSImage image) {
         List<SpaceDisplay> displays = null;
         if (space.getId() != null) {
             displays = spaceDisplayRepo.getBySpace(space);
