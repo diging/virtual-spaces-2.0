@@ -47,7 +47,7 @@ $(document).ready(function(){
                 '<span>' + image.text + '</span>'
         );
         $("#selectedImage").empty();
-        $("#selectedImage").append('<img width="300px" src="' + tbaseUrl + '/' + image.id + '" class="img-thumbnail" />');
+        $("#selectedImage").append('<img width="300px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
         return $image;
     }
 
