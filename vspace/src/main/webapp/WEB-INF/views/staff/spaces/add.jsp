@@ -18,7 +18,6 @@ $(document).ready(function(){
 		    },
 		    dataType: 'json',
 		    processResults: function (data) {
-		        console.log(data);
 		        return {
 		          results: data,
 		        };
