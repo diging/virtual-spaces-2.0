@@ -30,7 +30,6 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
-import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
@@ -124,7 +123,7 @@ public class ImageServiceTest {
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(1);
+        List<IVSImage> requestedImages = serviceToTest.getImages(1);
         assertEquals(1, requestedImages.size());
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
@@ -135,7 +134,7 @@ public class ImageServiceTest {
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(-2);
+        List<IVSImage> requestedImages = serviceToTest.getImages(-2);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
@@ -146,7 +145,7 @@ public class ImageServiceTest {
         Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()));
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<VSImage> requestedImages = serviceToTest.getImages(7);
+        List<IVSImage> requestedImages = serviceToTest.getImages(7);
         assertEquals(IMG_ID, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }

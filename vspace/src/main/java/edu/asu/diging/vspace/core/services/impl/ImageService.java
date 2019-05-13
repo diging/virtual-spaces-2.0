@@ -90,11 +90,13 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo
      */ 
     @Override
-    public List<VSImage> getImages(int pageNo) {
+    public List<IVSImage > getImages(int pageNo) {
         pageNo = validatePageNumber(pageNo);
         Pageable sortByRequestedField = PageRequest.of(pageNo-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()));
         Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
-        return images.getContent();   
+        List<IVSImage> results = new ArrayList<>();
+        images.getContent().forEach(i -> results.add(i));
+        return results;
     }  
     
     /**
@@ -164,6 +166,15 @@ public class ImageService implements IImageService {
         } else {
             throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
         } 
+    }
+    
+    @Override
+    public List<IVSImage> findByFilenameOrNameContains(String searchTerm) {
+        String likeSearchTerm = "%" + searchTerm + "%";
+        List<VSImage> results = imageRepo.findByFilenameLikeOrNameLike(likeSearchTerm, likeSearchTerm);
+        List<IVSImage> imageResults = new ArrayList<>();
+        results.forEach(r -> imageResults.add(r));
+        return imageResults;
     }
     
     @Override
