@@ -103,9 +103,9 @@ $( document ).ready(function() {
                                     <option>Assign a tag</option>
                                     <c:forEach
                                         items="${imageCategories}"
-                                        var="tag">
-                                        <option value="${tag}"><spring:eval
-                                                expression="@configFile.getProperty('image_category_' + tag)" /></option>
+                                        var="catTag">
+                                        <option value="${catTag}"><spring:eval
+                                                expression="@configFile.getProperty('image_category_' + catTag)" /></option>
                                     </c:forEach>
                                 </select>
                             </form></td>
