@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 @Controller
 public class AddImageBlockController {
@@ -38,15 +40,16 @@ public class AddImageBlockController {
             image = file.getBytes();
             filename = file.getOriginalFilename();
         }
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
+            CreationReturnValue imageBlock = contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
+            ObjectNode node = mapper.createObjectNode();
+            node.put("imageBlock", imageBlock.getElement().getId());
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.CREATED);
         } catch (ImageCouldNotBeStoredException e) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Image Content block cannot be stored.");
-            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        return new ResponseEntity<String>("ok",HttpStatus.OK);
     }
 }

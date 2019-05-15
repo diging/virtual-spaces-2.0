@@ -10,16 +10,8 @@ var contentCount = ${fn:length(slideContents)};
 function uploadImage() {
 	var file = document.getElementById('file').files[0];
 	var reader  = new FileReader();
-	
-	reader.onload = function () {
-		var imageblock = $('<img src="#" />');
-		imageblock.attr('src', reader.result);
-		imageblock.attr('width', '800px');
-		$('#slideSpace').append(imageblock);        
-	}
 	++contentCount;
 	reader.readAsDataURL(file);
-	
 	var file = document.getElementById('file').files[0];
 	var formData = new FormData();
 	formData.append('file', file);
@@ -35,12 +27,35 @@ function uploadImage() {
 		data: formData,
 		
 		success: function(data) {
-			// do nothing for now
+			data = JSON.parse(data);
+			var imageBlock = $('<div class="valueDiv card card-body"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;"></div></div></div>');
+			reader.onload = function () {
+				imgTag = $('.img', imageBlock)
+				imgTag.attr('src', reader.result);
+				imgTag.attr('width', '800px');
+				$('#slideSpace').append(imageBlock); 
+				$(imageBlock).attr( 'id', data["imageBlock"]);
+		        $('#'+data["imageBlock"]+ ' #deleteTextId').attr( 'value', data["imageBlock"]);
+			}
+			reader.readAsDataURL(file);
+			// clear previous upload from form
+			$( '#imageUploadForm' ).each(function(){
+			    this.reset();
+			});
 		},
 		error: function(data) {
-			console.log(data);
+			--contentCount;
+			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to submit again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			$('.error').append(alert); 
+			$(".error").delay(4000).slideUp(500, function(){
+			    $(".error").empty();
+			});
+			$( '#imageUploadForm' ).each(function(){
+			    this.reset();
+			});
 		}
 	});
+	
 } 
 	
 $(document).ready(function() {
@@ -52,14 +67,40 @@ $(document).ready(function() {
 		$("#addImgAlert").show();
   	});
 	
+	$(document).on("click", ".deleteText", function(e) {
+		$("#confirmDeleteTextAlert").show();
+		var alert = $('<input type="hidden" id="deleteTextId">');
+		$(alert).attr( 'value', $(this).siblings('input').val());
+		$('.modal-footer').append(alert); 
+  	});
+	
+	$(document).on("click", ".deleteImage", function(e) {
+		$("#confirmDeleteImageAlert").show();
+		var alert = $('<input type="hidden" id="deleteImageId">');
+		$(alert).attr( 'value', $(this).siblings('input').val());
+		$('.modal-footer').append(alert); 
+  	});
+	
 	$("#uploadImage").click(function(e) {
 		e.preventDefault();
-			$("#addImgAlert").hide();
-			uploadImage();
+		$("#addImgAlert").hide();
+		uploadImage();
   	});
 	
 	$("#cancelSubmitText").click(function() {
 		$("#addTextAlert").hide();	
+	});
+	
+	$("#cancelDeleteText").click(function() {
+		$("#confirmDeleteTextAlert").hide();
+	});
+	
+	$("#cancelDeleteImage").click(function() {
+		$("#confirmDeleteImageAlert").hide();
+	});
+	
+	$("#cancelDelete").click(function() {
+		$("#confirmDeleteImageAlert").hide();	
 	});
 	
 	$("#cancelImageBtn").click(function() {
@@ -67,28 +108,103 @@ $(document).ready(function() {
 		$("#addImgAlert").hide();	
 	});
 	
+	
 	$("#submitText").on("click", function(e) {
 		$("#addTextAlert").hide();
 		e.preventDefault();
 
 		var payload = {};
 		payload["content"] = $("#textBlockText").val();
-		
-		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
-		$(textblock).css({
-			'margin': "10px"
-		});
-		$('#slideSpace').append(textblock);
 		++contentCount;
 		payload["contentOrder"] = contentCount;
 		// ------------- creating text content blocks ------------
-		$.post("<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
+		$.ajax({
+		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />",
+		    type: 'POST',
+		    data: payload,
+		    success: function(data) {
+		    	var textBlock = $('<div class="valueDiv card card-body"><div class="row"><div class="col"><p>'+payload["content"]+'</p></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;"></div></div></div>');
+				$(textBlock).css({
+					'margin': "10px"
+				});
+				$('#slideSpace').append(textBlock);
+		    	$(textBlock).attr( 'id', data["textBlock"]);
+		        $('#'+data["textBlock"]+ ' #deleteTextId').attr( 'value', data["textBlock"]);
+		        
+		    },
+			error: function(data) {
+				--contentCount;
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to submit again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.error').append(alert); 
+				$(".error").delay(4000).slideUp(500, function(){
+				    $(".error").empty();
+				});
+				$("#textBlockText").val('');
+			}
 		});
+
 		
-		$("#textBlockText").val('')
+		$("#textBlockText").val('');
 	});
+	
+	// ---------- Delete Text Block -------------
+	
+		$("#deleteText").on("click", function(e) {
+		e.preventDefault();
+		$("#confirmDeleteTextAlert").hide();
+		var payload = {};
+		payload["blockId"] = $('#deleteTextId').attr('value');
+		$('#deleteTextId').remove()
+		
+		// ------------- delete text content blocks ------------
+		$.ajax({
+		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent/" />" + payload["blockId"] + "?${_csrf.parameterName}=${_csrf.token}",
+		    type: 'DELETE',
+		    data: payload,
+		    success: function(result) {
+		        $('#' + payload["blockId"]).remove();
+		        
+		    },
+			error: function(data) {
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.error').append(alert); 
+				$(".error").delay(4000).slideUp(500, function(){
+				    $(".error").empty();
+				});
+			}
+		});
+	});
+	
+	// ---------- Delete Image Block -----------
+	
+	$("#deleteImage").on("click", function(e) {
+		e.preventDefault();
+		$("#confirmDeleteImageAlert").hide();
+		var payload = {};
+		payload["blockId"] = $('#deleteImageId').attr('value');
+		$('#deleteImageId').remove()
+		// ------------- delete image content blocks ------------
+		$.ajax({
+		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + payload["blockId"] + "?${_csrf.parameterName}=${_csrf.token}",
+		    type: 'DELETE',
+		    data: payload,
+		    success: function(result) {
+		        $('#' + payload["blockId"]).remove();
+		    },
+			error: function(data) {
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.error').append(alert); 
+				$(".error").delay(4000).slideUp(500, function(){
+				    $(".error").empty();
+				});
+			}
+		});
+	});
+	
 	$("#addImgAlert").draggable();
 	$("#addTextAlert").draggable();
+	$("#confirmDeleteTextAlert").draggable();
+	$("#confirmDeleteImageAlert").draggable();
 
 });
 </script>
@@ -99,6 +215,10 @@ $(document).ready(function() {
   <li class="breadcrumb-item"><a href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
   <li class="breadcrumb-item active">${slide.name}</li>
 </ol>
+
+<div class="error">
+</div>
+
 
 <h1>Slide: ${slide.name}</h1>
 <div class="alert alert-light" role="alert">
@@ -111,16 +231,58 @@ $(document).ready(function() {
 
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Add content
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a id="addText" class="dropdown-item" href="#">Add Text</a>
-    <a id="addImage" class="dropdown-item" href="#">Add Image</a>
+	<div class="dropdown">
+		  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    Add content
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    		<a id="addText" class="dropdown-item" href="#">Add Text</a>
+		    <a id="addImage" class="dropdown-item" href="#">Add Image</a>
+		  </div>
+	</div>
+</nav>
+
+<!-- Delete Text Modal -->
+<div id="confirmDeleteTextAlert" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <h6>Are you sure you want to delete this text block?</h6>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelDeleteText" type="reset" class="btn light">Cancel</button>
+        <button type="submit" id="deleteText" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
   </div>
 </div>
-</nav>
+
+<!-- Delete Image Modal -->
+<div id="confirmDeleteImageAlert" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <h6>Are you sure you want to delete this image block?</h6>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelDelete" type="reset" class="btn light">Cancel</button>
+        <button type="submit" id="deleteImage" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -154,16 +316,18 @@ $(document).ready(function() {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
+      
         <div class="modal-body">
-            <h6><small>Upload Image: </small></h6>
-            <input class="form-control" type="file" name="file" rows="5" cols="500" id="file" />
-          </div>
-          <div class="modal-footer">
-            <button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
-            <button type="submit" id="uploadImage" class="btn btn-primary">Upload Image</button>
-          </div>
-      </form>
+        	<form name="photoForm"  id="imageUploadForm" enctype="multipart/form-data" method="post">
+	            <h6><small>Upload Image: </small></h6>
+	            <input class="form-control" type="file" name="file" rows="5" cols="500" id="file" />
+            </form>
+        </div>
+      
+      <div class="modal-footer">
+        <button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
+        <button type="submit" id="uploadImage" class="btn btn-primary">Upload Image</button>
+      </div>
     </div>
   </div>
 </div>
@@ -171,10 +335,30 @@ $(document).ready(function() {
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-			<div class="valueDiv"><img id="${contents.image.id}" width="800px" style="margin:10px;" src="<c:url value="/api/image/${contents.image.id}" />" /></div>
+			<div id="${contents.id}" class="valueDiv card card-body" style="margin:10px;">
+				<div class="row">
+					<div class="col">
+						<img id="${contents.image.id}" width="800px" src="<c:url value="/api/image/${contents.image.id}" />" />
+					</div>
+					<div class="col">
+						<input type="hidden" id="deleteImageId" value="${contents.id}">
+						<input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;">
+					</div>
+				</div>
+			</div>
 		</c:if>
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-			<div class="valueDiv card card-body" style="margin:10px;"><p>${contents.text}</p></div>
+			<div id="${contents.id}" class="valueDiv card card-body" style="margin:10px;">
+				<div class="row">
+					<div class="col">
+						<p>${contents.text}</p>
+					</div>
+					<div class="col">
+						<input type="hidden" id="deleteTextId" value="${contents.id}">
+						<input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;">
+					</div>
+				</div>
+			</div>
 		</c:if>
 	</c:forEach>
 </div>

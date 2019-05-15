@@ -7,13 +7,16 @@ import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
+import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
@@ -120,9 +123,28 @@ public class ContentBlockManager implements IContentBlockManager {
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
-
         returnValue.setElement(imageBlock);
         return returnValue;
+    }
+    
+    @Override
+    public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
+        try {
+            textBlockRepo.deleteById(id);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new BlockDoesNotExistException(exception);
+        }
+
+    }
+    
+    @Override
+    public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
+        try {
+           imageBlockRepo.deleteById(id);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new BlockDoesNotExistException(exception);
+        }
+
     }
 
 }

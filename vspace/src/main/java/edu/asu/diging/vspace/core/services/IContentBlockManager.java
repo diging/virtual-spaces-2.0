@@ -2,7 +2,9 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -14,5 +16,9 @@ public interface IContentBlockManager {
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException;
 
     List<IContentBlock> getAllContentBlocks(String slideId);
+    
+    void deleteTextBlockById(String blockid) throws BlockDoesNotExistException;
+    
+    void deleteImageBlockById(String blockid) throws BlockDoesNotExistException;
 
 }
