@@ -20,7 +20,7 @@ public interface ILinkManager {
     List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId);
 
     IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
-            String externalLink) throws SpaceDoesNotExistException;
+            String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
     void deleteSpaceLink(String linkId);
     
@@ -30,5 +30,7 @@ public interface ILinkManager {
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
     
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
+
+    void deleteExternalLink(String linkId);
 
 }

@@ -15,10 +15,4 @@ public interface ISpaceLinkDisplay extends ILinkDisplay {
     void setRotation(int rotation);
 
     int getRotation();
-
-    void setType(DisplayType type);
-
-    DisplayType getType();
-    
-
 }
