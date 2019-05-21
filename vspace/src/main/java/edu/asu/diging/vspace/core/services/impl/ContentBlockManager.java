@@ -140,7 +140,7 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
         try {
-           imageBlockRepo.deleteById(id);
+            imageBlockRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new BlockDoesNotExistException(exception);
         }

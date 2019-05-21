@@ -152,17 +152,15 @@ $(document).ready(function() {
 		$("#deleteText").on("click", function(e) {
 		e.preventDefault();
 		$("#confirmDeleteTextAlert").hide();
-		var payload = {};
-		payload["blockId"] = $('#deleteTextId').attr('value');
+		var blockId = $('#deleteTextId').attr('value');
 		$('#deleteTextId').remove()
 		
 		// ------------- delete text content blocks ------------
 		$.ajax({
-		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent/" />" + payload["blockId"] + "?${_csrf.parameterName}=${_csrf.token}",
+		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/" />" + blockId + "?${_csrf.parameterName}=${_csrf.token}",
 		    type: 'DELETE',
-		    data: payload,
 		    success: function(result) {
-		        $('#' + payload["blockId"]).remove();
+		        $('#' + blockId).remove();
 		        
 		    },
 			error: function(data) {
@@ -180,16 +178,14 @@ $(document).ready(function() {
 	$("#deleteImage").on("click", function(e) {
 		e.preventDefault();
 		$("#confirmDeleteImageAlert").hide();
-		var payload = {};
-		payload["blockId"] = $('#deleteImageId').attr('value');
+		var blockId = $('#deleteImageId').attr('value');
 		$('#deleteImageId').remove()
 		// ------------- delete image content blocks ------------
 		$.ajax({
-		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + payload["blockId"] + "?${_csrf.parameterName}=${_csrf.token}",
+		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + blockId + "?${_csrf.parameterName}=${_csrf.token}",
 		    type: 'DELETE',
-		    data: payload,
 		    success: function(result) {
-		        $('#' + payload["blockId"]).remove();
+		        $('#' + blockId).remove();
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');

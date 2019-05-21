@@ -22,7 +22,7 @@ public class DeleteTextBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent/{blockId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteTextBlock(@PathVariable("blockId") String blockId) throws IOException {
     		System.out.print(blockId);
 	    	 try {
