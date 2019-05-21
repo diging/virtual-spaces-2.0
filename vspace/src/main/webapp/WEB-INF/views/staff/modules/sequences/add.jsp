@@ -4,11 +4,25 @@
 
 <script>
 	$(document).ready(function() {
+		var order = {};
+		var multiselectIDs = []
+		var vals = []
 		$('#ordered-slides').multiSelect({
 			keepOrder : true,
+			dblClick : true,
+			afterInit: function(container) {
+				$("#ordered-slides").find("option").each(function(){
+						vals.push($(this).val()); 
+					});
+				$(".ms-selection ul").find("li").each(function(index){
+						$(this).attr( 'value', vals[index]); 
+					});
+			},
 			afterSelect : function(value) {
+				
 				var get_val = $("#orderedSlideIds").val();
 				var hidden_val = (get_val != "") ? get_val + "," : get_val;
+				order[value] = $(".ms-selection ul li:last").attr('id');
 				$("#orderedSlideIds").val(hidden_val + "" + value);
 			},
 			afterDeselect : function(value, text) {
@@ -17,6 +31,17 @@
 				$("#orderedSlideIds").val(new_val);
 			}
 		})
+		function getOrder(){
+			// check for order in list then append to value when sort is stopped
+			$(".ms-selection ul").find("li").each(function(index){
+				console.log("Runs");
+				console.log($(this).val()) 
+			});
+		}
+		$(function(){
+			$('.ms-selection ul').sortable({distance: 5, stop: getOrder()});
+			
+		});
 	});
 </script>
 
@@ -41,7 +66,7 @@
 		<label for="Slides" class="col-md-2 col-form-label">Select
 			Slides:</label> <select multiple="multiple" id="ordered-slides">
 			<c:forEach items="${slides}" var="slide">
-				<option value='${slide.id}'>${slide.name}</option>
+				<option value='${slide.id}' id="${slide.id}">${slide.name}</option>
 			</c:forEach>
 			<select>
 	</div>

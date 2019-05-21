@@ -33,12 +33,7 @@ public class Sequence extends VSpaceElement implements ISequence {
     private IModule module;
 
     @ManyToMany(targetEntity = Slide.class, cascade=CascadeType.ALL)
-    @OrderColumn(name = "slide_id")
-    @JoinTable(
-        name = "sequence_slide", 
-        joinColumns = { @JoinColumn(name = "sequence_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "slides_order") }
-    )
+    @OrderColumn(name="slide_order")
     List<ISlide> slides = new ArrayList<>();
     /*
      * (non-Javadoc)
