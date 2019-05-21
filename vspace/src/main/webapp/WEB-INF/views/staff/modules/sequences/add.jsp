@@ -10,16 +10,16 @@
 		$('#ordered-slides').multiSelect({
 			keepOrder : true,
 			dblClick : true,
-			afterInit: function(container) {
-				$("#ordered-slides").find("option").each(function(){
-						vals.push($(this).val()); 
-					});
-				$(".ms-selection ul").find("li").each(function(index){
-						$(this).attr( 'value', vals[index]); 
-					});
+			afterInit : function(container) {
+				$("#ordered-slides").find("option").each(function() {
+					vals.push($(this).val());
+				});
+				$(".ms-selection ul").find("li").each(function(index) {
+					$(this).attr('value', vals[index]);
+				});
 			},
 			afterSelect : function(value) {
-				
+
 				var get_val = $("#orderedSlideIds").val();
 				var hidden_val = (get_val != "") ? get_val + "," : get_val;
 				order[value] = $(".ms-selection ul li:last").attr('id');
@@ -31,16 +31,15 @@
 				$("#orderedSlideIds").val(new_val);
 			}
 		})
-		function getOrder(){
-			// check for order in list then append to value when sort is stopped
-			$(".ms-selection ul").find("li").each(function(index){
-				console.log("Runs");
-				console.log($(this).val()) 
-			});
-		}
-		$(function(){
-			$('.ms-selection ul').sortable({distance: 5, stop: getOrder()});
-			
+		$('.ms-selection ul').sortable({
+			distance : 5,
+			stop : function(event, ui) {
+				var new_val = []
+				$(".ms-selection ul").find("li").each(function(index, value) {
+					new_val.push($(this).attr('value'))
+				});
+				$("#orderedSlideIds").attr("value", new_val);
+			}
 		});
 	});
 </script>
@@ -64,7 +63,9 @@
 	</div>
 	<div class="form-group row">
 		<label for="Slides" class="col-md-2 col-form-label">Select
-			Slides:</label> <select multiple="multiple" id="ordered-slides">
+			Slides: <br>
+		<small>(Double click to select and drag to reorder)</small>
+		</label> <select multiple="multiple" id="ordered-slides">
 			<c:forEach items="${slides}" var="slide">
 				<option value='${slide.id}' id="${slide.id}">${slide.name}</option>
 			</c:forEach>
