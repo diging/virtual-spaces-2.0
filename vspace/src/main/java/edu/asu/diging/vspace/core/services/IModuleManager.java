@@ -11,6 +11,8 @@ public interface IModuleManager {
     IModule storeModule(IModule module);
 
     IModule getModule(String id);
+    
+    List<IModule> getAllModules();
 
     List<ISlide> getModuleSlides(String moduleId);
     

@@ -1,10 +1,15 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
@@ -25,6 +30,9 @@ public class ListImagesController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
         model.addAttribute("images", imageService.getImages(pageNo));
+        model.addAttribute("imageCategories", ImageCategory.values());
+        
         return "staff/images/list";
     }
+    
 }

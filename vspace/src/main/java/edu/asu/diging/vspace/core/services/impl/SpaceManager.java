@@ -113,6 +113,42 @@ public class SpaceManager implements ISpaceManager {
         returnValue.setElement(space);
         return returnValue;
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
+     * diging.vspace.core.model.ISpace,edu.asu.diging.vspace.core.model.impl.VSImage)
+     */
+    @Override
+    public CreationReturnValue storeSpace(ISpace space, IVSImage image) {
+        List<SpaceDisplay> displays = null;
+        if (space.getId() != null) {
+            displays = spaceDisplayRepo.getBySpace(space);
+        }
+        ISpaceDisplay spaceDisplay;
+        if (displays == null || displays.isEmpty()) {
+            spaceDisplay = spaceDisplayFactory.createSpaceDisplay();
+        } else {
+            spaceDisplay = displays.get(0);
+        }
+
+        if (image != null) {
+            space.setImage(image);
+            spaceDisplay.setHeight(image.getHeight());
+            spaceDisplay.setWidth(image.getWidth());
+        }
+        
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+
+        space = spaceRepo.save((Space) space);
+        spaceDisplay.setSpace(space);
+        spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
+        returnValue.setElement(space);
+        return returnValue;
+    }
 
     @Override
     public ISpace getSpace(String id) {
