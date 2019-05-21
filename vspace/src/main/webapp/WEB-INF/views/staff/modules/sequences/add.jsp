@@ -19,7 +19,6 @@
 				});
 			},
 			afterSelect : function(value) {
-
 				var get_val = $("#orderedSlideIds").val();
 				var hidden_val = (get_val != "") ? get_val + "," : get_val;
 				order[value] = $(".ms-selection ul li:last").attr('id');
@@ -63,8 +62,8 @@
 	</div>
 	<div class="form-group row">
 		<label for="Slides" class="col-md-2 col-form-label">Select
-			Slides: <br>
-		<small>(Double click to select and drag to reorder)</small>
+			Slides: <br> <small>(Double click to select and drag to
+				reorder)</small>
 		</label> <select multiple="multiple" id="ordered-slides">
 			<c:forEach items="${slides}" var="slide">
 				<option value='${slide.id}' id="${slide.id}">${slide.name}</option>

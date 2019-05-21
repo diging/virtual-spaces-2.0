@@ -22,37 +22,35 @@ import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
-
 @Transactional
 @Service
 public class SequenceManager implements ISequenceManager {
 
     @Autowired
     private ModuleManager moduleManager;
-    
+
     @Autowired
     private ISequenceFactory sequenceFactory;
-    
+
     @Autowired
     private SequenceRepository sequenceRepo;
-    
+
     @Autowired
     private SlideRepository slideRepo;
-    
+
     @Override
     public ISequence storeSequence(String moduleId, SequenceForm sequenceForm) {
-        String[] orderedSlideIds = sequenceForm.getOrderedSlideIds().split(",");        
+        String[] orderedSlideIds = sequenceForm.getOrderedSlideIds().split(",");
         List<String> slideIds = Arrays.asList(orderedSlideIds);
         Map<String, Integer> idOrderMap = new HashMap<>();
-        for(int i = 0; i<orderedSlideIds.length; ++i) {
+        for (int i = 0; i < orderedSlideIds.length; ++i) {
             idOrderMap.put(orderedSlideIds[i], i);
         }
         List<ISlide> slides = new ArrayList<>();
         slideRepo.findAllById(slideIds).forEach(slides::add);
-        Collections.sort(slides, (ISlide s1, ISlide s2) 
-                -> idOrderMap.get(s1.getId()).compareTo(idOrderMap.get(s2.getId())));
-        ISequence sequence = sequenceFactory.createSequence(moduleManager.getModule(moduleId), 
-                sequenceForm, slides);
+        Collections.sort(slides,
+                (ISlide s1, ISlide s2) -> idOrderMap.get(s1.getId()).compareTo(idOrderMap.get(s2.getId())));
+        ISequence sequence = sequenceFactory.createSequence(moduleManager.getModule(moduleId), sequenceForm, slides);
         sequenceRepo.save((Sequence) sequence);
         return sequence;
     }

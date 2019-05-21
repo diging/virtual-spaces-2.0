@@ -12,7 +12,6 @@
 		$("#addSlideButton").on("click", function(e) {
 			$("#createSlideAlert").show();
 		});
-		//$("#createSlideAlert").draggable();
 
 		$("#cancelSlideBtn").click(function() {
 			$("#createSlideAlert").hide();
@@ -63,48 +62,49 @@
 			</td>
 		</tr>
 		<tr>
-		<td>
+			<td>
 				<table width="100%" height="100%" style="margin-top: 50px;">
-		<c:forEach items="${slides}" var="slide">
-			<tr>
-				<td
-					style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
-					<div class="card" style="max-width: 18rem;">
-						<div align="left" class="card-body">
-							<a
-								href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-								<h5 class="card-title">${slide.name}</h5>
-								<p class="card-text">${slide.description}</p>
-							</a>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</c:forEach>
-					</table>
-		
-		</td>
-		<td>&nbsp;</td>
-		<td>
-		<table  width="100%" height="100%" style="margin-top: 50px;" align="top">
-		<c:forEach items="${sequences}" var="sequence">
-			<tr>
-				<td
-					style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
-					<div class="card" style="max-width: 18rem;">
-						<div align="left" class="card-body">
-							<a
-								href="<c:url value="/staff/module/${module.id}/sequence/${sequence.id}" />">
-								<h5 class="card-title">${sequence.name}</h5>
-								<p class="card-text">${sequence.description}</p>
-							</a>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</c:forEach>
-					</table>
-		</td>
+					<c:forEach items="${slides}" var="slide">
+						<tr>
+							<td
+								style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
+								<div class="card" style="max-width: 18rem;">
+									<div align="left" class="card-body">
+										<a
+											href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+											<h5 class="card-title">${slide.name}</h5>
+											<p class="card-text">${slide.description}</p>
+										</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+
+			</td>
+			<td>&nbsp;</td>
+			<td>
+				<table width="100%" height="100%" style="margin-top: 50px;"
+					align="top">
+					<c:forEach items="${sequences}" var="sequence">
+						<tr>
+							<td
+								style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
+								<div class="card" style="max-width: 18rem;">
+									<div align="left" class="card-body">
+										<a
+											href="<c:url value="/staff/module/${module.id}/sequence/${sequence.id}" />">
+											<h5 class="card-title">${sequence.name}</h5>
+											<p class="card-text">${sequence.description}</p>
+										</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</td>
 		</tr>
 	</table>
 </body>
