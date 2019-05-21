@@ -84,7 +84,7 @@ public class ContentBlockManager implements IContentBlockManager {
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
-        
+
         return textBlock;
     }
 
@@ -95,7 +95,8 @@ public class ContentBlockManager implements IContentBlockManager {
      * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException {
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = null;
         ISlide slide = slideManager.getSlide(slideId);
         if (image != null && image.length > 0) {
@@ -126,7 +127,7 @@ public class ContentBlockManager implements IContentBlockManager {
         returnValue.setElement(imageBlock);
         return returnValue;
     }
-    
+
     @Override
     public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
         try {
@@ -136,12 +137,12 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
     }
-    
+
     @Override
     public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
         try {
             imageBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException  e) {
+        } catch (IllegalArgumentException e) {
             throw new BlockDoesNotExistException(e);
         }
 
