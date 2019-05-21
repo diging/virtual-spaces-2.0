@@ -131,8 +131,8 @@ public class ContentBlockManager implements IContentBlockManager {
     public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
         try {
             textBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-            throw new BlockDoesNotExistException(exception);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
         }
 
     }
@@ -141,8 +141,8 @@ public class ContentBlockManager implements IContentBlockManager {
     public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
         try {
             imageBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-            throw new BlockDoesNotExistException(exception);
+        } catch (IllegalArgumentException  e) {
+            throw new BlockDoesNotExistException(e);
         }
 
     }

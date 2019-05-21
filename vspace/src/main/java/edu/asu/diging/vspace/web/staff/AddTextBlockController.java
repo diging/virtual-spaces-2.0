@@ -23,14 +23,14 @@ public class AddTextBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<HashMap> addTextBlock(@PathVariable("id") String slideId,
+    public ResponseEntity<Map<String, String>> addTextBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 
         ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
-        HashMap<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<String, String>();
         data.put("textBlock", textBlock.getId());
-        return new ResponseEntity<HashMap>(data, HttpStatus.OK);
+        return new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
     }
 
 }
