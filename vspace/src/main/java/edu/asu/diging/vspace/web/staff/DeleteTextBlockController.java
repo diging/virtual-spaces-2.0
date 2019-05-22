@@ -16,23 +16,22 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
 public class DeleteTextBlockController {
-	
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteTextBlock(@PathVariable("blockId") String blockId) throws IOException {
-    		System.out.print(blockId);
-	    	 try {
-	    		 contentBlockManager.deleteTextBlockById(blockId);
-	         } catch (BlockDoesNotExistException blockDoesNotExistException) {
-	             logger.error("Could not delete text block.", blockDoesNotExistException);
-	             return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
-	         }
-	
-	        return new ResponseEntity<String>(HttpStatus.OK);
+        try {
+            contentBlockManager.deleteTextBlockById(blockId);
+        } catch (BlockDoesNotExistException e) {
+            logger.error("Could not delete text block.", e);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
 }

@@ -26,9 +26,9 @@ public class DeleteImageBlockController {
     public ResponseEntity<String> deleteImageBlock(@PathVariable("blockId") String blockId) throws IOException {
         try {
             contentBlockManager.deleteImageBlockById(blockId);
-        } catch (BlockDoesNotExistException ex) {
-            logger.error("Could not delete text block.", ex);
-            return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
+        } catch (BlockDoesNotExistException e) {
+            logger.error("Could not delete text block.", e);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);

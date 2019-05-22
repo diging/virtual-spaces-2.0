@@ -22,7 +22,7 @@ public class AddTextBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Map<String, String>> addTextBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
