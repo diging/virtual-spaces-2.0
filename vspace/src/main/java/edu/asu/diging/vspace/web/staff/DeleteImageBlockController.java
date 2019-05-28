@@ -28,7 +28,6 @@ public class DeleteImageBlockController {
             contentBlockManager.deleteImageBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
             logger.error("Could not delete text block.", e);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);
