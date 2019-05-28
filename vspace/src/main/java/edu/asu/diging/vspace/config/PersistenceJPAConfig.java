@@ -7,7 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -24,71 +23,70 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:config.properties")
-public class PersistenceJPAConfig{
- 
-	@Autowired
-	private Environment env;
-	
-	private String dbDriver;
-	
-	private String dbUrl;
-	
-	private String dbUser;
-	
-	private String dbPassword;
-	
-	@PostConstruct
-	public void init() {
-		dbDriver = env.getProperty("db_driver");
-		dbUrl = env.getProperty("db_url");
-		dbUser = env.getProperty("db_user");
-		dbPassword = env.getProperty("db_password");
-	}
-	
-   @Bean
-   public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-      LocalContainerEntityManagerFactoryBean em 
-        = new LocalContainerEntityManagerFactoryBean();
-      em.setDataSource(dataSource());
-      em.setPackagesToScan(new String[] { "edu.asu.diging.vspace.core.model", "edu.asu.diging.simpleusers.core.model" });
- 
-      JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-      em.setJpaVendorAdapter(vendorAdapter);
-      em.setJpaProperties(additionalProperties());
- 
-      return em;
-   }
- 
-   @Bean
-   public DataSource dataSource(){
-      DriverManagerDataSource dataSource = new DriverManagerDataSource();
-      dataSource.setDriverClassName(dbDriver);
-      dataSource.setUrl(dbUrl);
-      dataSource.setUsername(dbUser);
-      dataSource.setPassword(dbPassword);
-      return dataSource;
-   }
- 
-   @Bean
-   public PlatformTransactionManager transactionManager(
-     EntityManagerFactory emf){
-       JpaTransactionManager transactionManager = new JpaTransactionManager();
-       transactionManager.setEntityManagerFactory(emf);
- 
-       return transactionManager;
-   }
- 
-   @Bean
-   public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
-       return new PersistenceExceptionTranslationPostProcessor();
-   }
- 
-   Properties additionalProperties() {
-       Properties properties = new Properties();
-       properties.setProperty("hibernate.hbm2ddl.auto", "update");
-       properties.setProperty(
-         "hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        
-       return properties;
-   }
+public class PersistenceJPAConfig {
+
+    @Autowired
+    private Environment env;
+
+    private String dbDriver;
+
+    private String dbUrl;
+
+    private String dbUser;
+
+    private String dbPassword;
+
+    @PostConstruct
+    public void init() {
+        dbDriver = env.getProperty("db_driver");
+        dbUrl = env.getProperty("db_url");
+        dbUser = env.getProperty("db_user");
+        dbPassword = env.getProperty("db_password");
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan(
+                new String[] { "edu.asu.diging.vspace.core.model", "edu.asu.diging.simpleusers.core.model" });
+
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(additionalProperties());
+
+        return em;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(dbDriver);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(dbUser);
+        dataSource.setPassword(dbPassword);
+        return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+
+        return transactionManager;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
+        properties.setProperty("hibernate.show_sql", "false");
+        return properties;
+    }
 }

@@ -23,4 +23,6 @@ public class ImageFactory implements IImageFactory {
         image.setFileType(fileType);
         return image;
     }
+    
+
 }

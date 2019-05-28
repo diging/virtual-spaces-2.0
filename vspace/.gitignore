@@ -1,4 +1,8 @@
 /target/
 /Users/
 /.settings/
+<<<<<<< HEAD
 /.DS_Store
+=======
+.DS_Store
+>>>>>>> 0a1c4ae8f231ae79b85b86a7bc6afb794e5af3e0

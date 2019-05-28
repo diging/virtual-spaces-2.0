@@ -1,14 +1,10 @@
 package edu.asu.diging.vspace.web.staff.forms;
 
-import java.util.List;
-
-import edu.asu.diging.vspace.core.model.ISlide;
-
 public class SequenceForm {
 
     private String name;
     private String description;
-    private List<ISlide> slides;
+    private String orderedSlideIds;
     
     public String getName() {
         return name;
@@ -22,10 +18,10 @@ public class SequenceForm {
     public void setDescription(String description) {
         this.description = description;
     }
-    public List<ISlide> getSlides() {
-        return slides;
+    public String getOrderedSlideIds() {
+        return orderedSlideIds;
     }
-    public void setSlides(List<ISlide> slides) {
-        this.slides = slides;
+    public void setOrderedSlideIds(String orderedSlideIds) {
+        this.orderedSlideIds = orderedSlideIds;
     }
 }

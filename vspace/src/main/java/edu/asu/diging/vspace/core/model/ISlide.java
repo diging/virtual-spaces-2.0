@@ -4,7 +4,12 @@ import java.util.List;
 
 public interface ISlide extends IVSpaceElement {
 
-    void setImage(List<IVSImage> image);
+    void setModule(IModule module);
 
-    List<IVSImage> getImage();
+    IModule getModule();
+
+    void setContents(List<IContentBlock> contents);
+
+    List<IContentBlock> getContents();
+
 }
