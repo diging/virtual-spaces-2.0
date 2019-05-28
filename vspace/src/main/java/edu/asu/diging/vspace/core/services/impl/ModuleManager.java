@@ -68,15 +68,13 @@ public class ModuleManager implements IModuleManager {
 
     @Override
     public List<ISlide> getModuleSlides(String moduleId) {
-        IModule module = getModule(moduleId);
-        return new ArrayList<>(slideRepo.findByModule((Module) module));
+        return new ArrayList<>(slideRepo.findSlidesForModule(moduleId));
     }
 
 
     @Override
     public List<ISequence> getModuleSequences(String moduleId) {
-        IModule module = getModule(moduleId);
-        return new LinkedList<>(sequenceRepo.findByModule((Module) module));
+        return new LinkedList<>(sequenceRepo.findSequencesForModule(moduleId));
     }
 
 }

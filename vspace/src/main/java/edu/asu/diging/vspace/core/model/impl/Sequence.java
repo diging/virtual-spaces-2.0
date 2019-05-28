@@ -30,9 +30,9 @@ public class Sequence extends VSpaceElement implements ISequence {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    @ManyToMany(targetEntity = Slide.class, cascade=CascadeType.ALL)
+    @ManyToMany(targetEntity = Slide.class, cascade=CascadeType.PERSIST)
     @OrderColumn(name="slide_order")
-    List<ISlide> slides = new ArrayList<>();
+    private List<ISlide> slides = new ArrayList<>();
     /*
      * (non-Javadoc)
      * 

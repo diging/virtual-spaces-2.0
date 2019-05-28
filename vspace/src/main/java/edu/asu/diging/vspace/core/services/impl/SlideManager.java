@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ public class SlideManager implements ISlideManager {
     @Autowired
     private ModuleManager moduleManager;
     
-    @Autowired
-    private SequenceManager sequenceManager;
-    
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -46,8 +42,4 @@ public class SlideManager implements ISlideManager {
         return null;
     }
 
-    @Override
-    public List<ISlide> getSlidesInSequence(String sequenceId) {
-        return sequenceManager.getSequence(sequenceId).getSlides();
-    }
 }

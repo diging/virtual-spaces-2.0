@@ -19,15 +19,15 @@
 				});
 			},
 			afterSelect : function(value) {
-				var get_val = $("#orderedSlideIds").val();
-				var hidden_val = (get_val != "") ? get_val + "," : get_val;
+				var get_val = $("#orderedSlides").val();
+				//var hidden_val = (get_val != "") ? get_val + "," : get_val;
 				order[value] = $(".ms-selection ul li:last").attr('id');
-				$("#orderedSlideIds").val(hidden_val + "" + value);
+				$("#orderedSlides").val(hidden_val + "" + value);
 			},
 			afterDeselect : function(value, text) {
-				var get_val = $("#orderedSlideIds").val();
+				var get_val = $("#orderedSlides").val();
 				var new_val = get_val.replace(value, "");
-				$("#orderedSlideIds").val(new_val);
+				$("#orderedSlides").val(new_val);
 			}
 		})
 		$('.ms-selection ul').sortable({
@@ -37,7 +37,7 @@
 				$(".ms-selection ul").find("li").each(function(index, value) {
 					new_val.push($(this).attr('value'))
 				});
-				$("#orderedSlideIds").attr("value", new_val);
+				$("#orderedSlides").attr("value", new_val);
 			}
 		});
 	});
@@ -54,7 +54,6 @@
 		<form:input type="text" class="form-control col-md-10" id="name"
 			path="name" />
 	</div>
-
 	<div class="form-group row">
 		<label for="description" class="col-md-2 col-form-label">Description:</label>
 		<form:textarea class="form-control col-md-10" rows="5" cols="30"
@@ -68,11 +67,12 @@
 			<c:forEach items="${slides}" var="slide">
 				<option value='${slide.id}' id="${slide.id}">${slide.name}</option>
 			</c:forEach>
-			<select>
+			</select>
+		<form:input type="hidden" id="orderedSlides" path="orderedSlides"></form:input>
 	</div>
 	<button class="btn btn-primary btn-sm" type="submit" value="submit">Create
 		Sequence</button>
-	<form:input type="hidden" id="orderedSlideIds" path="orderedSlideIds"></form:input>
+	
 </form:form>
 
 </body>
