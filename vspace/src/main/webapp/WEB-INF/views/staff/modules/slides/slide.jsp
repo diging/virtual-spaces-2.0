@@ -46,7 +46,6 @@ $(document).ready(function() {
 	//-------- edit description --------
 	$("#submitDescription").hide()
 	$("#editDescription").click(function() {
-		var val = $("#description").val();
 		$("#description").html(function (i, val) {
 	        return '<textarea id="newDescription" style="width:250%; height:200%;" class="form-control" type="text">'+val+'</textarea>';
 	    });
