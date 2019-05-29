@@ -38,7 +38,6 @@ function uploadImage() {
 			// do nothing for now
 		},
 		error: function(data) {
-			console.log(data);
 		}
 	});
 } 
@@ -68,21 +67,16 @@ $(document).ready(function() {
 		data: formData,
 		enctype: 'multipart/form-data',
 		success: function(data) {
-			// replace text box with new description
+		    // replace text box with new description
 			$("#submitDescription").hide()
 			$("#editDescription").show()
 			var val = $("#newDescription").val();
 			$("#newDescription").remove()
 			$("#description").text(val)
-			
 		},
 		error: function(data) {
-			console.log(data);
 			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.error').append(alert); 
-			$(".error").delay(4000).slideUp(500, function(){
-			    $(".error").empty();
-			});
+			$('.error').append(alert);
 		}
 	});
 		
@@ -92,11 +86,9 @@ $(document).ready(function() {
 	$("#submitTitle").hide()
 	$("#editTitle").click(function() {
 		$('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-		var val = $("#title").text()
-		var val2 = val.split(": ")[1] 
-		console.log(val2);
+		var getTitleText = $("#title").text().split(": ")[1]
 		$('#title').text('Slide: ')
-		$("#newTitle").val(val2)
+		$("#newTitle").val(getTitleText)
 		$("#editTitle").hide()
 		$("#submitTitle").show()
 		
@@ -118,18 +110,13 @@ $(document).ready(function() {
 			$("#submitTitle").hide()
 			$("#editTitle").show()
 			var val = $("#newTitle").val();
-			console.log(val)
 			$("#newTitle").closest('div').remove()
 			$("#title").text("Silde: " + val)
 			
 		},
 		error: function(data) {
-			console.log(data);
 			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.error').append(alert); 
-			$(".error").delay(4000).slideUp(500, function(){
-			    $(".error").empty();
-			});
+			$('.error').append(alert);
 		}
 	});
 		
@@ -193,6 +180,9 @@ $(document).ready(function() {
 		href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
 	<li class="breadcrumb-item active">${slide.name}</li>
 </ol>
+
+<div class="error"></div>
+
 <div class="row align-items-center">
 
 	<button id="editTitle" type="button"
