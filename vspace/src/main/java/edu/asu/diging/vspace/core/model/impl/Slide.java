@@ -3,10 +3,12 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -32,7 +34,9 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     private List<IContentBlock> contents;
-  
+    
+    @ManyToMany(mappedBy = "slides")
+    private List<Sequence> sequence;
 
     /*
      * (non-Javadoc)
@@ -103,6 +107,14 @@ public class Slide extends VSpaceElement implements ISlide {
     @Override
     public void setContents(List<IContentBlock> contents) {
         this.contents = contents;
+    }
+    
+    public List<Sequence> getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(List<Sequence> sequence) {
+        this.sequence = sequence;
     }
 
 

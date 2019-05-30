@@ -81,12 +81,10 @@
 						</tr>
 					</c:forEach>
 				</table>
-
 			</td>
 			<td>&nbsp;</td>
 			<td>
-				<table width="100%" height="100%" style="margin-top: 50px;"
-					align="top">
+				<table width="100%" height="100%" style="margin-top: 50px;" align="top">
 					<c:forEach items="${sequences}" var="sequence">
 						<tr>
 							<td

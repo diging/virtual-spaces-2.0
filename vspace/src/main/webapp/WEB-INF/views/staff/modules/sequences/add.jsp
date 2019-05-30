@@ -4,9 +4,8 @@
 
 <script>
 	$(document).ready(function() {
-		var order = {};
-		var multiselectIDs = []
 		var vals = []
+		var slides = []
 		$('#ordered-slides').multiSelect({
 			keepOrder : true,
 			dblClick : true,
@@ -19,35 +18,44 @@
 				});
 			},
 			afterSelect : function(value) {
-				var get_val = $("#orderedSlides").val();
-				//var hidden_val = (get_val != "") ? get_val + "," : get_val;
-				order[value] = $(".ms-selection ul li:last").attr('id');
-				$("#orderedSlides").val(hidden_val + "" + value);
+				slides = [];
+				$('.ms-selection ul li.ms-selected').each(function(index, value) {
+					slides.push($(this).attr('value'));					
+				});
+				$("#orderedSlides").val(slides);
+				console.log(orderedSlides);
 			},
 			afterDeselect : function(value, text) {
-				var get_val = $("#orderedSlides").val();
-				var new_val = get_val.replace(value, "");
-				$("#orderedSlides").val(new_val);
+				for (var i=slides.length-1; i>=0; i--) {
+	    			if (String(slides[i]) === String(value)) {
+	    				slides.splice(i, 1);
+	    				break;
+	        		}
+	    		}
+				$("#orderedSlides").val(slides);
+				console.log(orderedSlides); 
 			}
 		})
 		$('.ms-selection ul').sortable({
 			distance : 5,
 			stop : function(event, ui) {
 				var new_val = []
-				$(".ms-selection ul").find("li").each(function(index, value) {
-					new_val.push($(this).attr('value'))
+				$('.ms-selection ul li.ms-selected').each(function(index, value) {
+					new_val.push($(this).attr('value'));					
 				});
-				$("#orderedSlides").attr("value", new_val);
+				$("#orderedSlides").val(new_val);
+				console.log(orderedSlides);
 			}
 		});
+		
 	});
 </script>
 
 <h1>Add New Sequence</h1>
 
 <c:url value="/staff/module/${moduleId}/sequence/add" var="postUrl" />
-<form:form method="POST" action="${postUrl}" modelAttribute="sequence">
-
+<form:form method="POST" action="${postUrl}?" modelAttribute="sequence">
+	
 	<div class="form-group row">
 		<label for="name" class="col-md-2 col-form-label">Sequence
 			Name:</label>
