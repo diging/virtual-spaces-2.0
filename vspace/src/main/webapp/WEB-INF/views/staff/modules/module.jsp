@@ -32,7 +32,7 @@
 	<div id="result"></div>
 	<div class="container" id="header" style="margin-bottom:10px;">
 		<div class="row">
-			<div class="col">
+			<div class="col justify-content-center">
 				<div
 					class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
 					<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES</span>
@@ -62,7 +62,7 @@
 	</div>
 	<div class="container" id="table">
 		<div class="row">
-			<div class="col">
+			<div class="col" style="max-width: 24rem;">
 				<c:forEach items="${slides}" var="slide">
 					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body">
@@ -76,7 +76,7 @@
 				</c:forEach>
 			</div>
 			
-			<div class="col">
+			<div class="col" style="max-width: 24rem;">
 				<c:forEach items="${sequences}" var="sequences">
 					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body">
