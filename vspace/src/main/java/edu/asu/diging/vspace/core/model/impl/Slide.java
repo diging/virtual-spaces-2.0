@@ -17,6 +17,7 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
@@ -35,8 +36,8 @@ public class Slide extends VSpaceElement implements ISlide {
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     private List<IContentBlock> contents;
     
-    @ManyToMany(mappedBy = "slides")
-    private List<Sequence> sequence;
+    @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
+    private List<ISequence> sequence;
 
     /*
      * (non-Javadoc)
@@ -109,11 +110,22 @@ public class Slide extends VSpaceElement implements ISlide {
         this.contents = contents;
     }
     
-    public List<Sequence> getSequence() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#getContents()
+     */
+    public List<ISequence> getSequence() {
         return sequence;
     }
 
-    public void setSequence(List<Sequence> sequence) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ISlide#setSequence(java.util.List)
+     */
+    public void setSequence(List<ISequence> sequence) {
         this.sequence = sequence;
     }
 

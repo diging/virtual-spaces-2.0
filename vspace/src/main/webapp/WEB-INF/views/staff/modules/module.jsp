@@ -30,9 +30,9 @@
 
 <body>
 	<div id="result"></div>
-	<table border="0" width="100%" height="50%" style="margin-top: 50px;">
-		<tr>
-			<td style="width: 20rem; padding-left: 15px; border: 1;">
+	<div class="container" id="header" style="margin-bottom:10px;">
+		<div class="row">
+			<div class="col">
 				<div
 					class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
 					<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES</span>
@@ -40,9 +40,8 @@
 						href="<c:url value="${module.id}/slide/add" />"> <span
 						data-feather="plus-circle"></span></a>
 				</div>
-			</td>
-			<td>&nbsp;</td>
-			<td style="width: 20rem; padding-left: 15px; border: 1;">
+			</div>
+			<div class="col">
 				<div
 					class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
 					<span style="float: left; font-size: medium; padding-top: 3px;">SEQUENCES</span>
@@ -50,59 +49,47 @@
 						href="<c:url value="${module.id}/sequence/add" />"> <span
 						data-feather="plus-circle"></span></a>
 				</div>
-			</td>
-			<td>&nbsp;</td>
-			<td style="width: 20rem; padding-left: 15px; border: 1;">
+			</div>
+			<div class="col">
 				<div
 					class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
 					<span style="float: left; font-size: medium; padding-top: 3px;">START
 						SEQUENCE</span> <span id="startSequence"
 						style="float: right; padding-top: 3px;"></span>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<table width="100%" height="100%" style="margin-top: 50px;">
-					<c:forEach items="${slides}" var="slide">
-						<tr>
-							<td
-								style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
-								<div class="card" style="max-width: 18rem;">
-									<div align="left" class="card-body">
-										<a
-											href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-											<h5 class="card-title">${slide.name}</h5>
-											<p class="card-text">${slide.description}</p>
-										</a>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</c:forEach>
-				</table>
-			</td>
-			<td>&nbsp;</td>
-			<td>
-				<table width="100%" height="100%" style="margin-top: 50px;" align="top">
-					<c:forEach items="${sequences}" var="sequence">
-						<tr>
-							<td
-								style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
-								<div class="card" style="max-width: 18rem;">
-									<div align="left" class="card-body">
-										<a
-											href="<c:url value="/staff/module/${module.id}/sequence/${sequence.id}" />">
-											<h5 class="card-title">${sequence.name}</h5>
-											<p class="card-text">${sequence.description}</p>
-										</a>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</c:forEach>
-				</table>
-			</td>
-		</tr>
-	</table>
+			</div>
+		</div>
+	</div>
+	<div class="container" id="table">
+		<div class="row">
+			<div class="col">
+				<c:forEach items="${slides}" var="slide">
+					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
+						<div align="left" class="card-body">
+							<a
+								href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+								<h5 class="card-title">${slide.name}</h5>
+								<p class="card-text">${slide.description}</p>
+							</a>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+			
+			<div class="col">
+				<c:forEach items="${sequences}" var="sequences">
+					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
+						<div align="left" class="card-body">
+							<a
+								href="<c:url value="/staff/module/${module.id}/sequences/${sequences.id}" />">
+								<h5 class="card-title">${sequences.name}</h5>
+								<p class="card-text">${sequences.description}</p>
+							</a>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+	</div>
+
 </body>

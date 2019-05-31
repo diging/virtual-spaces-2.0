@@ -31,10 +31,10 @@ public class Sequence extends VSpaceElement implements ISequence {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Slide.class)
     @JoinTable(name="Sequence_Slides",
-    joinColumns = @JoinColumn(name = "Sequence_Id"),
-    inverseJoinColumns = @JoinColumn(name = "Slide_Id"))  
+    joinColumns = @JoinColumn(name = "Sequence_Id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"))  
     @OrderColumn(name="slide_order")
     private List<ISlide> slides;
     

@@ -23,7 +23,6 @@
 					slides.push($(this).attr('value'));					
 				});
 				$("#orderedSlides").val(slides);
-				console.log(orderedSlides);
 			},
 			afterDeselect : function(value, text) {
 				for (var i=slides.length-1; i>=0; i--) {
@@ -32,8 +31,7 @@
 	    				break;
 	        		}
 	    		}
-				$("#orderedSlides").val(slides);
-				console.log(orderedSlides); 
+				$("#orderedSlides").val(slides); 
 			}
 		})
 		$('.ms-selection ul').sortable({
@@ -44,7 +42,6 @@
 					new_val.push($(this).attr('value'));					
 				});
 				$("#orderedSlides").val(new_val);
-				console.log(orderedSlides);
 			}
 		});
 		
