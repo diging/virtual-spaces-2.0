@@ -4,8 +4,9 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<script
-	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+//# sourceURL=click.js
 <script>
 	$(document).ready(function($) {
 
@@ -16,7 +17,14 @@
 		$("#cancelSlideBtn").click(function() {
 			$("#createSlideAlert").hide();
 		});
+		
+		$(".sequence").on("click", function() {
+			console.log("hello");
+		    $(this).css("background-color", "red");
+		}); 
 	});
+	
+	
 </script>
 
 <h1>Module: ${module.name}</h1>
@@ -74,9 +82,9 @@
 			
 			<div class="col" style="max-width: 24rem;">
 				<c:forEach items="${sequences}" var="sequences">
-					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
+					<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body">
-							<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">
+							<a href="#">
 								<h5 class="card-title">${sequences.name}</h5>
 								<p class="card-text">${sequences.description}</p>
 							</a>
