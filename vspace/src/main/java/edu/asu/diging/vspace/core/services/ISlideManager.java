@@ -10,7 +10,7 @@ public interface ISlideManager {
 
     ISlide createSlide(String moduleId, SlideForm slideForm);
 
-    ISlide updateSlide(Slide slide);
+    void updateSlide(Slide slide);
 
    
 

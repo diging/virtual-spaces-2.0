@@ -43,9 +43,8 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public ISlide updateSlide(Slide slide) {
+    public void updateSlide(Slide slide) {
         slideRepo.save((Slide) slide);
-        return null;
     }
 
 }
