@@ -79,6 +79,3 @@
 		Sequence</button>
 	
 </form:form>
-
-</body>
-</html>
