@@ -186,8 +186,7 @@ $(document).ready(function() {
 <div class="error"></div>
 <!-- title -->
 <div class="row align-items-center">
-    <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
-        ${slide.name}</h1>
+    <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide: ${slide.name}</h1>
     <a id="editTitle" class="btn" href="#"
         style="float: left; margin-right: 1%;"
     ><i class="fas fa-edit"></i></a>
