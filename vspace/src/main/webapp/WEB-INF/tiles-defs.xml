@@ -149,7 +149,7 @@
 	</definition>
 	
 	<definition name="staff/module/sequence/slides" extends="sequence.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/sequences/sequence.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
 	</definition>
     
     <!-- Users -->

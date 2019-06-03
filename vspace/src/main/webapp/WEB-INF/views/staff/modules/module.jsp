@@ -6,8 +6,8 @@
 
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-//# sourceURL=click.js
 <script>
+//# sourceURL=click.js
 	$(document).ready(function($) {
 
 		$("#addSlideButton").on("click", function(e) {
@@ -18,9 +18,22 @@
 			$("#createSlideAlert").hide();
 		});
 		
+
 		$(".sequence").on("click", function() {
-			console.log("hello");
-		    $(this).css("background-color", "red");
+		    $(this).css("border", "solid deepSkyBlue");
+		    console.log(this.id);
+
+			/* $('#selectedSequence').html(""+
+		    		"<c:forEach items="${slidesOfSequence}" var="slide">"+
+					"<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">"+
+						"<div align="left" class="card-body">"+
+							"<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">"+
+								"<h5 class="card-title">${slide.name}</h5>"+
+								"<p class="card-text">${slide.description}</p>"+
+							"</a>"+
+						"</div>"+
+					"</div>"+
+				"</c:forEach>"); */
 		}); 
 	});
 	
@@ -82,7 +95,7 @@
 			
 			<div class="col" style="max-width: 24rem;">
 				<c:forEach items="${sequences}" var="sequences">
-					<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
+					<div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body">
 							<a href="#">
 								<h5 class="card-title">${sequences.name}</h5>
@@ -92,6 +105,8 @@
 					</div>
 				</c:forEach>
 			</div>
+			
+			<div id="selectedSequence" class="col" style="max-width: 24rem;"></div>
 		</div>
 	</div>
 

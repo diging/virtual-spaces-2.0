@@ -22,7 +22,7 @@ public class SequenceController {
     public String showSequence(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("sequence", sequenceManager.getSequence(id));
-        model.addAttribute("slides", sequenceManager.getSequence(id).getSlides());
+        model.addAttribute("slidesOfSequence", sequenceManager.getSequence(id).getSlides());
         return "staff/module/sequence/slides";
     }
 }
