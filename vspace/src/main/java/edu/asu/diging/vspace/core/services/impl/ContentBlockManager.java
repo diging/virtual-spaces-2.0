@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -81,7 +82,7 @@ public class ContentBlockManager implements IContentBlockManager {
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
-        
+
         return textBlock;
     }
 
@@ -92,7 +93,8 @@ public class ContentBlockManager implements IContentBlockManager {
      * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException {
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = null;
         ISlide slide = slideManager.getSlide(slideId);
         if (image != null && image.length > 0) {
@@ -123,6 +125,34 @@ public class ContentBlockManager implements IContentBlockManager {
 
         returnValue.setElement(imageBlock);
         return returnValue;
+    }
+
+    @Override
+    public void updateTextBlock(TextBlock textBlock) {
+        textBlockRepo.save((TextBlock) textBlock);
+    }
+
+    @Override
+    public void updateImageBlock(ImageBlock imgBlock) {
+        imageBlockRepo.save((ImageBlock) imgBlock);
+    }
+
+    @Override
+    public IImageBlock getImageBlock(String imgBlockId) {
+        Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
+        if (imgBlock.isPresent()) {
+            return imgBlock.get();
+        }
+        return null;
+    }
+
+    @Override
+    public ITextBlock getTextBlock(String textBlockId) {
+        Optional<TextBlock> textBlock = textBlockRepo.findById(textBlockId);
+        if (textBlock.isPresent()) {
+            return textBlock.get();
+        }
+        return null;
     }
 
 }
