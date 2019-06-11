@@ -31,7 +31,8 @@ public class EditImageBlockController {
             @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
             @RequestParam("contentOrder") Integer contentOrder, @RequestParam("imageBlockId") String blockId,
             Principal principal, RedirectAttributes attributes) throws IOException {
-        System.out.println("****************************@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
         byte[] image = null;
         String filename = null;
         if (file != null) {
@@ -39,8 +40,7 @@ public class EditImageBlockController {
             filename = file.getOriginalFilename();
         }
         try {
-            IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
-            contentBlockManager.createImageBlock(slideId, image, filename, contentOrder);
+            contentBlockManager.updateImageBlock(imageBlock, image, filename, contentOrder);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

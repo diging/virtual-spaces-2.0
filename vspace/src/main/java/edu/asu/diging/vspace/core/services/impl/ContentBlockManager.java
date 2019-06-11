@@ -133,8 +133,33 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateImageBlock(ImageBlock imgBlock) {
-        imageBlockRepo.save((ImageBlock) imgBlock);
+    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException {
+        System.out.println("****************************@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        IVSImage oldImage = imageBlock.getImage();
+        IVSImage slideContentImage = null;
+
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            slideContentImage = imageFactory.createImage(filename, contentType);
+            slideContentImage = imageRepo.save((VSImage) slideContentImage);
+            imageRepo.delete((VSImage) oldImage);
+        }
+
+        if (slideContentImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, slideContentImage.getId());
+            } catch (FileStorageException e) {
+                throw new ImageCouldNotBeStoredException(e);
+            }
+            slideContentImage.setParentPath(relativePath);
+            imageRepo.save((VSImage) slideContentImage);
+        }
+
+        imageBlock.setImage(slideContentImage);
+        imageBlockRepo.save((ImageBlock) imageBlock);
     }
 
     @Override
@@ -154,5 +179,4 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-
 }

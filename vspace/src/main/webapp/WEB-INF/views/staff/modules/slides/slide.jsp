@@ -110,13 +110,12 @@ $(document).ready(function() {
         }
         //prevent normal hover actions
         e.preventDefault();
-
     }
-	
-	function onMouseLeave(e) {
+
+    function onMouseLeave(e) {
         $(this).removeClass("hova");
     }
-	
+
     function onDoubleClick(e){
         // get the id of the nearest div with id valueDiv
         var blockId = $(e.target).closest('div').attr('id');
@@ -142,6 +141,7 @@ $(document).ready(function() {
         	console.log(blockId);
             $("#addImgAlert").show();
             localStorage.setItem('imgBlockId', blockId);
+           
         }
         
         
@@ -296,7 +296,7 @@ $(document).ready(function() {
     <c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
             <div class="valueDiv">
-                <img id="${contents.image.id}" width="800px"
+                <img id="${contents.id}" width="800px"
                     style="margin: 10px;"
                     src="<c:url value="/api/image/${contents.image.id}" />"
                 />

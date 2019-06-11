@@ -6,7 +6,6 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
-import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -21,10 +20,11 @@ public interface IContentBlockManager {
 
     void updateTextBlock(TextBlock textBlock);
 
-    void updateImageBlock(ImageBlock imgBlock);
-
     IImageBlock getImageBlock(String imgBlockId);
 
     ITextBlock getTextBlock(String textBlockId);
+
+    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException;
 
 }
