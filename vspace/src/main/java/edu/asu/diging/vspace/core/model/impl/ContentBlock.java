@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -24,7 +25,7 @@ public class ContentBlock extends VSpaceElement implements IContentBlock {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne(targetEntity = Slide.class)
+    @ManyToOne(targetEntity = Slide.class)
     private ISlide slide;
 
     private Integer contentOrder;
