@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -25,6 +27,7 @@ public class Module extends VSpaceElement implements IModule {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
+    @JsonIgnore
     @OneToMany(targetEntity = Slide.class, mappedBy = "module")
     private List<ISlide> slides;
 

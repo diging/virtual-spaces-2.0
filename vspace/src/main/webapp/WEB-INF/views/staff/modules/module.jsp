@@ -18,7 +18,6 @@
 			$("#createSlideAlert").hide();
 		});
 		
-
 		$(".sequence").on("click", function(e) {
 		    $(this).css("border", "solid deepSkyBlue");
 		    var id = $(this.id);
@@ -27,33 +26,16 @@
 		    
 		    $.ajax({
 	            type: "GET",
-	            url: "<c:url value="/staff/module/${module.id}/sequence/" />" + x + "?${_csrf.parameterName}=${_csrf.token}",	
+	            url: "<c:url value="/staff/module/${module.id}/sequence/get/" />" + x + "?${_csrf.parameterName}=${_csrf.token}",	
 	            async: false,
-	            success: function(response) {	
-	                console.log("success");		                
-	                
-	            }	    
-	        });
-	        console.log("after ajax2");	
-	        /*   $('#selectedSequence').html("<c:forEach items="${slidesOfSequence}" var="slide"><p>one</p></c:forEach>");
-	         */			/* $('#selectedSequence').html(""+
-	        		    		"<c:forEach items="${slidesOfSequence}" var="slide">"+
-	        					"<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">"+
-	        						"<div align="left" class="card-body">"+
-	        							"<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">"+
-	        								"<h5 class="card-title">${slide.name}</h5>"+
-	        								"<p class="card-text">${slide.description}</p>"+
-	        							"</a>"+
-	        						"</div>"+
-	        					"</div>"+
-	        				"</c:forEach>"); */
-		}); 
-	    <c:forEach items="${data.slidesOfSequence}" var="link" varStatus="loop"> 
-    		console.log("hi");
-    	</c:forEach>
-	});
-	
-	
+	            success: function(response) {		
+	                console.log("success");	
+	               console.log(response);	              
+	               
+	       	 	}
+		   });
+		});
+	});	
 </script>
 
 <h1>Module: ${module.name}</h1>

@@ -19,13 +19,12 @@ public class SequenceController {
     private IModuleManager moduleManager;
 
     @RequestMapping("/staff/module/{moduleId}/sequence/{id}")
-    public String showSequence(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
-        System.out.println( "printing??");
-        
+    public String showSequence(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {   
+        System.out.println("inside controller??? ");
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("sequence", sequenceManager.getSequence(id));
         model.addAttribute("slidesOfSequence", sequenceManager.getSequence(id).getSlides());
-        
-        return "staff/module/sequence/slides";
+             
+        return "staff/module";
     }
 }

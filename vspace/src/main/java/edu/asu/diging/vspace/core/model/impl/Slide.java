@@ -9,11 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -30,12 +32,13 @@ public class Slide extends VSpaceElement implements ISlide {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne(targetEntity = Module.class)
+    @ManyToOne(targetEntity = Module.class)
     private IModule module;
 
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     private List<IContentBlock> contents;
     
+    @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
 
