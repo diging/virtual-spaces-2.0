@@ -19,22 +19,33 @@
 		});
 		
 		$(".sequence").on("click", function(e) {
+			$(".sequence").css({ 'border' : ''});
 		    $(this).css("border", "solid deepSkyBlue");
-		    var id = $(this.id);
-		    var x = id.selector;
-		    console.log(x); 
 		    
+		    var id = $(this.id);	    
+		    var sequenceId = id.selector;
+		    console.log(sequenceId); 
+		    
+		    $('#selectedSequence').empty();
 		    $.ajax({
 	            type: "GET",
-	            url: "<c:url value="/staff/module/${module.id}/sequence/get/" />" + x + "?${_csrf.parameterName}=${_csrf.token}",	
+	            url: "<c:url value="/staff/module/${module.id}/sequence/get/" />" + sequenceId + "?${_csrf.parameterName}=${_csrf.token}",	
 	            async: false,
-	            success: function(response) {		
-	                console.log("success");	
-	               console.log(response);	              
-	               
-	       	 	}
-		   });
-		});
+	            success: function(response) {		               	
+	               	$.each(response, function (index, slide) {
+	               		var slideId = slide.id;
+	               		console.log(id);
+	               	  $('#selectedSequence').append('<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
+	      					'<div align="left" class="card-body">'+
+	      					'<a href="<c:url value="/staff/module/${module.id}/slide/"/>'+slideId+'" >'+
+	      							'<h5 class="card-title">' +slide.name+ '</h5>'+
+	      							'<p class="card-text">'+slide.description+'</p>'+
+	      						'</a>'+
+	      					'</div>');
+	                });
+	             }
+	       	 });
+		 });
 	});	
 </script>
 
