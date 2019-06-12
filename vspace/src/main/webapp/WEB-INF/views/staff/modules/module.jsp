@@ -8,45 +8,44 @@
 
 <script>
 //# sourceURL=click.js
-	$(document).ready(function($) {
+$(document).ready(function($) {
 
-		$("#addSlideButton").on("click", function(e) {
-			$("#createSlideAlert").show();
-		});
+	$("#addSlideButton").on("click", function(e) {
+		$("#createSlideAlert").show();
+	});
 
-		$("#cancelSlideBtn").click(function() {
-			$("#createSlideAlert").hide();
-		});
-		
-		$(".sequence").on("click", function(e) {
-			$(".sequence").css({ 'border' : ''});
-		    $(this).css("border", "solid deepSkyBlue");
-		    
-		    var id = $(this.id);	    
-		    var sequenceId = id.selector;
-		    console.log(sequenceId); 
-		    
-		    $('#selectedSequence').empty();
-		    $.ajax({
-	            type: "GET",
-	            url: "<c:url value="/staff/module/${module.id}/sequence/get/" />" + sequenceId + "?${_csrf.parameterName}=${_csrf.token}",	
-	            async: false,
-	            success: function(response) {		               	
-	               	$.each(response, function (index, slide) {
-	               		var slideId = slide.id;
-	               		console.log(id);
-	               	  $('#selectedSequence').append('<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-	      					'<div align="left" class="card-body">'+
+	$("#cancelSlideBtn").click(function() {
+		$("#createSlideAlert").hide();
+	});
+	
+	$(".sequence").on("click", function(e) {
+		$(".sequence").css({ 'border' : ''});
+	    $(this).css("border", "solid deepSkyBlue");
+	    
+	    var id = $(this.id);	    
+	    var sequenceId = id.selector;
+	    console.log(sequenceId); 
+	    
+	    $('#selectedSequence').empty();
+	    $.ajax({
+            type: "GET",
+            url: "<c:url value="/staff/module/${module.id}/sequence/get/" />" + sequenceId + "?${_csrf.parameterName}=${_csrf.token}",	
+            async: false,
+            success: function(response) {		               	
+               	$.each(response, function (index, slide) {
+               		var slideId = slide.id;
+               		console.log(id);
+               	  $('#selectedSequence').append('<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
+      					'<div align="left" class="card-body">'+
 	      					'<a href="<c:url value="/staff/module/${module.id}/slide/"/>'+slideId+'" >'+
-	      							'<h5 class="card-title">' +slide.name+ '</h5>'+
-	      							'<p class="card-text">'+slide.description+'</p>'+
-	      						'</a>'+
-	      					'</div>');
-	                });
-	             }
-	       	 });
-		 });
-	});	
+	      					'<h5 class="card-title">' +slide.name+ '</h5>'+
+	      					'<p class="card-text">'+slide.description+'</p>'+'</a>'+
+      					'</div>');
+               	  });
+               }
+           });
+	   });
+});	
 </script>
 
 <h1>Module: ${module.name}</h1>
