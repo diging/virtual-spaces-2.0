@@ -70,7 +70,7 @@ $(document).ready(function() {
 			$("#submitDescription").hide()
 			$("#editDescription").show()
 			var val = $("#newDescription").val();
-			$('<p id="description"style="margin-top: 1%; margin-left: 1%; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+			$('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
 			$("#newDescription").remove()
 			$("#description").text(val)
 		},
@@ -87,7 +87,6 @@ $(document).ready(function() {
 	$("#editTitle").click(function() {
 		$('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
 		var getTitleText = $("#title").text().split(": ")[1]
-		console.log(getTitleText)
 		$('#title').text('Slide: ')
 		$("#newTitle").val(getTitleText)
 		$("#editTitle").hide()
@@ -191,7 +190,7 @@ $(document).ready(function() {
         style="float: left; margin-right: 1%;"
     ><i class="fas fa-edit"></i></a>
     <button id="submitTitle" type="button"
-        class="btn btn-outline-success"
+        class="btn btn-primary"
         style="float: left; margin-right: 1%;"
     >Save</button>
 </div>
@@ -203,14 +202,14 @@ $(document).ready(function() {
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
     <h5 style="margin-bottom: 0px;">Description:</h5>
-    <p id="description"
-        style="margin-top: 1%; margin-left: 1%; margin-bottom: .5rem;"
-    >${slide.description}</p>
     <a id="editDescription" class="btn" href="#"
-        style="margin-right: 1%; font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
+        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
     ><i class="fas fa-edit"></i></a>
+    <p id="description"
+        style="margin-top: .5rem; margin-bottom: .5rem;"
+    >${slide.description}</p>
     <button id="submitDescription" type="button"
-        class="btn btn-outline-success btn-sm" style="margin-top: 1%;"
+        class="btn btn-primary btn-sm" style="margin-top: 1%;"
     >Save</button>
 </div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
