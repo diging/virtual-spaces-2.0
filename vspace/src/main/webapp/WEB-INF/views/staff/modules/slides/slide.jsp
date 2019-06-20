@@ -223,13 +223,14 @@ $(document).ready(function() {
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button"
             id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false"
+            aria-haspopup="true" aria-expanded="false" style="float:left;"
         >Add content</button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a id="addText" class="dropdown-item" href="#">Add Text</a>
             <a id="addImage" class="dropdown-item" href="#">Add
                 Image</a>
         </div>
+        <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
     </div>
 </nav>
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
