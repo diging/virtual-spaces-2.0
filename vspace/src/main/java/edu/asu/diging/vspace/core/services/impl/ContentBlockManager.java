@@ -82,7 +82,6 @@ public class ContentBlockManager implements IContentBlockManager {
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
-
         return textBlock;
     }
 
