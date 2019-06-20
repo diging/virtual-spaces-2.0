@@ -26,10 +26,10 @@ public class EditImageBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/{imageBlockId}", method = RequestMethod.POST)
     public ResponseEntity<String> editImageBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
-            @RequestParam("contentOrder") Integer contentOrder, @RequestParam("imageBlockId") String blockId,
+            @PathVariable("imageBlockId") String blockId, @PathVariable("moduleId") String moduleId,
+            @RequestParam("file") MultipartFile file, @RequestParam("contentOrder") Integer contentOrder,
             Principal principal, RedirectAttributes attributes) throws IOException {
 
         IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);

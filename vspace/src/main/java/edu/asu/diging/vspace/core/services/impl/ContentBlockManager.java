@@ -135,7 +135,6 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException {
-        System.out.println("****************************@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         IVSImage oldImage = imageBlock.getImage();
         IVSImage slideContentImage = null;
 

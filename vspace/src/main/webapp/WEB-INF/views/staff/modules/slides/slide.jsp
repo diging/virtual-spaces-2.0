@@ -10,14 +10,7 @@ function uploadImage() {
 	var file = document.getElementById('file').files[0];
 	var reader  = new FileReader();
 	
-	reader.onload = function () {
-		var imageblock = $('<img src="#" />');
-		imageblock.attr('src', reader.result);
-		imageblock.attr('width', '800px');
-		$('#slideSpace').append(imageblock);        
-	}
-	++contentCount;
-	reader.readAsDataURL(file);
+	
 	
 	var file = document.getElementById('file').files[0];
 	var formData = new FormData();
@@ -27,10 +20,25 @@ function uploadImage() {
 		formData.append('imageBlockId', localStorage.getItem('imgBlockId'));
 	}
 	if (localStorage.getItem('imgBlockId')){
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/edit?${_csrf.parameterName}=${_csrf.token}" />";
-  } else {
-      var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-  }
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + localStorage.getItem('imgBlockId') + "?${_csrf.parameterName}=${_csrf.token}";
+        reader.onload = function () {
+            var imageblock = $('<img src="#" />');
+            imageblock.attr('src', reader.result);
+            imageblock.attr('width', '800px');
+            $("#" + localStorage.getItem('imgBlockId')).replaceWith(imageblock);
+        }
+       
+    } else {
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        reader.onload = function () {
+            var imageblock = $('<img src="#" />');
+            imageblock.attr('src', reader.result);
+            imageblock.attr('width', '800px');
+            $('#slideSpace').append(imageblock);        
+        }
+        ++contentCount;
+    }
+    reader.readAsDataURL(file);
 	$.ajax({
 		enctype: 'multipart/form-data',
 		// ------------- creating image content blocks ------------
@@ -303,14 +311,16 @@ $(document).ready(function() {
             </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-            <div id="${contents.id}" class="valueDiv card card-body row" style="margin: 10px;">
+            <div id="${contents.id}" class="valueDiv card card-body row"
+                style="margin: 10px;"
+            >
                 <p>${contents.text}</p>
             </div>
         </c:if>
     </c:forEach>
 </div>
 <style type="text/css">
-    .hova {
-    background-color: lightcyan;
-    }
+.hova {
+	background-color: #bfb168;
+}
 </style>
