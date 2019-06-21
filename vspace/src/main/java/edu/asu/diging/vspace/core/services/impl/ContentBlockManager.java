@@ -16,7 +16,6 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
@@ -132,7 +131,7 @@ public class ContentBlockManager implements IContentBlockManager {
     public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
         try {
             textBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
 
@@ -142,7 +141,7 @@ public class ContentBlockManager implements IContentBlockManager {
     public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
         try {
             imageBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
 
