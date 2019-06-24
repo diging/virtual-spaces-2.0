@@ -50,6 +50,12 @@ public class ContentBlockManagerTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @Test
+    public void test_deleteTextBlockById_success() throws BlockDoesNotExistException {
+        String id = "ID";
+        Mockito.verify(textBlockRepo).deleteById(id);
+    }
+
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteTextBlockById_forNonExistentId() throws BlockDoesNotExistException {
         String textBlockId = "notARealId";
