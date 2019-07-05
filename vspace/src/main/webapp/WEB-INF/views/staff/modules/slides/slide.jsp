@@ -5,35 +5,33 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
+
+function createImageBlock(reader) {
+	var imageblock = $('<img src="#" />');
+    imageblock.attr('src', reader.result);
+    imageblock.attr('width', '800px');
+    return imageblock
+}
 	
 function uploadImage() {
 	var file = document.getElementById('file').files[0];
 	var reader  = new FileReader();
-	
-	
-	
 	var file = document.getElementById('file').files[0];
 	var formData = new FormData();
 	formData.append('file', file);
 	formData.append('contentOrder', contentCount);
-	if(localStorage.getItem('imgBlockId')) {
-		formData.append('imageBlockId', localStorage.getItem('imgBlockId'));
-	}
 	if (localStorage.getItem('imgBlockId')){
+		formData.append('imageBlockId', localStorage.getItem('imgBlockId'));
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + localStorage.getItem('imgBlockId') + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function () {
-            var imageblock = $('<img src="#" />');
-            imageblock.attr('src', reader.result);
-            imageblock.attr('width', '800px');
+        	imageblock = createImageBlock(reader);
             $("#" + localStorage.getItem('imgBlockId')).replaceWith(imageblock);
         }
        
     } else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function () {
-            var imageblock = $('<img src="#" />');
-            imageblock.attr('src', reader.result);
-            imageblock.attr('width', '800px');
+        	imageblock = createImageBlock(reader);
             $('#slideSpace').append(imageblock);        
         }
         ++contentCount;
@@ -146,13 +144,9 @@ $(document).ready(function() {
         } else {
         	// Must use closest('div').children() instead of closet('img').
         	blockId = $(e.target).closest('div').children().attr('id');
-        	console.log(blockId);
             $("#addImgAlert").show();
             localStorage.setItem('imgBlockId', blockId);
-           
         }
-        
-        
     }
     
     function closeTextBox() {
