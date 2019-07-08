@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
 
 public class ContentBlockManagerTest {
     @Mock
@@ -48,12 +49,17 @@ public class ContentBlockManagerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
     }
 
     @Test
     public void test_deleteTextBlockById_success() throws BlockDoesNotExistException {
-        String id = "ID";
-        Mockito.verify(textBlockRepo).deleteById(id);
+        String slideId = "2";
+        String text = "Test Test Test";
+        Integer contentOrder = 1;
+        TextBlock textBlock = managerToTest.createTextBlock(slideId, text, contentOrder);
+        textBlock.setId("2");
+        Mockito.verify(textBlockRepo).deleteById("2");
     }
 
     @Test(expected = BlockDoesNotExistException.class)
