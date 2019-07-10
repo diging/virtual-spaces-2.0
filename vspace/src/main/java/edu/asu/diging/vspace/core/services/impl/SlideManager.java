@@ -47,4 +47,9 @@ public class SlideManager implements ISlideManager {
         slideRepo.save((Slide) slide);
     }
 
+    @Override
+    public void deleteSlide(ISlide slide) {
+        slideRepo.delete((Slide) slide);
+    }
+
 }
