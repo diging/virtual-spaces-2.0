@@ -37,10 +37,7 @@ public class AddSequenceController {
             Principal principal) {
 
         sequenceManager.storeSequence(moduleId, sequenceForm); 
-        for(String x : sequenceForm.getOrderedSlides()) {
-            System.out.print("in for loop");
-            System.out.println(x);
-        }
+
         return "redirect:/staff/module/{moduleId}";
     }
 }
