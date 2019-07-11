@@ -23,7 +23,7 @@ public class SequenceFactory implements ISequenceFactory{
     @Override
     public ISequence createSequence(IModule module, SequenceForm sequenceForm, List<ISlide> slides) {
         ISequence sequence = new Sequence();
-        sequence.setName(sequenceForm.getName());;
+        sequence.setName(sequenceForm.getName());
         sequence.setDescription(sequenceForm.getDescription());
         sequence.setSlides(slides);
         sequence.setModule(module);
