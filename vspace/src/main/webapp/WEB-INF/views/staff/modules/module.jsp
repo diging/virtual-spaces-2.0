@@ -27,7 +27,7 @@ $(document).ready(function($) {
 	    
 	    $.ajax({
             type: "GET",
-            url: "<c:url value="/staff/module/${module.id}/sequence/get/" />" + sequenceId + "?${_csrf.parameterName}=${_csrf.token}",	
+            url: "<c:url value="/staff/module/${module.id}/sequence/"/>" +sequenceId+  "/slides",	
             async: false,
             success: function(response) {		               	
                	$.each(response, function (index, slide) {

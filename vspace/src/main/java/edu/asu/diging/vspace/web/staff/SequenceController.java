@@ -23,10 +23,10 @@ public class SequenceController {
     @Autowired
     private ISequenceManager sequenceManager;
     
-    @RequestMapping(value = "/staff/module/{moduleId}/sequence/get/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/module/{moduleId}/sequence/{id}/slides", method = RequestMethod.GET)
     public ResponseEntity<List<ISlide>> getSequenceSlides(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("id") String sequenceId, @ModelAttribute SequenceForm sequenceForm,
             Principal principal) {
-        
+
         List<ISlide> slide = sequenceManager.getSequence(sequenceId).getSlides();
         return new ResponseEntity<List<ISlide>>(slide, HttpStatus.OK);
     }
