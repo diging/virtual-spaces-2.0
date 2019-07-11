@@ -28,63 +28,60 @@
 	by ${module.modifiedBy}.
 </div>
 
-<body>
-	<div id="result"></div>
-	<div class="container" id="header" style="margin-bottom:10px;">
-		<div class="row">
-			<div class="col justify-content-center">
-				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
-					<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES</span>
-					<a class="d-flex align-items-center text-muted"
-						href="<c:url value="${module.id}/slide/add" />"> <span
-						data-feather="plus-circle"></span></a>
-				</div>
+<div id="result"></div>
+<div class="container" id="header" style="margin-bottom:10px;">
+	<div class="row">
+		<div class="col justify-content-center">
+			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+				<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES</span>
+				<a class="d-flex align-items-center text-muted"
+					href="<c:url value="${module.id}/slide/add" />"> <span
+					data-feather="plus-circle"></span></a>
 			</div>
-			<div class="col">
-				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
-					<span style="float: left; font-size: medium; padding-top: 3px;">SEQUENCES</span>
-					<a class="d-flex align-items-center text-muted"
-						href="<c:url value="${module.id}/sequence/add" />"> <span
-						data-feather="plus-circle"></span></a>
-				</div>
+		</div>
+		<div class="col">
+			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+				<span style="float: left; font-size: medium; padding-top: 3px;">SEQUENCES</span>
+				<a class="d-flex align-items-center text-muted"
+					href="<c:url value="${module.id}/sequence/add" />"> <span
+					data-feather="plus-circle"></span></a>
 			</div>
-			<div class="col">
-				<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
-					<span style="float: left; font-size: medium; padding-top: 3px;">START
-						SEQUENCE</span> <span id="startSequence"
-						style="float: right; padding-top: 3px;"></span>
-				</div>
+		</div>
+		<div class="col">
+			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+				<span style="float: left; font-size: medium; padding-top: 3px;">START
+					SEQUENCE</span> <span id="startSequence"
+					style="float: right; padding-top: 3px;"></span>
 			</div>
 		</div>
 	</div>
-	<div class="container" id="table">
-		<div class="row">
-			<div class="col" style="max-width: 24rem;">
-				<c:forEach items="${slides}" var="slide">									
-						<div class="card" style="max-width: 18rem; margin-bottom:10px;">
-							<div align="left" class="card-body">
-								<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-									<h5 class="card-title">${slide.name}</h5>
-									<p class="card-text">${slide.description}</p>
-								</a>						
-							</div>
-						</div>				
-				</c:forEach>
-			</div>
-			
-			<div class="col" style="max-width: 24rem;">
-				<c:forEach items="${sequences}" var="sequences">
+</div>
+<div class="container" id="table">
+	<div class="row">
+		<div class="col" style="max-width: 24rem;">
+			<c:forEach items="${slides}" var="slide">									
 					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body">
-							<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">
-								<h5 class="card-title">${sequences.name}</h5>
-								<p class="card-text">${sequences.description}</p>
-							</a>
+							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+								<h5 class="card-title">${slide.name}</h5>
+								<p class="card-text">${slide.description}</p>
+							</a>						
 						</div>
+					</div>				
+			</c:forEach>
+		</div>
+		
+		<div class="col" style="max-width: 24rem;">
+			<c:forEach items="${sequences}" var="sequences">
+				<div class="card" style="max-width: 18rem; margin-bottom:10px;">
+					<div align="left" class="card-body">
+						<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">
+							<h5 class="card-title">${sequences.name}</h5>
+							<p class="card-text">${sequences.description}</p>
+						</a>
 					</div>
-				</c:forEach>
-			</div>
+				</div>
+			</c:forEach>
 		</div>
 	</div>
-
-</body>
+</div>

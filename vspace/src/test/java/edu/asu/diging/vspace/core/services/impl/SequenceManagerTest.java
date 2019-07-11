@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 public class SequenceManagerTest {
@@ -35,7 +36,7 @@ public class SequenceManagerTest {
     private SequenceFactory sequenceFactory;
     
     @InjectMocks
-    private SequenceManager sequenceToTest = new SequenceManager();
+    private SequenceManager sequenceManagerToTest = new SequenceManager();
     
     @Before
     public void init() {
@@ -49,42 +50,42 @@ public class SequenceManagerTest {
         Optional<Sequence> mockSequence = Optional.of(newSequence);
         Mockito.when(mockSequenceRepo.findById(newSequence.getId())).thenReturn(mockSequence);
 
-        ISequence iSequenceActual = sequenceToTest.getSequence(newSequence.getId());
-        Assert.assertEquals(mockSequence.get().getId(), iSequenceActual.getId());
-        Assert.assertEquals(mockSequence.get().getName(), iSequenceActual.getName());
+        ISequence actualSequence = sequenceManagerToTest.getSequence(newSequence.getId());
+        Assert.assertEquals(newSequence.getId(), actualSequence.getId());
+        Assert.assertEquals(newSequence.getName(), actualSequence.getName());
     }
     
     @Test
     public void test_getSequence_idNotExists() throws Exception {
-        Mockito.when(mockSequenceRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
-        Assert.assertNull(sequenceToTest.getSequence(Mockito.anyString()));
+        Mockito.when(mockSequenceRepo.findById("a non existing id string")).thenReturn(Optional.empty());
+        Assert.assertNull(sequenceManagerToTest.getSequence("a non existing id string"));
     }
     
     @Test
-    public void test_storeSequence_Success() {
+    public void test_storeSequence_success() {
         Module module = new Module();
         module.setId("module1");
         
-        SequenceForm seqForm = new SequenceForm();
-        seqForm.setName("SEQ1");
-        seqForm.setDescription("sample description");
-        List<String> orderedSlides = new ArrayList<>();
-        orderedSlides.add("SLI1");
-        orderedSlides.add("SLI2");
-        seqForm.setOrderedSlides(orderedSlides);
+        SequenceForm sequenceForm = new SequenceForm();
+        sequenceForm.setName("SEQ1");
+        sequenceForm.setDescription("sample description");
         
+        Slide slide1 = new Slide();
+        slide1.setId("slide1");       
+        Slide slide2 = new Slide();
+        slide2.setId("slide1");
+ 
         List<ISlide> slides = new ArrayList<>();
-        for(String slideId : seqForm.getOrderedSlides()) {
-            slides.add(slideManager.getSlide(slideId));
-        }
+        slides.add(slide1);
+        slides.add(slide2);
         
         Sequence newSequence = new Sequence(); 
-        Mockito.when((Sequence) sequenceFactory.createSequence(moduleManager.getModule(module.getId()), seqForm, slides)).thenReturn(newSequence);
+        Mockito.when(sequenceFactory.createSequence(moduleManager.getModule(module.getId()), sequenceForm, slides)).thenReturn(newSequence);
         Sequence mockSequence = new Sequence();
         Mockito.when(mockSequenceRepo.save(newSequence)).thenReturn(mockSequence);
         
-        ISequence iSequenceActual = sequenceToTest.storeSequence(module.getId(), seqForm);
-        Assert.assertEquals(mockSequence.getId(), iSequenceActual.getId());
-        Assert.assertEquals(mockSequence.getName(), iSequenceActual.getName());       
+        ISequence actualSequence = sequenceManagerToTest.storeSequence(module.getId(), sequenceForm);
+        Assert.assertEquals(mockSequence, actualSequence);
+        Mockito.verify(mockSequenceRepo).save(mockSequence);       
     }
 }
