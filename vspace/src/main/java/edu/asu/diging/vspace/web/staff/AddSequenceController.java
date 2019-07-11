@@ -35,8 +35,12 @@ public class AddSequenceController {
     @RequestMapping(value = "/staff/module/{moduleId}/sequence/add", method = RequestMethod.POST)
     public String addSequence(Model model, @PathVariable("moduleId") String moduleId, @ModelAttribute SequenceForm sequenceForm,
             Principal principal) {
-        
-        sequenceManager.storeSequence(moduleId, sequenceForm);    
+
+        sequenceManager.storeSequence(moduleId, sequenceForm); 
+        for(String x : sequenceForm.getOrderedSlides()) {
+            System.out.print("in for loop");
+            System.out.println(x);
+        }
         return "redirect:/staff/module/{moduleId}";
     }
 }
