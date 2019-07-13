@@ -21,7 +21,7 @@ public class EditTextBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
             @RequestParam("textBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("textBlockDesc") String textBlockDesc) throws IOException {

@@ -48,7 +48,7 @@ public class EditImageBlockController {
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<String>("ok", HttpStatus.OK);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
 }

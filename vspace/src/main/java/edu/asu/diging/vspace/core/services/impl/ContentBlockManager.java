@@ -85,17 +85,18 @@ public class ContentBlockManager implements IContentBlockManager {
         return textBlock;
     }
 
-    private IVSImage saveImage(byte[] image, IVSImage slideContentImage, String filename) {
+    private IVSImage saveImage(byte[] image, String filename) {
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
-            slideContentImage = imageFactory.createImage(filename, contentType);
+            IVSImage slideContentImage = imageFactory.createImage(filename, contentType);
             slideContentImage = imageRepo.save((VSImage) slideContentImage);
+            return slideContentImage;
         }
-        return slideContentImage;
+        return null;
     }
 
-    private IVSImage handleNullContent(byte[] image, IVSImage slideContentImage, String filename)
+    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
             throws ImageCouldNotBeStoredException {
         if (slideContentImage != null) {
             String relativePath = null;
@@ -107,7 +108,6 @@ public class ContentBlockManager implements IContentBlockManager {
             slideContentImage.setParentPath(relativePath);
             imageRepo.save((VSImage) slideContentImage);
         }
-        return slideContentImage;
     }
 
     /*
@@ -121,11 +121,10 @@ public class ContentBlockManager implements IContentBlockManager {
             throws ImageCouldNotBeStoredException {
 
         ISlide slide = slideManager.getSlide(slideId);
-        IVSImage slideContentImage = null;
-        slideContentImage = saveImage(image, slideContentImage, filename);
+        IVSImage slideContentImage = saveImage(image, filename);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
-        slideContentImage = handleNullContent(image, slideContentImage, filename);
+        storeImageFile(image, slideContentImage, filename);
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
@@ -142,9 +141,8 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException {
-        IVSImage slideContentImage = null;
-        slideContentImage = saveImage(image, slideContentImage, filename);
-        slideContentImage = handleNullContent(image, slideContentImage, filename);
+        IVSImage slideContentImage = saveImage(image, filename);
+        storeImageFile(image, slideContentImage, filename);
         imageBlock.setImage(slideContentImage);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
