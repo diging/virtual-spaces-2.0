@@ -11,9 +11,7 @@ $( document ).ready(function() {
 		if($(this).val() === 'slide') {
 			console.log("slide");
 		    $.ajax({ 
-			  url: "<c:url value="${module.id}/slide/add" />",
-			  method: "GET",
-				
+			  url: "<c:url value="${module.id}/slide/add" />",				
 			}); 
 		}
 		else
@@ -45,14 +43,9 @@ $( document ).ready(function() {
 	<tr>
 		<td style="width: 20rem; padding-left: 15px; border:1;">
 			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"><span style="float:left; font-size:medium; padding-top: 3px;">SLIDES</span>
-			<select id="dropdown">
-		 	  <option>Add New</option>
-			  <option value= 'slide' id="slide">Slide</option>
-    		  <option value='branchingPoint' id="branchingPoint">Branching Point</option>
-			</select>
-		   </div>
+			<a class="d-flex align-items-center text-muted" href="<c:url value="${module.id}/slide/add" />">
+			<span data-feather="plus-circle"></span></a></div>
 		</td>
-		<%-- <a class="d-flex align-items-center text-muted" href="<c:url value="${module.id}/slide/add" />"></a> --%>
 		<td>&nbsp;</td>
 		<td style="width: 20rem; padding-left: 15px; border:1;">
 			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1"><span style="float:left; font-size:medium; padding-top: 3px;">SEQUENCES</span>
@@ -77,11 +70,11 @@ $( document ).ready(function() {
 	</tr>	
 	</c:forEach>
 </table>
-
+<%-- 
 <div class="dropdown">
   <button onclick="myFunction()" class="dropbtn"><span data-feather="plus-circle"></span></button>
   <div id="myDropdown" class="dropdown-content">
     <a href="<c:url value="${module.id}/slide/add" />">Slide</a>
     <a href="#about">Branching Point</a>
   </div>
-</div>
+</div> --%>

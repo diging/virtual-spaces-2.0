@@ -23,6 +23,7 @@ public class AddSlideController {
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("slide", new SlideForm());
+        
         return "staff/module/slide/add";
     }
 

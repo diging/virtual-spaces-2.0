@@ -8,4 +8,6 @@ public interface ISlideFactory {
 
     ISlide createSlide(IModule modfule, SlideForm form);
 
+    ISlide createBranchingPoint(IModule module, SlideForm form);
+
 }
