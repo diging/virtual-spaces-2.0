@@ -30,7 +30,6 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm) {
-        System.out.println("---------manager---------");
         ISlide slide = slideFactory.createSlide(module, slideForm);             
         slideRepo.save((Slide) slide);        
         return slide;

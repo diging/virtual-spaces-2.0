@@ -4,7 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
-<script>
+<!-- <script>
 $( document ).ready(function() { 
 	$("#dropdown").change(function(e) {
 		console.log("in??");
@@ -16,18 +16,11 @@ $( document ).ready(function() {
 		}
 		else
 			console.log("bpoint");
-		/* $.ajax({ 
-			url: "<c:url value="${module.id}/slide/add" />",
-			method: "GET",
-				success:function(data) {
-					console.log("successsss!!");
-				}
-			}); */
 	});
 });
 
 </script>
-
+ -->
 <h1>Module: ${module.name}</h1>
 <div class="alert alert-light" role="alert">
   Created on <span class="date">${module.creationDate}</span> by ${module.createdBy}.
@@ -70,11 +63,3 @@ $( document ).ready(function() {
 	</tr>	
 	</c:forEach>
 </table>
-<%-- 
-<div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn"><span data-feather="plus-circle"></span></button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="<c:url value="${module.id}/slide/add" />">Slide</a>
-    <a href="#about">Branching Point</a>
-  </div>
-</div> --%>

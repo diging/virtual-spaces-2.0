@@ -31,7 +31,6 @@ public class SlideFactory implements ISlideFactory {
             slide.setName(form.getName());
             slide.setDescription(form.getDescription());
             slide.setModule(module);
-            System.out.println("Slideeeeee factory");
             return slide;        
     }
     
@@ -50,7 +49,6 @@ public class SlideFactory implements ISlideFactory {
         branchingPoint.setModule(moduleId);
         branchingPoint.setContents(new ArrayList<IContentBlock>());
         branchingPoint.setChoices(new ArrayList<IChoice>());
-        System.out.println("inside factory");
         return branchingPoint;
     }    
     
