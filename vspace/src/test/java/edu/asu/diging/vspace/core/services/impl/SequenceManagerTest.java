@@ -63,29 +63,45 @@ public class SequenceManagerTest {
     
     @Test
     public void test_storeSequence_success() {
+        Sequence newSequence = new Sequence();
         Module module = new Module();
         module.setId("module1");
+        newSequence.setModule(module);
         
         SequenceForm sequenceForm = new SequenceForm();
         sequenceForm.setName("SEQ1");
         sequenceForm.setDescription("sample description");
+        newSequence.setName(sequenceForm.getName());
+        newSequence.setDescription(sequenceForm.getDescription());
+        
+        String sli1 = new String("SLI000000036");
+        String sli2 = new String("SLI000000037");
+        List<String> sli = new ArrayList<>();
+        sli.add(sli1);
+        sli.add(sli2);
+        sequenceForm.setOrderedSlides(sli);
         
         Slide slide1 = new Slide();
-        slide1.setId("slide1");       
+        slide1.setId("SLI000000036");       
         Slide slide2 = new Slide();
-        slide2.setId("slide1");
+        slide2.setId("SLI000000037");
  
         List<ISlide> slides = new ArrayList<>();
         slides.add(slide1);
         slides.add(slide2);
+        newSequence.setSlides(slides);
         
-        Sequence newSequence = new Sequence(); 
         Mockito.when(sequenceFactory.createSequence(moduleManager.getModule(module.getId()), sequenceForm, slides)).thenReturn(newSequence);
-        Sequence mockSequence = new Sequence();
-        Mockito.when(mockSequenceRepo.save(newSequence)).thenReturn(mockSequence);
+        Mockito.when(mockSequenceRepo.save(newSequence)).thenReturn(newSequence);
         
         ISequence actualSequence = sequenceManagerToTest.storeSequence(module.getId(), sequenceForm);
-        Assert.assertEquals(mockSequence, actualSequence);
-        Mockito.verify(mockSequenceRepo).save(mockSequence);       
+        Assert.assertEquals(newSequence, actualSequence);
+        
+        Assert.assertEquals(actualSequence.getModule().getId(), module.getId());
+        Assert.assertEquals(actualSequence.getName(), sequenceForm.getName());
+        Assert.assertEquals(actualSequence.getDescription(), sequenceForm.getDescription());
+        Assert.assertEquals(actualSequence.getSlides(), slides);
+        //Mockito.verify(mockSequenceRepo).save(newSequence);   
+        
     }
 }
