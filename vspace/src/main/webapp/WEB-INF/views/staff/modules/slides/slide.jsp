@@ -282,21 +282,10 @@ $(document).ready(function() {
         $(".open").removeClass("open");
     }
     
-    function cancelAndCloseTextBox() {
-    	var description = document.getElementById("newTextBlock").defaultValue;;
-        // clear text box and buttons
-        $(".open").empty()
-        $(".open").append('<p>'+description+'</p>');
-        // reset border of the card
-        $(".open").css('border', '1px solid rgba(0,0,0,.125)');
-        //rebind event handlers
-        $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-        // remove id from storage so its not there on refresh
-        $(".open").removeClass("open");
-    }
     // must add the event to the document since the buttons are added dynamically
     $(document).on('click','#cancelTextBlock',function(){
-    	cancelAndCloseTextBox();
+    	document.getElementById("newTextBlock").value = document.getElementById("newTextBlock").defaultValue;
+    	closeTextBox();
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
