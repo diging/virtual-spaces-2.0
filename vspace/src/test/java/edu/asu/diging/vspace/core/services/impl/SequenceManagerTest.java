@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.SequenceRepository;
+import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.SequenceFactory;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -31,6 +32,9 @@ public class SequenceManagerTest {
     
     @Mock
     private SlideManager slideManager;
+    
+    @Mock
+    private SlideRepository slideRepo;
     
     @Mock
     private SequenceFactory sequenceFactory;
@@ -62,46 +66,48 @@ public class SequenceManagerTest {
     }
     
     @Test
-    public void test_storeSequence_success() {
-        Sequence newSequence = new Sequence();
+    public void test_storeSequence_success() {        
         Module module = new Module();
         module.setId("module1");
-        newSequence.setModule(module);
-        
+             
         SequenceForm sequenceForm = new SequenceForm();
         sequenceForm.setName("SEQ1");
         sequenceForm.setDescription("sample description");
-        newSequence.setName(sequenceForm.getName());
-        newSequence.setDescription(sequenceForm.getDescription());
+              
+        String slideId1 = "slide1";
+        String slideId2 = "slide2";
+        List<String> slideIds = new ArrayList<>();
+        slideIds.add(slideId1);
+        slideIds.add(slideId2);
+        sequenceForm.setOrderedSlides(slideIds);
         
-        String sli1 = new String("SLI000000036");
-        String sli2 = new String("SLI000000037");
-        List<String> sli = new ArrayList<>();
-        sli.add(sli1);
-        sli.add(sli2);
-        sequenceForm.setOrderedSlides(sli);
-        
-        Slide slide1 = new Slide();
-        slide1.setId("SLI000000036");       
-        Slide slide2 = new Slide();
-        slide2.setId("SLI000000037");
+        ISlide slide1 = new Slide();
+        slide1.setId("slide1");       
+        ISlide slide2 = new Slide();
+        slide2.setId("slide2");
  
         List<ISlide> slides = new ArrayList<>();
         slides.add(slide1);
         slides.add(slide2);
+            
+        Sequence newSequence = new Sequence();
+        newSequence.setModule(module);
+        newSequence.setName(sequenceForm.getName());
+        newSequence.setDescription(sequenceForm.getDescription());
         newSequence.setSlides(slides);
-        
-        Mockito.when(sequenceFactory.createSequence(moduleManager.getModule(module.getId()), sequenceForm, slides)).thenReturn(newSequence);
+              
+        Mockito.when(slideManager.getSlide(slideId1)).thenReturn(slide1);
+        Mockito.when(slideManager.getSlide(slideId2)).thenReturn(slide2);
+        Mockito.when(moduleManager.getModule("module1")).thenReturn(module);
+        Mockito.when(sequenceFactory.createSequence(module, sequenceForm, slides)).thenReturn(newSequence);
         Mockito.when(mockSequenceRepo.save(newSequence)).thenReturn(newSequence);
         
         ISequence actualSequence = sequenceManagerToTest.storeSequence(module.getId(), sequenceForm);
-        Assert.assertEquals(newSequence, actualSequence);
-        
+
         Assert.assertEquals(actualSequence.getModule().getId(), module.getId());
         Assert.assertEquals(actualSequence.getName(), sequenceForm.getName());
         Assert.assertEquals(actualSequence.getDescription(), sequenceForm.getDescription());
         Assert.assertEquals(actualSequence.getSlides(), slides);
-        //Mockito.verify(mockSequenceRepo).save(newSequence);   
-        
+        Mockito.verify(mockSequenceRepo).save(newSequence);           
     }
 }
