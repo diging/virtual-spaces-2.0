@@ -18,38 +18,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 @Controller
-public class AddImageBlockController {
-
+public class EditImageBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image", method = RequestMethod.POST)
-    public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
-            @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
-            throws IOException {
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/{imageBlockId}", method = RequestMethod.POST)
+    public ResponseEntity<String> editImageBlock(@PathVariable("id") String slideId,
+            @PathVariable("imageBlockId") String blockId, @PathVariable("moduleId") String moduleId,
+            @RequestParam("file") MultipartFile file, @RequestParam("contentOrder") Integer contentOrder,
+            Principal principal, RedirectAttributes attributes) throws IOException {
 
+        IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
         byte[] image = null;
         String filename = null;
         if (file != null) {
             image = file.getBytes();
             filename = file.getOriginalFilename();
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            CreationReturnValue imageBlock = contentBlockManager.createImageBlock(slideId, image, filename,
-                    contentOrder);
-            ObjectNode node = mapper.createObjectNode();
-            node.put("imageBlock", imageBlock.getElement().getId());
-            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.CREATED);
+            contentBlockManager.updateImageBlock(imageBlock, image, filename, contentOrder);
         } catch (ImageCouldNotBeStoredException e) {
+            ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Image Content block cannot be stored.");
-            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
+
 }

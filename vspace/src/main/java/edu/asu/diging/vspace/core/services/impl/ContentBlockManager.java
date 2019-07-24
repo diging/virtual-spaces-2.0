@@ -2,10 +2,10 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -87,28 +87,8 @@ public class ContentBlockManager implements IContentBlockManager {
         return textBlock;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
-     * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
-     */
-    @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
+    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
             throws ImageCouldNotBeStoredException {
-        IVSImage slideContentImage = null;
-        ISlide slide = slideManager.getSlide(slideId);
-        if (image != null && image.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(image);
-
-            slideContentImage = imageFactory.createImage(filename, contentType);
-            slideContentImage = imageRepo.save((VSImage) slideContentImage);
-        }
-
-        CreationReturnValue returnValue = new CreationReturnValue();
-        returnValue.setErrorMsgs(new ArrayList<>());
-
         if (slideContentImage != null) {
             String relativePath = null;
             try {
@@ -119,7 +99,23 @@ public class ContentBlockManager implements IContentBlockManager {
             slideContentImage.setParentPath(relativePath);
             imageRepo.save((VSImage) slideContentImage);
         }
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
+     */
+    @Override
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException {
+
+        ISlide slide = slideManager.getSlide(slideId);
+        IVSImage slideContentImage = saveImage(image, filename);
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        storeImageFile(image, slideContentImage, filename);
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
@@ -147,4 +143,34 @@ public class ContentBlockManager implements IContentBlockManager {
 
     }
 
+    public void updateTextBlock(TextBlock textBlock) {
+        textBlockRepo.save((TextBlock) textBlock);
+    }
+
+    @Override
+    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException {
+        IVSImage slideContentImage = saveImage(image, filename);
+        storeImageFile(image, slideContentImage, filename);
+        imageBlock.setImage(slideContentImage);
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
+
+    @Override
+    public IImageBlock getImageBlock(String imgBlockId) {
+        Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
+        if (imgBlock.isPresent()) {
+            return imgBlock.get();
+        }
+        return null;
+    }
+
+    @Override
+    public ITextBlock getTextBlock(String textBlockId) {
+        Optional<TextBlock> textBlock = textBlockRepo.findById(textBlockId);
+        if (textBlock.isPresent()) {
+            return textBlock.get();
+        }
+        return null;
+    }
 }
