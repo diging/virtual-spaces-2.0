@@ -38,7 +38,7 @@ public class SequenceFactoryTest {
         Slide slide1 = new Slide();
         slide1.setId("slide1");       
         Slide slide2 = new Slide();
-        slide2.setId("slide1");
+        slide2.setId("slide2");
  
         List<ISlide> slides = new ArrayList<>();
         slides.add(slide1);

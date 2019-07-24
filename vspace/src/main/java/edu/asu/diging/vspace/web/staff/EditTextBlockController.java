@@ -12,22 +12,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ITextBlock;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
-public class AddTextBlockController {
+public class EditTextBlockController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST)
-    public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
-            @RequestParam("contentOrder") Integer contentOrder) throws IOException {
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/edit", method = RequestMethod.POST)
+    public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
+            @RequestParam("textBlockId") String blockId, @PathVariable("moduleId") String moduleId,
+            @RequestParam("textBlockDesc") String textBlockDesc) throws IOException {
 
-        ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
+        ITextBlock textBlock = contentBlockManager.getTextBlock(blockId);
+        textBlock.setText(textBlockDesc);
+        contentBlockManager.updateTextBlock((TextBlock) textBlock);
 
-        return new ResponseEntity<>(textBlock.getId(), HttpStatus.OK);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
 }
