@@ -15,16 +15,16 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
 public class SlideManager implements ISlideManager {
-    
+
     @Autowired
     private SlideRepository slideRepo;
-    
+
     @Autowired
     private SlideFactory slideFactory;
-    
+
     @Autowired
     private ModuleManager moduleManager;
-    
+
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -32,7 +32,7 @@ public class SlideManager implements ISlideManager {
         slideRepo.save((Slide) slide);
         return slide;
     }
-    
+
     @Override
     public ISlide getSlide(String slideId) {
         Optional<Slide> slide = slideRepo.findById(slideId);
@@ -41,4 +41,10 @@ public class SlideManager implements ISlideManager {
         }
         return null;
     }
+
+    @Override
+    public void updateSlide(Slide slide) {
+        slideRepo.save((Slide) slide);
+    }
+
 }

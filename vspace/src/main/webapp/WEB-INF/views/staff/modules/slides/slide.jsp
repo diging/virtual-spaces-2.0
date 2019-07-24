@@ -58,6 +58,108 @@ function uploadImage() {
 } 
 	
 $(document).ready(function() {
+	//-------- edit description --------
+	$("#submitDescription").hide()
+	$("#cancelEditDescription").hide()
+	var description = $("#description").text()
+	$("#editDescription").click(function() {
+		$('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+		$("#description").remove()
+		$("#editDescription").hide()
+		$("#submitDescription").show()
+		$("#cancelEditDescription").show()
+		
+	});
+	
+	$("#submitDescription").click(function() {
+		var formData = new FormData();
+		formData.append('description', $("#newDescription").val());
+		$.ajax({
+		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
+		type: 'POST',
+		cache       : false,
+		contentType : false,
+		processData : false,
+		data: formData,
+		enctype: 'multipart/form-data',
+		success: function(data) {
+		    // replace text box with new description
+			$("#submitDescription").hide()
+			$("#cancelEditDescription").hide()
+			$("#editDescription").show()
+			var val = $("#newDescription").val();
+			$('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+			$("#newDescription").remove();
+			$("#description").text(val)
+		},
+		error: function(data) {
+			    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			    $('.error').append(alert);
+			}
+		});
+		
+  	});
+	
+	$("#cancelEditDescription").click(function(){
+		$("#submitDescription").hide()
+		$("#editDescription").show()
+	    $("#cancelEditDescription").hide()
+	    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+        $("#newDescription").remove()
+        $("#description").text(description)
+	    
+	});
+	
+	//------- edit title --------
+	$("#submitTitle").hide();
+	$("#cancelEditTitle").hide();
+	var getTitleText = $("#title").text().split(": ")[1]
+	$("#editTitle").click(function() {
+		$('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+		$('#title').text('Slide: ')
+		$("#newTitle").val(getTitleText)
+		$("#editTitle").hide()
+		$("#submitTitle").show()
+		$("#cancelEditTitle").show()
+		
+	});
+	
+	$("#submitTitle").click(function() {
+		var formData = new FormData();
+		formData.append('title', $("#newTitle").val());
+		$.ajax({
+    		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/title?${_csrf.parameterName}=${_csrf.token}" />",
+    		type: 'POST',
+    		cache       : false,
+    		contentType : false,
+    		processData : false,
+    		data: formData,
+    		enctype: 'multipart/form-data',
+    		success: function(data) {
+    			// replace text box with new description
+    			$("#submitTitle").hide()
+    			$("#cancelEditTitle").hide();
+    			$("#editTitle").show()
+    			var val = $("#newTitle").val();
+    			$("#newTitle").closest('div').remove();
+    			$("#title").text("Silde: " + val)
+    			
+    		},
+    		error: function(data) {
+    			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    			$('.error').append(alert);
+    		}
+		});
+  	});
+   $("#cancelEditTitle").click(function(){
+        $("#submitTitle").hide()
+        $("#editTitle").show()
+        $("#cancelEditTitle").hide()
+        $("#newTitle").closest('div').remove();
+        $("#title").text("Silde: " + getTitleText)
+        
+    });
+	
 	$("#addText").click(function() {
 		$("#addTextAlert").show();
   	});
@@ -223,14 +325,41 @@ $(document).ready(function() {
     <li class="breadcrumb-item active">${slide.name}</li>
 </ol>
 <div class="error"></div>
-<h1>Slide: ${slide.name}</h1>
+<!-- title -->
+<div class="row align-items-center">
+    <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide: ${slide.name}</h1>
+    <a id="editTitle" class="btn" href="#"
+        style="float: left; margin-right: 1%;"
+    ><i class="fas fa-edit"></i></a>
+    <button id="submitTitle" type="button"
+        class="btn btn-primary"
+        style="float: left; margin-right: 1%;"
+    >Save</button>
+    <button id="cancelEditTitle" type="button"
+        class="btn btn-primary" style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;"
+    >Cancel</button>
+</div>
 <div class="alert alert-light" role="alert">
     Created on <span class="date">${slide.creationDate}</span> by
     ${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
     by ${slide.modifiedBy}.
 </div>
-<h5>Description:</h5>
-<p>${slide.description}</p>
+<!-- description -->
+<div style="margin-left: .1%;" class="row align-items-center">
+    <h5 style="margin-bottom: 0px;">Description:</h5>
+    <a id="editDescription" class="btn" href="#"
+        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
+    ><i class="fas fa-edit"></i></a>
+    <p id="description"
+        style="margin-top: .5rem; margin-bottom: .5rem;"
+    >${slide.description}</p>
+    <button id="submitDescription" type="button"
+        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%;"
+    >Save</button>
+    <button id="cancelEditDescription" type="button"
+        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;"
+    >Cancel</button>
+</div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button"
@@ -355,16 +484,16 @@ $(document).ready(function() {
                     <input class="form-control" type="file" name="file"
                         rows="5" cols="500" id="file"
                     />
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelImageBtn" type="reset"
-                    class="btn light"
-                >Cancel</button>
-                <button type="submit" id="uploadImage"
-                    class="btn btn-primary"
-                >Upload Image</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelImageBtn" type="reset"
+                        class="btn light"
+                    >Cancel</button>
+                    <button type="submit" id="uploadImage"
+                        class="btn btn-primary"
+                    >Upload Image</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
