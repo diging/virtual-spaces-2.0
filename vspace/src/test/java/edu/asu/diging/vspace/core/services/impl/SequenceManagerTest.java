@@ -71,7 +71,7 @@ public class SequenceManagerTest {
         module.setId("module1");
              
         SequenceForm sequenceForm = new SequenceForm();
-        sequenceForm.setName("SEQ1");
+        sequenceForm.setName("seq1");
         sequenceForm.setDescription("sample description");
               
         String slideId1 = "slide1";
