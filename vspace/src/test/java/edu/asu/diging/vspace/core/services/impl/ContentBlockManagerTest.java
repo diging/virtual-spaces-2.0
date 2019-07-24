@@ -10,13 +10,14 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.ModuleRepository;
+import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.impl.TextBlock;
 
 public class ContentBlockManagerTest {
     @Mock
@@ -29,6 +30,9 @@ public class ContentBlockManagerTest {
     private SlideManager slideManager;
 
     @Mock
+    private ModuleManager moduleManager;
+
+    @Mock
     private TextContentBlockRepository textBlockRepo;
 
     @Mock
@@ -39,6 +43,12 @@ public class ContentBlockManagerTest {
 
     @Mock
     private ImageRepository imageRepo;
+
+    @Mock
+    private SlideRepository slideRepo;
+
+    @Mock
+    private ModuleRepository moduleRepo;
 
     @Mock
     private IStorageEngine storage;
@@ -54,12 +64,16 @@ public class ContentBlockManagerTest {
 
     @Test
     public void test_deleteTextBlockById_success() throws BlockDoesNotExistException {
-        String slideId = "2";
-        String text = "Test Test Test";
-        Integer contentOrder = 1;
-        TextBlock textBlock = managerToTest.createTextBlock(slideId, text, contentOrder);
-        textBlock.setId("2");
-        Mockito.verify(textBlockRepo).deleteById("2");
+        String textBlockId = "2";
+        managerToTest.deleteTextBlockById(textBlockId);
+        Mockito.verify(textBlockRepo).deleteById(textBlockId);
+    }
+
+    @Test
+    public void test_deleteImageBlockById_success() throws BlockDoesNotExistException {
+        String imageBlockId = "2";
+        managerToTest.deleteImageBlockById(imageBlockId);
+        Mockito.verify(imageBlockRepo).deleteById(imageBlockId);
     }
 
     @Test(expected = BlockDoesNotExistException.class)
