@@ -100,21 +100,7 @@ function uploadImage() {
     });
 } 
     
-$(document).ready(function() {
-	//-------- resizing contentblock images --------
-	var divWindow    = $(".valueDiv"),
-	$image			 = $(".imgDiv"),
-	aspectRatio      = $image.width() / $image.height();
-	resizeImage();
-	
-	function resizeImage() {
-		if ( (divWindow.width() / divWindow.height()) < aspectRatio ) {
-			$image.css("height", divWindow.height());
-		} else {
-			$image.css("width", divWindow.width());
-		}
-	}
-                  		
+$(document).ready(function() { 
     //-------- edit contentblock description --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
@@ -127,7 +113,7 @@ $(document).ready(function() {
         $("#cancelEditDescription").show()
         
     });
-    
+
     $("#submitDescription").click(function() {
         var formData = new FormData();
         formData.append('description', $("#newDescription").val());
@@ -327,6 +313,18 @@ $(document).ready(function() {
            }
        });
     });
+    
+    var divWindow = $(".valueDiv"),
+    $image = $(".imgDiv"),
+    aspectRatio = $image.width() / $image.height();
+    resizeImage();
+    function resizeImage() {
+ 		if ((divWindow.width() / divWindow.height()) < aspectRatio ) {
+ 			$image.css("height", divWindow.height());
+ 		} else {
+ 			$image.css("width", divWindow.width());
+ 		}
+    }
 });
 </script>
 <ol class="breadcrumb">
