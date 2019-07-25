@@ -101,19 +101,18 @@ function uploadImage() {
 } 
     
 $(document).ready(function() {
-	
 	//-------- resizing contentblock images --------
 	var divWindow    = $(".valueDiv"),
 	$image   		 = $(".imgDiv"),
 	aspectRatio      = $image.width() / $image.height();
-	resizeImage(); 
-    
-	function resizeImage() {		
+	resizeImage();
+	
+	function resizeImage() {
 		if ( (divWindow.width() / divWindow.height()) < aspectRatio ) {
-		    $image.css("height", divWindow.height());
+			$image.css("height", divWindow.height());
 		} else {
-		    $image.css("width", divWindow.width());
-		}					
+			$image.css("width", divWindow.width());
+		}
 	}
                   		
     //-------- edit contentblock description --------
