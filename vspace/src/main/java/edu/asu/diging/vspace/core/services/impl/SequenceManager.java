@@ -40,8 +40,8 @@ public class SequenceManager implements ISequenceManager {
             slides.add(slideManager.getSlide(slideId));
         }
         ISequence sequence = sequenceFactory.createSequence(moduleManager.getModule(moduleId), sequenceForm, slides);
-        sequenceRepo.save((Sequence) sequence);
-        return sequence;
+        return sequenceRepo.save((Sequence) sequence);
+         
     }
 
     @Override

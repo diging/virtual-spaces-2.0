@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,8 +51,8 @@ public class SequenceManagerTest {
     public void test_getSequence_idExists() {
         Sequence newSequence = new Sequence();
         newSequence.setId("sequence1");
-        Optional<Sequence> mockSequence = Optional.of(newSequence);
-        Mockito.when(mockSequenceRepo.findById(newSequence.getId())).thenReturn(mockSequence);
+        Optional<Sequence> sequence = Optional.of(newSequence);
+        Mockito.when(mockSequenceRepo.findById(newSequence.getId())).thenReturn(sequence);
 
         ISequence actualSequence = sequenceManagerToTest.getSequence(newSequence.getId());
         Assert.assertEquals(newSequence.getId(), actualSequence.getId());
@@ -72,34 +72,25 @@ public class SequenceManagerTest {
              
         SequenceForm sequenceForm = new SequenceForm();
         sequenceForm.setName("seq1");
-        sequenceForm.setDescription("sample description");
-              
-        String slideId1 = "slide1";
-        String slideId2 = "slide2";
-        List<String> slideIds = new ArrayList<>();
-        slideIds.add(slideId1);
-        slideIds.add(slideId2);
+        sequenceForm.setDescription("sample description");            
+        List<String> slideIds = Arrays.asList("slide1", "slide2");
         sequenceForm.setOrderedSlides(slideIds);
         
-        ISlide slide1 = new Slide();
-        slide1.setId("slide1");       
-        ISlide slide2 = new Slide();
-        slide2.setId("slide2");
- 
-        List<ISlide> slides = new ArrayList<>();
-        slides.add(slide1);
-        slides.add(slide2);
+        List<ISlide> slidesList = Arrays.asList(new Slide(), new Slide());
+        slidesList.get(0).setId("slide1");
+        slidesList.get(1).setId("slide2");
             
         Sequence newSequence = new Sequence();
+        newSequence.setId("seq01");
         newSequence.setModule(module);
         newSequence.setName(sequenceForm.getName());
         newSequence.setDescription(sequenceForm.getDescription());
-        newSequence.setSlides(slides);
+        newSequence.setSlides(slidesList);
               
-        Mockito.when(slideManager.getSlide(slideId1)).thenReturn(slide1);
-        Mockito.when(slideManager.getSlide(slideId2)).thenReturn(slide2);
+        Mockito.when(slideManager.getSlide("slide1")).thenReturn(slidesList.get(0));
+        Mockito.when(slideManager.getSlide("slide2")).thenReturn(slidesList.get(1));
         Mockito.when(moduleManager.getModule("module1")).thenReturn(module);
-        Mockito.when(sequenceFactory.createSequence(module, sequenceForm, slides)).thenReturn(newSequence);
+        Mockito.when(sequenceFactory.createSequence(module, sequenceForm, slidesList)).thenReturn(newSequence);
         Mockito.when(mockSequenceRepo.save(newSequence)).thenReturn(newSequence);
         
         ISequence actualSequence = sequenceManagerToTest.storeSequence(module.getId(), sequenceForm);
@@ -107,7 +98,8 @@ public class SequenceManagerTest {
         Assert.assertEquals(actualSequence.getModule().getId(), module.getId());
         Assert.assertEquals(actualSequence.getName(), sequenceForm.getName());
         Assert.assertEquals(actualSequence.getDescription(), sequenceForm.getDescription());
-        Assert.assertEquals(actualSequence.getSlides(), slides);
-        Mockito.verify(mockSequenceRepo).save(newSequence);           
+        Assert.assertEquals(actualSequence.getSlides(), slidesList);
+        Mockito.verify(mockSequenceRepo).save(newSequence); 
+        Assert.assertNotNull(actualSequence.getId());
     }
 }

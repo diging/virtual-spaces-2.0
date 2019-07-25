@@ -6,7 +6,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.factory.impl.SequenceFactory;
@@ -18,7 +17,6 @@ import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 public class SequenceFactoryTest {
 
-    @InjectMocks
     private SequenceFactory sequenceFactoryToTest = new SequenceFactory();
     
     @Before
