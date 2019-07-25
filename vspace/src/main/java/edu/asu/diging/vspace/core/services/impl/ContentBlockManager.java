@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -83,8 +84,18 @@ public class ContentBlockManager implements IContentBlockManager {
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
-
         return textBlock;
+    }
+
+    private IVSImage saveImage(byte[] image, String filename) {
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            IVSImage slideContentImage = imageFactory.createImage(filename, contentType);
+            slideContentImage = imageRepo.save((VSImage) slideContentImage);
+            return slideContentImage;
+        }
+        return null;
     }
 
     private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
@@ -119,6 +130,7 @@ public class ContentBlockManager implements IContentBlockManager {
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
+
         returnValue.setElement(imageBlock);
         return returnValue;
     }
