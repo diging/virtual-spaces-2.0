@@ -319,11 +319,11 @@ $(document).ready(function() {
     aspectRatio = $image.width() / $image.height();
     resizeImage();
     function resizeImage() {
-      if ((divWindow.width() / divWindow.height()) < aspectRatio ) {
-        $image.css("height", divWindow.height());
- 	  } else {
- 		  $image.css("width", divWindow.width());
- 	    }
+    	if ((divWindow.width() / divWindow.height()) < aspectRatio ) {
+    		$image.css("height", divWindow.height());
+    	} else {
+    			$image.css("width", divWindow.width());
+    	}
     }
 });
 </script>
