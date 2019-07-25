@@ -104,9 +104,9 @@ $(document).ready(function() {
 	
 	//-------- resizing contentblock images --------
 	var divWindow    = $(".valueDiv"),
-    $image   		 = $(".imgDiv"),
-    aspectRatio      = $image.width() / $image.height();
-    resizeImage(); 
+	$image   		 = $(".imgDiv"),
+	aspectRatio      = $image.width() / $image.height();
+	resizeImage(); 
     
 	function resizeImage() {		
 		if ( (divWindow.width() / divWindow.height()) < aspectRatio ) {
