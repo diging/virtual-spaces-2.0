@@ -101,7 +101,22 @@ function uploadImage() {
 } 
     
 $(document).ready(function() {
-    //-------- edit description --------
+	
+	//-------- resizing contentblock images --------
+	var divWindow    = $(".valueDiv"),
+    $image   		 = $(".imgDiv"),
+    aspectRatio      = $image.width() / $image.height();
+    resizeImage(); 
+    
+	function resizeImage() {		
+		if ( (divWindow.width() / divWindow.height()) < aspectRatio ) {
+		    $image.css("height", divWindow.height());
+		} else {
+		    $image.css("width", divWindow.width());
+		}					
+	}
+                  		
+    //-------- edit contentblock description --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
     var description = $("#description").text()
@@ -449,7 +464,7 @@ $(document).ready(function() {
     <c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
             <div style="margin: 1%" class="valueDiv">
-                <img id="${contents.id}" width="800px"
+                <img id="${contents.id}" width="800px" class="imgDiv"
                     style="margin: 1%;"
                     src="<c:url value="/api/image/${contents.image.id}" />"
                 />
