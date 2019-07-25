@@ -103,7 +103,7 @@ function uploadImage() {
 $(document).ready(function() {
 	//-------- resizing contentblock images --------
 	var divWindow    = $(".valueDiv"),
-	$image   		 = $(".imgDiv"),
+	$image			 = $(".imgDiv"),
 	aspectRatio      = $image.width() / $image.height();
 	resizeImage();
 	
