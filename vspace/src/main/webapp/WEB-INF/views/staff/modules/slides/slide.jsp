@@ -7,7 +7,7 @@
 var contentCount = ${fn:length(slideContents)};
 
 function createImageBlock(reader) {
-    var imageblock = $('<div class="valueDiv card card-body"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;"></div></div></div>');
+    var imageblock = $('<div class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;"></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
     imageblock.find('img').attr('width', '800px');
     return imageblock
@@ -30,10 +30,10 @@ function onMouseLeave(e) {
 
 function onDoubleClick(e){
     // get the id of the nearest div with id valueDiv
-    var blockId = $(e.target).closest('div.valueDiv').attr('id');
+    var blockId = $(e.target).closest('div.valueDiv').hasClass( "img" );
     $(e.target).closest('.valueDiv').addClass("open");
     // if there is a block id we know its text block otherwise its an image block
-    if(blockId){
+    if(!blockId){
         //remove card border
         $(".open").css('border', 'none');
         // get text from p tag
@@ -60,8 +60,7 @@ function uploadImage() {
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
     if ($(".open")[0]){
-    	console.log("Runs open");
-        var imageBlockId = $('.open img').attr('id')
+        var imageBlockId = $('.open').attr('id')
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function () {
@@ -616,7 +615,7 @@ $(document).ready(function() {
 <div id="slideSpace">
     <c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-            <div id="${contents.id}" class="valueDiv card card-body"
+            <div id="${contents.id}" class="valueDiv card card-body img"
                 style="margin: 10px;"
             >
                 <div class="row">
