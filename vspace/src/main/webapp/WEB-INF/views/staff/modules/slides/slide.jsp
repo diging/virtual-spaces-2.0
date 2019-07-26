@@ -313,6 +313,7 @@ $(document).ready(function() {
 		payload["content"] = $("#textBlockText").val();
 		++contentCount;
 		payload["contentOrder"] = contentCount;
+		console.log("Edits");
 		// ------------- creating text content blocks ------------
 		$.ajax({
 		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text?${_csrf.parameterName}=${_csrf.token}" />",
@@ -439,7 +440,7 @@ $(document).ready(function() {
         formData.append('content', $("#textBlockText").val());
         ++contentCount;
         formData.append('contentOrder', contentCount);
-        
+        console.log("This runs");
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
@@ -449,7 +450,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+text+'</p></div>');
+                var textblock = $('<div id="'+data+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId"value="${contents.id}><inputclass="btn btn-danger deleteText"type="submit" value="Delete"style="float: right;"></div></div></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -474,7 +475,7 @@ $(document).ready(function() {
         var description = $("#newTextBlock").val()
         // clear text box and buttons
         $(".open").empty()
-        $(".open").append('<p>'+description+'</p>');
+        $(".open").append('<div class="row"><div class="col"><p>'+description+'</p></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;"></div></div>');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
