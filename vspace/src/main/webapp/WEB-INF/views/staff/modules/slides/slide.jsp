@@ -7,7 +7,7 @@
 var contentCount = ${fn:length(slideContents)};
 
 function createImageBlock(reader) {
-    var imageblock = $('<div style="margin: 1%" class="valueDiv"><img style="margin: 1%;" src="#" /></div>');
+    var imageblock = $('<div class="valueDiv card card-body"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;"></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
     imageblock.find('img').attr('width', '800px');
     return imageblock
@@ -54,60 +54,13 @@ function onDoubleClick(e){
 }
     
 function uploadImage() {
-	var file = document.getElementById('file').files[0];
-	var reader  = new FileReader();
-	++contentCount;
-	reader.readAsDataURL(file);
-	var file = document.getElementById('file').files[0];
-	var formData = new FormData();
-	formData.append('file', file);
-	formData.append('contentOrder', contentCount);
-	$.ajax({
-		enctype: 'multipart/form-data',
-		// ------------- creating image content blocks ------------
-		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />",
-		type: 'POST',
-		cache       : false,
-		contentType : false,
-		processData : false,
-		data: formData,
-		
-		success: function(data) {
-			data = JSON.parse(data);
-			var imageBlock = $('<div class="valueDiv card card-body"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;"></div></div></div>');
-			reader.onload = function () {
-				imgTag = $('.img', imageBlock)
-				imgTag.attr('src', reader.result);
-				imgTag.attr('width', '800px');
-				$('#slideSpace').append(imageBlock); 
-				$(imageBlock).attr( 'id', data["imageBlock"]);
-				$('#'+data["imageBlock"]+ ' #deleteTextId').attr( 'value', data["imageBlock"]);
-			}
-			reader.readAsDataURL(file);
-			// clear previous upload from form
-			$( '#imageUploadForm' ).each(function(){
-			    this.reset();
-			});
-		},
-		error: function(data) {
-			--contentCount;
-			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to submit again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.error').append(alert); 
-			$(".error").delay(4000).slideUp(500, function(){
-			    $(".error").empty();
-			});
-			$( '#imageUploadForm' ).each(function(){
-			    this.reset();
-			});
-		}
-	});
-	
     var file = document.getElementById('file').files[0];
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
     if ($(".open")[0]){
+    	console.log("Runs open");
         var imageBlockId = $('.open img').attr('id')
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
@@ -276,11 +229,6 @@ $(document).ready(function() {
 		$('.modal-footer').append(alert); 
   	});
 	
-	$("#uploadImage").click(function(e) {
-		e.preventDefault();
-		$("#addImgAlert").hide();
-		uploadImage();
-  	});
 	
 	$("#cancelSubmitText").click(function() {
 		$("#addTextAlert").hide();	
