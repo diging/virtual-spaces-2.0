@@ -35,7 +35,8 @@ public class Slide extends VSpaceElement implements ISlide {
     @ManyToOne(targetEntity = Module.class)
     private IModule module;
 
-    @JsonIgnore
+    //-------- @JsonIgnore used as this entity will be returned in a controller
+    @JsonIgnore 
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     private List<IContentBlock> contents;
     

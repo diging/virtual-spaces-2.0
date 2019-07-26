@@ -20,7 +20,7 @@ $(document).ready(function($) {
 	
 	$(".sequence").on("click", function(e) {
 		$(".sequence").css({ 'border' : ''});
-	    $(this).css("border", "solid deepSkyBlue");	    
+		$(this).css("border", "solid deepSkyBlue");	    
 	    var id = $(this.id);	    
 	    var sequenceId = id.selector;
 	    $('#selectedSequence').empty();
