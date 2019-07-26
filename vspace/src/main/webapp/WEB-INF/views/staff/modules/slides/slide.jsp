@@ -66,6 +66,7 @@ function uploadImage() {
         reader.onload = function () {
             imageblock = createImageBlock(reader);
             $("#" + imageBlockId).replaceWith(imageblock);
+            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         }
        
     } else {
@@ -94,6 +95,7 @@ function uploadImage() {
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
             	img.attr('id', data);
+            	
             }
         },
         error: function(data) {
