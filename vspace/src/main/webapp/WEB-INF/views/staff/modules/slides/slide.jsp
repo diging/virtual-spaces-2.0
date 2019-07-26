@@ -16,7 +16,7 @@ function createImageBlock(reader) {
 function onMouseEnter(e){
     var target = $( e.target );
     $(".hova").removeClass("hova");
-    $(e.target).addClass("hova");
+    $(e.target).closest(".valueDiv").addClass("hova");
     // This is needed to prevent only the p tag from being highlighted
     if(target.is('p')){
         $(e.target).parent().addClass("hova");
