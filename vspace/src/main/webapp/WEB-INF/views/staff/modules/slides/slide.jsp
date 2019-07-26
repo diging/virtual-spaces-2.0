@@ -38,7 +38,6 @@ function onDoubleClick(e){
         $(".open").css('border', 'none');
         // get text from p tag
         var description = $(".open").find("p:first").text();
-        console.log(description);
         //empty div
         $(".open").empty();
         // insert text box and buttons
@@ -305,43 +304,7 @@ $(document).ready(function() {
 	});
 	
 	
-	$("#submitText").on("click", function(e) {
-		$("#addTextAlert").hide();
-		e.preventDefault();
 
-		var payload = {};
-		payload["content"] = $("#textBlockText").val();
-		++contentCount;
-		payload["contentOrder"] = contentCount;
-		console.log("Edits");
-		// ------------- creating text content blocks ------------
-		$.ajax({
-		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text?${_csrf.parameterName}=${_csrf.token}" />",
-		    type: 'POST',
-		    data: payload,
-		    success: function(data) {
-		    	var textBlock = $('<div class="valueDiv card card-body"><div class="row"><div class="col"><p>'+payload["content"]+'</p></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;"></div></div></div>');
-				$(textBlock).css({
-					'margin': "10px"
-				});
-				$('#slideSpace').append(textBlock);
-				$(textBlock).attr( 'id', data["textBlock"]);
-				$('#'+data["textBlock"]+ ' #deleteTextId').attr( 'value', data["textBlock"]);
-			},
-			error: function(data) {
-				--contentCount;
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to submit again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.error').append(alert); 
-				$(".error").delay(4000).slideUp(500, function(){
-				    $(".error").empty();
-				});
-				$("#textBlockText").val('');
-			}
-		});
-
-		
-		$("#textBlockText").val('');
-	});
 	
 	// ---------- Delete Text Block -------------
 	
@@ -440,9 +403,8 @@ $(document).ready(function() {
         formData.append('content', $("#textBlockText").val());
         ++contentCount;
         formData.append('contentOrder', contentCount);
-        console.log("This runs");
         $.ajax({
-            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />",
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
             cache       : false,
             contentType : false,
@@ -450,7 +412,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+data+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId"value="${contents.id}><inputclass="btn btn-danger deleteText"type="submit" value="Delete"style="float: right;"></div></div></div>');
+                var textblock = $('<div id="'+data+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="${contents.id}"><input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;"></div></div></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
