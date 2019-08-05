@@ -50,7 +50,8 @@ public class SequenceManagerTest {
     @Test
     public void test_getSequence_idExists() {
         Sequence newSequence = new Sequence();
-        newSequence.setId("sequence1");
+        newSequence.setId("seq1");
+        newSequence.setName("sequence1");
         Optional<Sequence> sequence = Optional.of(newSequence);
         Mockito.when(mockSequenceRepo.findById(newSequence.getId())).thenReturn(sequence);
 
@@ -81,7 +82,6 @@ public class SequenceManagerTest {
         slidesList.get(1).setId("slide2");
             
         Sequence newSequence = new Sequence();
-        newSequence.setId("seq01");
         newSequence.setModule(module);
         newSequence.setName(sequenceForm.getName());
         newSequence.setDescription(sequenceForm.getDescription());
