@@ -19,11 +19,6 @@ public class SequenceFactoryTest {
 
     private SequenceFactory sequenceFactoryToTest = new SequenceFactory();
     
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
-    
     @Test
     public void test_createSequence_success() {
         Module module = new Module();
