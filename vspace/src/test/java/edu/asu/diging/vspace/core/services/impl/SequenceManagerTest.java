@@ -51,13 +51,11 @@ public class SequenceManagerTest {
     public void test_getSequence_idExists() {
         Sequence newSequence = new Sequence();
         newSequence.setId("seq1");
-        newSequence.setName("sequence1");
         Optional<Sequence> sequence = Optional.of(newSequence);
         Mockito.when(mockSequenceRepo.findById(newSequence.getId())).thenReturn(sequence);
 
         ISequence actualSequence = sequenceManagerToTest.getSequence(newSequence.getId());
         Assert.assertEquals(newSequence.getId(), actualSequence.getId());
-        Assert.assertEquals(newSequence.getName(), actualSequence.getName());
     }
     
     @Test
@@ -65,7 +63,7 @@ public class SequenceManagerTest {
         Mockito.when(mockSequenceRepo.findById("a non existing id string")).thenReturn(Optional.empty());
         Assert.assertNull(sequenceManagerToTest.getSequence("a non existing id string"));
     }
-    
+   
     @Test
     public void test_storeSequence_success() {        
         Module module = new Module();
@@ -102,7 +100,6 @@ public class SequenceManagerTest {
         
         ISequence actualSequence = sequenceManagerToTest.storeSequence(module.getId(), sequenceForm);
 
-        Assert.assertNotNull(actualSequence.getId());
         Assert.assertEquals(actualSequence.getId(), newSequence2.getId());
         Assert.assertEquals(actualSequence.getModule().getId(), module.getId());
         Assert.assertEquals(actualSequence.getName(), sequenceForm.getName());
