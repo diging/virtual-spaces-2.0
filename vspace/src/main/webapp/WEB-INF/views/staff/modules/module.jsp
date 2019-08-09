@@ -101,8 +101,8 @@ $(document).ready(function($) {
 				<div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
 					<div align="left" class="card-body">
 						<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
-							<font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
-							<p class="card-text">${sequences.description}</p></font>	
+						<font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
+						<p class="card-text">${sequences.description}</p></font>	
 					</div>
 				</div>
 			</c:forEach>
