@@ -20,10 +20,10 @@ $(document).ready(function($) {
 	
 	$(".sequence").on("click", function(e) {
 		$(".sequence").css({ 'border' : ''});
-		$(this).css("border", "solid deepSkyBlue");	    
-	    var id = $(this.id);	    
-	    var sequenceId = id.selector;
-	    $('#selectedSequence').empty();
+		$(this).css("border", "solid deepSkyBlue");
+		var id = $(this.id);
+		var sequenceId = id.selector;
+		$('#selectedSequence').empty();
 	    
 	    $.ajax({
             type: "GET",
@@ -100,10 +100,9 @@ $(document).ready(function($) {
 			<c:forEach items="${sequences}" var="sequences">
 				<div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
 					<div align="left" class="card-body">
-						<a href="#">
-							<h5 class="card-title">${sequences.name}</h5>
-							<p class="card-text">${sequences.description}</p>
-						</a>
+						<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
+							<font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
+							<p class="card-text">${sequences.description}</p></font>	
 					</div>
 				</div>
 			</c:forEach>
