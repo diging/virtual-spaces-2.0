@@ -102,7 +102,6 @@ public class SequenceManagerTest {
         
         ISequence actualSequence = sequenceManagerToTest.storeSequence(module.getId(), sequenceForm);
 
-        Assert.assertNotNull(actualSequence.getId());
         Assert.assertEquals(actualSequence.getId(), newSequence2.getId());
         Assert.assertEquals(actualSequence.getModule().getId(), module.getId());
         Assert.assertEquals(actualSequence.getName(), sequenceForm.getName());
