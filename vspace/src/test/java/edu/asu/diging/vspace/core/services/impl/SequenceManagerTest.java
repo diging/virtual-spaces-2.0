@@ -63,7 +63,7 @@ public class SequenceManagerTest {
         Mockito.when(mockSequenceRepo.findById("a non existing id string")).thenReturn(Optional.empty());
         Assert.assertNull(sequenceManagerToTest.getSequence("a non existing id string"));
     }
-   
+  
     @Test
     public void test_storeSequence_success() {        
         Module module = new Module();
