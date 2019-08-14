@@ -19,11 +19,10 @@ $(document).ready(function($) {
 	$(".sequence").on("click", function(e) {
 		$(".sequence").css({ 'border' : ''});
 		$(this).css("border", "solid #c1bb88");
-		var id = $(this.id);
-		var sequenceId = id.selector;
+		var sequenceId = this.id;
 		$('#selectedSequence').empty();
-	    
-	    $.ajax({
+		
+		$.ajax({
             type: "GET",
             url: "<c:url value="/staff/module/${module.id}/sequence/"/>" +sequenceId+  "/slides",	
             async: false,
@@ -104,7 +103,6 @@ $(document).ready(function($) {
 					</div>
 				</c:forEach>
 			</div>
-			&nbsp;&nbsp;
 			<div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
 		</div>
 	</div>
