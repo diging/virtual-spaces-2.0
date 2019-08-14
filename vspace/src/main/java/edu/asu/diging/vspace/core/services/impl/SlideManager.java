@@ -46,5 +46,4 @@ public class SlideManager implements ISlideManager {
     public void updateSlide(Slide slide) {
         slideRepo.save((Slide) slide);
     }
-
 }
