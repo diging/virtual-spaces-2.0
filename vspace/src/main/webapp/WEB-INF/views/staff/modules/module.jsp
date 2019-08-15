@@ -71,7 +71,7 @@ $(document).ready(function($) {
 			</div>
 		</div>
 		<div class="col">
-			<div class="card-header sidebar-heading d-flex justify-content-center align-items-center px-3 mt-4 mb-1">
+			<div class="card-header sidebar-heading d-flex align-items-center px-3 mt-4 mb-1">
 				<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES IN
 					SEQUENCE</span> <span id="startSequence"
 					style="float: right; padding-top: 3px;"></span>
