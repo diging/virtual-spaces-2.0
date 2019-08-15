@@ -5,11 +5,16 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 
@@ -22,10 +27,17 @@ public class Sequence extends VSpaceElement implements ISequence {
         parameters = @Parameter(name = "prefix", value = "SEQ"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
+    
+    @OneToOne(targetEntity = Module.class)
+    private IModule module;
 
-    @OneToMany(targetEntity = Slide.class)
+    @ManyToMany(targetEntity = Slide.class)
+    @JoinTable(name="Sequence_Slides",
+    joinColumns = @JoinColumn(name = "Sequence_Id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"))  
+    @OrderColumn(name="slide_order")
     private List<ISlide> slides;
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -33,7 +45,7 @@ public class Sequence extends VSpaceElement implements ISequence {
      */
     @Override
     public String getId() {
-        return id;
+        return id;  
     }
 
     /*
@@ -65,5 +77,20 @@ public class Sequence extends VSpaceElement implements ISequence {
     @Override
     public void setSlides(List<ISlide> slides) {
         this.slides = slides;
+    }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISequence#getModule()
+     */
+    public IModule getModule() {
+        return module;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISequence#setModule(edu.asu.diging.vspace.
+     * core.model.IModule)
+     */
+    public void setModule(IModule module) {
+        this.module = module;
     }
 }
