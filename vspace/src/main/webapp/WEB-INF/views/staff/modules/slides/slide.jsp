@@ -313,18 +313,6 @@ $(document).ready(function() {
            }
        });
     });
-    
-    var divWindow = $(".valueDiv"),
-    $image = $(".imgDiv"),
-    aspectRatio = $image.width() / $image.height();
-    resizeImage();
-    function resizeImage() {
-    	if ((divWindow.width() / divWindow.height()) < aspectRatio) {
-    		$image.css("height", divWindow.height());
-    	} else {
-    		$image.css("width", divWindow.width());
-    	}
-    }
 });
 </script>
 <ol class="breadcrumb">
@@ -395,14 +383,12 @@ $(document).ready(function() {
             <div class="modal-header">
                 <h5 class="modal-title">Add new Text Block</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form name="textForm" id="textUploadForm"
-                enctype="multipart/form-data" method="post"
-            >
+                enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <h6>
                         <small>Enter Text: </small>
@@ -429,29 +415,24 @@ $(document).ready(function() {
             <div class="modal-header">
                 <h5 class="modal-title">Add new Image Block</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form name="photoForm" id="imageUploadForm"
-                enctype="multipart/form-data" method="post"
-            >
+                enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <h6>
                         <small>Upload Image: </small>
                     </h6>
                     <input class="form-control" type="file" name="file"
-                        rows="5" cols="500" id="file"
-                    />
+                        rows="5" cols="500" id="file"/>
                 </div>
                 <div class="modal-footer">
                     <button id="cancelImageBtn" type="reset"
-                        class="btn light"
-                    >Cancel</button>
+                        class="btn light">Cancel</button>
                     <button type="submit" id="uploadImage"
-                        class="btn btn-primary"
-                    >Upload Image</button>
+                        class="btn btn-primary">Upload Image</button>
                 </div>
             </form>
         </div>
@@ -460,17 +441,15 @@ $(document).ready(function() {
 <div id="slideSpace">
     <c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-            <div style="margin: 1%" class="valueDiv">
+            <div style="margin: 1%;" class="valueDiv">
                 <img id="${contents.id}" width="800px" class="imgDiv"
                     style="margin: 1%;"
-                    src="<c:url value="/api/image/${contents.image.id}" />"
-                />
+                    src="<c:url value="/api/image/${contents.image.id}" />"/>
             </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
             <div id="${contents.id}" class="valueDiv card card-body row"
-                style="margin: 10px;"
-            >
+                style="margin: 10px;">
                 <p>${contents.text}</p>
             </div>
         </c:if>
