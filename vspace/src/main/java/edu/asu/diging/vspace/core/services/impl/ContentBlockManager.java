@@ -135,8 +135,19 @@ public class ContentBlockManager implements IContentBlockManager {
         return returnValue;
     }
 
+    /**
+     * Delete a text block using an id
+     * 
+     * @param id - id of resource to be deleted. If the id is null then the
+     *           functions returns nothing.
+     *
+     */
+
     @Override
     public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
         try {
             textBlockRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
@@ -145,8 +156,19 @@ public class ContentBlockManager implements IContentBlockManager {
 
     }
 
+    /**
+     * Delete an image block using an id
+     * 
+     * @param id - id of resource to be deleted. If the id is null then the
+     *           functions returns nothing.
+     *
+     */
+
     @Override
     public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
         try {
             imageBlockRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
