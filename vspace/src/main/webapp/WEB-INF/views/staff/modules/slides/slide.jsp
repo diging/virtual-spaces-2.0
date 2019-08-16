@@ -7,7 +7,6 @@
 var contentCount = ${fn:length(slideContents)};
 
 function createImageBlock(reader) {
-    var imageblock = $('<div class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteImage" type="submit" value="Delete" style="float: right;"></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
     imageblock.find('img').attr('width', '800px');
     return imageblock
@@ -361,7 +360,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+data+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="${contents.id}"><input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;"></div></div></div>');
+                var textblock = $('<div id="'+data+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="${contents.id}"> <a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -631,8 +630,11 @@ $(document).ready(function() {
                             value="${contents.id}"
                         > <input class="btn btn-danger deleteImage"
                             type="submit" value="Delete"
-                            style="float: right;"
+                            
                         >
+                        <a class="btn deleteImage" href="#"
+        				style="float: right;"
+   						 ><i style="color: black;" class="fas fa-trash-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -648,10 +650,10 @@ $(document).ready(function() {
                     <div class="col">
                         <input type="hidden" id="deleteTextId"
                             value="${contents.id}"
-                        > <input class="btn btn-danger deleteText"
-                            type="submit" value="Delete"
-                            style="float: right;"
                         >
+                        <a class="btn deleteText" href="#"
+        				style="float: right;"
+   						 ><i style="color: black;" class="fas fa-trash-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -662,4 +664,5 @@ $(document).ready(function() {
 .hova {
     background-color: #bfb168;
 }
+
 </style>
