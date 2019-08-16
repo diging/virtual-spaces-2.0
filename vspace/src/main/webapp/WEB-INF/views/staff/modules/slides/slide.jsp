@@ -7,6 +7,7 @@
 var contentCount = ${fn:length(slideContents)};
 
 function createImageBlock(reader) {
+	var imageblock = $('<div class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
     imageblock.find('img').attr('width', '800px');
     return imageblock
@@ -628,9 +629,6 @@ $(document).ready(function() {
                     <div class="col">
                         <input type="hidden" id="deleteImageId"
                             value="${contents.id}"
-                        > <input class="btn btn-danger deleteImage"
-                            type="submit" value="Delete"
-                            
                         >
                         <a class="btn deleteImage" href="#"
         				style="float: right;"
