@@ -42,12 +42,13 @@ public class ContentBlockManagerTest {
         managerToTest.deleteTextBlockById(textBlockId);
     }
 
-    @Test(expected = BlockDoesNotExistException.class)
+    @Test
     public void test_deleteTextBlockById_whenIdIsNull() throws BlockDoesNotExistException {
-        Mockito.doThrow(IllegalArgumentException.class).when(textBlockRepo).deleteById(null);
+        String textBlockId = "2";
         managerToTest.deleteTextBlockById(null);
+        Mockito.verify(textBlockRepo, Mockito.never()).deleteById(textBlockId);
     }
-    
+
     @Test
     public void test_deleteImageBlockById_success() throws BlockDoesNotExistException {
         String imageBlockId = "2";
@@ -62,10 +63,12 @@ public class ContentBlockManagerTest {
         managerToTest.deleteImageBlockById(imageBlockId);
     }
 
-    @Test(expected = BlockDoesNotExistException.class)
+    @Test
     public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
-        Mockito.doThrow(IllegalArgumentException.class).when(imageBlockRepo).deleteById(null);
+        String imageBlockId = "2";
         managerToTest.deleteImageBlockById(null);
+        Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
+
     }
 
 }
