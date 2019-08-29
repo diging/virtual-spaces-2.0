@@ -7,10 +7,13 @@
 var contentCount = ${fn:length(slideContents)};
 
 function createImageBlock(reader) {
-    var imageblock = $('<div style="margin: 1%" class="valueDiv"><img style="margin: 1%;" src="#" /></div>');
+    var imageblock = $('<div style="margin: 1%" class="valueDiv"><img style="margin: 1%;" class="imgDiv" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
-    imageblock.find('img').attr('width', '800px');
-    return imageblock
+    //imageblock.find('img').attr('width', '800px');
+/*     var divWindow = $(".valueDiv");
+    $image = $(".imgDiv");
+    resizeImage(); */
+    return imageblock;
 }
 
 function onMouseEnter(e){
@@ -313,6 +316,33 @@ $(document).ready(function() {
            }
        });
     });
+    
+    var divWindow = $(".valueDiv");
+  	$images = $(".imgDiv");
+    
+/*     images.forEach(myFunction); 
+    function myFunction(image, index) 
+    { 
+        console.log(image); 
+    }
+    
+    
+   /*  images.forEach(function(element) {
+    	  console.log(element);
+    	}); */
+     
+    resizeImage();
+    function resizeImage() {
+    	for(var image in $images) {
+    		if (image.width() > divWindow.width()) {
+           		image.css("width", "800px");
+           	} else {
+           		$(".valueDiv").css("width", image.width());
+           	}
+    	}
+   		
+    }
+    
 });
 </script>
 <ol class="breadcrumb">
@@ -442,7 +472,7 @@ $(document).ready(function() {
     <c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
             <div style="margin: 1%;" class="valueDiv">
-                <img id="${contents.id}" width="800px" class="imgDiv"
+                <img id="${contents.id}" class="imgDiv"
                     style="margin: 1%;"
                     src="<c:url value="/api/image/${contents.image.id}" />"/>
             </div>
