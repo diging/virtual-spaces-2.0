@@ -9,10 +9,7 @@ var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv"><img style="margin: 1%;" class="imgDiv" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
-    //imageblock.find('img').attr('width', '800px');
-/*     var divWindow = $(".valueDiv");
-    $image = $(".imgDiv");
-    resizeImage(); */
+    imageblock.find('img').attr('width', '800px');
     return imageblock;
 }
 
@@ -315,34 +312,22 @@ $(document).ready(function() {
                $('.error').append(alert);
            }
        });
-    });
-    
-    var divWindow = $(".valueDiv");
-  	$images = $(".imgDiv");
-    
-/*     images.forEach(myFunction); 
-    function myFunction(image, index) 
-    { 
-        console.log(image); 
-    }
-    
-    
-   /*  images.forEach(function(element) {
-    	  console.log(element);
-    	}); */
-     
-    resizeImage();
-    function resizeImage() {
-    	for(var image in $images) {
-    		if (image.width() > divWindow.width()) {
-           		image.css("width", "800px");
-           	} else {
-           		$(".valueDiv").css("width", image.width());
-           	}
-    	}
-   		
-    }
-    
+    });    
+});
+
+$(window).on('load', function () {
+	var divWindow = $(".valueDiv");
+	var images = $(".imgDiv");
+	resizeImage(images);
+	function resizeImage(images) {
+		for(var i =0; i < images.length; i++) {
+			if (images[i].width > divWindow.width()) {
+				images[i].width = 800;
+			} else {
+				$(".valueDiv").css("width", images[i].width);
+			}
+		}
+	}
 });
 </script>
 <ol class="breadcrumb">
