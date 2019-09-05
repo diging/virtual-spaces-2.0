@@ -39,5 +39,5 @@ public class AddSequenceController {
         sequenceManager.storeSequence(moduleId, sequenceForm); 
 
         return "redirect:/staff/module/{moduleId}";
-    }
+    }    
 }
