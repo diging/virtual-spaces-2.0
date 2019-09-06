@@ -1,28 +1,63 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link href="<c:url value="/resources/multiselect/css/multiselect.css" />" rel="stylesheet">
+<script src="<c:url value="/resources/multiselect/js/multiselect.min.js" />" ></script>
 
 <script>
 //# sourceURL=click.js
 $(document).ready(function(){
-		$('select[name="slideType"]').change(function(){
-		    if ($(this).val() == "branchingPoint"){
-		    	$('#choices').show();	
-		    	
-				$.ajax({
-					type: "GET",
-					url: "<c:url value="/staff/module/${moduleId}/sequences"/>",
-					async: false,
-					success: function(response) {
-						console.log(response);
-					    $.each(response, function (index, sequence) {
-							$('#selectSequence').append(''+
-									'<option value="${sequence.id}">'+sequence.name+'</option>'+'');
-							});
-						}
-				});
-		     }        
-		});
+	var vals = []
+	var choices = []
+		
+	$('select[name="slideType"]').change(function(){
+	    if ($(this).val() == "branchingPoint"){
+	    	$('#choices').show();
+	    	console.log("before multiselect");
+	    	$('#selectSequence').multiSelect({		    		
+	    		dblClick : true,
+	    		afterInit : function(container) {
+	    			$("#selectSequence").find("option").each(function() {
+	    				vals.push($(this).val());
+	    				console.log("sdgdgs");
+	    			});
+	    			$(".ms-selection ul").find("li").each(function(index) {
+	    				console.log("hi");
+	    				$(this).attr('value', vals[index]);
+	    			});
+	    		},
+	    		afterSelect : function(value) {
+	    			choices = [];
+	    			$('.ms-selection ul li.ms-selected').each(function(index, value) {
+	    				choices.push($(this).attr('value'));					
+	    			});
+	    			$("#choices").val(choices);
+	    		},
+	    		afterDeselect : function(value, text) {
+	    			for (var i=choices.length-1; i>=0; i--) {
+	    				if (String(choices[i]) === String(value)) {
+	    					choices.splice(i, 1);
+	    					break;
+	    	    		}
+	    			}
+	    			$("#choices").val(choices); 
+	    		}
+	        });
+	    	
+			$.ajax({
+				type: "GET",
+				url: "<c:url value="/staff/module/${moduleId}/sequences"/>",
+				async: false,
+				success: function(response) {
+					console.log(response);
+				    $.each(response, function (index, sequence) {
+						$('#selectSequence').append(''+
+								'<option value='+sequence.id+' id='+sequence.id+'>'+sequence.name+'</option>'+'');
+						});
+					}
+			});
+	     }        
+	});
 });
 </script>
 <h1>Add new Slide</h1>
@@ -48,13 +83,10 @@ $(document).ready(function(){
  </div>
   
  <div class="form-group row" id="choices" style="display:none;">
-    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>
-    <form id="selectSequenceForm" action="<c:url value="/staff/module/" />${moduleId}?${_csrf.parameterName}=${_csrf.token}" method="post">
-    	<input type="hidden" name="imageID" value="${image.id}" id="imageID" />
-    		<select id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
-    			<option>Select Sequences</option>				
+    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>	
+    		<select id="selectSequence" name="selectSequence" multiple="multiple" class="form-control form-control-sm" style="width: 68px;">			
             </select>
-    </form>
+            <form:input type="hidden" id="choices" path="choices"></form:input>
  </div> 
    
  <div class="form-group row">
