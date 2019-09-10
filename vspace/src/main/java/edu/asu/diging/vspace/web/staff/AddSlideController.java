@@ -28,6 +28,7 @@ public class AddSlideController {
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("slide", new SlideForm());
+        model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
         
         return "staff/module/slide/add";
     }
@@ -37,8 +38,8 @@ public class AddSlideController {
             Principal principal) {
 
         IModule module = moduleManager.getModule(moduleId);
-        if(slideForm.getType().equals("slide"))
-            slideManager.createSlide(module, slideForm);
+        if(slideForm.getSlideType().equals("slide"))
+            slideManager.createSlide(module, slideForm);           
         else
             slideManager.createBranchingPoint(module, slideForm);
         

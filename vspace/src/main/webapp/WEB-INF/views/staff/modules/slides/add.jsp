@@ -19,11 +19,10 @@ $(document).ready(function(){
 	    		afterInit : function(container) {
 	    			$("#selectSequence").find("option").each(function() {
 	    				vals.push($(this).val());
-	    				console.log("sdgdgs");
 	    			});
 	    			$(".ms-selection ul").find("li").each(function(index) {
-	    				console.log("hi");
 	    				$(this).attr('value', vals[index]);
+	    				console.log("check");
 	    			});
 	    		},
 	    		afterSelect : function(value) {
@@ -55,7 +54,7 @@ $(document).ready(function(){
 								'<option value='+sequence.id+' id='+sequence.id+'>'+sequence.name+'</option>'+'');
 						});
 					}
-			});
+			}); 
 	     }        
 	});
 });
@@ -79,13 +78,17 @@ $(document).ready(function(){
              <option value="slide">Slide</option>
              <option value="branchingPoint">Branching Point</option>
          </select>   
+         <form:input type="hidden" id="slideType" path="slideType"></form:input>
          </div>
  </div>
   
  <div class="form-group row" id="choices" style="display:none;">
     <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>	
-    		<select id="selectSequence" name="selectSequence" multiple="multiple" class="form-control form-control-sm" style="width: 68px;">			
-            </select>
+            <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
+				<c:forEach items="${sequences}" var="sequence">
+					<option value='${sequence.id}' id="${sequence.id}">${sequence.name}</option>
+			</c:forEach>
+			</select>
             <form:input type="hidden" id="choices" path="choices"></form:input>
  </div> 
    

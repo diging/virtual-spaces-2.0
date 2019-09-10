@@ -21,7 +21,7 @@ public class Choice extends VSpaceElement implements IChoice {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne(targetEntity = Sequence.class)
+    @OneToOne(targetEntity = Slide.class)
     private ISequence sequence;
 
     /*

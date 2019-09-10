@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -42,13 +43,15 @@ public class SlideFactory implements ISlideFactory {
      * String, java.lang.String)
      */
     @Override
-    public IBranchingPoint createBranchingPoint(IModule moduleId, SlideForm form) {
+    public IBranchingPoint createBranchingPoint(IModule moduleId, SlideForm form, List<IChoice> choices) {
         IBranchingPoint branchingPoint = new BranchingPoint();
+        //IChoice choices = new Choice();
         branchingPoint.setName(form.getName());
         branchingPoint.setDescription(form.getDescription());
         branchingPoint.setModule(moduleId);
         branchingPoint.setContents(new ArrayList<IContentBlock>());
-        branchingPoint.setChoices(new ArrayList<IChoice>());
+        branchingPoint.setChoices(choices);
+        //branchingPoint.setChoices(form.getChoices());
         return branchingPoint;
     }    
     

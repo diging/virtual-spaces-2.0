@@ -1,32 +1,43 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
+import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
 public class SlideManager implements ISlideManager {
+    
+    @Autowired
+    private SequenceManager sequenceManager;
 
+    @Autowired
+    private SlideFactory slideFactory;
+ 
+    @Autowired
+    private SlideRepository slideRepo;
+    
     @Autowired
     private BranchingPointRepository bpointRepo;
     
     @Autowired
-    private SlideRepository slideRepo;
-
-    @Autowired
-    private SlideFactory slideFactory;
+    private ChoiceRepository choiceRepo;
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm) {
@@ -37,8 +48,16 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm) {
-        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm);        
-        bpointRepo.save((BranchingPoint) branchingPoint);        
+        List<IChoice> choices = new ArrayList<IChoice>();
+        System.out.println("saving???--------------");
+        for(String choiceId: slideForm.getChoices()) {
+            IChoice choice = new Choice();
+            choice.setSequence(sequenceManager.getSequence(choiceId));
+            
+            choiceRepo.save((Choice) choice);
+        }
+        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm, choices);        
+        bpointRepo.save((BranchingPoint) branchingPoint);  
         return branchingPoint;
     }
 
