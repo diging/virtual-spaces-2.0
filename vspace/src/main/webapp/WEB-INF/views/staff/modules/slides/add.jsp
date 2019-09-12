@@ -12,8 +12,8 @@ $(document).ready(function(){
 		
 	$('select[name="slideType"]').change(function(){
 	    if ($(this).val() == "branchingPoint"){
-	    	$('#choices').show();
-	    	console.log("before multiselect");
+	    	$('#sequences').show();
+
 	    	$('#selectSequence').multiSelect({		    		
 	    		dblClick : true,
 	    		afterInit : function(container) {
@@ -22,7 +22,6 @@ $(document).ready(function(){
 	    			});
 	    			$(".ms-selection ul").find("li").each(function(index) {
 	    				$(this).attr('value', vals[index]);
-	    				console.log("check");
 	    			});
 	    		},
 	    		afterSelect : function(value) {
@@ -31,6 +30,7 @@ $(document).ready(function(){
 	    				choices.push($(this).attr('value'));					
 	    			});
 	    			$("#choices").val(choices);
+	    			//console.log($("#choices").value);
 	    		},
 	    		afterDeselect : function(value, text) {
 	    			for (var i=choices.length-1; i>=0; i--) {
@@ -41,20 +41,9 @@ $(document).ready(function(){
 	    			}
 	    			$("#choices").val(choices); 
 	    		}
-	        });
-	    	
-			$.ajax({
-				type: "GET",
-				url: "<c:url value="/staff/module/${moduleId}/sequences"/>",
-				async: false,
-				success: function(response) {
-					console.log(response);
-				    $.each(response, function (index, sequence) {
-						$('#selectSequence').append(''+
-								'<option value='+sequence.id+' id='+sequence.id+'>'+sequence.name+'</option>'+'');
-						});
-					}
-			}); 
+	        });	    				
+	     } else {
+	    	 $('#sequences').hide();
 	     }        
 	});
 });
@@ -82,12 +71,12 @@ $(document).ready(function(){
          </div>
  </div>
   
- <div class="form-group row" id="choices" style="display:none;">
+ <div class="form-group row" id="sequences" style="display:none;">
     <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>	
             <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
-				<c:forEach items="${sequences}" var="sequence">
+				 <c:forEach items="${sequences}" var="sequence">
 					<option value='${sequence.id}' id="${sequence.id}">${sequence.name}</option>
-			</c:forEach>
+				 </c:forEach> 
 			</select>
             <form:input type="hidden" id="choices" path="choices"></form:input>
  </div> 

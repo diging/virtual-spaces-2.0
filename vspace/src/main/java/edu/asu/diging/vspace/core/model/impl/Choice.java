@@ -1,13 +1,17 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
 
@@ -23,6 +27,9 @@ public class Choice extends VSpaceElement implements IChoice {
 
     @OneToOne(targetEntity = Slide.class)
     private ISequence sequence;
+    
+    @ManyToMany(mappedBy = "choices", targetEntity = BranchingPoint.class)
+    private List<IBranchingPoint> bpoint;
 
     /*
      * (non-Javadoc)

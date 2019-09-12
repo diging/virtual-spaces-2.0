@@ -72,8 +72,7 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * edu.asu.diging.vspace.core.services.impl.IContentBlock#createTextBlock(java.
+     * @see edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
      * lang.String, java.lang.String)
      */
     @Override

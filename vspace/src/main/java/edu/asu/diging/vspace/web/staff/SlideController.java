@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.services.impl.ContentBlockManager;
 import edu.asu.diging.vspace.core.services.impl.ModuleManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
@@ -27,10 +28,13 @@ public class SlideController {
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
-
+        
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slideManager.getSlide(id));
         model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(id));
+        System.out.println("-------------------------");
+        System.out.println(((IBranchingPoint) slideManager.getSlide(id)).getChoices());
+        model.addAttribute("choices", ((IBranchingPoint) slideManager.getSlide(id)).getChoices());
 
         return "staff/module/slide/contents";
     }

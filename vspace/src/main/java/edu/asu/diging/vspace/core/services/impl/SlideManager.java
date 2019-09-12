@@ -49,11 +49,9 @@ public class SlideManager implements ISlideManager {
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm) {
         List<IChoice> choices = new ArrayList<IChoice>();
-        System.out.println("saving???--------------");
         for(String choiceId: slideForm.getChoices()) {
             IChoice choice = new Choice();
-            choice.setSequence(sequenceManager.getSequence(choiceId));
-            
+            choice.setSequence(sequenceManager.getSequence(choiceId));            
             choiceRepo.save((Choice) choice);
         }
         IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm, choices);        

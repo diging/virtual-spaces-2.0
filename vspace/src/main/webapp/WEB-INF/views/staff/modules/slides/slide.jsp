@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
@@ -212,6 +213,10 @@ $(document).ready(function() {
         $("#addImgAlert").show();
       });
     
+    $("#addChoice").click(function() {
+        $("#addChoiceAlert").show();
+      });
+    
     $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
@@ -221,6 +226,11 @@ $(document).ready(function() {
     $("#cancelSubmitText").click(function() {
         $("#addTextAlert").hide();	
     });
+    
+    $("#cancelSubmitChoice").click(function() {
+        $("#addChoiceAlert").hide();	
+    });
+    
     
     $("#cancelImageBtn").click(function() {
         $("#image1").remove();
@@ -263,8 +273,15 @@ $(document).ready(function() {
         });
         $("#textBlockText").val('')
     });
+    
+    $("#submitChoices").on("click", function(e) {
+    	alert("submitted choices");
+    });
+
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();
+    $("#addChoiceAlert").draggable();
+    
     
     // ------------- edit text block ----------------
     
@@ -364,9 +381,9 @@ $(document).ready(function() {
     >Cancel</button>
 </div>
 <div id="choiceSpace">
-	<c:forEach items="${slides}" var="silde">
-		<p>Hii</p>
-    </c:forEach>
+	<c:forEach items="${choices}" var="choice">
+                	<p>${choice.name}</p>
+                	</c:forEach>
 </div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="dropdown">
@@ -376,8 +393,8 @@ $(document).ready(function() {
         >Add content</button>
          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a id="addText" class="dropdown-item" href="#">Add Text</a>
-            <a id="addImage" class="dropdown-item" href="#">Add
-                Image</a>
+            <a id="addImage" class="dropdown-item" href="#">Add Image</a>
+            <a id="addChoice" class="dropdown-item" href="#">Add Choice</a>    
         </div>
         <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
     </div>
@@ -394,8 +411,7 @@ $(document).ready(function() {
                 </button>
             </div>
             <form name="textForm" id="textUploadForm"
-                enctype="multipart/form-data" method="post"
-            >
+                enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <h6>
                         <small>Enter Text: </small>
@@ -445,6 +461,41 @@ $(document).ready(function() {
                     <button type="submit" id="uploadImage"
                         class="btn btn-primary"
                     >Upload Image</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select from the Choices</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="choiceForm" id="choiceForm"
+                enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <input id="cheese" type="checkbox" name="ingredients[]" value="Cheese" />
+					<label for="cheese">Cheese</label><br/>
+					<input id="olives" type="checkbox" name="ingredients[]" value="Olives" />
+					<label for="olives">Olives</label><br />
+					<input id="pepperoni" type="checkbox" name="ingredients[]" value="Pepperoni" />
+					<label for="pepperoni">Pepperoni</label><br />
+					<input id="anchovies" type="checkbox" name="ingredients[]" value="Anchovies" />
+					<label for="anchovies">Anchovies</label>
+				</div>
+                <div class="modal-footer">
+                    <button id="cancelSubmitChoice" type="reset"
+                        class="btn light"
+                    >Cancel</button>
+                    <button type="submit" id="submitChoices"
+                        class="btn btn-primary"
+                    >Submit</button>
                 </div>
             </form>
         </div>
