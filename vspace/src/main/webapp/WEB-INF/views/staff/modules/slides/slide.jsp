@@ -9,7 +9,7 @@ var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv"><img style="margin: 1%;" class="imgDiv" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
-    imageblock.find('img').attr('width', '800px');
+    imageblock.find('valueDiv').attr('width', '800px');
     return imageblock;
 }
 
@@ -29,11 +29,11 @@ function onMouseLeave(e) {
 }
 
 function onDoubleClick(e){
-    // get the id of the nearest div with id valueDiv
-    var blockId = $(e.target).closest('div').attr('id');
-    $(e.target).closest('.valueDiv').addClass("open");
-    // if there is a block id we know its text block otherwise its an image block
-    if(blockId){
+    // get to the nearest divs class attribute
+    var divName = $(e.target).closest('div').attr('class');
+    //if the div is a text content block 
+    if(divName.includes("textDiv")){
+    	$(e.target).closest('.textDiv').addClass("open");
         //remove card border
         $(".open").css('border', 'none');
         // get text from p tag
@@ -43,7 +43,7 @@ function onDoubleClick(e){
         $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
         $(".open").children("p:first").remove();
         // unbind events to prevent multiple instances of buttons and constant highlighting
-        $('.valueDiv').unbind('mouseenter mouseleave dblclick');
+        $('.textDiv').unbind('mouseenter mouseleave dblclick');
         // remove highlighting if present
         $(this).removeClass("hova");
     } else {
@@ -277,7 +277,7 @@ $(document).ready(function() {
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
-        $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
     }
@@ -289,6 +289,7 @@ $(document).ready(function() {
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $(document).on('click','#submitTextBlock',function(){
        var formData = new FormData();
@@ -319,6 +320,7 @@ $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
 	var images = $(".imgDiv");
 	resizeImage(images);
+	
 	function resizeImage(images) {
 		for(var i =0; i < images.length; i++) {
 			if (images[i].width > divWindow.width()) {
@@ -463,7 +465,7 @@ $(window).on('load', function () {
             </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-            <div id="${contents.id}" class="valueDiv card card-body row"
+            <div id="${contents.id}" class="textDiv card card-body row"
                 style="margin: 10px;">
                 <p>${contents.text}</p>
             </div>
