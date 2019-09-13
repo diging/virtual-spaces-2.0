@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,7 +29,7 @@ public class Choice extends VSpaceElement implements IChoice {
     @OneToOne(targetEntity = Slide.class)
     private ISequence sequence;
     
-    @ManyToMany(mappedBy = "choices", targetEntity = BranchingPoint.class)
+    @ManyToMany(mappedBy = "choices", targetEntity = BranchingPoint.class, cascade=CascadeType.ALL)
     private List<IBranchingPoint> bpoint;
 
     /*
