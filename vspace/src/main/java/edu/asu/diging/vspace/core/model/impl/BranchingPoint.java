@@ -2,12 +2,9 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -16,10 +13,7 @@ import edu.asu.diging.vspace.core.model.IChoice;
 @DiscriminatorValue("BranchingPoint")
 public class BranchingPoint extends Slide implements IBranchingPoint {
 
-    @ManyToMany(cascade=CascadeType.ALL, targetEntity = Choice.class)
-    @JoinTable(name="BranchingPoint_Choices",
-            joinColumns = @JoinColumn(name = "branchingPoint_id", referencedColumnName="id") ,
-            inverseJoinColumns = @JoinColumn(name = "choice_id", referencedColumnName="id"))
+    @OneToMany(targetEntity = Choice.class)
     private List<IChoice> choices;
     
     /*

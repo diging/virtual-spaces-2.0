@@ -1,12 +1,10 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -15,6 +13,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
 public class Choice extends VSpaceElement implements IChoice {
@@ -26,11 +25,12 @@ public class Choice extends VSpaceElement implements IChoice {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne(targetEntity = Slide.class)
+    @OneToOne(targetEntity = Sequence.class)
     private ISequence sequence;
-    
-    @ManyToMany(mappedBy = "choices", targetEntity = BranchingPoint.class, cascade=CascadeType.ALL)
-    private List<IBranchingPoint> bpoint;
+
+    @ManyToOne(targetEntity = Slide.class)
+    //@JoinColumn(name="Branchingpoint_id")
+    private ISlide bpoint;
 
     /*
      * (non-Javadoc)
@@ -72,5 +72,13 @@ public class Choice extends VSpaceElement implements IChoice {
     @Override
     public void setSequence(ISequence sequence) {
         this.sequence = sequence;
+    }
+
+    public ISlide getBpoint() {
+        return bpoint;
+    }
+
+    public void setBpoint(ISlide bpoint) {
+        this.bpoint = bpoint;
     }
 }
