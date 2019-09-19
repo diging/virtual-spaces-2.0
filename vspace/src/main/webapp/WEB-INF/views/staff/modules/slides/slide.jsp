@@ -6,10 +6,11 @@
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
 
-function createImageBlock(reader) {
-    var imageblock = $('<div style="margin: 1%" class="valueDiv"><img style="margin: 1%;" class="imgDiv" src="#" /></div>');
+function createImageBlock(reader, width) {
+    var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
-    imageblock.find('valueDiv').attr('width', '800px');
+    if(width > 800)
+    	imageblock.find('img').attr('width', '800px');
     return imageblock;
 }
 
@@ -68,10 +69,14 @@ function uploadImage() {
        
     } else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-        reader.onload = function () {
-            imageblock = createImageBlock(reader);
-            $('#slideSpace').append(imageblock);
-            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        reader.onload = function (theFile) {        	
+        	var image = new Image();
+            image.src = theFile.target.result;
+            image.onload = function() {
+            	imageblock = createImageBlock(reader, this.width);
+            	$('#slideSpace').append(imageblock);            
+                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            };          
         }
         ++contentCount;
     }
