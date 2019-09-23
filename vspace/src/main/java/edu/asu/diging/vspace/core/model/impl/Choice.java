@@ -3,7 +3,6 @@ package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -13,7 +12,6 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
-import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
 public class Choice extends VSpaceElement implements IChoice {
@@ -28,9 +26,8 @@ public class Choice extends VSpaceElement implements IChoice {
     @OneToOne(targetEntity = Sequence.class)
     private ISequence sequence;
 
-    @ManyToOne(targetEntity = Slide.class)
-    //@JoinColumn(name="Branchingpoint_id")
-    private ISlide bpoint;
+    @ManyToOne(targetEntity = BranchingPoint.class)
+    private IBranchingPoint branchingPoint;
 
     /*
      * (non-Javadoc)
@@ -74,11 +71,26 @@ public class Choice extends VSpaceElement implements IChoice {
         this.sequence = sequence;
     }
 
-    public ISlide getBpoint() {
-        return bpoint;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IChoice#getBranchingPoint()
+     */
+    @Override
+    public IBranchingPoint getBranchingPoint() {
+        return branchingPoint;
     }
 
-    public void setBpoint(ISlide bpoint) {
-        this.bpoint = bpoint;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IChoice#setBranchingPoint(edu.asu.diging.
+     * vspace.core.model.IBranchingPoint)
+     */
+    @Override
+    public void setBranchingPoint(IBranchingPoint bpoint) {
+        this.branchingPoint = bpoint;
     }
 }

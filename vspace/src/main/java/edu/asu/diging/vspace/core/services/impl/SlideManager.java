@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -38,6 +37,7 @@ public class SlideManager implements ISlideManager {
     
     @Autowired
     private ChoiceRepository choiceRepo;
+ 
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm) {
@@ -48,14 +48,12 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm) {
-        List<IChoice> choices = new ArrayList<IChoice>();
-        for(String choiceId: slideForm.getChoices()) {
-            IChoice choice = new Choice();
-            choice.setSequence(sequenceManager.getSequence(choiceId));            
+        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm);        
+        bpointRepo.save((BranchingPoint) branchingPoint);
+        for(IChoice choice: branchingPoint.getChoices()) {
+            choice.setBranchingPoint(branchingPoint);
             choiceRepo.save((Choice) choice);
         }
-        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm, choices);        
-        bpointRepo.save((BranchingPoint) branchingPoint);  
         return branchingPoint;
     }
 

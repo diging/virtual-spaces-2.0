@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
@@ -28,7 +29,7 @@ public class Sequence extends VSpaceElement implements ISequence {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
-    @OneToOne(targetEntity = Module.class)
+    @ManyToOne(targetEntity = Module.class)
     private IModule module;
 
     @ManyToMany(targetEntity = Slide.class)

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.impl.ContentBlockManager;
 import edu.asu.diging.vspace.core.services.impl.ModuleManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
@@ -34,7 +36,8 @@ public class SlideController {
         model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(id));
         System.out.println("-------------------------");
         System.out.println(((IBranchingPoint) slideManager.getSlide(id)).getChoices());
-        model.addAttribute("choices", ((IBranchingPoint) slideManager.getSlide(id)).getChoices());
+        if(slideManager.getSlide(id).getClass() == BranchingPoint.class )
+            model.addAttribute("choices", ((IBranchingPoint)slideManager.getSlide(id)).getChoices());
 
         return "staff/module/slide/contents";
     }

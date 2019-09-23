@@ -3,8 +3,10 @@ package edu.asu.diging.vspace.core.factory.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.factory.ISlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -17,6 +19,9 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
 public class SlideFactory implements ISlideFactory {
+    
+    @Autowired
+    private IChoiceFactory choiceFactory;
 
     /*
      * (non-Javadoc)
@@ -43,15 +48,15 @@ public class SlideFactory implements ISlideFactory {
      * String, java.lang.String)
      */
     @Override
-    public IBranchingPoint createBranchingPoint(IModule moduleId, SlideForm form, List<IChoice> choices) {
+    public IBranchingPoint createBranchingPoint(IModule moduleId, SlideForm form) {
         IBranchingPoint branchingPoint = new BranchingPoint();
-        //IChoice choices = new Choice();
         branchingPoint.setName(form.getName());
         branchingPoint.setDescription(form.getDescription());
         branchingPoint.setModule(moduleId);
         branchingPoint.setContents(new ArrayList<IContentBlock>());
+       
+        List<IChoice> choices = choiceFactory.createChoices(form.getChoices(), branchingPoint);
         branchingPoint.setChoices(choices);
-        //branchingPoint.setChoices(form.getChoices());
         return branchingPoint;
     }    
     
