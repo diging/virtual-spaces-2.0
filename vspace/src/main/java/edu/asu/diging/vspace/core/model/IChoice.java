@@ -6,7 +6,7 @@ public interface IChoice extends IVSpaceElement {
 
     void setSequence(ISequence link);
     
-    IBranchingPoint getBranchingPoint();
-    
-    void setBranchingPoint(IBranchingPoint bpoint);
+//    IBranchingPoint getBranchingPoint();
+//    
+//    void setBranchingPoint(IBranchingPoint bpoint);
 }

@@ -2,18 +2,18 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 
 @Entity
-@DiscriminatorValue("BranchingPoint")
 public class BranchingPoint extends Slide implements IBranchingPoint {
 
     @OneToMany(targetEntity = Choice.class)
+    @JoinTable(name="BranchingPoint_choices")
     private List<IChoice> choices;
     
     /*

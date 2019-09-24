@@ -17,8 +17,8 @@ public class SequenceFactory implements ISequenceFactory{
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.factory.impl.IImageFactory#createImage(java.lang.
-     * String, java.lang.String)
+     * edu.asu.diging.vspace.core.factory.impl.IImageFactory#createImage(edu.asu.diging.vspace.core.model.IModule,
+     * edu.asu.diging.vspace.web.staff.forms.SequenceForm, java.util.list<edu.asu.diging.vspace.core.model.ISlide>)
      */
     @Override
     public ISequence createSequence(IModule module, SequenceForm sequenceForm, List<ISlide> slides) {

@@ -22,9 +22,6 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
 public class SlideManager implements ISlideManager {
-    
-    @Autowired
-    private SequenceManager sequenceManager;
 
     @Autowired
     private SlideFactory slideFactory;
@@ -48,12 +45,11 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm) {
-        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm);        
-        bpointRepo.save((BranchingPoint) branchingPoint);
+        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm); 
         for(IChoice choice: branchingPoint.getChoices()) {
-            choice.setBranchingPoint(branchingPoint);
-            choiceRepo.save((Choice) choice);
-        }
+            choiceRepo.save((Choice)choice);
+        }           
+        bpointRepo.save((BranchingPoint) branchingPoint);        
         return branchingPoint;
     }
 

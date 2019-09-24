@@ -25,7 +25,7 @@ public class ChoiceFactory implements IChoiceFactory{
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createChoices()
+     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createChoices(java.util.List<java.lang.String>, edu.asu.diging.vspace.core.model.IBranchingPoint)
      */
     @Override
     public List<IChoice> createChoices(List<String> choices, IBranchingPoint branchingPoint) {
@@ -33,7 +33,7 @@ public class ChoiceFactory implements IChoiceFactory{
         for(String choiceId: choices) {
             IChoice choice = new Choice();
             choice.setSequence(sequenceManager.getSequence(choiceId));  
-            choiceRepo.save((Choice) choice);
+            //choiceRepo.save((Choice) choice);
             choiceList.add(choice);
         }
             return choiceList;        

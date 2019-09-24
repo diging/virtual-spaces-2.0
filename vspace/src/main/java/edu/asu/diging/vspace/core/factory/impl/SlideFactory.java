@@ -27,16 +27,15 @@ public class SlideFactory implements ISlideFactory {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createSlide(java.lang.
-     * String, java.lang.String)
+     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createSlide(edu.asu.diging.vspace.core.model.IModule, edu.asu.diging.vspace.web.staff.forms.SlideForm)
      */
     @Override
     public ISlide createSlide(IModule module, SlideForm form) {
             ISlide slide = new Slide();        
-            slide.setContents(new ArrayList<IContentBlock>());
             slide.setName(form.getName());
             slide.setDescription(form.getDescription());
             slide.setModule(module);
+            slide.setContents(new ArrayList<IContentBlock>());
             return slide;        
     }
     
@@ -44,15 +43,14 @@ public class SlideFactory implements ISlideFactory {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createBranchingPoint(java.lang.
-     * String, java.lang.String)
+     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createBranchingPoint(edu.asu.diging.vspace.core.model.IModule, edu.asu.diging.vspace.web.staff.forms.SlideForm)
      */
     @Override
-    public IBranchingPoint createBranchingPoint(IModule moduleId, SlideForm form) {
+    public IBranchingPoint createBranchingPoint(IModule module, SlideForm form) {
         IBranchingPoint branchingPoint = new BranchingPoint();
         branchingPoint.setName(form.getName());
         branchingPoint.setDescription(form.getDescription());
-        branchingPoint.setModule(moduleId);
+        branchingPoint.setModule(module);
         branchingPoint.setContents(new ArrayList<IContentBlock>());
        
         List<IChoice> choices = choiceFactory.createChoices(form.getChoices(), branchingPoint);

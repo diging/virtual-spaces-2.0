@@ -380,11 +380,7 @@ $(document).ready(function() {
         class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;"
     >Cancel</button>
 </div>
-<div id="choiceSpace">
-	<c:forEach items="${choices}" var="choice">
-                	<p>${choice.name}</p>
-                	</c:forEach>
-</div>
+
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button"

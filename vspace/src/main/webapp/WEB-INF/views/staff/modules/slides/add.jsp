@@ -30,7 +30,6 @@ $(document).ready(function(){
 	    				choices.push($(this).attr('value'));					
 	    			});
 	    			$("#choices").val(choices);
-	    			//console.log($("#choices").value);
 	    		},
 	    		afterDeselect : function(value, text) {
 	    			for (var i=choices.length-1; i>=0; i--) {
