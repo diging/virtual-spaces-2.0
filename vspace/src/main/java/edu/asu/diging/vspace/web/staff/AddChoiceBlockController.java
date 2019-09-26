@@ -21,7 +21,7 @@ public class AddChoiceBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choicecontent", method = RequestMethod.POST)
-    public ResponseEntity<String> addChoiceBlock(@PathVariable("id") String slideId,
+    public ResponseEntity<Sequence> addChoiceBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 

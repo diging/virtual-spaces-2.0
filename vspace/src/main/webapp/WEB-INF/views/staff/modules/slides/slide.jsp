@@ -301,12 +301,13 @@ $(document).ready(function() {
             enctype: 'multipart/form-data',
             success: function(data) {
             	alert("success");
-                /* var choiceblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+text+'</p></div>');
-                $(textblock).css({
+            	console.log(data.sequence);
+                var choiceblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+data+'</p></div>');
+                $(choiceblock).css({
                     'margin': "10px"
                 });
-                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(textblock); */
+                //$(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('#slideSpace').append(choiceblock);  
                
             },
             error: function(data) {
