@@ -10,37 +10,57 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Transactional
 @Service
 public class ContentBlockManager implements IContentBlockManager {
+    
+    @Autowired
+    private ISlideManager slideManager;
+    
+    @Autowired
+    private ISequenceManager sequenceManager;
+    
+    @Autowired
+    private IImageFactory imageFactory;
 
     @Autowired
     private ITextBlockFactory textBlockFactory;
 
     @Autowired
     private IImageBlockFactory imageBlockFactory;
-
+    
     @Autowired
-    private SlideManager slideManager;
+    private IChoiceBlockFactory choiceBlockFactory;
+
+
+    
+    @Autowired
+    private ImageRepository imageRepo;
 
     @Autowired
     private TextContentBlockRepository textBlockRepo;
@@ -49,10 +69,7 @@ public class ContentBlockManager implements IContentBlockManager {
     private ImageContentBlockRepository imageBlockRepo;
 
     @Autowired
-    private IImageFactory imageFactory;
-
-    @Autowired
-    private ImageRepository imageRepo;
+    private ChoiceContentBlockRepository choiceBlockRepo;
 
     @Autowired
     private IStorageEngine storage;
@@ -163,4 +180,20 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
+     * lang.String, java.util.list<java.lang.String>, java.lang.Integer)
+     */
+    @Override
+    public IChoiceBlock createChoiceBlock(String slideId, String choiceId, Integer contentOrder) {
+
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder);
+        choiceBlock.setSequence(sequenceManager.getSequence(choiceId));
+        choiceBlock = choiceBlockRepo.save((ChoiceBlock)choiceBlock);
+        return choiceBlock;
+    }
+    
 }

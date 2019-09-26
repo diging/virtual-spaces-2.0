@@ -33,7 +33,6 @@ public class ChoiceFactory implements IChoiceFactory{
         for(String choiceId: choices) {
             IChoice choice = new Choice();
             choice.setSequence(sequenceManager.getSequence(choiceId));  
-            //choiceRepo.save((Choice) choice);
             choiceList.add(choice);
         }
             return choiceList;        

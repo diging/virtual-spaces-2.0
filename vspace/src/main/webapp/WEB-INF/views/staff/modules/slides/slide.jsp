@@ -99,7 +99,7 @@ function uploadImage() {
         	$(".open").removeClass("open");
         }
     });
-} 
+}
     
 $(document).ready(function() {
     //-------- edit description --------
@@ -222,7 +222,7 @@ $(document).ready(function() {
             $("#addImgAlert").hide();
             uploadImage();
       });
-    
+  
     $("#cancelSubmitText").click(function() {
         $("#addTextAlert").hide();	
     });
@@ -275,7 +275,47 @@ $(document).ready(function() {
     });
     
     $("#submitChoices").on("click", function(e) {
-    	alert("submitted choices");
+        e.preventDefault();
+        $("#addChoiceAlert").hide();
+        var allchoiceVals = [];
+        $('#choiceDiv :checked').each(function() {
+        	allchoiceVals.push($(this).attr("id"));
+          });
+          console.log(allchoiceVals);
+
+        // ------------- creating choice content blocks ------------
+        
+        var formData = new FormData();
+        //var text = $("#textBlockText").val()
+        formData.append('content', allchoiceVals);
+        ++contentCount;
+        formData.append('contentOrder', contentCount);
+        
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choicecontent?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+            	alert("success");
+                /* var choiceblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+text+'</p></div>');
+                $(textblock).css({
+                    'margin': "10px"
+                });
+                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('#slideSpace').append(textblock); */
+               
+            },
+            error: function(data) {
+                /* var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert); */
+                alert("error");
+            }
+        });
+        $("#textBlockText").val('')
     });
 
     $("#addImgAlert").draggable();
@@ -363,6 +403,11 @@ $(document).ready(function() {
     Created on <span class="date">${slide.creationDate}</span> by
     ${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
     by ${slide.modifiedBy}.
+</div>
+<div id="choiceSpace">
+	<c:forEach items="${choices}" var="choice">
+                	<p>${choice.sequence.name}</p>
+                	</c:forEach>
 </div>
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
@@ -475,23 +520,15 @@ $(document).ready(function() {
             </div>
             <form name="choiceForm" id="choiceForm"
                 enctype="multipart/form-data" method="post">
-                <div class="modal-body">
-                    <input id="cheese" type="checkbox" name="ingredients[]" value="Cheese" />
-					<label for="cheese">Cheese</label><br/>
-					<input id="olives" type="checkbox" name="ingredients[]" value="Olives" />
-					<label for="olives">Olives</label><br />
-					<input id="pepperoni" type="checkbox" name="ingredients[]" value="Pepperoni" />
-					<label for="pepperoni">Pepperoni</label><br />
-					<input id="anchovies" type="checkbox" name="ingredients[]" value="Anchovies" />
-					<label for="anchovies">Anchovies</label>
+                <div id = "choiceDiv" class="modal-body">
+                	<c:forEach items="${choices}" var="choice">
+	                	<input id=${choice.sequence.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
+						<label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
+                	</c:forEach>                   
 				</div>
                 <div class="modal-footer">
-                    <button id="cancelSubmitChoice" type="reset"
-                        class="btn light"
-                    >Cancel</button>
-                    <button type="submit" id="submitChoices"
-                        class="btn btn-primary"
-                    >Submit</button>
+                    <button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
+                    <button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
@@ -509,8 +546,7 @@ $(document).ready(function() {
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
             <div id="${contents.id}" class="valueDiv card card-body row"
-                style="margin: 10px;"
-            >
+                style="margin: 10px;">
                 <p>${contents.text}</p>
             </div>
         </c:if>

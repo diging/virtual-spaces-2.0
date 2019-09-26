@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.model.IChoice;
 public class BranchingPoint extends Slide implements IBranchingPoint {
 
     @OneToMany(targetEntity = Choice.class)
-    @JoinTable(name="BranchingPoint_choices")
+    @JoinTable(name="BP_choices")
     private List<IChoice> choices;
     
     /*

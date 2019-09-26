@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
@@ -26,5 +27,7 @@ public interface IContentBlockManager {
 
     void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
+
+    IChoiceBlock createChoiceBlock(String slideId, String choice, Integer contentOrder);
 
 }
