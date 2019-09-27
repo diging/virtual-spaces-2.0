@@ -15,8 +15,99 @@
   Created on <span class="date">${sequence.creationDate}</span> by ${sequence.createdBy}.<br>
   Modified on <span class="date">${sequence.modificationDate}</span> by ${sequence.modifiedBy}.
 </div>
-<h5>Description:</h5>
-<p>${sequence.description}</p>
+ <!-- <h5>Description:</h5>
+<p>${sequence.description}</p>  -->
+
+<script>
+
+
+$(document).ready(function() { 
+    //-------- edit contentblock description SEQUENCE --------
+    $("#submitDescription").hide()
+    $("#cancelEditDescription").hide()
+    var description = $("#description").text()
+    $("#editDescription").click(function() {
+        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+        $("#description").remove()
+        $("#editDescription").hide()
+        $("#submitDescription").show()
+        $("#cancelEditDescription").show()
+        
+    });
+
+    $("#submitDescription").click(function() {
+        var formData = new FormData();
+        formData.append('description', $("#newDescription").val());
+        $.ajax({
+        url: "<c:url value="/staff/module/${module.id}/sequence/${sequence.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
+        type: 'POST',
+        cache       : false,
+        contentType : false,
+        processData : false,
+        data: formData,
+        enctype: 'multipart/form-data',
+        success: function(data) {
+            // replace text box with new description
+            $("#submitDescription").hide()
+            $("#cancelEditDescription").hide()
+            $("#editDescription").show()
+            var val = $("#newDescription").val();
+            console.log("Value of new description: "+val)
+            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+            $("#newDescription").remove();
+            $("#description").text(val)
+        },
+        error: function(data) {
+            $(".open").removeClass("open");
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+        
+      });
+    
+    $("#cancelEditDescription").click(function(){
+        $("#submitDescription").hide()
+        $("#editDescription").show()
+        $("#cancelEditDescription").hide()
+        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+        $("#newDescription").remove()
+        $("#description").text(description)
+        
+    });
+    
+    // Edit/Save Description ends
+    
+});
+
+
+
+
+
+
+
+</script>
+
+
+
+
+<!-- description -->
+<div style="margin-left: .1%;" class="row align-items-center">
+    <h5 style="margin-bottom: 0px;">Description:</h5>
+    <a id="editDescription" class="btn" href="#"
+        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
+    ><i class="fas fa-edit"></i></a>
+    <p id="description"
+        style="margin-top: .5rem; margin-bottom: .5rem;"
+    >${sequence.description}</p>
+    <button id="submitDescription" type="button"
+        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%;"
+    >Save</button>
+    <button id="cancelEditDescription" type="button"
+        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;"
+    >Cancel</button>
+</div>
+
     
 <div id="slideSpace">
 	<table width="100%" height="50%" style="margin-top: 50px;">

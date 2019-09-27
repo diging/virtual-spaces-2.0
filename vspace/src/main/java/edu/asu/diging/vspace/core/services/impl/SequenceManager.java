@@ -52,4 +52,10 @@ public class SequenceManager implements ISequenceManager {
         }
         return null;
     }
+
+	@Override
+	public void updateSequence(Sequence sequence) {
+		sequenceRepo.save((Sequence) sequence);
+		
+	}
 }

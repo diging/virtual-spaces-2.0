@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
 import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 public interface ISequenceManager {
@@ -8,5 +9,7 @@ public interface ISequenceManager {
     ISequence storeSequence(String moduleId, SequenceForm sequenceForm);
 
     ISequence getSequence(String sequenceId);
+    
+    void updateSequence(Sequence sequence);
 
 }
