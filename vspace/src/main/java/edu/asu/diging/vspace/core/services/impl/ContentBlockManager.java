@@ -57,8 +57,6 @@ public class ContentBlockManager implements IContentBlockManager {
     @Autowired
     private IChoiceBlockFactory choiceBlockFactory;
 
-
-    
     @Autowired
     private ImageRepository imageRepo;
 
@@ -185,7 +183,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
-     * lang.String, java.util.list<java.lang.String>, java.lang.Integer)
+     * lang.String, java.lang.String, java.lang.Integer)
      */
     @Override
     public IChoiceBlock createChoiceBlock(String slideId, String choiceId, Integer contentOrder) {

@@ -53,7 +53,7 @@ public class SlideFactory implements ISlideFactory {
         branchingPoint.setModule(module);
         branchingPoint.setContents(new ArrayList<IContentBlock>());
        
-        List<IChoice> choices = choiceFactory.createChoices(form.getChoices(), branchingPoint);
+        List<IChoice> choices = choiceFactory.createChoices(form.getChoices());
         branchingPoint.setChoices(choices);
         return branchingPoint;
     }    

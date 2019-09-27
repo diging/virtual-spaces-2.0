@@ -8,6 +8,6 @@ import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
 
 @Repository
 @JaversSpringDataAuditable
-public interface ChoiceContentBlockRepository extends PagingAndSortingRepository<ChoiceBlock, String>{
+public interface ChoiceContentBlockRepository extends PagingAndSortingRepository<ChoiceBlock, String> {
 
 }

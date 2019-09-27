@@ -31,6 +31,7 @@ public class ModuleManager implements IModuleManager {
 
     @Autowired
     private SequenceRepository sequenceRepo;
+    
     /*
      * (non-Javadoc)
      * 

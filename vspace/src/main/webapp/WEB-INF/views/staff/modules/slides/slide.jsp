@@ -102,6 +102,12 @@ function uploadImage() {
 }
     
 $(document).ready(function() {
+	
+	if(${slide['class'].simpleName ==  'BranchingPoint'}) {
+		$('#addChoice').show();
+		$('#choiceSpace').show();	
+	}
+			
     //-------- edit description --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
@@ -204,7 +210,19 @@ $(document).ready(function() {
         $("#title").text("Silde: " + getTitleText)
         
     });
-    
+   
+   $('.choice_check').each(function() {
+	    $(this).addClass('unselected');
+	  });
+   
+   $('.choice_check').on('click', function() {
+	    $(this).toggleClass('unselected');
+	    $(this).toggleClass('selected');
+	    $('.choice_check').not(this).prop('checked', false);
+	    $('.choice_check').not(this).removeClass('selected');
+	    $('.choice_check').not(this).addClass('unselected');
+	  });
+   
     $("#addText").click(function() {
         $("#addTextAlert").show();
       });
@@ -281,12 +299,10 @@ $(document).ready(function() {
         $('#choiceDiv :checked').each(function() {
         	allchoiceVals.push($(this).attr("id"));
           });
-          console.log(allchoiceVals);
 
         // ------------- creating choice content blocks ------------
         
         var formData = new FormData();
-        //var text = $("#textBlockText").val()
         formData.append('content', allchoiceVals);
         ++contentCount;
         formData.append('contentOrder', contentCount);
@@ -300,23 +316,23 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-            	alert("success");
-            	console.log(data.sequence);
-                var choiceblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+data+'</p></div>');
+                var choiceblock = $('<div id="'+ data.id +'" class="valueDiv card card-body row">'+
+						'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+data.id+'" >'+
+						'<h5 class="card-title">'+data.name+'</h5>'+
+						'</a></div>');            
+						
                 $(choiceblock).css({
                     'margin': "10px"
                 });
-                //$(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(choiceblock);  
                
             },
             error: function(data) {
-                /* var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert); */
-                alert("error");
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
             }
         });
-        $("#textBlockText").val('')
+        $('input:checkbox').removeAttr('checked');
     });
 
     $("#addImgAlert").draggable();
@@ -405,17 +421,11 @@ $(document).ready(function() {
     ${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
     by ${slide.modifiedBy}.
 </div>
-<div id="choiceSpace">
-	<c:forEach items="${choices}" var="choice">
-                	<p>${choice.sequence.name}</p>
-                	</c:forEach>
-</div>
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
     <h5 style="margin-bottom: 0px;">Description:</h5>
     <a id="editDescription" class="btn" href="#"
-        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
-    ><i class="fas fa-edit"></i></a>
+        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i class="fas fa-edit"></i></a>
     <p id="description"
         style="margin-top: .5rem; margin-bottom: .5rem;"
     >${slide.description}</p>
@@ -426,6 +436,13 @@ $(document).ready(function() {
         class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;"
     >Cancel</button>
 </div>
+<!-- choices -->
+<div id="choiceSpace" style="margin-left: .1%;display:none;" class="row align-items-center">
+	<h5 style="margin-bottom: 0px;">Choices: </h5>
+	<c:forEach items="${choices}" var="choice">
+		<div style="margin-left: .5rem;" class="p-3 mb-2 bg-light text-dark"><a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">${choice.sequence.name}</a></div>
+	</c:forEach>
+</div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="dropdown">
@@ -435,8 +452,8 @@ $(document).ready(function() {
         >Add content</button>
          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a id="addText" class="dropdown-item" href="#">Add Text</a>
-            <a id="addImage" class="dropdown-item" href="#">Add Image</a>
-            <a id="addChoice" class="dropdown-item" href="#">Add Choice</a>    
+            <a id="addImage" class="dropdown-item" href="#">Add Image</a>          
+            <a id="addChoice" class="dropdown-item" href="#" style="display:none;">Add Choice</a>    
         </div>
         <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
     </div>
@@ -523,7 +540,7 @@ $(document).ready(function() {
                 enctype="multipart/form-data" method="post">
                 <div id = "choiceDiv" class="modal-body">
                 	<c:forEach items="${choices}" var="choice">
-	                	<input id=${choice.sequence.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
+	                	<input class="choice_check" id=${choice.sequence.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
 						<label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
                 	</c:forEach>                   
 				</div>
@@ -549,6 +566,12 @@ $(document).ready(function() {
             <div id="${contents.id}" class="valueDiv card card-body row"
                 style="margin: 10px;">
                 <p>${contents.text}</p>
+            </div>
+        </c:if>
+        <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
+            <div id="${contents.sequence.id}" class="card card-body row"
+                style="margin: 10px;">
+                <a href="<c:url value="/staff/module/${module.id}/sequence/${contents.sequence.id}" />">${contents.sequence.name}</a>
             </div>
         </c:if>
     </c:forEach>

@@ -43,7 +43,7 @@ public class Space extends VSpaceElement implements ISpace {
 	private IVSImage image;
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpace#getId()
 	 */
 	@Override
 	public String getId() {
@@ -51,7 +51,7 @@ public class Space extends VSpaceElement implements ISpace {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setId(java.lang.String)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpace#setId(java.lang.String)
 	 */
 	@Override
 	public void setId(String id) {
@@ -59,7 +59,7 @@ public class Space extends VSpaceElement implements ISpace {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpaceLinks()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpace#getSpaceLinks()
 	 */
 	@Override
 	public List<ISpaceLink> getSpaceLinks() {
@@ -75,7 +75,7 @@ public class Space extends VSpaceElement implements ISpace {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getModuleLinks()
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpace#getModuleLinks()
 	 */
 	@Override
 	public List<IModuleLink> getModuleLinks() {
@@ -83,7 +83,7 @@ public class Space extends VSpaceElement implements ISpace {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setModuleLinks(java.util.List)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpace#setModuleLinks(java.util.List)
 	 */
 	@Override
 	public void setModuleLinks(List<IModuleLink> moduleLinks) {
@@ -99,17 +99,26 @@ public class Space extends VSpaceElement implements ISpace {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setExternalLinks(java.util.List)
+	 * @see edu.asu.diging.vspace.core.model.impl.ISpace#setExternalLinks(java.util.List)
 	 */
 	@Override
 	public void setExternalLinks(List<IExternalLink> externalLinks) {
 		this.externalLinks = externalLinks;
 	}
 
+	/* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISpace#getImage()
+     */
+	@Override
 	public IVSImage getImage() {
 		return image;
 	}
 
+	
+	/* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISpace#setImage(edu.asu.diging.vspace.core.model.IVSImage)
+     */
+	@Override
 	public void setImage(IVSImage image) {
 		this.image = image;
 	}

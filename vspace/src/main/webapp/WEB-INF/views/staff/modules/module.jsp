@@ -4,21 +4,6 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<!-- <script>
-$( document ).ready(function() { 
-	$("#dropdown").change(function(e) {
-		console.log("in??");
-		if($(this).val() === 'slide') {
-			console.log("slide");
-		    $.ajax({ 
-			  url: "<c:url value="${module.id}/slide/add" />",				
-			}); 
-		}
-		else
-			console.log("bpoint");
-	});
-});
--->
 <script>
 //# sourceURL=click.js
 $(document).ready(function($) {

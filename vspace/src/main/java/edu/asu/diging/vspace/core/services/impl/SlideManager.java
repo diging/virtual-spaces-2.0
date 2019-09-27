@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
-import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;

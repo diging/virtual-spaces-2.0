@@ -33,11 +33,9 @@ public class SlideController {
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slideManager.getSlide(id));
         model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(id));
-        System.out.println("-------------------------");
-        if(slideManager.getSlide(id) instanceof BranchingPoint) {
-            System.out.println(((IBranchingPoint)slideManager.getSlide(id)).getChoices());
+        if(slideManager.getSlide(id) instanceof BranchingPoint) 
             model.addAttribute("choices", ((IBranchingPoint)slideManager.getSlide(id)).getChoices());
-        }
+
            
         return "staff/module/slide/contents";
     }
