@@ -10,19 +10,13 @@
   <li class="breadcrumb-item active">${sequence.name}</li>
 </ol>
 
-<h1>Sequence: ${sequence.name}</h1>
-<div class="alert alert-light" role="alert">
-  Created on <span class="date">${sequence.creationDate}</span> by ${sequence.createdBy}.<br>
-  Modified on <span class="date">${sequence.modificationDate}</span> by ${sequence.modifiedBy}.
-</div>
- <!-- <h5>Description:</h5>
-<p>${sequence.description}</p>  -->
+
 
 <script>
 
 
 $(document).ready(function() { 
-    //-------- edit contentblock description SEQUENCE --------
+    //-------- edit contentblock description Sequence starts --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
     var description = $("#description").text()
@@ -64,7 +58,7 @@ $(document).ready(function() {
             }
         });
         
-      });
+   });
     
     $("#cancelEditDescription").click(function(){
         $("#submitDescription").hide()
@@ -76,24 +70,94 @@ $(document).ready(function() {
         
     });
     
-    // Edit/Save Description ends
+    // ------- Edit/Save Description ends --------
     
+    
+    
+    //------- edit title of Sequence starts --------
+    
+    $("#submitTitle").hide();
+    $("#cancelEditTitle").hide();
+    var getTitleText = $("#title").text().split(": ")[1]
+    $("#editTitle").click(function() {
+        $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+        $('#title').text('Slide: ')
+        $("#newTitle").val(getTitleText)
+        $("#editTitle").hide()
+        $("#submitTitle").show()
+        $("#cancelEditTitle").show()
+        
+    });
+    
+    $("#submitTitle").click(function() {
+        var formData = new FormData();
+        formData.append('title', $("#newTitle").val());
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/sequence/${sequence.id}/edit/title?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                // replace text box with new description
+                $("#submitTitle").hide()
+                $("#cancelEditTitle").hide();
+                $("#editTitle").show()
+                var val = $("#newTitle").val();
+                $("#newTitle").closest('div').remove();
+                $("#title").text("Silde: " + val)
+                
+            },
+            error: function(data) {
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+      });
+   $("#cancelEditTitle").click(function(){
+        $("#submitTitle").hide()
+        $("#editTitle").show()
+        $("#cancelEditTitle").hide()
+        $("#newTitle").closest('div').remove();
+        $("#title").text("Silde: " + getTitleText)
+        
+    });
+   // ------- Edit/Save Description ends --------
 });
-
-
-
-
 
 
 
 </script>
 
+<!--  <h1>Sequence: ${sequence.name}</h1> -->
 
+<!-- title -->
+<div class="row align-items-center">
+    <h2 id="title" style="margin-bottom: 0%; margin-left: 1%;">Sequence: ${sequence.name}</h1>
+    <a id="editTitle" class="btn" href="#"
+        style="float: left; margin-right: 1%;"
+    ><i class="fas fa-edit"></i></a>
+    <button id="submitTitle" type="button"
+        class="btn btn-primary"
+        style="float: left; margin-right: 1%;"
+    >Save</button>
+    <button id="cancelEditTitle" type="button"
+        class="btn btn-primary" style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;"
+    >Cancel</button>
+</div>
+<div class="alert alert-light" role="alert">
+  Created on <span class="date">${sequence.creationDate}</span> by ${sequence.createdBy}.<br>
+  Modified on <span class="date">${sequence.modificationDate}</span> by ${sequence.modifiedBy}.
+</div>
+ <!-- <h5>Description:</h5>
+<p>${sequence.description}</p>  -->
 
 
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
-    <h5 style="margin-bottom: 0px;">Description:</h5>
+    <h4 style="margin-bottom: 0px;">Description:</h5>
     <a id="editDescription" class="btn" href="#"
         style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
     ><i class="fas fa-edit"></i></a>
