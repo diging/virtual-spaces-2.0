@@ -46,7 +46,7 @@ $(document).ready(function() {
             $("#cancelEditDescription").hide()
             $("#editDescription").show()
             var val = $("#newDescription").val();
-            console.log("Value of new description: "+val)
+            
             $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
             $("#newDescription").remove();
             $("#description").text(val)
@@ -107,7 +107,7 @@ $(document).ready(function() {
                 $("#editTitle").show()
                 var val = $("#newTitle").val();
                 $("#newTitle").closest('div').remove();
-                $("#title").text("Silde: " + val)
+                $("#title").text("Sequence: " + val)
                 
             },
             error: function(data) {
@@ -121,7 +121,7 @@ $(document).ready(function() {
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
         $("#newTitle").closest('div').remove();
-        $("#title").text("Silde: " + getTitleText)
+        $("#title").text("Sequence: " + getTitleText)
         
     });
    // ------- Edit/Save Description ends --------
@@ -131,7 +131,6 @@ $(document).ready(function() {
 
 </script>
 
-<!--  <h1>Sequence: ${sequence.name}</h1> -->
 
 <!-- title -->
 <div class="row align-items-center">
@@ -151,8 +150,7 @@ $(document).ready(function() {
   Created on <span class="date">${sequence.creationDate}</span> by ${sequence.createdBy}.<br>
   Modified on <span class="date">${sequence.modificationDate}</span> by ${sequence.modifiedBy}.
 </div>
- <!-- <h5>Description:</h5>
-<p>${sequence.description}</p>  -->
+ 
 
 
 <!-- description -->
