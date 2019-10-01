@@ -19,9 +19,12 @@
 
 
 $(document).ready(function() { 
+ 
+	
     //-------- edit contentblock description Sequence starts --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
+    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
     var description = $("#description").text()
     $("#editDescription").click(function() {
         $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
@@ -81,10 +84,12 @@ $(document).ready(function() {
     
     $("#submitTitle").hide();
     $("#cancelEditTitle").hide();
+    
     var getTitleText = $("#title").text().split(": ")[1]
+    console.log("Value of title: "+getTitleText);
     $("#editTitle").click(function() {
         $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-        $('#title').text('Slide: ')
+        $('#title').text('Sequence: ')
         $("#newTitle").val(getTitleText)
         $("#editTitle").hide()
         $("#submitTitle").show()

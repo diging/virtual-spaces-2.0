@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ISequence;
-import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 
 @Controller
@@ -24,7 +23,7 @@ public class EditSequenceController {
             @PathVariable("moduleId") String moduleId, @PathVariable("sequenceId") String sequenceId) {
         ISequence sequence = sequenceManager.getSequence(sequenceId);
         sequence.setDescription(description);
-        sequenceManager.updateSequence((Sequence) sequence);
+        sequenceManager.updateSequence(sequence);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
@@ -33,7 +32,7 @@ public class EditSequenceController {
             @PathVariable("moduleId") String moduleId, @PathVariable("sequenceId") String sequenceId) {
         ISequence sequence = sequenceManager.getSequence(sequenceId);
         sequence.setName(title);
-        sequenceManager.updateSequence((Sequence) sequence);
+        sequenceManager.updateSequence(sequence);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
