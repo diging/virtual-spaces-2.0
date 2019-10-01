@@ -1,13 +1,16 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="<c:url value="/staff/dashboard" />">Dashboard</a></li>
-  <li class="breadcrumb-item"><a href="<c:url value="/staff/module/list" />">Modules</a></li>
-  <li class="breadcrumb-item"><a href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
-  <li class="breadcrumb-item active">${sequence.name}</li>
+	<li class="breadcrumb-item"><a
+		href="<c:url value="/staff/dashboard" />">Dashboard</a></li>
+	<li class="breadcrumb-item"><a
+		href="<c:url value="/staff/module/list" />">Modules</a></li>
+	<li class="breadcrumb-item"><a
+		href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
+	<li class="breadcrumb-item active">${sequence.name}</li>
 </ol>
 
 
@@ -134,43 +137,43 @@ $(document).ready(function() {
 
 <!-- title -->
 <div class="row align-items-center">
-    <h2 id="title" style="margin-bottom: 0%; margin-left: 1%;">Sequence: ${sequence.name}</h1>
-    <a id="editTitle" class="btn" href="#"
-        style="float: left; margin-right: 1%;"
-    ><i class="fas fa-edit"></i></a>
-    <button id="submitTitle" type="button"
-        class="btn btn-primary"
-        style="float: left; margin-right: 1%;"
-    >Save</button>
-    <button id="cancelEditTitle" type="button"
-        class="btn btn-primary" style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;"
-    >Cancel</button>
+	<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;">
+		Sequence: ${sequence.name}
+		</h1>
+		<a id="editTitle" class="btn" href="#"
+			style="float: left; margin-right: 1%;"><i
+			class="fas fa-edit"></i></a>
+		<button id="submitTitle" type="button" class="btn btn-primary"
+			style="float: left; margin-right: 1%;">Save</button>
+		<button id="cancelEditTitle" type="button" class="btn btn-primary"
+			style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
 </div>
 <div class="alert alert-light" role="alert">
-  Created on <span class="date">${sequence.creationDate}</span> by ${sequence.createdBy}.<br>
-  Modified on <span class="date">${sequence.modificationDate}</span> by ${sequence.modifiedBy}.
+	Created on <span class="date">${sequence.creationDate}</span> by
+	${sequence.createdBy}.<br> Modified on <span class="date">${sequence.modificationDate}</span>
+	by ${sequence.modifiedBy}.
 </div>
- 
+
 
 
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
-    <h4 style="margin-bottom: 0px;">Description:</h5>
-    <a id="editDescription" class="btn" href="#"
-        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
-    ><i class="fas fa-edit"></i></a>
-    <p id="description"
-        style="margin-top: .5rem; margin-bottom: .5rem;"
-    >${sequence.description}</p>
-    <button id="submitDescription" type="button"
-        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%;"
-    >Save</button>
-    <button id="cancelEditDescription" type="button"
-        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;"
-    >Cancel</button>
+	<h4 style="margin-bottom: 0px;">
+		Description:
+		</h5>
+		<a id="editDescription" class="btn" href="#"
+			style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
+			class="fas fa-edit"></i></a>
+		<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${sequence.description}</p>
+		<button id="submitDescription" type="button"
+			class="btn btn-primary btn-sm"
+			style="margin-top: 1%; margin-bottom: 1%;">Save</button>
+		<button id="cancelEditDescription" type="button"
+			class="btn btn-primary btn-sm"
+			style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 </div>
 
-    
+
 <div id="slideSpace">
 	<table width="100%" height="50%" style="margin-top: 50px;">
 		<c:forEach items="${slides}" var="slide">
