@@ -31,12 +31,12 @@ public class SlideFactory implements ISlideFactory {
      */
     @Override
     public ISlide createSlide(IModule module, SlideForm form) {
-            ISlide slide = new Slide();        
-            slide.setName(form.getName());
-            slide.setDescription(form.getDescription());
-            slide.setModule(module);
-            slide.setContents(new ArrayList<IContentBlock>());
-            return slide;        
+        ISlide slide = new Slide();
+        slide.setName(form.getName());
+        slide.setDescription(form.getDescription());
+        slide.setModule(module);
+        slide.setContents(new ArrayList<IContentBlock>());
+        return slide;        
     }
     
     /*

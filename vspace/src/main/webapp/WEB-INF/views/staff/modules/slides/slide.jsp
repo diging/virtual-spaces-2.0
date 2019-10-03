@@ -65,8 +65,7 @@ function uploadImage() {
         reader.onload = function () {
             imageblock = createImageBlock(reader);
             $("#" + imageBlockId).replaceWith(imageblock);
-        }
-       
+        }	      
     } else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function () {
@@ -102,7 +101,6 @@ function uploadImage() {
 }
     
 $(document).ready(function() {
-	
 	if(${slide['class'].simpleName ==  'BranchingPoint'}) {
 		$('#addChoice').show();
 		$('#choiceSpace').show();	
@@ -124,31 +122,30 @@ $(document).ready(function() {
     $("#submitDescription").click(function() {
         var formData = new FormData();
         formData.append('description', $("#newDescription").val());
-        $.ajax({
-        url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
-        type: 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        enctype: 'multipart/form-data',
-        success: function(data) {
-            // replace text box with new description
-            $("#submitDescription").hide()
-            $("#cancelEditDescription").hide()
-            $("#editDescription").show()
-            var val = $("#newDescription").val();
-            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
-            $("#newDescription").remove();
-            $("#description").text(val)
-        },
-        error: function(data) {
-            $(".open").removeClass("open");
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
-            }
-        });
-        
+        $.ajax({ 
+	        url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData,
+	        enctype: 'multipart/form-data',
+	        success: function(data) {
+	            // replace text box with new description
+	            $("#submitDescription").hide()
+	            $("#cancelEditDescription").hide()
+	            $("#editDescription").show()
+	            var val = $("#newDescription").val();
+	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+	            $("#newDescription").remove();
+	            $("#description").text(val)
+	        },
+	        error: function(data) {
+	            $(".open").removeClass("open");
+	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	                $('.error').append(alert);
+	        }
+         });       
       });
     
     $("#cancelEditDescription").click(function(){
@@ -171,8 +168,7 @@ $(document).ready(function() {
         $("#newTitle").val(getTitleText)
         $("#editTitle").hide()
         $("#submitTitle").show()
-        $("#cancelEditTitle").show()
-        
+        $("#cancelEditTitle").show()       
     });
     
     $("#submitTitle").click(function() {
@@ -207,13 +203,12 @@ $(document).ready(function() {
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
         $("#newTitle").closest('div').remove();
-        $("#title").text("Silde: " + getTitleText)
-        
+        $("#title").text("Silde: " + getTitleText)       
     });
    
    $('.choice_check').each(function() {
 	    $(this).addClass('unselected');
-	  });
+   });
    
    $('.choice_check').on('click', function() {
 	    $(this).toggleClass('unselected');
@@ -225,21 +220,21 @@ $(document).ready(function() {
    
     $("#addText").click(function() {
         $("#addTextAlert").show();
-      });
+    });
     
     $("#addImage").click(function() {
         $("#addImgAlert").show();
-      });
+    });
     
     $("#addChoice").click(function() {
         $("#addChoiceAlert").show();
-      });
+    });
     
     $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
             uploadImage();
-      });
+    });
   
     $("#cancelSubmitText").click(function() {
         $("#addTextAlert").hide();	
@@ -281,8 +276,7 @@ $(document).ready(function() {
                     'margin': "10px"
                 });
                 $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(textblock);
-               
+                $('#slideSpace').append(textblock);             
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -319,13 +313,11 @@ $(document).ready(function() {
                 var choiceblock = $('<div id="'+ data.id +'" class="valueDiv card card-body row">'+
 						'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+data.id+'" >'+
 						'<h5 class="card-title">'+data.name+'</h5>'+
-						'</a></div>');            
-						
+						'</a></div>');            						
                 $(choiceblock).css({
                     'margin': "10px"
                 });
-                $('#slideSpace').append(choiceblock);  
-               
+                $('#slideSpace').append(choiceblock);            
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -341,8 +333,7 @@ $(document).ready(function() {
     
     
     // ------------- edit text block ----------------
-    
-    
+      
     function closeTextBox() {
         var description = $("#newTextBlock").val()
         // clear text box and buttons
@@ -541,7 +532,7 @@ $(document).ready(function() {
                 <div id = "choiceDiv" class="modal-body">
                 	<c:forEach items="${choices}" var="choice">
 	                	<input class="choice_check" id=${choice.sequence.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
-						<label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
+	                	<label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
                 	</c:forEach>                   
 				</div>
                 <div class="modal-footer">

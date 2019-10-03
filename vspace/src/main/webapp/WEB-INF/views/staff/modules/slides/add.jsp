@@ -55,7 +55,7 @@ $(document).ready(function(){
           
  <div class="form-group row">
  	<label for="name" class="col-md-2 col-form-label">Slide Name:</label>
-    <form:input type="text" class="form-control col-md-10" id="name" path="name" />
+ 	<form:input type="text" class="form-control col-md-10" id="name" path="name" />
  </div>
   
  <div class="form-group row">
@@ -66,7 +66,7 @@ $(document).ready(function(){
              <option value="slide">Slide</option>
              <option value="branchingPoint">Branching Point</option>
          </select>   
-         <form:input type="hidden" id="slideType" path="slideType"></form:input>
+     <form:input type="hidden" id="slideType" path="slideType"></form:input>
          </div>
  </div>
   
@@ -75,15 +75,14 @@ $(document).ready(function(){
             <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
 				 <c:forEach items="${sequences}" var="sequence">
 					<option value='${sequence.id}' id="${sequence.id}">${sequence.name}</option>
-				 </c:forEach> 
+				 </c:forEach>
 			</select>
-            <form:input type="hidden" id="choices" path="choices"></form:input>
+	<form:input type="hidden" id="choices" path="choices"></form:input>
  </div> 
    
  <div class="form-group row">
  	<label for="description" class="col-md-2 col-form-label">Description:</label>
-    <form:textarea class="form-control col-md-10" rows="5" cols="30" id="description" path="description" />
- </div> 
-          
+ 	<form:textarea class="form-control col-md-10" rows="5" cols="30" id="description" path="description" />
+ </div>          
   <button class="btn btn-primary btn-sm" type="submit" value="submit">Create Slide</button>
 </form:form>
