@@ -6,7 +6,7 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 public interface ISlideFactory {
 
-    ISlide createSlide(IModule modfule, SlideForm form);
+    ISlide createSlide(IModule module, SlideForm form);
 
     ISlide createBranchingPoint(IModule module, SlideForm form);
 

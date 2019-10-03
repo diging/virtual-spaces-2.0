@@ -23,10 +23,10 @@ public class AddChoiceBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choicecontent", method = RequestMethod.POST)
     public ResponseEntity<ISequence> addChoiceBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
+            @PathVariable("moduleId") String moduleId, @RequestParam("content") String choiceContent,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 
-        IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, content, contentOrder);
+        IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, choiceContent, contentOrder);
 
         return new ResponseEntity<>(choiceBlock.getSequence(), HttpStatus.OK);
     }

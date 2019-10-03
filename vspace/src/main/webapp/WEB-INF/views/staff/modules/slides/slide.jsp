@@ -440,7 +440,7 @@ $(document).ready(function() {
 <div id="choiceSpace" style="margin-left: .1%;display:none;" class="row align-items-center">
 	<h5 style="margin-bottom: 0px;">Choices: </h5>
 	<c:forEach items="${choices}" var="choice">
-		<div style="margin-left: .5rem;" class="p-3 mb-2 bg-light text-dark"><a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">${choice.sequence.name}</a></div>
+		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">${choice.sequence.name}</a>
 	</c:forEach>
 </div>
 

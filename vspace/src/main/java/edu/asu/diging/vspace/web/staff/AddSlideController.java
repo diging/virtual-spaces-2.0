@@ -38,10 +38,11 @@ public class AddSlideController {
             Principal principal) {
 
         IModule module = moduleManager.getModule(moduleId);
-        if(slideForm.getSlideType().equals("slide"))
-            slideManager.createSlide(module, slideForm);           
-        else
+        if(slideForm.getSlideType().substring(0, slideForm.getSlideType().length()-1).equals("slide")) {
+            slideManager.createSlide(module, slideForm);
+        } else {
             slideManager.createBranchingPoint(module, slideForm);
+        }
         
         return "redirect:/staff/module/{moduleId}";
     }

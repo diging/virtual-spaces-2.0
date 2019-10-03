@@ -35,7 +35,6 @@ public class SlideController {
         model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(id));
         if(slideManager.getSlide(id) instanceof BranchingPoint) 
             model.addAttribute("choices", ((IBranchingPoint)slideManager.getSlide(id)).getChoices());
-
            
         return "staff/module/slide/contents";
     }

@@ -7,7 +7,7 @@
 <script>
 //# sourceURL=click.js
 $(document).ready(function($) {
-
+	
 	$("#addSlideButton").on("click", function(e) {
 		$("#createSlideAlert").show();
 	});
@@ -85,6 +85,9 @@ $(document).ready(function($) {
 						<div class="card" style="max-width: 18rem; margin-bottom:10px;">
 							<div align="left" class="card-body">
 								<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+									<c:if test="${slide['class'].simpleName ==  'BranchingPoint'}">
+							           <span id="branchingPoint" style="float: right;" data-feather="git-branch"></span> 
+	        						</c:if>
 									<h5 class="card-title">${slide.name}</h5>
 									<p class="card-text">${slide.description}</p>
 								</a>						
