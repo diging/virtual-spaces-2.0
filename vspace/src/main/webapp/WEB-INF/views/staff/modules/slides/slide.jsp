@@ -53,11 +53,37 @@ function onDoubleClick(e){
 }
     
 function uploadImage() {
-    var file = document.getElementById('file').files[0];
+    //var file = document.getElementById('file').files[0];
+    var file = $('#file')[0].files[0]
+    console.log("File to be uploaded: "+file.name)
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
+    /*if ($(".open")[0]){
+        var imageBlockId = $('.open img').attr('id')
+        formData.append('imageBlockId',imageBlockId);
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
+        reader.onload = function () {
+            imageblock = createImageBlock(reader);
+            $("#" + imageBlockId).replaceWith(imageblock);
+        }
+       
+    } else {
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        reader.onload = function (theFile) {        	
+        	var image = new Image();
+            image.src = theFile.target.result;
+            image.onload = function() {
+            	imageblock = createImageBlock(reader, this.width);
+            	$('#slideSpace').append(imageblock);            
+                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            };          
+        }
+        ++contentCount;
+    }*/
+  
+    // Ashmi changes for Story VSPC-64
     if ($(".open")[0]){
         var imageBlockId = $('.open img').attr('id')
         formData.append('imageBlockId',imageBlockId);
@@ -80,6 +106,7 @@ function uploadImage() {
         }
         ++contentCount;
     }
+    
     reader.readAsDataURL(file);
     $.ajax({
         enctype: 'multipart/form-data',
@@ -338,147 +365,132 @@ $(window).on('load', function () {
 });
 </script>
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a
-        href="<c:url value="/staff/dashboard" />"
-    >Dashboard</a></li>
-    <li class="breadcrumb-item"><a
-        href="<c:url value="/staff/module/list" />"
-    >Modules</a></li>
-    <li class="breadcrumb-item"><a
-        href="<c:url value="/staff/module/${module.id}" />"
-    >${module.name}</a></li>
-    <li class="breadcrumb-item active">${slide.name}</li>
+	<li class="breadcrumb-item"><a
+		href="<c:url value="/staff/dashboard" />">Dashboard</a></li>
+	<li class="breadcrumb-item"><a
+		href="<c:url value="/staff/module/list" />">Modules</a></li>
+	<li class="breadcrumb-item"><a
+		href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
+	<li class="breadcrumb-item active">${slide.name}</li>
 </ol>
 <div class="error"></div>
 <!-- title -->
 <div class="row align-items-center">
-    <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide: ${slide.name}</h1>
-    <a id="editTitle" class="btn" href="#"
-        style="float: left; margin-right: 1%;"
-    ><i class="fas fa-edit"></i></a>
-    <button id="submitTitle" type="button"
-        class="btn btn-primary"
-        style="float: left; margin-right: 1%;"
-    >Save</button>
-    <button id="cancelEditTitle" type="button"
-        class="btn btn-primary" style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;"
-    >Cancel</button>
+	<h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
+		${slide.name}</h1>
+	<a id="editTitle" class="btn" href="#"
+		style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
+	<button id="submitTitle" type="button" class="btn btn-primary"
+		style="float: left; margin-right: 1%;">Save</button>
+	<button id="cancelEditTitle" type="button" class="btn btn-primary"
+		style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
 </div>
 <div class="alert alert-light" role="alert">
-    Created on <span class="date">${slide.creationDate}</span> by
-    ${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
-    by ${slide.modifiedBy}.
+	Created on <span class="date">${slide.creationDate}</span> by
+	${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
+	by ${slide.modifiedBy}.
 </div>
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
-    <h5 style="margin-bottom: 0px;">Description:</h5>
-    <a id="editDescription" class="btn" href="#"
-        style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"
-    ><i class="fas fa-edit"></i></a>
-    <p id="description"
-        style="margin-top: .5rem; margin-bottom: .5rem;"
-    >${slide.description}</p>
-    <button id="submitDescription" type="button"
-        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%;"
-    >Save</button>
-    <button id="cancelEditDescription" type="button"
-        class="btn btn-primary btn-sm" style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;"
-    >Cancel</button>
+	<h5 style="margin-bottom: 0px;">Description:</h5>
+	<a id="editDescription" class="btn" href="#"
+		style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
+		class="fas fa-edit"></i></a>
+	<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${slide.description}</p>
+	<button id="submitDescription" type="button"
+		class="btn btn-primary btn-sm"
+		style="margin-top: 1%; margin-bottom: 1%;">Save</button>
+	<button id="cancelEditDescription" type="button"
+		class="btn btn-primary btn-sm"
+		style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 </div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button"
-            id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false" style="float:left;"
-        >Add content</button>
-         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a id="addText" class="dropdown-item" href="#">Add Text</a>
-            <a id="addImage" class="dropdown-item" href="#">Add
-                Image</a>
-        </div>
-        <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
-    </div>
+	<div class="dropdown">
+		<button class="btn btn-primary dropdown-toggle" type="button"
+			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+			aria-expanded="false" style="float: left;">Add
+			content</button>
+		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<a id="addText" class="dropdown-item" href="#">Add Text</a> <a
+				id="addImage" class="dropdown-item" href="#">Add Image</a>
+		</div>
+		<p style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
+			Click on a Block to Edit it
+		<p>
+	</div>
 </nav>
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add new Text Block</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form name="textForm" id="textUploadForm"
-                enctype="multipart/form-data" method="post">
-                <div class="modal-body">
-                    <h6>
-                        <small>Enter Text: </small>
-                    </h6>
-                    <textarea class="form-control" id="textBlockText"
-                        rows="3"
-                    ></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancelSubmitText" type="reset"
-                        class="btn light"
-                    >Cancel</button>
-                    <button type="submit" id="submitText"
-                        class="btn btn-primary"
-                    >Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add new Text Block</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form name="textForm" id="textUploadForm"
+				enctype="multipart/form-data" method="post">
+				<div class="modal-body">
+					<h6>
+						<small>Enter Text: </small>
+					</h6>
+					<textarea class="form-control" id="textBlockText" rows="3"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
+					<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add new Image Block</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form name="photoForm" id="imageUploadForm"
-                enctype="multipart/form-data" method="post">
-                <div class="modal-body">
-                    <h6>
-                        <small>Upload Image: </small>
-                    </h6>
-                    <input class="form-control" type="file" name="file"
-                        rows="5" cols="500" id="file"/>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancelImageBtn" type="reset"
-                        class="btn light">Cancel</button>
-                    <button type="submit" id="uploadImage"
-                        class="btn btn-primary">Upload Image</button>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add new Image Block</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form name="photoForm" id="imageUploadForm"
+				enctype="multipart/form-data" method="post">
+				<div class="modal-body">
+					<h6>
+						<small>Upload Image: </small>
+					</h6>
+					<input class="form-control" type="file" name="file" rows="5"
+						cols="500" id="file" />
+				</div>
+				<div class="modal-footer">
+					<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
+					<button type="submit" id="uploadImage" class="btn btn-primary">Upload
+						Image</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 <div id="slideSpace">
-    <c:forEach items="${slideContents}" var="contents">
-        <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-            <div style="margin: 1%;" class="valueDiv">
-                <img id="${contents.id}" class="imgDiv"
-                    style="margin: 1%;"
-                    src="<c:url value="/api/image/${contents.image.id}" />"/>
-            </div>
-        </c:if>
-        <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-            <div id="${contents.id}" class="textDiv card card-body row"
-                style="margin: 10px;">
-                <p>${contents.text}</p>
-            </div>
-        </c:if>
-    </c:forEach>
+	<c:forEach items="${slideContents}" var="contents">
+		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
+			<div style="margin: 1%;" class="valueDiv">
+				<img id="${contents.id}" class="imgDiv" style="margin: 1%;"
+					src="<c:url value="/api/image/${contents.image.id}" />" />
+			</div>
+		</c:if>
+		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
+			<div id="${contents.id}" class="textDiv card card-body row"
+				style="margin: 10px;">
+				<p>${contents.text}</p>
+			</div>
+		</c:if>
+	</c:forEach>
 </div>
 <style type="text/css">
 .hova {
-    background-color: #bfb168;
+	background-color: #bfb168;
 }
 </style>
