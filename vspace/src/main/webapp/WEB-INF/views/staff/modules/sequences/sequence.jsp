@@ -90,7 +90,7 @@ $(document).ready(function() {
     	
     	var getTitleText = $("#title").text().split(": ")[1].trim()
         $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-        $('#title').text('Sequence: ')
+        $('#title').text('Sequence: '+getTitleText)
         $("#newTitle").val(getTitleText)
         $("#editTitle").hide()
         $("#submitTitle").show()
@@ -130,9 +130,9 @@ $(document).ready(function() {
         $("#submitTitle").hide()
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
-        var value = $("#newTitle").val();
+        var value = $("#title").text().split(": ")[1].trim()
         $("#newTitle").closest('div').remove();
-        $("#title").text("Sequence: " + value)
+        $("#title").text("Sequence : "+value)
   
         
     });
