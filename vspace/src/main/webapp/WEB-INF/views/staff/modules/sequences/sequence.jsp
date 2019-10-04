@@ -24,10 +24,10 @@ $(document).ready(function() {
     //-------- edit contentblock description Sequence starts --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
-    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
-    var description = $("#description").text()
+    
     $("#editDescription").click(function() {
-        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+    	var description = $("#description").text()
+        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertAfter( "#description" );
         $("#description").remove()
         $("#editDescription").hide()
         $("#submitDescription").show()
@@ -52,10 +52,9 @@ $(document).ready(function() {
             $("#cancelEditDescription").hide()
             $("#editDescription").show()
             var val = $("#newDescription").val();
-            
             $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
             $("#newDescription").remove();
-            $("#description").text(val)
+            $("#description").text(val);
         },
         error: function(data) {
             $(".open").removeClass("open");
@@ -70,9 +69,10 @@ $(document).ready(function() {
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+        var description = $("#newDescription").val()
+        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">'+description+'</p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
-        $("#description").text(description)
+        $("#description").text(description);
         
     });
     
@@ -85,9 +85,9 @@ $(document).ready(function() {
     $("#submitTitle").hide();
     $("#cancelEditTitle").hide();
     
-    var getTitleText = $("#title").text().split(": ")[1]
-    console.log("Value of title: "+getTitleText);
-    $("#editTitle").click(function() {
+    
+    	$("#editTitle").click(function() {
+    	var getTitleText = $("#title").text().split(": ")[1].trim()
         $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
         $('#title').text('Sequence: ')
         $("#newTitle").val(getTitleText)
@@ -123,13 +123,15 @@ $(document).ready(function() {
                 $('.error').append(alert);
             }
         });
+                
       });
    $("#cancelEditTitle").click(function(){
         $("#submitTitle").hide()
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
+        var value = $('#newTitle').val();
         $("#newTitle").closest('div').remove();
-        $("#title").text("Sequence: " + getTitleText)
+        $("#title").text("Sequence: " + value)
         
     });
    // ------- Edit/Save Description ends --------
@@ -144,14 +146,11 @@ $(document).ready(function() {
 <div class="row align-items-center">
 	<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;">
 		Sequence: ${sequence.name}
-		</h1>
+		</h2>
 		<a id="editTitle" class="btn" href="#"
-			style="float: left; margin-right: 1%;"><i
-			class="fas fa-edit"></i></a>
-		<button id="submitTitle" type="button" class="btn btn-primary"
-			style="float: left; margin-right: 1%;">Save</button>
-		<button id="cancelEditTitle" type="button" class="btn btn-primary"
-			style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
+			style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
+		<button id="submitTitle" type="button" class="btn btn-primary" style="float: left; margin-right: 1%;">Save</button>
+		<button id="cancelEditTitle" type="button" class="btn btn-primary" style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
 </div>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${sequence.creationDate}</span> by
