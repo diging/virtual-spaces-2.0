@@ -33,23 +33,19 @@ public class SlideManager implements ISlideManager {
     
     @Autowired
     private ChoiceRepository choiceRepo;
- 
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm) {
-        ISlide slide = slideFactory.createSlide(module, slideForm);             
+        ISlide slide = slideFactory.createSlide("Slide", module, slideForm);             
         slideRepo.save((Slide) slide);        
         return slide;
     }
 
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm) {
-        IBranchingPoint branchingPoint = slideFactory.createBranchingPoint(module, slideForm); 
-        for(IChoice choice: branchingPoint.getChoices()) {
-            choiceRepo.save((Choice)choice);
-        }           
+        ISlide branchingPoint = slideFactory.createSlide("BranchingPoint", module, slideForm);            
         bpointRepo.save((BranchingPoint) branchingPoint);        
-        return branchingPoint;
+        return (IBranchingPoint) branchingPoint;
     }
 
     @Override
@@ -61,6 +57,14 @@ public class SlideManager implements ISlideManager {
         return null;
     }
 
+    @Override
+    public IChoice getChoice(String choiceId) {
+        Optional<Choice> choice = choiceRepo.findById(choiceId);
+        if (choice.isPresent()) {
+            return choice.get();
+        }
+        return null;
+    }
     @Override
     public void updateSlide(Slide slide) {
         slideRepo.save((Slide) slide);

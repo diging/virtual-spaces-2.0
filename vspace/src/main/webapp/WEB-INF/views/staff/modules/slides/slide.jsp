@@ -105,18 +105,14 @@ function uploadImage() {
     });
 }
     
-<<<<<<< HEAD
 $(document).ready(function() {
-	if(${slide['class'].simpleName ==  'BranchingPoint'}) {
+	if(${slide['class'].simpleName == 'BranchingPoint'}) {
 		$('#addChoice').show();
 		$('#choiceSpace').show();	
-	}
-			
-    //-------- edit description --------
-=======
-$(document).ready(function() { 
+	}			
+
     //-------- edit contentblock description --------
->>>>>>> refs/heads/develop
+
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
     var description = $("#description").text()
@@ -299,15 +295,15 @@ $(document).ready(function() {
     $("#submitChoices").on("click", function(e) {
         e.preventDefault();
         $("#addChoiceAlert").hide();
-        var allchoiceVals = [];
+        var selectedChoice = [];
         $('#choiceDiv :checked').each(function() {
-        	allchoiceVals.push($(this).attr("id"));
+        	selectedChoice.push($(this).attr("id"));
           });
 
         // ------------- creating choice content blocks ------------
         
         var formData = new FormData();
-        formData.append('content', allchoiceVals);
+        formData.append('content', selectedChoice);
         ++contentCount;
         formData.append('contentOrder', contentCount);
         
@@ -319,10 +315,11 @@ $(document).ready(function() {
             processData : false,
             data: formData,
             enctype: 'multipart/form-data',
-            success: function(data) {
-                var choiceblock = $('<div id="'+ data.id +'" class="valueDiv card card-body row">'+
-						'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+data.id+'" >'+
-						'<h5 class="card-title">'+data.name+'</h5>'+
+            success: function(choiceBlock) {
+            	console.log(choiceBlock);
+                var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row">'+
+						'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choiceBlock.choice.sequence.id+'" >'+
+						'<h5 class="card-title">'+choiceBlock.choice.sequence.name+'</h5>'+
 						'</a></div>');            						
                 $(choiceblock).css({
                     'margin': "10px"
@@ -552,7 +549,7 @@ $(window).on('load', function () {
                 enctype="multipart/form-data" method="post">
                 <div id = "choiceDiv" class="modal-body">
                 	<c:forEach items="${choices}" var="choice">
-	                	<input class="choice_check" id=${choice.sequence.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
+	                	<input class="choice_check" id=${choice.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
 	                	<label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
                 	</c:forEach>                   
 				</div>
@@ -580,9 +577,9 @@ $(window).on('load', function () {
             </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
-            <div id="${contents.sequence.id}" class="card card-body row"
+            <div id="${contents.choice.sequence.id}" class="card card-body row"
                 style="margin: 10px;">
-                <a href="<c:url value="/staff/module/${module.id}/sequence/${contents.sequence.id}" />">${contents.sequence.name}</a>
+                <a href="<c:url value="/staff/module/${module.id}/sequence/${contents.choice.sequence.id}" />">${contents.choice.sequence.name}</a>
             </div>
         </c:if>
     </c:forEach>

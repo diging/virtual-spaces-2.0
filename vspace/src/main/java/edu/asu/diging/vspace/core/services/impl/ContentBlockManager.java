@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
@@ -32,7 +33,6 @@ import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Transactional
@@ -41,9 +41,6 @@ public class ContentBlockManager implements IContentBlockManager {
     
     @Autowired
     private ISlideManager slideManager;
-    
-    @Autowired
-    private ISequenceManager sequenceManager;
     
     @Autowired
     private IImageFactory imageFactory;
@@ -179,6 +176,15 @@ public class ContentBlockManager implements IContentBlockManager {
         return null;
     }
     
+    @Override
+    public IChoiceBlock getChoiceBlock(String choiceBlockId) {
+        Optional<ChoiceBlock> choiceBlock = choiceBlockRepo.findById(choiceBlockId);
+        if (choiceBlock.isPresent()) {
+            return choiceBlock.get();
+        }
+        return null;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -187,11 +193,9 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public IChoiceBlock createChoiceBlock(String slideId, String choiceId, Integer contentOrder) {
-
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder);
-        choiceBlock.setSequence(sequenceManager.getSequence(choiceId));
-        choiceBlock = choiceBlockRepo.save((ChoiceBlock)choiceBlock);
-        return choiceBlock;
+        IChoice choice = slideManager.getChoice(choiceId);
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choice);                 
+        return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
     }
     
 }

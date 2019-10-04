@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
-import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
@@ -22,12 +21,12 @@ public class AddChoiceBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choicecontent", method = RequestMethod.POST)
-    public ResponseEntity<ISequence> addChoiceBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("content") String choiceContent,
+    public ResponseEntity<IChoiceBlock> addChoiceBlock(@PathVariable("id") String slideId,
+            @PathVariable("moduleId") String moduleId, @RequestParam("content") String choiceId,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 
-        IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, choiceContent, contentOrder);
+        IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, choiceId, contentOrder);
 
-        return new ResponseEntity<>(choiceBlock.getSequence(), HttpStatus.OK);
+        return new ResponseEntity<>(choiceBlock, HttpStatus.OK);
     }
 }

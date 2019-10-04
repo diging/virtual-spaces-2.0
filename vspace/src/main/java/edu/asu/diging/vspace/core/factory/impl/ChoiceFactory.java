@@ -24,11 +24,11 @@ public class ChoiceFactory implements IChoiceFactory{
      * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createChoices(java.util.List<java.lang.String>)
      */
     @Override
-    public List<IChoice> createChoices(List<String> choiceIds) {
+    public List<IChoice> createChoices(List<String> sequenceIds) {
         List<IChoice> choices = new ArrayList<IChoice>();
-        for(String choiceId: choiceIds) {
+        for(String sequenceId: sequenceIds) {
             IChoice choice = new Choice();
-            choice.setSequence(sequenceManager.getSequence(choiceId));
+            choice.setSequence(sequenceManager.getSequence(sequenceId));
             choices.add(choice);
            }
         return choices;        

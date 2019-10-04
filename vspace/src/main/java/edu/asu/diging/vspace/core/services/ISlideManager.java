@@ -4,6 +4,7 @@ import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 public interface ISlideManager {
@@ -15,5 +16,7 @@ public interface ISlideManager {
     void updateSlide(Slide slide);
 
     IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm);
+
+    IChoice getChoice(String choiceId);
 
 }

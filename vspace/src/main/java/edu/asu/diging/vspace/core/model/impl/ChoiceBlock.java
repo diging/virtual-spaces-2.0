@@ -3,14 +3,14 @@ package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
-import edu.asu.diging.vspace.core.model.ISequence;
 
 @Entity
 public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
 
-    @OneToOne(targetEntity = Sequence.class)
-    private ISequence sequence;
+    @OneToOne(targetEntity = Choice.class)
+    private IChoice choice;
 
     /*
      * (non-Javadoc)
@@ -18,8 +18,8 @@ public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
      * @see edu.asu.diging.vspace.core.model.impl.ISequence#getSequence()
      */
     @Override
-    public ISequence getSequence() {
-        return sequence;
+    public IChoice getChoice() {
+        return choice;
     }
 
     /*
@@ -28,7 +28,7 @@ public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
      * @see edu.asu.diging.vspace.core.model.impl.IChoice#setSequence(edu.asu.diging.vspace.core.model.impl.ISequence)
      */
     @Override
-    public void setSequence(ISequence sequence) {
-        this.sequence = sequence;
+    public void setChoice(IChoice choice) {
+        this.choice = choice;
     }
 }

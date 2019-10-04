@@ -24,10 +24,12 @@ public interface IContentBlockManager {
     IImageBlock getImageBlock(String imgBlockId);
 
     ITextBlock getTextBlock(String textBlockId);
+    
+    IChoiceBlock getChoiceBlock(String choiceBlockId);
 
     void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
 
-    IChoiceBlock createChoiceBlock(String slideId, String choice, Integer contentOrder);
+    IChoiceBlock createChoiceBlock(String slideId, String choice, Integer contentOrder);   
 
 }

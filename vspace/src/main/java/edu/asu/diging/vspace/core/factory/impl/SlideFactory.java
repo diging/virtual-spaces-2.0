@@ -30,32 +30,20 @@ public class SlideFactory implements ISlideFactory {
      * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createSlide(edu.asu.diging.vspace.core.model.IModule, edu.asu.diging.vspace.web.staff.forms.SlideForm)
      */
     @Override
-    public ISlide createSlide(IModule module, SlideForm form) {
-        ISlide slide = new Slide();
+    public ISlide createSlide(String type, IModule module, SlideForm form) {
+        
+        ISlide slide;
+        if(type.equals("Slide")) {
+            slide = new Slide();
+        } else {
+            slide = new BranchingPoint();            
+            List<IChoice> choices = choiceFactory.createChoices(form.getChoices());
+            ((IBranchingPoint) slide).setChoices(choices);
+        }        
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         slide.setModule(module);
         slide.setContents(new ArrayList<IContentBlock>());
         return slide;        
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createBranchingPoint(edu.asu.diging.vspace.core.model.IModule, edu.asu.diging.vspace.web.staff.forms.SlideForm)
-     */
-    @Override
-    public IBranchingPoint createBranchingPoint(IModule module, SlideForm form) {
-        IBranchingPoint branchingPoint = new BranchingPoint();
-        branchingPoint.setName(form.getName());
-        branchingPoint.setDescription(form.getDescription());
-        branchingPoint.setModule(module);
-        branchingPoint.setContents(new ArrayList<IContentBlock>());
-       
-        List<IChoice> choices = choiceFactory.createChoices(form.getChoices());
-        branchingPoint.setChoices(choices);
-        return branchingPoint;
-    }    
-    
+    }   
 }
