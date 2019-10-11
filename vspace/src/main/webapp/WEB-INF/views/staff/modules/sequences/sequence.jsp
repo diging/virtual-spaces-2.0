@@ -27,14 +27,19 @@ $(document).ready(function() {
     
     $("#editDescription").click(function() {
     	var description = $("#description").text()
-        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertAfter( "#description" );
-        $("#description").remove()
+    	document.getElementById("description").value = description;
+        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+        $("#description").hide()
+        $("#newDescription").val(description)
         $("#editDescription").hide()
         $("#submitDescription").show()
-        $("#cancelEditDescription").show()
+        $("#cancelEditDescription").show()  
         
     });
 
+    
+    // --- Submit Description ------
+    
     $("#submitDescription").click(function() {
         var formData = new FormData();
         formData.append('description', $("#newDescription").val());
@@ -65,18 +70,20 @@ $(document).ready(function() {
         
    });
     
+    // ---- Cancel Edited Description ----
+    
     $("#cancelEditDescription").click(function(){
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        var description = $("#newDescription").val()
-        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">'+description+'</p>').insertBefore( "#newDescription" );
+        var description = document.getElementById("description").value
+        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">description</p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description);
         
     });
     
-    // ------- Edit/Save Description ends --------
+    // ------- Edit/Save/Cancel Description ends --------
     
     
     
@@ -85,20 +92,23 @@ $(document).ready(function() {
     $("#submitTitle").hide();
     $("#cancelEditTitle").hide();
     
-    	//var getTitleText = $("#title").text().split(": ")[1]
     	$("#editTitle").click(function() {
-    	
+
     	var getTitleText = $("#title").text().split(": ")[1].trim()
         $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-        //$('#title').text('Sequence: '+getTitleText)
-        $('#title').text('Sequence: ')
+    	document.getElementById("title").value = getTitleText;
+    	$('#title').text('Sequence: ')
         $("#newTitle").val(getTitleText)
         $("#editTitle").hide()
         $("#submitTitle").show()
         $("#cancelEditTitle").show()
         
     });
-    
+    	
+    	
+    	
+    // ------ Submit title Sequence -------
+    	
     $("#submitTitle").click(function() {
         var formData = new FormData();
         formData.append('title', $("#newTitle").val());
@@ -127,17 +137,21 @@ $(document).ready(function() {
         });
                 
       });
+    
+    
+   // ------  Edit Title Sequence ------
+   
    $("#cancelEditTitle").click(function(){
         $("#submitTitle").hide()
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
-        var value = $("#title").text().split(": ")[1].trim()
+       	var value = document.getElementById("title").value
         $("#newTitle").closest('div').remove();
         $("#title").text("Sequence : "+value)
   
         
     });
-   // ------- Edit/Save Description ends --------
+   // ------- Edit/Save Sequence Title ends --------
 });
 
 
