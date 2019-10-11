@@ -23,7 +23,7 @@ $(document).ready(function() {
 	
     //-------- edit contentblock description Sequence starts --------
     $("#submitDescription").hide()
-    $("#cancelEditDescription").hide()
+    $("#cancelEditDescription").hide()	
     
     $("#editDescription").click(function() {
     	var description = $("#description").text()
@@ -85,12 +85,13 @@ $(document).ready(function() {
     $("#submitTitle").hide();
     $("#cancelEditTitle").hide();
     
-    
+    	//var getTitleText = $("#title").text().split(": ")[1]
     	$("#editTitle").click(function() {
     	
     	var getTitleText = $("#title").text().split(": ")[1].trim()
         $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-        $('#title').text('Sequence: '+getTitleText)
+        //$('#title').text('Sequence: '+getTitleText)
+        $('#title').text('Sequence: ')
         $("#newTitle").val(getTitleText)
         $("#editTitle").hide()
         $("#submitTitle").show()
