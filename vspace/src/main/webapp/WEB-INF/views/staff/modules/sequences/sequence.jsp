@@ -1,4 +1,4 @@
-<%@ page pageEncoding="UTF-8"%>
+		<%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -27,13 +27,14 @@ $(document).ready(function() {
     
     $("#editDescription").click(function() {
     	var description = $("#description").text()
-    	document.getElementById("description").value = description;
+    	$("#description").val(description) 
         $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
         $("#description").hide()
         $("#newDescription").val(description)
         $("#editDescription").hide()
         $("#submitDescription").show()
-        $("#cancelEditDescription").show()  
+        $("#cancelEditDescription").show()
+        
         
     });
 
@@ -57,9 +58,10 @@ $(document).ready(function() {
             $("#cancelEditDescription").hide()
             $("#editDescription").show()
             var val = $("#newDescription").val();
-            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
-            $("#newDescription").remove();
+            $("#editDescription").show()
+            $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
             $("#description").text(val);
+            $("#newDescription").hide()
         },
         error: function(data) {
             $(".open").removeClass("open");
@@ -76,10 +78,12 @@ $(document).ready(function() {
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        var description = document.getElementById("description").value
-        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">description</p>').insertBefore( "#newDescription" );
+        var description = $("#description").val()
+        $('<p id="editedDescription" style="margin-top: .5rem; margin-bottom: .5rem;">'+description+'</p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description);
+        $("#description").show()
+        $("#editedDescription").remove()
         
     });
     
@@ -92,13 +96,14 @@ $(document).ready(function() {
     $("#submitTitle").hide();
     $("#cancelEditTitle").hide();
     
-    	$("#editTitle").click(function() {
-
-    	var getTitleText = $("#title").text().split(": ")[1].trim()
-        $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-    	document.getElementById("title").value = getTitleText;
+    $("#editTitle").click(function() {
+    	// Using data attribute
+    	var sequenceTitle = $("#title").text().split(": ")[1]
+    	var trimmedSequenceTitle = $.trim(sequenceTitle)
+        $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+    	$("#title").val(trimmedSequenceTitle)
     	$('#title').text('Sequence: ')
-        $("#newTitle").val(getTitleText)
+        $("#newTitle").val(trimmedSequenceTitle)
         $("#editTitle").hide()
         $("#submitTitle").show()
         $("#cancelEditTitle").show()
@@ -126,7 +131,7 @@ $(document).ready(function() {
                 $("#cancelEditTitle").hide();
                 $("#editTitle").show()
                 var val = $("#newTitle").val();
-                $("#newTitle").closest('div').remove();
+                $("#editSequenceTitle").remove()
                 $("#title").text("Sequence: " + val)
                 
             },
@@ -145,9 +150,9 @@ $(document).ready(function() {
         $("#submitTitle").hide()
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
-       	var value = document.getElementById("title").value
-        $("#newTitle").closest('div').remove();
-        $("#title").text("Sequence : "+value)
+        var sequenceTitle = $("#title").val()
+        $("#editSequenceTitle").remove()
+        $("#title").text("Sequence: "+sequenceTitle)
   
         
     });
@@ -181,7 +186,7 @@ $(document).ready(function() {
 <div style="margin-left: .1%;" class="row align-items-center">
 	<h4 style="margin-bottom: 0px;">
 		Description:
-		</h5>
+		</h4>
 		<a id="editDescription" class="btn" href="#"
 			style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
 			class="fas fa-edit"></i></a>
