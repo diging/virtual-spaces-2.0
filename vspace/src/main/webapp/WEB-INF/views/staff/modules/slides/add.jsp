@@ -13,7 +13,6 @@ $(document).ready(function(){
 	$('select[name="slideType"]').change(function(){
 	    if ($(this).val() == "branchingPoint"){
 	    	$('#sequences').show();
-
 	    	$('#selectSequence').multiSelect({		    		
 	    		dblClick : true,
 	    		afterInit : function(container) {
@@ -38,7 +37,7 @@ $(document).ready(function(){
 	    					break;
 	    	    		}
 	    			}
-	    			$("#choices").val(choices); 
+	    			$("#choices").val(choices);
 	    		}
 	        });	    				
 	     } else {
@@ -60,14 +59,12 @@ $(document).ready(function(){
   
  <div class="form-group row">
  	 <label for="type" class="col-md-2 col-form-label">Type:</label>
-         <div>
          <select id="slideType" name="slideType" class="form-control-xs target" style="height:50px;width:300px;">
              <option selected value="">Choose from existing</option>
-             <option value="slide">Slide</option>
-             <option value="branchingPoint">Branching Point</option>
+             <option  id="slide" value="slide">Slide</option>
+             <option id="branchingPoint" value="branchingPoint">Branching Point</option>
          </select>   
      <form:input type="hidden" id="slideType" path="slideType"></form:input>
-         </div>
  </div>
   
  <div class="form-group row" id="sequences" style="display:none;">

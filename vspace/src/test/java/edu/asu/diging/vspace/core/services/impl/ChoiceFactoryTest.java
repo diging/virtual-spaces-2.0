@@ -2,13 +2,14 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -23,19 +24,21 @@ public class ChoiceFactoryTest {
     @InjectMocks
     private ChoiceFactory choiceFactoryToTest = new ChoiceFactory();
     
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+    
     @Test
     public void test_createChoice_success() {
- 
         List<String> sequenceIds = new ArrayList<>();
         sequenceIds.add("sequence1");
         sequenceIds.add("sequence2");
         
         ISequence newSequence1 = new Sequence();
         newSequence1.setId("sequence1");
-        //Optional<Sequence> sequence1 = Optional.of(newSequence1);
         ISequence newSequence2 = new Sequence();
         newSequence2.setId("sequence2");
-        //Optional<Sequence> sequence2 = Optional.of(newSequence2);
         
         List<ISequence> newSequences = new ArrayList<>();
         newSequences.add(newSequence1);
@@ -47,7 +50,9 @@ public class ChoiceFactoryTest {
         List<IChoice> actualChoices = choiceFactoryToTest.createChoices(sequenceIds);
         int i = 0;
         for(IChoice actualChoice : actualChoices) {
-            Assert.assertEquals(newSequences.get(i++), actualChoice.getSequence());
+            Assert.assertEquals(newSequences.get(i), actualChoice.getSequence());
+            Assert.assertEquals(newSequences.get(i).getId(), actualChoice.getSequence().getId());
+            i++;
         }
     }
 }
