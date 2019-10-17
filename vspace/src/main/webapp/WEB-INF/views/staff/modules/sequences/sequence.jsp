@@ -26,11 +26,14 @@ $(document).ready(function() {
     $("#cancelEditDescription").hide()	
     
     $("#editDescription").click(function() {
-    	var description = $("#description").text()
-    	$("#description").val(description) 
-        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+    	
+    	// using data-attributes
+    	var description = $("#description").data('value')  // gets value
+    	$("#description").data('value', description)  // sets value
+        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
         $("#description").hide()
         $("#newDescription").val(description)
+        $("#newDescription").data('value',description);
         $("#editDescription").hide()
         $("#submitDescription").show()
         $("#cancelEditDescription").show()
@@ -61,6 +64,7 @@ $(document).ready(function() {
             $("#editDescription").show()
             $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
             $("#description").text(val);
+            $("#description").data('value',val);
             $("#newDescription").hide()
         },
         error: function(data) {
@@ -78,7 +82,7 @@ $(document).ready(function() {
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        var description = $("#description").val()
+        var description = $("#description").data('value')
         $('<p id="editedDescription" style="margin-top: .5rem; margin-bottom: .5rem;">'+description+'</p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description);
@@ -98,12 +102,11 @@ $(document).ready(function() {
     
     $("#editTitle").click(function() {
     	// Using data attribute
-    	var sequenceTitle = $("#title").text().split(": ")[1]
-    	var trimmedSequenceTitle = $.trim(sequenceTitle)
+    	var sequenceTitle = $("#title").data('value')  // gets value without using trim function
         $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-    	$("#title").val(trimmedSequenceTitle)
+    	$("#title").val(sequenceTitle)
     	$('#title').text('Sequence: ')
-        $("#newTitle").val(trimmedSequenceTitle)
+        $("#newTitle").val(sequenceTitle)
         $("#editTitle").hide()
         $("#submitTitle").show()
         $("#cancelEditTitle").show()
@@ -133,7 +136,7 @@ $(document).ready(function() {
                 var val = $("#newTitle").val();
                 $("#editSequenceTitle").remove()
                 $("#title").text("Sequence: " + val)
-                
+                $("#title").data('value', val)  // sets value
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -166,7 +169,7 @@ $(document).ready(function() {
 
 <!-- title -->
 <div class="row align-items-center">
-	<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;">
+	<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;" data-value="${sequence.name}">
 		Sequence: ${sequence.name}
 		</h2>
 		<a id="editTitle" class="btn" href="#"
@@ -190,7 +193,7 @@ $(document).ready(function() {
 		<a id="editDescription" class="btn" href="#"
 			style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
 			class="fas fa-edit"></i></a>
-		<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${sequence.description}</p>
+		<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;" data-value="${sequence.description}">${sequence.description}</p>
 		<button id="submitDescription" type="button"
 			class="btn btn-primary btn-sm"
 			style="margin-top: 1%; margin-bottom: 1%;">Save</button>
