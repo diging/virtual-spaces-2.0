@@ -84,7 +84,9 @@ function uploadImage() {
     }*/
   
     // Ashmi changes for Story VSPC-64
-    if ($(".open")[0]){
+    console.log("Value of if condition: "+$(".open"))
+    if ($(".open")){
+    	console.log("----- INSIDE IF -----")
         var imageBlockId = $('.open img').attr('id')
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
@@ -94,6 +96,7 @@ function uploadImage() {
         }
        
     } else {
+    	console.log("----- INSIDE ELSE -----")
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
