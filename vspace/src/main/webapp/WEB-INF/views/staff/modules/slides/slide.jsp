@@ -84,23 +84,40 @@ function uploadImage() {
     }*/
   
     // Ashmi changes for Story VSPC-64
-    console.log("Value of if condition: "+$(".open"))
-    if ($(".open")){
-    	console.log("----- INSIDE IF -----")
-        var imageBlockId = $('.open img').attr('id')
+    console.log("contentCount: "+contentCount)
+    console.log("Value of if condition: "+$(".imgDiv").attr('id'))
+    var value = $(".imgDiv")
+    if (typeof(value) === 'object'){
+    	console.log("yes type is object")
+    }
+  
+    
+    if ($(".imgDiv").attr('id') && contentCount != 0){
+        var imageBlockId = $('.imgDiv').attr('id')
+        console.log("imageBlockId: "+imageBlockId)
+        console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
-        reader.onload = function () {
-            imageblock = createImageBlock(reader);
-            $("#" + imageBlockId).replaceWith(imageblock);
-        }
+        console.log("URL Formed in IF BLOCK ----- "+url)
+        reader.onload = function (theFile) {
+        
+	        console.log("theFile: "+theFile.target.result)
+	        var image = new Image();
+	        image.src = theFile.target.result;
+	        var srcTimestamp = image.src+"?"+new Date().getTime()
+	        console.log("srcTimestamp: "+srcTimestamp)
+	        image.onload = function () {
+	            imageblock = createImageBlock(reader, this.width);
+	            $("#" + imageBlockId).attr("src", srcTimestamp);
+        	};
+     }
        
     } else {
-    	console.log("----- INSIDE ELSE -----")
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        console.log("URL Formed in ELSE BLOCK ----- "+url)
         reader.onload = function (theFile) {        	
         	var image = new Image();
-            image.src = theFile.target.result;
+            image.src = theFile.target.result
             image.onload = function() {
             	imageblock = createImageBlock(reader, this.width);
             	$('#slideSpace').append(imageblock);            
@@ -122,7 +139,8 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
-            $(".open").removeClass("open");
+            //$(".open").removeClass("open");
+            $(".imgDiv").removeClass("imgDiv");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
@@ -479,7 +497,7 @@ $(window).on('load', function () {
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-			<div style="margin: 1%;" class="valueDiv">
+			<div style="margin: 1%;" class="valueDiv" id="${contents.id}">
 				<img id="${contents.id}" class="imgDiv" style="margin: 1%;"
 					src="<c:url value="/api/image/${contents.image.id}" />" />
 			</div>
