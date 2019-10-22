@@ -38,7 +38,7 @@ public class AddSlideController {
             Principal principal) {
 
         IModule module = moduleManager.getModule(moduleId);
-        if(slideForm.getSlideType().substring(0, slideForm.getSlideType().length()-1).equals("branchingPoint")) {
+        if(slideForm.getSlideType().equals("branchingPoint")) {
             slideManager.createBranchingPoint(module, slideForm);           
         } else {
             slideManager.createSlide(module, slideForm);

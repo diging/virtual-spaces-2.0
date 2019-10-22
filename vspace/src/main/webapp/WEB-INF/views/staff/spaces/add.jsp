@@ -73,7 +73,7 @@ $(document).ready(function(){
 	</div>
 
 	<div class="form-group row">
-		<label for="description" class="col-md-2 col-form-label">Background image:</label>
+		<label for="image" class="col-md-2 col-form-label">Background image:</label>
 		<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />
 		
 	</div>

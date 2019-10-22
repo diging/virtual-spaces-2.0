@@ -10,7 +10,7 @@ $(document).ready(function(){
 	var vals = []
 	var choices = []
 		
-	$('select[name="slideType"]').change(function(){
+	$('select[id="type"]').change(function(){
 	    if ($(this).val() == "branchingPoint"){
 	    	$('#sequences').show();
 	    	$('#selectSequence').multiSelect({		    		
@@ -58,13 +58,12 @@ $(document).ready(function(){
  </div>
   
  <div class="form-group row">
- 	 <label for="type" class="col-md-2 col-form-label">Type:</label>
-         <select id="slideType" name="slideType" class="form-control-xs target" style="height:50px;width:300px;">
+ 	 <label for="slideType" class="col-md-2 col-form-label">Type:</label>
+         <form:select path="slideType" id="type" class="form-control-xs target" style="height:50px;width:300px;">
              <option selected value="">Choose from existing</option>
-             <option  id="slide" value="slide">Slide</option>
-             <option id="branchingPoint" value="branchingPoint">Branching Point</option>
-         </select>   
-     <form:input type="hidden" id="slideType" path="slideType"></form:input>
+             <option  id="slide" value="slide" label="Slide" >Slide</option>
+             <option id="branchingPoint" value="branchingPoint" label="BranchingPoint">Branching Point</option>
+	     </form:select>
  </div>
   
  <div class="form-group row" id="sequences" style="display:none;">
