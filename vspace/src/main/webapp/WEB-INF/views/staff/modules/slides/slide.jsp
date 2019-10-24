@@ -53,7 +53,7 @@ function onDoubleClick(e){
 }
     
 function uploadImage() {
-    //var file = document.getElementById('file').files[0];
+    
     var file = $('#file')[0].files[0]
     var reader  = new FileReader();
     var formData = new FormData();
