@@ -82,7 +82,7 @@ function uploadImage() {
         }
         ++contentCount;
     }*/
-  
+     
     // Ashmi changes for Story VSPC-64
     console.log("contentCount: "+contentCount)
     console.log("Value of if condition: "+$(".imgDiv").attr('id'))
