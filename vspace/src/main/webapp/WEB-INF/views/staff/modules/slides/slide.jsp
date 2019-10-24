@@ -9,8 +9,9 @@ var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader) {
 	var imageblock = $('<div class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
-    imageblock.find('img').attr('width', '800px');
-    return imageblock
+    if(width > 800)
+    	imageblock.find('img').attr('width', '800px');
+    return imageblock;
 }
 
 function onMouseEnter(e){
@@ -29,11 +30,11 @@ function onMouseLeave(e) {
 }
 
 function onDoubleClick(e){
-    // get the id of the nearest div with id valueDiv
-    var blockId = $(e.target).closest('div.valueDiv').hasClass( "img" );
-    $(e.target).closest('.valueDiv').addClass("open");
-    // if there is a block id we know its text block otherwise its an image block
-    if(!blockId){
+    // get to the nearest divs class attribute
+    var divName = $(e.target).closest('div').attr('class');
+    //if the div is a text content block 
+    if(divName.includes("textDiv")){
+    	$(e.target).closest('.textDiv').addClass("open");
         //remove card border
         $(".open").css('border', 'none');
         // get text from p tag
@@ -45,7 +46,7 @@ function onDoubleClick(e){
         $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
         $(".open").children("p:first").remove();
         // unbind events to prevent multiple instances of buttons and constant highlighting
-        $('.valueDiv').unbind('mouseenter mouseleave dblclick');
+        $('.textDiv').unbind('mouseenter mouseleave dblclick');
         // remove highlighting if present
         $(this).removeClass("hova");
     } else {
@@ -71,10 +72,14 @@ function uploadImage() {
        
     } else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-        reader.onload = function () {
-            imageblock = createImageBlock(reader);
-            $('#slideSpace').append(imageblock);
-            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        reader.onload = function (theFile) {        	
+        	var image = new Image();
+            image.src = theFile.target.result;
+            image.onload = function() {
+            	imageblock = createImageBlock(reader, this.width);
+            	$('#slideSpace').append(imageblock);            
+                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            };          
         }
         ++contentCount;
     }
@@ -104,8 +109,8 @@ function uploadImage() {
     });
 } 
     
-$(document).ready(function() {
-    //-------- edit description --------
+$(document).ready(function() { 
+    //-------- edit contentblock description --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
     var description = $("#description").text()
@@ -117,7 +122,7 @@ $(document).ready(function() {
         $("#cancelEditDescription").show()
         
     });
-    
+
     $("#submitDescription").click(function() {
         var formData = new FormData();
         formData.append('description', $("#newDescription").val());
@@ -390,7 +395,7 @@ $(document).ready(function() {
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
-        $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
     }
@@ -402,6 +407,7 @@ $(document).ready(function() {
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $(document).on('click','#submitTextBlock',function(){
        var formData = new FormData();
@@ -425,7 +431,23 @@ $(document).ready(function() {
                $('.error').append(alert);
            }
        });
-    });
+    });    
+});
+
+$(window).on('load', function () {
+	var divWindow = $(".valueDiv");
+	var images = $(".imgDiv");
+	resizeImage(images);
+	
+	function resizeImage(images) {
+		for(var i =0; i < images.length; i++) {
+			if (images[i].width > divWindow.width()) {
+				images[i].width = 800;
+			} else {
+				$(".valueDiv").css("width", images[i].width);
+			}
+		}
+	}
 });
 </script>
 <ol class="breadcrumb">
@@ -552,14 +574,12 @@ $(document).ready(function() {
             <div class="modal-header">
                 <h5 class="modal-title">Add new Text Block</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form name="textForm" id="textUploadForm"
-                enctype="multipart/form-data" method="post"
-            >
+                enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <h6>
                         <small>Enter Text: </small>
@@ -586,29 +606,24 @@ $(document).ready(function() {
             <div class="modal-header">
                 <h5 class="modal-title">Add new Image Block</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form name="photoForm" id="imageUploadForm"
-                    enctype="multipart/form-data" method="post"
-                >
+            <form name="photoForm" id="imageUploadForm"
+                enctype="multipart/form-data" method="post">
+                <div class="modal-body">
                     <h6>
                         <small>Upload Image: </small>
                     </h6>
                     <input class="form-control" type="file" name="file"
-                        rows="5" cols="500" id="file"
-                    />
+                        rows="5" cols="500" id="file"/>
                 </div>
                 <div class="modal-footer">
                     <button id="cancelImageBtn" type="reset"
-                        class="btn light"
-                    >Cancel</button>
+                        class="btn light">Cancel</button>
                     <button type="submit" id="uploadImage"
-                        class="btn btn-primary"
-                    >Upload Image</button>
+                        class="btn btn-primary">Upload Image</button>
                 </div>
             </form>
         </div>
@@ -636,6 +651,11 @@ $(document).ready(function() {
                     </div>
                 </div>
             </div>
+            <div style="margin: 1%;" class="valueDiv">
+                <img id="${contents.id}" class="imgDiv"
+                    style="margin: 1%;"
+                    src="<c:url value="/api/image/${contents.image.id}" />"/>
+            </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
             <div id="${contents.id}" class="valueDiv card card-body"
@@ -654,6 +674,10 @@ $(document).ready(function() {
    						 ><i style="color: black;" class="fas fa-trash-alt"></i></a>
                     </div>
                 </div>
+            </div>
+            <div id="${contents.id}" class="textDiv card card-body row"
+                style="margin: 10px;">
+                <p>${contents.text}</p>
             </div>
         </c:if>
     </c:forEach>
