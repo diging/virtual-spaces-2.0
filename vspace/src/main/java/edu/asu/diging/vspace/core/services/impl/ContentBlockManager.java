@@ -126,6 +126,7 @@ public class ContentBlockManager implements IContentBlockManager {
         IVSImage slideContentImage = saveImage(image, filename);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
+        System.out.println("workingg in manager.......");
         storeImageFile(image, slideContentImage, filename);
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setContentOrder(contentOrder);

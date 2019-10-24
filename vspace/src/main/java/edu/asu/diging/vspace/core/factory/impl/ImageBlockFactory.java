@@ -21,6 +21,7 @@ public class ImageBlockFactory implements IImageBlockFactory {
      */
     @Override
     public IImageBlock createImageBlock(ISlide slide, IVSImage image) {
+        System.out.println("workingg in factory.......");
         IImageBlock imageBlock = new ImageBlock();
         imageBlock.setImage(image);
         imageBlock.setSlide(slide);

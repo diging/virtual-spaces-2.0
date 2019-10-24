@@ -6,7 +6,7 @@
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
 
-function createImageBlock(reader) {
+function createImageBlock(reader, width) {
 	var imageblock = $('<div class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
@@ -95,6 +95,7 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
+        	console.log("working");
             $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
