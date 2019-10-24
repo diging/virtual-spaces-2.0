@@ -60,28 +60,7 @@ function uploadImage() {
     var formData = new FormData();
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
-    /*if ($(".open")[0]){
-        var imageBlockId = $('.open img').attr('id')
-        formData.append('imageBlockId',imageBlockId);
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
-        reader.onload = function () {
-            imageblock = createImageBlock(reader);
-            $("#" + imageBlockId).replaceWith(imageblock);
-        }
-       
-    } else {
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-        reader.onload = function (theFile) {        	
-        	var image = new Image();
-            image.src = theFile.target.result;
-            image.onload = function() {
-            	imageblock = createImageBlock(reader, this.width);
-            	$('#slideSpace').append(imageblock);            
-                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-            };          
-        }
-        ++contentCount;
-    }*/
+   
      
     // Ashmi changes for Story VSPC-64
     console.log("contentCount: "+contentCount)
