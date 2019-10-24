@@ -55,7 +55,6 @@ function onDoubleClick(e){
 function uploadImage() {
     //var file = document.getElementById('file').files[0];
     var file = $('#file')[0].files[0]
-    console.log("File to be uploaded: "+file.name)
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
@@ -63,28 +62,16 @@ function uploadImage() {
    
      
     // Ashmi changes for Story VSPC-64
-    console.log("contentCount: "+contentCount)
-    console.log("Value of if condition: "+$(".imgDiv").attr('id'))
-    var value = $(".imgDiv")
-    if (typeof(value) === 'object'){
-    	console.log("yes type is object")
-    }
-  
     
     if ($(".imgDiv").attr('id') && contentCount != 0){
         var imageBlockId = $('.imgDiv').attr('id')
-        console.log("imageBlockId: "+imageBlockId)
-        console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
-        console.log("URL Formed in IF BLOCK ----- "+url)
         reader.onload = function (theFile) {
         
-	        console.log("theFile: "+theFile.target.result)
 	        var image = new Image();
 	        image.src = theFile.target.result;
-	        var srcTimestamp = image.src+"?"+new Date().getTime()
-	        console.log("srcTimestamp: "+srcTimestamp)
+	        var srcTimestamp = image.src+"?"+new Date().getTime() // Used date method to replace existing image with new image
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
 	            $("#" + imageBlockId).attr("src", srcTimestamp);
@@ -93,7 +80,7 @@ function uploadImage() {
        
     } else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-        console.log("URL Formed in ELSE BLOCK ----- "+url)
+       
         reader.onload = function (theFile) {        	
         	var image = new Image();
             image.src = theFile.target.result
