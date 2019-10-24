@@ -29,7 +29,6 @@ $(document).ready(function() {
     	
     	// using data-attributes
     	var description = $("#description").data('value')  // gets value
-    	$("#description").data('value', description)  // sets value
         $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
         $("#description").hide()
         $("#newDescription").val(description)
@@ -62,7 +61,8 @@ $(document).ready(function() {
             $("#editDescription").show()
             var val = $("#newDescription").val();
             $("#editDescription").show()
-            $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+            $("#description").show() 
+            $('#description').insertBefore( "#newDescription" );
             $("#description").text(val);
             $("#description").data('value',val);
             $("#newDescription").hide()
@@ -83,11 +83,10 @@ $(document).ready(function() {
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
         var description = $("#description").data('value')
-        $('<p id="editedDescription" style="margin-top: .5rem; margin-bottom: .5rem;">'+description+'</p>').insertBefore( "#newDescription" );
+        $('description').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description);
         $("#description").show()
-        $("#editedDescription").remove()
         
     });
     
