@@ -29,12 +29,13 @@ function onMouseLeave(e) {
     $(this).removeClass("hova");
 }
 
-function onDoubleClick(e){
-    // get to the nearest divs class attribute
-    var divName = $(e.target).closest('div').attr('class');
-    //if the div is a text content block 
-    if(divName.includes("textDiv")){
-    	$(e.target).closest('.textDiv').addClass("open");
+function onDoubleClick(e){	
+    	// get the id of the nearest div with id valueDiv
+        var blockId = $(e.target).closest('div.valueDiv').hasClass( "img" );
+    	console.log(blockId);
+        $(e.target).closest('.valueDiv').addClass("open");
+        // if there is a block id we know its text block otherwise its an image block
+        if(!blockId){
         //remove card border
         $(".open").css('border', 'none');
         // get text from p tag
@@ -95,7 +96,6 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
-        	console.log("working");
             $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
@@ -274,6 +274,7 @@ $(document).ready(function() {
 		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/" />" + blockId + "?${_csrf.parameterName}=${_csrf.token}",
 		    type: 'DELETE',
 		    success: function(result) {
+		    	console.log("delete success");
 		        $('#' + blockId).remove();
 		        
 		    },
@@ -367,7 +368,8 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+data+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="${contents.id}"> <a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
+            	var textBlockId = data.textBlock;
+                var textblock = $('<div id="'+textBlockId+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="${contents.id}"> <a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -413,7 +415,10 @@ $(document).ready(function() {
     $(document).on('click','#submitTextBlock',function(){
        var formData = new FormData();
        formData.append('textBlockDesc', $("#newTextBlock").val());
+       var blockid = $(this).closest(".open").attr("id");
+       console.log(blockid); //getting object here - bad 
        formData.append('textBlockId',  $(this).closest(".open").attr("id"));
+       
        $.ajax({
            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
            type: 'POST',
@@ -424,7 +429,8 @@ $(document).ready(function() {
            enctype: 'multipart/form-data',
            success: function(data) {
                // replace text box with new description
-               closeTextBox()
+               console.log("inside succes of creating");
+               closeTextBox();
                $(".open").removeClass("open");
            },
            error: function(data) {
@@ -652,11 +658,11 @@ $(window).on('load', function () {
                     </div>
                 </div>
             </div>
-            <div style="margin: 1%;" class="valueDiv">
+       <%--      <div style="margin: 1%;" class="valueDiv">
                 <img id="${contents.id}" class="imgDiv"
                     style="margin: 1%;"
                     src="<c:url value="/api/image/${contents.image.id}" />"/>
-            </div>
+            </div> --%>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
             <div id="${contents.id}" class="valueDiv card card-body"
@@ -676,10 +682,10 @@ $(window).on('load', function () {
                     </div>
                 </div>
             </div>
-            <div id="${contents.id}" class="textDiv card card-body row"
+            <%-- <div id="${contents.id}" class="textDiv card card-body row"
                 style="margin: 10px;">
                 <p>${contents.text}</p>
-            </div>
+            </div> --%>
         </c:if>
     </c:forEach>
 </div>

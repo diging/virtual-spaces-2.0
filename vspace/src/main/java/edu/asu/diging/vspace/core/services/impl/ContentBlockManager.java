@@ -126,7 +126,6 @@ public class ContentBlockManager implements IContentBlockManager {
         IVSImage slideContentImage = saveImage(image, filename);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
-        System.out.println("workingg in manager.......");
         storeImageFile(image, slideContentImage, filename);
         IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
         imgBlock.setContentOrder(contentOrder);
@@ -150,8 +149,9 @@ public class ContentBlockManager implements IContentBlockManager {
             return;
         }
         try {
-            textBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
+            System.out.println("in delete manager");
+            textBlockRepo.deleteById(id);         
+        } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
 
