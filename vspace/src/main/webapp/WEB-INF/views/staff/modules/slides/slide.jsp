@@ -62,9 +62,19 @@ function uploadImage() {
    
      
     // Ashmi changes for Story VSPC-64
+    console.log()
+    for (var k in $(".open")) {
+        if ($(".open").hasOwnProperty(k)) {
+           console.log("values: "+$(".open")[k]);
+        }
+    }
+    
     
     if ($(".imgDiv").attr('id') && contentCount != 0){
+    	console.log("INSIDE IF BLOCK ---------")
         var imageBlockId = $('.imgDiv').attr('id')
+        console.log("imageBlockId: "+imageBlockId)
+        console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function (theFile) {
@@ -74,11 +84,14 @@ function uploadImage() {
 	        var srcTimestamp = image.src+"?"+new Date().getTime() // Used date method to replace existing image with new image
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
-	            $("#" + imageBlockId).attr("src", srcTimestamp);
+	            console.log("imageblock: "+imageblock)
+	            $("#" + imageBlockId).attr("id", imageBlockId);
+	            $("#" + imageBlockId).replaceWith(imageblock);
         	};
      }
        
     } else {
+    	console.log("INSIDE ELSE BLOCK ---------")
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
        
         reader.onload = function (theFile) {        	
