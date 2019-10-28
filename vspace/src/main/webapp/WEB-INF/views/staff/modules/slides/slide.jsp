@@ -74,10 +74,10 @@ function uploadImage() {
        
     } else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-        reader.onload = function (theFile) {        	
+        reader.onload = function (theFile) {
         	var image = new Image();
-            image.src = theFile.target.result;
-            image.onload = function() {
+        	image.src = theFile.target.result;
+        	image.onload = function() {
             	imageblock = createImageBlock(reader, this.width);
             	$('#slideSpace').append(imageblock);            
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -99,8 +99,8 @@ function uploadImage() {
         success: function(data) {
         	var imageData = JSON.parse(data);
         	$('input[id=deleteImageId]').val(imageData.imageBlockId);
-            $(".open").removeClass("open");
-            var $imgTag = imageblock.find('img[id]');
+        	$(".open").removeClass("open");
+        	var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
             	img.attr('id', imageData.imageBlockId);
