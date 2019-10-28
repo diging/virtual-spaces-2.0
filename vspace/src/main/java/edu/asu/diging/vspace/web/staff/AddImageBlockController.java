@@ -44,7 +44,7 @@ public class AddImageBlockController {
             CreationReturnValue imageBlock = contentBlockManager.createImageBlock(slideId, image, filename,
                     contentOrder);
             ObjectNode node = mapper.createObjectNode();
-            node.put("imageBlock", imageBlock.getElement().getId());
+            node.put("imageBlockId", imageBlock.getElement().getId());
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.CREATED);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectNode node = mapper.createObjectNode();

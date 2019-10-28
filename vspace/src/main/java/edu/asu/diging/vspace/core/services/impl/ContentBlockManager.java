@@ -149,7 +149,6 @@ public class ContentBlockManager implements IContentBlockManager {
             return;
         }
         try {
-            System.out.println("in delete manager");
             textBlockRepo.deleteById(id);         
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);

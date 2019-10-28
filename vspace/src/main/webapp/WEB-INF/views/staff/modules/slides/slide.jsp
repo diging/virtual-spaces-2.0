@@ -7,7 +7,7 @@
 var contentCount = ${fn:length(slideContents)};
 
 function createImageBlock(reader, width) {
-	var imageblock = $('<div class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input type="hidden" id="deleteTextId"><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
+	var imageblock = $('<div id="current" class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input style="display:none;" type="hidden" name="deleteImageId" id="deleteImageId"><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -32,7 +32,6 @@ function onMouseLeave(e) {
 function onDoubleClick(e){	
     	// get the id of the nearest div with id valueDiv
         var blockId = $(e.target).closest('div.valueDiv').hasClass( "img" );
-    	console.log(blockId);
         $(e.target).closest('.valueDiv').addClass("open");
         // if there is a block id we know its text block otherwise its an image block
         if(!blockId){
@@ -54,6 +53,8 @@ function onDoubleClick(e){
         $("#addImgAlert").show();
     }
 }
+
+//------------- creating image content blocks ------------
     
 function uploadImage() {
     var file = document.getElementById('file').files[0];
@@ -66,7 +67,7 @@ function uploadImage() {
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function () {
-            imageblock = createImageBlock(reader);
+            imageblock = createImageBlock(reader, this.width);
             $("#" + imageBlockId).replaceWith(imageblock);
             $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         }
@@ -96,12 +97,14 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
+        	var imageData = JSON.parse(data);
+        	$('input[id=deleteImageId]').val(imageData.imageBlockId);
             $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
-            	img.attr('id', data);
-            	
+            	img.attr('id', imageData.imageBlockId);
+            	document.getElementById("current").setAttribute('id', imageData.imageBlockId);    	
             }
         },
         error: function(data) {
@@ -274,7 +277,6 @@ $(document).ready(function() {
 		    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/" />" + blockId + "?${_csrf.parameterName}=${_csrf.token}",
 		    type: 'DELETE',
 		    success: function(result) {
-		    	console.log("delete success");
 		        $('#' + blockId).remove();
 		        
 		    },
@@ -307,7 +309,7 @@ $(document).ready(function() {
 			    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + blockId + "?${_csrf.parameterName}=${_csrf.token}",
 			    type: 'DELETE',
 			    success: function(result) {
-			        $('#' + blockId).remove();
+			    	$('#' + blockId).remove();
 			    },
 				error: function(data) {
 					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -369,7 +371,7 @@ $(document).ready(function() {
             enctype: 'multipart/form-data',
             success: function(data) {
             	var textBlockId = data.textBlock;
-                var textblock = $('<div id="'+textBlockId+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="${contents.id}"> <a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
+                var textblock = $('<div id="'+textBlockId+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="'+textBlockId+'"> <a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -416,7 +418,6 @@ $(document).ready(function() {
        var formData = new FormData();
        formData.append('textBlockDesc', $("#newTextBlock").val());
        var blockid = $(this).closest(".open").attr("id");
-       console.log(blockid); //getting object here - bad 
        formData.append('textBlockId',  $(this).closest(".open").attr("id"));
        
        $.ajax({
@@ -429,7 +430,6 @@ $(document).ready(function() {
            enctype: 'multipart/form-data',
            success: function(data) {
                // replace text box with new description
-               console.log("inside succes of creating");
                closeTextBox();
                $(".open").removeClass("open");
            },
@@ -658,11 +658,6 @@ $(window).on('load', function () {
                     </div>
                 </div>
             </div>
-       <%--      <div style="margin: 1%;" class="valueDiv">
-                <img id="${contents.id}" class="imgDiv"
-                    style="margin: 1%;"
-                    src="<c:url value="/api/image/${contents.image.id}" />"/>
-            </div> --%>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
             <div id="${contents.id}" class="valueDiv card card-body"
@@ -682,10 +677,6 @@ $(window).on('load', function () {
                     </div>
                 </div>
             </div>
-            <%-- <div id="${contents.id}" class="textDiv card card-body row"
-                style="margin: 10px;">
-                <p>${contents.text}</p>
-            </div> --%>
         </c:if>
     </c:forEach>
 </div>
