@@ -69,9 +69,36 @@ function uploadImage() {
         }
     }
     
+    console.log("First ID Value ---- "+$(".imgDiv").attr('id'))
+    if ($(".imgDiv").attr('id')) {
+    	console.log("Inside IF ---------- ")
+    	
+    	var imageBlockId = $('.imgDiv').attr('id')
+        console.log("imageBlockId: "+imageBlockId)
+        console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
+        formData.append('imageBlockId',imageBlockId);
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
+        reader.onload = function (theFile) {
+        
+	        var image = new Image();
+	        image.src = theFile.target.result;
+	        var srcTimestamp = image.src+"?"+new Date().getTime() // Used date method to replace existing image with new image
+	        image.onload = function () {
+	            imageblock = createImageBlock(reader, this.width);
+	            console.log("imageblock: "+imageblock)
+	            $("#" + imageBlockId).attr("id", imageBlockId);
+	            $("#" + imageBlockId).replaceWith(imageblock);
+        	};
+        }
+    	
+        //this.src = this.src.replace(image.src,$('.imgDiv').attr('src'));
+      }
     
-    if ($(".imgDiv").attr('id') && contentCount != 0){
-    	console.log("INSIDE IF BLOCK ---------")
+    
+    
+    
+    /*if ($(".imgDiv").attr('id') && contentCount != 0){
+    	//console.log("INSIDE IF BLOCK ---------")
         var imageBlockId = $('.imgDiv').attr('id')
         console.log("imageBlockId: "+imageBlockId)
         console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
@@ -90,7 +117,7 @@ function uploadImage() {
         	};
      }
        
-    } else {
+    }*/ else {
     	console.log("INSIDE ELSE BLOCK ---------")
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
        
