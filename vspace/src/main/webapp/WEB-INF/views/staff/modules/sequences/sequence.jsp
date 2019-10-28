@@ -60,12 +60,12 @@ $(document).ready(function() {
             $("#cancelEditDescription").hide()
             $("#editDescription").show()
             var val = $("#newDescription").val();
+            $("#description").text(val);
             $("#editDescription").show()
             $("#description").show() 
             $('#description').insertBefore( "#newDescription" );
-            $("#description").text(val);
             $("#description").data('value',val);
-            $("#newDescription").hide()
+            $("#newDescription").remove()
         },
         error: function(data) {
             $(".open").removeClass("open");
@@ -85,7 +85,6 @@ $(document).ready(function() {
         var description = $("#description").data('value')
         $('description').insertBefore( "#newDescription" );
         $("#newDescription").remove()
-        $("#description").text(description);
         $("#description").show()
         
     });
