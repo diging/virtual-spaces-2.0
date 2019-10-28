@@ -69,7 +69,13 @@ function uploadImage() {
         }
     }
     
-    console.log("First ID Value ---- "+$(".imgDiv").attr('id'))
+    console.log("First ID Value ---- "+$("this").attr('id'))
+    var newClass = $("this").attr('id')
+    console.log("newClass: "+newClass)
+    
+    var oldClass = $("valueDiv").attr('class')
+    console.log("oldClass: "+oldClass)
+    
     if ($(".imgDiv").attr('id')) {
     	console.log("Inside IF ---------- ")
     	
