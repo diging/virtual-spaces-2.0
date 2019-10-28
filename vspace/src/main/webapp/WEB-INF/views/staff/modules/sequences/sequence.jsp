@@ -151,7 +151,7 @@ $(document).ready(function() {
         $("#submitTitle").hide()
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
-        var sequenceTitle = $("#title").val()
+        var sequenceTitle = $("#title").data('value')
         $("#editSequenceTitle").remove()
         $("#title").text("Sequence: "+sequenceTitle)
   
