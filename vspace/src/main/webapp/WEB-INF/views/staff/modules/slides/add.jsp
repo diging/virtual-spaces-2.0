@@ -63,7 +63,7 @@ $(document).ready(function(){
              <option selected value="">Choose from existing</option>
              <option  id="slide" value="slide" label="Slide" >Slide</option>
              <option id="branchingPoint" value="branchingPoint" label="BranchingPoint">Branching Point</option>
-	     </form:select>
+         </form:select>
  </div>
   
  <div class="form-group row" id="sequences" style="display:none;">
@@ -72,7 +72,7 @@ $(document).ready(function(){
 				 <c:forEach items="${sequences}" var="sequence">
 					<option value='${sequence.id}' id="${sequence.id}">${sequence.name}</option>
 				 </c:forEach>
-			</select>
+		   </select>
 	<form:input type="hidden" id="choices" path="choices"></form:input>
  </div> 
    

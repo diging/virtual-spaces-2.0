@@ -6,7 +6,7 @@ public class SlideForm {
 
     private String name;
     private String description;
-    private String slideType;
+    private String type;
     private List<String> choices;
     
     public String getName() {
@@ -21,11 +21,11 @@ public class SlideForm {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getSlideType() {
-        return slideType;
+    public String getType() {
+        return type;
     }
-    public void setSlideType(String type) {
-        this.slideType = type;
+    public void setType(String type) {
+        this.type = type;
     }
     public List<String> getChoices() {
         return choices;

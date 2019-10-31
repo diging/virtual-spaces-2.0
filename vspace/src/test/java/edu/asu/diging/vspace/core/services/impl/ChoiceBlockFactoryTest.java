@@ -9,8 +9,8 @@ import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
 public class ChoiceBlockFactoryTest {
-
-private ChoiceBlockFactory choiceBlockFactoryToTest = new ChoiceBlockFactory();
+    
+    private ChoiceBlockFactory choiceBlockFactoryToTest = new ChoiceBlockFactory();
     
     @Test
     public void test_createChoiceBlock_success() {
@@ -26,6 +26,6 @@ private ChoiceBlockFactory choiceBlockFactoryToTest = new ChoiceBlockFactory();
         IChoiceBlock actualChoiceBlock = choiceBlockFactoryToTest.createChoiceBlock(slide, contentOrder, choice);
         Assert.assertEquals(slide.getId(), actualChoiceBlock.getSlide().getId());
         Assert.assertEquals(contentOrder, actualChoiceBlock.getContentOrder());
-        Assert.assertEquals(choice.getId(), actualChoiceBlock.getChoice().getId());
+        Assert.assertEquals(choice.getId(), actualChoiceBlock.getChoices().get(0).getId());
     }
 }

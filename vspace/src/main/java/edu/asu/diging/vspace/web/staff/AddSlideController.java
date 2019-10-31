@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.impl.ModuleManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -38,10 +39,11 @@ public class AddSlideController {
             Principal principal) {
 
         IModule module = moduleManager.getModule(moduleId);
-        if(slideForm.getSlideType().equals("branchingPoint")) {
-            slideManager.createBranchingPoint(module, slideForm);           
+        SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
+        if(type.equals(SlideType.BRANCHINGPOINT)) {
+            slideManager.createBranchingPoint(module, slideForm, type);           
         } else {
-            slideManager.createSlide(module, slideForm);
+            slideManager.createSlide(module, slideForm, type);
         }
         
         return "redirect:/staff/module/{moduleId}";

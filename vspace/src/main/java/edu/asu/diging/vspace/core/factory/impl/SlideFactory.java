@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.factory.ISlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
@@ -30,10 +31,10 @@ public class SlideFactory implements ISlideFactory {
      * edu.asu.diging.vspace.core.factory.impl.ISlideFactory#createSlide(edu.asu.diging.vspace.core.model.IModule, edu.asu.diging.vspace.web.staff.forms.SlideForm)
      */
     @Override
-    public ISlide createSlide(String type, IModule module, SlideForm form) {
+    public ISlide createSlide(IModule module, SlideForm form, SlideType type) {
         
         ISlide slide;
-        if(type.equals("Slide")) {
+        if(type.equals(SlideType.SLIDE)) {
             slide = new Slide();
         } else {
             slide = new BranchingPoint();            

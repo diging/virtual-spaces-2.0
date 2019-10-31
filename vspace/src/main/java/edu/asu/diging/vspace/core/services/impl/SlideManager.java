@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -35,15 +36,15 @@ public class SlideManager implements ISlideManager {
     private ChoiceRepository choiceRepo;
 
     @Override
-    public ISlide createSlide(IModule module, SlideForm slideForm) {
-        ISlide slide = slideFactory.createSlide("Slide", module, slideForm);             
+    public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
+        ISlide slide = slideFactory.createSlide(module, slideForm, type);             
         slideRepo.save((Slide) slide);        
         return slide;
     }
 
     @Override
-    public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm) {
-        ISlide branchingPoint = slideFactory.createSlide("BranchingPoint", module, slideForm);            
+    public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type) {
+        ISlide branchingPoint = slideFactory.createSlide(module, slideForm, type);            
         bpointRepo.save((BranchingPoint) branchingPoint);        
         return (IBranchingPoint) branchingPoint;
     }

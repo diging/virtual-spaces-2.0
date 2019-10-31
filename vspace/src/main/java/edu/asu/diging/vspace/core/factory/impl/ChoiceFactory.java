@@ -12,7 +12,7 @@ import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 
 @Service
-public class ChoiceFactory implements IChoiceFactory{
+public class ChoiceFactory implements IChoiceFactory {
     
     @Autowired
     private ISequenceManager sequenceManager;
@@ -30,7 +30,7 @@ public class ChoiceFactory implements IChoiceFactory{
             IChoice choice = new Choice();
             choice.setSequence(sequenceManager.getSequence(sequenceId));
             choices.add(choice);
-           }
+        }
         return choices;        
     }
 }
