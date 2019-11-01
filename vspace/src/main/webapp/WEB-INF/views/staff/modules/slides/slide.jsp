@@ -68,13 +68,10 @@ function uploadImage() {
            console.log("values: "+$(".open")[k]);
         }
     }
+  
     
-    console.log("First ID Value ---- "+$("this").attr('id'))
-    var newClass = $("this").attr('id')
-    console.log("newClass: "+newClass)
+    //alert($(this).attr('id'));  // shows undefined
     
-    var oldClass = $("valueDiv").attr('class')
-    console.log("oldClass: "+oldClass)
     
     if ($(".imgDiv").attr('id')) {
     	console.log("Inside IF ---------- ")
@@ -132,7 +129,8 @@ function uploadImage() {
             image.src = theFile.target.result
             image.onload = function() {
             	imageblock = createImageBlock(reader, this.width);
-            	$('#slideSpace').append(imageblock);            
+            	$('#slideSpace').append(imageblock); 
+            	console.log("imageblock ELSE ---- "+imageblock[0])
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
         }
@@ -512,6 +510,7 @@ $(window).on('load', function () {
 			<div style="margin: 1%;" class="valueDiv" id="${contents.id}">
 				<img id="${contents.id}" class="imgDiv" style="margin: 1%;"
 					src="<c:url value="/api/image/${contents.image.id}" />" />
+					<button id="toggleSelection">Select</button>
 			</div>
 		</c:if>
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
