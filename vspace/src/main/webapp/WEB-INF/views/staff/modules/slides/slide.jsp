@@ -316,15 +316,15 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(choiceBlock) {
-            	console.log(choiceBlock);
-                var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row">'+
-						'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choiceBlock.choice.sequence.id+'" >'+
-						'<h5 class="card-title">'+choiceBlock.choice.sequence.name+'</h5>'+
-						'</a></div>');            						
-                $(choiceblock).css({
+            	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
+            	$.each(choiceBlock.choices, function(index, choice) {
+            		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
+            				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
+            	});
+            	$(choiceblock).css({
                     'margin': "10px"
                 });
-                $('#slideSpace').append(choiceblock);            
+                $('#slideSpace').append(choiceblock);        
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -562,7 +562,7 @@ $(window).on('load', function () {
     </div>
 </div>
 <div id="slideSpace">
-    <c:forEach items="${slideContents}" var="contents">
+	<c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
             <div style="margin: 1%;" class="valueDiv">
                 <img id="${contents.id}" class="imgDiv"
@@ -577,12 +577,13 @@ $(window).on('load', function () {
             </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
-            <div id="${contents.choice.sequence.id}" class="card card-body row"
-                style="margin: 10px;">
-                <a href="<c:url value="/staff/module/${module.id}/sequence/${contents.choice.sequence.id}" />">${contents.choice.sequence.name}</a>
-            </div>
+        	<div id="${contents.id}" class="card card-body row" style="margin: 10px;">
+        		<c:forEach items="${contents.choices}" var="choice">
+        			<a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+        		</c:forEach>
+        	</div>
         </c:if>
-    </c:forEach>
+	</c:forEach>
 </div>
 <style type="text/css">
 .hova {
