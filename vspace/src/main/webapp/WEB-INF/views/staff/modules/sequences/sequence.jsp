@@ -63,7 +63,6 @@ $(document).ready(function() {
             $("#description").text(val);
             $("#editDescription").show()
             $("#description").show() 
-            $('#description').insertBefore( "#newDescription" );
             $("#description").data('value',val);
             $("#newDescription").remove()
         },
@@ -83,7 +82,6 @@ $(document).ready(function() {
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
         var description = $("#description").data('value')
-        $('description').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").show()
         
@@ -102,7 +100,6 @@ $(document).ready(function() {
     	// Using data attribute
     	var sequenceTitle = $("#titleName").data('value')  // gets value without using trim function
         $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-    	$("#title").val(sequenceTitle)
     	$('#title').text('Sequence: ')
         $("#newTitle").val(sequenceTitle)
         $("#editTitle").hide()
