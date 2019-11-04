@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <h1>Add new Module</h1>
-
+   
 <c:url value="/staff/module/add" var="postUrl" />
 <form:form method="POST"
           action="${postUrl}" modelAttribute="module">

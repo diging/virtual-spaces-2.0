@@ -8,5 +8,7 @@ public interface ISequenceManager {
     ISequence storeSequence(String moduleId, SequenceForm sequenceForm);
 
     ISequence getSequence(String sequenceId);
+    
+    void updateSequence(ISequence sequence);
 
 }

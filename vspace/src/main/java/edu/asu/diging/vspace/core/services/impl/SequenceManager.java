@@ -23,7 +23,7 @@ public class SequenceManager implements ISequenceManager {
 
     @Autowired
     private ModuleManager moduleManager;
-    
+
     @Autowired
     private SlideManager slideManager;
 
@@ -36,12 +36,12 @@ public class SequenceManager implements ISequenceManager {
     @Override
     public ISequence storeSequence(String moduleId, SequenceForm sequenceForm) {
         List<ISlide> slides = new ArrayList<>();
-        for(String slideId : sequenceForm.getOrderedSlides()) {
+        for (String slideId : sequenceForm.getOrderedSlides()) {
             slides.add(slideManager.getSlide(slideId));
         }
         ISequence sequence = sequenceFactory.createSequence(moduleManager.getModule(moduleId), sequenceForm, slides);
         return sequenceRepo.save((Sequence) sequence);
-         
+
     }
 
     @Override
@@ -51,5 +51,10 @@ public class SequenceManager implements ISequenceManager {
             return mayBeSequence.get();
         }
         return null;
+    }
+
+    @Override
+    public void updateSequence(ISequence sequence) {
+        sequenceRepo.save((Sequence) sequence);
     }
 }
