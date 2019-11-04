@@ -48,12 +48,19 @@ function onDoubleClick(e){
         // remove highlighting if present
         $(this).removeClass("hova");
     } else {
+    	console.log(" ON double click Function ---- ")
         $("#addImgAlert").show();
+    	var imgID = $(e.target).closest('div').attr('id');
+    	console.log("Image ID to replace: "+imgID)
+    	
+    	
     }
 }
     
 function uploadImage() {
     
+	
+	
     var file = $('#file')[0].files[0]
     var reader  = new FileReader();
     var formData = new FormData();
@@ -62,15 +69,7 @@ function uploadImage() {
    
      
     // Ashmi changes for Story VSPC-64
-    console.log()
-    for (var k in $(".open")) {
-        if ($(".open").hasOwnProperty(k)) {
-           console.log("values: "+$(".open")[k]);
-        }
-    }
-  
     
-    //alert($(this).attr('id'));  // shows undefined
     
     
     if ($(".imgDiv").attr('id')) {
@@ -276,6 +275,12 @@ $(document).ready(function() {
       });
     
     $("#uploadImage").click(function(e) {
+    	
+    	/*for(p in e) {
+    	    console.log ("key-value of e: "+p, e[p])
+    	}*/
+    	var divID = $(e.target).closest('div').attr('id');
+        console.log("ID of selected image: "+divID)
         e.preventDefault();
             $("#addImgAlert").hide();
             uploadImage();
@@ -510,7 +515,6 @@ $(window).on('load', function () {
 			<div style="margin: 1%;" class="valueDiv" id="${contents.id}">
 				<img id="${contents.id}" class="imgDiv" style="margin: 1%;"
 					src="<c:url value="/api/image/${contents.image.id}" />" />
-					<button id="toggleSelection">Select</button>
 			</div>
 		</c:if>
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
