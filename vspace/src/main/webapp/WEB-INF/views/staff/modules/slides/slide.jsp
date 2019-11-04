@@ -5,7 +5,6 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
-
 function createImageBlock(reader, width) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -49,9 +48,10 @@ function onDoubleClick(e){
         $(this).removeClass("hova");
     } else {
     	console.log(" ON double click Function ---- ")
-        $("#addImgAlert").show();
     	var imgID = $(e.target).closest('div').attr('id');
-    	console.log("Image ID to replace: "+imgID)
+        $("#addImgAlert").show();
+    	$("#uploadImage").data('value', imgID)  // sets Image ID value
+    	console.log("Image ID: "+$("#uploadImage").data('value')) // gets Image ID value
     	
     	
     }
@@ -60,7 +60,8 @@ function onDoubleClick(e){
 function uploadImage() {
     
 	
-	
+	var imgID = $("#uploadImage").data('value')
+	console.log("uploadImage() -- ID value: "+imgID)
     var file = $('#file')[0].files[0]
     var reader  = new FileReader();
     var formData = new FormData();
@@ -72,10 +73,9 @@ function uploadImage() {
     
     
     
-    if ($(".imgDiv").attr('id')) {
-    	console.log("Inside IF ---------- ")
-    	
-    	var imageBlockId = $('.imgDiv').attr('id')
+    if (imgID != '') {
+    	console.log("Inside IF ---------- ")	
+    	var imageBlockId = imgID
         console.log("imageBlockId: "+imageBlockId)
         console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
         formData.append('imageBlockId',imageBlockId);
@@ -83,43 +83,18 @@ function uploadImage() {
         reader.onload = function (theFile) {
         
 	        var image = new Image();
-	        image.src = theFile.target.result;
+	        image.src = theFile.target.result
 	        var srcTimestamp = image.src+"?"+new Date().getTime() // Used date method to replace existing image with new image
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
 	            console.log("imageblock: "+imageblock)
 	            $("#" + imageBlockId).attr("id", imageBlockId);
-	            $("#" + imageBlockId).replaceWith(imageblock);
+	            //$("#" + imageBlockId).replaceWith(imageblock);
+	            $("#" + imageblock).attr("src", srcTimestamp);
         	};
         }
-    	
-        //this.src = this.src.replace(image.src,$('.imgDiv').attr('src'));
       }
-    
-    
-    
-    
-    /*if ($(".imgDiv").attr('id') && contentCount != 0){
-    	//console.log("INSIDE IF BLOCK ---------")
-        var imageBlockId = $('.imgDiv').attr('id')
-        console.log("imageBlockId: "+imageBlockId)
-        console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
-        formData.append('imageBlockId',imageBlockId);
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
-        reader.onload = function (theFile) {
-        
-	        var image = new Image();
-	        image.src = theFile.target.result;
-	        var srcTimestamp = image.src+"?"+new Date().getTime() // Used date method to replace existing image with new image
-	        image.onload = function () {
-	            imageblock = createImageBlock(reader, this.width);
-	            console.log("imageblock: "+imageblock)
-	            $("#" + imageBlockId).attr("id", imageBlockId);
-	            $("#" + imageBlockId).replaceWith(imageblock);
-        	};
-     }
-       
-    }*/ else {
+  else {
     	console.log("INSIDE ELSE BLOCK ---------")
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
        
@@ -129,7 +104,6 @@ function uploadImage() {
             image.onload = function() {
             	imageblock = createImageBlock(reader, this.width);
             	$('#slideSpace').append(imageblock); 
-            	console.log("imageblock ELSE ---- "+imageblock[0])
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
         }
@@ -148,8 +122,8 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
-            //$(".open").removeClass("open");
-            $(".imgDiv").removeClass("imgDiv");
+            $(".open").removeClass("open");
+            //$(".imgDiv").removeClass("imgDiv");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
@@ -275,12 +249,6 @@ $(document).ready(function() {
       });
     
     $("#uploadImage").click(function(e) {
-    	
-    	/*for(p in e) {
-    	    console.log ("key-value of e: "+p, e[p])
-    	}*/
-    	var divID = $(e.target).closest('div').attr('id');
-        console.log("ID of selected image: "+divID)
         e.preventDefault();
             $("#addImgAlert").hide();
             uploadImage();
@@ -502,7 +470,7 @@ $(window).on('load', function () {
 				</div>
 				<div class="modal-footer">
 					<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
-					<button type="submit" id="uploadImage" class="btn btn-primary">Upload
+					<button type="submit" id="uploadImage" class="btn btn-primary" data-value="">Upload
 						Image</button>
 				</div>
 			</form>
