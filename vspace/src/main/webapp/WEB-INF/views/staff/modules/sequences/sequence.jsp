@@ -98,7 +98,7 @@ $(document).ready(function() {
     
     $("#editTitle").click(function() {
     	// Using data attribute
-    	var sequenceTitle = $("#titleName").data('value')  // gets value without using trim function
+    	var sequenceTitle = $("#title").data('value')  // gets value without using trim function
         $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
     	$('#title').text('Sequence: ')
         $("#newTitle").val(sequenceTitle)
@@ -130,7 +130,7 @@ $(document).ready(function() {
                 var val = $("#newTitle").val();
                 $("#editSequenceTitle").remove()
                 $("#title").text("Sequence: " + val)
-                $("#titleName").data('value', val)  // sets value
+                $("#title").data('value', val)  // sets value
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -147,7 +147,7 @@ $(document).ready(function() {
         $("#submitTitle").hide()
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
-        var sequenceTitle = $("#titleName").data('value')  // gets value
+        var sequenceTitle = $("#title").data('value')  // gets value
         $("#editSequenceTitle").remove()
         $("#title").text("Sequence: "+sequenceTitle)
   
@@ -165,7 +165,6 @@ $(document).ready(function() {
 	<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;" data-value="${sequence.name}">
 		Sequence: ${sequence.name}
 		</h2>
-		<p id="titleName" style="margin-top: .5rem; font-size:35px; margin-bottom: .5rem;" data-value="${sequence.name}"></p>
 		<a id="editTitle" class="btn" href="#"
 			style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
 		<button id="submitTitle" type="button" class="btn btn-primary" style="float: left; margin-right: 1%;">Save</button>
