@@ -81,7 +81,6 @@ $(document).ready(function() {
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        var description = $("#description").data('value')
         $("#newDescription").remove()
         $("#description").show()
         
