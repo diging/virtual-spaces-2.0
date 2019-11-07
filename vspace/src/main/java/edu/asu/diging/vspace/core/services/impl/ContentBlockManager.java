@@ -80,7 +80,7 @@ public class ContentBlockManager implements IContentBlockManager {
         ISlide slide = slideManager.getSlide(slideId);
         return slide.getContents();
     }
-
+    
     /*
      * (non-Javadoc)
      * 

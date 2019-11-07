@@ -3,7 +3,10 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
@@ -11,7 +14,11 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 @Entity
 public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
 
-    @OneToMany(targetEntity = Choice.class)
+    @OneToOne(targetEntity = Choice.class)
+//    @JoinTable(name = "ChoiceBlock_Choice",
+//    joinColumns = {@JoinColumn(name = "ChoiceBlock_id")},
+//    inverseJoinColumns = {@JoinColumn(name = "choices_id")}
+//    )
     private List<IChoice> choices;
 
     /*

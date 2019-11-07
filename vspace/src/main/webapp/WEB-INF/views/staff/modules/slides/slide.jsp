@@ -402,6 +402,29 @@ $(window).on('load', function () {
 			}
 		}
 	}
+	
+	/* //ajax to get all the contentblocks	of slide
+	$.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/contents?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'GET',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            success: function(contentBlocks) {
+            		console.log("success");
+            		console.log(contentBlocks);
+                //$('#slideSpace').append(choiceblock);  
+            		$.each(contentBlocks, function(index, choice) {
+                		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
+                				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
+                	});
+            },
+            error: function(data) {
+            	console.log("nothing to display");
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        }); */
 });
 </script>
 <ol class="breadcrumb">

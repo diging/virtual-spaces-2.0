@@ -1,11 +1,13 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -26,8 +28,12 @@ public class Choice extends VSpaceElement implements IChoice {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-//    @ManyToOne(targetEntity = ChoiceBlock.class)
-//    private IChoiceBlock choiceBlock;
+//    @OneToMany(targetEntity = ChoiceBlock.class)
+//    @JoinTable(name = "ChoiceBlck_Choice",
+//    joinColumns = {@JoinColumn(name = "ChoiceBlock_id")},
+//    inverseJoinColumns = {@JoinColumn(name = "choices_id")}
+//    )
+//    private List<IChoiceBlock> choiceBlock;
 
     @OneToOne(targetEntity = Sequence.class)
     private ISequence sequence;
