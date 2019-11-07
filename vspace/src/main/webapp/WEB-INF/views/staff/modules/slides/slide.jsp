@@ -47,13 +47,11 @@ function onDoubleClick(e){
         // remove highlighting if present
         $(this).removeClass("hova");
     } else {
-    	console.log(" ON double click Function ---- ")
-    	var imgID = $(e.target).closest('div').attr('id');
-        $("#addImgAlert").show();
-    	$("#uploadImage").data('value', imgID)  // sets Image ID value
-    	console.log("Image ID: "+$("#uploadImage").data('value')) // gets Image ID value
-    	
-    	
+	    	var imgID = $(e.target).closest('div').attr('id');
+	    	console.log("imgID on doubleclick: "+imgID)
+	    	$("#uploadImage").data('value', imgID)
+	    	$("#addImgAlert").show();
+        	
     }
 }
     
@@ -61,7 +59,6 @@ function uploadImage() {
     
 	
 	var imgID = $("#uploadImage").data('value')
-	console.log("uploadImage() -- ID value: "+imgID)
     var file = $('#file')[0].files[0]
     var reader  = new FileReader();
     var formData = new FormData();
@@ -71,33 +68,28 @@ function uploadImage() {
      
     // Ashmi changes for Story VSPC-64
     
-    
-    
+
     if (imgID != '') {
-    	console.log("Inside IF ---------- ")	
     	var imageBlockId = imgID
-        console.log("imageBlockId: "+imageBlockId)
-        console.log("imageBlockId src: "+$('.imgDiv').attr('src'))
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function (theFile) {
         
 	        var image = new Image();
 	        image.src = theFile.target.result
-	        var srcTimestamp = image.src+"?"+new Date().getTime() // Used date method to replace existing image with new image
+	        var srcTimestamp = image.src+"?"+new Date().getTime()
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
-	            console.log("imageblock: "+imageblock)
 	            $("#" + imageBlockId).attr("id", imageBlockId);
-	            //$("#" + imageBlockId).replaceWith(imageblock);
-	            $("#" + imageblock).attr("src", srcTimestamp);
+	            $("#" + imageBlockId).replaceWith(imageblock);
+	            //$("#" + imageBlockId).attr("src", srcTimestamp);
+	        
         	};
         }
       }
   else {
-    	console.log("INSIDE ELSE BLOCK ---------")
+	  
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-       
         reader.onload = function (theFile) {        	
         	var image = new Image();
             image.src = theFile.target.result
@@ -108,6 +100,7 @@ function uploadImage() {
             };          
         }
         ++contentCount;
+       
     }
     
     reader.readAsDataURL(file);
@@ -122,8 +115,8 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
-            $(".open").removeClass("open");
-            //$(".imgDiv").removeClass("imgDiv");
+            //$(".open").removeClass("open");
+            $(".imgDiv").removeClass("imgDiv");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
