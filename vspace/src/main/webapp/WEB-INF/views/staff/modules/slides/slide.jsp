@@ -49,8 +49,8 @@ function onDoubleClick(e){
     } else {
     	
     	// storing image ID selected by the user to replace, onDoubleClick
-    	var imgID = $(e.target).closest('div').attr('id'); // sets image ID
-    	$("#uploadImage").data('value', imgID)
+    	var imgID = $(e.target).closest('div').attr('id'); 
+    	$("#uploadImage").data('value', imgID) // sets image ID value
     	$("#addImgAlert").show();
        	
     }
@@ -59,7 +59,7 @@ function onDoubleClick(e){
 function uploadImage() {
     
 	
-	var imgID = $("#uploadImage").data('value') // gets image ID
+	var imgID = $("#uploadImage").data('value') // gets image ID value
     var file = $('#file')[0].files[0]
     var reader  = new FileReader();
     var formData = new FormData();
