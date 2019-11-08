@@ -253,7 +253,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+text+'</p></div>');
+                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'</p></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
