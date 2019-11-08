@@ -5,136 +5,201 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
-	
+
+function createImageBlock(reader, width) {
+    var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
+    imageblock.find('img').attr('src', reader.result);
+    if(width > 800)
+    	imageblock.find('img').attr('width', '800px');
+    return imageblock;
+}
+
+function onMouseEnter(e){
+    var target = $( e.target );
+    $(".hova").removeClass("hova");
+    $(e.target).addClass("hova");
+    // This is needed to prevent only the p tag from being highlighted
+    if(target.is('p')){
+        $(e.target).parent().addClass("hova");
+    }
+    //prevent normal hover actions
+    e.preventDefault();
+}
+function onMouseLeave(e) {
+    $(this).removeClass("hova");
+}
+
+function onDoubleClick(e){
+    // get to the nearest divs class attribute
+    var divName = $(e.target).closest('div').attr('class');
+    //if the div is a text content block 
+    if(divName.includes("textDiv")){
+    	$(e.target).closest('.textDiv').addClass("open");
+        //remove card border
+        $(".open").css('border', 'none');
+        // get text from p tag
+        var description = $(".open").children("p:first").text();
+        // insert text box and buttons
+        $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
+        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
+        $(".open").children("p:first").remove();
+        // unbind events to prevent multiple instances of buttons and constant highlighting
+        $('.textDiv').unbind('mouseenter mouseleave dblclick');
+        // remove highlighting if present
+        $(this).removeClass("hova");
+    } else {
+        $("#addImgAlert").show();
+    }
+}
+    
 function uploadImage() {
-	var file = document.getElementById('file').files[0];
-	var reader  = new FileReader();
-	
-	reader.onload = function () {
-		var imageblock = $('<img src="#" />');
-		imageblock.attr('src', reader.result);
-		imageblock.attr('width', '800px');
-		$('#slideSpace').append(imageblock);        
-	}
-	++contentCount;
-	reader.readAsDataURL(file);
-	
-	var file = document.getElementById('file').files[0];
-	var formData = new FormData();
-	formData.append('file', file);
-	formData.append('contentOrder', contentCount);
-	$.ajax({
-		enctype: 'multipart/form-data',
-		// ------------- creating image content blocks ------------
-		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />",
-		type: 'POST',
-		cache       : false,
-		contentType : false,
-		processData : false,
-		data: formData,
-		
-		success: function(data) {
-			// do nothing for now
-		},
-		error: function(data) {
-		}
-	});
+    var file = document.getElementById('file').files[0];
+    var reader  = new FileReader();
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('contentOrder', contentCount);
+    if ($(".open")[0]){
+        var imageBlockId = $('.open img').attr('id')
+        formData.append('imageBlockId',imageBlockId);
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
+        reader.onload = function () {
+            imageblock = createImageBlock(reader);
+            $("#" + imageBlockId).replaceWith(imageblock);
+        }
+       
+    } else {
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        reader.onload = function (theFile) {        	
+        	var image = new Image();
+            image.src = theFile.target.result;
+            image.onload = function() {
+            	imageblock = createImageBlock(reader, this.width);
+            	$('#slideSpace').append(imageblock);            
+                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            };          
+        }
+        ++contentCount;
+    }
+    reader.readAsDataURL(file);
+    $.ajax({
+        enctype: 'multipart/form-data',
+        // ------------- creating image content blocks ------------
+        url: url,
+        type: 'POST',
+        cache       : false,
+        contentType : false,
+        processData : false,
+        data: formData,
+        
+        success: function(data) {
+            $(".open").removeClass("open");
+            var $imgTag = imageblock.find('img[id]');
+            if($imgTag.length == 0){
+            	var img = imageblock.find('img')
+            	img.attr('id', data);
+            }
+        },
+        error: function(data) {
+        	$(".open").removeClass("open");
+        }
+    });
 } 
-	
-$(document).ready(function() {
-	//-------- edit description --------
-	$("#submitDescription").hide()
-	$("#cancelEditDescription").hide()
-	var description = $("#description").text()
-	$("#editDescription").click(function() {
-		$('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
-		$("#description").remove()
-		$("#editDescription").hide()
-		$("#submitDescription").show()
-		$("#cancelEditDescription").show()
-		
-	});
-	
-	$("#submitDescription").click(function() {
-		var formData = new FormData();
-		formData.append('description', $("#newDescription").val());
-		$.ajax({
-		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
-		type: 'POST',
-		cache       : false,
-		contentType : false,
-		processData : false,
-		data: formData,
-		enctype: 'multipart/form-data',
-		success: function(data) {
-		    // replace text box with new description
-			$("#submitDescription").hide()
-			$("#cancelEditDescription").hide()
-			$("#editDescription").show()
-			var val = $("#newDescription").val();
-			$('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
-			$("#newDescription").remove();
-			$("#description").text(val)
-		},
-		error: function(data) {
-			    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			    $('.error').append(alert);
-			}
-		});
-		
-  	});
-	
-	$("#cancelEditDescription").click(function(){
-		$("#submitDescription").hide()
-		$("#editDescription").show()
-	    $("#cancelEditDescription").hide()
-	    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+    
+$(document).ready(function() { 
+    //-------- edit contentblock description --------
+    $("#submitDescription").hide()
+    $("#cancelEditDescription").hide()
+    var description = $("#description").text()
+    $("#editDescription").click(function() {
+        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+        $("#description").remove()
+        $("#editDescription").hide()
+        $("#submitDescription").show()
+        $("#cancelEditDescription").show()
+        
+    });
+
+    $("#submitDescription").click(function() {
+        var formData = new FormData();
+        formData.append('description', $("#newDescription").val());
+        $.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
+        type: 'POST',
+        cache       : false,
+        contentType : false,
+        processData : false,
+        data: formData,
+        enctype: 'multipart/form-data',
+        success: function(data) {
+            // replace text box with new description
+            $("#submitDescription").hide()
+            $("#cancelEditDescription").hide()
+            $("#editDescription").show()
+            var val = $("#newDescription").val();
+            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+            $("#newDescription").remove();
+            $("#description").text(val)
+        },
+        error: function(data) {
+            $(".open").removeClass("open");
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+        
+      });
+    
+    $("#cancelEditDescription").click(function(){
+        $("#submitDescription").hide()
+        $("#editDescription").show()
+        $("#cancelEditDescription").hide()
+        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description)
-	    
-	});
-	
-	//------- edit title --------
-	$("#submitTitle").hide();
-	$("#cancelEditTitle").hide();
-	var getTitleText = $("#title").text().split(": ")[1]
-	$("#editTitle").click(function() {
-		$('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-		$('#title').text('Slide: ')
-		$("#newTitle").val(getTitleText)
-		$("#editTitle").hide()
-		$("#submitTitle").show()
-		$("#cancelEditTitle").show()
-		
-	});
-	
-	$("#submitTitle").click(function() {
-		var formData = new FormData();
-		formData.append('title', $("#newTitle").val());
-		$.ajax({
-    		url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/title?${_csrf.parameterName}=${_csrf.token}" />",
-    		type: 'POST',
-    		cache       : false,
-    		contentType : false,
-    		processData : false,
-    		data: formData,
-    		enctype: 'multipart/form-data',
-    		success: function(data) {
-    			// replace text box with new description
-    			$("#submitTitle").hide()
-    			$("#cancelEditTitle").hide();
-    			$("#editTitle").show()
-    			var val = $("#newTitle").val();
-    			$("#newTitle").closest('div').remove();
-    			$("#title").text("Silde: " + val)
-    			
-    		},
-    		error: function(data) {
-    			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-    			$('.error').append(alert);
-    		}
-		});
-  	});
+        
+    });
+    
+    //------- edit title --------
+    $("#submitTitle").hide();
+    $("#cancelEditTitle").hide();
+    var getTitleText = $("#title").text().split(": ")[1]
+    $("#editTitle").click(function() {
+        $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+        $('#title').text('Slide: ')
+        $("#newTitle").val(getTitleText)
+        $("#editTitle").hide()
+        $("#submitTitle").show()
+        $("#cancelEditTitle").show()
+        
+    });
+    
+    $("#submitTitle").click(function() {
+        var formData = new FormData();
+        formData.append('title', $("#newTitle").val());
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/title?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                // replace text box with new description
+                $("#submitTitle").hide()
+                $("#cancelEditTitle").hide();
+                $("#editTitle").show()
+                var val = $("#newTitle").val();
+                $("#newTitle").closest('div').remove();
+                $("#title").text("Silde: " + val)
+                
+            },
+            error: function(data) {
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+      });
    $("#cancelEditTitle").click(function(){
         $("#submitTitle").hide()
         $("#editTitle").show()
@@ -143,53 +208,133 @@ $(document).ready(function() {
         $("#title").text("Silde: " + getTitleText)
         
     });
-	
-	$("#addText").click(function() {
-		$("#addTextAlert").show();
-  	});
-	
-	$("#addImage").click(function() {
-		$("#addImgAlert").show();
-  	});
-	
-	$("#uploadImage").click(function(e) {
-		e.preventDefault();
-			$("#addImgAlert").hide();
-			uploadImage();
-  	});
-	
-	$("#cancelSubmitText").click(function() {
-		$("#addTextAlert").hide();	
-	});
-	
-	$("#cancelImageBtn").click(function() {
-		$("#image1").remove();
-		$("#addImgAlert").hide();	
-	});
-	
-	$("#submitText").on("click", function(e) {
-		$("#addTextAlert").hide();
-		e.preventDefault();
+    
+    $("#addText").click(function() {
+        $("#addTextAlert").show();
+      });
+    
+    $("#addImage").click(function() {
+        $("#addImgAlert").show();
+      });
+    
+    $("#uploadImage").click(function(e) {
+        e.preventDefault();
+            $("#addImgAlert").hide();
+            uploadImage();
+      });
+    
+    $("#cancelSubmitText").click(function() {
+        $("#addTextAlert").hide();	
+    });
+    
+    $("#cancelImageBtn").click(function() {
+        $("#image1").remove();
+        $("#addImgAlert").hide();
+        $(".open").removeClass("open");
+    });
+    
+    $("#submitText").on("click", function(e) {
+        $("#addTextAlert").hide();
+        e.preventDefault();
+        // ------------- creating text content blocks ------------
+        
+        var formData = new FormData();
+        var text = $("#textBlockText").val()
+        formData.append('content', $("#textBlockText").val());
+        ++contentCount;
+        formData.append('contentOrder', contentCount);
+        
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                var textblock = $('<div id="'+ data +'" class="valueDiv card card-body row"><p>'+text+'</p></div>');
+                $(textblock).css({
+                    'margin': "10px"
+                });
+                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('#slideSpace').append(textblock);
+               
+            },
+            error: function(data) {
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+        $("#textBlockText").val('')
+    });
+    $("#addImgAlert").draggable();
+    $("#addTextAlert").draggable();
+    
+    // ------------- edit text block ----------------
+    
+    
+    function closeTextBox() {
+        var description = $("#newTextBlock").val()
+        // clear text box and buttons
+        $(".open").empty()
+        $(".open").append('<p>'+description+'</p>');
+        // reset border of the card
+        $(".open").css('border', '1px solid rgba(0,0,0,.125)');
+        //rebind event handlers
+        $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        // remove id from storage so its not there on refresh
+        $(".open").removeClass("open");
+    }
+    
+    // must add the event to the document since the buttons are added dynamically
+    $(document).on('click','#cancelTextBlock',function(){
+    	document.getElementById("newTextBlock").value = document.getElementById("newTextBlock").defaultValue;
+    	closeTextBox();
+    });
 
-		var payload = {};
-		payload["content"] = $("#textBlockText").val();
-		
-		var textblock = $('<div class="card card-body">'+payload["content"]+'</div>');
-		$(textblock).css({
-			'margin': "10px"
-		});
-		$('#slideSpace').append(textblock);
-		++contentCount;
-		payload["contentOrder"] = contentCount;
-		// ------------- creating text content blocks ------------
-		$.post("<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />", payload, function(data) {
-		});
-		
-		$("#textBlockText").val('')
-	});
-	$("#addImgAlert").draggable();
-	$("#addTextAlert").draggable();
+    $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
+    $(document).on('click','#submitTextBlock',function(){
+       var formData = new FormData();
+       formData.append('textBlockDesc', $("#newTextBlock").val());
+       formData.append('textBlockId',  $(this).closest(".open").attr("id"));
+       $.ajax({
+           url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
+           type: 'POST',
+           cache       : false,
+           contentType : false,
+           processData : false,
+           data: formData,
+           enctype: 'multipart/form-data',
+           success: function(data) {
+               // replace text box with new description
+               closeTextBox()
+               $(".open").removeClass("open");
+           },
+           error: function(data) {
+               var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+               $('.error').append(alert);
+           }
+       });
+    });    
+});
+
+$(window).on('load', function () {
+	var divWindow = $(".valueDiv");
+	var images = $(".imgDiv");
+	resizeImage(images);
+	
+	function resizeImage(images) {
+		for(var i =0; i < images.length; i++) {
+			if (images[i].width > divWindow.width()) {
+				images[i].width = 800;
+			} else {
+				$(".valueDiv").css("width", images[i].width);
+			}
+		}
+	}
 });
 </script>
 <ol class="breadcrumb">
@@ -244,13 +389,14 @@ $(document).ready(function() {
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button"
             id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false"
+            aria-haspopup="true" aria-expanded="false" style="float:left;"
         >Add content</button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a id="addText" class="dropdown-item" href="#">Add Text</a>
             <a id="addImage" class="dropdown-item" href="#">Add
                 Image</a>
         </div>
+        <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
     </div>
 </nav>
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
@@ -259,14 +405,12 @@ $(document).ready(function() {
             <div class="modal-header">
                 <h5 class="modal-title">Add new Text Block</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form name="textForm" id="textUploadForm"
-                enctype="multipart/form-data" method="post"
-            >
+                enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <h6>
                         <small>Enter Text: </small>
@@ -293,29 +437,24 @@ $(document).ready(function() {
             <div class="modal-header">
                 <h5 class="modal-title">Add new Image Block</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form name="photoForm" id="imageUploadForm"
-                enctype="multipart/form-data" method="post"
-            >
+                enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <h6>
                         <small>Upload Image: </small>
                     </h6>
                     <input class="form-control" type="file" name="file"
-                        rows="5" cols="500" id="file"
-                    />
+                        rows="5" cols="500" id="file"/>
                 </div>
                 <div class="modal-footer">
                     <button id="cancelImageBtn" type="reset"
-                        class="btn light"
-                    >Cancel</button>
+                        class="btn light">Cancel</button>
                     <button type="submit" id="uploadImage"
-                        class="btn btn-primary"
-                    >Upload Image</button>
+                        class="btn btn-primary">Upload Image</button>
                 </div>
             </form>
         </div>
@@ -324,17 +463,22 @@ $(document).ready(function() {
 <div id="slideSpace">
     <c:forEach items="${slideContents}" var="contents">
         <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-            <div class="valueDiv">
-                <img id="${contents.image.id}" width="800px"
-                    style="margin: 10px;"
-                    src="<c:url value="/api/image/${contents.image.id}" />"
-                />
+            <div style="margin: 1%;" class="valueDiv">
+                <img id="${contents.id}" class="imgDiv"
+                    style="margin: 1%;"
+                    src="<c:url value="/api/image/${contents.image.id}" />"/>
             </div>
         </c:if>
         <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-            <div class="valueDiv card card-body" style="margin: 10px;">
+            <div id="${contents.id}" class="textDiv card card-body row"
+                style="margin: 10px;">
                 <p>${contents.text}</p>
             </div>
         </c:if>
     </c:forEach>
 </div>
+<style type="text/css">
+.hova {
+    background-color: #bfb168;
+}
+</style>

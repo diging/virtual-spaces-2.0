@@ -46,10 +46,9 @@ public class SlideManager implements ISlideManager {
     public void updateSlide(Slide slide) {
         slideRepo.save((Slide) slide);
     }
-
+    
     @Override
     public void deleteSlide(String slideId) {
         slideRepo.delete((Slide) getSlide(slideId));
     }
-
 }

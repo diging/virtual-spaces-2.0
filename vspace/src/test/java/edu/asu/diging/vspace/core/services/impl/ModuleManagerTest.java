@@ -36,7 +36,6 @@ public class ModuleManagerTest {
 
         IModule iModuleActual = managerToTest.getModule(newModule.getId());
         Assert.assertEquals(mockModule.get().getId(), iModuleActual.getId());
-        Assert.assertEquals(mockModule.get().getName(), iModuleActual.getName());
     }
 
     @Test
