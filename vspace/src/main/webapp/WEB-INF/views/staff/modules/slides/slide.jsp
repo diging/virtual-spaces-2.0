@@ -69,7 +69,7 @@ function uploadImage() {
      
     // Ashmi changes for Story VSPC-64
     
-	// checks if ID present to replace
+	// checks if image ID is present to replace
     if (imgID != '') {
     	
     	var imageBlockId = imgID
