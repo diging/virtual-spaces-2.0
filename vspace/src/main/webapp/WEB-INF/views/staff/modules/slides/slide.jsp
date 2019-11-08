@@ -121,7 +121,7 @@ function uploadImage() {
             	var img = imageblock.find('img')
             	img.attr('id', data);
             }
-            // refreshing web page to not load page from cache
+            // refreshing webpage to prevent page load from cache
             location.reload(true)
         },
         error: function(data) {
