@@ -47,11 +47,12 @@ function onDoubleClick(e){
         // remove highlighting if present
         $(this).removeClass("hova");
     } else {
-	    	var imgID = $(e.target).closest('div').attr('id');
-	    	console.log("imgID on doubleclick: "+imgID)
-	    	$("#uploadImage").data('value', imgID)
-	    	$("#addImgAlert").show();
-        	
+    	
+    	// storing image ID selected by the user to replace, onDoubleClick
+    	var imgID = $(e.target).closest('div').attr('id');
+    	$("#uploadImage").data('value', imgID)
+    	$("#addImgAlert").show();
+       	
     }
 }
     
@@ -77,13 +78,11 @@ function uploadImage() {
         
 	        var image = new Image();
 	        image.src = theFile.target.result
-	        var srcTimestamp = image.src+"?"+new Date().getTime()
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
 	            $("#" + imageBlockId).attr("id", imageBlockId);
 	            $("#" + imageBlockId).replaceWith(imageblock);
-	            //$("#" + imageBlockId).attr("src", srcTimestamp);
-	        
+	     
         	};
         }
       }
@@ -115,13 +114,14 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
-            //$(".open").removeClass("open");
-            $(".imgDiv").removeClass("imgDiv");
+            $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
             	img.attr('id', data);
             }
+            // refreshing web page to not load page from cache
+            location.reload(true)
         },
         error: function(data) {
         	$(".open").removeClass("open");
@@ -252,7 +252,8 @@ $(document).ready(function() {
     });
     
     $("#cancelImageBtn").click(function() {
-        $("#image1").remove();
+    	// Initialize selected image ID to blank, on clicking cancel
+    	$("#uploadImage").data('value', '')
         $("#addImgAlert").hide();
         $(".open").removeClass("open");
     });
