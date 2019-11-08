@@ -12,6 +12,7 @@ function createImageBlock(reader, width) {
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
+    console.log("hi1");
     return imageblock;
 }
 
@@ -100,6 +101,7 @@ function uploadImage() {
             }
         },
         error: function(data) {
+        	console.log("error??");
         	$(".open").removeClass("open");
         }
     });

@@ -14,11 +14,7 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 @Entity
 public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
 
-    @OneToOne(targetEntity = Choice.class)
-//    @JoinTable(name = "ChoiceBlock_Choice",
-//    joinColumns = {@JoinColumn(name = "ChoiceBlock_id")},
-//    inverseJoinColumns = {@JoinColumn(name = "choices_id")}
-//    )
+    @OneToMany(targetEntity = Choice.class)
     private List<IChoice> choices;
 
     /*

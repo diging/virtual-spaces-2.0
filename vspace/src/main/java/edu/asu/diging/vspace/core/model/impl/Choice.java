@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
 //@Inheritance(strategy = InheritanceType.JOINED)
@@ -33,7 +35,9 @@ public class Choice extends VSpaceElement implements IChoice {
 //    joinColumns = {@JoinColumn(name = "ChoiceBlock_id")},
 //    inverseJoinColumns = {@JoinColumn(name = "choices_id")}
 //    )
-//    private List<IChoiceBlock> choiceBlock;
+    
+    @ManyToOne(targetEntity = ChoiceBlock.class)
+    private IChoiceBlock choiceBlock;
 
     @OneToOne(targetEntity = Sequence.class)
     private ISequence sequence;
