@@ -12,6 +12,6 @@ public interface ISlideManager {
 
     void updateSlide(Slide slide);
 
-    void deleteSlide(ISlide slide);
+    void deleteSlide(String slideId);
 
 }

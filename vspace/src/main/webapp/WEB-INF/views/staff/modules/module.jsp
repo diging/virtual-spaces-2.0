@@ -15,32 +15,7 @@
 		$("#cancelSlideBtn").click(function () {
 			$("#createSlideAlert").hide();
 		});
-		
-		$(".deleteSlide").click(function() {
-			var slideId = $('#deleteSlideId').attr('value');
-	        var formData = new FormData();
-	        $.ajax({
-	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + '?${_csrf.parameterName}=${_csrf.token}',
-	        type: 'DELETE',
-	        cache       : false,
-	        contentType : false,
-	        processData : false,
-	        data: formData,
-	        enctype: 'multipart/form-data',
-	        success: function(data) {
-	        },
-	        error: function(data) {
-	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	                $('.error').append(alert);
-	            }
-	        });
-	        
-	    });
 	});
-	
-	
-	
-	
 </script>
 
 <h1>Module: ${module.name}</h1>
@@ -56,7 +31,7 @@
 
 <body>
 	<div id="result"></div>
-	<table border="0" width="100%" height="50%" style=" margin-top:50px;">
+	<table border="0" height="50%" style=" margin-top:50px;">
 		<tr>
 			<td style="width: 20rem; padding-left: 15px; border:1;">
 				<div
@@ -84,21 +59,25 @@
 			<tr>
 				<td style="padding-left: 22px; border-style:hidden; padding-top: 6px; padding-bottom: 6px;">
 					<div class="card" style="max-width: 18rem;">
-						<div align="left" class="card-body d-flex align-items-center"> <a
-								href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-							<div style="float: left;">
+						<div align="left" class="card-body d-flex align-items-center" style="position:relative;">
+							 <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
 								<h5 class="card-title">${slide.name}</h5>
 								<p class="card-text">${slide.description}</p></a>
-							</div>
-							<div style="margin-left: 65%;">
-                            <input type="hidden" id="deleteSlideId" value="${slide.id}"> 
-                            <input class="btn btn-danger deleteSlide" type="submit" value="Delete" style="float: right;">
+							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
+								<a href="#" data-record-id="${slide.id}"
+								data-url="<c:url value="/staff/module/${module.id}/slide/remove/${slide.id}?${_csrf.parameterName}=${_csrf.token}"/>"
+								data-call-on-success="<c:url value="/staff/module/${module.id}"/>"
+								data-call-on-error="<c:url value="/staff/module/${module.id}"/>"
+								data-toggle="modal" data-target="#confirm-delete"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
-
 					</div>
 				</td>
 			</tr>
 		</c:forEach>
 	</table>
 </body>
+
+<jsp:include page="../../deleteModal.jsp">
+	<jsp:param name="elementType" value="Slide" />
+</jsp:include>

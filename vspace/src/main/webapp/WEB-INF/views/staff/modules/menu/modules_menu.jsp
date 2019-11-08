@@ -4,7 +4,7 @@
 <script>
 	//# sourceURL=list.js
 	$(document).ready(function () {
-		$.get("<c:url value=" / staff / api / module / list " />", function (data) {
+		$.get("<c:url value="/staff/api/module/list " />", function (data) {
 			elements = JSON.parse(data);
 			jQuery.each(elements, function (index, element) {
 				var li = $('<li class="nav-item"></li>');

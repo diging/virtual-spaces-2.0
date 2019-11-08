@@ -24,7 +24,7 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private ModuleManager moduleManager;
-
+    
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -48,8 +48,8 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public void deleteSlide(ISlide slide) {
-        slideRepo.delete((Slide) slide);
+    public void deleteSlide(String slideId) {
+        slideRepo.delete((Slide) getSlide(slideId));
     }
 
 }

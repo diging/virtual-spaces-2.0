@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
 public class DeleteSlideController {
-
+    
     @Autowired
     private ISlideManager slideManager;
 
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteModuleLink(@PathVariable("id") String spaceId,
-            @PathVariable("slideId") String slideId) {
-        ISlide slide = slideManager.getSlide(slideId);
-        slideManager.deleteSlide(slide);
-        return new ResponseEntity<String>(HttpStatus.OK);
+    @RequestMapping(value = "/staff/module/{id}/slide/remove/{slideId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteModuleLink(@PathVariable("id") String moduleId,
+            @PathVariable("slideId") String slideId) throws SlideDoesNotExistException {
+        
+        slideManager.deleteSlide(slideId);
+        return new ResponseEntity<>(HttpStatus.OK); 
     }
 }
