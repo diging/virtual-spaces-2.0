@@ -49,7 +49,7 @@ function onDoubleClick(e){
     } else {
     	
     	// storing image ID selected by the user to replace, onDoubleClick
-    	var imgID = $(e.target).closest('div').attr('id');
+    	var imgID = $(e.target).closest('div').attr('id'); // sets image ID
     	$("#uploadImage").data('value', imgID)
     	$("#addImgAlert").show();
        	
@@ -59,7 +59,7 @@ function onDoubleClick(e){
 function uploadImage() {
     
 	
-	var imgID = $("#uploadImage").data('value')
+	var imgID = $("#uploadImage").data('value') // gets image ID
     var file = $('#file')[0].files[0]
     var reader  = new FileReader();
     var formData = new FormData();
@@ -69,8 +69,9 @@ function uploadImage() {
      
     // Ashmi changes for Story VSPC-64
     
-
+	// checks if ID present to replace
     if (imgID != '') {
+    	
     	var imageBlockId = imgID
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
