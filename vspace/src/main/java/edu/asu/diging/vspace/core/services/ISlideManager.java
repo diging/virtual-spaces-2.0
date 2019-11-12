@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services;
 
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -12,6 +13,6 @@ public interface ISlideManager {
 
     void updateSlide(Slide slide);
 
-    void deleteSlide(String slideId);
+    void deleteSlideById(String slideId) throws SlideDoesNotExistException;
 
 }

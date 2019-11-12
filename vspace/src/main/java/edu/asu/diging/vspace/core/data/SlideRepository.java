@@ -15,5 +15,8 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
 
     @Query("SELECT d FROM Slide d WHERE d.module.id = ?1")
     public List<Slide> findSlidesForModule(String moduleId);
+    
+    @Query("SELECT count(*) FROM Slide d WHERE d.id = ?1")
+    public int countSequencesForSlide(String slideId);
 
 }

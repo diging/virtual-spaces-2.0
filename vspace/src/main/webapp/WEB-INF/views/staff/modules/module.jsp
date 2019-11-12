@@ -89,7 +89,7 @@ $(document).ready(function($) {
 							<h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
 								<a href="#" data-record-id="${slide.id}"
-								data-url="<c:url value="/staff/module/${module.id}/slide/remove/${slide.id}?${_csrf.parameterName}=${_csrf.token}"/>"
+								data-url="<c:url value="/staff/module/${module.id}/slide/${slide.id}?${_csrf.parameterName}=${_csrf.token}"/>"
 								data-call-on-success="<c:url value="/staff/module/${module.id}"/>"
 								data-call-on-error="<c:url value="/staff/module/${module.id}"/>"
 								data-toggle="modal" data-target="#confirm-delete"><span style="float: right;" data-feather="trash-2"></span></a>

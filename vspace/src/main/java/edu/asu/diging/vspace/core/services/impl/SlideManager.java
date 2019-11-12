@@ -3,9 +3,12 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -15,16 +18,18 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
 public class SlideManager implements ISlideManager {
-
-    @Autowired
-    private SlideRepository slideRepo;
-
-    @Autowired
-    private SlideFactory slideFactory;
-
+    
     @Autowired
     private ModuleManager moduleManager;
     
+    @Autowired
+    private SlideFactory slideFactory;
+    
+    @Autowired
+    private SlideRepository slideRepo;
+    
+    @Autowired
+    private SequenceRepository seqRepo;
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -48,7 +53,13 @@ public class SlideManager implements ISlideManager {
     }
     
     @Override
-    public void deleteSlide(String slideId) {
-        slideRepo.delete((Slide) getSlide(slideId));
+    public void deleteSlideById(String slideId) throws SlideDoesNotExistException {
+        
+        System.out.println("--------"+slideRepo.countSequencesForSlide(slideId));
+        try {
+            slideRepo.delete((Slide) getSlide(slideId));
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new SlideDoesNotExistException(exception);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,21 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 @Controller
 public class DeleteSlideController {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private ISlideManager slideManager;
 
-    @RequestMapping(value = "/staff/module/{id}/slide/remove/{slideId}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteModuleLink(@PathVariable("id") String moduleId,
-            @PathVariable("slideId") String slideId) throws SlideDoesNotExistException {
+    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteSlide(@PathVariable("id") String moduleId,
+            @PathVariable("slideId") String slideId) {
         
-        slideManager.deleteSlide(slideId);
+        try {
+            slideManager.deleteSlideById(slideId);
+        } catch (SlideDoesNotExistException slideDoesNotExistException) {
+            logger.error("Could not delete slide.", slideDoesNotExistException);
+            return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
+        }       
         return new ResponseEntity<>(HttpStatus.OK); 
     }
 }
