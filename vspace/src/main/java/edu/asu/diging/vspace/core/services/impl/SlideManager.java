@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
@@ -28,8 +27,6 @@ public class SlideManager implements ISlideManager {
     @Autowired
     private SlideRepository slideRepo;
     
-    @Autowired
-    private SequenceRepository seqRepo;
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -53,13 +50,21 @@ public class SlideManager implements ISlideManager {
     }
     
     @Override
-    public void deleteSlideById(String slideId) throws SlideDoesNotExistException {
+    public boolean deleteSlideById(String slideId) throws SlideDoesNotExistException {
         
         System.out.println("--------"+slideRepo.countSequencesForSlide(slideId));
-        try {
-            slideRepo.delete((Slide) getSlide(slideId));
-        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-            throw new SlideDoesNotExistException(exception);
+        int count = slideRepo.countSequencesForSlide(slideId).size();
+        if(count > 0) {
+          //give warning to user telling this slide belongs to another sequence
+            return false;
+        }         
+        else {
+            try {
+                slideRepo.delete((Slide) getSlide(slideId));
+            } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+                throw new SlideDoesNotExistException(exception);
+            }
         }
+        return true;
     }
 }

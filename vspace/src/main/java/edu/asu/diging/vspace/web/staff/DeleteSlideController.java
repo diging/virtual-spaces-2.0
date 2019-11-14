@@ -26,7 +26,12 @@ public class DeleteSlideController {
             @PathVariable("slideId") String slideId) {
         
         try {
-            slideManager.deleteSlideById(slideId);
+            if(!slideManager.deleteSlideById(slideId))
+            {
+                //warn user
+                System.out.println("Dont delete slide, think before deleting it");
+            }
+            
         } catch (SlideDoesNotExistException slideDoesNotExistException) {
             logger.error("Could not delete slide.", slideDoesNotExistException);
             return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
