@@ -39,6 +39,30 @@ $(document).ready(function($) {
 				}
 		});
 	});
+
+	//------------Deleting Slides-------------------
+	$(".deleteSlide").click(function() {
+		var slideId = $(this).attr("id");
+        $.ajax({
+	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + '?${_csrf.parameterName}=${_csrf.token}',
+	        type: 'DELETE',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        success: function(data) {
+	        	console.log("in success");
+	        	//$("#slideId").closest('div').remove();
+	        	const myNode = document.getElementById("slideId");
+	        	myNode.innerHTML = '';
+	        	$("#slideId").closest('div').empty();
+	        },
+	        error: function(data) {
+	        	console.log("in error");
+	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	                $('.error').append(alert);
+	            }
+	        });
+      });
 });	
 
 </script>
@@ -83,16 +107,21 @@ $(document).ready(function($) {
 		<div class="row">
 			<div class="col justify-content-center" style="padding-left: 30px;">
 				<c:forEach items="${slides}" var="slide">
-					<div class="card" style="max-width: 18rem; margin-bottom:10px;">
+					<div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body d-flex align-items-center" style="position:relative;">
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
 							<h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>
-							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
+							<%-- <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
 								<a href="#" data-record-id="${slide.id}"
 								data-url="<c:url value="/staff/module/${module.id}/slide/${slide.id}?${_csrf.parameterName}=${_csrf.token}"/>"
 								data-call-on-success="<c:url value="/staff/module/${module.id}"/>"
 								data-call-on-error="<c:url value="/staff/module/${module.id}"/>"
 								data-toggle="modal" data-target="#confirm-delete"><span style="float: right;" data-feather="trash-2"></span></a>
+							</div> --%>
+							
+							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
+                            <input type="hidden" id="deleteSlideId" value="${slide.id}"> 
+                            <a id="SLI000000041" href="#" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>
@@ -114,6 +143,32 @@ $(document).ready(function($) {
 	</div>
 </div>
 
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="deleteModalTitle">
+					Confirm Deletion?
+				</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+			</div>
+			<div class="modal-body">
+				<p>
+				This Slide is a part of another Sequence. Are you Sure you want to delete it?
+					Are you sure you want to delete
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="closeButton" class="btn btn-default"
+					data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-danger btn-ok">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <jsp:include page="../../deleteModal.jsp">
 	<jsp:param name="elementType" value="Slide" />

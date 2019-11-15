@@ -22,20 +22,18 @@ public class DeleteSlideController {
     private ISlideManager slideManager;
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteSlide(@PathVariable("id") String moduleId,
+    public ResponseEntity<String> deleteSlide(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
         
         try {
-            if(!slideManager.deleteSlideById(slideId))
-            {
-                //warn user
-                System.out.println("Dont delete slide, think before deleting it");
+            if(!slideManager.deleteSlideById(slideId)) {
+                return new ResponseEntity<String>("This Slide belongs to another Sequence", HttpStatus.OK); 
             }
             
         } catch (SlideDoesNotExistException slideDoesNotExistException) {
             logger.error("Could not delete slide.", slideDoesNotExistException);
-            return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
         }       
-        return new ResponseEntity<>(HttpStatus.OK); 
+        return new ResponseEntity<String>(HttpStatus.OK); 
     }
 }
