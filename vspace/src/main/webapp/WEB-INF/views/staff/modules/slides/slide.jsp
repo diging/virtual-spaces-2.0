@@ -5,6 +5,7 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
+var imageToReplace = false
 function createImageBlock(reader, width) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -49,7 +50,9 @@ function onDoubleClick(e){
     } else {
     	
     	// storing image ID selected by the user to replace, onDoubleClick
-    	var imgID = $(e.target).closest('div').attr('id'); 
+    	//var imgID = $(e.target).closest('div').attr('id'); 
+    	imageToReplace = true
+    	var imgID = $(e.target).attr('id'); 
     	$("#uploadImage").data('value', imgID) // sets image ID value
     	$("#addImgAlert").show();
        	
@@ -58,9 +61,9 @@ function onDoubleClick(e){
     
 function uploadImage() {
     
-	
 	var imgID = $("#uploadImage").data('value') // gets image ID
     var file = $('#file')[0].files[0]
+	
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
@@ -70,8 +73,9 @@ function uploadImage() {
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
-    if (imgID != '') {
-    	
+    if (imgID != '' && imageToReplace == true) {
+    
+    	imageToReplace = true
     	var imageBlockId = imgID
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
@@ -83,12 +87,12 @@ function uploadImage() {
 	            imageblock = createImageBlock(reader, this.width);
 	            $("#" + imageBlockId).attr("id", imageBlockId);
 	            $("#" + imageBlockId).replaceWith(imageblock);
-	     
         	};
         }
       }
   else {
-	  
+	
+	  	imageToReplace = false
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
@@ -100,7 +104,7 @@ function uploadImage() {
             };          
         }
         ++contentCount;
-       
+        
     }
     
     reader.readAsDataURL(file);
@@ -119,10 +123,16 @@ function uploadImage() {
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
-            	img.attr('id', data);
+            	if(data != ''){
+            		img.attr('id', data);
+            	}
+            	else{
+            		img.attr('id', $("#uploadImage").data('value'))
+            	}
             }
-            // refreshing webpage to prevent page load from cache
-            location.reload(true)
+            if(imageToReplace == false){
+            	$("#uploadImage").data('value', '')
+            }
         },
         error: function(data) {
         	$(".open").removeClass("open");
@@ -239,6 +249,7 @@ $(document).ready(function() {
       });
     
     $("#addImage").click(function() {
+    	imageToReplace = false
         $("#addImgAlert").show();
       });
     
