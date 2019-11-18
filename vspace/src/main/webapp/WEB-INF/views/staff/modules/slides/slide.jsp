@@ -50,7 +50,6 @@ function onDoubleClick(e){
     } else {
     	
     	// storing image ID selected by the user to replace, onDoubleClick
-    	//var imgID = $(e.target).closest('div').attr('id'); 
     	imageToReplace = true
     	var imgID = $(e.target).attr('id'); 
     	$("#uploadImage").data('value', imgID) // sets image ID value
