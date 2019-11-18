@@ -62,7 +62,6 @@ function uploadImage() {
     
 	var imgID = $("#uploadImage").data('value') // gets image ID
     var file = $('#file')[0].files[0]
-	
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
