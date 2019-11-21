@@ -41,25 +41,29 @@ $(document).ready(function($) {
 	});
 
 	//------------Deleting Slides-------------------
-	$(".deleteSlide").click(function() {
+	$(".deleteSlide").click(function(e) {
 		var slideId = $(this).attr("id");
         $.ajax({
 	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + '?${_csrf.parameterName}=${_csrf.token}',
 	        type: 'DELETE',
 	        cache       : false,
-	        contentType : false,
 	        processData : false,
 	        success: function(data) {
-	        	console.log("in success");
-	        	//$("#slideId").closest('div').remove();
-	        	const myNode = document.getElementById("slideId");
-	        	myNode.innerHTML = '';
-	        	$("#slideId").closest('div').empty();
+	        	$("#"+slideId).closest('.slide').remove();
 	        },
 	        error: function(data) {
-	        	console.log("in error");
-	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	                $('.error').append(alert);
+		        	if(data.status == 400) {
+		        		console.log("slide is part of squence");
+		        		$("#confirm-del").show();
+		        	}
+		        		
+		        	if(data.status == 404) {
+		        		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	                	$('.error').append(alert);
+		        	}
+		        	
+		        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		        	$('.error').append(alert);
 	            }
 	        });
       });
@@ -121,7 +125,7 @@ $(document).ready(function($) {
 							
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
                             <input type="hidden" id="deleteSlideId" value="${slide.id}"> 
-                            <a id="SLI000000041" href="#" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.id}" href="#" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>
@@ -144,31 +148,29 @@ $(document).ready(function($) {
 </div>
 
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="deleteModalTitle">
-					Confirm Deletion?
-				</h4>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-			</div>
-			<div class="modal-body">
-				<p>
-				This Slide is a part of another Sequence. Are you Sure you want to delete it?
-					Are you sure you want to delete
-				</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" id="closeButton" class="btn btn-default"
-					data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-danger btn-ok">Delete</button>
-			</div>
+<div class="modal-dialog" class="alert alert-secondary" role="alert" id="confirm-del" tabindex="-1" role="dialog"
+aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 400px; height: 250px; display: none; position: absolute; top: 300px; z-index: 999">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title" id="deleteModalTitle">
+				Confirm Deletion?
+			</h4>
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+		</div>
+		<div class="modal-body">
+			<p>
+			This Slide is a part of another Sequence. Are you Sure you want to delete it?
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" id="closeButton" class="btn btn-default"
+				data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-danger btn-ok deleteSlide">Delete</button>
 		</div>
 	</div>
 </div>
+
 
 <jsp:include page="../../deleteModal.jsp">
 	<jsp:param name="elementType" value="Slide" />

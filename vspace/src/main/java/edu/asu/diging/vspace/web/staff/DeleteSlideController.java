@@ -27,12 +27,12 @@ public class DeleteSlideController {
         
         try {
             if(!slideManager.deleteSlideById(slideId)) {
-                return new ResponseEntity<String>("This Slide belongs to another Sequence", HttpStatus.OK); 
+                return new ResponseEntity<String>("slide exists", HttpStatus.BAD_REQUEST); 
             }
             
         } catch (SlideDoesNotExistException slideDoesNotExistException) {
             logger.error("Could not delete slide.", slideDoesNotExistException);
-            return new ResponseEntity<String>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Invalid input. Please try again", HttpStatus.NOT_FOUND);
         }       
         return new ResponseEntity<String>(HttpStatus.OK); 
     }
