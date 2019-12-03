@@ -50,12 +50,10 @@ public class SlideManager implements ISlideManager {
     }
     
     @Override
-    public boolean deleteSlideById(String slideId) throws SlideDoesNotExistException {
-        
-        System.out.println("--------"+slideRepo.countSequencesForSlide(slideId));
-        int count = slideRepo.countSequencesForSlide(slideId).size();
-        if(count > 0) {
-          //give warning to user telling this slide belongs to another sequence
+    public boolean deleteSlideById(String slideId, Integer flag) throws SlideDoesNotExistException {
+
+        if(slideRepo.countSequencesForSlide(slideId).size() > 0 && flag == 0) {
+          //Warning user that this slide is part of a sequence
             return false;
         }         
         else {

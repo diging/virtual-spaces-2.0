@@ -6,6 +6,7 @@
 
 <script>
 //# sourceURL=click.js
+var flag = 0;
 $(document).ready(function($) {
 	$("#addSlideButton").on("click", function (e) {
 		$("#createSlideAlert").show();
@@ -16,6 +17,27 @@ $(document).ready(function($) {
 		$("#createSlideAlert").hide();
 	});
 	
+	$("#cancelDeleteSlideBtn").click(function() {
+        $("#deleteSlide").hide();  
+    });
+	
+	$("#cancelSlideDelButton").click(function () {
+		flag = 0;
+		$("#confirm-del").hide();
+	});
+
+	$("#deleteSlideFromSequence").click(function () {
+		flag = 1;
+		console.log(flag);
+		$("#confirm-del").hide();
+	});
+	$("#confirm-del").draggable();
+	
+	function setId(slideId) {
+		var x = document.getElementById("cancelSlideDelButton").nextSibling.innerHTML;
+		console.log("in my method");
+		x = slideId;
+	}
 	$(".sequence").on("click", function(e) {
 		$(".sequence").css({ 'border' : ''});
 		$(this).css("border", "solid #c1bb88");
@@ -42,28 +64,35 @@ $(document).ready(function($) {
 
 	//------------Deleting Slides-------------------
 	$(".deleteSlide").click(function(e) {
+		console.log("deleting slide ajax call");
 		var slideId = $(this).attr("id");
+		var formData = new FormData();
+		formData.append('flag', flag);
+		console.log(slideId);
+		console.log(flag);
+		setId(slideId);
         $.ajax({
-	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + '?${_csrf.parameterName}=${_csrf.token}',
+	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'/'+  flag+ '?${_csrf.parameterName}=${_csrf.token}',
 	        type: 'DELETE',
 	        cache       : false,
+	        contentType : false,
 	        processData : false,
+	        data: formData,
+            enctype: 'multipart/form-data',
 	        success: function(data) {
-	        	$("#"+slideId).closest('.slide').remove();
+	        	if(data) {
+	        		console.log("u sure??");
+	        		$("#confirm-del").show();
+	        		
+	        		//document.getElementById("deleteSlideFromSequence").id = slideId;
+	        	} else {
+	        		console.log("success console");
+	        		$("#"+slideId).closest('.slide').remove();
+	        	} 
 	        },
 	        error: function(data) {
-		        	if(data.status == 400) {
-		        		console.log("slide is part of squence");
-		        		$("#confirm-del").show();
-		        	}
-		        		
-		        	if(data.status == 404) {
-		        		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	                	$('.error').append(alert);
-		        	}
-		        	
-		        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		        	$('.error').append(alert);
+	        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	        	$('.error').append(alert);
 	            }
 	        });
       });
@@ -125,7 +154,7 @@ $(document).ready(function($) {
 							
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
                             <input type="hidden" id="deleteSlideId" value="${slide.id}"> 
-                            <a id="${slide.id}" href="#" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.id}" href="#" class="deleteSlide slideFromSequence" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>
@@ -148,7 +177,7 @@ $(document).ready(function($) {
 </div>
 
 
-<div class="modal-dialog" class="alert alert-secondary" role="alert" id="confirm-del" tabindex="-1" role="dialog"
+<div id="confirm-del" class="modal-dialog alert alert-secondary" role="alert"  tabindex="-1" role="dialog"
 aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 400px; height: 250px; display: none; position: absolute; top: 300px; z-index: 999">
 	<div class="modal-content">
 		<div class="modal-header">
@@ -164,9 +193,9 @@ aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 40
 			</p>
 		</div>
 		<div class="modal-footer">
-			<button type="button" id="closeButton" class="btn btn-default"
+			<button type="button" id="cancelSlideDelButton" class="btn btn-default"
 				data-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-danger btn-ok deleteSlide">Delete</button>
+			<button id="deleteSlideFromSequence" type="reset" class="btn btn-danger btn-ok deleteSlide">Delete</button>
 		</div>
 	</div>
 </div>
