@@ -5,7 +5,6 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
-var imageToReplace = false
 function createImageBlock(reader, width) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -50,7 +49,6 @@ function onDoubleClick(e){
     } else {
     	
     	// storing image ID selected by the user to replace, onDoubleClick
-    	imageToReplace = true
     	var imgID = $(e.target).attr('id'); 
     	$("#uploadImage").data('value', imgID) // sets image ID value
     	$("#addImgAlert").show();
@@ -66,19 +64,19 @@ function uploadImage() {
     var formData = new FormData();
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
-   
+    var imageblock = "";
      
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
-    if (imgID != '' && imageToReplace == true) {
+    if (imgID != '') {
     
-    	imageToReplace = true
+    
     	var imageBlockId = imgID
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function (theFile) {
-        
+        	
 	        var image = new Image();
 	        image.src = theFile.target.result
 	        image.onload = function () {
@@ -90,13 +88,13 @@ function uploadImage() {
       }
   else {
 	
-	  	imageToReplace = false
+	
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
             image.src = theFile.target.result
             image.onload = function() {
-            	imageblock = createImageBlock(reader, this.width);
+            	imageblock = createImageBlock(reader, this.width);  
             	$('#slideSpace').append(imageblock); 
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
@@ -126,11 +124,10 @@ function uploadImage() {
             	}
             	else{
             		img.attr('id', $("#uploadImage").data('value'))
+            		$("#uploadImage").data('value', '')
             	}
             }
-            if(imageToReplace == false){
-            	$("#uploadImage").data('value', '')
-            }
+        
         },
         error: function(data) {
         	$(".open").removeClass("open");
