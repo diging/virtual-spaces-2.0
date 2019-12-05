@@ -78,7 +78,7 @@ function uploadImage() {
         reader.onload = function (theFile) {
         	
 	        var image = new Image();
-	        image.src = theFile.target.result
+	        image.src = theFile.target.result;
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
 	            $("#" + imageBlockId).attr("id", imageBlockId);
@@ -118,13 +118,13 @@ function uploadImage() {
             $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
-            	var img = imageblock.find('img')
+            	var img = imageblock.find('img');
             	if(data != ''){
             		img.attr('id', data);
             	}
             	else{
-            		img.attr('id', $("#uploadImage").data('value'))
-            		$("#uploadImage").data('value', '')
+            		img.attr('id', imgID);
+            		$("#uploadImage").data('value', '');
             	}
             }
         
