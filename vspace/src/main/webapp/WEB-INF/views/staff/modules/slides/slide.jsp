@@ -71,8 +71,7 @@ function uploadImage() {
 	// checks if image ID is present to replace
     if (imgID != '') {
     
-    
-    	var imageBlockId = imgID
+    	var imageBlockId = imgID;
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function (theFile) {
@@ -87,7 +86,6 @@ function uploadImage() {
         }
       }
   else {
-	
 	
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
