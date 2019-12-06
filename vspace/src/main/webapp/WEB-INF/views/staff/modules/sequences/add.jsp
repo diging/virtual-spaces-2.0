@@ -72,7 +72,7 @@
 				reorder)</small>
 		</label> <select multiple="multiple" id="ordered-slides">
 			<c:forEach items="${slides}" var="slide">
-				<option value='${slide.id}' id="${slide.id}">${slide.name}</option>
+				<option value='${slide.key.id}' id="${slide.key.id}">${slide.key.name}</option>
 			</c:forEach>
 			</select>
 		<form:input type="hidden" id="orderedSlides" path="orderedSlides"></form:input>

@@ -50,19 +50,11 @@ public class SlideManager implements ISlideManager {
     }
     
     @Override
-    public boolean deleteSlideById(String slideId, Integer flag) throws SlideDoesNotExistException {
-
-        if(slideRepo.countSequencesForSlide(slideId).size() > 0 && flag == 0) {
-          //Warning user that this slide is part of a sequence
-            return false;
-        }         
-        else {
-            try {
-                slideRepo.delete((Slide) getSlide(slideId));
-            } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-                throw new SlideDoesNotExistException(exception);
-            }
+    public void deleteSlideById(String slideId) throws SlideDoesNotExistException {
+        try {
+            slideRepo.delete((Slide) getSlide(slideId));
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+            throw new SlideDoesNotExistException(exception);
         }
-        return true;
     }
 }

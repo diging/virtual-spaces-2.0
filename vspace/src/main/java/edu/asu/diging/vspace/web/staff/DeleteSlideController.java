@@ -21,20 +21,14 @@ public class DeleteSlideController {
     @Autowired
     private ISlideManager slideManager;
 
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/{flag}", method = RequestMethod.DELETE)
-    public ResponseEntity<Integer> deleteSlide(@PathVariable("id") String moduleId,
-            @PathVariable("slideId") String slideId, @PathVariable("flag") Integer flag) {
-        
+    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteSlide(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId) {
         try {
-            if(flag == 0 && !slideManager.deleteSlideById(slideId, flag)) {
-                return new ResponseEntity<Integer>(1, HttpStatus.OK); 
-            } else if (flag == 1) {
-                slideManager.deleteSlideById(slideId, flag);
-            }
-        } catch (SlideDoesNotExistException slideDoesNotExistException) {
-            logger.error("Could not delete slide.", slideDoesNotExistException);
-            return new ResponseEntity<Integer>(2, HttpStatus.NOT_FOUND);
+            slideManager.deleteSlideById(slideId);
+            } catch (SlideDoesNotExistException slideDoesNotExistException) {
+                logger.error("Could not delete slide.", slideDoesNotExistException);
+                return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later", HttpStatus.NOT_FOUND);
         }       
-        return new ResponseEntity<Integer>(0,HttpStatus.OK); 
+        return new ResponseEntity<String>("Ok", HttpStatus.OK); 
     }
 }
