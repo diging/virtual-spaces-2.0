@@ -96,8 +96,7 @@ function uploadImage() {
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
         }
-        ++contentCount;
-        
+        ++contentCount;    
     }
     
     reader.readAsDataURL(file);
