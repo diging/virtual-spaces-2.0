@@ -80,7 +80,6 @@ function uploadImage() {
 	        image.src = theFile.target.result;
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
-	            $("#" + imageBlockId).attr("id", imageBlockId);
 	            $("#" + imageBlockId).replaceWith(imageblock);
         	};
         }
