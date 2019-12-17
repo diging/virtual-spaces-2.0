@@ -84,8 +84,7 @@ function uploadImage() {
             $("#" + imageBlockId).replaceWith(imageblock);
         	};
         }
-       $("#uploadImage").data('value', '')
-       ++contentCount; 
+       $("#uploadImage").data('value', '');
       }
   else {
 	
