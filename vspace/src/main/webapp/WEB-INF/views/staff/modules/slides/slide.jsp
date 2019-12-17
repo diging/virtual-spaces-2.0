@@ -5,6 +5,7 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
+//var imageToReplace = false
 function createImageBlock(reader, width) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -15,6 +16,7 @@ function createImageBlock(reader, width) {
 
 function onMouseEnter(e){
     var target = $( e.target );
+   
     $(".hova").removeClass("hova");
     $(e.target).addClass("hova");
     // This is needed to prevent only the p tag from being highlighted
@@ -57,9 +59,11 @@ function onDoubleClick(e){
 }
     
 function uploadImage() {
-    
+   	console.log("uploadImage() ----- ") 
 	var imgID = $("#uploadImage").data('value') // gets image ID
+	console.log("imgID: "+imgID)
     var file = $('#file')[0].files[0]
+   	console.log("file: "+file)
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
@@ -70,19 +74,22 @@ function uploadImage() {
     
 	// checks if image ID is present to replace
     if (imgID != '') {
-    
+
     	var imageBlockId = imgID;
-        formData.append('imageBlockId',imageBlockId);
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
+        //formData.append('imageBlockId',imageBlockId);
+        //var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {
         	
 	        var image = new Image();
 	        image.src = theFile.target.result;
 	        image.onload = function () {
-	            imageblock = createImageBlock(reader, this.width);
-	            $("#" + imageBlockId).replaceWith(imageblock);
+            imageblock = createImageBlock(reader, this.width);
+            $("#" + imageBlockId).replaceWith(imageblock);
         	};
         }
+       $("#uploadImage").data("value", '')
+       ++contentCount; 
       }
   else {
 	
@@ -115,15 +122,8 @@ function uploadImage() {
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img');
-            	if(data != ''){
-            		img.attr('id', data);
-            	}
-            	else{
-            		img.attr('id', imgID);
-            		$("#uploadImage").data('value', '');
-            	}
+            	img.attr('id', data);	
             }
-        
         },
         error: function(data) {
         	$(".open").removeClass("open");
@@ -240,7 +240,7 @@ $(document).ready(function() {
       });
     
     $("#addImage").click(function() {
-    	imageToReplace = false
+    	//imageToReplace = false
         $("#addImgAlert").show();
       });
     
