@@ -79,8 +79,8 @@ function uploadImage() {
 	        var image = new Image();
 	        image.src = theFile.target.result;
 	        image.onload = function () {
-            imageblock = createImageBlock(reader, this.width);
-            $("#" + imageBlockId).replaceWith(imageblock);
+	            imageblock = createImageBlock(reader, this.width);
+	            $("#" + imageBlockId).replaceWith(imageblock);
         	};
         }
        $("#uploadImage").data('value', '');
@@ -234,7 +234,6 @@ $(document).ready(function() {
       });
     
     $("#addImage").click(function() {
-    	//imageToReplace = false
         $("#addImgAlert").show();
       });
     
