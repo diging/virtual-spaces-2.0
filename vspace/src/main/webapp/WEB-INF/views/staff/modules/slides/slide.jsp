@@ -76,8 +76,6 @@ function uploadImage() {
     if (imgID != '') {
 
     	var imageBlockId = imgID;
-        //formData.append('imageBlockId',imageBlockId);
-        //var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {
         	
@@ -124,6 +122,7 @@ function uploadImage() {
             	var img = imageblock.find('img');
             	img.attr('id', data);	
             }
+      
         },
         error: function(data) {
         	$(".open").removeClass("open");
