@@ -5,7 +5,6 @@
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
-//var imageToReplace = false
 function createImageBlock(reader, width) {
     var imageblock = $('<div style="margin: 1%" class="valueDiv1"><img style="margin: 1%;" src="#" /></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -119,7 +118,6 @@ function uploadImage() {
             	var img = imageblock.find('img');
             	img.attr('id', data);	
             }
-      
         },
         error: function(data) {
         	$(".open").removeClass("open");
