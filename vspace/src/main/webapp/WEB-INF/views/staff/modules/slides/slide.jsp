@@ -59,11 +59,9 @@ function onDoubleClick(e){
 }
     
 function uploadImage() {
-   	console.log("uploadImage() ----- ") 
+   	
 	var imgID = $("#uploadImage").data('value') // gets image ID
-	console.log("imgID: "+imgID)
     var file = $('#file')[0].files[0]
-   	console.log("file: "+file)
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
@@ -86,7 +84,7 @@ function uploadImage() {
             $("#" + imageBlockId).replaceWith(imageblock);
         	};
         }
-       $("#uploadImage").data("value", '')
+       $("#uploadImage").data('value', '')
        ++contentCount; 
       }
   else {
