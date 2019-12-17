@@ -66,14 +66,14 @@ function uploadImage() {
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
     var imageblock = "";
-     
+    var url = "";
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
     if (imgID != '') {
 
     	var imageBlockId = imgID;
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {
         	
 	        var image = new Image();
@@ -87,7 +87,7 @@ function uploadImage() {
       }
   else {
 	
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
             image.src = theFile.target.result
