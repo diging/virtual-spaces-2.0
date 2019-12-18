@@ -51,9 +51,12 @@ function onDoubleClick(e){
     	
     	// storing image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
-    	$("#uploadImage").data('value', imgID) // sets image ID value
-    	$("#addImgAlert").show();
-       	
+    	if(imgID != ''){
+    		console.log("IMAGE ID on double click ---- "+imgID)
+        	$("#uploadImage").data('value', imgID); // sets image ID value
+        	$("#addImgAlert").show();
+    	}
+	
     }
 }
     
@@ -66,14 +69,14 @@ function uploadImage() {
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
     var imageblock = "";
-    var url = "";
+    
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
     if (imgID != '') {
-
+		console.log("Inside IF ----")
     	var imageBlockId = imgID;
-        url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {
         	
 	        var image = new Image();
@@ -86,8 +89,8 @@ function uploadImage() {
        $("#uploadImage").data('value', '');
       }
   else {
-	
-        url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+		console.log("Inside ELSE ---- ")
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
             image.src = theFile.target.result
@@ -112,6 +115,7 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
+        	console.log("data: "+data)
             $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
