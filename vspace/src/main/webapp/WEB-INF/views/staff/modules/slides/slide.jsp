@@ -52,7 +52,6 @@ function onDoubleClick(e){
     	// storing image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
-    		console.log("IMAGE ID on double click ---- "+imgID)
         	$("#uploadImage").data('value', imgID); // sets image ID value
         	$("#addImgAlert").show();
     	}
@@ -74,22 +73,23 @@ function uploadImage() {
     
 	// checks if image ID is present to replace
     if (imgID != '') {
-		console.log("Inside IF ----")
+    	
     	var imageBlockId = imgID;
-        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
+    	formData.append('imageBlockId',imageBlockId);
+        var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function (theFile) {
         	
 	        var image = new Image();
 	        image.src = theFile.target.result;
 	        image.onload = function () {
 	            imageblock = createImageBlock(reader, this.width);
-	            $("#" + imageBlockId).replaceWith(imageblock);
+	            $("#" + imageBlockId).replaceWith(imageblock);	
+	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         	};
         }
        $("#uploadImage").data('value', '');
       }
-  else {
-		console.log("Inside ELSE ---- ")
+  	else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
@@ -102,7 +102,7 @@ function uploadImage() {
         }
         ++contentCount;    
     }
-    
+  	
     reader.readAsDataURL(file);
     $.ajax({
         enctype: 'multipart/form-data',
@@ -115,18 +115,23 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
-        	console.log("data: "+data)
             $(".open").removeClass("open");
             var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img');
-            	img.attr('id', data);	
+            	if(data != ''){
+            		img.attr('id', data);
+            	}
+            	else{
+            		img.attr('id', imgID);
+            	}
             }
         },
         error: function(data) {
         	$(".open").removeClass("open");
         }
     });
+    
 } 
     
 $(document).ready(function() { 
