@@ -49,7 +49,7 @@ function onDoubleClick(e){
         $(this).removeClass("hova");
     } else {
     	
-    	// storing image ID selected by the user to replace, onDoubleClick
+    	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
         	$("#uploadImage").data('value', imgID); // sets image ID value
@@ -87,7 +87,8 @@ function uploadImage() {
 	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         	};
         }
-       $("#uploadImage").data('value', '');
+        // Reset data-attribute to get current selected image ID
+        $("#uploadImage").data('value', '');
       }
   	else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
@@ -257,7 +258,7 @@ $(document).ready(function() {
     });
     
     $("#cancelImageBtn").click(function() {
-    	// Initialize selected image ID to blank, on clicking cancel
+    	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '')
         $("#addImgAlert").hide();
         $(".open").removeClass("open");
