@@ -89,7 +89,7 @@ function uploadImage() {
         }
         // Reset data-attribute to get current selected image ID
         $("#uploadImage").data('value', '');
-    }
+      }
   	else {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
