@@ -117,16 +117,13 @@ function uploadImage() {
         
         success: function(data) {
             $(".open").removeClass("open");
-            var $imgTag = imageblock.find('img[id]');
-            if($imgTag.length == 0){
-            	var img = imageblock.find('img');
-            	if(data != ''){
-            		img.attr('id', data);
-            	}
-            	else{
-            		img.attr('id', imgID);
-            	}
-            }
+           	var img = imageblock.find('img');
+           	if(data != ''){
+           		img.attr('id', data);
+           	}
+           	else{
+           		img.attr('id', imgID);
+           	}
         },
         error: function(data) {
         	$(".open").removeClass("open");
@@ -412,8 +409,7 @@ $(window).on('load', function () {
 	<div class="dropdown">
 		<button class="btn btn-primary dropdown-toggle" type="button"
 			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-			aria-expanded="false" style="float: left;">Add
-			content</button>
+			aria-expanded="false" style="float: left;">Add content</button>
 		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 			<a id="addText" class="dropdown-item" href="#">Add Text</a> <a
 				id="addImage" class="dropdown-item" href="#">Add Image</a>
@@ -470,8 +466,8 @@ $(window).on('load', function () {
 				</div>
 				<div class="modal-footer">
 					<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
-					<button type="submit" id="uploadImage" class="btn btn-primary" data-value="">Upload
-						Image</button>
+					<button type="submit" id="uploadImage" class="btn btn-primary"
+						data-value="">Upload Image</button>
 				</div>
 			</form>
 		</div>
