@@ -62,12 +62,16 @@ function onDoubleClick(e){
 function uploadImage() {
    	
 	var imgID = $("#uploadImage").data('value') // gets image ID
-    var file = $('#file')[0].files[0]
+    var file = $('#file')[0].files[0];
+	var fileName = file.name;
+	$("#file").data('value', fileName);
+	
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
     var imageblock = "";
+ 
     
     // Ashmi changes for Story VSPC-64
     
@@ -78,7 +82,6 @@ function uploadImage() {
     	formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function (theFile) {
-        	
 	        var image = new Image();
 	        image.src = theFile.target.result;
 	        image.onload = function () {
@@ -94,7 +97,7 @@ function uploadImage() {
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
-            image.src = theFile.target.result
+            image.src = theFile.target.result;
             image.onload = function() {
             	imageblock = createImageBlock(reader, this.width);  
             	$('#slideSpace').append(imageblock); 
@@ -256,7 +259,8 @@ $(document).ready(function() {
     
     $("#cancelImageBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
-    	$("#uploadImage").data('value', '')
+    	$("#uploadImage").data('value', '');
+    	$("#file").data('value', '');
         $("#addImgAlert").hide();
         $(".open").removeClass("open");
     });
@@ -462,7 +466,7 @@ $(window).on('load', function () {
 						<small>Upload Image: </small>
 					</h6>
 					<input class="form-control" type="file" name="file" rows="5"
-						cols="500" id="file" />
+						cols="500" id="file" data-value="" />
 				</div>
 				<div class="modal-footer">
 					<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
