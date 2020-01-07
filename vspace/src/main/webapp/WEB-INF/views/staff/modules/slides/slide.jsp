@@ -52,6 +52,7 @@ function onDoubleClick(e){
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
+    		$("#file").data('value', '');
         	$("#uploadImage").data('value', imgID); // sets image ID value
         	$("#addImgAlert").show();
     	}
@@ -64,11 +65,10 @@ function uploadImage() {
 	var imgID = $("#uploadImage").data('value') // gets image ID
     var file = $('#file')[0].files[0];
 	var fileName = file.name;
-	$("#file").data('value', fileName);
-	
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
+    formData.append('content', file.name);
     formData.append('contentOrder', contentCount);
     var imageblock = "";
  
@@ -131,7 +131,11 @@ function uploadImage() {
         error: function(data) {
         	$(".open").removeClass("open");
         }
+      
+        
     });
+    // Reset the image file name 
+    $('#file').val('');
     
 } 
     
@@ -260,7 +264,6 @@ $(document).ready(function() {
     $("#cancelImageBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '');
-    	$("#file").data('value', '');
         $("#addImgAlert").hide();
         $(".open").removeClass("open");
     });
@@ -466,7 +469,7 @@ $(window).on('load', function () {
 						<small>Upload Image: </small>
 					</h6>
 					<input class="form-control" type="file" name="file" rows="5"
-						cols="500" id="file" data-value="" />
+						cols="500" id="file" />
 				</div>
 				<div class="modal-footer">
 					<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
