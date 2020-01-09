@@ -21,6 +21,7 @@ public class EditSpaceController {
 
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
+    	System.out.println("Inside space Delete controller method GET! --");
         ISpace space = spaceManager.getSpace(spaceId);
         SpaceForm spaceForm = new SpaceForm();
         spaceForm.setName(space.getName());
@@ -33,6 +34,7 @@ public class EditSpaceController {
     
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.POST)
     public String save(@ModelAttribute SpaceForm spaceForm, @PathVariable("spaceId") String spaceId) {
+    	System.out.println("Inside space Delete controller method! POST--");
         ISpace space = spaceManager.getSpace(spaceId);
         space.setName(spaceForm.getName());
         space.setDescription(spaceForm.getDescription());
