@@ -4,6 +4,7 @@
 	$(document).ready(function() {
 		$('#confirm-delete').on('click', '.btn-ok', function(e) {
 			var url = $(this).data('url');
+			console.log('Delte URL ----> '+url);
 			var urlToLoadOnSuccess = $(this).data('urlToLoadOnSuccess');
 			var urlToLoadOnError = $(this).data('urlToLoadOnError');
 			$.ajax({
