@@ -52,7 +52,6 @@ function onDoubleClick(e){
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
-    		$("#file").data('value', '');
         	$("#uploadImage").data('value', imgID); // sets image ID value
         	$("#addImgAlert").show();
     	}
@@ -77,7 +76,7 @@ function uploadImage() {
     
 	// checks if image ID is present to replace
     if (imgID != '') {
-    	
+    	console.log("Image Replaced !!!")
     	var imageBlockId = imgID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
@@ -94,6 +93,7 @@ function uploadImage() {
         $("#uploadImage").data('value', '');
       }
   	else {
+  		console.log("Add new image !!!")
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
@@ -135,7 +135,7 @@ function uploadImage() {
         
     });
     // Reset the image file name 
-    $('#file').val('');
+   	$('#file').val('');
     
 } 
     
