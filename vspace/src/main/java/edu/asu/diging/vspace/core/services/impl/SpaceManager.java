@@ -163,9 +163,12 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
+        	//linkManager.deleteSpaceLinksBySource(id);
+        	//Deleting space ID from Reference Table i.e. SpaceDisplay and then from Main Table i.e. Space
+        	spaceDisplayRepo.deleteBySpaceId(id);
             spaceRepo.deleteById(id);
-            //linkManager.deleteSpaceLinksBySource(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+        	System.out.println("Inside Catch block -- while running delete queries !!!!");
            throw new SpaceDoesNotExistException(exception);
         }
 
