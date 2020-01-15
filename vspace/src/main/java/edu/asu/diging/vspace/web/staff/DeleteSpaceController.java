@@ -27,8 +27,8 @@ public class DeleteSpaceController {
         	System.out.println("Inside space Delete controller method! --");
             spaceManager.deleteSpaceById(id);
         } catch (SpaceDoesNotExistException exception) {
-            logger.error("Could not delete space.", exception);
-            return new ResponseEntity<>("Invalid input. Please try again", HttpStatus.BAD_REQUEST);
+            logger.error("Could not delete slide.", exception);
+            return new ResponseEntity<>("Sorry, unable to delete space. Please try later", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

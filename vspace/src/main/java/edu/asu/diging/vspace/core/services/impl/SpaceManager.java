@@ -164,11 +164,9 @@ public class SpaceManager implements ISpaceManager {
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
             spaceRepo.deleteById(id);
-            linkManager.deleteSpaceLinksBySource(id);
-        } catch (IllegalArgumentException | EmptyResultDataAccessException | SpaceLinkDoesNotExistException exception) {
-            if(!(exception instanceof SpaceLinkDoesNotExistException)) {
-                throw new SpaceDoesNotExistException(exception);
-            }
+            //linkManager.deleteSpaceLinksBySource(id);
+        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+           throw new SpaceDoesNotExistException(exception);
         }
 
     }
