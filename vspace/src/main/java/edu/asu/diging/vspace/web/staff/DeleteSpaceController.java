@@ -24,7 +24,6 @@ public class DeleteSpaceController {
     @RequestMapping(value = "/staff/space/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteSpace(@PathVariable String id) {
         try {
-        	System.out.println("Inside space Delete controller method! --");
             spaceManager.deleteSpaceById(id);
         } catch (SpaceDoesNotExistException exception) {
             logger.error("Could not delete slide.", exception);

@@ -29,7 +29,6 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
-import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
@@ -62,8 +61,6 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
 
-    @Autowired
-    private ILinkManager linkManager;
     /*
      * (non-Javadoc)
      * 
@@ -163,12 +160,11 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
-        	//linkManager.deleteSpaceLinksBySource(id);
+        	
         	//Deleting space ID from Reference Table i.e. SpaceDisplay and then from Main Table i.e. Space
         	spaceDisplayRepo.deleteBySpaceId(id);
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-        	System.out.println("Inside Catch block -- while running delete queries !!!!");
            throw new SpaceDoesNotExistException(exception);
         }
 
