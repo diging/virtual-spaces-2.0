@@ -27,7 +27,7 @@ public class DeleteSpaceController {
             spaceManager.deleteSpaceById(id);
         } catch (SpaceDoesNotExistException exception) {
             logger.error("Could not delete slide.", exception);
-            return new ResponseEntity<>("Sorry, unable to delete space. Please try later", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Sorry, unable to delete space. Please try again later.", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
