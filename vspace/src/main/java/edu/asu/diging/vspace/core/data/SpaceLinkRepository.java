@@ -13,6 +13,5 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 @JaversSpringDataAuditable
 public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLink, String> {
 
-   
     List<SpaceLink> findBySourceSpace(ISpace space);
 }
