@@ -35,13 +35,13 @@
             </c:if>
             
             <c:if test="${not fn:contains(user.roles, 'STAFF')}">
-		        <c:url value="/staff/user/${user.username}/role/add?roles=STAFF" var="url"/>
+		        <c:url value="/staff/user/${user.username}/role/add?roles=ROLE_STAFF" var="url"/>
 	            <form:form action="${url}" method="POST">
 	            <button style="padding:0px" class="btn btn-link"><span data-feather="user"></span> Make Staff</button>
 	            </form:form>
 	        </c:if>
             <c:if test="${fn:contains(user.roles, 'STAFF')}">
-	            <c:url value="/staff/user/${user.username}/role/remove?roles=STAFF" var="url"/>
+	            <c:url value="/staff/user/${user.username}/role/remove?roles=ROLE_STAFF" var="url"/>
 		        <form:form action="${url}" method="POST">
 	            <button style="padding:0px" class="btn btn-link"><span data-feather="user"></span> Remove Staff Role</button>
 	            </form:form>

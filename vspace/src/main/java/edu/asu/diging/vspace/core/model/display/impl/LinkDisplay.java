@@ -4,6 +4,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
@@ -13,6 +14,8 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
 
     private float positionX;
     private float positionY;
+    private int rotation;
+    private DisplayType type;
     
     @OneToOne(targetEntity=VSImage.class)
     private IVSImage image;
@@ -57,5 +60,31 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
     @Override
     public void setImage(IVSImage image) {
         this.image = image;
+    }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.display.impl.IDisplay#getRotation()
+     */
+    @Override
+    public int getRotation() {
+        return rotation;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.display.impl.IDisplay#setRotation(int)
+     */
+    @Override
+    public void setRotation(int rotation) {
+        this.rotation = rotation;
+    }
+    
+    @Override
+    public DisplayType getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(DisplayType type) {
+        this.type = type;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
@@ -24,9 +25,9 @@ public class AddTextBlockController {
             @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 
-        contentBlockManager.createTextBlock(slideId, content, contentOrder);
+        ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
 
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>(textBlock.getId(), HttpStatus.OK);
     }
 
 }

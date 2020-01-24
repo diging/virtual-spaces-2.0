@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
+import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -26,6 +29,8 @@ public class ModuleManager implements IModuleManager {
     @Autowired
     private SlideRepository slideRepo;
 
+    @Autowired
+    private SequenceRepository sequenceRepo;
     /*
      * (non-Javadoc)
      * 
@@ -52,13 +57,24 @@ public class ModuleManager implements IModuleManager {
             return module.get();
         }
         return null;
+    }       
+    
+    @Override
+    public List<IModule> getAllModules() {
+        List<IModule> modules = new ArrayList<>();
+        moduleRepo.findAll().forEach(s -> modules.add(s));
+        return modules;
     }
 
     @Override
     public List<ISlide> getModuleSlides(String moduleId) {
-        IModule module = getModule(moduleId);
-        return new ArrayList<>(slideRepo.findByModule((Module) module));
+        return new ArrayList<>(slideRepo.findSlidesForModule(moduleId));
     }
 
-    
+
+    @Override
+    public List<ISequence> getModuleSequences(String moduleId) {
+        return new LinkedList<>(sequenceRepo.findSequencesForModule(moduleId));
+    }
+
 }

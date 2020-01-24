@@ -37,6 +37,10 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
+	<definition name="module" extends="base.definition">	
+		<put-attribute name="currentPage" value="module" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
+	</definition>
     
     <!-- Register -->
     <definition name="register" extends="base.definition"> 
@@ -133,6 +137,20 @@
 	<definition name="staff/module/slide/contents" extends="slide.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
 	</definition>
+	
+	 <!-- Sequences -->
+	<definition name="sequence.base.def" extends="base.definition.bt4">	
+		<put-attribute name="currentPage" value="sequence" />
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition> 
+
+	<definition name="staff/module/sequence/add" extends="sequence.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/sequences/add.jsp" />	
+	</definition>
+	
+	<definition name="staff/module/sequence/slides" extends="sequence.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/sequences/sequence.jsp" />
+	</definition>
     
     <!-- Users -->
     <definition name="staff/user/list" extends="exhibit.base.def"> 
@@ -144,5 +162,10 @@
         <put-attribute name="currentPage" value="images" />
         <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
     </definition>
-
+    <definition name="staff/image" extends="exhibit.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/images/image.jsp" />
+	</definition>
+	<definition name="staff/image/edit" extends="exhibit.base.def">
+        <put-attribute name="content" value="/WEB-INF/views/staff/images/edit.jsp" />
+    </definition>
 </tiles-definitions>

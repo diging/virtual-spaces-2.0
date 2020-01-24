@@ -1,10 +1,13 @@
 package edu.asu.diging.vspace.core.services;
 
 
-import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
-import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 import java.util.List;
+
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.ImageCategory;
+import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 public interface IImageService {
 
@@ -14,9 +17,20 @@ public interface IImageService {
     
     long getTotalPages();
     
-    List<VSImage> getImages(int pageNo);
+    List<IVSImage> getImages(int pageNo);
     
     long getTotalImageCount();
 
     int validatePageNumber(int pageNo);
+    
+    void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
+    
+    IVSImage getImageById(String imageId) throws ImageDoesNotExistException;
+
+    void addCategory(IVSImage image, ImageCategory category);
+
+    void removeCategory(IVSImage image, ImageCategory category);
+
+    List<IVSImage> findByFilenameOrNameContains(String searchTerm);
+
 }
