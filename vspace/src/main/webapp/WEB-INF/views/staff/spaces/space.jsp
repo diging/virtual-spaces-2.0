@@ -1039,4 +1039,3 @@ Delete Space
 <jsp:include page="../../deleteModal.jsp" >
 <jsp:param name="elementType" value="Space" /> 
 </jsp:include>
-	
