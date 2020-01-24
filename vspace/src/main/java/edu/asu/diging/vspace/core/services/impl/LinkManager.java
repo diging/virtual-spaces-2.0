@@ -187,7 +187,6 @@ public class LinkManager implements ILinkManager {
         space.getModuleLinks().remove(link);
         moduleLinkRepo.delete((ModuleLink) link);
     }
- 
     
     @Override
     public void deleteExternalLink(String linkId) {
