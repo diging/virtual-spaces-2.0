@@ -20,7 +20,4 @@ public interface ISpaceManager {
     List<ISpace> getAllSpaces();
     
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
-    
-    List<ISpace> getAllTargetSpaces();
-    
 }
