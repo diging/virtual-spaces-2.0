@@ -21,4 +21,4 @@ public class ListSpacesController {
 		
 		return "staff/space/list";
 	}
-}
+} 
