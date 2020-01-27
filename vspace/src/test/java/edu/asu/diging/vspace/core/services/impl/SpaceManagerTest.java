@@ -19,7 +19,6 @@ import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
@@ -32,7 +31,6 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
-import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 public class SpaceManagerTest {
@@ -70,8 +68,6 @@ public class SpaceManagerTest {
     @Mock
     private ISpaceDisplayFactory spaceDisplayFactory;
 
-    @Mock
-    private ILinkManager linkManager;
 
     @InjectMocks
     private SpaceManager managerToTest;
@@ -118,14 +114,14 @@ public class SpaceManagerTest {
 
     
     @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException, SpaceLinkDoesNotExistException {
+    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException{
        Mockito.doThrow(IllegalArgumentException.class)
         .when(spaceRepo).deleteById(null);
        managerToTest.deleteSpaceById(null);
     }
     
     @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException, SpaceLinkDoesNotExistException {  
+    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {  
        Mockito.doThrow(EmptyResultDataAccessException.class)
         .when(spaceRepo).deleteById(spaceId);
        managerToTest.deleteSpaceById(spaceId);

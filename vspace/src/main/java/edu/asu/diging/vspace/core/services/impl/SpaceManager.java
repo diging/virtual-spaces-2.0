@@ -188,7 +188,6 @@ public class SpaceManager implements ISpaceManager {
      *            if id is null throws exception, else delete corresponding
      *            space
      * @throws SpaceDoesNotExistException 
-     * @throws SpaceLinkDoesNotExistException 
      */
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {

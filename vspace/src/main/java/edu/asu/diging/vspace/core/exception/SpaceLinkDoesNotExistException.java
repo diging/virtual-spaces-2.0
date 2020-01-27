@@ -5,7 +5,7 @@ public class SpaceLinkDoesNotExistException extends Exception {
     /**
      * 
      */
-    private static final long serialVersionUID = -6849852485214921351L;
+    private static final long serialVersionUID = 1L;
 
     public SpaceLinkDoesNotExistException() {
         super();
