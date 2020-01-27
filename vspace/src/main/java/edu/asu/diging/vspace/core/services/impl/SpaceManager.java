@@ -17,7 +17,6 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SpaceLinkDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
