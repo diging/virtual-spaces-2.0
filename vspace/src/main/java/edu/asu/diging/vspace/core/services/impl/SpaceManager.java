@@ -13,7 +13,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -58,8 +57,6 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private IImageService imageService;
     
-    @Autowired
-    private SpaceLinkRepository spaceLinkRepo;
 
     /*
      * (non-Javadoc)
@@ -204,21 +201,5 @@ public class SpaceManager implements ISpaceManager {
            throw new SpaceDoesNotExistException(exception);
         }
 
-    }
-    
-    /**
-     * Method to return target spaces of all spacelinks
-     * 
-     * @return list of target space in each spacelink 
-     */
-    @Override
-    public List<ISpace> getAllTargetSpaces() {
-        List<ISpace> targetSpaces = new ArrayList<>();
-        spaceLinkRepo.findAll().forEach(s -> {
-            if (s.getTargetSpace() != null) {
-                targetSpaces.add(s.getTargetSpace());
-            }
-        });
-        return targetSpaces;
     }
 }

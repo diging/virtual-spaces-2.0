@@ -743,8 +743,15 @@ $( document ).ready(function() {
 	</button>
 </div>
 
-<h1> Space: ${space.name} <small style="margin-left: 10px;"><a href="<c:url value="/staff/space/${space.id}/edit" />"><span data-feather="edit"></span></a></small></h1>
-
+<h1> Space: ${space.name} <small style="margin-left: 10px;"><a
+		href="<c:url value="/staff/space/${space.id}/edit" />"><span
+			data-feather="edit"></span></a> <a href="#" data-record-id="${space.id}"
+		data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"
+		data-call-on-success="<c:url value="/staff/space/list"/>"
+		data-call-on-error="<c:url value="/staff/space/list"/>"
+		data-toggle="modal" data-target="#confirm-delete"><span
+			data-feather="trash-2"></span></a></small>
+</h1>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}. 
 	<br>

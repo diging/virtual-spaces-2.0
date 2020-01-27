@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ILinkManager;
-import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -17,8 +16,6 @@ public class SpaceController {
     @Autowired
     private ISpaceManager spaceManager;
 
-    @Autowired
-    private IModuleManager moduleManager;
 
     @Autowired
     private ILinkManager linkManager;
@@ -27,11 +24,9 @@ public class SpaceController {
     public String showSpace(@PathVariable String id, Model model) {
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("space", space);
-        model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
-        model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
+        model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
-        model.addAttribute("moduleList", moduleManager.getAllModules());
 
         return "staff/space";
     }
