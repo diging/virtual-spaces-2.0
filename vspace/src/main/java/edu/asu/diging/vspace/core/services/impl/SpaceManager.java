@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -25,6 +26,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -56,7 +58,8 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private IImageService imageService;
     
-
+    @Autowired
+    private SpaceLinkRepository spaceLinkRepo;
     /*
      * (non-Javadoc)
      * 
@@ -200,4 +203,16 @@ public class SpaceManager implements ISpaceManager {
         }
 
     }
+
+
+	@Override
+	public boolean getAllLinkedTargetSpaceIds(String id) {
+		
+		Optional<SpaceLink> getLinksFromSpace = spaceLinkRepo.findById(id);
+        if (!getLinksFromSpace.isPresent()) {
+        	System.out.println("Links exist to this space!!!!!!");
+            return true;
+        }
+		return false;
+	}
 }
