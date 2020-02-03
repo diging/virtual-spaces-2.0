@@ -60,6 +60,8 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
+    
+
     /*
      * (non-Javadoc)
      * 
@@ -196,6 +198,7 @@ public class SpaceManager implements ISpaceManager {
         try {
         	
         	//Deleting space ID from Reference Table i.e. SpaceDisplay and then from Main Table i.e. Space
+       
         	spaceDisplayRepo.deleteBySpaceId(id);
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
@@ -206,13 +209,18 @@ public class SpaceManager implements ISpaceManager {
 
 
 	@Override
-	public boolean getAllLinkedTargetSpaceIds(String id) {
+	public boolean checkTargetSpaceIds(String id) {
 		
-		Optional<SpaceLink> getLinksFromSpace = spaceLinkRepo.findById(id);
-        if (!getLinksFromSpace.isPresent()) {
+		List<SpaceLink> getLinksFromSpace = spaceLinkRepo.getLinkedSpaceIds(id);
+		String linkedId = getLinksFromSpace.get(0).getId();
+		System.out.println("Linked ID: "+linkedId);
+        if (linkedId != null) {
         	System.out.println("Links exist to this space!!!!!!");
             return true;
         }
 		return false;
 	}
+
+	
+
 }

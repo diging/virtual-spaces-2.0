@@ -19,7 +19,8 @@ public interface ISpaceManager {
 
     List<ISpace> getAllSpaces();
     
-    boolean getAllLinkedTargetSpaceIds(String id);
+    boolean checkTargetSpaceIds(String id);
     
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
+
 }

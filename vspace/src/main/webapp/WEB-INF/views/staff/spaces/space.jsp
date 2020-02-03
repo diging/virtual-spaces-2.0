@@ -744,15 +744,15 @@ $( document ).ready(function() {
 </div>
 
 <h1> Space: ${space.name} <small style="margin-left: 10px;">
-		<c:out value="${isSpaceLinkExists}"/><a
-		href="<c:url value="/staff/space/${space.id}/edit" />"><span
-			data-feather="edit"></span></a> <a href="#" data-record-id="${space.id}"
+		<a href="<c:url value="/staff/space/${space.id}/edit" />"><span
+		data-feather="edit"></span></a> <a href="#" data-record-id="${space.id}"
 		data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"
 		data-call-on-success="<c:url value="/staff/space/list"/>"
 		data-call-on-error="<c:url value="/staff/space/list"/>"
 		data-toggle="modal" data-target="#confirm-delete"
-		data-warning="${isSpaceLinkExists? 'Warning! Other spaces have links to this space' : ''}"><span
-			data-feather="trash-2"></span></a></small>
+		data-warning="${isSpaceLinkExists? 'Warning! Other spaces have links to this space! Do you want to delete?' : ''}"><span
+		data-feather="trash-2"></span></a></small>
+		<%-- Boolean value: ${isSpaceLinkExists}	 --%>
 </h1>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}. 
