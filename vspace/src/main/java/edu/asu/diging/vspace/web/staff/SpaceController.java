@@ -26,13 +26,16 @@ public class SpaceController {
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
     	
+    	
         ISpace space = spaceManager.getFullyLoadedSpace(id);
+        model.addAttribute("isSpaceLinkExists", spaceManager.checkTargetSpaceIds(id));
         model.addAttribute("space", space);
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
         model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("moduleList", moduleManager.getAllModules());
-        model.addAttribute("isSpaceLinkExists", spaceManager.checkTargetSpaceIds(id));
+        
+        System.out.println("SPACE CONTROLLER !!!! Boolean value: "+spaceManager.checkTargetSpaceIds(id));
         return "staff/space";
     }
 }

@@ -197,8 +197,22 @@ public class SpaceManager implements ISpaceManager {
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
         	
+        	// Order of deletion
+        	/* 1. SPACELINK - DELETE FROM SPACELINK WHERE SOURCE_SPACE_ID = "SPL000000001";
+        	 * 2. SPACEDISPLAY - DELETE FROM SPACEDISPLAY WHERE SPACE_ID = "SPA000000018"
+        	 * 3. SPACE - DELETE FROM SPACE WHERE ID = "SPA000000018";
+        	 * 
+        	 * 
+        	 */
         	//Deleting space ID from Reference Table i.e. SpaceDisplay and then from Main Table i.e. Space
-       
+        	// Delete all the space ids by passing it as a list
+        	List<String> linkedIds = new ArrayList<>();
+        	List<SpaceLink> ids = spaceLinkRepo.getLinkedSpaceIds(id);
+        	for(SpaceLink spaceData : ids) {
+        		linkedIds.add(spaceData.getId());
+        	}
+        	
+        	spaceLinkRepo.deleteBySourceSpaceId(linkedIds);
         	spaceDisplayRepo.deleteBySpaceId(id);
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
@@ -212,13 +226,19 @@ public class SpaceManager implements ISpaceManager {
 	public boolean checkTargetSpaceIds(String id) {
 		
 		List<SpaceLink> getLinksFromSpace = spaceLinkRepo.getLinkedSpaceIds(id);
-		String linkedId = getLinksFromSpace.get(0).getId();
-		System.out.println("Linked ID: "+linkedId);
-        if (linkedId != null) {
-        	System.out.println("Links exist to this space!!!!!!");
-            return true;
-        }
-		return false;
+		boolean targetIdExists = false;
+		System.out.println("ID Passed: "+id);
+		String linkedId = "";
+		if(getLinksFromSpace.size() > 0) {
+			linkedId = getLinksFromSpace.get(0).getId();
+			System.out.println("Linked ID: "+linkedId);
+			targetIdExists = true;
+		}
+		else {
+			targetIdExists = false;
+			System.out.println("targetIdExists: "+targetIdExists);
+		}
+       return targetIdExists;
 	}
 
 	
