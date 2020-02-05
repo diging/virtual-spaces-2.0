@@ -750,7 +750,7 @@ $( document ).ready(function() {
 		data-call-on-success="<c:url value="/staff/space/list"/>"
 		data-call-on-error="<c:url value="/staff/space/list"/>"
 		data-toggle="modal" data-target="#confirm-delete"
-		data-warning="${isSpaceLinkExists? 'Warning! Other spaces have links to this space! Do you want to delete?' : ''}"><span
+		data-warning="${isSpaceLinkExists? 'Warning! Other spaces have links to this space! Do you still want to delete?' : ''}"><span
 		data-feather="trash-2"></span></a></small>
 		<%-- Boolean value: ${isSpaceLinkExists}	 --%>
 </h1>
