@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -25,6 +26,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -61,7 +63,8 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
     
-
+    @Autowired
+    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
     /*
      * (non-Javadoc)
      * 
@@ -197,24 +200,40 @@ public class SpaceManager implements ISpaceManager {
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
         	
-        	// Order of deletion
-        	/* 1. SPACELINK - DELETE FROM SPACELINK WHERE SOURCE_SPACE_ID = "SPL000000001";
-        	 * 2. SPACEDISPLAY - DELETE FROM SPACEDISPLAY WHERE SPACE_ID = "SPA000000018"
-        	 * 3. SPACE - DELETE FROM SPACE WHERE ID = "SPA000000018";
-        	 * 
-        	 * 
-        	 */
+        	System.out.println("Inside deleteSpaceById method !!!!!!!");
+        	// Order of deletion: Tables: SPACELINKDISPLAY (link_id), SPACELINK (source_space_id), SPACEDISPLAY (space_id),  SPACE(id) 
+        	
         	//Deleting space ID from Reference Table i.e. SpaceDisplay and then from Main Table i.e. Space
         	// Delete all the space ids by passing it as a list
-        	List<String> linkedIds = new ArrayList<>();
-        	List<SpaceLink> ids = spaceLinkRepo.getLinkedSpaceIds(id);
-        	for(SpaceLink spaceData : ids) {
-        		linkedIds.add(spaceData.getId());
+        	List<String> linkedIds = null;
+        	List<SpaceLink> spaceLinkIDs = spaceLinkRepo.getLinkedSpaceIds(id);
+        	
+        	if(spaceLinkIDs.size() > 0) {
+        		System.out.println("Inside If block ------> when there are more than 1 links attached to space!!");
+        		System.out.println("spaceLinkIDs: "+spaceLinkIDs.get(0).getId());
+        		linkedIds = new ArrayList<>();
+        		for(SpaceLink spaceData : spaceLinkIDs) {
+            		linkedIds.add(spaceData.getId());
+            	}
+        		
+        		//System.out.println("spaceLinkDisplayIds Value: "+spaceLinkDisplayIds.get(0).getId());
+        		spaceLinkDisplayRepo.deleteByLinkId(linkedIds);
+        		spaceLinkRepo.deleteBySourceSpaceId(id);
+        		spaceDisplayRepo.deleteBySpaceId(id); 
+                spaceRepo.deleteById(id);
+                System.out.println("IF BLOCK ----- Deletion task completed SUCCESSFULLY!");
+        		
+        	}
+        	else {
+        		System.out.println("Inside Else block ----> When no links attached to space");
+        		System.out.println("ID to delete: "+id);
+        		spaceDisplayRepo.deleteBySpaceId(id);
+        		spaceRepo.deleteById(id);
+        		System.out.println("ELSE BLOCK ----- Deletion task completed SUCCESSFULLY!");
         	}
         	
-        	spaceLinkRepo.deleteBySourceSpaceId(linkedIds);
-        	spaceDisplayRepo.deleteBySpaceId(id);
-            spaceRepo.deleteById(id);
+        	
+        	
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
            throw new SpaceDoesNotExistException(exception);
         }
