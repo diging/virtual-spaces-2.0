@@ -26,7 +26,6 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -188,78 +187,52 @@ public class SpaceManager implements ISpaceManager {
         return spaces;
     }
 
-    /**
-     * Method to delete space based on id
-     * 
-     * @param id
-     *            if id is null throws exception, else delete corresponding
-     *            space
-     * @throws SpaceDoesNotExistException 
-     */
-    @Override
-    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
-        try {
-        	
-        	System.out.println("Inside deleteSpaceById method !!!!!!!");
-        	// Order of deletion: Tables: SPACELINKDISPLAY (link_id), SPACELINK (source_space_id), SPACEDISPLAY (space_id),  SPACE(id) 
-        	
-        	//Deleting space ID from Reference Table i.e. SpaceDisplay and then from Main Table i.e. Space
-        	// Delete all the space ids by passing it as a list
-        	List<String> linkedIds = null;
-        	List<SpaceLink> spaceLinkIDs = spaceLinkRepo.getLinkedSpaceIds(id);
-        	
-        	if(spaceLinkIDs.size() > 0) {
-        		System.out.println("Inside If block ------> when there are more than 1 links attached to space!!");
-        		System.out.println("spaceLinkIDs: "+spaceLinkIDs.get(0).getId());
-        		linkedIds = new ArrayList<>();
-        		for(SpaceLink spaceData : spaceLinkIDs) {
-            		linkedIds.add(spaceData.getId());
-            	}
-        		
-        		//System.out.println("spaceLinkDisplayIds Value: "+spaceLinkDisplayIds.get(0).getId());
-        		spaceLinkDisplayRepo.deleteByLinkId(linkedIds);
-        		spaceLinkRepo.deleteBySourceSpaceId(id);
-        		spaceDisplayRepo.deleteBySpaceId(id); 
-                spaceRepo.deleteById(id);
-                System.out.println("IF BLOCK ----- Deletion task completed SUCCESSFULLY!");
-        		
-        	}
-        	else {
-        		System.out.println("Inside Else block ----> When no links attached to space");
-        		System.out.println("ID to delete: "+id);
-        		spaceDisplayRepo.deleteBySpaceId(id);
-        		spaceRepo.deleteById(id);
-        		System.out.println("ELSE BLOCK ----- Deletion task completed SUCCESSFULLY!");
-        	}
-        	
-        	
-        	
-        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-           throw new SpaceDoesNotExistException(exception);
-        }
+	/**
+	 * Method to delete space based on id
+	 * 
+	 * @param id if id is null throws exception, else delete corresponding space
+	 * @throws SpaceDoesNotExistException
+	 */
+	@Override
+	public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
+		try {
+			// Order of deletion: Tables: SPACELINKDISPLAY (link_id), SPACELINK
+			// (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
+			List<String> linkedIds = null;
+			List<SpaceLink> spaceLinkIDs = spaceLinkRepo.getLinkedSpaceIds(id);
 
-    }
+			// When the space has other links attached to it
+			if (spaceLinkIDs.size() > 0) {
+				linkedIds = new ArrayList<>();
+				for (SpaceLink spaceData : spaceLinkIDs) {
+					linkedIds.add(spaceData.getId());
+				}
+				spaceLinkDisplayRepo.deleteByLinkId(linkedIds);
+				spaceLinkRepo.deleteBySourceSpaceId(id);
+				spaceDisplayRepo.deleteBySpaceId(id);
+				spaceRepo.deleteById(id);
+			}
+			// When the space has no other links attached to it
+			else {
+				spaceDisplayRepo.deleteBySpaceId(id);
+				spaceRepo.deleteById(id);
+			}
 
+		} catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
+			throw new SpaceDoesNotExistException(exception);
+		}
+
+	}
 
 	@Override
 	public boolean checkTargetSpaceIds(String id) {
-		
+
 		List<SpaceLink> getLinksFromSpace = spaceLinkRepo.getLinkedSpaceIds(id);
 		boolean targetIdExists = false;
-		System.out.println("ID Passed: "+id);
-		String linkedId = "";
-		if(getLinksFromSpace.size() > 0) {
-			linkedId = getLinksFromSpace.get(0).getId();
-			System.out.println("Linked ID: "+linkedId);
+		if (getLinksFromSpace.size() > 0)
 			targetIdExists = true;
-		}
-		else {
+		else
 			targetIdExists = false;
-			System.out.println("targetIdExists: "+targetIdExists);
-		}
-       return targetIdExists;
+		return targetIdExists;
 	}
-
-	
-
 }
