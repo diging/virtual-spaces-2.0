@@ -52,6 +52,7 @@ public class SlideManager implements ISlideManager {
     @Override
     public void deleteSlideById(String slideId) throws SlideDoesNotExistException {
         try {
+        	System.out.println("inside deleteSlideById method ---- ");
             slideRepo.delete((Slide) getSlide(slideId));
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new SlideDoesNotExistException(exception);
