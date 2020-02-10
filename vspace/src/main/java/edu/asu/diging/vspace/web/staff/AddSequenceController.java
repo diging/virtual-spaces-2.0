@@ -45,7 +45,7 @@ public class AddSequenceController {
         if(ll.size()==1) {
         	IModule module=moduleManager.getModule(moduleId);
         	module.setStartSequence(ll.get(0));
-        	moduleManager.updateModule(module);
+        	moduleManager.storeModule(module);
         }
         // Added by Prashant Jadhav for story id 22 end
         return "redirect:/staff/module/{moduleId}";

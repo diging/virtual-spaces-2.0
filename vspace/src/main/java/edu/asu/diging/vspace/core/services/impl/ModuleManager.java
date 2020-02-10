@@ -76,11 +76,4 @@ public class ModuleManager implements IModuleManager {
     public List<ISequence> getModuleSequences(String moduleId) {
         return new LinkedList<>(sequenceRepo.findSequencesForModule(moduleId));
     }
-    //Added By prashant Jadhav for story 22 start
-    @Override
-    public void updateModule(IModule module) {
-    	moduleRepo.save((Module) module);
-    }
-  //Added By prashant Jadhav for story 22 end
-
 }

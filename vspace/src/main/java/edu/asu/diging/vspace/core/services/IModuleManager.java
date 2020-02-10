@@ -11,14 +11,11 @@ public interface IModuleManager {
     IModule storeModule(IModule module);
 
     IModule getModule(String id);
-    
+
     List<IModule> getAllModules();
 
     List<ISlide> getModuleSlides(String moduleId);
-    
+
     List<ISequence> getModuleSequences(String moduleId);
-    //Added By Prashant Jadhav for story 22 start
-	void updateModule(IModule module);
-	//Added By Prashant Jadhav for story 22 end
 
 }
