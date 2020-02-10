@@ -153,7 +153,7 @@ $(document).ready(function($) {
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 	</div>
 	<div class="modal-body">
-		<p> This Slide is a part of another Sequence. Are you Sure you want to delete it?</p>
+		<p> This Slide is a part of another Sequence. Are you sure you want to delete it?</p>
 	</div>
 	<div class="modal-footer">
 		<button type="button" id="cancelSlideDelButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
