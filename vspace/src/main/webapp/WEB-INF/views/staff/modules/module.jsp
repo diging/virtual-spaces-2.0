@@ -10,6 +10,7 @@ var slideIdToDelete = 0;
 
 //------------Deleting Slides-------------------
 function deleteSlide(slideId, hasSequence) {
+	console.log("hasSequence: ------>  "+hasSequence)
 	if(hasSequence == 0) {
 		$.ajax({
 	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
@@ -35,6 +36,11 @@ $(document).ready(function($) {
 		$("#createSlideAlert").show();
 	});
 	$("#createSlideAlert").draggable();
+	
+	// Ashmi changes for story - 54
+	$("#closeSlide").click(function (){
+		$("#deleteSlideAlert").hide();
+	})
 	
 	$("#cancelSlideBtn").click(function () {
 		$("#createSlideAlert").hide();
@@ -150,7 +156,7 @@ $(document).ready(function($) {
 	<div class="modal-content">
 	<div class="modal-header">
 		<h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<button type="button" id="closeSlide" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 	</div>
 	<div class="modal-body">
 		<p> This Slide is a part of another Sequence. Are you sure you want to delete it?</p>
