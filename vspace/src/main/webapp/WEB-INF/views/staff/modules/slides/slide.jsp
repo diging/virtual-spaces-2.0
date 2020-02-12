@@ -33,6 +33,7 @@ function onDoubleClick(e){
     	// get the id of the nearest div with id valueDiv
         var blockId = $(e.target).closest('div.valueDiv').hasClass( "img" );
         $(e.target).closest('.valueDiv').addClass("open");
+        alert(blockId);
         // if there is a block id we know its text block otherwise its an image block
         if(!blockId){
         //remove card border
@@ -62,8 +63,9 @@ function uploadImage() {
     var formData = new FormData();
     formData.append('file', file);
     formData.append('contentOrder', contentCount);
+    alert("1 - "+ $(".open").attr('id'));
     if ($(".open")[0]){
-        var imageBlockId = $('.open').attr('id')
+        var imageBlockId = $('.open').attr('id');
         formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
         reader.onload = function () {
@@ -79,7 +81,7 @@ function uploadImage() {
         	image.src = theFile.target.result;
         	image.onload = function() {
             	imageblock = createImageBlock(reader, this.width);
-            	$('#slideSpace').append(imageblock);            
+            	$('#slideSpace').append(imageblock); 
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
         }
@@ -97,14 +99,16 @@ function uploadImage() {
         data: formData,
         
         success: function(data) {
+        	alert(data);
         	var imageData = JSON.parse(data);
-        	$('input[id=deleteImageId]').val(imageData.imageBlockId);
-        	$(".open").removeClass("open");
+        	// Changed update to hidden input tag's value only for the most recent upload and not for all images present in a slide as part of VSPC-52.
+        	document.querySelector("div[id='current']").querySelector("input[id='deleteImageId']").value = imageData.imageBlockId;
+         	$(".open").removeClass("open");
         	var $imgTag = imageblock.find('img[id]');
             if($imgTag.length == 0){
             	var img = imageblock.find('img')
             	img.attr('id', imageData.imageBlockId);
-            	document.getElementById("current").setAttribute('id', imageData.imageBlockId);    	
+            	document.getElementById("current").setAttribute('id', imageData.imageBlockId);  	
             }
         },
         error: function(data) {
@@ -391,12 +395,12 @@ $(document).ready(function() {
     
     // ------------- edit text block ----------------
     
-    
-    function closeTextBox() {
+    // parentId is the Id of the text block, passing it to the deleteTextId value.
+    function closeTextBox(parentId) {
         var description = $("#newTextBlock").val()
         // clear text box and buttons
         $(".open").empty()
-        $(".open").append('<div class="row"><div class="col"><p>'+description+'</p></div><div class="col"><input type="hidden" id="deleteTextId"><input class="btn btn-danger deleteText" type="submit" value="Delete" style="float: right;"></div></div>');
+        $(".open").append('<div class="row"><div class="col"><p>'+description+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value = "'+parentId+'"><a class="btn deleteText" href="#"	style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
@@ -408,7 +412,8 @@ $(document).ready(function() {
     // must add the event to the document since the buttons are added dynamically
     $(document).on('click','#cancelTextBlock',function(){
     	document.getElementById("newTextBlock").value = document.getElementById("newTextBlock").defaultValue;
-    	closeTextBox();
+    	var blockId = $(this).closest(".open").attr("id")
+    	closeTextBox(blockId);
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -416,10 +421,9 @@ $(document).ready(function() {
 
     $(document).on('click','#submitTextBlock',function(){
        var formData = new FormData();
+       var blockId = $(this).closest(".open").attr("id");
        formData.append('textBlockDesc', $("#newTextBlock").val());
-       var blockid = $(this).closest(".open").attr("id");
-       formData.append('textBlockId',  $(this).closest(".open").attr("id"));
-       
+       formData.append('textBlockId', blockId);
        $.ajax({
            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
            type: 'POST',
@@ -430,7 +434,7 @@ $(document).ready(function() {
            enctype: 'multipart/form-data',
            success: function(data) {
                // replace text box with new description
-               closeTextBox();
+               closeTextBox(blockId);
                $(".open").removeClass("open");
            },
            error: function(data) {
@@ -645,7 +649,7 @@ $(window).on('load', function () {
                 <div class="row">
                     <div class="col">
                         <img id="${contents.image.id}" width="800px"
-                            src="<c:url value="/api/image/${contents.image.id}" />"
+                            src="<c:url value="/api/image/${contents.image.id}"/>"
                         />
                     </div>
                     <div class="col">
