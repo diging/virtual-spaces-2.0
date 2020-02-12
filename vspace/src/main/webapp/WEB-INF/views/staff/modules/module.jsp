@@ -21,7 +21,7 @@ $(document).ready(function($) {
 		$(this).css("border", "solid #c1bb88");
 		var sequenceId = this.id;
 		$('#selectedSequence').empty();
-		
+		console.log("on click of sequence");
 		$.ajax({
 			type: "GET",
 			url: "<c:url value="/staff/module/${module.id}/sequence/"/>" +sequenceId+  "/slides",
@@ -39,16 +39,44 @@ $(document).ready(function($) {
 				}
 		});
 	});
-});	
+	
+	$(".sequences").on("click", function(e) {
+		var sequenceId = this.id;
+		$.ajax({
+			type: "PUT",
+			url: "<c:url value="/staff/module/${module.id}/update/"/>" +sequenceId +'?${_csrf.parameterName}=${_csrf.token}',
+			async: false,
+			success: function(response) {
+				console.log("Successfully updated");
+				$('#message').html("Sequence updated successfully").fadeIn('slow');
+			}
+			});
+	});		
+});
+
 </script>
 
 <h1>Module: ${module.name}</h1>
 <h3>Description: ${module.description}</h3>
 
+<div id="message"></div>
+
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${module.creationDate}</span> by
 	${module.createdBy}. <br> Modified on <span class="date">${module.modificationDate}</span>
 	by ${module.modifiedBy}.
+</div>
+
+<div class="dropdown">
+	<button class="btn btn-primary dropdown-toggle" type="button"
+		id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+		aria-expanded="false">Select Start
+		Sequence</button>
+	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		<c:forEach items="${sequences}" var="sequences">
+			<a id="${sequences.id}" class="dropdown-item sequences"> ${sequences.name}</a>
+		</c:forEach>
+	</div>
 </div>
 
 <div id="result"></div>

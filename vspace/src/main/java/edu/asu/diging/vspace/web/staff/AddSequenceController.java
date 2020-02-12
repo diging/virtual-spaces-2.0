@@ -34,20 +34,10 @@ public class AddSequenceController {
         model.addAttribute("slides", moduleManager.getModuleSlides(moduleId));
         return "staff/module/sequence/add";
     }
-    
     @RequestMapping(value = "/staff/module/{moduleId}/sequence/add", method = RequestMethod.POST)
     public String addSequence(Model model, @PathVariable("moduleId") String moduleId, @ModelAttribute SequenceForm sequenceForm,
             Principal principal) {
-    	
-        sequenceManager.storeSequence(moduleId, sequenceForm); 
-        // Added by Prashant Jadhav for story id 22 start
-        LinkedList<ISequence> ll= new LinkedList<>(moduleManager.getModuleSequences(moduleId));
-        if(ll.size()==1) {
-        	IModule module=moduleManager.getModule(moduleId);
-        	module.setStartSequence(ll.get(0));
-        	moduleManager.storeModule(module);
-        }
-        // Added by Prashant Jadhav for story id 22 end
+        sequenceManager.storeSequence(moduleId, sequenceForm);
         return "redirect:/staff/module/{moduleId}";
-    }    
+    }  
 }
