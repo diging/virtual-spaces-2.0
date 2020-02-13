@@ -43,8 +43,8 @@ public class AddModuleController {
 		return "redirect:/staff/module/list";
 	}
 	
-	@RequestMapping(value = "/staff/module/{moduleId}/update/{sequenceId}", method = RequestMethod.PUT)
-    public String updateModule(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("sequenceId") String sequenceId, Principal principal) {
+	@RequestMapping(value = "/staff/module/{moduleId}/{sequenceId}", method = RequestMethod.POST)
+    public String updateModule(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("sequenceId") String sequenceId) {
 	    IModule module=moduleManager.getModule(moduleId);
         module.setStartSequence(sequenceManager.getSequence(sequenceId));
         moduleManager.storeModule(module);
