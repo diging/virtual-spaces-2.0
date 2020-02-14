@@ -26,6 +26,7 @@ public class AddSequenceController {
     
     @RequestMapping(value = "/staff/module/{id}/sequence/add", method = RequestMethod.GET)
     public String showAddSequence(@PathVariable("id") String moduleId, Model model) {
+    	System.out.println("iNSIDE Add controller ----> showAddSequence() ---");
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequence", new SequenceForm());
         model.addAttribute("slides", moduleManager.getModuleSlides(moduleId));

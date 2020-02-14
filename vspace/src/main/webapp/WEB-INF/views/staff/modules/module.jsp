@@ -31,16 +31,32 @@ function deleteSlide(slideId, hasSequence) {
 	}  
 }
 
+function deleteSlideFromSequence(slideId, hasSequence){
+	$.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/" + hasSequence +'?${_csrf.parameterName}=${_csrf.token}',
+        type: 'DELETE',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+        	$("#"+slideId).closest('.slide').remove();
+        },
+        error: function(data) {
+        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+        	$('.error').append(alert);
+        }
+    });
+}
+
 $(document).ready(function($) {
 	$("#addSlideButton").on("click", function (e) {
 		$("#createSlideAlert").show();
 	});
 	$("#createSlideAlert").draggable();
 	
-	// Ashmi changes for story - 54
 	$("#closeSlide").click(function (){
+		slideIdToDelete = 0;
 		$("#deleteSlideAlert").hide();
-	})
+	});
 	
 	$("#cancelSlideBtn").click(function () {
 		$("#createSlideAlert").hide();
@@ -78,7 +94,7 @@ $(document).ready(function($) {
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$("#deleteSlideAlert").hide();
-		deleteSlide(slideIdToDelete, 0);
+		deleteSlideFromSequence(slideIdToDelete, 1);
 	});
 				
 });	

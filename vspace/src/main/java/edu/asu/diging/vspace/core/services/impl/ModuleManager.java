@@ -69,7 +69,6 @@ public class ModuleManager implements IModuleManager {
 
     @Override
     public HashMap<ISlide, Integer> getModuleSlides(String moduleId) {
-    	System.out.println("Inside getModuleSlides method ---- ");
         HashMap<ISlide, Integer> slidesWithSeq = new HashMap<ISlide, Integer>();        
         for(ISlide slide: slideRepo.findSlidesForModule(moduleId)) {
             slidesWithSeq.put(slide, slideRepo.countSequencesForSlide(slide.getId()).size());
