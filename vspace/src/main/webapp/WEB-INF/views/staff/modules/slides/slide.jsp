@@ -6,7 +6,7 @@
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader, width) {
-	var imageblock = $('<div id="current" class="valueDiv card card-body img"><div class="row"><div class="col"><img class="img" src="#" /></div><div class="col"><input style="display:none;" type="hidden" name="deleteImageId" id="deleteImageId"><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
+    var imageblock = $('<div id="current" style="margin: 1%" class="valueDiv card card-body"><img class="imgDiv" style="margin: 1%;" src="#" /><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -17,7 +17,7 @@ function onMouseEnter(e){
     var target = $( e.target );
    
     $(".hova").removeClass("hova");
-    $(e.target).closest(".valueDiv").addClass("hova");
+    $(e.target).addClass("hova");
     // This is needed to prevent only the p tag from being highlighted
     if(target.is('p')){
         $(e.target).parent().addClass("hova");
@@ -43,6 +43,8 @@ function onDoubleClick(e){
         $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
         $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
         $(".open").children("p:first").remove();
+        $(".open").children("input:first").remove();
+        $(".open").children("a:first").remove();
         // unbind events to prevent multiple instances of buttons and constant highlighting
         $('.textDiv').unbind('mouseenter mouseleave dblclick');
         // remove highlighting if present
@@ -58,8 +60,6 @@ function onDoubleClick(e){
 	
     }
 }
-
-//------------- creating image content blocks ------------
     
 function uploadImage() {
    	
@@ -71,7 +71,6 @@ function uploadImage() {
     formData.append('file', file);
     formData.append('content', file.name);
     formData.append('contentOrder', contentCount);
-    alert("1 - "+ $(".open").attr('id'));
     var imageblock = "";
  
     
@@ -91,7 +90,6 @@ function uploadImage() {
 	            $("#" + imageBlockId).replaceWith(imageblock);	
 	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         	};
-            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         }
         // Reset data-attribute to get current selected image ID
         $("#uploadImage").data('value', '');
@@ -99,11 +97,11 @@ function uploadImage() {
   	else {
   	
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
-        reader.onload = function (theFile) {
+        reader.onload = function (theFile) {        	
         	var image = new Image();
-        	image.src = theFile.target.result;
-        	image.onload = function() {
-            	imageblock = createImageBlock(reader, this.width);
+            image.src = theFile.target.result;
+            image.onload = function() {
+            	imageblock = createImageBlock(reader, this.width);  
             	$('#slideSpace').append(imageblock); 
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
@@ -127,20 +125,23 @@ function uploadImage() {
            	var img = imageblock.find('img');
            	if(data != ''){
            		img.attr('id', data);
+           		var divBlock = document.getElementById("current");
+           		divBlock.querySelector("input[id='deleteImageId']").value = data;
+           		divBlock.setAttribute('id', data);
            	}
            	else{
            		img.attr('id', imgID);
+           		var divBlock = document.getElementById("current");
+           		divBlock.querySelector("input[id='deleteImageId']").value = imgID;
+           		divBlock.setAttribute('id', imgID);
            	}
         },
         error: function(data) {
         	$(".open").removeClass("open");
         }
-      
-        
     });
     // Reset the image file name 
    	$('#file').val('');
-    
 } 
     
 $(document).ready(function() { 
@@ -246,22 +247,22 @@ $(document).ready(function() {
         $("#title").text("Silde: " + getTitleText)
         
     });
-	
-	$("#addText").click(function() {
-		$("#addTextAlert").show();
-  	});
-	
-	$("#addImage").click(function() {
-		$("#addImgAlert").show();
-  	});
-	
-	$("#uploadImage").click(function(e) {
+    
+    $("#addText").click(function() {
+        $("#addTextAlert").show();
+      });
+    
+    $("#addImage").click(function() {
+        $("#addImgAlert").show();
+      });
+    
+    $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
             uploadImage();
       });
-	
-	$(document).on("click", ".deleteText", function(e) {
+    
+    $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
 		var alert = $('<input type="hidden" id="deleteTextId">');
 		$(alert).attr( 'value', $(this).siblings('input').val());
@@ -274,9 +275,9 @@ $(document).ready(function() {
 		$(alert).attr( 'value', $(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
-	
-	
-	$("#cancelSubmitText").click(function() {
+    
+    
+    $("#cancelSubmitText").click(function() {
 		$("#addTextAlert").hide();	
 	});
 	
@@ -288,15 +289,11 @@ $(document).ready(function() {
 		$("#confirmDeleteImageAlert").hide();
 	});
 	
-	$("#cancelImageBtn").click(function() {
-		$("#image1").remove();
-		$("#addImgAlert").hide();	
+	$("#cancelDelete").click(function() {
+		$("#confirmDeleteImageAlert").hide();	
 	});
 	
-	
-
-	
-	// ---------- Delete Text Block -------------
+    	// ---------- Delete Text Block -------------
 	
 		$("#deleteText").on("click", function(e) {
 		e.preventDefault();
@@ -353,29 +350,9 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
-	$("#addImgAlert").draggable();
-	$("#addTextAlert").draggable();
-	$("#confirmDeleteTextAlert").draggable();
+    
+    $("#confirmDeleteTextAlert").draggable();
 	$("#confirmDeleteImageAlert").draggable();
-    
-    $("#addText").click(function() {
-        $("#addTextAlert").show();
-      });
-    
-    $("#addImage").click(function() {
-        $("#addImgAlert").show();
-      });
-    
-    $("#uploadImage").click(function(e) {
-        e.preventDefault();
-            $("#addImgAlert").hide();
-            uploadImage();
-      });
-    
-    $("#cancelSubmitText").click(function() {
-        $("#addTextAlert").hide();	
-    });
     
     $("#cancelImageBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
@@ -403,8 +380,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-            	var textBlockId = data.textBlock;
-                var textblock = $('<div id="'+textBlockId+'" class="valueDiv card card-body"style="margin: 10px;"><div class="row"><div class="col"><p>'+text+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value="'+textBlockId+'"> <a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div></div>');
+                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'</p><input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -424,12 +400,12 @@ $(document).ready(function() {
     
     // ------------- edit text block ----------------
     
-    // parentId is the Id of the text block, passing it to the deleteTextId value.
-    function closeTextBox(parentId) {
+    
+    function closeTextBox(blockId) {
         var description = $("#newTextBlock").val()
         // clear text box and buttons
         $(".open").empty()
-        $(".open").append('<div class="row"><div class="col"><p>'+description+'</p></div><div class="col"><input type="hidden" id="deleteTextId" value = "'+parentId+'"><a class="btn deleteText" href="#"	style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div></div');
+        $(".open").append('<p>'+description+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="#"	style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a>');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
@@ -441,7 +417,7 @@ $(document).ready(function() {
     // must add the event to the document since the buttons are added dynamically
     $(document).on('click','#cancelTextBlock',function(){
     	document.getElementById("newTextBlock").value = document.getElementById("newTextBlock").defaultValue;
-    	var blockId = $(this).closest(".open").attr("id")
+    	var blockId = $(this).closest(".open").attr("id");
     	closeTextBox(blockId);
     });
 
@@ -463,7 +439,7 @@ $(document).ready(function() {
            enctype: 'multipart/form-data',
            success: function(data) {
                // replace text box with new description
-               closeTextBox(blockId);
+               closeTextBox(blockId)
                $(".open").removeClass("open");
            },
            error: function(data) {
@@ -477,7 +453,7 @@ $(document).ready(function() {
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
 	var images = $(".imgDiv");
-	resizeImage(images);
+	/* resizeImage(images); */
 	
 	function resizeImage(images) {
 		for(var i =0; i < images.length; i++) {
@@ -544,6 +520,7 @@ $(window).on('load', function () {
 		<p>
 	</div>
 </nav>
+
 <!-- Delete Text Modal -->
 <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
     role="dialog"
@@ -600,6 +577,7 @@ $(window).on('load', function () {
         </div>
     </div>
 </div>
+
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -655,52 +633,29 @@ $(window).on('load', function () {
 	</div>
 </div>
 <div id="slideSpace">
-    <c:forEach items="${slideContents}" var="contents">
-        <c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-            <div id="${contents.id}" class="valueDiv card card-body img"
-                style="margin: 10px;"
-            >
-                <div class="row">
-                    <div class="col">
-                        <img id="${contents.image.id}" width="800px"
-                            src="<c:url value="/api/image/${contents.image.id}"/>"
-                        />
-                    </div>
-                    <div class="col">
-                        <input type="hidden" id="deleteImageId"
-                            value="${contents.id}"
-                        >
-                        <a class="btn deleteImage" href="#"
-        				style="float: right;"
-   						 ><i style="color: black;" class="fas fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </c:if>
-        <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-            <div id="${contents.id}" class="valueDiv card card-body"
-                style="margin: 10px;"
-            >
-                <div class="row">
-                    <div class="col">
-                        <p>${contents.text}</p>
-                    </div>
-                    <div class="col">
-                        <input type="hidden" id="deleteTextId"
-                            value="${contents.id}"
-                        >
-                        <a class="btn deleteText" href="#"
-        				style="float: right;"
-   						 ><i style="color: black;" class="fas fa-trash-alt"></i></a>
-                    </div>
-                </div>
-            </div>
-        </c:if>
-    </c:forEach>
+	<c:forEach items="${slideContents}" var="contents">
+		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
+			<div style="margin: 1%;" class="valueDiv card card-body" id="${contents.id}">
+				<img id="${contents.id}" class="imgDiv" style="margin: 1%;" src="<c:url value="/api/image/${contents.image.id}" />" />
+	             <input type="hidden" id="deleteImageId" value="${contents.id}">
+	             <a class="btn deleteImage" href="#" style="float: right;">
+	        		<i style="color: black;" class="fas fa-trash-alt"></i>
+	        	</a>
+			</div>
+		</c:if>
+		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
+			<div id="${contents.id}" class="textDiv card card-body row" style="margin: 1%;">
+				<p>${contents.text}</p>
+				<input type="hidden" id="deleteTextId" value="${contents.id}">
+                <a class="btn deleteText" href="#" style="float: right;">
+        			<i style="color: black;" class="fas fa-trash-alt"></i>
+        		</a>
+			</div>
+		</c:if>
+	</c:forEach>
 </div>
 <style type="text/css">
 .hova {
 	background-color: #bfb168;
 }
-
 </style>

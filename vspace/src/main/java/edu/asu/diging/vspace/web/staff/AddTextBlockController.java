@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,15 +20,14 @@ public class AddTextBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Map<String, String>> addTextBlock(@PathVariable("id") String slideId,
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST)
+    public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
 
         ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("textBlock", textBlock.getId());
-        return new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
+
+        return new ResponseEntity<>(textBlock.getId(), HttpStatus.OK);
     }
 
 }

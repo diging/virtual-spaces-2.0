@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -39,17 +40,19 @@ public class AddImageBlockController {
             image = file.getBytes();
             filename = file.getOriginalFilename();
         }
-        ObjectMapper mapper = new ObjectMapper();
+        String imageId;
         try {
-            CreationReturnValue imageBlock = contentBlockManager.createImageBlock(slideId, image, filename,
+            CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image, filename,
                     contentOrder);
-            ObjectNode node = mapper.createObjectNode();
-            node.put("imageBlockId", imageBlock.getElement().getId());
-            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.CREATED);
+            IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
+            imageId = imageBlock.getId();
         } catch (ImageCouldNotBeStoredException e) {
+            ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Image Content block cannot be stored.");
-            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 }
