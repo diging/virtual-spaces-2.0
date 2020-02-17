@@ -25,7 +25,7 @@ public class UpdateStartSequenceModuleController {
     private ISequenceManager sequenceManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/sequence/start", method = RequestMethod.POST)
-    public RedirectView updateModule(HttpServletRequest request,
+    public String updateModule(HttpServletRequest request,
             @PathVariable("moduleId") String moduleId,
             @RequestParam("sequenceParam") String sequenceId,RedirectAttributes attributes) {
         IModule module=moduleManager.getModule(moduleId);
@@ -34,6 +34,6 @@ public class UpdateStartSequenceModuleController {
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Start sequence successfully updated!");
         attributes.addAttribute("showAlert", "true");
-        return new RedirectView(request.getContextPath() + "/staff/module/{moduleId}");
+        return "redirect:/staff/module/{moduleId}";
     }
 }
