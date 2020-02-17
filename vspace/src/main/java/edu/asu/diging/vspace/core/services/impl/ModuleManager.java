@@ -76,5 +76,4 @@ public class ModuleManager implements IModuleManager {
     public List<ISequence> getModuleSequences(String moduleId) {
         return new LinkedList<>(sequenceRepo.findSequencesForModule(moduleId));
     }
-
 }
