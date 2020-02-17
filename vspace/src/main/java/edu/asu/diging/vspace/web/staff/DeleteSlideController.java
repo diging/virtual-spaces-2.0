@@ -38,7 +38,7 @@ public class DeleteSlideController {
 	public ResponseEntity<String> deleteSlideFromSequence(@PathVariable("id") String moduleId,
 			@PathVariable("slideId") String slideId, @PathVariable("hasSequence") int hasSequence) {
 		try {
-			slideManager.deleteSlideBySequence(slideId, moduleId);
+			slideManager.deleteSlidesFromSequence(slideId, moduleId);
 		} catch (SlideDoesNotExistException slideDoesNotExistException) {
 			logger.error("Could not delete slide.", slideDoesNotExistException);
 			return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later",

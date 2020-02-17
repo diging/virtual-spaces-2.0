@@ -15,6 +15,6 @@ public interface ISlideManager {
 
 	void deleteSlideById(String slideId) throws SlideDoesNotExistException;
 
-	void deleteSlideBySequence(String slideId, String moduleId) throws SlideDoesNotExistException;
+	void deleteSlidesFromSequence(String slideId, String moduleId) throws SlideDoesNotExistException;
 
 }

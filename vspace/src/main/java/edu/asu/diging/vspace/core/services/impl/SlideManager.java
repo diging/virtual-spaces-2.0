@@ -66,7 +66,7 @@ public class SlideManager implements ISlideManager {
     }
 
 	@Override
-	public void deleteSlideBySequence(String slideId, String moduleId) throws SlideDoesNotExistException {
+	public void deleteSlidesFromSequence(String slideId, String moduleId) throws SlideDoesNotExistException {
 
 		List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
 		// Remove slides referenced to Sequence
