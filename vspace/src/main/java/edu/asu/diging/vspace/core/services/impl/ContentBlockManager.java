@@ -171,7 +171,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         try {
             imageBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
 

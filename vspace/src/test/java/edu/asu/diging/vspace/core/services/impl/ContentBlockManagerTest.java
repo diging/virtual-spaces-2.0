@@ -44,7 +44,7 @@ public class ContentBlockManagerTest {
 
     @Test
     public void test_deleteTextBlockById_whenIdIsNull() throws BlockDoesNotExistException {
-        String textBlockId = "2";
+        String textBlockId = null;
         managerToTest.deleteTextBlockById(null);
         Mockito.verify(textBlockRepo, Mockito.never()).deleteById(textBlockId);
     }
@@ -65,7 +65,7 @@ public class ContentBlockManagerTest {
 
     @Test
     public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
-        String imageBlockId = "2";
+        String imageBlockId = null;
         managerToTest.deleteImageBlockById(null);
         Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
 

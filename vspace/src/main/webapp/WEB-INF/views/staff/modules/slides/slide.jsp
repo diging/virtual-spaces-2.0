@@ -125,15 +125,13 @@ function uploadImage() {
            	var img = imageblock.find('img');
            	if(data != ''){
            		img.attr('id', data);
-           		var divBlock = document.getElementById("current");
-           		divBlock.querySelector("input[id='deleteImageId']").value = data;
-           		divBlock.setAttribute('id', data);
+           		$("#current").find('#deleteImageId').val(data);;//querySelector("input[id='deleteImageId']").value = data;
+           		$("#current").attr('id', data);
            	}
            	else{
            		img.attr('id', imgID);
-           		var divBlock = document.getElementById("current");
-           		divBlock.querySelector("input[id='deleteImageId']").value = imgID;
-           		divBlock.setAttribute('id', imgID);
+           		$("#current").find('#deleteImageId').val(imgID);     //querySelector("input[id='deleteImageId']").value = imgID;
+           		$("#current").attr('id', imgID);
            	}
         },
         error: function(data) {
@@ -453,7 +451,6 @@ $(document).ready(function() {
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
 	var images = $(".imgDiv");
-	/* resizeImage(images); */
 	
 	function resizeImage(images) {
 		for(var i =0; i < images.length; i++) {
