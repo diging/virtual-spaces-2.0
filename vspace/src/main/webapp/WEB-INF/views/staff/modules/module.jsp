@@ -10,6 +10,7 @@ var slideIdToDelete = 0;
 
 //------------Deleting Slides-------------------
 function deleteSlide(slideId, hasSequence) {
+	console.log("Inside deleteSlide() -------");
 	console.log("hasSequence: ------>  "+hasSequence)
 	if(hasSequence == 0) {
 		$.ajax({
@@ -32,6 +33,8 @@ function deleteSlide(slideId, hasSequence) {
 }
 
 function deleteSlideFromSequence(slideId, hasSequence){
+	console.log("Inside deleteSlideFromSequence() -------");
+	console.log("hasSequence: ------>  "+hasSequence)
 	$.ajax({
         url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/" + hasSequence +'?${_csrf.parameterName}=${_csrf.token}',
         type: 'DELETE',
@@ -162,7 +165,7 @@ $(document).ready(function($) {
 						</div>
 					</div>
 				</c:forEach>
-			</div>
+			</div>	
 			<div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
 		</div>
 	</div>

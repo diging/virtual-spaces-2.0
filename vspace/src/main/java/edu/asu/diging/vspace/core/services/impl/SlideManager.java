@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +33,7 @@ public class SlideManager implements ISlideManager {
     @Autowired
     private SequenceRepository sequenceRepo;
     
+    
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -59,8 +59,6 @@ public class SlideManager implements ISlideManager {
     @Override
     public void deleteSlideById(String slideId) throws SlideDoesNotExistException {
         try {
-        	System.out.println("Inside deleteSlideById method() ------->");
-        	System.out.println("Slide ID to delete: ----> "+slideId);
             slideRepo.delete((Slide) getSlide(slideId));
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new SlideDoesNotExistException(exception);
@@ -68,20 +66,16 @@ public class SlideManager implements ISlideManager {
     }
 
 	@Override
-	public void deleteSlideBySequence(String slideId, String moduleId, int hasSequence) throws SlideDoesNotExistException {
-		System.out.println("Inside deleteSlideBySequence() --->"+slideId);
-		List<Sequence> sequence = sequenceRepo.findSequencesForModule(moduleId);
-		List<String> sequenceIds = new ArrayList<>();
-//		for(int i = 0; i<sequence.size(); i++) {
-//			sequenceRepo.deleteById(sequence.get(i).getId());
-//		}
-		for(int i = 0; i<sequence.size(); i++) {
-			sequenceIds.add(sequence.get(i).getId());
-			
-		}
-		System.out.println(sequenceIds);
-		sequenceRepo.deleteSlideIdFromSequence1(sequenceIds);
-		slideRepo.delete((Slide) getSlide(slideId));
+	public void deleteSlideBySequence(String slideId, String moduleId) throws SlideDoesNotExistException {
 
+		List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
+		// Remove slides referenced to Sequence
+		for (int i = 0; i < sequences.size(); i++) {
+			if (sequences.get(i).getSlides().get(i).getId().equals(slideId)) {
+				sequences.get(i).getSlides().remove(i);
+				sequenceRepo.save(sequences.get(i));
+				slideRepo.delete((Slide) getSlide(slideId));
+			}
+		}
 	}
 }

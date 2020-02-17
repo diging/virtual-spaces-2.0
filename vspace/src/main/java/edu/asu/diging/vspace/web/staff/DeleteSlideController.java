@@ -21,28 +21,29 @@ public class DeleteSlideController {
     @Autowired
     private ISlideManager slideManager;
 
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteSlide(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId) {
-        try {
-        	System.out.println("Inside delete slide controller ---->");
-            slideManager.deleteSlideById(slideId);
-            } catch (SlideDoesNotExistException slideDoesNotExistException) {
-                logger.error("Could not delete slide.", slideDoesNotExistException);
-                return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later", HttpStatus.NOT_FOUND);
-        }       
-        return new ResponseEntity<String>("Ok", HttpStatus.OK); 
-    }
-    
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/{hasSequence}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteSlideFromSequence(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, @PathVariable("hasSequence") int hasSequence) {
-        try {
-        	System.out.println("Inside deleteSlideFromSequence ---->");
-        	System.out.println("hasSequence value: ----> "+hasSequence);
-            slideManager.deleteSlideBySequence(slideId, moduleId, hasSequence);
-            } catch (SlideDoesNotExistException slideDoesNotExistException) {
-                logger.error("Could not delete slide.", slideDoesNotExistException);
-                return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later", HttpStatus.NOT_FOUND);
-        }       
-        return new ResponseEntity<String>("Ok", HttpStatus.OK); 
-    }
+	@RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteSlide(@PathVariable("id") String moduleId,
+			@PathVariable("slideId") String slideId) {
+		try {
+			slideManager.deleteSlideById(slideId);
+		} catch (SlideDoesNotExistException slideDoesNotExistException) {
+			logger.error("Could not delete slide.", slideDoesNotExistException);
+			return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later",
+					HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Ok", HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/staff/module/{id}/slide/{slideId}/{hasSequence}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteSlideFromSequence(@PathVariable("id") String moduleId,
+			@PathVariable("slideId") String slideId, @PathVariable("hasSequence") int hasSequence) {
+		try {
+			slideManager.deleteSlideBySequence(slideId, moduleId);
+		} catch (SlideDoesNotExistException slideDoesNotExistException) {
+			logger.error("Could not delete slide.", slideDoesNotExistException);
+			return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later",
+					HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Ok", HttpStatus.OK);
+	}
 }
