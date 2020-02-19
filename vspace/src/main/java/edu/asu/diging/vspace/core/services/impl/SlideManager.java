@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
@@ -69,7 +68,7 @@ public class SlideManager implements ISlideManager {
 	public void deleteSlidesFromSequence(String slideId, String moduleId) throws SlideDoesNotExistException {
 
 		List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-		// Remove slides referenced to Sequence
+		// Remove slides that refer Sequence
 		for (int i = 0; i < sequences.size(); i++) {
 			if (sequences.get(i).getSlides().get(i).getId().equals(slideId)) {
 				sequences.get(i).getSlides().remove(i);
