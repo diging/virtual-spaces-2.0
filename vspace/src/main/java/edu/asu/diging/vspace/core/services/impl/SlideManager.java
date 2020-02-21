@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
@@ -55,26 +55,31 @@ public class SlideManager implements ISlideManager {
         slideRepo.save((Slide) slide);
     }
     
-    @Override
-    public void deleteSlideById(String slideId) throws SlideDoesNotExistException {
-        try {
-            slideRepo.delete((Slide) getSlide(slideId));
-        } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-            throw new SlideDoesNotExistException(exception);
-        }
-    }
-
 	@Override
-	public void deleteSlidesFromSequence(String slideId, String moduleId) throws SlideDoesNotExistException {
+	public void deleteSlideById(String slideId, String moduleId, String flag) throws SlideDoesNotExistException {
+		try {
 
-		List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-		// Remove slides that refer Sequence
-		for (int i = 0; i < sequences.size(); i++) {
-			if (sequences.get(i).getSlides().get(i).getId().equals(slideId)) {
-				sequences.get(i).getSlides().remove(i);
-				sequenceRepo.save(sequences.get(i));
+			if (flag.equals("0")) {
 				slideRepo.delete((Slide) getSlide(slideId));
 			}
+			// Slide part of another sequence
+			else {
+				List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
+				int j = 0;
+				for (int i = 0; i < sequences.size(); i++) {
+					j = 0;
+					if (sequences.get(i).getSlides().size() > 0) {
+						if (sequences.get(i).getSlides().get(j).getId().equals(slideId)) {
+							sequences.get(i).getSlides().remove(j);
+							sequenceRepo.save(sequences.get(i));
+							slideRepo.delete((Slide) getSlide(slideId));
+						}
+					}
+
+				}
+			}
+		} catch (IllegalArgumentException exception) {
+			throw new SlideDoesNotExistException(exception);
 		}
 	}
 }

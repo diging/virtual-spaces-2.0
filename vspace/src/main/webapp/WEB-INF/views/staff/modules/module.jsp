@@ -7,12 +7,11 @@
 <script>
 //# sourceURL=click.js
 var slideIdToDelete = 0;
-
 //------------Deleting Slides-------------------
-function deleteSlide(slideId, hasSequence) {
+function deleteSlide(slideId, hasSequence, flag) {
 	if(hasSequence == 0) {
 		$.ajax({
-	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
+	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/" + flag +'?${_csrf.parameterName}=${_csrf.token}',
 	        type: 'DELETE',
 	        cache       : false,
 	        contentType : false,
@@ -30,21 +29,6 @@ function deleteSlide(slideId, hasSequence) {
 	}  
 }
 
-function deleteSlideFromSequence(slideId, hasSequence){
-	$.ajax({
-        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/" + hasSequence +'?${_csrf.parameterName}=${_csrf.token}',
-        type: 'DELETE',
-        cache       : false,
-        contentType : false,
-        success: function(data) {
-        	$("#"+slideId).closest('.slide').remove();
-        },
-        error: function(data) {
-        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-        	$('.error').append(alert);
-        }
-    });
-}
 
 $(document).ready(function($) {
 	$("#addSlideButton").on("click", function (e) {
@@ -93,7 +77,7 @@ $(document).ready(function($) {
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$("#deleteSlideAlert").hide();
-		deleteSlideFromSequence(slideIdToDelete, 1);
+		deleteSlide(slideIdToDelete, 0, 1);
 	});
 				
 });	
@@ -145,7 +129,7 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.key.id}" />">
 							<h5 class="card-title">${slide.key.name}</h5><p class="card-text">${slide.key.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}', '${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		

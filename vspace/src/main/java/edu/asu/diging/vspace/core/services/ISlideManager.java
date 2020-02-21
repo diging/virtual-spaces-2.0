@@ -13,8 +13,6 @@ public interface ISlideManager {
 
 	void updateSlide(Slide slide);
 
-	void deleteSlideById(String slideId) throws SlideDoesNotExistException;
-
-	void deleteSlidesFromSequence(String slideId, String moduleId) throws SlideDoesNotExistException;
+	void deleteSlideById(String slideId, String moduleId, String flag) throws SlideDoesNotExistException;
 
 }
