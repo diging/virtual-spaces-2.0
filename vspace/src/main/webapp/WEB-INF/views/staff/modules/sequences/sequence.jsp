@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link href="<c:url value="/resources/multiselect/css/multiselect.css" />" rel="stylesheet">
+<script src="<c:url value="/resources/multiselect/js/multiselect.min.js" />" ></script>
 
 <ol class="breadcrumb">
 	<li class="breadcrumb-item"><a
@@ -17,9 +19,52 @@
 
 <script>
 
-
 $(document).ready(function() { 
- 
+	var vals = []
+	var slides = []
+	$('#ordered-slides').multiSelect({
+		keepOrder : true,
+		dblClick : true,
+		afterInit : function(container) {
+			$("#ordered-slides").find("option").each(function() {
+				vals.push($(this).val());
+			});
+			$(".ms-selection ul").find("li").each(function(index) {
+				$(this).attr('value', vals[index]);
+			});
+			/* $('.ms-selection ul li.ms-selected').each(function(index, value) {
+				slides.push($(this).attr('value'));					
+			}); */
+			$("#orderedSlides").val(slides);
+		},
+		afterSelect : function(value) {
+			slides = [];
+			$('.ms-selection ul li.ms-selected').each(function(index, value) {
+				slides.push($(this).attr('value'));					
+			});
+			$("#orderedSlides").val(slides);
+		},
+		afterDeselect : function(value, text) {
+			for (var i=slides.length-1; i>=0; i--) {
+    			if (String(slides[i]) === String(value)) {
+    				slides.splice(i, 1);
+    				break;
+        		}
+    		}
+			$("#orderedSlides").val(slides); 
+		}
+	})
+	$('.ms-selection ul').sortable({
+		distance : 5,
+		stop : function(event, ui) {
+			var new_val = []
+			$('.ms-selection ul li.ms-selected').each(function(index, value) {
+				new_val.push($(this).attr('value'));					
+			});
+			$("#orderedSlides").val(new_val);
+		}
+	});
+	
 	
     //-------- edit contentblock description Sequence starts --------
     $("#submitDescription").hide()
@@ -154,10 +199,9 @@ $(document).ready(function() {
    // ------- Edit/Save Sequence Title ends --------
 });
 
-
-
 </script>
 
+<c:url value="/staff/module/${moduleId}/sequence/${sequence.id}/getSlides" var="postUrl" />
 
 <!-- title -->
 <div class="row align-items-center">
@@ -196,25 +240,23 @@ $(document).ready(function() {
 
 
 <div id="slideSpace">
-	<table width="100%" height="50%" style="margin-top: 50px;">
-		<c:forEach items="${slides}" var="slide">
-			<tr>
-				<td
-					style="padding-left: 22px; border-style: hidden; padding-top: 6px; padding-bottom: 6px;">
-					<div class="card" style="max-width: 18rem;">
-						<div align="left" class="card-body">
-							<a
-								href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-								<h5 class="card-title">${slide.name}</h5>
-								<p class="card-text">${slide.description}</p>
-							</a>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</c:forEach>
-	</table>
+<form:form method="POST" action="${postUrl}?" modelAttribute="sequence">
+	<div class="form-group row">
+		<label for="Slides" class="col-md-2 col-form-label">Select
+			Slides: <br> <small>(Double click to select and drag to
+				reorder)</small>
+		</label> <select multiple="multiple" id="ordered-slides">
+			<c:forEach items="${allSlides}" var="slide">
+				<c:if test='${selectedSlides.contains(slide)}'>
+					<option value='${slide.id}' id="${slide.id}" selected="selected">${slide.name}</option>
+				</c:if>
+				<c:if test='${!selectedSlides.contains(slide)}'>
+					<option value='${slide.id}' id="${slide.id}">${slide.name}</option>
+				</c:if>
+			</c:forEach>
+			</select>
+		<form:input type="hidden" id="orderedSlides" path=""></form:input>
+	</div>
+	<button class="btn btn-primary btn-sm" type="submit" value="submit">Save Changes</button>
+</form:form>
 </div>
-
-
-
