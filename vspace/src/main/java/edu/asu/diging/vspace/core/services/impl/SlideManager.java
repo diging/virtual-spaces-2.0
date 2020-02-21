@@ -65,15 +65,20 @@ public class SlideManager implements ISlideManager {
 			// Slide part of another sequence
 			else {
 				List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-				int j = 0;
-				for (int i = 0; i < sequences.size(); i++) {
-					j = 0;
+				int sizeOfSequences = sequences.size();
+				for (int i = 0; i < sizeOfSequences; i++) {
+					
 					if (sequences.get(i).getSlides().size() > 0) {
-						if (sequences.get(i).getSlides().get(j).getId().equals(slideId)) {
-							sequences.get(i).getSlides().remove(j);
-							sequenceRepo.save(sequences.get(i));
-							slideRepo.delete((Slide) getSlide(slideId));
+						int sizeOfSlides = sequences.get(i).getSlides().size();
+						
+						for(int j = 0; j < sizeOfSlides; j++) {
+							if (sequences.get(i).getSlides().get(j).getId().equals(slideId)) {
+								sequences.get(i).getSlides().remove(j);
+								sequenceRepo.save(sequences.get(i));
+								slideRepo.delete((Slide) getSlide(slideId));
+							}
 						}
+						
 					}
 
 				}
