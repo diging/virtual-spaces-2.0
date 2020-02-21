@@ -80,7 +80,6 @@ public class SlideManager implements ISlideManager {
 						}
 						
 					}
-
 				}
 			}
 		} catch (IllegalArgumentException exception) {
