@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 @Controller
 public class DeleteImageBlockController {
 
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
     @Autowired
     private IContentBlockManager contentBlockManager;
 
@@ -24,6 +28,7 @@ public class DeleteImageBlockController {
         try {
             contentBlockManager.deleteImageBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
+        	logger.warn("Image Id does not exist, bad request.",e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 

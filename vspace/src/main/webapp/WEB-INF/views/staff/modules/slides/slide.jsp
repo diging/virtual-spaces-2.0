@@ -6,7 +6,7 @@
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader, width) {
-    var imageblock = $('<div id="current" style="margin: 1%" class="valueDiv card card-body"><img class="imgDiv" style="margin: 1%;" src="#" /><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+    var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -41,7 +41,7 @@ function onDoubleClick(e){
         var description = $(".open").children("p:first").text();
         // insert text box and buttons
         $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
-        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
+        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
         $(".open").children("p:first").remove();
         $(".open").children("input:first").remove();
         $(".open").children("a:first").remove();
@@ -125,12 +125,12 @@ function uploadImage() {
            	var img = imageblock.find('img');
            	if(data != ''){
            		img.attr('id', data);
-           		$("#current").find('#deleteImageId').val(data);;//querySelector("input[id='deleteImageId']").value = data;
+           		$("#current").find('#deleteImageId').val(data);
            		$("#current").attr('id', data);
            	}
            	else{
            		img.attr('id', imgID);
-           		$("#current").find('#deleteImageId').val(imgID);     //querySelector("input[id='deleteImageId']").value = imgID;
+           		$("#current").find('#deleteImageId').val(imgID);
            		$("#current").attr('id', imgID);
            	}
         },
@@ -378,7 +378,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'</p><input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></p></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -403,7 +403,7 @@ $(document).ready(function() {
         var description = $("#newTextBlock").val()
         // clear text box and buttons
         $(".open").empty()
-        $(".open").append('<p>'+description+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="#"	style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a>');
+        $(".open").append('<p>'+description+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="#" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
@@ -450,18 +450,23 @@ $(document).ready(function() {
 
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
+	$(".deleteText").css('float', 'right');
 	var images = $(".imgDiv");
+	resizeImage(images);
 	
 	function resizeImage(images) {
+		$(".valueDiv").css('border', '1px solid rgba(0,0,0,.125)');
 		for(var i =0; i < images.length; i++) {
-			if (images[i].width > divWindow.width()) {
+			if (images[i].width > divWindow.width() || images[i].width >= 800) {
+				$(".valueDiv").find("#"+images[i].id).css("width", 800);
 				images[i].width = 800;
 			} else {
-				$(".valueDiv").css("width", images[i].width);
+				$(".valueDiv").find("#"+images[i].id).css("width", images[i].width);
 			}
 		}
 	}
 });
+
 </script>
 <ol class="breadcrumb">
 	<li class="breadcrumb-item"><a
@@ -631,9 +636,9 @@ $(window).on('load', function () {
 </div>
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
-		<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-			<div style="margin: 1%;" class="valueDiv card card-body" id="${contents.id}">
-				<img id="${contents.id}" class="imgDiv" style="margin: 1%;" src="<c:url value="/api/image/${contents.image.id}" />" />
+		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
+			<div style="margin: 1%;" class="valueDiv card-body" id="${contents.id}">
+				<img id="${contents.id}" class="imgDiv" src="<c:url value="/api/image/${contents.image.id}" />" />
 	             <input type="hidden" id="deleteImageId" value="${contents.id}">
 	             <a class="btn deleteImage" href="#" style="float: right;">
 	        		<i style="color: black;" class="fas fa-trash-alt"></i>
@@ -642,11 +647,12 @@ $(window).on('load', function () {
 		</c:if>
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
 			<div id="${contents.id}" class="textDiv card card-body row" style="margin: 1%;">
-				<p>${contents.text}</p>
-				<input type="hidden" id="deleteTextId" value="${contents.id}">
+				<p>${contents.text}
+				<input type="hidden" id="deleteTextId" value="${contents.id}" />
                 <a class="btn deleteText" href="#" style="float: right;">
-        			<i style="color: black;" class="fas fa-trash-alt"></i>
-        		</a>
+	        		<i style="color: black;" class="fas fa-trash-alt"></i>
+	        	</a>
+	        	</p>
 			</div>
 		</c:if>
 	</c:forEach>
