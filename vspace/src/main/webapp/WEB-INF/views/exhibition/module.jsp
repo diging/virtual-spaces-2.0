@@ -35,6 +35,32 @@ section {
 				}
 			}
 		}
+		
+		$.ajax({
+			type: "GET",
+			url: "<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${startSlideId}"/>",
+			async: true,
+			success: function(response) {
+				console.log("In window load");
+				$.each(response, function (index, slide) {
+					console.log('Index ID' + index);
+					});
+				}
+		});
+		
+	});
+	$(document).ready(function($) {	
+	$.ajax({
+		type: "GET",
+		url: "<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${startSlideId}"/>",
+		async: true,
+		success: function(response) {
+			console.log("In document load");
+			$.each(response, function (index, slide) {
+				console.log('Index ID' + index);
+				});
+			}
+	});
 	});
 </script>
 <div class="container">
@@ -47,7 +73,7 @@ section {
 				${module.createdBy}. <br> Modified on <span class="date">${module.modificationDate}</span>
 				by ${module.modifiedBy}.
 			</div>
-			<c:if test="${module.startSequence.id != null}">
+			 <c:if test="${module.startSequence.id != null}">
 				<div id="slideSpace">
 					<section>
 						<div id="myCarousel" class="carousel slide" data-ride="carousel"
@@ -131,6 +157,8 @@ section {
 						configured yet.</p>
 				</div>
 			</c:if>
+			
+			
 		</div>
 	</div>
 </div>
