@@ -18,8 +18,8 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 @Controller
 public class DeleteTextBlockController {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IContentBlockManager contentBlockManager;
 
@@ -28,7 +28,7 @@ public class DeleteTextBlockController {
         try {
             contentBlockManager.deleteTextBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
-        	logger.warn("Text Id does not exist, bad request.",e);
+            logger.warn("Text Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 

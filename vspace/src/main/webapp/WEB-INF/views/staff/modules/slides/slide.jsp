@@ -6,7 +6,7 @@
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader, width) {
-    var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+    var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -41,7 +41,7 @@ function onDoubleClick(e){
         var description = $(".open").children("p:first").text();
         // insert text box and buttons
         $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
-        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="#"style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="#" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
+        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
         $(".open").children("p:first").remove();
         $(".open").children("input:first").remove();
         $(".open").children("a:first").remove();
@@ -280,6 +280,8 @@ $(document).ready(function() {
 	});
 	
 	$("#cancelDeleteText").click(function() {
+		$("#confirmDeleteTextAlert").find('input').remove();
+		$("#confirmDeleteImageAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 	});
 	
@@ -288,6 +290,8 @@ $(document).ready(function() {
 	});
 	
 	$("#cancelDelete").click(function() {
+		$("#confirmDeleteTextAlert").find('input').remove();
+		$("#confirmDeleteImageAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").hide();	
 	});
 	
@@ -295,6 +299,7 @@ $(document).ready(function() {
 	
 		$("#deleteText").on("click", function(e) {
 		e.preventDefault();
+		$("#confirmDeleteImageAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 		var blockId = $('#deleteTextId').attr('value');
 		$('#deleteTextId').remove()
@@ -321,6 +326,7 @@ $(document).ready(function() {
 	
 	$("#deleteImage").on("click", function(e) {
 		e.preventDefault();
+		$("#confirmDeleteTextAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").hide();
 		var blockId = $('#deleteImageId').attr('value');
 		if(blockId == null || blockId == ''){
@@ -378,7 +384,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="#" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></p></div>');
+                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></p></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -403,7 +409,7 @@ $(document).ready(function() {
         var description = $("#newTextBlock").val()
         // clear text box and buttons
         $(".open").empty()
-        $(".open").append('<p>'+description+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="#" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
+        $(".open").append('<p>'+description+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
@@ -525,59 +531,47 @@ $(window).on('load', function () {
 
 <!-- Delete Text Modal -->
 <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
-    role="dialog"
->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h6>Are you sure you want to delete this text
-                    block?</h6>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelDeleteText" type="reset"
-                    class="btn light"
-                >Cancel</button>
-                <button type="submit" id="deleteText"
-                    class="btn btn-primary"
-                >Submit</button>
-            </div>
-        </div>
-    </div>
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Delete</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<h6>Are you sure you want to delete this text block?</h6>
+			</div>
+			<div class="modal-footer">
+				<button id="cancelDeleteText" type="reset" class="btn light">Cancel</button>
+				<button type="submit" id="deleteText" class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- Delete Image Modal -->
 <div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
-    role="dialog"
->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h6>Are you sure you want to delete this image
-                    block?</h6>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelDelete" type="reset" class="btn light">Cancel</button>
-                <button type="submit" id="deleteImage"
-                    class="btn btn-primary"
-                >Submit</button>
-            </div>
-        </div>
-    </div>
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Delete</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<h6>Are you sure you want to delete this image block?</h6>
+			</div>
+			<div class="modal-footer">
+				<button id="cancelDelete" type="reset" class="btn light">Cancel</button>
+				<button type="submit" id="deleteImage" class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
@@ -637,22 +631,25 @@ $(window).on('load', function () {
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
-			<div style="margin: 1%;" class="valueDiv card-body" id="${contents.id}">
-				<img id="${contents.id}" class="imgDiv" src="<c:url value="/api/image/${contents.image.id}" />" />
-	             <input type="hidden" id="deleteImageId" value="${contents.id}">
-	             <a class="btn deleteImage" href="#" style="float: right;">
-	        		<i style="color: black;" class="fas fa-trash-alt"></i>
-	        	</a>
+			<div style="margin: 1%;" class="valueDiv card-body"
+				id="${contents.id}">
+				<img id="${contents.id}" class="imgDiv"
+					src="<c:url value="/api/image/${contents.image.id}" />" /> <input
+					type="hidden" id="deleteImageId" value="${contents.id}"> <a
+					class="btn deleteImage" href="javascript:;" style="float: right;">
+					<i style="color: black;" class="fas fa-trash-alt"></i>
+				</a>
 			</div>
 		</c:if>
 		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-			<div id="${contents.id}" class="textDiv card card-body row" style="margin: 1%;">
+			<div id="${contents.id}" class="textDiv card card-body row"
+				style="margin: 1%;">
 				<p>${contents.text}
-				<input type="hidden" id="deleteTextId" value="${contents.id}" />
-                <a class="btn deleteText" href="#" style="float: right;">
-	        		<i style="color: black;" class="fas fa-trash-alt"></i>
-	        	</a>
-	        	</p>
+					<input type="hidden" id="deleteTextId" value="${contents.id}" /> <a
+						class="btn deleteText" href="javascript:;" style="float: right;">
+						<i style="color: black;" class="fas fa-trash-alt"></i>
+					</a>
+				</p>
 			</div>
 		</c:if>
 	</c:forEach>

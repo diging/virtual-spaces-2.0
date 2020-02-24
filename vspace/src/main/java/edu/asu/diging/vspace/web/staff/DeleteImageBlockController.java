@@ -18,8 +18,8 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 @Controller
 public class DeleteImageBlockController {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IContentBlockManager contentBlockManager;
 
@@ -28,7 +28,7 @@ public class DeleteImageBlockController {
         try {
             contentBlockManager.deleteImageBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
-        	logger.warn("Image Id does not exist, bad request.",e);
+            logger.warn("Image Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
