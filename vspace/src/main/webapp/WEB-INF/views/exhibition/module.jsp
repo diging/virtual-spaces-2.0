@@ -36,32 +36,63 @@ section {
 			}
 		}
 		
-		$.ajax({
-			type: "GET",
-			url: "<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${startSlideId}"/>",
-			async: true,
-			success: function(response) {
-				console.log("In window load");
-				$.each(response, function (index, slide) {
-					console.log('Index ID' + index);
-					});
-				}
-		});
+		$('#content-1').css('display','block');
 		
 	});
-	$(document).ready(function($) {	
-	$.ajax({
-		type: "GET",
-		url: "<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${startSlideId}"/>",
-		async: true,
-		success: function(response) {
-			console.log("In document load");
-			$.each(response, function (index, slide) {
-				console.log('Index ID' + index);
-				});
-			}
+	$(document).ready(function($) {
+		$(".next").on("click", function(e) {
+			$('#slideContent').empty();
+			$.ajax({
+				type: "GET",
+				url: "<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${startSlideId}"/>",
+				async: true,
+				success: function(response) {
+					console.log(response);
+				},
+				error: function(error) {
+					  console.log(error);
+					}
+			});
+		});
 	});
+	
+	var counter = 1;
+	$('body').on('click', '.next', function() { 
+	    $('.content').hide();
+
+	    counter++;
+	    $('#content-'+counter+'').show();
+
+	    if(counter > 1) {
+	        $('.back').show();
+	    };
+	    if(counter > 3) {
+	        $('.content-holder').hide();
+	        $('.end').show();
+	    };
+
 	});
+
+	$('body').on('click', '.back', function() { 
+	    //alert(counter);
+	    counter--;
+	    $('.content').hide();
+	    var id = counter;    
+	    $('#content-'+id).show();
+	    if(counter<2){
+	            $('.back').hide();
+	    }
+
+
+	});
+
+	$('body').on('click', '.edit-previous', function() {
+	    $('.end').hide();
+	    $('.content-holder').show();
+	    $('#content-3').show();
+	    counter--;
+	});
+	
 </script>
 <div class="container">
 	<div class="row">
@@ -73,7 +104,17 @@ section {
 				${module.createdBy}. <br> Modified on <span class="date">${module.modificationDate}</span>
 				by ${module.modifiedBy}.
 			</div>
-			 <c:if test="${module.startSequence.id != null}">
+			<div class="content-holder">
+			<c:forEach items="${slides}" var="slide" varStatus="loop">
+				<div class="content" id="content-${loop.count}" data-id='${loop.count}' style="display: none;">
+        			<p>${slide.id}</p>
+        				<div class="slideContent" id="${slide.id}"></div>
+        		</div>
+			</c:forEach>
+			<button type="button" class="back">Prev</button>
+    		<button type="button" class="next">Next</button>
+			</div>
+			 <%-- <c:if test="${module.startSequence.id != null}">
 				<div id="slideSpace">
 					<section>
 						<div id="myCarousel" class="carousel slide" data-ride="carousel"
@@ -150,7 +191,7 @@ section {
 						</div>
 					</section>
 				</div>
-			</c:if>
+			</c:if> --%>
 			<c:if test="${module.startSequence.id == null}">
 				<div id="message">
 					<p style="color: red;">Sorry, this module has not been
