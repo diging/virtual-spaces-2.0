@@ -59,9 +59,9 @@ public class SlideManager implements ISlideManager {
 
         try {
             List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-            outer: for (Sequence sequence : sequences) {
-                for (ISlide slideIds : sequence.getSlides()) {
-                    if (slideIds.getId().equals(slideId)) {
+            outer: for(Sequence sequence : sequences) {
+                for(ISlide slideIds : sequence.getSlides()) {
+                    if(slideIds.getId().equals(slideId)) {
                         sequence.getSlides().remove(slideIds);
                         sequenceRepo.save(sequence);
                         continue outer;
@@ -70,7 +70,7 @@ public class SlideManager implements ISlideManager {
             }
             slideRepo.delete((Slide) getSlide(slideId));
 
-        } catch (IllegalArgumentException exception) {
+        } catch(IllegalArgumentException exception) {
             throw new SlideDoesNotExistException(exception);
         }
     }
