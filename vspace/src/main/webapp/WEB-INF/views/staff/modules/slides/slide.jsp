@@ -654,6 +654,9 @@ $(window).on('load', function () {
 		</c:if>
 	</c:forEach>
 </div>
+<div>
+	<a class="btn btn-primary" style="margin-top: 2%;" href="<c:url value="/staff/module/${module.id}" />">Back</a>
+</div>
 <style type="text/css">
 .hova {
 	background-color: #bfb168;
