@@ -19,20 +19,19 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
 public class SlideManager implements ISlideManager {
-    
+
     @Autowired
     private ModuleManager moduleManager;
-    
+
     @Autowired
     private SlideFactory slideFactory;
-    
+
     @Autowired
     private SlideRepository slideRepo;
-    
+
     @Autowired
     private SequenceRepository sequenceRepo;
-    
-    
+
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -54,36 +53,49 @@ public class SlideManager implements ISlideManager {
     public void updateSlide(Slide slide) {
         slideRepo.save((Slide) slide);
     }
-    
-	@Override
-	public void deleteSlideById(String slideId, String moduleId, String flag) throws SlideDoesNotExistException {
-		try {
 
-			if (flag.equals("0")) {
-				slideRepo.delete((Slide) getSlide(slideId));
-			}
-			// Slide part of another sequence
-			else {
-				List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-				int sizeOfSequences = sequences.size();
-				for (int i = 0; i < sizeOfSequences; i++) {
-					
-					if (sequences.get(i).getSlides().size() > 0) {
-						int sizeOfSlides = sequences.get(i).getSlides().size();
-						
-						for(int j = 0; j < sizeOfSlides; j++) {
-							if (sequences.get(i).getSlides().get(j).getId().equals(slideId)) {
-								sequences.get(i).getSlides().remove(j);
-								sequenceRepo.save(sequences.get(i));
-								slideRepo.delete((Slide) getSlide(slideId));
-							}
-						}
-						
-					}
-				}
-			}
-		} catch (IllegalArgumentException exception) {
-			throw new SlideDoesNotExistException(exception);
-		}
-	}
+    @Override
+    public void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException {
+
+        try {
+            List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
+            outer: for (Sequence sequence : sequences) {
+                for (ISlide slideIds : sequence.getSlides()) {
+                    if (slideIds.getId().equals(slideId)) {
+                        System.out.println("Slide IDS match -----> ");
+                        sequence.getSlides().remove(slideIds);
+                        sequenceRepo.save(sequence);
+                        continue outer;
+                    }
+                }
+            }
+            slideRepo.delete((Slide) getSlide(slideId));
+
+//			if (flag.equals("0")) {
+//				slideRepo.delete((Slide) getSlide(slideId));
+//			}
+//			// Slide part of another sequence
+//			else {
+//				List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
+//				int sizeOfSequences = sequences.size();
+//				for (int i = 0; i < sizeOfSequences; i++) {
+//					
+//					if (sequences.get(i).getSlides().size() > 0) {
+//						int sizeOfSlides = sequences.get(i).getSlides().size();
+//						
+//						for(int j = 0; j < sizeOfSlides; j++) {
+//							if (sequences.get(i).getSlides().get(j).getId().equals(slideId)) {
+//								sequences.get(i).getSlides().remove(j);
+//								sequenceRepo.save(sequences.get(i));
+//								slideRepo.delete((Slide) getSlide(slideId));
+//							}
+//						}
+//						
+//					}
+//				}
+//			}
+        } catch (IllegalArgumentException exception) {
+            throw new SlideDoesNotExistException(exception);
+        }
+    }
 }
