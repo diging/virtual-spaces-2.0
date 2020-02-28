@@ -15,23 +15,23 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
 public class DeleteSlideController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     private ISlideManager slideManager;
 
-	@RequestMapping(value = "/staff/module/{id}/slide/{slideId}/{flag}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteSlide(@PathVariable("id") String moduleId,
-			@PathVariable("slideId") String slideId, @PathVariable("flag") String flag) {
-		try {
-			slideManager.deleteSlideById(slideId, moduleId, flag);
-		} catch (SlideDoesNotExistException slideDoesNotExistException) {
-			logger.error("Could not delete slide.", slideDoesNotExistException);
-			return new ResponseEntity<String>("Sorry, unable to delete the slide. Please try later",
-					HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>("Ok", HttpStatus.OK);
-	}
+    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteSlide(@PathVariable("id") String moduleId,
+            @PathVariable("slideId") String slideId) {
+        try {
+            slideManager.deleteSlideById(slideId, moduleId);
+        } catch (SlideDoesNotExistException slideDoesNotExistException) {
+            logger.error("Could not delete slide.", slideDoesNotExistException);
+            return new ResponseEntity<String>("Sorry, unable to delete the slide. The slide does not exist.",
+                    HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<String>("Ok", HttpStatus.OK);
+    }
 
 }

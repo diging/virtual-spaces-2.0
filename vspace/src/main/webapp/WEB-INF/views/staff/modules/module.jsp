@@ -9,10 +9,10 @@
 //# sourceURL=click.js
 var slideIdToDelete = 0;
 //------------Deleting Slides-------------------
-function deleteSlide(slideId, hasSequence, flag) {
+function deleteSlide(slideId, hasSequence) {
 	if(hasSequence == 0) {
 		$.ajax({
-	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/" + flag +'?${_csrf.parameterName}=${_csrf.token}',
+	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
 	        type: 'DELETE',
 	        cache       : false,
 	        contentType : false,
@@ -78,7 +78,7 @@ $(document).ready(function($) {
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$("#deleteSlideAlert").hide();
-		deleteSlide(slideIdToDelete, 0, 1);
+		deleteSlide(slideIdToDelete, 0);
 	});
 				
 });	
@@ -153,7 +153,7 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.key.id}" />">
 							<h5 class="card-title">${slide.key.name}</h5><p class="card-text">${slide.key.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}', '${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		
