@@ -68,7 +68,6 @@ public class SlideManager implements ISlideManager {
                     }
                 }
             }
-                
             try {
                 
             slideRepo.delete((Slide) getSlide(slideId));
