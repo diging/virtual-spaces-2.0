@@ -9,8 +9,7 @@
 //# sourceURL=click.js
 var slideIdToDelete = 0;
 //------------Deleting Slides-------------------
-function deleteSlide(slideId, hasSequence) {
-	if(hasSequence == 0) {
+function deleteSlide(slideId) {
 		$.ajax({
 	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
 	        type: 'DELETE',
@@ -24,12 +23,28 @@ function deleteSlide(slideId, hasSequence) {
 	        	$('.error').append(alert);
 	        }
 	    });
-	} else {
-		slideIdToDelete = slideId;
-		$("#deleteSlideAlert").show();
-	}  
 }
 
+
+function checkDeleteSlide(slideId) {
+	
+	console.log("Inside checkDeleteSlide method!!!! -----");
+		$.ajax({
+	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        success: function(data) {
+	        	$("#deleteSlideAlert").show();
+	        	slideIdToDelete = slideId;
+	        },
+	        error: function(data) {
+	        	console.log("data: "+data)
+	        	console.log("Inside error");
+	        	deleteSlide(slideId);
+	        }
+	    });
+}
 
 $(document).ready(function($) {
 	$("#addSlideButton").on("click", function (e) {
@@ -78,7 +93,7 @@ $(document).ready(function($) {
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$("#deleteSlideAlert").hide();
-		deleteSlide(slideIdToDelete, 0);
+		deleteSlide(slideIdToDelete);
 	});
 				
 });	
@@ -153,7 +168,9 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.key.id}" />">
 							<h5 class="card-title">${slide.key.name}</h5><p class="card-text">${slide.key.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <%-- <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a> --%>
+                            <%-- <a id="${slide.key.id}" href="javascript:checkDeleteSlide('${slide.key.id}')" class="checkDeleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>  --%>
+                            <a id="${slide.key.id}" href="javascript:checkDeleteSlide('${slide.key.id}')" class="checkDeleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		
@@ -186,7 +203,7 @@ $(document).ready(function($) {
 	</div>
 	<div class="modal-footer">
 		<button type="button" id="cancelSlideDelButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		<button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok deleteSlide">Delete</button>
+		<button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok checkDeleteSlide">Delete</button>
 	</div>
 	</div>
 </div>
