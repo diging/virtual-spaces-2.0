@@ -57,17 +57,20 @@ public class SlideManager implements ISlideManager {
     @Override
     public void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException {
 
-        try {
             List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-            outer: for(Sequence sequence : sequences) {
-                for(ISlide slideIds : sequence.getSlides()) {
-                    if(slideIds.getId().equals(slideId)) {
-                        sequence.getSlides().remove(slideIds);
+            for(Sequence sequence : sequences) {
+                
+                int sizeOfSlides = sequence.getSlides().size();
+                for(int i = 0; i< sizeOfSlides; i++) {
+                    if(sequence.getSlides().get(i).getId().equals(slideId)) {
+                        sequence.getSlides().remove(i);
                         sequenceRepo.save(sequence);
-                        continue outer;
                     }
                 }
             }
+                
+            try {
+                
             slideRepo.delete((Slide) getSlide(slideId));
 
         } catch(IllegalArgumentException exception) {
