@@ -40,13 +40,12 @@ public class DeleteSlideController {
     public ResponseEntity<String> checkDeleteSlide(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
         
-        System.out.println("Inside checkSLide for SEQUENCE controller method ---------> ");
         boolean checkSlideHasSequence = slideManager.checkSlideHasSequence(slideId, moduleId);
         if(checkSlideHasSequence)
-            return new ResponseEntity<String>("Ok", HttpStatus.OK);
+            return new ResponseEntity<String>("1", HttpStatus.OK);
         else
-            return new ResponseEntity<String>("Slide does not contain sequence",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("0",
+                    HttpStatus.OK);
 
     }
 }

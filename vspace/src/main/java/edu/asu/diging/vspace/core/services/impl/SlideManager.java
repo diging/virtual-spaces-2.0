@@ -83,7 +83,6 @@ public class SlideManager implements ISlideManager {
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         boolean slideHasSequence = false;
         for(Sequence sequence : sequences) {
-            
             int sizeOfSlides = sequence.getSlides().size();
             for(int i = 0; i< sizeOfSlides; i++) {
                 if(sequence.getSlides().get(i).getId().equals(slideId)) {

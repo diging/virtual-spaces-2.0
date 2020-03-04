@@ -27,21 +27,20 @@ function deleteSlide(slideId) {
 
 
 function checkDeleteSlide(slideId) {
-	
-	console.log("Inside checkDeleteSlide method!!!! -----");
+
 		$.ajax({
 	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
 	        type: 'POST',
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	        	$("#deleteSlideAlert").show();
-	        	slideIdToDelete = slideId;
-	        },
-	        error: function(data) {
-	        	console.log("data: "+data)
-	        	console.log("Inside error");
-	        	deleteSlide(slideId);
+	        	if(data == "1"){
+	        		$("#deleteSlideAlert").show();
+		        	slideIdToDelete = slideId;
+	        	}
+	        	else{
+	        		deleteSlide(slideId);
+	        	}	
 	        }
 	    });
 }
@@ -168,8 +167,6 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.key.id}" />">
 							<h5 class="card-title">${slide.key.name}</h5><p class="card-text">${slide.key.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <%-- <a id="${slide.key.id}" href="javascript:deleteSlide('${slide.key.id}','${slide.value}')" class="deleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a> --%>
-                            <%-- <a id="${slide.key.id}" href="javascript:checkDeleteSlide('${slide.key.id}')" class="checkDeleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>  --%>
                             <a id="${slide.key.id}" href="javascript:checkDeleteSlide('${slide.key.id}')" class="checkDeleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
