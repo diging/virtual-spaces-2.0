@@ -37,7 +37,7 @@ public class DeleteSlideController {
     }
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/sequences", method = RequestMethod.POST)
-    public ResponseEntity<String> checkDeleteSlide(@PathVariable("id") String moduleId,
+    public ResponseEntity<String> checkSlideInSequence(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
 
         boolean checkSlideHasSequence = slideManager.checkSlideHasSequence(slideId, moduleId);
