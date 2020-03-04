@@ -41,11 +41,10 @@ public class DeleteSlideController {
             @PathVariable("slideId") String slideId) {
 
         boolean checkSlideHasSequence = slideManager.checkSlideHasSequence(slideId, moduleId);
-        if(checkSlideHasSequence)
+        if (checkSlideHasSequence)
             return new ResponseEntity<String>("1", HttpStatus.OK);
         else
-            return new ResponseEntity<String>("0",
-                    HttpStatus.OK);
+            return new ResponseEntity<String>("0", HttpStatus.OK);
 
     }
 }
