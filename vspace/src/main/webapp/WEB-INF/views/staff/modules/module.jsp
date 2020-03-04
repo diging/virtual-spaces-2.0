@@ -26,7 +26,7 @@ function deleteSlide(slideId) {
 }
 
 
-function checkDeleteSlide(slideId) {
+function checkSlideInSequence(slideId) {
 
 		$.ajax({
 	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
@@ -167,7 +167,7 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.key.id}" />">
 							<h5 class="card-title">${slide.key.name}</h5><p class="card-text">${slide.key.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.key.id}" href="javascript:checkDeleteSlide('${slide.key.id}')" class="checkDeleteSlide" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.key.id}" href="javascript:checkSlideInSequence('${slide.key.id}')" class="checkSlideInSequence" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		
@@ -200,7 +200,7 @@ $(document).ready(function($) {
 	</div>
 	<div class="modal-footer">
 		<button type="button" id="cancelSlideDelButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		<button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok checkDeleteSlide">Delete</button>
+		<button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
 	</div>
 	</div>
 </div>
