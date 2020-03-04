@@ -35,6 +35,7 @@ public class Module extends VSpaceElement implements IModule {
     @OneToMany(targetEntity = Sequence.class)
     private List<ISequence> sequences;
 
+    @JsonIgnore
     @OneToOne(targetEntity = Sequence.class)
     private ISequence startSequence;
 

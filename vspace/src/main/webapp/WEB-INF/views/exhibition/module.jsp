@@ -44,10 +44,28 @@ section {
 			$('#slideContent').empty();
 			$.ajax({
 				type: "GET",
-				url: "<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${startSlideId}"/>",
-				async: true,
+				url: "<c:url value="/exhibit/module/sequence/slide/${startSlideId}/content"/>",
+				async: false,
+				cache:false,
 				success: function(response) {
-					console.log(response);
+					console.log("success");
+					$.each(response, function (index, slide) {
+						console.log(slide);
+						console.log(slide.id);
+						$('#slideContent').append(''+
+										'<c:forEach items="'+slide+'" var="innerContents">'+
+												'<c:if test="${innerContents['class'].simpleName ==  'ImageBlock'}">'+
+													'<div class="valueDiv" id="${innerContents.id}">'+
+														'<img id="${innerContents.id}" class="imgDiv" style="margin: 1%;" src="<c:url value="/api/image/${innerContents.image.id}" />" />'+
+													'</div>'+
+												'</c:if>'+
+												'<c:if test="${innerContents['class'].simpleName ==  'TextBlock'}">'+
+													'<div id="${innerContents.id}" class="textDiv" style="margin: 10px; width: 800px;">'+
+														'<p style="margin-right: 50px; text-align: justify;">${innerContents.text}</p>'+
+													'</div>'+
+												'</c:if>'+
+											'</c:forEach>');
+						});
 				},
 				error: function(error) {
 					  console.log(error);
@@ -108,9 +126,10 @@ section {
 			<c:forEach items="${slides}" var="slide" varStatus="loop">
 				<div class="content" id="content-${loop.count}" data-id='${loop.count}' style="display: none;">
         			<p>${slide.id}</p>
-        				<div class="slideContent" id="${slide.id}"></div>
+        			<div id="slideContent"></div>
         		</div>
 			</c:forEach>
+				
 			<button type="button" class="back">Prev</button>
     		<button type="button" class="next">Next</button>
 			</div>
@@ -192,6 +211,7 @@ section {
 					</section>
 				</div>
 			</c:if> --%>
+	
 			<c:if test="${module.startSequence.id == null}">
 				<div id="message">
 					<p style="color: red;">Sorry, this module has not been
