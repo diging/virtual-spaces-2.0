@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
@@ -135,7 +137,8 @@ function uploadImage() {
            	}
         },
         error: function(data) {
-        	$(".open").removeClass("open");
+        	$("#current").remove();
+        	$("#loginAlert").show();
         }
     });
     // Reset the image file name 
@@ -625,6 +628,24 @@ $(window).on('load', function () {
 						data-value="">Upload Image</button>
 				</div>
 			</form>
+		</div>
+	</div>
+</div>
+
+<div id="loginAlert" class="modal modal-backdrop" tabindex="-1"
+	role="dialog" backdrop="static"
+	style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Login</h5>
+			</div>
+			<div class="modal-body">
+				<h6>
+					<small>You have been logged Out, Please login again.</small>
+				</h6>
+				<a class="btn btn-primary" onClick="window.location.reload();">Login</a>
+			</div>
 		</div>
 	</div>
 </div>
