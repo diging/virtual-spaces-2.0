@@ -514,24 +514,24 @@ $(window).on('load', function () {
 		class="btn btn-primary btn-sm"
 		style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 </div>
+<div style="margin-top: 1%; margin-bottom: 2%;">
+	<a class="btn btn-primary"
+		href="<c:url value="/staff/module/${module.id}" />">Go Back</a>
+</div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-	<div class="dropdown container-fluid">
-		<div class="navbar-left">
-			<button class="btn btn-primary dropdown-toggle" type="button"
-				id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-				aria-expanded="false" style="float: left;">Add content</button>
-			<p style="float: right; margin-top: 3%">Double Click on a Block
-				to Edit it</p>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				<a id="addText" class="dropdown-item" href="#">Add Text</a> <a
-					id="addImage" class="dropdown-item" href="#">Add Image</a>
-			</div>
+	<div class="dropdown">
+		<button class="btn btn-primary dropdown-toggle" type="button"
+			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+			aria-expanded="false" style="float: left;">Add content</button>
+		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<a id="addText" class="dropdown-item" href="#">Add Text</a> <a
+				id="addImage" class="dropdown-item" href="#">Add Image</a>
 		</div>
-		<a class="navbar-right"
-			href="<c:url value="/staff/module/${module.id}" />"><< Go Back</a>
+		<p style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
+			Click on a Block to Edit it
+		<p>
 	</div>
 </nav>
-
 
 <!-- Delete Text Modal -->
 <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
