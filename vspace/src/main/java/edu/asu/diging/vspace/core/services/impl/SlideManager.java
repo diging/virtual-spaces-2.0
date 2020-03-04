@@ -20,7 +20,7 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 @Service
 public class SlideManager implements ISlideManager {
 
-    @Autowired
+    @Autowired  
     private ModuleManager moduleManager;
 
     @Autowired
@@ -57,19 +57,19 @@ public class SlideManager implements ISlideManager {
     @Override
     public void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException {
 
-            List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-            for(Sequence sequence : sequences) {
-                
-                int sizeOfSlides = sequence.getSlides().size();
-                for(int i = 0; i< sizeOfSlides; i++) {
-                    if(sequence.getSlides().get(i).getId().equals(slideId)) {
-                        sequence.getSlides().remove(i);
-                        sequenceRepo.save(sequence);
-                    }
+        List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
+        for(Sequence sequence : sequences) {
+
+            int sizeOfSlides = sequence.getSlides().size();
+            for(int i = 0; i< sizeOfSlides; i++) {
+                if(sequence.getSlides().get(i).getId().equals(slideId)) {
+                    sequence.getSlides().remove(i);
+                    sequenceRepo.save(sequence);
                 }
             }
-            try {
-                
+        }
+        try {
+
             slideRepo.delete((Slide) getSlide(slideId));
 
         } catch(IllegalArgumentException exception) {
@@ -79,7 +79,7 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public boolean checkSlideHasSequence(String slideId, String moduleId) {
-        
+
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         boolean slideHasSequence = false;
         for(Sequence sequence : sequences) {

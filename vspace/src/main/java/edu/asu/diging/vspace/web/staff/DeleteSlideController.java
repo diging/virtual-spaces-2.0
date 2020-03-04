@@ -20,7 +20,7 @@ public class DeleteSlideController {
 
     @Autowired
     private ISlideManager slideManager;
-    
+
 
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}", method = RequestMethod.DELETE)
@@ -35,11 +35,11 @@ public class DeleteSlideController {
         }
         return new ResponseEntity<String>("Ok", HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/sequences", method = RequestMethod.POST)
     public ResponseEntity<String> checkDeleteSlide(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
-        
+
         boolean checkSlideHasSequence = slideManager.checkSlideHasSequence(slideId, moduleId);
         if(checkSlideHasSequence)
             return new ResponseEntity<String>("1", HttpStatus.OK);
