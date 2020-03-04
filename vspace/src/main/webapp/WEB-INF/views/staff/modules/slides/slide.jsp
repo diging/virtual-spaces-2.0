@@ -74,13 +74,13 @@ function uploadImage() {
     formData.append('content', file.name);
     formData.append('contentOrder', contentCount);
     var imageblock = "";
- 
+ 	var oldImageBlock = "";
     
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
     if (imgID != '') {
-    
+    	oldImageBlock = $("#" + imgID);
     	var imageBlockId = imgID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
@@ -108,7 +108,7 @@ function uploadImage() {
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
         }
-        ++contentCount;    
+        ++contentCount; 
     }
   	
     reader.readAsDataURL(file);
@@ -137,8 +137,15 @@ function uploadImage() {
            	}
         },
         error: function(data) {
-        	$("#current").remove();
-        	$("#loginAlert").show();
+        	if (imgID == '') {
+        		$("#current").remove();
+        	}
+        	else {
+        		$("#current").replaceWith(oldImageBlock);
+        	}
+        	if (data.status == 403) {
+        		$("#loginAlert").show();
+        	}
         }
     });
     // Reset the image file name 
@@ -396,8 +403,13 @@ $(document).ready(function() {
                
             },
             error: function(data) {
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
+            	if (data.status == 403){
+            		$("#loginAlert").show();
+            	}
+            	else {
+                	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                	$('.error').append(alert);
+            	}
             }
         });
         $("#textBlockText").val('')
@@ -450,8 +462,13 @@ $(document).ready(function() {
                $(".open").removeClass("open");
            },
            error: function(data) {
-               var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-               $('.error').append(alert);
+        		if (data.status == 403) {
+           			$("#loginAlert").show();
+           		}
+           		else {
+               		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+               		$('.error').append(alert);
+           		}
            }
        });
     });    
@@ -632,8 +649,8 @@ $(window).on('load', function () {
 	</div>
 </div>
 
-<div id="loginAlert" class="modal modal-backdrop" tabindex="-1"
-	role="dialog" backdrop="static"
+<div id="loginAlert" class="modal" tabindex="-1" role="dialog"
+	backdrop="static"
 	style="display: none; background-color: rgba(0, 0, 0, 0.5);">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -642,9 +659,12 @@ $(window).on('load', function () {
 			</div>
 			<div class="modal-body">
 				<h6>
-					<small>You have been logged Out, Please login again.</small>
+					You are not logged In, Please login.
 				</h6>
-				<a class="btn btn-primary" onClick="window.location.reload();">Login</a>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-primary" style="color: white;"
+					onClick="window.location.reload();">Login</a>
 			</div>
 		</div>
 	</div>
