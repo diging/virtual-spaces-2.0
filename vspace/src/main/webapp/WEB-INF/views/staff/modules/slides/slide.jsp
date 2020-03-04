@@ -514,6 +514,10 @@ $(window).on('load', function () {
 		class="btn btn-primary btn-sm"
 		style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 </div>
+<div style="margin-top: 1%; margin-bottom: 2%;">
+	<a class="btn btn-primary"
+		href="<c:url value="/staff/module/${module.id}" />">Go Back</a>
+</div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 	<div class="dropdown">
 		<button class="btn btn-primary dropdown-toggle" type="button"
@@ -654,6 +658,7 @@ $(window).on('load', function () {
 		</c:if>
 	</c:forEach>
 </div>
+
 <style type="text/css">
 .hova {
 	background-color: #bfb168;
