@@ -39,26 +39,28 @@ public class ExhibitionModuleController {
             return "module";
         } else {
             model.addAttribute("startSequenceId", module.getStartSequence().getId());
-            model.addAttribute("startSlideId", module.getStartSequence().getSlides().get(0).getId());
             model.addAttribute("slides", module.getStartSequence().getSlides());
+            model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(module.getStartSequence().getSlides().get(0).getId()));
             return "module";
         }
     }
-
-    @RequestMapping(value = "/exhibit/module/sequence/slide/{slideId}/content", method = RequestMethod.GET)
-    public ResponseEntity<List<IContentBlock>> slide(Model model, @PathVariable("slideId") String slideId) {
-        // IModule module=moduleManager.getModule(moduleId);
-        List<IContentBlock> content = contentBlockManager.getAllContentBlocks(slideId);
-        return new ResponseEntity<List<IContentBlock>>(content, HttpStatus.OK);
+    @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}/content", method = RequestMethod.GET)
+    public String slide(Model model, @PathVariable("slideId") String slideId,@PathVariable("moduleId") String moduleId) {
+        IModule module = moduleManager.getModule(moduleId);
+        model.addAttribute("module", module);
+        model.addAttribute("startSequenceId", module.getStartSequence().getId());
+        model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
+        model.addAttribute("slides", module.getStartSequence().getSlides());
+        model.addAttribute("currentSlide", slideId);
+        List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(slideId);
+        model.addAttribute("slideContents", slideContents);
+        return "module";
 
     }
-
     @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{id}/slides", method = RequestMethod.GET)
     public ResponseEntity<List<ISlide>> getSequenceSlides(Model model, @PathVariable("moduleId") String moduleId,
             @PathVariable("id") String sequenceId) {
-
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
-
         return new ResponseEntity<List<ISlide>>(slides, HttpStatus.OK);
     }
 }
