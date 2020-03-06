@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,15 +60,15 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         for(Sequence sequence : sequences) {
-
-            int sizeOfSlides = sequence.getSlides().size();
-            for(int i = 0; i< sizeOfSlides; i++) {
-                if(sequence.getSlides().get(i).getId().equals(slideId)) {
-                    sequence.getSlides().remove(i);
-                    sequenceRepo.save(sequence);
+            List<ISlide> slidesList = sequence.getSlides();
+            Iterator<ISlide> slideIterator = slidesList.iterator();
+            while(slideIterator.hasNext()) {
+                if(slideIterator.next().getId().equals(slideId)){
+                    slideIterator.remove();
                 }
-            }
+            }  
         }
+
         try {
 
             slideRepo.delete((Slide) getSlide(slideId));
