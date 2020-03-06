@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -19,7 +20,7 @@ public class ListImagesController {
     private IImageService imageService;
 
     @RequestMapping("/staff/images/list/{page}")
-    public String listSpaces(@PathVariable String page, Model model) {
+    public String listSpaces(@PathVariable String page, @RequestParam(value="sort", required= false) String sortBy, @RequestParam(value="order", required= false) String order, Model model) {
         int pageNo;
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page));
@@ -31,6 +32,8 @@ public class ListImagesController {
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
         model.addAttribute("images", imageService.getImages(pageNo));
         model.addAttribute("imageCategories", ImageCategory.values());
+        model.addAttribute("sortProperty", sortBy);
+        model.addAttribute("sortOrder",order);
         
         return "staff/images/list";
     }
