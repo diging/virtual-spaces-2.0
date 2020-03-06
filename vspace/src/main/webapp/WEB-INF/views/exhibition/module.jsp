@@ -36,28 +36,6 @@ section {
 			}
 		}
 	});
-	$(document).ready(function($) {
-		$.ajax({
-			type : "GET",
-			url : "<c:url value="/exhibit/module/{module.id}/sequence/${startSequenceId}/slides"/>",
-			async : false,
-			cache : false,
-			success : function(response) {
-			$('#slides').append(''
-						+ '<div id=slidesList><p>Slides List</p>');
-				$.each(response,function(index, slide) {
-					$('#slides').append(''
-							+ '<a href="/vspace/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/'+slide.id+'/content">'
-							+ slide.name
-							+ '<br></a>'
-							+ '</div>');
-					});
-			},
-			error : function(error) {
-				console.log(error);
-			}
-		});
-	});
 </script>
 <div class="container">
 	<div class="row">
@@ -69,38 +47,49 @@ section {
 				${module.createdBy}. <br> Modified on <span class="date">${module.modificationDate}</span>
 				by ${module.modifiedBy}.
 			</div>
-
-			<div id="slides"></div>
-			<c:if test="${currentSlide != firstSlide}">
+			<c:if test="${error == null}">
+				<div id="slides">
+					<p>Slides List</p>
+					<c:forEach items="${slides}" var="slides">
+						<a
+							href="/vspace/exhibit/module/${module.id}/sequence/${currentSequenceId}/slide/${slides.id}">${slides.name}<br></a>
+					</c:forEach>
+				</div>
+				<div id="sequences">
+					<p>Sequences List</p>
+					<c:forEach items="${currentSlideCon.sequence}" var="sequences">
+						<a
+							href="/vspace/exhibit/module/${module.id}/sequence/${sequences.id}">${sequences.name}<br></a>
+					</c:forEach>
+				</div>
 				<div id="firstSlide"
 					style="position: fixed; top: 300px; right: 800px">
 					<a
-						href="/vspace/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${firstSlide}/content">Jump
+						href="/vspace/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${firstSlide}">Jump
 						to First Slide</a>
 				</div>
+				<div id="slideSpace">
+					<section>
+						<c:forEach items="${currentSlideCon.contents}" var="contents">
+							<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
+								<div class="valueDiv" id="${contents.id}">
+									<img id="${contents.id}" class="imgDiv" style="margin: 1%;"
+										src="<c:url value="/api/image/${contents.image.id}" />" />
+								</div>
+							</c:if>
+							<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
+								<div id="${contents.id}" class="textDiv"
+									style="margin: 10px; width: 800px;">
+									<p style="margin-right: 50px; text-align: justify;">${contents.text}</p>
+								</div>
+							</c:if>
+						</c:forEach>
+					</section>
+				</div>
 			</c:if>
-			<div id="slideSpace">
-				<section>
-					<c:forEach items="${slideContents}" var="contents">
-						<c:if test="${contents['class'].simpleName ==  'ImageBlock'}">
-							<div class="valueDiv" id="${contents.id}">
-								<img id="${contents.id}" class="imgDiv" style="margin: 1%;"
-									src="<c:url value="/api/image/${contents.image.id}" />" />
-							</div>
-						</c:if>
-						<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-							<div id="${contents.id}" class="textDiv"
-								style="margin: 10px; width: 800px;">
-								<p style="margin-right: 50px; text-align: justify;">${contents.text}</p>
-							</div>
-						</c:if>
-					</c:forEach>
-				</section>
-			</div>
-			<c:if test="${module.startSequence.id == null}">
+			<c:if test="${error != null}">
 				<div id="message">
-					<p style="color: red;">Sorry, this module has not been
-						configured yet.</p>
+					<p style="color: red;">${error}</p>
 				</div>
 			</c:if>
 		</div>
