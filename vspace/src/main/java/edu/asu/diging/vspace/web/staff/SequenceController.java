@@ -41,7 +41,8 @@ public class SequenceController {
 
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("sequence", sequenceManager.getSequence(sequenceId));
-        model.addAttribute("slides", sequenceManager.getSequence(sequenceId).getSlides());
+        model.addAttribute("selectedSlides", sequenceManager.getSequence(sequenceId).getSlides());
+        model.addAttribute("allSlides", moduleManager.getModuleSlides(moduleId));
         return "staff/module/sequence/slides";
     }
 }
