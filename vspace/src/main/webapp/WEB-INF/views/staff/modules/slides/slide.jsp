@@ -2,8 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script>
 //# sourceURL=click.js
 var contentCount = ${fn:length(slideContents)};
@@ -659,7 +657,7 @@ $(window).on('load', function () {
 			</div>
 			<div class="modal-body">
 				<h6>
-					You are not logged In, Please login.
+					You are not logged in, please login.
 				</h6>
 			</div>
 			<div class="modal-footer">
