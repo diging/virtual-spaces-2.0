@@ -39,16 +39,16 @@ public class DeleteSlideController {
         return new ResponseEntity<String>("Ok", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/sequences", method = RequestMethod.POST)
-    public ResponseEntity<String> checkSlideInSequence(@PathVariable("id") String moduleId,
+    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/sequences", method = RequestMethod.GET)
+    public ResponseEntity<List<Sequence>> checkSlideInSequence(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
 
         List<Sequence> slideSequences = slideManager.checkSlideHasSequence(slideId, moduleId);
         if (slideSequences.size() > 0) {
-            return new ResponseEntity<String>("1", HttpStatus.OK);
+            return new ResponseEntity<>(slideSequences, HttpStatus.OK);
         } 
         else {
-            return new ResponseEntity<String>("0", HttpStatus.OK);
+            return new ResponseEntity<>(slideSequences, HttpStatus.OK);
         }
     }
 }

@@ -30,11 +30,11 @@ function checkSlideInSequence(slideId) {
 
 		$.ajax({
 	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
-	        type: 'POST',
+	        type: 'GET',
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	        	if(data == "1"){
+	        	if(data.length > 0){
 	        		$("#deleteSlideAlert").show();
 		        	slideIdToDelete = slideId;
 	        	}
