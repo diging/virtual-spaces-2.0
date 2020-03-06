@@ -1,12 +1,13 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
-    uri="http://www.springframework.org/security/tags"%>
+	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script src="<c:url value="/resources/bootpag/js/bootpag.min.js" />"></script>
-<script>
+<script th:inline="javascript">
 //# sourceURL=js.js
+
 $( document ).ready(function() {
   $('#page-selection').bootpag({
 	    total: ${totalPages},
@@ -24,8 +25,30 @@ $( document ).ready(function() {
 	    lastClass: 'last',
 	    firstClass: 'first'
 	}).on("page", function(event, num){
-		window.location.assign("./"+num);
-	}); 
+		window.location.assign("./"+num+"?sort=${sortProperty}&order=${order}");
+	});
+  
+  $("table.table thead th").each(function(){
+      var head = $(this);
+      if(head.attr('sort-prop')=='${sortProperty}'){
+          head.append('${order}'=='desc'?'▾':'▴');
+      }
+      });
+
+   //set click action, reload page on clicking with all query params
+   $("table.table thead th").click(function() {
+    var headerSortPropName = $(this).attr("sort-prop");
+    if(headerSortPropName != 'tag') {
+    	if(headerSortPropName=='${sortProperty}'){
+        	window.location.href = window.location.pathname+
+        	'?sort='+ headerSortPropName+'&order='+
+        	('${order}' == 'desc'?'asc':'desc');
+    	}else{
+         	window.location.href = window.location.pathname+
+       	 	'?sort='+ headerSortPropName+'&order=asc';
+    	}
+    }
+    });
   });
   
 </script>
@@ -51,74 +74,64 @@ $( document ).ready(function() {
 }
 </style>
 <c:choose>
-    <c:when test="${totalImageCount gt 0}">
-        <div style="padding-bottom: 20px;">This virtual exhibition
-            contains the following images.</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Filename</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Created By</th>
-                    <th scope="col">Created Date</th>
-                    <th scope="col">Tag</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${images}" var="image">
+	<c:when test="${totalImageCount gt 0}">
+		<div style="padding-bottom: 20px;">This virtual exhibition
+			contains the following images.</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col" sort-prop="filename">Filename</th>
+					<th scope="col" sort-prop="name">Name</th>
+					<th scope="col" sort-prop="createdBy">Created By</th>
+					<th scope="col" sort-prop="creationDate">Created Date</th>
+					<th scope="col" sort-prop="tag">Tag</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${images}" var="image">
 
-                    <tr>
-                        <th scope="row"><a
-                            href="<c:url value="/staff/display/image/${image.id}"/>"><img
-                                src="<c:url value="/api/image/${image.id}"/>"
-                                class="img-thumbnail">
-                                ${image.filename} </a></th>
-                        <td>${image.name}</td>
-                        <td>${image.createdBy}</td>
-                        <td><span class="date">${image.creationDate}</span></td>
-                        <td><span id="tags-${image.id}" class="tag">
-                                <c:forEach items="${image.categories}"
-                                    var="cat">
-                                    <span
-                                        id="category-badge-${image.id}-${cat}"
-                                        data-category="${cat}"
-                                        class="badge badge-warning">
-                                        <spring:eval
-                                            expression="@configFile.getProperty('image_category_' + cat)" />
-                                        <i data-image-id="${image.id}"
-                                        data-category="${cat}"
-                                        class="fas fa-times removeTag"></i>
-                                    </span>
-                                </c:forEach>
-                        </span>
-                            <form id="changeTagForm"
-                                action="<c:url value="/staff/images/" />${image.id}/tag?${_csrf.parameterName}=${_csrf.token}"
-                                method="post">
-                                <input type="hidden" name="imageID"
-                                    value="${image.id}" id="imageID" />
-                                <select id="changeTag" name="tag"
-                                    onChange="toggleChange(this.form, '${image.id}')"
-                                    class="form-control form-control-sm"
-                                    style="width: 68px;">
-                                    <option>Assign a tag</option>
-                                    <c:forEach
-                                        items="${imageCategories}"
-                                        var="catTag">
-                                        <option value="${catTag}"><spring:eval
-                                                expression="@configFile.getProperty('image_category_' + catTag)" /></option>
-                                    </c:forEach>
-                                </select>
-                            </form></td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-        <div id="page-selection"></div>
-    </c:when>
-    <c:otherwise>
-        <div style="padding-bottom: 20px;">There are no images in
-            Virtual Space.</div>
-    </c:otherwise>
+					<tr>
+						<th scope="row"><a
+							href="<c:url value="/staff/display/image/${image.id}"/>"><img
+								src="<c:url value="/api/image/${image.id}"/>"
+								class="img-thumbnail"> ${image.filename} </a></th>
+						<td>${image.name}</td>
+						<td>${image.createdBy}</td>
+						<td><span class="date">${image.creationDate}</span></td>
+						<td><span id="tags-${image.id}" class="tag"> <c:forEach
+									items="${image.categories}" var="cat">
+									<span id="category-badge-${image.id}-${cat}"
+										data-category="${cat}" class="badge badge-warning"> <spring:eval
+											expression="@configFile.getProperty('image_category_' + cat)" />
+										<i data-image-id="${image.id}" data-category="${cat}"
+										class="fas fa-times removeTag"></i>
+									</span>
+								</c:forEach>
+						</span>
+							<form id="changeTagForm"
+								action="<c:url value="/staff/images/" />${image.id}/tag?${_csrf.parameterName}=${_csrf.token}"
+								method="post">
+								<input type="hidden" name="imageID" value="${image.id}"
+									id="imageID" /> <select id="changeTag" name="tag"
+									onChange="toggleChange(this.form, '${image.id}')"
+									class="form-control form-control-sm" style="width: 68px;">
+									<option>Assign a tag</option>
+									<c:forEach items="${imageCategories}" var="catTag">
+										<option value="${catTag}"><spring:eval
+												expression="@configFile.getProperty('image_category_' + catTag)" /></option>
+									</c:forEach>
+								</select>
+							</form></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div id="page-selection"></div>
+	</c:when>
+	<c:otherwise>
+		<div style="padding-bottom: 20px;">There are no images in
+			Virtual Space.</div>
+	</c:otherwise>
 </c:choose>
 
 <script>
