@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
@@ -40,11 +43,12 @@ public class DeleteSlideController {
     public ResponseEntity<String> checkSlideInSequence(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
 
-        boolean checkSlideHasSequence = slideManager.checkSlideHasSequence(slideId, moduleId);
-        if (checkSlideHasSequence)
+        List<Sequence> slideSequences = slideManager.checkSlideHasSequence(slideId, moduleId);
+        if (slideSequences.size() > 0) {
             return new ResponseEntity<String>("1", HttpStatus.OK);
-        else
+        } 
+        else {
             return new ResponseEntity<String>("0", HttpStatus.OK);
-
+        }
     }
 }

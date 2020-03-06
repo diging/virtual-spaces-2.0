@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -79,21 +80,20 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public boolean checkSlideHasSequence(String slideId, String moduleId) {
+    public List<Sequence> checkSlideHasSequence(String slideId, String moduleId) {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-        boolean slideHasSequence = false;
+        List<Sequence> sequenceSlides = new ArrayList<>();
         for(Sequence sequence : sequences) {
-            int sizeOfSlides = sequence.getSlides().size();
-            for(int i = 0; i< sizeOfSlides; i++) {
-                if(sequence.getSlides().get(i).getId().equals(slideId)) {
-                    slideHasSequence = true;
-                    break;
+            List<ISlide> slidesList = sequence.getSlides();
+            Iterator<ISlide> slideIterator = slidesList.iterator();
+            while(slideIterator.hasNext()) {
+                if(slideIterator.next().getId().equals(slideId)){
+                    sequenceSlides.add(sequence);
+                    return sequenceSlides;
                 }
-            }
-            if(slideHasSequence)
-                break;
+            } 
         }
-        return slideHasSequence;
+        return sequenceSlides;
     }
 }

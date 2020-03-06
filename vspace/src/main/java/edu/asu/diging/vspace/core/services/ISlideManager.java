@@ -1,7 +1,10 @@
 package edu.asu.diging.vspace.core.services;
 
+import java.util.List;
+
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
@@ -15,6 +18,6 @@ public interface ISlideManager {
 
 	void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException;
 	
-	boolean checkSlideHasSequence(String slideId, String moduleId);
+	List<Sequence> checkSlideHasSequence(String slideId, String moduleId);
 
 }
