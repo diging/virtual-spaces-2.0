@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.core.model;
 
 public enum SortByField {
-    CREATION_DATE("creationDate"),
-    CREATION_BY("createdBy"),
-    FILENAME("filename"),
-    NAME("name");
+    CREATION_DATE("creationDate");
+
     private final String value;
 
     private SortByField(String value) {
