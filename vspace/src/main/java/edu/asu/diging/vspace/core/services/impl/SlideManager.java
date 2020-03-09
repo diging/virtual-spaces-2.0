@@ -61,8 +61,7 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         for(Sequence sequence : sequences) {
-            List<ISlide> slidesList = sequence.getSlides();
-            Iterator<ISlide> slideIterator = slidesList.iterator();
+            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
             while(slideIterator.hasNext()) {
                 if(slideIterator.next().getId().equals(slideId)){
                     slideIterator.remove();
@@ -80,17 +79,15 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public List<Sequence> checkSlideHasSequence(String slideId, String moduleId) {
+    public List<Sequence> getSlideSequences(String slideId, String moduleId) {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         List<Sequence> sequenceSlides = new ArrayList<>();
         for(Sequence sequence : sequences) {
-            List<ISlide> slidesList = sequence.getSlides();
-            Iterator<ISlide> slideIterator = slidesList.iterator();
+            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
             while(slideIterator.hasNext()) {
                 if(slideIterator.next().getId().equals(slideId)){
                     sequenceSlides.add(sequence);
-                    return sequenceSlides;
                 }
             } 
         }

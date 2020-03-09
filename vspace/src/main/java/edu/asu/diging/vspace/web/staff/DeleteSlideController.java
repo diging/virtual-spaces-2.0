@@ -43,12 +43,7 @@ public class DeleteSlideController {
     public ResponseEntity<List<Sequence>> checkSlideInSequence(@PathVariable("id") String moduleId,
             @PathVariable("slideId") String slideId) {
 
-        List<Sequence> slideSequences = slideManager.checkSlideHasSequence(slideId, moduleId);
-        if (slideSequences.size() > 0) {
-            return new ResponseEntity<>(slideSequences, HttpStatus.OK);
-        } 
-        else {
-            return new ResponseEntity<>(slideSequences, HttpStatus.OK);
-        }
+        List<Sequence> slideSequences = slideManager.getSlideSequences(slideId, moduleId);
+        return new ResponseEntity<>(slideSequences, HttpStatus.OK);
     }
 }
