@@ -10,14 +10,14 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 public interface ISlideManager {
 
-	ISlide getSlide(String slideId);
+    ISlide getSlide(String slideId);
 
-	ISlide createSlide(String moduleId, SlideForm slideForm);
+    ISlide createSlide(String moduleId, SlideForm slideForm);
 
-	void updateSlide(Slide slide);
+    void updateSlide(Slide slide);
 
-	void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException;
-	
-	List<Sequence> getSlideSequences(String slideId, String moduleId);
+    void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException;
+
+    List<Sequence> getSlideSequences(String slideId, String moduleId);
 
 }
