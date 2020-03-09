@@ -162,12 +162,12 @@ $(document).ready(function($) {
 		<div class="row">
 			<div class="col justify-content-center" style="padding-left: 30px;">
 				<c:forEach items="${slides}" var="slide">
-					<div id="${slide.key.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
+					<div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
 						<div align="left" class="card-body d-flex align-items-center" style="position:relative;">
-							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.key.id}" />">
-							<h5 class="card-title">${slide.key.name}</h5><p class="card-text">${slide.key.description}</p></a>						
+							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+							<h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.key.id}" href="javascript:checkSlideInSequence('${slide.key.id}')" class="checkSlideInSequence" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		
