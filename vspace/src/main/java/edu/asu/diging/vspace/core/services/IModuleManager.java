@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services;
 
-import java.util.HashMap;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.model.IModule;
@@ -15,7 +14,7 @@ public interface IModuleManager {
     
     List<IModule> getAllModules();
 
-    HashMap<ISlide, Integer> getModuleSlides(String moduleId);
+    List<ISlide> getModuleSlides(String moduleId);
     
     List<ISequence> getModuleSequences(String moduleId);
 

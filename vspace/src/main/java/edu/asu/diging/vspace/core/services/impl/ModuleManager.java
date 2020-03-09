@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -68,12 +67,8 @@ public class ModuleManager implements IModuleManager {
     }
 
     @Override
-    public HashMap<ISlide, Integer> getModuleSlides(String moduleId) {
-        HashMap<ISlide, Integer> slidesWithSeq = new HashMap<ISlide, Integer>();        
-        for(ISlide slide: slideRepo.findSlidesForModule(moduleId)) {
-            slidesWithSeq.put(slide, slideRepo.getSequencesForSlide(slide.getId()).size());
-        }
-        return slidesWithSeq;
+    public List<ISlide> getModuleSlides(String moduleId) {
+        return new ArrayList<>(slideRepo.findSlidesForModule(moduleId));
     }
 
 
