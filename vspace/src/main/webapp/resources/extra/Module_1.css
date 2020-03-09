@@ -1,0 +1,417 @@
+.image_container {
+  margin: 10px auto;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #ababab;
+}
+
+.image_row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  margin: 10px;
+  height: 400px;
+  width: calc(100% - 40px);
+  background-color: teal;
+  border: 1px solid black;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  line-height: 400px;
+}
+.mediaViewInfo {
+	--web-view-name: Module 1;
+	--web-view-id: Module_1;
+	--web-scale-on-resize: true;
+	--web-center-horizontally: true;
+	--web-center-vertically: true;
+	--web-enable-deep-linking: true;
+}
+:root {
+	--web-view-ids: Module_1;
+}
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	border: none;
+}
+.Module_1_Class {
+	position: absolute;
+	transform: translateX(-50%) translateY(-50%);
+	left: 50%;
+	top: 50%;
+	width: 1280px;
+	height: 720px;
+	background-color: rgba(255,255,255,1);
+	overflow: hidden;
+	--web-view-name: Module 1;
+	--web-view-id: Module_1;
+	--web-scale-on-resize: true;
+	--web-center-horizontally: true;
+	--web-center-vertically: true;
+	--web-enable-deep-linking: true;
+}
+@keyframes slide-in {
+
+	0% {
+		transform: translateX(-100%);
+	}
+
+}
+@keyframes slide-in {
+
+	0% {
+		transform: translateY(-100%);
+	}
+
+}
+@keyframes  {
+
+
+}
+.Dialogue_on_Mount_Olympus_Class {
+	position: absolute;
+	left: 288px;
+	top: 63px;
+	overflow: visible;
+	width: 379px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 26px;
+	color: rgba(0,0,0,1);
+}
+.Group_8_Class {
+	position: absolute;
+	width: 705px;
+	height: 433px;
+	left: 288px;
+	top: 117px;
+	overflow: visible;
+}
+.Rectangle_1 {
+	position: absolute;
+	overflow: visible;
+	width: 705px;
+	height: 433px;
+	left: 0px;
+	top: 0px;
+}
+.Image_7_Class {
+	position: absolute;
+	width: 432px;
+	height: 433px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+}
+.Icon_open_menu_Class {
+	position: absolute;
+	width: 24px;
+	height: 22.286px;
+	left: 20px;
+	top: 20px;
+	overflow: visible;
+	cursor: pointer;
+	--web-animation: slide-in 0.3s ease-out forwards;
+	--web-action-type: page;
+	--web-action-target: Module_1_menu_slide_out.html;
+}
+.Icon_open_menu_ {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 22.286px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1,0,0,1,0,0);
+}
+.Map_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 20px;
+	top: 607px;
+	overflow: visible;
+}
+.Ellipse_6 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+.Icon_awesome_map_Class {
+	position: absolute;
+	width: 24px;
+	height: 18.667px;
+	left: 10px;
+	top: 13px;
+	overflow: visible;
+}
+.Icon_awesome_map_ {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 18.667px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1,0,0,1,0,0);
+}
+._DigInG_Class {
+	position: absolute;
+	left: 1206px;
+	top: 693px;
+	overflow: visible;
+	width: 47px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Helvetica Neue;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	color: rgba(0,0,0,1);
+}
+.Component_31___13_Class {
+	position: absolute;
+	width: 34px;
+	height: 34px;
+	left: 1229px;
+	top: 16px;
+	overflow: visible;
+}
+.Mask_Group_9_Class {
+	position: absolute;
+	width: 34px;
+	height: 34px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	cursor: pointer;
+	--web-animation: slide-in 0.3s ease-out forwards;
+	--web-action-type: page;
+	--web-action-target: Language_options.html;
+}
+.Illustration__Laurent_Taudin_T_Class {
+	position: absolute;
+	left: 737px;
+	top: 124px;
+	overflow: visible;
+	width: 238px;
+	height: 426px;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 16px;
+	color: rgba(0,0,0,1);
+}
+.SLideshow_option_Class {
+	position: absolute;
+	width: 43.846px;
+	height: 44px;
+	left: 1026px;
+	top: 117px;
+	overflow: visible;
+	--web-animation: fadein 0.3s ease-out;
+	--web-action-type: page;
+	--web-action-target: Module_1___slideshow.html;
+	cursor: pointer;
+}
+.Ellipse_2 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 103.846px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+.Icon_ionic_md_play_circle {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 10px;
+	top: 10px;
+	transform: matrix(1,0,0,1,0,0);
+}
+.SLideshow_option_be_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 1026px;
+	top: 187px;
+	overflow: visible;
+}
+.Ellipse_2_bf {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+.Icon_ionic_md_play_circle_bg {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 9.574px;
+	top: 10px;
+	transform: matrix(1,0,0,1,0,0);
+}
+.SLideshow_option_bh_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 1026px;
+	top: 258px;
+	overflow: visible;
+}
+.Ellipse_2_bi {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+.Icon_ionic_md_play_circle_bj {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 9.574px;
+	top: 10px;
+	transform: matrix(1,0,0,1,0,0);
+}
+.Text_Version_Class {
+	position: absolute;
+	left: 1090px;
+	top: 129px;
+	overflow: visible;
+	width: 97px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	color: rgba(0,0,0,1);
+}
+.Movie_Class {
+	position: absolute;
+	left: 1090px;
+	top: 199px;
+	overflow: visible;
+	width: 49px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	color: rgba(0,0,0,1);
+}
+.Alternative_Movie_Class {
+	position: absolute;
+	left: 1090px;
+	top: 270px;
+	overflow: visible;
+	width: 140px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	color: rgba(0,0,0,1);
+}
+.exit_to_space_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 20px;
+	top: 110px;
+	overflow: visible;
+	--web-animation: fadein 0.3s ease-out;
+	--web-action-type: page;
+	--web-action-target: Home.html;
+	cursor: pointer;
+}
+.Ellipse_5 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+.Icon_awesome_angle_double_left {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 19.269px;
+	left: 10px;
+	top: 12px;
+	transform: matrix(1,0,0,1,0,0);
+}
+
+.slide_wrapper {
+    display: block;
+}
+
+#slide_sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* top layer */
+    z-index: 9999;
+}
+
+.slide_overlay {
+    display: none;
+    position: fixed;
+    /* full screen */
+    width: 100vw;
+    height: 100vh;
+    /* transparent black */
+    background: rgba(0, 0, 0, 0.7);
+    /* middle layer, i.e. appears below the sidebar */
+    z-index: 998;
+    opacity: 0;
+    /* animate the transition */
+    transition: all 0.5s ease-in-out;
+}
+/* display .overlay when it has the .active class */
+.slide_overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+#slide_dismiss {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    /* top right corner of the sidebar */
+    top: 10px;
+    right: 10px;
+}
