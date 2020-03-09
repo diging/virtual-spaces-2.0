@@ -92,7 +92,7 @@ public class ImageService implements IImageService {
     @Override
     public List<IVSImage > getImages(int pageNo) {
         pageNo = validatePageNumber(pageNo);
-        Pageable sortByRequestedField = PageRequest.of(pageNo-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()));
+        Pageable sortByRequestedField = PageRequest.of(pageNo-1, pageSize, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
         List<IVSImage> results = new ArrayList<>();
         images.getContent().forEach(i -> results.add(i));
