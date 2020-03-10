@@ -30,6 +30,9 @@ public class SlideManagerTest {
     @InjectMocks
     private SlideManager slideManagerToTest = new SlideManager();
     
+    @InjectMocks
+    private SlideManager slideManagerToTestSpy =  Mockito.spy(slideManagerToTest);
+    
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -73,24 +76,14 @@ public class SlideManagerTest {
         sequenceObj.setSlides(slidesList);
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
-        
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
         
         ISlide slide = new Slide();
         slide.setId(slideId);
-        SlideManager slideManagerToTestSpy =  Mockito.spy(slideManagerToTest);
-     
         Mockito.doReturn(slide).when(slideManagerToTestSpy).getSlide(Mockito.any());
         
-        
-        slideManagerToTest.deleteSlideById(slideId, moduleId);
-        
-        
-        
-        
-        //Mockito.verify(slideRepo).delete(slide);
-        
-        
+        slideManagerToTestSpy.deleteSlideById(slideId, moduleId);  
+        Mockito.verify(slideRepo).delete((Slide) slide);
     }
     
   
