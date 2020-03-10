@@ -2,7 +2,6 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Assert;
@@ -14,7 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.SequenceRepository;
-import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -23,6 +23,9 @@ public class SlideManagerTest {
 
     @Mock
     private SequenceRepository sequenceRepo;
+    
+    @Mock
+    private SlideRepository slideRepo;
     
     @InjectMocks
     private SlideManager slideManagerToTest = new SlideManager();
@@ -57,22 +60,38 @@ public class SlideManagerTest {
         Assert.assertEquals(actualSequenceSlideList.size(), sequencesList.size()); 
     }
     
-    
-    
-    public List<Sequence> getSlideSequences(String slideId, String moduleId) {
+    @Test
+    public void test_deleteSlideById() throws SlideDoesNotExistException {
+        String slideId = "SLI0000000040";
+        String moduleId = "MOD000000010";
 
-        List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-        List<Sequence> sequenceSlides = new ArrayList<>();
-        for(Sequence sequence : sequences) {
-            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
-            while(slideIterator.hasNext()) {
-                if(slideIterator.next().getId().equals(slideId)){
-                    sequenceSlides.add(sequence);
-                }
-            } 
-        }
-        return sequenceSlides;
+        List<ISlide> slidesList = Arrays.asList(new Slide());
+        slidesList.get(0).setId("SLI0000000040");
+        
+        Sequence sequenceObj = new Sequence();
+        sequenceObj.setId("SEQ000000004");
+        sequenceObj.setSlides(slidesList);
+        List<Sequence> sequencesList = new ArrayList<>();
+        sequencesList.add(sequenceObj);
+        
+        Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
+        
+        ISlide slide = new Slide();
+        slide.setId(slideId);
+        SlideManager slideManagerToTestSpy =  Mockito.spy(slideManagerToTest);
+     
+        Mockito.doReturn(slide).when(slideManagerToTestSpy).getSlide(Mockito.any());
+        
+        
+        slideManagerToTest.deleteSlideById(slideId, moduleId);
+        
+        
+        
+        
+        //Mockito.verify(slideRepo).delete(slide);
+        
+        
     }
     
-    
+  
 }

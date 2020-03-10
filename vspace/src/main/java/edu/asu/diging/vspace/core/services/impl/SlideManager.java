@@ -61,8 +61,11 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         for(Sequence sequence : sequences) {
-            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
+            
+            List<ISlide> sequenceSlides = new ArrayList<ISlide> (sequence.getSlides());
+            Iterator<ISlide> slideIterator = sequenceSlides.iterator();
             while(slideIterator.hasNext()) {
+                //System.out.println("Slide ID: "+slideIterator.next().getId());
                 if(slideIterator.next().getId().equals(slideId)){
                     slideIterator.remove();
                 }
