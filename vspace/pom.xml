@@ -21,7 +21,7 @@
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3306/vspace</db.url>
+        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
         <uploaded.files.path></uploaded.files.path>
