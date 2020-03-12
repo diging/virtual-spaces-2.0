@@ -38,36 +38,52 @@ public class SlideManagerTest {
         MockitoAnnotations.initMocks(this);
     }
     
+    // setting common used variables and Objects
+    String slideId, moduleId, sequenceId, slideIdNotInSequence;
+    List<ISlide> slidesList = Arrays.asList(new Slide());
+    Sequence sequenceObj;
+    
+    
+    @Before
+    public void setup() throws Exception {
+        sequenceObj = new Sequence() ;
+        slideId = "SLI000000002";
+        slideIdNotInSequence = "SLI000000219";
+        moduleId = "MOD000000002";
+        sequenceId = "SEQ000000004";
+        slidesList.get(0).setId(slideId);
+    }
+    
     @Test
     public void test_slideSequence() {
-        String slideId = "SLI000000002";
-        String moduleId = "MOD000000002";
-        List<ISlide> slidesList = Arrays.asList(new Slide());
-        slidesList.get(0).setId("SLI000000002");
         
-        Sequence sequenceObj = new Sequence();
-        sequenceObj.setId("SEQ000000004");
+        // Positive scenario - Slide present in Sequence
+        
+        sequenceObj.setId(sequenceId);
         sequenceObj.setSlides(slidesList);
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
+        List<Sequence> slideSequencePresent = slideManagerToTest.getSlideSequences(slideId, moduleId);
         
-        List<Sequence> actualSequenceSlideList = slideManagerToTest.getSlideSequences(slideId, moduleId);
+        if(slideSequencePresent.size() > 0) {
+            String actualSlideIdSequence = slideSequencePresent.get(0).getSlides().get(0).getId();
+            String expectedSlideIdSequence = sequencesList.get(0).getSlides().get(0).getId();
+            
+            Assert.assertEquals(actualSlideIdSequence, expectedSlideIdSequence);
+            Assert.assertEquals(slideSequencePresent.size(), sequencesList.size()); 
+        }
         
-        Assert.assertEquals(actualSequenceSlideList.get(0).getSlides().get(0).getId(), sequencesList.get(0).getSlides().get(0).getId());
-        Assert.assertEquals(actualSequenceSlideList.size(), sequencesList.size()); 
+        // Negative Scenario - Slide not present in Sequence
+        List<Sequence> actualSequenceSlideListNotPresent = slideManagerToTest.getSlideSequences(slideId, moduleId);
+        Assert.assertNotSame(actualSequenceSlideListNotPresent, slideSequencePresent);
     }
     
     @Test
     public void test_deleteSlideById() throws SlideDoesNotExistException {
-        String slideId = "SLI0000000040";
-        String moduleId = "MOD000000010";
-
-        List<ISlide> slidesList = Arrays.asList(new Slide());
-        slidesList.get(0).setId("SLI0000000040");
         
-        Sequence sequenceObj = new Sequence();
-        sequenceObj.setId("SEQ000000004");
+        
+        sequenceObj.setId(sequenceId);
         sequenceObj.setSlides(slidesList);
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
