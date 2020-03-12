@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Iterators;
+
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
@@ -61,15 +63,13 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         for(Sequence sequence : sequences) {
-            
-            List<ISlide> sequenceSlides = new ArrayList<ISlide> (sequence.getSlides());
-            Iterator<ISlide> slideIterator = sequenceSlides.iterator();
+            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
             while(slideIterator.hasNext()) {
-                //System.out.println("Slide ID: "+slideIterator.next().getId());
                 if(slideIterator.next().getId().equals(slideId)){
                     slideIterator.remove();
                 }
-            }  
+            }
+            sequenceRepo.save(sequence);
         }
 
         try {
