@@ -41,6 +41,10 @@
 		<put-attribute name="currentPage" value="module" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
 	</definition>
+	<definition name="slideShow" extends="base.definition">	
+		<put-attribute name="currentPage" value="slideShow" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/slideShow.jsp" />	
+	</definition>
     
     <!-- Register -->
     <definition name="register" extends="base.definition"> 
