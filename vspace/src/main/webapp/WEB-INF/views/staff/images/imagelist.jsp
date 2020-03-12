@@ -91,7 +91,6 @@ $( document ).ready(function() {
 			</thead>
 			<tbody>
 				<c:forEach items="${images}" var="image">
-
 					<tr>
 						<th scope="row"><a
 							href="<c:url value="/staff/display/image/${image.id}"/>"><img
@@ -123,7 +122,8 @@ $( document ).ready(function() {
 												expression="@configFile.getProperty('image_category_' + catTag)" /></option>
 									</c:forEach>
 								</select>
-							</form></td>
+							</form>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
