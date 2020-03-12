@@ -42,8 +42,6 @@ public class SlideManagerTest {
     public void test_slideSequence() {
         String slideId = "SLI000000002";
         String moduleId = "MOD000000002";
-        
-        
         List<ISlide> slidesList = Arrays.asList(new Slide());
         slidesList.get(0).setId("SLI000000002");
         
@@ -52,14 +50,11 @@ public class SlideManagerTest {
         sequenceObj.setSlides(slidesList);
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
-        
-        
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
         
         List<Sequence> actualSequenceSlideList = slideManagerToTest.getSlideSequences(slideId, moduleId);
         
         Assert.assertEquals(actualSequenceSlideList.get(0).getSlides().get(0).getId(), sequencesList.get(0).getSlides().get(0).getId());
-        Assert.assertEquals(actualSequenceSlideList.get(0).getSlides(), sequencesList.get(0).getSlides());
         Assert.assertEquals(actualSequenceSlideList.size(), sequencesList.size()); 
     }
     
