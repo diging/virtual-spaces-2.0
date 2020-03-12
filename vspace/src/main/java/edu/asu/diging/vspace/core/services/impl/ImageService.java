@@ -109,7 +109,7 @@ public class ImageService implements IImageService {
         if (sortedBy != null) {
             if (order.contentEquals("desc")) {
                 sortingParameters = Sort.by(sortedBy).descending();
-            } else {
+            } else if(order.contentEquals("asc")) {
                 sortingParameters = Sort.by(sortedBy);
             }
         }

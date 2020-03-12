@@ -80,10 +80,10 @@ $( document ).ready(function() {
 		<table class="table">
 			<thead>
 				<tr>
-					<th scope="col" sort-prop="filename">Filename</th>
-					<th scope="col" sort-prop="name">Name</th>
-					<th scope="col" sort-prop="createdBy">Created By</th>
-					<th scope="col" sort-prop="creationDate">Created Date</th>
+					<th scope="col" sort-prop="filename"><a href="#">Filename</a></th>
+					<th scope="col" sort-prop="name"><a href="#">Name</a></th>
+					<th scope="col" sort-prop="createdBy"><a href="#">Created By</a></th>
+					<th scope="col" sort-prop="creationDate"><a href="#">Created Date</a></th>
 					<th scope="col" sort-prop="tag">Tag</th>
 				</tr>
 			</thead>
