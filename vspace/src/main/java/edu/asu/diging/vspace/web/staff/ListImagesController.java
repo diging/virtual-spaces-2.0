@@ -27,7 +27,6 @@ public class ListImagesController {
         } catch (NumberFormatException numberFormatException) {
             pageNo = 1;
         }
-        System.out.println(sortedBy + "--" + order);
         model.addAttribute("totalPages", imageService.getTotalPages());
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());

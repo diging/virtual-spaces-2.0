@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:config.properties")
+@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class PersistenceJPAConfig {
 
     @Autowired

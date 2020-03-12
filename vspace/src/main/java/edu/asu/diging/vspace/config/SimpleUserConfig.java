@@ -8,7 +8,7 @@ import edu.asu.diging.simpleusers.core.config.SimpleUsers;
 import edu.asu.diging.simpleusers.core.config.SimpleUsersConfiguration;
 
 @Configuration
-@PropertySource("classpath:/config.properties")
+@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class SimpleUserConfig implements SimpleUsersConfiguration {
 
     @Value("${email_user}")
