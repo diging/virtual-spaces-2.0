@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script src="<c:url value="/resources/bootpag/js/bootpag.min.js" />"></script>
-<script th:inline="javascript">
+<script>
 //# sourceURL=js.js
 
 $( document ).ready(function() {
@@ -82,8 +82,10 @@ $( document ).ready(function() {
 				<tr>
 					<th scope="col" sort-prop="filename"><a href="#">Filename</a></th>
 					<th scope="col" sort-prop="name"><a href="#">Name</a></th>
-					<th scope="col" sort-prop="createdBy"><a href="#">Created By</a></th>
-					<th scope="col" sort-prop="creationDate"><a href="#">Created Date</a></th>
+					<th scope="col" sort-prop="createdBy"><a href="#">Created
+							By</a></th>
+					<th scope="col" sort-prop="creationDate"><a href="#">Created
+							Date</a></th>
 					<th scope="col" sort-prop="tag">Tag</th>
 				</tr>
 			</thead>

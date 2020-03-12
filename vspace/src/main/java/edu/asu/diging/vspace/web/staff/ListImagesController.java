@@ -1,8 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +17,7 @@ public class ListImagesController {
     private IImageService imageService;
 
     @RequestMapping("/staff/images/list/{page}")
-    public String listSpaces(@PathVariable String page, @RequestParam(value = "sort", required = false) String sortedBy, @RequestParam(value = "order", required = false) String order, Model model) {
+    public String listImagesByPage(@PathVariable String page, @RequestParam(value = "sort", required = false) String sortedBy, @RequestParam(value = "order", required = false) String order, Model model) {
         int pageNo;
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page));
