@@ -120,7 +120,7 @@ public class ImageServiceTest {
    
     @Test
     public void test_getImages_success() { 
-        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(1);
@@ -131,7 +131,7 @@ public class ImageServiceTest {
   
     @Test
     public void test_getImages_negativePage() { 
-        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()));
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(-2);
@@ -142,7 +142,7 @@ public class ImageServiceTest {
     @Test
     public void test_getImages_pageGreaterThanTotalPages() { 
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
-        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()));
+        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(7);
