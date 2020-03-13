@@ -89,6 +89,7 @@ public class SlideManagerTest {
         sequencesList.add(sequenceObj);
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
         
+        // using mockito spy object
         ISlide slide = new Slide();
         slide.setId(slideId);
         Mockito.doReturn(slide).when(slideManagerToTestSpy).getSlide(Mockito.any());
