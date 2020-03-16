@@ -29,6 +29,10 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private ISpace startSpace;
 
     private String title;
+    
+    private String mode;
+    
+    private String modeMessage;
 
     /*
      * (non-Javadoc)
@@ -81,5 +85,21 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setTitle(String title) {
         this.title = title;
     }
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public String getModeMessage() {
+		return modeMessage;
+	}
+
+	public void setModeMessage(String modeMessage) {
+		this.modeMessage = modeMessage;
+	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -45,7 +46,7 @@ public class ExhibitionConfigurationController {
         } else {
             model.addAttribute("exhibition", new Exhibition());
         }
-        
+        model.addAttribute("exhibitionModes", ExhibitionModes.getAllValues());
         model.addAttribute("spacesList", spaceRepo.findAll());
         return "staff/exhibit/config";
     }
@@ -61,7 +62,7 @@ public class ExhibitionConfigurationController {
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, RedirectAttributes attributes)
+            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, @RequestParam("exhibitMode") String exhibitMode, @RequestParam("modeMessage") String exhibitModeMessage, RedirectAttributes attributes)
             throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
@@ -75,6 +76,13 @@ public class ExhibitionConfigurationController {
 
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
+        exhibition.setMode(exhibitMode);
+        if(exhibitMode.equals(ExhibitionModes.OFFLINE.getValue())) {
+        	exhibition.setModeMessage(exhibitModeMessage);
+        }
+        else {
+        	exhibition.setModeMessage(null);
+        }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
