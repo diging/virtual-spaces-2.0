@@ -18,7 +18,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Component
-@PropertySource("classpath:/config.properties")
+@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class StorageEngine implements IStorageEngine {
 
 	@Value("${uploads_path}")

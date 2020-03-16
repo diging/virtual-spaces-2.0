@@ -67,35 +67,6 @@
 				<a class="navbar-brand" href="<c:url value="/" />"><c:if test="${not empty exhibition.title}">
 					${exhibition.title}</c:if>
 				<c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
-
-				<ul class="navbar-nav ml-auto" style="flex-direction: row">
-					<li class="nav-item">
-						<a href="#" id="sidebarCollapse" class="nav-link">
-							<i class="fas fa-compass"></i>
-						</a>
-					</li>
-					<sec:authorize access="isAuthenticated() and hasAnyRole('ADMIN', 'STAFF')">
-						<li class="nav-item">
-							<a href="<c:url value="/staff/dashboard" />" class="nav-link">
-							<i class="fas fa-tachometer-alt"></i>
-							</a>
-						</li>
-					</sec:authorize>
-					<sec:authorize access="isAnonymous()">
-						<li class="nav-item" style="padding-left: 20px;">
-							<a class="nav-link" href="<c:url value="/login" />"><i class="fas fa-sign-in-alt"></i></a>
-						</li>
-					</sec:authorize>
-					<sec:authorize access="isAuthenticated()">
-						<li class="nav-item" style="padding-left: 20px;">
-							<form action="<c:url value="/logout" />" method="POST">
-							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-							<button class="btn navbar-link" type="submit" title="Logout"><i
-									class="fas fa-sign-out-alt"></i></button>
-							</form>
-						</li>
-					</sec:authorize>
-				</ul>
 			</nav>
 
 			<!-- Sidebar -->
@@ -115,11 +86,6 @@
 
 			<!-- Begin page content -->
 			<main role="main" class="flex-shrink-0" style="padding-top: 20px;">
-                <c:if test="${showAlert eq true}">
-                    <div id="errorMsg" class="alert alert-${alertType}">
-                      ${message}
-                    </div>
-                  </c:if>
 				<tiles:insertAttribute name="content" />
 			</main>
 		</div>

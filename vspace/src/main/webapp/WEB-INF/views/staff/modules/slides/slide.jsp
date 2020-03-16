@@ -72,13 +72,13 @@ function uploadImage() {
     formData.append('content', file.name);
     formData.append('contentOrder', contentCount);
     var imageblock = "";
- 
+ 	var oldImageBlock = "";
     
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
     if (imgID != '') {
-    
+    	oldImageBlock = $("#" + imgID);
     	var imageBlockId = imgID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image/" />" + imageBlockId + "?${_csrf.parameterName}=${_csrf.token}";
@@ -106,7 +106,7 @@ function uploadImage() {
                 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             };          
         }
-        ++contentCount;    
+        ++contentCount; 
     }
   	
     reader.readAsDataURL(file);
@@ -135,7 +135,15 @@ function uploadImage() {
            	}
         },
         error: function(data) {
-        	$(".open").removeClass("open");
+        	if (imgID == '') {
+        		$("#current").remove();
+        	}
+        	else {
+        		$("#current").replaceWith(oldImageBlock);
+        	}
+        	if (data.status == 403) {
+        		$("#loginAlert").show();
+        	}
         }
     });
     // Reset the image file name 
@@ -394,8 +402,13 @@ $(document).ready(function() {
                
             },
             error: function(data) {
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
+            	if (data.status == 403){
+            		$("#loginAlert").show();
+            	}
+            	else {
+                	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                	$('.error').append(alert);
+            	}
             }
         });
         $("#textBlockText").val('')
@@ -448,8 +461,13 @@ $(document).ready(function() {
                $(".open").removeClass("open");
            },
            error: function(data) {
-               var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-               $('.error').append(alert);
+        		if (data.status == 403) {
+           			$("#loginAlert").show();
+           		}
+           		else {
+               		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+               		$('.error').append(alert);
+           		}
            }
        });
     });    
@@ -514,6 +532,10 @@ $(window).on('load', function () {
 	<button id="cancelEditDescription" type="button"
 		class="btn btn-primary btn-sm"
 		style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
+</div>
+<div style="margin-top: 1%; margin-bottom: 2%;">
+	<a class="btn btn-primary"
+		href="<c:url value="/staff/module/${module.id}" />">Go Back</a>
 </div>
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
 	<div class="dropdown">
@@ -629,6 +651,27 @@ $(window).on('load', function () {
 		</div>
 	</div>
 </div>
+
+<div id="loginAlert" class="modal" tabindex="-1" role="dialog"
+	backdrop="static"
+	style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Login</h5>
+			</div>
+			<div class="modal-body">
+				<h6>
+					You are not logged in, please login.
+				</h6>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-primary" style="color: white;"
+					onClick="window.location.reload();">Login</a>
+			</div>
+		</div>
+	</div>
+</div>
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
@@ -655,6 +698,7 @@ $(window).on('load', function () {
 		</c:if>
 	</c:forEach>
 </div>
+
 <style type="text/css">
 .hova {
 	background-color: #bfb168;
