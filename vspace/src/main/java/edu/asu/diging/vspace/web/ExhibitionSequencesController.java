@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 
@@ -23,26 +24,27 @@ public class ExhibitionSequencesController {
 	private ISequenceManager sequenceManager;
 
 	@RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}")
-	public String sequence(Model model, @PathVariable("sequenceId") String sequenceId, @PathVariable("moduleId") String moduleId) {
+	public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
+	        @PathVariable("moduleId") String moduleId) {
 		IModule module = moduleManager.getModule(moduleId);
 		model.addAttribute("module", module);
-		List<ISequence> list=moduleManager.getModuleSequences(moduleId);
-		boolean flag=true;
-		for(ISequence sequence:list) {
-			if(sequence.getId().equals(sequenceId)) {
-				flag=false;
+		List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
+		List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
+		boolean sequenceFlag = true;
+		for (ISequence sequence : sequences) {
+			if (sequence.getId().equals(sequenceId)) {
+				sequenceFlag = false;
 				break;
 			}
 		}
-		if(flag) {
-			model.addAttribute("error","Sequence does not belong to selected module.");
+		if (sequenceFlag) {
+			model.addAttribute("error", "Sequence does not belong to selected module.");
+			return "module";
+		} else if (slides.size() == 0) {
+			model.addAttribute("error", "No slides to display in selected sequence for module.");
 			return "module";
 		}
-		else if(sequenceManager.getSequence(sequenceId).getSlides().size()==0) {
-			model.addAttribute("error","No slides to display in selected sequence for module.");
-			return "module";
-		}
-		String firstSlideId=sequenceManager.getSequence(sequenceId).getSlides().get(0).getId();
-		return "redirect:/exhibit/module/"+moduleId+"/sequence/"+sequenceId+"/slide/"+firstSlideId;
+		String firstSlideId = slides.get(0).getId();
+		return "redirect:/exhibit/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;
 	}
 }
