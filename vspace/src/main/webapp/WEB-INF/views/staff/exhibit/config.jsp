@@ -4,7 +4,9 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<script>
 
+</script>
 <h1>Exhibition Configuration</h1>
 
 <div style="padding-bottom: 20px;">
@@ -24,17 +26,20 @@
 				class="form-control" name="title" value="${exhibition.title}" />
 		</div>
 		<div style="padding-top: 10px;">
-			<label for="title">Exhibition Mode:</label> 
-			<select	class="form-control" name="exhibitMode" onChange = "modeChange(exhibitMode.value)">
+			<label for="title">Exhibition Mode:</label> <select
+				class="form-control" name="exhibitMode"
+				onChange="modeChange(exhibitMode.value)">
 				<c:forEach items="${exhibitionModes}" var="mode">
-					<option id=${mode} value=${mode}
+					<option id=${mode } value=${mode
+						}
 						<c:if test="${mode==exhibition.mode}">selected</c:if>>${mode}</option>
 				</c:forEach>
 			</select>
 		</div>
-		<div id="offlineMessage"  style="padding-top: 10px;">
-		<label for="title">Offline Message:</label> <input type="text"
-				class="form-control" name="modeMessage" value="${exhibition.modeMessage}" />
+		<div id="offlineMessage" style="padding-top: 10px;">
+			<label for="title">Offline Message:</label> <input type="text"
+				class="form-control" name="modeMessage"
+				value="${exhibition.modeMessage}" />
 		</div>
 		<p style="padding-top: 10px;">
 			<input class="btn btn-primary" type="submit" value="submit" />
@@ -43,14 +48,21 @@
 	</form:form>
 </div>
 <script>
-
-function modeChange( modeChosen ) {
+$(document).ready(function() {
 	var offlineMessage = $('#offlineMessage');
-	if (modeChosen == "Offline")
+	if (${exhibition.mode}.value == "Offline")
 		offlineMessage.show();
 	else {
 		offlineMessage.hide();
 	}
-}
+});
 
+	function modeChange(modeChosen) {
+		var offlineMessage = $('#offlineMessage');
+		if (modeChosen == "Offline")
+			offlineMessage.show();
+		else {
+			offlineMessage.hide();
+		}
+	}
 </script>

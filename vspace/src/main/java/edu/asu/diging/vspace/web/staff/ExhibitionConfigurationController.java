@@ -78,7 +78,13 @@ public class ExhibitionConfigurationController {
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         if(exhibitMode.equals(ExhibitionModes.OFFLINE.getValue())) {
-        	exhibition.setModeMessage(exhibitModeMessage);
+        	if(exhibitModeMessage.equals(""))
+        		exhibition.setModeMessage("This exhibition is currently offline. Please check back later.");
+        	else
+        		exhibition.setModeMessage(exhibitModeMessage);
+        }
+        else if(exhibitMode.equals(ExhibitionModes.MAINTENANCE.getValue())){
+        	exhibition.setModeMessage("This exhibition is currently under maintenance. Please check back later.");
         }
         else {
         	exhibition.setModeMessage(null);
