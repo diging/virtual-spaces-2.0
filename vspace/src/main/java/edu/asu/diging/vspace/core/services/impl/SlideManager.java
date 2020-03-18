@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -59,16 +58,17 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException {
-
+    	
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
+        Slide slideObj = (Slide) getSlide(slideId);
         for(Sequence sequence : sequences) {
-            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
-            while(slideIterator.hasNext()) {
-                if(slideIterator.next().getId().equals(slideId)){
-                    slideIterator.remove();
-                }
-            }
-            sequenceRepo.save(sequence);
+			for(int i = 0; i<sequence.getSlides().size(); i++) {
+				String slideIdToCompare = sequence.getSlides().get(i).getId();
+				if(slideIdToCompare.equals(slideId)) {
+					sequence.getSlides().remove(slideObj);
+					sequenceRepo.save(sequence);
+				}
+			}
         }
 
         try {
@@ -86,16 +86,11 @@ public class SlideManager implements ISlideManager {
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         List<Sequence> sequenceSlides = new ArrayList<>();
         for(Sequence sequence : sequences) {
-        	//List<ISlide> sequenceList = sequence.getSlides();
-     		//List<List<ISlide>> sequenceValues = Arrays.asList(sequenceList);
-            //Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
-        	Iterator<List<ISlide>> slideIterator = Arrays.asList(sequence.getSlides()).iterator();
+            Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
             while(slideIterator.hasNext()) {
-            	for(ISlide slides : slideIterator.next()) {
-            		if(slides.getId().equals(slideId)){
-                        sequenceSlides.add(sequence);
-                    }
-            	}    
+                if(slideIterator.next().getId().equals(slideId)){
+                    sequenceSlides.add(sequence);
+                }
             } 
         }
         return sequenceSlides;
