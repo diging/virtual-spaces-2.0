@@ -1,23 +1,14 @@
 .Module_1_Class {
-	position: absolute;
-	transform: translateX(-50%) translateY(-50%);
+	position: relative;
+	transform: translateX(-50%);
 	left: 50%;
 	top: 50%;
 	width: 1280px;
-	height: 650px;
-	background-color: rgba(255,255,255,1);
+	height: 1280px;
 	overflow: hidden;
-	--web-view-name: Module 1;
-	--web-view-id: Module_1;
-	--web-scale-on-resize: true;
-	--web-center-horizontally: true;
-	--web-center-vertically: true;
-	--web-enable-deep-linking: true;
 }
 .Group_8_Class {
 	position: absolute;
-	width: 705px;
-	height: 433px;
 	left: 288px;
 	top: 117px;
 	overflow: visible;
