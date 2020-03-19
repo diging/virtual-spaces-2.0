@@ -30,14 +30,8 @@ public class ExhibitionSequencesController {
 		model.addAttribute("module", module);
 		List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
 		List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
-		boolean sequenceFlag = true;
-		for (ISequence sequence : sequences) {
-			if (sequence.getId().equals(sequenceId)) {
-				sequenceFlag = false;
-				break;
-			}
-		}
-		if (sequenceFlag) {
+		boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
+		if (!sequenceExist) {
 			model.addAttribute("error", "Sequence does not belong to selected module.");
 			return "module";
 		} else if (slides.size() == 0) {
