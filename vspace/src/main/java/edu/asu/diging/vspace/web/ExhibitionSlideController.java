@@ -18,49 +18,49 @@ import edu.asu.diging.vspace.core.services.impl.SlideManager;
 @Controller
 public class ExhibitionSlideController {
 
-	@Autowired
-	private IModuleManager moduleManager;
+    @Autowired
+    private IModuleManager moduleManager;
 
-	@Autowired
-	private SlideManager sildeManager;
+    @Autowired
+    private SlideManager sildeManager;
 
-	@Autowired
-	private ISequenceManager sequenceManager;
+    @Autowired
+    private ISequenceManager sequenceManager;
 
-	@RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
-	public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-	        @PathVariable("sequenceId") String sequenceId) {
-		IModule module = moduleManager.getModule(moduleId);
-		model.addAttribute("module", module);
-		if (module.getStartSequence() == null) {
-			model.addAttribute("error", "Sorry, this module has not been configured yet.");
-		} else {
-			String startSequenceId = module.getStartSequence().getId();
-			model.addAttribute("startSequenceId", startSequenceId);
-			List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
-			if (sequenceSlides.size() == 0) {
-				model.addAttribute("error", "No slides to display in selected sequence for module.");
-			} else {
-				model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
-				String nextSlideId = "";
-				String prevSlideId = "";
-				int slideIndex = 0;
-				slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
-				if (sequenceSlides.size() > slideIndex + 1) {
-					nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
-				}
-				if (slideIndex > 0) {
-					prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
-				}
-				model.addAttribute("slides", sequenceSlides);
-				model.addAttribute("currentSequenceId", sequenceId);
-				model.addAttribute("nextSlide", nextSlideId);
-				model.addAttribute("prevSlide", prevSlideId);
-				model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
-				model.addAttribute("numOfSlides", sequenceSlides.size());
-				model.addAttribute("currentNumOfSlide", slideIndex + 1);
-			}
-		}
-		return "module";
-	}
+    @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
+    public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
+            @PathVariable("sequenceId") String sequenceId) {
+        IModule module = moduleManager.getModule(moduleId);
+        model.addAttribute("module", module);
+        if (module.getStartSequence() == null) {
+            model.addAttribute("error", "Sorry, this module has not been configured yet.");
+        } else {
+            String startSequenceId = module.getStartSequence().getId();
+            model.addAttribute("startSequenceId", startSequenceId);
+            List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
+            if (sequenceSlides.size() == 0) {
+                model.addAttribute("error", "No slides to display in selected sequence for module.");
+            } else {
+                model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
+                String nextSlideId = "";
+                String prevSlideId = "";
+                int slideIndex = 0;
+                slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
+                if (sequenceSlides.size() > slideIndex + 1) {
+                    nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
+                }
+                if (slideIndex > 0) {
+                    prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
+                }
+                model.addAttribute("slides", sequenceSlides);
+                model.addAttribute("currentSequenceId", sequenceId);
+                model.addAttribute("nextSlide", nextSlideId);
+                model.addAttribute("prevSlide", prevSlideId);
+                model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
+                model.addAttribute("numOfSlides", sequenceSlides.size());
+                model.addAttribute("currentNumOfSlide", slideIndex + 1);
+            }
+        }
+        return "module";
+    }
 }

@@ -17,28 +17,28 @@ import edu.asu.diging.vspace.core.services.ISequenceManager;
 @Controller
 public class ExhibitionSequencesController {
 
-	@Autowired
-	private IModuleManager moduleManager;
+    @Autowired
+    private IModuleManager moduleManager;
 
-	@Autowired
-	private ISequenceManager sequenceManager;
+    @Autowired
+    private ISequenceManager sequenceManager;
 
-	@RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}")
-	public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
-	        @PathVariable("moduleId") String moduleId) {
-		IModule module = moduleManager.getModule(moduleId);
-		model.addAttribute("module", module);
-		List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
-		List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
-		boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
-		if (!sequenceExist) {
-			model.addAttribute("error", "Sequence does not belong to selected module.");
-			return "module";
-		} else if (slides.size() == 0) {
-			model.addAttribute("error", "No slides to display in selected sequence for module.");
-			return "module";
-		}
-		String firstSlideId = slides.get(0).getId();
-		return "redirect:/exhibit/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;
-	}
+    @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}")
+    public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
+            @PathVariable("moduleId") String moduleId) {
+        IModule module = moduleManager.getModule(moduleId);
+        model.addAttribute("module", module);
+        List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
+        List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
+        boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
+        if (!sequenceExist) {
+            model.addAttribute("error", "Sequence does not belong to selected module.");
+            return "module";
+        } else if (slides.size() == 0) {
+            model.addAttribute("error", "No slides to display in selected sequence for module.");
+            return "module";
+        }
+        String firstSlideId = slides.get(0).getId();
+        return "redirect:/exhibit/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;
+    }
 }
