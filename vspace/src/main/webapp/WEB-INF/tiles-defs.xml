@@ -5,7 +5,8 @@
 <tiles-definitions>
 
 	<!-- Base definitions -->
-	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
+	<definition name="base.definition"
+		template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -14,7 +15,8 @@
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
 	</definition>
-	<definition name="base.definition.bt4" template="/WEB-INF/tiles/skeleton_bt4.jsp">
+	<definition name="base.definition.bt4"
+		template="/WEB-INF/tiles/skeleton_bt4.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -23,153 +25,200 @@
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
 	</definition>
-	
+
 	<definition name="home" extends="base.definition">
-		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
+		<put-attribute name="content"
+			value="/WEB-INF/views/home.jsp" />
 	</definition>
-	
+
 	<definition name="login" extends="base.definition">
-		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/login.jsp" />
 	</definition>
-	
-	<!--  Exhibition  -->
-	<definition name="space" extends="base.definition">	
+
+	<!-- Exhibition -->
+	<definition name="space" extends="base.definition">
 		<put-attribute name="currentPage" value="space" />
-		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
+		<put-attribute name="content"
+			value="/WEB-INF/views/exhibition/space.jsp" />
 	</definition>
-	<definition name="module" extends="base.definition">	
+	<definition name="module" extends="base.definition">
 		<put-attribute name="currentPage" value="module" />
-		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
+		<put-attribute name="content"
+			value="/WEB-INF/views/exhibition/module.jsp" />
 	</definition>
-	<definition name="slideShow" extends="base.definition">	
-		<put-attribute name="currentPage" value="slideShow" />
-		<put-attribute name="content" value="/WEB-INF/views/exhibition/slideShow.jsp" />	
+
+	<!-- Register -->
+	<definition name="register" extends="base.definition">
+		<put-attribute name="currentPage" value="space" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/register.jsp" />
 	</definition>
-    
-    <!-- Register -->
-    <definition name="register" extends="base.definition"> 
-        <put-attribute name="currentPage" value="space" />
-        <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
-    </definition>
-    
-    <!-- Password Reset -->
-    <definition name="reset/password/request" extends="base.definition"> 
-        <put-attribute name="currentPage" value="space" />
-        <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />    
-    </definition>
-    <definition name="reset/request/sent" extends="base.definition"> 
-        <put-attribute name="currentPage" value="space" />
-        <put-attribute name="content" value="/WEB-INF/views/resetRequestSent.jsp" />    
-    </definition>
-    <definition name="password/change" extends="base.definition"> 
-        <put-attribute name="currentPage" value="space" />
-        <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
-    </definition>
-    <definition name="accessDenied" extends="base.definition"> 
-        <put-attribute name="content" value="/WEB-INF/views/accessdenied.jsp" />    
-    </definition>
+
+	<!-- Password Reset -->
+	<definition name="reset/password/request"
+		extends="base.definition">
+		<put-attribute name="currentPage" value="space" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/resetPassword.jsp" />
+	</definition>
+	<definition name="reset/request/sent"
+		extends="base.definition">
+		<put-attribute name="currentPage" value="space" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/resetRequestSent.jsp" />
+	</definition>
+	<definition name="password/change" extends="base.definition">
+		<put-attribute name="currentPage" value="space" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/passwordChange.jsp" />
+	</definition>
+	<definition name="accessDenied" extends="base.definition">
+		<put-attribute name="content"
+			value="/WEB-INF/views/accessdenied.jsp" />
+	</definition>
 	<!-- Staff -->
 	<!-- Dashboard -->
-	<definition name="dashboard.base.def" extends="base.definition.bt4">	
+	<definition name="dashboard.base.def"
+		extends="base.definition.bt4">
 		<put-attribute name="currentPage" value="home" />
-		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/dashboard/menu/dashboard_menu.jsp" />
+		<put-attribute name="sidemenu"
+			value="/WEB-INF/views/staff/dashboard/menu/dashboard_menu.jsp" />
 	</definition>
-	
-	<definition name="staff/dashboard" extends="dashboard.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/dashboard/dashboardlist.jsp" />	
+
+	<definition name="staff/dashboard"
+		extends="dashboard.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/dashboard/dashboardlist.jsp" />
 	</definition>
-	
+
 	<!-- Spaces -->
-	<definition name="space.base.def" extends="base.definition.bt4">	
+	<definition name="space.base.def"
+		extends="base.definition.bt4">
 		<put-attribute name="currentPage" value="space" />
-		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/spaces/menu/spaces_menu.jsp" />
+		<put-attribute name="sidemenu"
+			value="/WEB-INF/views/staff/spaces/menu/spaces_menu.jsp" />
 	</definition>
-	
+
 	<definition name="staff/space/list" extends="space.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/spacelist.jsp" />	
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/spaces/spacelist.jsp" />
 	</definition>
-	
+
 	<definition name="staff/space/add" extends="space.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/add.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/spaces/add.jsp" />
 	</definition>
-	
+
 	<definition name="staff/space" extends="space.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/space.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/spaces/space.jsp" />
 	</definition>
-    
-    <definition name="staff/space/edit" extends="space.base.def">
-        <put-attribute name="content" value="/WEB-INF/views/staff/spaces/edit.jsp" />
-    </definition>
-	
+
+	<definition name="staff/space/edit" extends="space.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/spaces/edit.jsp" />
+	</definition>
+
 	<!-- Modules -->
-	<definition name="module.base.def" extends="base.definition.bt4">	
+	<definition name="module.base.def"
+		extends="base.definition.bt4">
 		<put-attribute name="currentPage" value="module" />
-		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/modules/menu/modules_menu.jsp" />
+		<put-attribute name="sidemenu"
+			value="/WEB-INF/views/staff/modules/menu/modules_menu.jsp" />
 	</definition>
-	
-	<definition name="staff/module/list" extends="module.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/modulelist.jsp" />	
+
+	<definition name="staff/module/list"
+		extends="module.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/modulelist.jsp" />
 	</definition>
-	
-	<definition name="staff/module/add" extends="module.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/add.jsp" />	
+
+	<definition name="staff/module/add"
+		extends="module.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/add.jsp" />
 	</definition>
-    <definition name="staff/module" extends="module.base.def">
-        <put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
-    </definition>
-	
+	<definition name="staff/module" extends="module.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition>
+
 	<!-- Exhibition Config -->
-	<definition name="exhibit.base.def" extends="base.definition.bt4">	
+	<definition name="exhibit.base.def"
+		extends="base.definition.bt4">
 		<put-attribute name="currentPage" value="exhibit" />
-		<put-attribute name="sidemenu" value="/WEB-INF/views/staff/exhibit/menu/config_menu.jsp" />
+		<put-attribute name="sidemenu"
+			value="/WEB-INF/views/staff/exhibit/menu/config_menu.jsp" />
 	</definition>
-	
-	<definition name="staff/exhibit/config" extends="exhibit.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/exhibit/config.jsp" />
+
+	<definition name="staff/exhibit/config"
+		extends="exhibit.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/exhibit/config.jsp" />
 	</definition>
-	
+
 	<!-- Slides -->
-	<definition name="slide.base.def" extends="base.definition.bt4">	
+	<definition name="slide.base.def"
+		extends="base.definition.bt4">
 		<put-attribute name="currentPage" value="slide" />
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
-	</definition> 
-	
-	<definition name="staff/module/slide/add" extends="slide.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/add.jsp" />	
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/module.jsp" />
 	</definition>
-	
-	<definition name="staff/module/slide/contents" extends="slide.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
+
+	<definition name="staff/module/slide/add"
+		extends="slide.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/slides/add.jsp" />
 	</definition>
-	
-	 <!-- Sequences -->
-	<definition name="sequence.base.def" extends="base.definition.bt4">	
+
+	<definition name="staff/module/slide/contents"
+		extends="slide.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
+	</definition>
+
+	<!-- Sequences -->
+	<definition name="sequence.base.def"
+		extends="base.definition.bt4">
 		<put-attribute name="currentPage" value="sequence" />
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/module.jsp" />
-	</definition> 
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/module.jsp" />
+	</definition>
 
-	<definition name="staff/module/sequence/add" extends="sequence.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/sequences/add.jsp" />	
+	<definition name="staff/module/sequence/add"
+		extends="sequence.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/sequences/add.jsp" />
 	</definition>
-	
-	<definition name="staff/module/sequence/slides" extends="sequence.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/modules/sequences/sequence.jsp" />
-	</definition>
-    
-    <!-- Users -->
-    <definition name="staff/user/list" extends="exhibit.base.def"> 
-        <put-attribute name="content" value="/WEB-INF/views/staff/users/list.jsp" />    
-    </definition>
 
-    <!-- Images -->
-    <definition name="staff/images/list" extends="exhibit.base.def"> 
-        <put-attribute name="currentPage" value="images" />
-        <put-attribute name="content" value="/WEB-INF/views/staff/images/imagelist.jsp" />    
-    </definition>
-    <definition name="staff/image" extends="exhibit.base.def">
-		<put-attribute name="content" value="/WEB-INF/views/staff/images/image.jsp" />
+	<definition name="staff/module/sequence/slides"
+		extends="sequence.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/modules/sequences/sequence.jsp" />
 	</definition>
-	<definition name="staff/image/edit" extends="exhibit.base.def">
-        <put-attribute name="content" value="/WEB-INF/views/staff/images/edit.jsp" />
-    </definition>
+
+	<!-- Users -->
+	<definition name="staff/user/list"
+		extends="exhibit.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/users/list.jsp" />
+	</definition>
+
+	<!-- Images -->
+	<definition name="staff/images/list"
+		extends="exhibit.base.def">
+		<put-attribute name="currentPage" value="images" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/images/imagelist.jsp" />
+	</definition>
+	<definition name="staff/image" extends="exhibit.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/images/image.jsp" />
+	</definition>
+	<definition name="staff/image/edit"
+		extends="exhibit.base.def">
+		<put-attribute name="content"
+			value="/WEB-INF/views/staff/images/edit.jsp" />
+	</definition>
 </tiles-definitions>
