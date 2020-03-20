@@ -1,0 +1,978 @@
+.mediaViewInfo { -
+	-web-view-name: Home; -
+	-web-view-id: Home; -
+	-web-scale-on-resize: true; -
+	-web-center-horizontally: true; -
+	-web-application: true; -
+	-web-enable-deep-linking: true;
+}
+
+:root { -
+	-web-view-ids: Home;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	border: none;
+}
+
+.Home_Class {
+	position: absolute;
+	transform: translateX(-50%);
+	left: 50%;
+	width: 1280px;
+	height: 720px;
+	background-color: rgba(255, 255, 255, 1);
+	overflow: hidden; -
+	-web-view-name: Home; -
+	-web-view-id: Home; -
+	-web-scale-on-resize: true; -
+	-web-center-horizontally: true; -
+	-web-application: true; -
+	-web-enable-deep-linking: true;
+}
+
+@
+keyframes slide-in { 0% {
+	transform: translateX(-100%);
+}
+
+}
+@
+keyframes {
+	
+}
+
+@
+keyframes slide-in { 0% {
+	transform: translateY(-100%);
+}
+
+}
+.Mask_Group_6_Class {
+	position: absolute;
+	width: 898.692px;
+	height: 560px;
+	left: 191px;
+	top: 80px;
+	overflow: visible;
+}
+
+.Icon_open_menu_Class {
+	position: absolute;
+	width: 24px;
+	height: 22.286px;
+	left: 20px;
+	top: 20px;
+	overflow: visible;
+	cursor: pointer; -
+	-web-animation: slide-in 0.3s ease-out forwards; -
+	-web-action-type: view; -
+	-web-action-target: menu_slide_out;
+}
+
+.Icon_open_menu_z {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 22.286px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.On_the_Shoulders_of_Giants_and_Class {
+	position: absolute;
+	left: 191px;
+	top: 42px;
+	overflow: visible;
+	width: 489px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 24px;
+	color: rgba(0, 0, 0, 1);
+}
+
+.Home__Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 350px;
+	top: 133px;
+	overflow: visible;
+}
+
+.Home__Image__Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 400px;
+	top: 133px;
+	overflow: visible;
+}
+
+.Ellipse_5 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_ionic_md_home_Class {
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 10px;
+	top: 10px;
+	overflow: visible;
+}
+
+.Icon_ionic_md_home_ {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Map_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 350px;
+	top: 607px;
+	overflow: visible;
+}
+
+.Ellipse_6 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_awesome_map_Class {
+	position: absolute;
+	width: 24px;
+	height: 18.667px;
+	left: 10px;
+	top: 13px;
+	overflow: visible;
+}
+
+.Icon_awesome_map_ {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 18.667px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Bottom_nav_Class {
+	position: absolute;
+	width: 590px;
+	height: 85px;
+	left: 550px;
+	top: 740px;
+	overflow: visible;
+}
+
+.Rectangle_10_Class {
+	opacity: 0.2;
+}
+
+.Rectangle_10 {
+	position: absolute;
+	overflow: visible;
+	width: 590px;
+	height: 85px;
+	left: 0px;
+	top: 0px;
+}
+
+.Share_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 309px;
+	top: 24px;
+	overflow: visible;
+}
+
+.Ellipse_7 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_awesome_share_alt_Class {
+	position: absolute;
+	width: 21px;
+	height: 24px;
+	left: 12px;
+	top: 10px;
+	overflow: visible;
+}
+
+.Icon_awesome_share_alt_be {
+	overflow: visible;
+	position: absolute;
+	width: 21px;
+	height: 24px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Full_screen_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 516px;
+	top: 24px;
+	overflow: visible;
+}
+
+.Ellipse_2 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_material_zoom_out_map_Class {
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 10px;
+	top: 10px;
+	overflow: visible;
+}
+
+.Icon_material_zoom_out_map_bi {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Zoom_out_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 378px;
+	top: 24px;
+	overflow: visible;
+}
+
+.Ellipse_3 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_metro_zoom_out {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 10px;
+	top: 10px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Zoom_in_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 447px;
+	top: 24px;
+	overflow: visible;
+}
+
+.Ellipse_4 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_metro_zoom_in {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 10px;
+	top: 10px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Back_Class {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+	left: 28px;
+	top: 24px;
+	overflow: visible;
+}
+
+.Ellipse_1 {
+	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 104px;
+	height: 104px;
+	left: 0px;
+	top: 0px;
+}
+
+.Icon_ionic_md_arrow_round_back_Class {
+	position: absolute;
+	width: 24px;
+	height: 22.639px;
+	left: 10px;
+	top: 11px;
+	overflow: visible;
+}
+
+.Icon_ionic_md_arrow_round_back_bs {
+	overflow: visible;
+	position: absolute;
+	width: 24px;
+	height: 22.639px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+._DigInG_Class {
+	position: absolute;
+	left: 1206px;
+	top: 693px;
+	overflow: visible;
+	width: 47px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Helvetica Neue;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	color: rgba(0, 0, 0, 1);
+}
+
+.Exit_Class {
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	left: 213px;
+	top: 465.656px;
+	overflow: visible;
+}
+
+.Group_2_Class {
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+}
+
+.Ellipse_8 {
+	position: absolute;
+	overflow: visible;
+	width: 41px;
+	height: 41px;
+	left: 0px;
+	top: 0px;
+}
+
+.Ellipse_10 {
+	position: absolute;
+	overflow: visible;
+	width: 35px;
+	height: 35px;
+	left: 3px;
+	top: 3px;
+}
+
+.Ellipse_9 {
+	filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+	position: absolute;
+	overflow: visible;
+	width: 47px;
+	height: 47px;
+	left: 6.14px;
+	top: 6.216px;
+}
+
+.Icon_awesome_walking {
+	overflow: visible;
+	position: absolute;
+	width: 12.5px;
+	height: 20px;
+	left: 14.14px;
+	top: 10.216px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Exit_b_Class {
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	left: 591.381px;
+	top: 536px;
+	overflow: visible;
+}
+
+.Group_2_b_Class {
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+}
+
+.Ellipse_8_b {
+	position: absolute;
+	overflow: visible;
+	width: 41px;
+	height: 41px;
+	left: 0px;
+	top: 0px;
+}
+
+.Ellipse_10_b {
+	position: absolute;
+	overflow: visible;
+	width: 35px;
+	height: 35px;
+	left: 3px;
+	top: 3px;
+}
+
+.Ellipse_9_b {
+	filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+	position: absolute;
+	overflow: visible;
+	width: 47px;
+	height: 47px;
+	left: 6.14px;
+	top: 6.216px;
+}
+
+.Icon_awesome_walking_b {
+	overflow: visible;
+	position: absolute;
+	width: 12.5px;
+	height: 20px;
+	left: 14.14px;
+	top: 10.216px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Rectangle_6_Class {
+	opacity: 0;
+}
+
+.Rectangle_6 {
+	position: absolute;
+	overflow: visible;
+	width: 6px;
+	height: 6px;
+	left: 957.164px;
+	top: 192px;
+}
+
+.Icon_awesome_info_circle_Class {
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	left: 688.396px;
+	top: 48px;
+	overflow: visible; -
+	-web-animation: fadein 0.3s ease-out; -
+	-web-action-type: view; -
+	-web-action-target: Title_info;
+	cursor: pointer;
+}
+
+.Icon_awesome_info_circle_b {
+	overflow: visible;
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	left: 0px;
+	top: 0px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Rectangle_8_Class {
+	opacity: 0;
+}
+
+.Rectangle_8 {
+	position: absolute;
+	overflow: visible;
+	width: 1px;
+	height: 3px;
+	left: 975.746px;
+	top: 146.462px;
+}
+
+.Dialogue_on_Mount__Olympus_Class {
+	opacity: 0;
+	position: absolute;
+	left: 793.251px;
+	top: 160.443px;
+	overflow: visible;
+	width: 11px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 1px;
+	color: rgba(150, 45, 62, 1);
+}
+
+.Component_31___1_Class {
+	position: absolute;
+	width: 34px;
+	height: 34px;
+	left: 1229px;
+	top: 16px;
+	overflow: visible;
+}
+
+.Mask_Group_9_Class {
+	position: absolute;
+	width: 34px;
+	height: 34px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	cursor: pointer; -
+	-web-animation: slide-in 0.3s ease-out forwards; -
+	-web-action-type: view; -
+	-web-action-target: Language_options;
+}
+
+.Languages_Class {
+	position: absolute;
+	width: 63px;
+	height: 45px;
+	left: 1200px;
+	top: 16px;
+	overflow: visible;
+}
+
+.Rectangle_11_Class {
+	opacity: 0;
+}
+
+.Rectangle_11 {
+	filter: drop-shadow(3px 3px 10px rgba(0, 0, 0, 0.251));
+	position: absolute;
+	overflow: visible;
+	width: 31px;
+	height: 31px;
+	left: 62px;
+	top: 0px;
+}
+
+.Content_Class {
+	opacity: 0;
+	position: absolute;
+	width: 10px;
+	height: 15px;
+	left: 0px;
+	top: 30px;
+	overflow: visible;
+}
+
+.ENG_Class {
+	transform: translate(0px, 0px) matrix(1, 0, 0, 1, 0, 1) rotate(180deg);
+	transform-origin: center;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	width: 3px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 1px;
+	color: rgba(0, 0, 0, 1);
+}
+
+.SWA_Class {
+	transform: translate(0px, 0px) matrix(1, 0, 0, 1, 0, 6) rotate(180deg);
+	transform-origin: center;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	width: 3px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 1px;
+	color: rgba(0, 0, 0, 1);
+}
+
+.KOR_Class {
+	transform: translate(0px, 0px) matrix(1, 0, 0, 1, 0, 12) rotate(180deg);
+	transform-origin: center;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	width: 3px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 1px;
+	color: rgba(0, 0, 0, 1);
+}
+
+.Mask_Group_9_cl_Class {
+	position: absolute;
+	width: 4px;
+	height: 4px;
+	left: 6px;
+	top: 0px;
+	overflow: visible;
+}
+
+.Mask_Group_12_Class {
+	position: absolute;
+	width: 4px;
+	height: 3px;
+	left: 6px;
+	top: 6px;
+	overflow: visible;
+}
+
+.Mask_Group_13_Class {
+	position: absolute;
+	width: 4px;
+	height: 4px;
+	left: 6px;
+	top: 11px;
+	overflow: visible;
+}
+
+.Info_Class {
+	position: absolute;
+	width: 29px;
+	height: 29px;
+	left: 285.622px;
+	top: 275.275px;
+	overflow: visible; -
+	-web-animation: fadein 0.3s ease-out; -
+	-web-action-type: view; -
+	-web-action-target: Modal;
+	cursor: pointer;
+}
+
+.Ellipse_8_cv {
+	position: absolute;
+	overflow: visible;
+	width: 29px;
+	height: 29px;
+	left: 0px;
+	top: 0px;
+}
+
+.Ellipse_10_cw {
+	position: absolute;
+	overflow: visible;
+	width: 25px;
+	height: 25px;
+	left: 2px;
+	top: 2px;
+}
+
+.Ellipse_9_cx {
+	filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+	position: absolute;
+	overflow: visible;
+	width: 39px;
+	height: 39px;
+	left: 4px;
+	top: 4px;
+}
+
+.Icon_awesome_info {
+	overflow: visible;
+	position: absolute;
+	width: 5.403px;
+	height: 14.408px;
+	left: 11.793px;
+	top: 7.48px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Info_cz_Class {
+	position: absolute;
+	width: 29px;
+	height: 29px;
+	left: 957.622px;
+	top: 275.275px;
+	overflow: visible; -
+	-web-animation: fadein 0.3s ease-out; -
+	-web-action-type: view; -
+	-web-action-target: Modal;
+	cursor: pointer;
+}
+
+.Ellipse_8_c {
+	position: absolute;
+	overflow: visible;
+	width: 29px;
+	height: 29px;
+	left: 0px;
+	top: 0px;
+}
+
+.Ellipse_10_c {
+	position: absolute;
+	overflow: visible;
+	width: 25px;
+	height: 25px;
+	left: 2px;
+	top: 2px;
+}
+
+.Ellipse_9_c {
+	filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+	position: absolute;
+	overflow: visible;
+	width: 39px;
+	height: 39px;
+	left: 4px;
+	top: 4px;
+}
+
+.Icon_awesome_info_c {
+	overflow: visible;
+	position: absolute;
+	width: 5.403px;
+	height: 14.408px;
+	left: 11.793px;
+	top: 7.48px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Exit_c_Class {
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	left: 678.86px;
+	top: 457.784px;
+	overflow: visible; -
+	-web-animation: fadein 0.3s ease-out; -
+	-web-action-type: view; -
+	-web-action-target: New_image;
+	cursor: pointer;
+}
+
+.Group_2_c_Class {
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+}
+
+.Ellipse_8_da {
+	position: absolute;
+	overflow: visible;
+	width: 41px;
+	height: 41px;
+	left: 0px;
+	top: 0px;
+}
+
+.Ellipse_10_da {
+	position: absolute;
+	overflow: visible;
+	width: 35px;
+	height: 35px;
+	left: 3px;
+	top: 3px;
+}
+
+.Ellipse_9_da {
+	filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+	position: absolute;
+	overflow: visible;
+	width: 47px;
+	height: 47px;
+	left: 6.14px;
+	top: 6.216px;
+}
+
+.Icon_awesome_walking_c {
+	overflow: visible;
+	position: absolute;
+	width: 12.5px;
+	height: 20px;
+	left: 14.14px;
+	top: 10.216px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Ext_Link_Class {
+	position: absolute;
+	width: 39px;
+	height: 39px;
+	left: 1037px;
+	top: 94px;
+	overflow: visible; -
+	-web-animation: fadein 0.3s ease-out; -
+	-web-action-type: view; -
+	-web-action-target: Ext_link_modal_1;
+	cursor: pointer;
+}
+
+.Group_3_Class {
+	position: absolute;
+	width: 39px;
+	height: 39px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+}
+
+.Ellipse_8_dc {
+	position: absolute;
+	overflow: visible;
+	width: 39px;
+	height: 39px;
+	left: 0px;
+	top: 0px;
+}
+
+.Ellipse_10_dd {
+	position: absolute;
+	overflow: visible;
+	width: 33px;
+	height: 33px;
+	left: 3px;
+	top: 3px;
+}
+
+.Ellipse_9_de {
+	filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+	position: absolute;
+	overflow: visible;
+	width: 45px;
+	height: 45px;
+	left: 6px;
+	top: 6px;
+}
+
+.Icon_ionic_md_apps {
+	overflow: visible;
+	position: absolute;
+	width: 17px;
+	height: 17px;
+	left: 11px;
+	top: 11px;
+	transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+#wrapper {
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+#slide_sidebar {
+	min-width: 250px;
+	max-width: 250px;
+	transition: all 0.3s;
+}
+
+#slide_sidebar.active {
+	margin-left: -250px;
+}
+
+#slide_sidebar .slide_sidebar-header {
+	padding: 10px;
+}
+
+.slide_sidebar-header h3 a:hover {
+	color: #7386D5;
+	background: #fff;
+}
+
+#slide_sidebar ul li {
+	padding-left: 35px;
+}
+
+#slide_sidebar ul li a:hover {
+	color: #7386D5;
+	background: #fff;
+}
+
+#slide_content {
+	width: 100%;
+	padding: 20px;
+	min-height: 100vh;
+	transition: all 0.3s;
+}
+
+@media ( max-width : 768px) {
+	#slide_sidebar {
+		margin-left: -250px;
+	}
+	#slide_sidebar.active {
+		margin-left: 0;
+	}
+	#slide_sidebarCollapse span {
+		display: none;
+	}
+}
