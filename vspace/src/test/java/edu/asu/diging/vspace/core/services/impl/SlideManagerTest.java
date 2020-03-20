@@ -82,7 +82,7 @@ public class SlideManagerTest {
     }
     
     @Test
-    public void test_deleteSlideById() throws SlideDoesNotExistException {
+    public void test_deleteSlideById_slideIdPresent() throws SlideDoesNotExistException {
         
         
         sequenceObj.setId(sequenceId);
