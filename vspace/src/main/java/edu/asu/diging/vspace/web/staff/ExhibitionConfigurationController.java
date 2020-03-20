@@ -62,7 +62,7 @@ public class ExhibitionConfigurationController {
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, @RequestParam("exhibitMode") String exhibitMode, @RequestParam("modeMessage") String exhibitModeMessage, RedirectAttributes attributes)
+            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, @RequestParam("exhibitMode") String exhibitMode, @RequestParam(value="modeMessage", required = false, defaultValue = "") String exhibitModeMessage, RedirectAttributes attributes)
             throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);

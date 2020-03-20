@@ -128,7 +128,7 @@ function drawLinks() {
 		</div>
 	</c:if>
 	<c:if test="${exhibitionConfig.mode != 'Active'}">
-		<div class="container col-sm">
+		<div class="container col-sm" >
 			<p>${exhibitionConfig.modeMessage}</p>
 		</div>
 	</c:if>

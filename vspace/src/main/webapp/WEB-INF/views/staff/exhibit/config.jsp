@@ -4,9 +4,6 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<script>
-
-</script>
 <h1>Exhibition Configuration</h1>
 
 <div style="padding-bottom: 20px;">
@@ -39,7 +36,7 @@
 		<div id="offlineMessage" style="padding-top: 10px;">
 			<label for="title">Offline Message:</label> <input type="text"
 				class="form-control" name="modeMessage"
-				value="${exhibition.modeMessage}" />
+				value="${exhibition.modeMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
 		</div>
 		<p style="padding-top: 10px;">
 			<input class="btn btn-primary" type="submit" value="submit" />
@@ -54,6 +51,7 @@ $(document).ready(function() {
 		offlineMessage.show();
 	else {
 		offlineMessage.hide();
+		offlineMessage.find('input[name=message]').val("");
 	}
 });
 
