@@ -18,9 +18,13 @@ public class ListImagesController {
     @Autowired
     private IImageService imageService;
 
-    @RequestMapping("/staff/images/list/{page}")
-    public String listSpaces(@PathVariable String page, Model model) {
+    @RequestMapping({"/staff/images/list/{page}","/staff/images/list"})
+    public String listSpaces(@PathVariable(required = false) String page, Model model) {
+        System.out.println("--"+page);
         int pageNo;
+        if(page == null || page.isEmpty()) {
+            page = "1";
+        }
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page));
         } catch (NumberFormatException numberFormatException) {
