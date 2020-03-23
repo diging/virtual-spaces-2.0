@@ -32,16 +32,16 @@ public class SlideManagerTest {
 	private SlideManager slideManagerToTest = new SlideManager();
 
 	// setting common used variables and Objects
-	String slideId, moduleId, sequenceId, slideIdNotInSequence;
-	List<ISlide> slidesList = Arrays.asList(new Slide());
-	Sequence sequenceObj;
+	private String slideId, moduleId, sequenceId, slideIdNotInSequence;
+	private List<ISlide> slidesList = Arrays.asList(new Slide());
+	private Sequence sequenceObj;
 
 
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 
-		sequenceObj = new Sequence() ;
+		sequenceObj = new Sequence();
 		slideId = "SLI000000002";
 		slideIdNotInSequence = "SLI000000219";
 		moduleId = "MOD000000002";
@@ -50,7 +50,7 @@ public class SlideManagerTest {
 	}    
 
 	@Test
-	public void test_slideSequence_slideExistsInSequence() {
+	public void test_getSlideSequence_slideExistsInSequence() {
 
 		// Positive scenario - Slide present in Sequence
 
@@ -70,11 +70,18 @@ public class SlideManagerTest {
 	}
 
 	@Test
-	public void test_slideSequence_slideNotExistsInSequence() {
+	public void test_getSlideSequence_slideNotExistsInSequence() {
 
+	    
+	    sequenceObj.setId(sequenceId);
+        sequenceObj.setSlides(slidesList);
+        List<Sequence> sequencesList = new ArrayList<>();
+        sequencesList.add(sequenceObj);
+        Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
+        
 		List<Sequence> slideSequencePresent = slideManagerToTest.getSlideSequences(slideId, moduleId);
 		List<Sequence> actualSequenceSlideListNotPresent = slideManagerToTest.getSlideSequences(slideIdNotInSequence, moduleId);
-		Assert.assertNotSame(actualSequenceSlideListNotPresent, slideSequencePresent);
+		Assert.assertNotEquals(slideSequencePresent, actualSequenceSlideListNotPresent);
 	}
 
 	@Test
