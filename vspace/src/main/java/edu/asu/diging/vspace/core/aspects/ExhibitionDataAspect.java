@@ -1,13 +1,19 @@
 package edu.asu.diging.vspace.core.aspects;
 
+import java.lang.reflect.Method;
+
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.lang.reflect.Parameter;
 
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -42,4 +48,20 @@ public class ExhibitionDataAspect {
             }
         }
     }
+    
+    @Around("execution(public * edu.asu.diging.vspace.web..Exhibition*Controller.*(..))")
+    public void showExhibition(ProceedingJoinPoint jp) throws Throwable {
+        Object[] args = jp.getArgs();
+        for(Object ob: args) {
+           // System.out.println(":: " + ob);
+        }
+        MethodSignature methodSignature = (MethodSignature) jp.getSignature();
+        Method method = methodSignature.getMethod();
+        Parameter[] paras = method.getParameters();
+        for(Parameter ob: paras) {
+            //System.out.println("-- " + ob);
+        }
+        jp.proceed(args);
+    }
+    
 }

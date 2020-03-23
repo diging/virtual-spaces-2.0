@@ -30,6 +30,7 @@ public class ExhibitionSpaceController {
 	
 	@RequestMapping(value="/exhibit/space/{id}")
 	public String space(@PathVariable("id") String id, Model model) {
+	    //System.out.println("Inside Space exhi");
 		ISpace space = spaceManager.getSpace(id);
 		IExhibition exhibition = exhibitManager.getStartExhibition();
 		model.addAttribute("exhibitionConfig",exhibition);
