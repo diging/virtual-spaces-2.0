@@ -122,7 +122,8 @@ $( document ).ready(function() {
 												expression="@configFile.getProperty('image_category_' + catTag)" /></option>
 									</c:forEach>
 								</select>
-							</form></td>
+							</form>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

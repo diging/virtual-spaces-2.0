@@ -96,7 +96,7 @@ public class ImageService implements IImageService {
     public List<IVSImage> getImages(int pageNo) {
         pageNo = validatePageNumber(pageNo);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize,
-                Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+            Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
         List<IVSImage> results = new ArrayList<>();
         images.getContent().forEach(i -> results.add(i));
@@ -112,16 +112,16 @@ public class ImageService implements IImageService {
      */
     @Override
     public List<IVSImage> getImages(int pageNo, String sortedBy, String order) {
-        System.out.println("inside getImages== " + sortedBy + " -- " + order);
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
         pageNo = validatePageNumber(pageNo);
-        if(sortedBy!=null && !sortedBy.equals("") && SortByField.getAllValues().contains(sortedBy)) {
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
             if(order.equalsIgnoreCase(Sort.Direction.DESC.toString())) {
                 sortingParameters = Sort.by(sortedBy).descending();
             } else {
                 sortingParameters = Sort.by(sortedBy);
             }
-        } else if(order!=null && !order.equals("") && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
             sortingParameters = sortingParameters.ascending();
         }
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
@@ -138,7 +138,7 @@ public class ImageService implements IImageService {
      */
     @Override
     public long getTotalPages() {
-        return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize : (imageRepo.count() / pageSize) + 1;
+        return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
     }
 
     /**
@@ -164,7 +164,7 @@ public class ImageService implements IImageService {
         if(pageNo<1) {
             return 1;
         } else if(pageNo>totalPages) {
-            return (totalPages==0) ? 1 : (int) totalPages;
+            return (totalPages==0) ? 1:(int) totalPages;
         }
         return pageNo;
     }
