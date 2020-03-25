@@ -14,6 +14,8 @@ import javax.persistence.OrderColumn;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -31,6 +33,8 @@ public class Sequence extends VSpaceElement implements ISequence {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
+    //-------- @JsonIgnore used as this Slide will be returned in a controller
+    @JsonIgnore
     @ManyToMany(targetEntity = Slide.class)
     @JoinTable(name="Sequence_Slides",
     joinColumns = @JoinColumn(name = "Sequence_Id", referencedColumnName="id"),
