@@ -19,7 +19,10 @@ public class ExhibitionModuleController {
     public String module(@PathVariable("id") String id, Model model) {
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
-        if (module.getStartSequence() == null) {
+        if (module == null) {
+            model.addAttribute("error", "Sorry, this module does not exist.");
+            return "module";
+        } else if (module.getStartSequence() == null) {
             model.addAttribute("error", "Sorry, this module has not been configured yet.");
             return "module";
         }

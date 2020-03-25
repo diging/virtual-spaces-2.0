@@ -97,7 +97,7 @@
 									<div class="Slideshow_previous Slideshow_previous_Class">
 										<svg class="Ellipse_11">
 									<ellipse fill="rgba(255,255,255,1)" class="Ellipse_11_Class"
-												rx="36" ry="36" cx="36" cy="36">
+												rx="20" ry="20" cx="20" cy="20">
 									</ellipse>
 								</svg>
 										<svg class="Icon_ionic_ios_arrow_back"
@@ -116,7 +116,7 @@
 									<div class="slideshow_next slideshow_next_Class">
 										<svg class="Ellipse_12">
 									<ellipse fill="rgba(255,255,255,1)" class="Ellipse_12_Class"
-												rx="36" ry="36" cx="36" cy="36">
+												rx="20" ry="20" cx="20" cy="20">
 									</ellipse>
 								</svg>
 										<svg class="Icon_ionic_ios_arrow_forward"
@@ -129,27 +129,6 @@
 									</div>
 								</a>
 							</c:if>
-						</div>
-						<a
-							href="/vspace/exhibit/module/${moduleId}/sequence/${sequenceId}/slide/${firstSlide}">
-							<div class="SLideshow_option SLideshow_option_Class">
-								<svg class="Ellipse_2">
-							<ellipse fill="rgba(255,255,255,1)" class="Ellipse_2_Class"
-										rx="21.923076629638672" ry="22" cx="21.923076629638672"
-										cy="22">
-							</ellipse>
-						</svg>
-								<svg class="Icon_ionic_md_play_circle"
-									viewBox="3.375 3.375 24 24">
-							<path fill="rgba(150,45,62,1)"
-										class="Icon_ionic_md_play_circle_Class"
-										d="M 15.37499809265137 3.374999761581421 C 8.751922607421875 3.374999761581421 3.374999761581421 8.751922607421875 3.374999761581421 15.37499809265137 C 3.374999761581421 21.99807357788086 8.751922607421875 27.37499809265137 15.37499809265137 27.37499809265137 C 21.99807357788086 27.37499809265137 27.37499809265137 21.99807357788086 27.37499809265137 15.37499809265137 C 27.37499809265137 8.751922607421875 21.99807357788086 3.374999761581421 15.37499809265137 3.374999761581421 Z M 12.97499847412109 20.77499580383301 L 12.97499847412109 9.974998474121094 L 20.17499732971191 15.37499809265137 L 12.97499847412109 20.77499580383301 Z">
-							</path>
-						</svg>
-							</div>
-						</a>
-						<div class="Text_Version_Class">
-							<span>Text Version</span>
 						</div>
 					</div>
 

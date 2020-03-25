@@ -28,13 +28,21 @@ public class ExhibitionSequencesController {
             @PathVariable("moduleId") String moduleId) {
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
+        if (module == null) {
+            model.addAttribute("error", "Sorry, this module does not exist.");
+            return "module";
+        } else if (module.getStartSequence() == null) {
+            model.addAttribute("error", "Sorry, this module has not been configured yet.");
+            return "module";
+        }
         List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
-        List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
         if (!sequenceExist) {
             model.addAttribute("error", "Sequence does not belong to selected module.");
             return "module";
-        } else if (slides.size() == 0) {
+        }
+        List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
+        if (slides.size() == 0) {
             model.addAttribute("error", "No slides to display in selected sequence for module.");
             return "module";
         }

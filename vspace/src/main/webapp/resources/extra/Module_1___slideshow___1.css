@@ -8,36 +8,36 @@
 }
 .Slideshow_previous_Class {
 	position: absolute;
-	width: 72px;
-	height: 72px;
-	left: 0px;
-	top: 0px;
+    width: 50px;
+    height: 50px;
+    left: 70px;
+    top: -160px;
 	overflow: visible;
 }
 .Ellipse_11 {
 	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
 	position: absolute;
 	overflow: visible;
-	width: 132px;
-	height: 132px;
-	left: 0px;
-	top: 0px;
+	width: 50px;
+    height: 50px;
+    left: 0px;
+    top: 0px;
 }
 .Icon_ionic_ios_arrow_back {
 	overflow: visible;
-	position: absolute;
-	width: 20.021px;
-	height: 35.021px;
-	left: 24.456px;
-	top: 18.968px;
-	transform: matrix(1,0,0,1,0,0);
+    position: absolute;
+    width: 11.021px;
+    height: 19.021px;
+    left: 14.456px;
+    top: 10.968px;
+    transform: matrix(1,0,0,1,0,0);
 }
 .slideshow_next_Class {
 	position: absolute;
-	width: 72px;
-	height: 72px;
-	left: 870px;
-	top: 0px;
+	width: 50px;
+    height: 50px;
+    left: 870px;
+    top: -160px;
 	overflow: visible;
 	--web-animation: fadein 0.3s ease-out;
 	--web-action-type: page;
@@ -48,18 +48,18 @@
 	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
 	position: absolute;
 	overflow: visible;
-	width: 132px;
-	height: 132px;
+	width: 50px;
+    height: 50px;
 	left: 0px;
 	top: 0px;
 }
 .Icon_ionic_ios_arrow_forward {
 	overflow: visible;
 	position: absolute;
-	width: 20.021px;
-	height: 35.017px;
-	left: 28.156px;
-	top: 18.844px;
+	 width: 11.021px;
+    height: 19.021px;
+	left: 17.456px;
+	top: 10.968px;
 	transform: matrix(1,0,0,1,0,0);
 }
 .Back_to_first_Class {

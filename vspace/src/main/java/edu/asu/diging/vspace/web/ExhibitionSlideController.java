@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
@@ -32,12 +33,31 @@ public class ExhibitionSlideController {
             @PathVariable("sequenceId") String sequenceId) {
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
+        if (module == null) {
+            model.addAttribute("error", "Sorry, this module does not exist.");
+            return "module";
+        }
         if (module.getStartSequence() == null) {
             model.addAttribute("error", "Sorry, this module has not been configured yet.");
         } else {
             String startSequenceId = module.getStartSequence().getId();
             model.addAttribute("startSequenceId", startSequenceId);
+
+            List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
+            boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
+            if (!sequenceExist) {
+                model.addAttribute("error", "Sequence does not belong to selected module.");
+                return "module";
+            }
+
             List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
+
+            boolean slideExist = sequenceSlides.stream().anyMatch(slide -> slide.getId().equals(slideId));
+            if (!slideExist) {
+                model.addAttribute("error", "Slide does not belong to selected module.");
+                return "module";
+            }
+
             if (sequenceSlides.size() == 0) {
                 model.addAttribute("error", "No slides to display in selected sequence for module.");
             } else {
