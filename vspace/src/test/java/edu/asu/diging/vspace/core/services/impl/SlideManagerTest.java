@@ -32,20 +32,23 @@ public class SlideManagerTest {
 	private SlideManager slideManagerToTest = new SlideManager();
 
 	// setting common used variables and Objects
-	private String slideId, moduleId, sequenceId, slideIdNotInSequence;
+	private String slideId, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
 	private List<ISlide> slidesList = Arrays.asList(new Slide());
 	private Sequence sequenceObj;
-
+	private Sequence sequenceObjOther;
 
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 
 		sequenceObj = new Sequence();
+		sequenceObjOther = new Sequence();
+		
 		slideId = "SLI000000002";
 		slideIdNotInSequence = "SLI000000219";
 		moduleId = "MOD000000002";
 		sequenceId = "SEQ000000004";
+		sequenceIdOther = "SEQ000000005";
 		slidesList.get(0).setId(slideId);
 	}    
 
@@ -110,10 +113,37 @@ public class SlideManagerTest {
 
 		sequenceObj.setId(sequenceId);
 		sequenceObj.setSlides(slidesList);
+		
+		sequenceObjOther.setId(sequenceId);
+		
 		List<Sequence> sequencesList = new ArrayList<>();
 		sequencesList.add(sequenceObj);
 		Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
 
 		slideManagerToTest.deleteSlideById(slideId, moduleId);
+	}
+	
+	@Test
+	public void test_deleteSlideById_slideIdPresentManySequences() throws SlideDoesNotExistException {
+	    
+        sequenceObj.setId(sequenceId);
+        sequenceObj.setSlides(slidesList);
+        
+        sequenceObjOther.setId(sequenceIdOther);
+        sequenceObjOther.setSlides(slidesList);
+        
+        List<Sequence> sequencesList = new ArrayList<>();
+        sequencesList.add(sequenceObj);
+        sequencesList.add(sequenceObjOther);
+        Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
+
+        Slide slide = new Slide();
+        slide.setId(slideId);
+        Optional<Slide> slideObj = Optional.of(slide);
+        Mockito.when(slideRepo.findById(slide.getId())).thenReturn(slideObj);
+        slideManagerToTest.deleteSlideById(slideId, moduleId);  
+        Mockito.verify(slideRepo).delete((Slide) slide);
+        
+        slideManagerToTest.deleteSlideById(slideId, moduleId);
 	}
 }
