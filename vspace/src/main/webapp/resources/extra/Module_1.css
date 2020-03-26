@@ -13,20 +13,14 @@
 	top: 117px;
 	overflow: visible;
 }
-._DigInG_Class {
+
+.Module_header_Class {
 	position: absolute;
-	left: 1206px;
-	top: 693px;
-	overflow: visible;
-	width: 47px;
-	white-space: nowrap;
-	text-align: left;
-	font-family: Helvetica Neue;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 12px;
-	color: rgba(0,0,0,1);
+    left: 604px;
+    top: 78px;
+    overflow: visible;
 }
+
 .SLideshow_option_Class {
 	position: absolute;
 	width: 43.846px;
@@ -56,20 +50,6 @@
 	left: 10px;
 	top: 10px;
 	transform: matrix(1,0,0,1,0,0);
-}
-.Text_Version_Class {
-	position: absolute;
-	left: 1090px;
-	top: 129px;
-	overflow: visible;
-	width: 97px;
-	white-space: nowrap;
-	text-align: left;
-	font-family: Montserrat;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 16px;
-	color: rgba(0,0,0,1);
 }
 .Ellipse_5 {
 	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));

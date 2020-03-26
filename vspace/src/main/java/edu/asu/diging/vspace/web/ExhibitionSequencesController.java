@@ -13,6 +13,10 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
+import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.web.exception.SlidesInSequenceNotFoundException;
 
 @Controller
 public class ExhibitionSequencesController {
@@ -25,26 +29,24 @@ public class ExhibitionSequencesController {
 
     @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
-            @PathVariable("moduleId") String moduleId) {
+            @PathVariable("moduleId") String moduleId) throws ModuleNotFoundException, SequenceNotFoundException,
+            SlidesInSequenceNotFoundException, ModuleNotConfiguredException {
         IModule module = moduleManager.getModule(moduleId);
-        model.addAttribute("module", module);
         if (module == null) {
-            model.addAttribute("error", "Sorry, this module does not exist.");
-            return "module";
-        } else if (module.getStartSequence() == null) {
-            model.addAttribute("error", "Sorry, this module has not been configured yet.");
-            return "module";
+            throw new ModuleNotFoundException(moduleId);
+        }
+        model.addAttribute("module", module);
+        if (module.getStartSequence() == null) {
+            throw new ModuleNotConfiguredException(moduleId);
         }
         List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
         boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
         if (!sequenceExist) {
-            model.addAttribute("error", "Sequence does not belong to selected module.");
-            return "module";
+            throw new SequenceNotFoundException(sequenceId);
         }
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         if (slides.size() == 0) {
-            model.addAttribute("error", "No slides to display in selected sequence for module.");
-            return "module";
+            throw new SlidesInSequenceNotFoundException();
         }
         String firstSlideId = slides.get(0).getId();
         return "redirect:/exhibit/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;

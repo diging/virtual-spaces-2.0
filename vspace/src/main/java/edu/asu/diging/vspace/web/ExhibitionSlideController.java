@@ -15,6 +15,11 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
+import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
+import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.web.exception.SlideNotFoundException;
+import edu.asu.diging.vspace.web.exception.SlidesInSequenceNotFoundException;
 
 @Controller
 public class ExhibitionSlideController {
@@ -30,57 +35,60 @@ public class ExhibitionSlideController {
 
     @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-            @PathVariable("sequenceId") String sequenceId) {
+            @PathVariable("sequenceId") String sequenceId) throws ModuleNotFoundException, ModuleNotConfiguredException,
+            SequenceNotFoundException, SlidesInSequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
         if (module == null) {
-            model.addAttribute("error", "Sorry, this module does not exist.");
-            return "module";
+            throw new ModuleNotFoundException(moduleId);
         }
         if (module.getStartSequence() == null) {
-            model.addAttribute("error", "Sorry, this module has not been configured yet.");
-        } else {
-            String startSequenceId = module.getStartSequence().getId();
-            model.addAttribute("startSequenceId", startSequenceId);
-
-            List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
-            boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
-            if (!sequenceExist) {
-                model.addAttribute("error", "Sequence does not belong to selected module.");
-                return "module";
-            }
-
-            List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
-
-            boolean slideExist = sequenceSlides.stream().anyMatch(slide -> slide.getId().equals(slideId));
-            if (!slideExist) {
-                model.addAttribute("error", "Slide does not belong to selected module.");
-                return "module";
-            }
-
-            if (sequenceSlides.size() == 0) {
-                model.addAttribute("error", "No slides to display in selected sequence for module.");
-            } else {
-                model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
-                String nextSlideId = "";
-                String prevSlideId = "";
-                int slideIndex = 0;
-                slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
-                if (sequenceSlides.size() > slideIndex + 1) {
-                    nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
-                }
-                if (slideIndex > 0) {
-                    prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
-                }
-                model.addAttribute("slides", sequenceSlides);
-                model.addAttribute("currentSequenceId", sequenceId);
-                model.addAttribute("nextSlide", nextSlideId);
-                model.addAttribute("prevSlide", prevSlideId);
-                model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
-                model.addAttribute("numOfSlides", sequenceSlides.size());
-                model.addAttribute("currentNumOfSlide", slideIndex + 1);
-            }
+            throw new ModuleNotConfiguredException(moduleId);
         }
+        String startSequenceId = module.getStartSequence().getId();
+        model.addAttribute("startSequenceId", startSequenceId);
+
+        List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
+        boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
+        if (!sequenceExist) {
+            throw new SequenceNotFoundException(sequenceId);
+        }
+
+        List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
+
+        boolean slideExist = sequenceSlides.stream().anyMatch(slide -> slide.getId().equals(slideId));
+        if (!slideExist) {
+            throw new SlideNotFoundException(slideId);
+        }
+
+        if (sequenceSlides.size() == 0) {
+            throw new SlidesInSequenceNotFoundException();
+        }
+        model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
+        String nextSlideId = "";
+        String prevSlideId = "";
+        int slideIndex = 0;
+        slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
+        int slideSize=sequenceSlides.size();
+        if (slideIndex == slideSize - 1) {
+            nextSlideId = sequenceSlides.get(0).getId();
+        }
+        if (slideIndex == 0) {
+            prevSlideId = sequenceSlides.get(sequenceSlides.size() - 1).getId();
+        }
+        if (slideIndex < slideSize - 1) {
+            nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
+        }
+        if (slideIndex > 0) {
+            prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
+        }
+        model.addAttribute("slides", sequenceSlides);
+        model.addAttribute("currentSequenceId", sequenceId);
+        model.addAttribute("nextSlide", nextSlideId);
+        model.addAttribute("prevSlide", prevSlideId);
+        model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
+        model.addAttribute("numOfSlides", sequenceSlides.size());
+        model.addAttribute("currentNumOfSlide", slideIndex + 1);
         return "module";
     }
 }
