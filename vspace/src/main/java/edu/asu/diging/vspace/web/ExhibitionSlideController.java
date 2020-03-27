@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +37,7 @@ public class ExhibitionSlideController {
 
     @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-            @PathVariable("sequenceId") String sequenceId) throws ModuleNotFoundException, ModuleNotConfiguredException,
+            @PathVariable("sequenceId") String sequenceId, HttpServletRequest httpServletRequest) throws ModuleNotFoundException, ModuleNotConfiguredException,
             SequenceNotFoundException, SlidesInSequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
@@ -89,6 +91,8 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
+        String referer = httpServletRequest.getHeader("Referer");
+        model.addAttribute("referer", referer);
         return "module";
     }
 }

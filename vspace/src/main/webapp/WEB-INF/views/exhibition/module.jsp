@@ -76,7 +76,10 @@
 							</div>
 						</nav>
 						<div class="Module_header_Class">
-							<h3>${module.name}</h3>
+							<h3>${module.name}</h3> 
+						</div>
+						<div class="Module_header_Class">
+							<a href="<c:url value="${referer}"/>">back to space</a>
 						</div>
 						<div class="Group_8_Class">
 							<c:forEach items="${currentSlideCon.contents}" var="contents">
