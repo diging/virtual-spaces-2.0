@@ -22,7 +22,7 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 @Service
 public class SlideManager implements ISlideManager {
 
-    @Autowired  
+    @Autowired
     private ModuleManager moduleManager;
 
     @Autowired
@@ -58,24 +58,24 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException {
-    	
+
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         Slide slideObj = (Slide) getSlide(slideId);
-        for(Sequence sequence : sequences) {
-			for(int i = 0; i<sequence.getSlides().size(); i++) {
-				String slideIdToCompare = sequence.getSlides().get(i).getId();
-				if(slideIdToCompare.equals(slideId)) {
-					sequence.getSlides().remove(slideObj);
-					sequenceRepo.save(sequence);
-				}
-			}
+        for (Sequence sequence : sequences) {
+            for (int i = 0; i < sequence.getSlides().size(); i++) {
+                String slideIdToCompare = sequence.getSlides().get(i).getId();
+                if (slideIdToCompare.equals(slideId)) {
+                    sequence.getSlides().remove(slideObj);
+                    sequenceRepo.save(sequence);
+                }
+            }
         }
 
         try {
 
             slideRepo.delete((Slide) getSlide(slideId));
 
-        } catch(IllegalArgumentException exception) {
+        } catch (IllegalArgumentException exception) {
             throw new SlideDoesNotExistException(exception);
         }
     }
@@ -85,13 +85,13 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         List<Sequence> sequenceSlides = new ArrayList<>();
-        for(Sequence sequence : sequences) {
+        for (Sequence sequence : sequences) {
             Iterator<ISlide> slideIterator = sequence.getSlides().iterator();
-            while(slideIterator.hasNext()) {
-                if(slideIterator.next().getId().equals(slideId)){
+            while (slideIterator.hasNext()) {
+                if (slideIterator.next().getId().equals(slideId)) {
                     sequenceSlides.add(sequence);
                 }
-            } 
+            }
         }
         return sequenceSlides;
     }

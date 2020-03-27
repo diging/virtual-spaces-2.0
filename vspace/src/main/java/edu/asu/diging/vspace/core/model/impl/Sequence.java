@@ -33,8 +33,6 @@ public class Sequence extends VSpaceElement implements ISequence {
     @OneToOne(targetEntity = Module.class)
     private IModule module;
 
-    //-------- @JsonIgnore used as this Slide will be returned in a controller
-    @JsonIgnore
     @ManyToMany(targetEntity = Slide.class)
     @JoinTable(name="Sequence_Slides",
     joinColumns = @JoinColumn(name = "Sequence_Id", referencedColumnName="id"),
