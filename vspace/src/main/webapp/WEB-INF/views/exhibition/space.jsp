@@ -1,20 +1,23 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+    uri="http://www.springframework.org/security/tags"%>
 
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {
-    if('${exhibitionConfig.mode}' == 'Active') {
-    	drawLinks();
+    if ("${showModal} == true") {
+    	$("#exhibitionDownModal").show();
     }
+    drawLinks();
     
     $( window ).resize(function() {
         $("#space a").remove();
-        if('${exhibitionConfig.mode}' == 'Active') {
-       	 	drawLinks();
-        }
+        drawLinks();
+    });
+    
+    $("#cancelExhibitionModal").click(function() {
+    	$("#exhibitionDownModal").hide();
     });
 });
 
@@ -108,32 +111,40 @@ function drawLinks() {
 </script>
 
 <div class="row">
-	<c:if test="${exhibitionConfig.mode == 'Active'}">
-		<div
-			class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
-		<div id="space-container" class="col-md-8 text-center">
-			<div id="space"
-				style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+    <div
+        class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
+    <div id="space-container" class="col-md-8 text-center">
+        <div id="space"
+            style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+        </div>
+    </div>
+    <div
+        class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
+        <c:if test="${not empty space.description}">
+            <div class="descriptionBox"
+                style="height: ${display.height - 20}px; overflow-y: scroll;">
+                <h5>${space.name}</h5>
+                ${space.description}
+            </div>
+        </c:if>
+    </div>
+</div>
+<div id="exhibitionDownModal" class="modal" tabindex="-1"
+	role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Exhibition Not Active</h5>
+			</div>
+			<div class="modal-body">
+				<h6>${exhibitionConfig.modeMessage}</h6>
+			</div>
+			<div class="modal-footer">
+				<button id="cancelExhibitionModal" type="button" class="btn light">Ok</button>
 			</div>
 		</div>
-		<div
-			class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
-			<c:if test="${not empty space.description}">
-				<div class="descriptionBox"
-					style="height: ${display.height - 20}px; overflow-y: scroll;">
-					<h5>${space.name}</h5>
-					${space.description}
-				</div>
-			</c:if>
-		</div>
-	</c:if>
-	<c:if test="${exhibitionConfig.mode != 'Active'}">
-		<div class="container col-sm" >
-			<p>${exhibitionConfig.modeMessage}</p>
-		</div>
-	</c:if>
+	</div>
 </div>
-
 <script>
 $(function() {
     

@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.aspects;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,19 +10,12 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-
-import java.lang.reflect.Parameter;
-
-import edu.asu.diging.simpleusers.core.model.impl.User;
 import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
-import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -60,22 +54,19 @@ public class ExhibitionDataAspect {
     @Around("execution(public * edu.asu.diging.vspace.web..ExhibitionSpaceController.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
-
-        MethodSignature methodSignature = (MethodSignature) jp.getSignature();
-        Method method = methodSignature.getMethod();
-        Parameter[] paras = method.getParameters();
-        Object values = jp.proceed();
+        
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         AuthenticationFacade authFacade = new AuthenticationFacade();
         if (exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
-            return values;
+            return jp.proceed();
         }
         else if(!(authFacade.getAuthenticatedUser() == null)){
-            //Still show the exhibition but with pop up and message that exhibit is down.
-            return values;
+           ((Model) args[1]).addAttribute("showModal","true");
+            return jp.proceed();
         }
-        //Public portal, no user logged in and exhbit is down, show just the maintenance/offline message.
-        // return a maintenance page ? create a new page?
+        
+        //Public portal, no user logged in and exhibit is down, show just the maintenance/offline message.
+        // return <create a new page>
         return "";
     }
 }
