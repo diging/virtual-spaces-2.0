@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SortByField {
-    CREATION_DATE("creationDate"),
-    FILENAME("filename"),
-    NAME("name"),
-    CREATED_BY("createdBy");
-    
-    
+    CREATION_DATE("creationDate"), FILENAME("filename"), NAME("name"), CREATED_BY("createdBy");
 
     private final String value;
 
@@ -20,7 +15,7 @@ public enum SortByField {
     public String getValue() {
         return value;
     }
-    
+
     public static List<String> getAllValues() {
         List<String> allValues = new ArrayList<>();
         for(SortByField sbf : SortByField.values()) {
