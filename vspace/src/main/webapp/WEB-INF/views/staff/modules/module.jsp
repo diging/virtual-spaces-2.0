@@ -5,6 +5,8 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+
+
 <script>
 //# sourceURL=click.js
 var slideIdToDelete = 0;
@@ -34,7 +36,7 @@ function checkSlideInSequence(slideId) {
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	        	if(data.length > 0){
+	        	if(data.length > 0){  
 	        		$("#deleteSlideAlert").show();
 		        	slideIdToDelete = slideId;
 	        	}
@@ -189,7 +191,32 @@ $(document).ready(function($) {
 	</div>
 </div>
 
-<div id="deleteSlideAlert" class="modal-dialog alert alert-secondary" role="alert"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 400px; height: 250px; display: none; position: absolute; top: 300px; z-index: 999">
+
+<h2>Modal Example</h2>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+<!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+<div id="deleteSlideAlert" class="modal-dialog alert alert-secondary" role="alert"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 400px; height: 250px; display: inline-block; position: absolute; top: 300px; z-index: 999">
 	<div class="modal-content">
 	<div class="modal-header">
 		<h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
