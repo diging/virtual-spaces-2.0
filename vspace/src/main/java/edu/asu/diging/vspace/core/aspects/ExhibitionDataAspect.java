@@ -64,9 +64,10 @@ public class ExhibitionDataAspect {
            ((Model) args[1]).addAttribute("showModal","true");
             return jp.proceed();
         }
-        
+        else {
         //Public portal, no user logged in and exhibit is down, show just the maintenance/offline message.
         // return <create a new page>
+        }
         return "";
     }
 }
