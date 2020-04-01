@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import org.hibernate.bytecode.enhance.internal.tracker.SortedFieldTracker;
 import org.javers.common.collections.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,13 +95,8 @@ public class ImageService implements IImageService {
      */
     @Override
     public List<IVSImage> getImages(int pageNo) {
-        pageNo = validatePageNumber(pageNo);
-        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize,
-            Sort.by(SortByField.CREATION_DATE.getValue()).descending());
-        Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
-        List<IVSImage> results = new ArrayList<>();
-        images.getContent().forEach(i -> results.add(i));
-        return results;
+        
+        return getImages(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
 
     /**
