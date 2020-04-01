@@ -58,6 +58,10 @@
 		<put-attribute name="currentPage" value="module" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
 	</definition>
+	<definition name="maintenance" extends="base.definition">	
+		<put-attribute name="currentPage" value="maintenance" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/maintenance.jsp" />	
+	</definition>
     
     <!-- Register -->
     <definition name="register" extends="base.definition"> 

@@ -65,9 +65,8 @@ public class ExhibitionDataAspect {
             return jp.proceed();
         }
         else {
-        //Public portal, no user logged in and exhibit is down, show just the maintenance/offline message.
-        // return <create a new page>
+            jp.proceed();
+            return "maintenance";
         }
-        return "";
     }
 }

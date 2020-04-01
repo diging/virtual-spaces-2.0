@@ -27,8 +27,7 @@
 				class="form-control" name="exhibitMode"
 				onChange="modeChange(exhibitMode.value)">
 				<c:forEach items="${exhibitionModes}" var="mode">
-					<option id=${mode } value=${mode
-						}
+					<option id=${mode} value=${mode}
 						<c:if test="${mode==exhibition.mode}">selected</c:if>>${mode}</option>
 				</c:forEach>
 			</select>
@@ -47,18 +46,20 @@
 <script>
 $(document).ready(function() {
 	var offlineMessage = $('#offlineMessage');
-	if (${exhibition.mode}.value == "Offline")
+	if (${exhibition.mode}.value == "Offline") {
 		offlineMessage.show();
+	}
 	else {
 		offlineMessage.hide();
-		offlineMessage.find('input[name=message]').val("");
+		offlineMessage.find('input[name=modeMessage]').val("");
 	}
 });
 
 	function modeChange(modeChosen) {
 		var offlineMessage = $('#offlineMessage');
-		if (modeChosen == "Offline")
+		if (modeChosen == "Offline") {
 			offlineMessage.show();
+		}
 		else {
 			offlineMessage.hide();
 		}

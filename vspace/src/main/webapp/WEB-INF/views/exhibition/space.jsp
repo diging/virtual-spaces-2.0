@@ -7,13 +7,12 @@
 //# sourceURL=click.js
 $( document ).ready(function() {
     if ('${showModal}' == 'true') {
-    	alert('${popupShown}')
-    	if('${popupShown}' != 'true') {
+    	if(sessionStorage.getItem("popupShown") != 'true') {
         	sessionStorage.setItem("popupShown","true");
         	$("#exhibitionDownModal").show();
     	}
     	else {
-			
+			$(".modalDown").css("display","block");
     	}
     }
     drawLinks();
@@ -25,6 +24,7 @@ $( document ).ready(function() {
     
     $("#cancelExhibitionModal").click(function() {
     	$("#exhibitionDownModal").hide();
+		$(".modalDown").css("display","block");
     });
 });
 
@@ -118,9 +118,9 @@ function drawLinks() {
 </script>
 
 <div class="row">
+        <div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >${exhibitionConfig.modeMessage}</div>
     <div
         class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
-        <div class="modalDown">${exhibitionConfig.modeMessage}</div>
     <div id="space-container" class="col-md-8 text-center">
         <div id="space"
             style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
