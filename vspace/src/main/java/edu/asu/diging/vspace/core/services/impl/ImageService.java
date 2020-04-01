@@ -95,7 +95,6 @@ public class ImageService implements IImageService {
      */
     @Override
     public List<IVSImage> getImages(int pageNo) {
-        
         return getImages(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
 
