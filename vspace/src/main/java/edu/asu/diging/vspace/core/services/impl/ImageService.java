@@ -115,14 +115,13 @@ public class ImageService implements IImageService {
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
         pageNo = validatePageNumber(pageNo);
         if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
-            if(order.equalsIgnoreCase(Sort.Direction.DESC.toString())) {
-                sortingParameters = Sort.by(sortedBy).descending();
-            } else {
                 sortingParameters = Sort.by(sortedBy);
-            }
         }
         if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
             sortingParameters = sortingParameters.ascending();
+        }
+        else {
+            sortingParameters = sortingParameters.descending();
         }
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
