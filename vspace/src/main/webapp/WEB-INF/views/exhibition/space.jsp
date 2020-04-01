@@ -55,7 +55,7 @@ function drawLinks() {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
         var link = $('<a></a>');
-        link.attr('href', '<c:url value="/exhibit/module/${link.link.module.id}" />');
+        link.attr('href', '<c:url value="/exhibit/${link.link.space.id}/module/${link.link.module.id}" />');
         
         var linkDisplay = $('<span class="fas fa-book-open"></span>');
      

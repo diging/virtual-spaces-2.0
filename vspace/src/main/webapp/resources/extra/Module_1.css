@@ -21,6 +21,14 @@
     overflow: visible;
 }
 
+.Space_link_Class {
+    position: absolute;
+    left: 1130px;
+    top: 78px;
+    overflow: visible;
+    color: blue
+}
+
 .SLideshow_option_Class {
 	position: absolute;
 	width: 43.846px;

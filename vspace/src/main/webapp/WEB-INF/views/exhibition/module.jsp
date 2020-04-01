@@ -51,14 +51,14 @@
 							<div class="slide_sidebar-header">
 								<h3>
 									<a
-										href="<c:url value="/exhibit/module/${module.id}/sequence/${startSequenceId}/slide/${firstSlide}" />">${module.name}</a>
+										href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}/slide/${firstSlide}" />">${module.name}</a>
 								</h3>
 							</div>
 							<ul class="list-unstyled components">
 								<li class="active"><c:forEach items="${slides}"
 										var="slides">
 										<li><a
-											href="<c:url value="/exhibit/module/${module.id}/sequence/${currentSequenceId}/slide/${slides.id}" />">${slides.name}</a>
+											href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${slides.id}" />">${slides.name}</a>
 										</li>
 									</c:forEach></li>
 							</ul>
@@ -78,8 +78,8 @@
 						<div class="Module_header_Class">
 							<h3>${module.name}</h3> 
 						</div>
-						<div class="Module_header_Class">
-							<a href="<c:url value="${referer}"/>">back to space</a>
+						<div class="Space_link_Class">
+							<a href="<c:url value="/exhibit/space/${spaceId}"/>">Go to ${spaceName}</a>
 						</div>
 						<div class="Group_8_Class">
 							<c:forEach items="${currentSlideCon.contents}" var="contents">
@@ -99,7 +99,7 @@
 						</div>
 						<div class="Group_7_Class">
 							<a
-								href="<c:url value="/exhibit/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
+								href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
 								<div class="Slideshow_previous Slideshow_previous_Class">
 									<svg class="Ellipse_11">
 									<ellipse fill="rgba(255,255,255,1)" class="Ellipse_11_Class"
@@ -115,7 +115,7 @@
 								</svg>
 								</div>
 							</a> <a
-								href="<c:url value="/exhibit/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
+								href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
 								<div class="slideshow_next slideshow_next_Class">
 									<svg class="Ellipse_12">
 									<ellipse fill="rgba(255,255,255,1)" class="Ellipse_12_Class"

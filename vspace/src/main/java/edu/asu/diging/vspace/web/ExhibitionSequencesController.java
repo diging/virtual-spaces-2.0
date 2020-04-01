@@ -27,7 +27,7 @@ public class ExhibitionSequencesController {
     @Autowired
     private ISequenceManager sequenceManager;
 
-    @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}")
+    @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId) throws ModuleNotFoundException, SequenceNotFoundException,
             SlidesInSequenceNotFoundException, ModuleNotConfiguredException {
@@ -49,6 +49,6 @@ public class ExhibitionSequencesController {
             throw new SlidesInSequenceNotFoundException();
         }
         String firstSlideId = slides.get(0).getId();
-        return "redirect:/exhibit/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;
+        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;
     }
 }

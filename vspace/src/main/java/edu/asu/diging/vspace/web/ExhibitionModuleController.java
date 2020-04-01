@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.web;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +17,8 @@ public class ExhibitionModuleController {
     @Autowired
     private IModuleManager moduleManager;
 
-    @RequestMapping(value = "/exhibit/module/{id}")
-    public String module(@PathVariable("id") String id, Model model, HttpServletRequest httpServletRequest)
+    @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
+    public String module(@PathVariable("id") String id, Model model)
             throws ModuleNotFoundException, ModuleNotConfiguredException {
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
@@ -30,6 +28,6 @@ public class ExhibitionModuleController {
             throw new ModuleNotConfiguredException(id);
         }
         String startSequenceID = module.getStartSequence().getId();
-        return "redirect:/exhibit/module/" + id + "/sequence/" + startSequenceID;
+        return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;
     }
 }

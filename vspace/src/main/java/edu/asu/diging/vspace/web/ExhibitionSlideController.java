@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
+import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
@@ -34,11 +38,19 @@ public class ExhibitionSlideController {
 
     @Autowired
     private ISequenceManager sequenceManager;
+    
+    @Autowired
+    private ISpaceManager spaceManager;
 
-    @RequestMapping(value = "/exhibit/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-            @PathVariable("sequenceId") String sequenceId, HttpServletRequest httpServletRequest) throws ModuleNotFoundException, ModuleNotConfiguredException,
-            SequenceNotFoundException, SlidesInSequenceNotFoundException, SlideNotFoundException {
+            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId) throws ModuleNotFoundException, ModuleNotConfiguredException,
+            SequenceNotFoundException, SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException {
+        
+        ISpace space = spaceManager.getSpace(spaceId);
+        if(space == null) {
+            throw new SpaceDoesNotExistException();
+        }
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
         if (module == null) {
@@ -91,8 +103,8 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
-        String referer = httpServletRequest.getHeader("Referer");
-        model.addAttribute("referer", referer);
+        model.addAttribute("spaceId", spaceId);
+        model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
         return "module";
     }
 }
