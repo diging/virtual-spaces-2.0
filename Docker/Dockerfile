@@ -1,0 +1,38 @@
+FROM tomcat:8.5
+
+ENV JAVA_OPTS="-DappConfigFile=file:/usr/local/tomcat/data/config"
+ENV TOMCAT_USERNAME="deployer"
+ENV TOMCAT_PASSWORD="nqzTIz69"
+
+RUN mkdir app
+RUN mkdir data
+RUN mkdir data/config
+RUN mkdir data/files
+
+WORKDIR app
+
+RUN apt-get update && apt-get install git -y && apt install maven -y
+
+RUN git clone -b develop https://github.com/diging/virtual-spaces-2.0.git
+
+RUN cd virtual-spaces-2.0/vspace && mvn clean package -Dlog.level=info
+RUN cp virtual-spaces-2.0/vspace/target/vspace.war ../webapps
+
+# download tomcat manager app
+RUN wget https://mirrors.ocf.berkeley.edu/apache/tomcat/tomcat-8/v8.5.53/bin/apache-tomcat-8.5.53.zip
+RUN unzip apache-tomcat-8.5.53.zip
+RUN cp -r apache-tomcat-8.5.53/webapps/manager ../webapps
+
+COPY scripts/tomcat-users.xml ../conf/
+COPY scripts/context.xml ../webapps/manager/META-INF/
+COPY scripts/start.sh .
+RUN ["chmod", "+x", "start.sh"]
+
+# make sure to wait for mysql
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+#ENTRYPOINT ["./start.sh"]
+CMD dockerize -wait tcp://db:3306 -timeout 60m ./start.sh
