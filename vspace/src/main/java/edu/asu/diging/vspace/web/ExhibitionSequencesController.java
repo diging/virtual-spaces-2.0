@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.web.exception.SlidesInSequenceNotFoundException;
+import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Controller
 public class ExhibitionSequencesController {
@@ -27,10 +30,18 @@ public class ExhibitionSequencesController {
     @Autowired
     private ISequenceManager sequenceManager;
 
+    @Autowired
+    private ISpaceManager spaceManager;
+
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
-            @PathVariable("moduleId") String moduleId) throws ModuleNotFoundException, SequenceNotFoundException,
-            SlidesInSequenceNotFoundException, ModuleNotConfiguredException {
+            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId)
+            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
+            ModuleNotConfiguredException, SpaceNotFoundException {
+        ISpace space = spaceManager.getSpace(spaceId);
+        if (space == null) {
+            throw new SpaceNotFoundException(spaceId);
+        }
         IModule module = moduleManager.getModule(moduleId);
         if (module == null) {
             throw new ModuleNotFoundException(moduleId);

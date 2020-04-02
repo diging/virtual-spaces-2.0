@@ -17,6 +17,12 @@
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
 	href="<c:url value="/resources/extra/Module_1___slideshow___1.css" />">
 
+<style type="text/css">
+body {
+	font-family: 'Montserrat', sans-serif;
+}
+</style>
+
 <script>
 	$(window).on('load', function() {
 		var divWindow = $(".valueDiv");
@@ -68,18 +74,18 @@
 						<nav class="slide_navbar navbar-default">
 							<div class="container-fluid">
 								<div class="navbar-header">
-									<button type="button" id="slide_sidebarCollapse"
-										class="btn btn-info">
+									<button type="button" id="slide_sidebarCollapse" class="btn">
 										<i class="fas fa-align-justify"></i>
 									</button>
 								</div>
 							</div>
 						</nav>
 						<div class="Module_header_Class">
-							<h3>${module.name}</h3> 
+							<h3>${module.name}</h3>
 						</div>
 						<div class="Space_link_Class">
-							<a href="<c:url value="/exhibit/space/${spaceId}"/>">Go to ${spaceName}</a>
+							<a href="<c:url value="/exhibit/space/${spaceId}"/>">Go to
+								${spaceName}</a>
 						</div>
 						<div class="Group_8_Class">
 							<c:forEach items="${currentSlideCon.contents}" var="contents">

@@ -12,12 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    
+
     @ExceptionHandler({ ModuleNotFoundException.class })
     protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
-        logger.info("ModuleNotFoundException Occured:: URL="+request.getRequestURL());
+        logger.info("ModuleNotFoundException Occured:: URL=" + request.getRequestURL());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
             ModuleNotConfiguredException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
-        logger.info("ModuleNotConfiguredException Occured:: URL="+request.getRequestURL());
+        logger.info("ModuleNotConfiguredException Occured:: URL=" + request.getRequestURL());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     protected ModelAndView handleSlideNotFoundException(HttpServletRequest request, SlideNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
-        logger.info("SlideNotFoundException Occured:: URL="+request.getRequestURL());
+        logger.info("SlideNotFoundException Occured:: URL=" + request.getRequestURL());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     protected ModelAndView handleSequenceNotFoundException(HttpServletRequest request, SequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
-        logger.info("SequenceNotFoundException Occured:: URL="+request.getRequestURL());
+        logger.info("SequenceNotFoundException Occured:: URL=" + request.getRequestURL());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -59,7 +59,18 @@ public class GlobalExceptionHandler {
             SlidesInSequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
-        logger.info("SlidesInSequenceNotFoundException Occured:: URL="+request.getRequestURL());
+        logger.info("SlidesInSequenceNotFoundException Occured:: URL=" + request.getRequestURL());
+        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.setViewName("module");
+        return modelAndView;
+    }
+
+    @ExceptionHandler({ SpaceNotFoundException.class })
+    protected ModelAndView handleSpaceNotFoundException(HttpServletRequest request,
+            SlidesInSequenceNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("error", ex.getMessage());
+        logger.info("SpaceNotFoundException Occured:: URL=" + request.getRequestURL());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;

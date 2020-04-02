@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Controller
 public class ExhibitionModuleController {
@@ -17,9 +20,16 @@ public class ExhibitionModuleController {
     @Autowired
     private IModuleManager moduleManager;
 
+    @Autowired
+    private ISpaceManager spaceManager;
+
     @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
-    public String module(@PathVariable("id") String id, Model model)
-            throws ModuleNotFoundException, ModuleNotConfiguredException {
+    public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
+            throws ModuleNotFoundException, ModuleNotConfiguredException, SpaceNotFoundException {
+        ISpace space = spaceManager.getSpace(spaceId);
+        if (space == null) {
+            throw new SpaceNotFoundException(spaceId);
+        }
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null) {
