@@ -151,6 +151,38 @@ public class ImageServiceTest {
     }
     
     @Test
+    public void test_getImages_sorted_success() { 
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+        when(imageRepo.count()).thenReturn(1L);
+        when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
+        List<IVSImage> requestedImages = serviceToTest.getImages(1, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+        assertEquals(1, requestedImages.size());
+        assertEquals(IMG_ID, requestedImages.get(0).getId());
+        verify(imageRepo).findAll(sortByRequestedField);
+    }
+    
+    @Test
+    public void test_getImages_sorted_negativePage() { 
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATED_BY.getValue()).descending());
+        when(imageRepo.count()).thenReturn(1L);
+        when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
+        List<IVSImage> requestedImages = serviceToTest.getImages(-2, SortByField.CREATED_BY.getValue(), Sort.Direction.DESC.toString());
+        assertEquals(IMG_ID, requestedImages.get(0).getId());
+        verify(imageRepo).findAll(sortByRequestedField);
+    }
+    
+    @Test
+    public void test_getImages_sorted_pageGreaterThanTotalPages() { 
+        ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
+        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+        when(imageRepo.count()).thenReturn(5L);
+        when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
+        List<IVSImage> requestedImages = serviceToTest.getImages(7, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+        assertEquals(IMG_ID, requestedImages.get(0).getId());
+        verify(imageRepo).findAll(sortByRequestedField);
+    }
+    
+    @Test
     public void test_getTotalImageCount_success() {
         when(imageRepo.count()).thenReturn(5L);
         assertEquals(5L, serviceToTest.getTotalImageCount());
