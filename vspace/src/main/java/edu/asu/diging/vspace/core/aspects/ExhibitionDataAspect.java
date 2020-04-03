@@ -54,7 +54,6 @@ public class ExhibitionDataAspect {
     @Around("execution(public * edu.asu.diging.vspace.web..ExhibitionSpaceController.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
-        
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         AuthenticationFacade authFacade = new AuthenticationFacade();
         if (exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
@@ -64,7 +63,7 @@ public class ExhibitionDataAspect {
            ((Model) args[1]).addAttribute("showModal","true");
             return jp.proceed();
         }
-        else {
+        else {  
             jp.proceed();
             return "maintenance";
         }
