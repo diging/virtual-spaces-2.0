@@ -37,6 +37,7 @@ function checkSlideInSequence(slideId) {
 	        contentType : false,
 	        success: function(data) {
 	        	if(data.length > 0){  
+	                //$('#deleteSlideAlert').modal('show'); // popup #myModal id modal
 	        		$("#deleteSlideAlert").show();
 		        	slideIdToDelete = slideId;
 	        	}
@@ -48,20 +49,13 @@ function checkSlideInSequence(slideId) {
 }
 
 $(document).ready(function($) {
-	$("#addSlideButton").on("click", function (e) {
-		$("#createSlideAlert").show();
-	});
-	$("#createSlideAlert").draggable();
 	
 	$("#closeSlide").click(function (){
 		slideIdToDelete = 0;
-		$("#deleteSlideAlert").hide();
+		 //$('#deleteSlideAlert').modal('hide'); 
+		 $("#deleteSlideAlert").hide();
 	});
 	
-	$("#cancelSlideBtn").click(function () {
-		$("#createSlideAlert").hide();
-	});
-		
 	$("#cancelSlideDelButton").click(function () {
 		slideIdToDelete = 0;
 		$("#deleteSlideAlert").hide();
@@ -93,6 +87,7 @@ $(document).ready(function($) {
 
 	
 	$("#deleteSlideFromSequence").on("click", function() {
+		//$('#deleteSlideAlert').modal('hide');
 		$("#deleteSlideAlert").hide();
 		deleteSlide(slideIdToDelete);
 	});
@@ -169,7 +164,7 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
 							<h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-toggle="modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		
@@ -191,32 +186,8 @@ $(document).ready(function($) {
 	</div>
 </div>
 
-
-<h2>Modal Example</h2>
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-<!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
   
-<div id="deleteSlideAlert" class="modal-dialog alert alert-secondary" role="alert"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 400px; height: 250px; display: inline-block; position: absolute; top: 300px; z-index: 999">
+<div id="deleteSlideAlert" class="modal-dialog alert alert-secondary" role="alert"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="cursor: move; width: 400px; height: 250px; display: none; position: absolute; top: 300px; z-index: 999">
 	<div class="modal-content">
 	<div class="modal-header">
 		<h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
