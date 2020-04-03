@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
 	href="<c:url value="/resources/extra/Home.css" />">
-	
+
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {
@@ -131,8 +131,7 @@ function drawLinks() {
 			<nav class="slide_navbar navbar-default">
 				<div class="container-fluid">
 					<div class="navbar-header">
-						<button type="button" id="slide_sidebarCollapse"
-							class="btn">
+						<button type="button" id="slide_sidebarCollapse" class="btn">
 							<i class="fas fa-align-justify"></i>
 						</button>
 					</div>
@@ -143,10 +142,8 @@ function drawLinks() {
 </div>
 <div class="row">
 	<div class="col-md-2 Home Home__Class">
-		<div>
-			${space.name}
-		</div>
-		
+		<div>${space.name}</div>
+
 	</div>
 </div>
 <div class="row">
