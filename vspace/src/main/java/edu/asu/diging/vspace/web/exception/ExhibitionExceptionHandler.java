@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class ExhibitionExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExhibitionExceptionHandler.class);
 
     @ExceptionHandler({ ModuleNotFoundException.class })
     protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {

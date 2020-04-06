@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Module Not Found")
 public class SlidesInSequenceNotFoundException extends Exception {
-    private static final long serialVersionUID = -3332292346834265371L;
+    private static final long serialVersionUID = 1L;
 
     public SlidesInSequenceNotFoundException() {
         super("Selected Sequence contains no Slides to display");

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Space Not Found")
 public class SpaceNotFoundException extends Exception {
-    private static final long serialVersionUID = -3332292346834265371L;
+    private static final long serialVersionUID = 1L;
 
     public SpaceNotFoundException(String id) {
         super("Space not found");
