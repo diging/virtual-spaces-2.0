@@ -24,7 +24,6 @@ public enum ExhibitionModes {
 		for(ExhibitionModes val : ExhibitionModes.values()) {
 			valuesList.add(val.getValue());
 		}
-		
 		return valuesList;
 	}
 }

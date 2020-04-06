@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.aspects;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -29,6 +30,9 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private AuthenticationFacade authFacade;
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {
@@ -51,20 +55,21 @@ public class ExhibitionDataAspect {
         }
     }
     
-    @Around("execution(public * edu.asu.diging.vspace.web..ExhibitionSpaceController.*(..))")
+    @Around("execution(public * edu.asu.diging.vspace.web..Exhibition*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
+        MethodSignature signature = (MethodSignature) jp.getSignature();
+        int index = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
+        System.out.println(index);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        AuthenticationFacade authFacade = new AuthenticationFacade();
         if (exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
             return jp.proceed();
         }
         else if(!(authFacade.getAuthenticatedUser() == null)){
-           ((Model) args[1]).addAttribute("showModal","true");
+           ((Model) args[index]).addAttribute("showModal","true");
             return jp.proceed();
         }
-        else {  
-            jp.proceed();
+        else {
             return "maintenance";
         }
     }
