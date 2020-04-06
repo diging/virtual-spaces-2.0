@@ -81,10 +81,9 @@ public class SlideManagerTest {
         sequencesList.add(sequenceObj);
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
 
-        List<Sequence> slideSequencePresent = slideManagerToTest.getSlideSequences(slideId, moduleId);
         List<Sequence> actualSequenceSlideListNotPresent = slideManagerToTest.getSlideSequences(slideIdNotInSequence,
                 moduleId);
-        Assert.assertNotEquals(slideSequencePresent, actualSequenceSlideListNotPresent);
+        Assert.assertTrue(actualSequenceSlideListNotPresent.isEmpty());
     }
 
     @Test
@@ -112,13 +111,11 @@ public class SlideManagerTest {
         sequenceObj.setId(sequenceId);
         sequenceObj.setSlides(slidesList);
 
-        sequenceObjOther.setId(sequenceId);
-
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
-
         slideManagerToTest.deleteSlideById(slideId, moduleId);
+        Mockito.doThrow(SlideDoesNotExistException.class).when(slideRepo).delete(null);
     }
 
     @Test
@@ -142,6 +139,5 @@ public class SlideManagerTest {
         slideManagerToTest.deleteSlideById(slideId, moduleId);
         Mockito.verify(slideRepo).delete((Slide) slide);
 
-        slideManagerToTest.deleteSlideById(slideId, moduleId);
     }
 }
