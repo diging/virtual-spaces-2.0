@@ -35,8 +35,13 @@ function checkSlideInSequence(slideId) {
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	        	if(data.length > 0){  
-	                $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
+	        	if(data.length > 0){
+	        		var keys = Object.keys(data);
+	        		for(var i = 0; i < keys.length;i++){
+	        			$("#sequenceData").text(data[keys[i]].name);
+	        		}
+	        		
+	        		$('#deleteSlideAlert').modal('show'); // popup #myModal id modal
 		        	slideIdToDelete = slideId;
 	        	}
 	        	else{
@@ -160,7 +165,7 @@ $(document).ready(function($) {
 							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
 							<h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
 							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
 							</div>
 						</div>
 					</div>		
@@ -182,21 +187,25 @@ $(document).ready(function($) {
 	</div>
 </div>
 
-  
-<div id="deleteSlideAlert" class="modal fade" role="dialog" >
-	<div class="modal-dialog">
-	<div class="modal-content">
-	<div class="modal-header">
-		<h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
-		<button type="button" id="closeSlide" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	</div>
-	<div class="modal-body">
-		<p> This Slide is a part of another Sequence. Are you sure you want to delete it?</p>
-	</div>
-	<div class="modal-footer">
-		<button type="button" id="cancelSlideDelButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		<button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
-	</div>
-	</div>
-	</div>
+
+<div id="deleteSlideAlert" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteModalTitle">Confirm
+                    Deletion?</h4>
+                <button type="button" id="closeSlide" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This Slide is a part of <span id="sequenceData"></span>
+                    Sequence. Are you sure you want to delete it?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelSlideDelButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>
