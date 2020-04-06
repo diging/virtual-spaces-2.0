@@ -1,79 +1,79 @@
 .Home_Class {
-	position: absolute;
-	transform: translateX(-50%);
-	left: 50%;
-	width: 1280px;
-	height: 720px;
-	background-color: rgba(255, 255, 255, 1);
-	overflow: hidden; -
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    width: 1280px;
+    height: 720px;
+    background-color: rgba(255, 255, 255, 1);
+    overflow: hidden;
 }
 
 .Home__Class {
-	position: absolute;
+    position: absolute;
     left: 750px;
     top: 90px;
-	overflow: visible;
-	font-size: 30px;
+    overflow: visible;
+    font-size: 30px;
 }
 
 .Home__Image__Class {
-	position: absolute;
-	width: 44px;
-	height: 44px;
-	left: 400px;
-	top: 133px;
-	overflow: visible;
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    left: 400px;
+    top: 133px;
+    overflow: visible;
 }
 
 #wrapper {
-	display: flex;
-	width: 100%;
-	align-items: stretch;
+    display: flex;
+    width: 100%;
+    align-items: stretch;
 }
 
 #slide_sidebar {
-	min-width: 250px;
-	max-width: 250px;
-	transition: all 0.3s;
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.3s;
 }
 
 #slide_sidebar.active {
-	margin-left: -250px;
+    margin-left: -250px;
 }
 
 #slide_sidebar .slide_sidebar-header {
-	padding: 10px;
+    padding: 10px;
 }
 
 .slide_sidebar-header h3 a:hover {
-	color: #7386D5;
-	background: #fff;
+    color: #7386D5;
+    background: #fff;
 }
 
 #slide_sidebar ul li {
-	padding-left: 35px;
+    padding-left: 35px;
 }
 
 #slide_sidebar ul li a:hover {
-	color: #7386D5;
-	background: #fff;
+    color: #7386D5;
+    background: #fff;
 }
 
 #slide_content {
-	width: 100%;
-	padding: 20px;
-	min-height: 100vh;
-	transition: all 0.3s;
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
 }
 
 @media ( max-width : 768px) {
-	#slide_sidebar {
-		margin-left: -250px;
-	}
-	#slide_sidebar.active {
-		margin-left: 0;
-	}
-	#slide_sidebarCollapse span {
-		display: none;
-	}
+    #slide_sidebar {
+        margin-left: -250px;
+    }
+    #slide_sidebar.active {
+        margin-left: 0;
+    }
+    #slide_sidebarCollapse span {
+        display: none;
+    }
 }

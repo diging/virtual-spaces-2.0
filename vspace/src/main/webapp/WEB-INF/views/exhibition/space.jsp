@@ -1,11 +1,11 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+    uri="http://www.springframework.org/security/tags"%>
 
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
-	href="<c:url value="/resources/extra/Home.css" />">
-	
+    href="<c:url value="/resources/extra/Home.css" />">
+
 <script>
 //# sourceURL=click.js
 $( document ).ready(function() {
@@ -116,43 +116,43 @@ function drawLinks() {
 }
 </script>
 <div class="row">
-	<div id="wrapper" class="toggled col-md-1">
-		<nav id="slide_sidebar">
-			<div class="slide_sidebar-header">
-				<h3>MODULES</h3>
-			</div>
-			<ul class="list-unstyled components">
-				<li class="active"><c:forEach items="${moduleList}" var="link">
-						<li><a href="/vspace/exhibit/module/${link.link.module.id}">${link.link.module.name}</a></li>
-					</c:forEach></li>
-			</ul>
-		</nav>
-		<div id="slide_content">
-			<nav class="slide_navbar navbar-default">
-				<div class="container-fluid">
-					<div class="navbar-header">
-						<button type="button" id="slide_sidebarCollapse"
-							class="btn">
-							<i class="fas fa-align-justify"></i>
-						</button>
-					</div>
-				</div>
-			</nav>
-		</div>
-	</div>
+    <div id="wrapper" class="toggled col-md-1">
+        <nav id="slide_sidebar">
+            <div class="slide_sidebar-header">
+                <h3>MODULES</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li class="active"><c:forEach items="${moduleList}"
+                        var="link">
+                        <li><a
+                            href="/vspace/exhibit/module/${link.link.module.id}">${link.link.module.name}</a></li>
+                    </c:forEach></li>
+            </ul>
+        </nav>
+        <div id="slide_content">
+            <nav class="slide_navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" id="slide_sidebarCollapse"
+                            class="btn">
+                            <i class="fas fa-align-justify"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
 </div>
 <div class="row">
-	<div class="col-md-2 Home Home__Class">
-		<div>
-			${space.name}
-		</div>
-		
-	</div>
+    <div class="col-md-2 Home Home__Class">
+        <div>${space.name}</div>
+
+    </div>
 </div>
 <div class="row">
-	<div class="col-md-2 Home__Image__Class">
-		<div id="space"
-			style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
-		</div>
-	</div>
+    <div class="col-md-2 Home__Image__Class">
+        <div id="space"
+            style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+        </div>
+    </div>
 </div>
