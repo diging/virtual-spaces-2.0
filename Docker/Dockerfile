@@ -11,7 +11,7 @@ WORKDIR app
 
 RUN apt-get update && apt-get install git -y && apt install maven -y
 
-RUN git clone -b master https://github.com/diging/virtual-spaces-2.0.git && latesttag=$(git describe --tags) && git checkout ${latesttag}
+RUN git clone -b master https://github.com/diging/virtual-spaces-2.0.git && cd virtual-spaces-2.0 && latesttag=$(git describe --tags) && git checkout ${latesttag}
 
 RUN cd virtual-spaces-2.0/vspace && mvn clean package -Dlog.level=info
 RUN cp virtual-spaces-2.0/vspace/target/vspace.war ../webapps
