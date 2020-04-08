@@ -67,11 +67,7 @@ public class ExhibitionDataAspect {
             return jp.proceed();
         } 
         else {
-            for(Object ob : args) {
-                System.out.println(ob);
-            }
             ((Model) args[index]).addAttribute("modeMessage", exhibition.getModeMessage());
-            System.out.println(exhibition.getModeMessage());
             return "maintenance";
         }
     }
