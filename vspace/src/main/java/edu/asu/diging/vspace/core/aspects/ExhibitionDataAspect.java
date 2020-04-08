@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.aspects;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
@@ -30,7 +28,7 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private AuthenticationFacade authFacade;
 
@@ -41,34 +39,39 @@ public class ExhibitionDataAspect {
         Class<?> returnType = signature.getReturnType();
         // only if there is a model object injected and if we're returning a string
         // (assuming that returning a string implies rendering of a view afterwards
-        if (args != null && returnType == String.class) {
-            for (Object obj : args) {
-                if (obj instanceof Model && !(obj instanceof RedirectAttributes)) {
-                    if (!((Model) obj).containsAttribute("exhibition")) {
+        if(args!=null && returnType==String.class) {
+            for(Object obj : args) {
+                if(obj instanceof Model && !(obj instanceof RedirectAttributes)) {
+                    if(!((Model) obj).containsAttribute("exhibition")) {
                         ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
                     }
-                    if (!((Model) obj).containsAttribute("allSpaces")) {
+                    if(!((Model) obj).containsAttribute("allSpaces")) {
                         ((Model) obj).addAttribute("allSpaces", spaceManager.getAllSpaces());
                     }
                 }
             }
         }
     }
-    
-    @Around("execution(public * edu.asu.diging.vspace.web..Exhibition*Controller.*(..))")
+
+    @Around("execution(public * edu.asu.diging.vspace.web.publicview..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int index = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        if (exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
+        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
             return jp.proceed();
-        }
-        else if(!(authFacade.getAuthenticatedUser() == null) && index > -1){
-           ((Model) args[index]).addAttribute("showModal","true");
+        } 
+        else if(!(authFacade.getAuthenticatedUser()==null) && index>-1) {
+            ((Model) args[index]).addAttribute("showModal", "true");
             return jp.proceed();
-        }
+        } 
         else {
+            for(Object ob : args) {
+                System.out.println(ob);
+            }
+            ((Model) args[index]).addAttribute("modeMessage", exhibition.getModeMessage());
+            System.out.println(exhibition.getModeMessage());
             return "maintenance";
         }
     }

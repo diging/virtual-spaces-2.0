@@ -9,5 +9,5 @@ $( document ).ready(function() {
 });
 </script>
 <div class="alert alert-warning center col-md-12" style="text-align: center;">
-${exhibitionConfig.modeMessage}
+${modeMessage}
 </div>
