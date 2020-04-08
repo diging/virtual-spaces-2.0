@@ -60,12 +60,11 @@ public class ExhibitionDataAspect {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int index = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
-        System.out.println(index);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         if (exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
             return jp.proceed();
         }
-        else if(!(authFacade.getAuthenticatedUser() == null)){
+        else if(!(authFacade.getAuthenticatedUser() == null) && index > -1){
            ((Model) args[index]).addAttribute("showModal","true");
             return jp.proceed();
         }
