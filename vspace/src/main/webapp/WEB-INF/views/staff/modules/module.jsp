@@ -9,7 +9,6 @@
 
 <script>
 //# sourceURL=click.js
-var slideIdToDelete = 0;
 //------------Deleting Slides-------------------
 function deleteSlide(slideId) {
 		$.ajax({
@@ -42,7 +41,7 @@ function checkSlideInSequence(slideId) {
 	        		}
 	        		
 	        		$('#deleteSlideAlert').modal('show'); // popup #myModal id modal
-		        	slideIdToDelete = slideId;
+		        	$("#deleteSlideAlert").data('value', slideId); // setter
 	        	}
 	        	else{
 	        		deleteSlide(slideId);
@@ -54,15 +53,15 @@ function checkSlideInSequence(slideId) {
 $(document).ready(function($) {
 	
 	$("#closeSlide").click(function (){
-		slideIdToDelete = 0;
+		$("#deleteSlideAlert").data('value', 0);
 		 $('#deleteSlideAlert').modal('hide'); 
 	});
 	
 	$("#cancelSlideDelButton").click(function () {
-		slideIdToDelete = 0;
+		$("#deleteSlideAlert").data('value', 0);
 		$("#deleteSlideAlert").hide();
 	});
-	$("#deleteSlideAlert").draggable();
+	
 	
 	$(".sequence").on("click", function(e) {
 		$(".sequence").css({ 'border' : ''});
@@ -90,7 +89,8 @@ $(document).ready(function($) {
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$('#deleteSlideAlert').modal('hide');
-		deleteSlide(slideIdToDelete);
+		var slideId = $("#deleteSlideAlert").data('value'); // getter
+		deleteSlide(slideId);
 	});
 				
 });	
@@ -188,7 +188,7 @@ $(document).ready(function($) {
 </div>
 
 
-<div id="deleteSlideAlert" class="modal fade" role="dialog">
+<div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
