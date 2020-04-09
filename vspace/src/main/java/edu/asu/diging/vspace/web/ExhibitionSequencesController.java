@@ -15,7 +15,6 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.web.exception.SlidesInSequenceNotFoundException;
@@ -36,8 +35,7 @@ public class ExhibitionSequencesController {
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId)
-            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
-            ModuleNotConfiguredException, SpaceNotFoundException {
+            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             throw new SpaceNotFoundException(spaceId);
@@ -48,13 +46,16 @@ public class ExhibitionSequencesController {
         }
         model.addAttribute("module", module);
         if (module.getStartSequence() == null) {
-            throw new ModuleNotConfiguredException(moduleId);
+            model.addAttribute("error","Sorry, module has not been configured yet.");
+            return "module";
         }
-        List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
-        boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
-        if (!sequenceExist) {
+        //List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
+        //boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
+        ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
+        if (sequenceExist==null) {
             throw new SequenceNotFoundException(sequenceId);
         }
+        
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         if (slides.size() == 0) {
             throw new SlidesInSequenceNotFoundException();

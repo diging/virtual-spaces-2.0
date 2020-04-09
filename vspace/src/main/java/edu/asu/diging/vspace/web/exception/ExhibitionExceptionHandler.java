@@ -13,27 +13,22 @@ public class ExhibitionExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ExhibitionExceptionHandler.class);
 
+//    @ExceptionHandler({ ModuleNotFoundException.class })
+//    protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.addObject("error", ex.getMessage());
+//        logger.info("ModuleNotFoundException Occured:: URL=" + request.getRequestURL());
+//        modelAndView.addObject("url", request.getRequestURL());
+//        modelAndView.setViewName("module");
+//        return modelAndView;
+//    }
+
     @ExceptionHandler({ ModuleNotFoundException.class })
-    protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
+    protected String handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
         logger.info("ModuleNotFoundException Occured:: URL=" + request.getRequestURL());
-        modelAndView.addObject("url", request.getRequestURL());
-        modelAndView.setViewName("module");
-        return modelAndView;
+        return ex.getMessage();
     }
-
-    @ExceptionHandler({ ModuleNotConfiguredException.class })
-    protected ModelAndView handleModuleNotConfiguredException(HttpServletRequest request,
-            ModuleNotConfiguredException ex) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
-        logger.info("ModuleNotConfiguredException Occured:: URL=" + request.getRequestURL());
-        modelAndView.addObject("url", request.getRequestURL());
-        modelAndView.setViewName("module");
-        return modelAndView;
-    }
-
+    
     @ExceptionHandler({ SlideNotFoundException.class })
     protected ModelAndView handleSlideNotFoundException(HttpServletRequest request, SlideNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();

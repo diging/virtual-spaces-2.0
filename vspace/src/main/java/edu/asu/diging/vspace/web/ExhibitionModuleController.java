@@ -10,7 +10,6 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotConfiguredException;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
@@ -25,7 +24,7 @@ public class ExhibitionModuleController {
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
-            throws ModuleNotFoundException, ModuleNotConfiguredException, SpaceNotFoundException {
+            throws SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             throw new SpaceNotFoundException(spaceId);
@@ -33,9 +32,12 @@ public class ExhibitionModuleController {
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null) {
-            throw new ModuleNotFoundException(id);
+            ModuleNotFoundException ex=new ModuleNotFoundException(id);
+            model.addAttribute("error",ex.getMessage());
+            return "module";
         } else if (module.getStartSequence() == null) {
-            throw new ModuleNotConfiguredException(id);
+            model.addAttribute("error","Sorry, module has not been configured yet.");
+            return "module";
         }
         String startSequenceID = module.getStartSequence().getId();
         return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;

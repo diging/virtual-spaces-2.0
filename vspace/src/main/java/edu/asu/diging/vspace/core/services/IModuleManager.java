@@ -18,4 +18,6 @@ public interface IModuleManager {
 
     List<ISequence> getModuleSequences(String moduleId);
 
+    ISequence checkIfSequenceExists(String moduleId, String sequenceId);
+
 }
