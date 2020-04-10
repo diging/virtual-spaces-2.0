@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +31,9 @@ public class SlideManagerTest {
     private SlideManager slideManagerToTest = new SlideManager();
 
     // setting common used variables and Objects
-    private String slideId, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
-    private List<ISlide> slidesList = Arrays.asList(new Slide());
+    private String slideId, slideIdOther, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
+    private List<ISlide> slidesList = new ArrayList<ISlide>();
+    private List<ISlide> slidesListOther = new ArrayList<ISlide>();
     private Sequence sequenceObj;
     private Sequence sequenceObjOther;
 
@@ -45,11 +45,28 @@ public class SlideManagerTest {
         sequenceObjOther = new Sequence();
 
         slideId = "SLI000000002";
+        slideIdOther = "SLI000000001";
+        
         slideIdNotInSequence = "SLI000000219";
         moduleId = "MOD000000002";
         sequenceId = "SEQ000000004";
         sequenceIdOther = "SEQ000000005";
-        slidesList.get(0).setId(slideId);
+        
+        Slide slideObj = new Slide();
+        slideObj.setId(slideId);
+        
+        Slide slideObjOther = new Slide();
+        slideObjOther.setId(slideIdOther);
+       
+        
+        
+        slidesList.add(slideObj);
+        
+        
+        slidesListOther.add(slideObj);
+        slidesListOther.add(slideObjOther);
+        
+       
     }
 
     @Test
@@ -65,9 +82,8 @@ public class SlideManagerTest {
         List<Sequence> slideSequencePresent = slideManagerToTest.getSlideSequences(slideId, moduleId);
 
         String actualSlideIdSequence = slideSequencePresent.get(0).getSlides().get(0).getId();
-        String expectedSlideIdSequence = sequencesList.get(0).getSlides().get(0).getId();
 
-        Assert.assertEquals(actualSlideIdSequence, expectedSlideIdSequence);
+        Assert.assertEquals(slideId, actualSlideIdSequence);
         Assert.assertEquals(slideSequencePresent.size(), sequencesList.size());
 
     }
@@ -126,18 +142,21 @@ public class SlideManagerTest {
 
         sequenceObjOther.setId(sequenceIdOther);
         sequenceObjOther.setSlides(slidesList);
-
+        sequenceObjOther.setSlides(slidesListOther);
+     
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
         sequencesList.add(sequenceObjOther);
+        int slidesListSizeBefore = sequencesList.get(1).getSlides().size();
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
 
-        Slide slide = new Slide();
-        slide.setId(slideId);
-        Optional<Slide> slideObj = Optional.of(slide);
-        Mockito.when(slideRepo.findById(slide.getId())).thenReturn(slideObj);
+        
+        ISlide slideObj = slidesList.get(0);
+        Mockito.when(slideRepo.findById(slideObj.getId())).thenReturn(Optional.of((Slide) slideObj));
         slideManagerToTest.deleteSlideById(slideId, moduleId);
-        Mockito.verify(slideRepo).delete((Slide) slide);
-
+        Mockito.verify(slideRepo).delete((Slide) slideObj);
+        int slidesListSizeAfter = sequencesList.get(1).getSlides().size();
+        
+        Assert.assertNotEquals(slidesListSizeBefore, slidesListSizeAfter);
     }
 }
