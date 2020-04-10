@@ -84,18 +84,24 @@ public class ExhibitionSlideController {
         int slideIndex = 0;
         slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
         int slideSize = sequenceSlides.size();
-        if (slideIndex == slideSize - 1) {
-            nextSlideId = sequenceSlides.get(0).getId();
-        }
-        if (slideIndex == 0) {
-            prevSlideId = sequenceSlides.get(sequenceSlides.size() - 1).getId();
-        }
-        if (slideIndex < slideSize - 1) {
+        if (slideSize > slideIndex + 1) {
             nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
         }
         if (slideIndex > 0) {
             prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
         }
+//        if (slideIndex == slideSize - 1) {
+//            nextSlideId = sequenceSlides.get(0).getId();
+//        }
+//        if (slideIndex == 0) {
+//            prevSlideId = sequenceSlides.get(sequenceSlides.size() - 1).getId();
+//        }
+//        if (slideIndex < slideSize - 1) {
+//            nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
+//        }
+//        if (slideIndex > 0) {
+//            prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
+//        }
         model.addAttribute("slides", sequenceSlides);
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);

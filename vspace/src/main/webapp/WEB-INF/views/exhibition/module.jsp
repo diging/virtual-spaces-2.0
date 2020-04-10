@@ -41,19 +41,18 @@ body {
 		}
 	});
 	$(document).ready(function() {
-		$('#slide_sidebar').removeClass('active');
 		$('#slide_sidebarCollapse').on('click', function() {
-			$('#slide_sidebar').toggleClass('active');
+			$('#slide_sidebar_module').toggleClass('active');
 		});
 	});
 </script>
-<div class="container">
+<div class="container-fluid">
 	<div id="Module_1" class="Module_1_Class">
 		<div class="col-sm">
 			<c:if test="${error == null}">
-				<div id="wrapper" class="toggled">
+				<div id="wrapper_module" class="toggled">
 					<div class="col-sm">
-						<nav id="slide_sidebar">
+						<nav id="slide_sidebar_module" class="active">
 							<div class="slide_sidebar-header">
 								<h3>
 									<a
@@ -70,7 +69,7 @@ body {
 							</ul>
 						</nav>
 					</div>
-					<div id="slide_content">
+					<div id="slide_content_module">
 						<nav class="slide_navbar navbar-default">
 							<div class="container-fluid">
 								<div class="navbar-header">
@@ -104,6 +103,7 @@ body {
 							</c:forEach>
 						</div>
 						<div class="Group_7_Class">
+                        <c:if test="${prevSlide !=  ''}">
 							<a
 								href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
 								<div class="Slideshow_previous Slideshow_previous_Class">
@@ -120,7 +120,10 @@ body {
 									</path>
 								</svg>
 								</div>
-							</a> <a
+							</a> 
+                            </c:if>
+                            <c:if test="${nextSlide !=  ''}">
+                            <a
 								href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
 								<div class="slideshow_next slideshow_next_Class">
 									<svg class="Ellipse_12">
@@ -137,6 +140,7 @@ body {
 								</svg>
 								</div>
 							</a>
+                            </c:if>
 						</div>
 					</div>
 

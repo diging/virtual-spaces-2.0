@@ -24,7 +24,7 @@ public class ExhibitionModuleController {
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
-            throws SpaceNotFoundException {
+            throws SpaceNotFoundException, ModuleNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             throw new SpaceNotFoundException(spaceId);
@@ -32,9 +32,7 @@ public class ExhibitionModuleController {
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null) {
-            ModuleNotFoundException ex=new ModuleNotFoundException(id);
-            model.addAttribute("error",ex.getMessage());
-            return "module";
+            throw new ModuleNotFoundException(id);
         } else if (module.getStartSequence() == null) {
             model.addAttribute("error","Sorry, module has not been configured yet.");
             return "module";

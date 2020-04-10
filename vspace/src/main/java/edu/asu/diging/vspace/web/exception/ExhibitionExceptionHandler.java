@@ -12,28 +12,31 @@ import org.springframework.web.servlet.ModelAndView;
 public class ExhibitionExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ExhibitionExceptionHandler.class);
-
-//    @ExceptionHandler({ ModuleNotFoundException.class })
-//    protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("error", ex.getMessage());
-//        logger.info("ModuleNotFoundException Occured:: URL=" + request.getRequestURL());
-//        modelAndView.addObject("url", request.getRequestURL());
-//        modelAndView.setViewName("module");
-//        return modelAndView;
-//    }
-
+    private static final String module_not_found="module_not_found";
+    private static final String space_not_found="space_not_found";
+    private static final String sequence_not_found="sequence_not_found";
+    private static final String slide_not_found="slide_not_found";
+    private static final String slide_not_found_in_sequence="slide_not_found_in_sequence";
+    
     @ExceptionHandler({ ModuleNotFoundException.class })
-    protected String handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
+    protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("error", ex.getMessage());
+        modelAndView.addObject("error_code", module_not_found);
         logger.info("ModuleNotFoundException Occured:: URL=" + request.getRequestURL());
-        return ex.getMessage();
+        logger.info("Code:: "+module_not_found+" Message:: " + ex.getMessage());
+        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.setViewName("module");
+        return modelAndView;
     }
     
     @ExceptionHandler({ SlideNotFoundException.class })
     protected ModelAndView handleSlideNotFoundException(HttpServletRequest request, SlideNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
+        modelAndView.addObject("error_code", slide_not_found);
         logger.info("SlideNotFoundException Occured:: URL=" + request.getRequestURL());
+        logger.info("Code:: "+slide_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -43,7 +46,9 @@ public class ExhibitionExceptionHandler {
     protected ModelAndView handleSequenceNotFoundException(HttpServletRequest request, SequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
+        modelAndView.addObject("error_code", sequence_not_found);
         logger.info("SequenceNotFoundException Occured:: URL=" + request.getRequestURL());
+        logger.info("Code:: "+sequence_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -54,7 +59,9 @@ public class ExhibitionExceptionHandler {
             SlidesInSequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
+        modelAndView.addObject("error_code", slide_not_found_in_sequence);
         logger.info("SlidesInSequenceNotFoundException Occured:: URL=" + request.getRequestURL());
+        logger.info("Code:: "+slide_not_found_in_sequence+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
@@ -65,7 +72,9 @@ public class ExhibitionExceptionHandler {
             SlidesInSequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", ex.getMessage());
+        modelAndView.addObject("error_code", space_not_found);
         logger.info("SpaceNotFoundException Occured:: URL=" + request.getRequestURL());
+        logger.info("Code:: "+space_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
