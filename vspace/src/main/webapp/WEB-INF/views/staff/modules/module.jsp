@@ -188,13 +188,15 @@ $(document).ready(function($) {
 </div>
 
 
-<div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
+<div id="deleteSlideAlert" class="modal fade" role="dialog"
+    data-value="0">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="deleteModalTitle">Confirm
                     Deletion?</h4>
-                <button type="button" id="closeSlide" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button type="button" id="closeSlide" class="close"
+                    data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
                 <p>
@@ -203,8 +205,10 @@ $(document).ready(function($) {
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" id="cancelSlideDelButton" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="deleteSlideFromSequence" type="submit" class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
+                <button type="button" id="cancelSlideDelButton"
+                    class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="deleteSlideFromSequence" type="submit"
+                    class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
             </div>
         </div>
     </div>
