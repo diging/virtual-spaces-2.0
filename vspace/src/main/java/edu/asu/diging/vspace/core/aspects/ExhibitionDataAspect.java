@@ -61,11 +61,11 @@ public class ExhibitionDataAspect {
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         if(exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
             return jp.proceed();
-        } 
+        }
         else if(!(authFacade.getAuthenticatedUser()==null) && index>-1) {
             ((Model) args[index]).addAttribute("showModal", "true");
             return jp.proceed();
-        } 
+        }
         else {
             ((Model) args[index]).addAttribute("modeMessage", exhibition.getModeMessage());
             return "maintenance";

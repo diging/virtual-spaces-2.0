@@ -70,10 +70,10 @@ public class ExhibitionConfigurationController {
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
-        } else {
+        }
+        else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
-
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
@@ -95,5 +95,4 @@ public class ExhibitionConfigurationController {
         attributes.addAttribute("showAlert", "true");
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
-
 }
