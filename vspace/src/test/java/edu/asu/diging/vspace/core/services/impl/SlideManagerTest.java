@@ -31,7 +31,7 @@ public class SlideManagerTest {
     private SlideManager slideManagerToTest = new SlideManager();
 
     // setting common used variables and Objects
-    private String slideId, slideIdOther, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
+    private String slideId, slideIdNotPresent, slideIdOther, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
     private List<ISlide> slidesList = new ArrayList<ISlide>();
     private List<ISlide> slidesListOther = new ArrayList<ISlide>();
     private Sequence sequenceObj;
@@ -41,11 +41,14 @@ public class SlideManagerTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
+        
+        
         sequenceObj = new Sequence();
         sequenceObjOther = new Sequence();
 
         slideId = "SLI000000002";
         slideIdOther = "SLI000000001";
+        slideIdNotPresent = "SLI000000300";
         
         slideIdNotInSequence = "SLI000000219";
         moduleId = "MOD000000002";
@@ -122,16 +125,19 @@ public class SlideManagerTest {
     @Test
     public void test_deleteSlideById_slideIdNotPresent() throws SlideDoesNotExistException {
 
-        Mockito.when(slideRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(slideRepo.findById(slideIdNotPresent)).thenReturn(Optional.empty());
+        slideManagerToTest.deleteSlideById(slideIdNotPresent, moduleId);
+        Mockito.verify(slideRepo, Mockito.never()).deleteById(slideIdNotPresent);
 
-        sequenceObj.setId(sequenceId);
-        sequenceObj.setSlides(slidesList);
+    }
+    
+    @Test
+    public void test_deleteSlideById_slideIdIsNull() {
 
-        List<Sequence> sequencesList = new ArrayList<>();
-        sequencesList.add(sequenceObj);
-        Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
-        slideManagerToTest.deleteSlideById(slideId, moduleId);
-        Mockito.doThrow(SlideDoesNotExistException.class).when(slideRepo).delete(null);
+        Mockito.when(slideRepo.findById(slideIdNotPresent)).thenReturn(Optional.empty());
+        slideManagerToTest.deleteSlideById(slideIdNotPresent, moduleId);
+        Mockito.verify(slideRepo, Mockito.never()).deleteById(slideIdNotPresent);
+
     }
 
     @Test
