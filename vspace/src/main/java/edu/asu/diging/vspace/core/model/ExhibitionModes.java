@@ -25,13 +25,5 @@ public enum ExhibitionModes {
             modesList.add(ExhibitionModes.MAINTENANCE);
             modesList.add(ExhibitionModes.OFFLINE);
         return modesList;
-    }
-    
-    public static List<String> getAllValues() {
-        List<String> valuesList = new ArrayList<>();
-        for(ExhibitionModes val : ExhibitionModes.values()) {
-            valuesList.add(val.getValue());
-        }
-        return valuesList;
-    }
+   }
 }
