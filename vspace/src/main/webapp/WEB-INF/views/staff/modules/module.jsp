@@ -11,19 +11,19 @@
 //# sourceURL=click.js
 //------------Deleting Slides-------------------
 function deleteSlide(slideId) {
-		$.ajax({
-	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
-	        type: 'DELETE',
-	        cache       : false,
-	        contentType : false,
-	        success: function(data) {
-	        	$("#"+slideId).closest('.slide').remove();
-	        },
-	        error: function(data) {
-	        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	        	$('.error').append(alert);
-	        }
-	    });
+    $.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
+        type: 'DELETE',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+            $("#"+slideId).closest('.slide').remove();
+        },
+        error: function(data) {
+            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.error').append(alert);
+        }
+    });
 }
 
 
@@ -50,14 +50,14 @@ function checkSlideInSequence(slideId) {
 
 $(document).ready(function($) {
 	
-	$("#closeSlide").click(function (){
-		$("#deleteSlideAlert").data('value', 0);
-		 $('#deleteSlideAlert').modal('hide'); 
+    $("#closeSlide").click(function (){
+        $("#deleteSlideAlert").data('value', 0);
+        $('#deleteSlideAlert').modal('hide'); 
 	});
 	
-	$("#cancelSlideDelButton").click(function () {
-		$("#deleteSlideAlert").data('value', 0);
-		$("#deleteSlideAlert").hide();
+    $("#cancelSlideDelButton").click(function () {
+        $("#deleteSlideAlert").data('value', 0);
+        $("#deleteSlideAlert").hide();
 	});
 	
 	
@@ -155,34 +155,34 @@ $(document).ready(function($) {
 		</div>
 	</div>
 	<div class="container" id="table">
-		<div class="row">
-			<div class="col justify-content-center" style="padding-left: 30px;">
-				<c:forEach items="${slides}" var="slide">
-					<div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
-						<div align="left" class="card-body d-flex align-items-center" style="position:relative;">
-							<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-							<h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
-							<div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
+        <div class="row">
+            <div class="col justify-content-center" style="padding-left: 30px;">
+                <c:forEach items="${slides}" var="slide">
+                    <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
+                        <div align="left" class="card-body d-flex align-items-center" style="position:relative;">
+                            <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+                            <h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
+                            <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
                             <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
-							</div>
-						</div>
-					</div>		
-				</c:forEach>
-			</div>
-			<div class="col justify-content-center" style="padding-left: 65px;">
-				<c:forEach items="${sequences}" var="sequences">
-					<div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
-						<div align="left" class="card-body">
-							<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
-							<font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
-							<p class="card-text">${sequences.description}</p></font>	
-						</div>
-					</div>
-				</c:forEach>
-			</div>	
-			<div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
-		</div>
-	</div>
+                            </div>
+                        </div>
+                    </div>		
+                </c:forEach>
+            </div>
+            <div class="col justify-content-center" style="padding-left: 65px;">
+                <c:forEach items="${sequences}" var="sequences">
+                    <div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
+                    <div align="left" class="card-body">
+                        <a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
+                        <font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
+                        <p class="card-text">${sequences.description}</p></font>	
+                    </div>
+                    </div>
+                </c:forEach>
+                </div>	
+             <div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
+         </div>
+    </div>
 </div>
 
 
