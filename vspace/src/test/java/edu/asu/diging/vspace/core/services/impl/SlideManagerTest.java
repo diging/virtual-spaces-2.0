@@ -127,9 +127,9 @@ public class SlideManagerTest {
     @Test
     public void test_deleteSlideById_slideIdIsNull() {
 
-        Mockito.when(slideRepo.findById("")).thenReturn(Optional.empty());
+        Mockito.when(slideRepo.findById(null)).thenReturn(Optional.empty());
 
-        slideManagerToTest.deleteSlideById("", moduleId);
+        slideManagerToTest.deleteSlideById(null, moduleId);
         Mockito.verify(slideRepo, Mockito.never()).deleteById(slideIdNotPresent);
     }
 
