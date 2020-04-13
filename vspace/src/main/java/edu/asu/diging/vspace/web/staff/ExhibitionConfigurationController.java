@@ -41,12 +41,12 @@ public class ExhibitionConfigurationController {
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        if (exhibition != null) {
+        if(exhibition!=null) {
             model.addAttribute("exhibition", exhibition);
         } else {
             model.addAttribute("exhibition", new Exhibition());
         }
-        model.addAttribute("exhibitionModes", ExhibitionModes.getAllValues());
+        model.addAttribute("exhibitionModes", ExhibitionModes.getAllModes());
         model.addAttribute("spacesList", spaceRepo.findAll());
         return "staff/exhibit/config";
     }
@@ -61,33 +61,28 @@ public class ExhibitionConfigurationController {
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
-            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, @RequestParam("exhibitMode") String exhibitMode, @RequestParam(value="modeMessage", required = false, defaultValue = "") String exhibitModeMessage, RedirectAttributes attributes)
-            throws IOException {
+        @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+        @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
+        @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
+        @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+        RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;
-        if (exhibitID == null || exhibitID.isEmpty()) {
+        if(exhibitID==null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
-        }
-        else {
+        } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        if(exhibitMode.equals(ExhibitionModes.OFFLINE.getValue())) {
-        	if(exhibitModeMessage.equals(""))
-        		exhibition.setModeMessage("This exhibition is currently offline. Please check back later.");
-        	else
-        		exhibition.setModeMessage(exhibitModeMessage);
-        }
-        else if(exhibitMode.equals(ExhibitionModes.MAINTENANCE.getValue())){
-        	exhibition.setModeMessage("This exhibition is currently under maintenance. Please check back later.");
-        }
-        else {
-        	exhibition.setModeMessage(null);
+        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !(customMessage.equals("")
+            || customMessage.equals(ExhibitionModes.OFFLINE.getValue()))) {
+            exhibition.setCustomMessage(customMessage);
+        } else {
+            exhibition.setCustomMessage("");
         }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");

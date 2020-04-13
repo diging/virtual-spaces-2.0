@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 
@@ -30,9 +31,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String title;
     
-    private String mode;
+    private ExhibitionModes mode;
     
-    private String modeMessage;
+    private String customMessage;
 
     /*
      * (non-Javadoc)
@@ -86,20 +87,20 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.title = title;
     }
 
-	public String getMode() {
+	public ExhibitionModes getMode() {
 		return mode;
 	}
 
-	public void setMode(String mode) {
+	public void setMode(ExhibitionModes mode) {
 		this.mode = mode;
 	}
 
-	public String getModeMessage() {
-		return modeMessage;
+	public String getCustomMessage() {
+		return customMessage;
 	}
 
-	public void setModeMessage(String modeMessage) {
-		this.modeMessage = modeMessage;
+	public void setCustomMessage(String customMessage) {
+		this.customMessage = customMessage;
 	}
 
 }

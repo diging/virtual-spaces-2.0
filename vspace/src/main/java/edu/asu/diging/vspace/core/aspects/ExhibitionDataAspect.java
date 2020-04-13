@@ -59,16 +59,18 @@ public class ExhibitionDataAspect {
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int index = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE.getValue())) {
+        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
             return jp.proceed();
         }
-        else if(!(authFacade.getAuthenticatedUser()==null) && index>-1) {
+        if(authFacade.getAuthenticatedUser()!=null && index>-1) {
             ((Model) args[index]).addAttribute("showModal", "true");
             return jp.proceed();
         }
-        else {
-            ((Model) args[index]).addAttribute("modeMessage", exhibition.getModeMessage());
-            return "maintenance";
+        if(exhibition.getMode()==ExhibitionModes.OFFLINE && !exhibition.getCustomMessage().equals("")) {
+            ((Model) args[index]).addAttribute("modeValue", exhibition.getCustomMessage());
+        } else {
+            ((Model) args[index]).addAttribute("modeValue", exhibition.getMode().getValue());
         }
+        return "maintenance";
     }
 }

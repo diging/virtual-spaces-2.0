@@ -34,8 +34,8 @@
 		</div>
 		<div id="offlineMessage" style="padding-top: 10px;">
 			<label for="title">Offline Message:</label> <input type="text"
-				class="form-control" name="modeMessage"
-				value="${exhibition.modeMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
+				class="form-control" name="customMessage"
+				value="${exhibition.customMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
 		</div>
 		<p style="padding-top: 10px;">
 			<input class="btn btn-primary" type="submit" value="submit" />
@@ -46,18 +46,17 @@
 <script>
 $(document).ready(function() {
 	var offlineMessage = $('#offlineMessage');
-	if (${exhibition.mode}.value == "Offline") {
+	if ('${exhibition}' != null && '${exhibition.mode}' == "OFFLINE") {
 		offlineMessage.show();
 	}
 	else {
 		offlineMessage.hide();
-		offlineMessage.find('input[name=modeMessage]').val("");
 	}
 });
 
 	function modeChange(modeChosen) {
 		var offlineMessage = $('#offlineMessage');
-		if (modeChosen == "Offline") {
+		if (modeChosen == "OFFLINE") {
 			offlineMessage.show();
 		}
 		else {

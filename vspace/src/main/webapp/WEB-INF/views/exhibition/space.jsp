@@ -7,24 +7,24 @@
 //# sourceURL=click.js
 $( document ).ready(function() {
     if ('${showModal}' == 'true') {
-    	if(sessionStorage.getItem("popupShown") != 'true') {
-        	sessionStorage.setItem("popupShown","true");
-        	$("#exhibitionDownModal").show();
-    	}
-    	else {
-			$(".modalDown").css("display","block");
-    	}
+        if(sessionStorage.getItem("popupShown") != 'true') {
+            sessionStorage.setItem("popupShown","true");
+            $("#exhibitionDownModal").show();
+        }
+        else {
+            $(".modalDown").css("display","block");
+        }
     }
     drawLinks();
-    
+
     $( window ).resize(function() {
         $("#space a").remove();
         drawLinks();
     });
-    
+
     $("#cancelExhibitionModal").click(function() {
-    	$("#exhibitionDownModal").hide();
-		$(".modalDown").css("display","block");
+        $("#exhibitionDownModal").hide();
+        $(".modalDown").css("display","block");
     });
 });
 
@@ -35,7 +35,7 @@ function drawLinks() {
         var posY = $("#space").position().top;
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
-        
+
         if ("${link.type}" == 'ALERT') {
             var linkDisplay = $('<div class="alert alert-primary" role="alert">');
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
@@ -50,28 +50,28 @@ function drawLinks() {
         linkDisplay.css('fill', 'red'); 
         linkDisplay.css('color', 'red');
         linkDisplay.css('font-size', "12px");	
-         
+
         link.append(linkDisplay);
         $("#space").append(link);
-        
+
         $(".label-${loop.index}").css({
-          'transform': 'rotate(0deg)',
-          'left': ${link.positionX} + posX - 10,
-          'top': ${link.positionY} + posY + 16,
-          'color': 'red'
+            'transform': 'rotate(0deg)',
+            'left': ${link.positionX} + posX - 10,
+            'top': ${link.positionY} + posY + 16,
+            'color': 'red'
         });	
     }
     </c:forEach>
-    
+
     <c:forEach items="${moduleList}" var="link">
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/module/${link.link.module.id}" />');
-        
+
         var linkDisplay = $('<span class="fas fa-book-open"></span>');
-     
+
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
@@ -79,7 +79,7 @@ function drawLinks() {
         linkDisplay.css('fill', 'red');
         linkDisplay.css('color', 'red');
         linkDisplay.css('font-size', "15px");
-         
+
         link.append(linkDisplay);
         $("#space").append(link);
     }
@@ -92,9 +92,9 @@ function drawLinks() {
         var link = $('<a></a>');
         link.attr('href', "${link.externalLink.externalLink}");
         link.attr('target', "_blank");
-        
+
         var linkDisplay = $('<span class="fa fa-globe"></span>');
-       
+
         if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
@@ -107,7 +107,7 @@ function drawLinks() {
         linkDisplay.css('fill', 'red');
         linkDisplay.css('color', 'red');
         linkDisplay.css('font-size', "15px");
-         
+
         link.append(linkDisplay);
         $("#space").append(link);
     }
@@ -118,7 +118,14 @@ function drawLinks() {
 </script>
 
 <div class="row">
-        <div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >${exhibitionConfig.modeMessage}</div>
+        <div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >
+            <c:if test="${exhibitionConfig.customMessage != ''}">
+                <h6>${exhibitionConfig.customMessage}</h6>
+            </c:if>
+            <c:if test="${exhibitionConfig.customMessage == ''}">
+           	    <h6>${exhibitionConfig.mode.value}</h6>
+            </c:if>
+        </div>
     <div
         class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
     <div id="space-container" class="col-md-8 text-center">
@@ -139,22 +146,27 @@ function drawLinks() {
 </div>
 <div id="exhibitionDownModal" class="modal" tabindex="-1"
 	role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Exhibition Not Active</h5>
-			</div>
-			<div class="modal-body">
-				<h6>${exhibitionConfig.modeMessage}</h6>
-			</div>
-			<div class="modal-footer">
-				<button id="cancelExhibitionModal" type="button" class="btn light">Ok</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Exhibition Not Active</h5>
+            </div>
+            <div class="modal-body">
+                <c:if test="${exhibitionConfig.customMessage != ''}">
+                    <h6>${exhibitionConfig.customMessage}</h6>
+                </c:if>
+                <c:if test="${exhibitionConfig.customMessage == ''}">
+                    <h6>${exhibitionConfig.mode.value}</h6>
+                </c:if>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelExhibitionModal" type="button" class="btn light">Ok</button>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
 $(function() {
-    
+
 });
 </script>
