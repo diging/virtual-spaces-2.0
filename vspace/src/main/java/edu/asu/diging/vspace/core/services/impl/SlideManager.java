@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,9 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private SequenceRepository sequenceRepo;
-
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Override
     public ISlide createSlide(String moduleId, SlideForm slideForm) {
         IModule module = moduleManager.getModule(moduleId);
@@ -61,6 +65,9 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         Slide slideObj = (Slide) getSlide(slideId);
+        if(slideObj == null) {
+            return;
+        }
         for (Sequence sequence : sequences) {
             for (int i = 0; i < sequence.getSlides().size(); i++) {
                 String slideIdToCompare = sequence.getSlides().get(i).getId();
@@ -76,7 +83,7 @@ public class SlideManager implements ISlideManager {
             slideRepo.delete((Slide) getSlide(slideId));
 
         } catch (IllegalArgumentException exception) {
-            throw new SlideDoesNotExistException(exception);
+            logger.error("Slide Id cannot be null. "+exception);
         }
     }
 
