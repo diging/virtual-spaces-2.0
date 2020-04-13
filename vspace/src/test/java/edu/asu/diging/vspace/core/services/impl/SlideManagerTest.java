@@ -47,9 +47,10 @@ public class SlideManagerTest {
         slideId = "SLI000000002";
         slideIdOther = "SLI000000001";
         slideIdNotPresent = "SLI000000300";
-
         slideIdNotInSequence = "SLI000000219";
+        
         moduleId = "MOD000000002";
+        
         sequenceId = "SEQ000000004";
         sequenceIdOther = "SEQ000000005";
 
@@ -60,10 +61,8 @@ public class SlideManagerTest {
         slideObjOther.setId(slideIdOther);
 
         slidesList.add(slideObj);
-
         slidesListOther.add(slideObj);
         slidesListOther.add(slideObjOther);
-
     }
 
     @Test
