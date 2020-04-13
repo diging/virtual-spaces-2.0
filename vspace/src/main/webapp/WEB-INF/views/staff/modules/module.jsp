@@ -28,26 +28,24 @@ function deleteSlide(slideId) {
 
 
 function checkSlideInSequence(slideId) {
-		$.ajax({
-	        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
-	        type: 'GET',
-	        cache       : false,
-	        contentType : false,
-	        success: function(data) {
-	        	if(data.length > 0){
-	        		var keys = Object.keys(data);
-	        		for(var i = 0; i < keys.length;i++){
-	        			$("#sequenceData").text(data[keys[i]].name);
-	        		}
-	        		
-	        		$('#deleteSlideAlert').modal('show'); // popup #myModal id modal
-		        	$("#deleteSlideAlert").data('value', slideId); // setter
-	        	}
-	        	else{
-	        		deleteSlide(slideId);
-	        	}	
-	        }
-	    });
+	$.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
+        type: 'GET',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+            if(data.length > 0){
+                $.each(data, function (index, sequenceData) {
+                    $('ol').append("<li>"+sequenceData.name+"</li>");
+                    });
+                $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
+                $("#deleteSlideAlert").data('value', slideId); // setter
+            }
+            else{
+              deleteSlide(slideId);
+              }	
+            }
+    });
 }
 
 $(document).ready(function($) {
@@ -200,9 +198,10 @@ $(document).ready(function($) {
             </div>
             <div class="modal-body">
                 <p>
-                    This Slide is a part of <span id="sequenceData"></span>
-                    Sequence. Are you sure you want to delete it?
+                    This Slide is a part of Sequences shown below. Are you sure you want to delete it?
                 </p>
+                <ol>
+                </ol>
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancelSlideDelButton"
