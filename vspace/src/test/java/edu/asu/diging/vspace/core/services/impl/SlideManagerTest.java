@@ -41,35 +41,29 @@ public class SlideManagerTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        
-        
         sequenceObj = new Sequence();
         sequenceObjOther = new Sequence();
 
         slideId = "SLI000000002";
         slideIdOther = "SLI000000001";
         slideIdNotPresent = "SLI000000300";
-        
+
         slideIdNotInSequence = "SLI000000219";
         moduleId = "MOD000000002";
         sequenceId = "SEQ000000004";
         sequenceIdOther = "SEQ000000005";
-        
+
         Slide slideObj = new Slide();
         slideObj.setId(slideId);
-        
+
         Slide slideObjOther = new Slide();
         slideObjOther.setId(slideIdOther);
-       
-        
-        
+
         slidesList.add(slideObj);
-        
-        
+
         slidesListOther.add(slideObj);
         slidesListOther.add(slideObjOther);
-        
-       
+
     }
 
     @Test
@@ -135,8 +129,8 @@ public class SlideManagerTest {
     public void test_deleteSlideById_slideIdIsNull() {
 
         Mockito.when(slideRepo.findById("")).thenReturn(Optional.empty());
-        
-        slideManagerToTest.deleteSlideById("", moduleId); 
+
+        slideManagerToTest.deleteSlideById("", moduleId);
         Mockito.verify(slideRepo, Mockito.never()).deleteById(slideIdNotPresent);
     }
 
@@ -149,20 +143,19 @@ public class SlideManagerTest {
         sequenceObjOther.setId(sequenceIdOther);
         sequenceObjOther.setSlides(slidesList);
         sequenceObjOther.setSlides(slidesListOther);
-     
+
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
         sequencesList.add(sequenceObjOther);
         int slidesListSizeBefore = sequencesList.get(1).getSlides().size();
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
 
-        
         ISlide slideObj = slidesList.get(0);
         Mockito.when(slideRepo.findById(slideObj.getId())).thenReturn(Optional.of((Slide) slideObj));
         slideManagerToTest.deleteSlideById(slideId, moduleId);
         Mockito.verify(slideRepo).delete((Slide) slideObj);
         int slidesListSizeAfter = sequencesList.get(1).getSlides().size();
-        
+
         Assert.assertNotEquals(slidesListSizeBefore, slidesListSizeAfter);
     }
 }
