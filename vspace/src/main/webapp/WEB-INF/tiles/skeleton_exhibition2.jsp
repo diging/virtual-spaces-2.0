@@ -42,6 +42,21 @@
 					font-size: 3.5rem;
 				}
 			}
+            
+            /* .footer {
+                margin-top: 100px;
+            } */
+            .footer {
+                margin: 15px 15px 15px 15px;
+                padding: 0px 30px 0px 30px;
+                display: flex;
+                justify-content: space-between;
+            }
+            .footerBox {
+                color: #A34D63;
+                width: 100%;
+            }
+            
 		</style>
 		<!-- Custom styles for this template -->
 		<link href="<c:url value="/resources/bootstrap-4.3.1-dist/sticky-footer.css" />" rel="stylesheet">
@@ -122,15 +137,20 @@
                   </c:if>
 				<tiles:insertAttribute name="content" />
 			</main>
+            
+            <div>
+           <div class="footerBox">
+            <footer class="footer">
+            <!-- <div class="d-flex justify-content-center"> -->
+                <span class="text-muted">This web application was built with Virtual Spaces 2.0
+                    (https://github.com/diging/virtual-spaces-2.0).</span>
+            <!-- </div> -->
+        </footer>
+        </div>
+        </div>
+            
 		</div>
-
-		<footer class="footer mt-auto">
-			<div class="d-flex justify-content-center">
-				<span class="text-muted">This web application was built with Virtual Spaces 2.0
-					(https://github.com/diging/virtual-spaces-2.0).</span>
-			</div>
-		</footer>
-
+        
 		<!-- Icons -->
 		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 		<script>

@@ -4,8 +4,6 @@
 	left: 50%;
 	top: 50%;
 	width: 1280px;
-	height: 1280px;
-	overflow: hidden;
 }
 .Group_8_Class {
 	position: absolute;
@@ -72,4 +70,15 @@ a, a:hover, a:focus {
 	color: inherit;
 	text-decoration: none;
 	transition: all 0.3s;
+}
+
+.navbar-nav>li>a {
+    padding-top: 0px;
+    padding-bottom: 15px;
+}
+
+.navbar-nav>li button {
+    padding-top: 0px;
+    padding-bottom: 5px;
+    line-height: 18px;
 }

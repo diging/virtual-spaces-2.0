@@ -60,12 +60,12 @@ body {
 								</h3>
 							</div>
 							<ul class="list-unstyled components">
-								<li class="active"><c:forEach items="${slides}"
+								<c:forEach items="${slides}"
 										var="slides">
 										<li><a
 											href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${slides.id}" />">${slides.name}</a>
 										</li>
-									</c:forEach></li>
+									</c:forEach>
 							</ul>
 						</nav>
 					</div>
@@ -79,6 +79,7 @@ body {
 								</div>
 							</div>
 						</nav>
+                        </div>
 						<div class="Module_header_Class">
 							<h3>${module.name}</h3>
 						</div>
@@ -142,7 +143,7 @@ body {
 							</a>
                             </c:if>
 						</div>
-					</div>
+					<!-- </div> -->
 
 				</div>
 			</c:if>
