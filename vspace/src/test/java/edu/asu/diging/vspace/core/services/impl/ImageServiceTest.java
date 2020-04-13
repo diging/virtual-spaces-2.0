@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
@@ -47,6 +49,7 @@ public class ImageServiceTest {
     private ImageForm imageForm;
     private List<VSImage> images;
     private IVSImage image;
+    private IVSImage image2;
     private final String IMG_ID = "id";
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
@@ -60,8 +63,13 @@ public class ImageServiceTest {
         image.setId(IMG_ID);
         image.setFilename(IMG_FILENAME);
         image.setFileType(IMG_CONTENT_TYPE);
+        image2 = new VSImage();
+        image2.setId("id2");
+        image2.setFilename("img2");
+        image2.setFileType("content/type");
         images = new ArrayList<>();
         images.add((VSImage)image);
+        images.add((VSImage)image2);
         imageForm = new ImageForm();
         imageForm.setFileName(NEW_IMG_FILENAME);
         imageForm.setDescription(DESCRIPTION);
@@ -162,10 +170,10 @@ public class ImageServiceTest {
     
     @Test
     public void test_getImages_sorted_negativePage() { 
-        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATED_BY.getValue()).descending());
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.FILENAME.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<IVSImage> requestedImages = serviceToTest.getImages(-2, SortByField.CREATED_BY.getValue(), Sort.Direction.DESC.toString());
+        List<IVSImage> requestedImages = serviceToTest.getImages(-2, SortByField.FILENAME.getValue(), Sort.Direction.DESC.toString());
         assertEquals(IMG_ID, requestedImages.get(0).getId());
     }
     
@@ -246,4 +254,11 @@ public class ImageServiceTest {
         serviceToTest.getImageById(IMG_ID);
     }
 
+    private Boolean sorted(List<VSImage> images, SortByField sbf, Direction dr) {
+        List<VSImage> listImg = new ArrayList<VSImage>();
+        for(int i=0; i<images.size(); ++i) {
+            return (images.get(i).getFilename().compareTo(images.get(i+1).getFilename()) > 0);
+        }
+        return false;
+    }
 }
