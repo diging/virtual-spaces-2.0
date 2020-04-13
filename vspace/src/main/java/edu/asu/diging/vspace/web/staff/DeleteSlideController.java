@@ -31,8 +31,8 @@ public class DeleteSlideController {
             @PathVariable("slideId") String slideId) {
         try {
             slideManager.deleteSlideById(slideId, moduleId);
-        } catch (SlideDoesNotExistException slideDoesNotExistException) {
-            logger.error("Could not delete slide.", slideDoesNotExistException);
+        } catch (Exception exception) {
+            logger.error("Could not delete slide.", exception);
             return new ResponseEntity<String>("Sorry, unable to delete the slide. The slide does not exist.",
                     HttpStatus.NOT_FOUND);
         }

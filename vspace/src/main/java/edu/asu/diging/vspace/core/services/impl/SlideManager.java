@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
-import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -61,7 +60,7 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public void deleteSlideById(String slideId, String moduleId) throws SlideDoesNotExistException {
+    public void deleteSlideById(String slideId, String moduleId) {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         Slide slideObj = (Slide) getSlide(slideId);
