@@ -35,6 +35,7 @@ function checkSlideInSequence(slideId) {
         contentType : false,
         success: function(data) {
             if(data.length > 0){
+                $("ol").empty();
                 $.each(data, function (index, sequenceData) {
                     $('ol').append("<li>"+sequenceData.name+"</li>");
                     });
