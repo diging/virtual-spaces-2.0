@@ -73,6 +73,7 @@ public class SlideManager implements ISlideManager {
                 if (slideIdToCompare.equals(slideId)) {
                     sequence.getSlides().remove(slideObj);
                     sequenceRepo.save(sequence);
+                    i = -1;
                 }
             }
         }
