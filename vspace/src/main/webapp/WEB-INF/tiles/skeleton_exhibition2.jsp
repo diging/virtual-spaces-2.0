@@ -28,6 +28,11 @@
 		</script>
 
 		<style>
+        
+            /* html,body {
+                height: 100%;
+                margin: 0;
+            } */
 			.bd-placeholder-img {
 				font-size: 1.125rem;
 				text-anchor: middle;
@@ -43,9 +48,6 @@
 				}
 			}
             
-            /* .footer {
-                margin-top: 100px;
-            } */
             .footer {
                 margin: 15px 15px 15px 15px;
                 padding: 0px 30px 0px 30px;
@@ -55,7 +57,17 @@
             .footerBox {
                 color: #A34D63;
                 width: 100%;
+                /* height: 50px; */
             }
+            
+            /* .push {
+                height: 20px;
+            } */
+            
+            /* .wrapper {
+                min-height: 100%;
+                margin-bottom: -50px;
+            } */
             
 		</style>
 		<!-- Custom styles for this template -->
@@ -138,8 +150,12 @@
 				<tiles:insertAttribute name="content" />
 			</main>
             
-            <div>
-           <div class="footerBox">
+          
+           
+        <!-- <div class="push"></div>    --> 
+		</div>
+        
+        <div class="footerBox">
             <footer class="footer">
             <!-- <div class="d-flex justify-content-center"> -->
                 <span class="text-muted">This web application was built with Virtual Spaces 2.0
@@ -147,9 +163,6 @@
             <!-- </div> -->
         </footer>
         </div>
-        </div>
-            
-		</div>
         
 		<!-- Icons -->
 		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>

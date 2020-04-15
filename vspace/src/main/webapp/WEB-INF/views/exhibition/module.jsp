@@ -48,10 +48,8 @@ body {
 </script>
 <div class="container-fluid">
 	<div id="Module_1" class="Module_1_Class">
-		<div class="col-sm">
 			<c:if test="${error == null}">
 				<div id="wrapper_module" class="toggled">
-					<div class="col-sm">
 						<nav id="slide_sidebar_module" class="active">
 							<div class="slide_sidebar-header">
 								<h3>
@@ -68,7 +66,6 @@ body {
 									</c:forEach>
 							</ul>
 						</nav>
-					</div>
 					<div id="slide_content_module">
 						<nav class="slide_navbar navbar-default">
 							<div class="container-fluid">
@@ -144,14 +141,14 @@ body {
                             </c:if>
 						</div>
 					<!-- </div> -->
-
 				</div>
+             
 			</c:if>
 			<c:if test="${error != null}">
 				<div id="message">
 					<p style="color: red;">${error}</p>
 				</div>
 			</c:if>
-		</div>
+        
 	</div>
 </div>
