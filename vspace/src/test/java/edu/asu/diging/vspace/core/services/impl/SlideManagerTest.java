@@ -146,7 +146,6 @@ public class SlideManagerTest {
         sequencesList.add(sequenceObj);
         sequencesList.add(sequenceObjOther);
         String slideValueBeforeDeletion = sequencesList.get(1).getSlides().get(0).getId();
-        System.out.println("slidePresentBefore: "+slideValueBeforeDeletion);
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
 
         ISlide slideObj = slidesList.get(0);
@@ -154,7 +153,6 @@ public class SlideManagerTest {
         slideManagerToTest.deleteSlideById(slideId, moduleId);
         Mockito.verify(slideRepo).delete((Slide) slideObj);
         String slideAfterDeletion = sequencesList.get(1).getSlides().get(0).getId();
-        System.out.println("slideAfterDeletion: "+slideAfterDeletion);
 
         Assert.assertNotEquals(slideValueBeforeDeletion, slideAfterDeletion);
     }
