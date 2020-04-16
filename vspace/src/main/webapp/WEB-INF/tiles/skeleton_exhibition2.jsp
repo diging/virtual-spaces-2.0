@@ -6,7 +6,6 @@
 
 <!doctype html>
 <html lang="en" class="h-100">
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -28,11 +27,6 @@
 		</script>
 
 		<style>
-        
-            /* html,body {
-                height: 100%;
-                margin: 0;
-            } */
 			.bd-placeholder-img {
 				font-size: 1.125rem;
 				text-anchor: middle;
@@ -47,39 +41,23 @@
 					font-size: 3.5rem;
 				}
 			}
-            
             .footer {
                 margin: 15px 15px 15px 15px;
                 padding: 0px 30px 0px 30px;
                 display: flex;
-                justify-content: space-between;
+                justify-content: center;
             }
             .footerBox {
                 color: #A34D63;
                 width: 100%;
-                /* height: 50px; */
             }
-            
-            /* .push {
-                height: 20px;
-            } */
-            
-            /* .wrapper {
-                min-height: 100%;
-                margin-bottom: -50px;
-            } */
-            
 		</style>
 		<!-- Custom styles for this template -->
 		<link href="<c:url value="/resources/bootstrap-4.3.1-dist/sticky-footer.css" />" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=EB+Garamond|Montserrat" rel="stylesheet">
-
 		<script>
 			$(document).ready(function () {
-
-
-
 				$('#sidebarCollapse').on('click', function () {
 					$('#sidebar').toggleClass('active');
 				});
@@ -87,14 +65,12 @@
 			});
 		</script>
 	</head>
-
 	<body class="d-flex flex-column h-100">
 		<div class="wrapper">
 			<nav class="navbar navbar-light bg-light" style="">
 				<a class="navbar-brand" href="<c:url value="/" />"><c:if test="${not empty exhibition.title}">
 					${exhibition.title}</c:if>
 				<c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
-
 				<ul class="navbar-nav ml-auto" style="flex-direction: row">
 					<li class="nav-item">
 						<a href="#" id="sidebarCollapse" class="nav-link">
@@ -124,7 +100,6 @@
 					</sec:authorize>
 				</ul>
 			</nav>
-
 			<!-- Sidebar -->
 			<nav id="sidebar" class="mCustomScrollbar active float-left position-absolute">
 				<div class="sidebar-header">
@@ -149,21 +124,13 @@
                   </c:if>
 				<tiles:insertAttribute name="content" />
 			</main>
-            
-          
-           
-        <!-- <div class="push"></div>    --> 
 		</div>
-        
         <div class="footerBox">
             <footer class="footer">
-            <!-- <div class="d-flex justify-content-center"> -->
                 <span class="text-muted">This web application was built with Virtual Spaces 2.0
                     (https://github.com/diging/virtual-spaces-2.0).</span>
-            <!-- </div> -->
         </footer>
         </div>
-        
 		<!-- Icons -->
 		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 		<script>

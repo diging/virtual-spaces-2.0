@@ -6,27 +6,21 @@
 	width: 1280px;
 }
 .Group_8_Class {
-	position: absolute;
-	left: 288px;
-	top: 117px;
-	overflow: visible;
+	text-align: center;
 }
-
 .Module_header_Class {
-	position: absolute;
     left: 604px;
     top: 78px;
     overflow: visible;
 }
-
 .Space_link_Class {
     position: absolute;
-    left: 1130px;
-    top: 78px;
+    left: 1166px;
+    top: 11px;
     overflow: visible;
-    color: blue
+    color: blue;
+    font-size: larger;
 }
-
 .SLideshow_option_Class {
 	position: absolute;
 	width: 43.846px;
