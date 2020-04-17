@@ -64,24 +64,21 @@ public class SlideManager implements ISlideManager {
 
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         Slide slideObj = (Slide) getSlide(slideId);
+        List<ISlide> slideObjToRemove = new ArrayList<>();
+        slideObjToRemove.add(slideObj);
         if(slideObj == null) {
             return;
         }
         for (Sequence sequence : sequences) {
-            for (int i = 0; i < sequence.getSlides().size(); i++) {
-                String slideIdToCompare = sequence.getSlides().get(i).getId();
-                if (slideIdToCompare.equals(slideId)) {
-                    sequence.getSlides().remove(slideObj);
-                    sequenceRepo.save(sequence);
-                    i = -1;
-                }
+            if(sequence.getSlides().contains(slideObj)) {
+                sequence.getSlides().removeAll(slideObjToRemove);
+                sequenceRepo.save(sequence);
             }
         }
-
         try {
-
+            
             slideRepo.delete((Slide) getSlide(slideId));
-
+            
         } catch (IllegalArgumentException exception) {
             logger.error("Slide Id cannot be null. "+exception);
         }
