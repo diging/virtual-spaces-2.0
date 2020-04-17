@@ -1,10 +1,11 @@
 .Group_7_Class {
-	position: absolute;
-    width: 942px;
+	position: fixed;
+    width: 55%;
     height: 72px;
-    left: 234px;
-    top: 69px;
-    overflow: visible;
+    left: 376px;
+    top: 205px;
+    display: flex;
+    justify-content: space-between;
 }
 .Slideshow_previous_Class {
 	position: absolute;
@@ -119,10 +120,9 @@ a, a:hover, a:focus {
 }
 
 #wrapper_module {
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-	overflow: hidden;
+    width: 100%;
+    align-items: center;
+    overflow: hidden;
 }
 
 #slide_sidebar_module {
@@ -160,3 +160,20 @@ a, a:hover, a:focus {
 	transition: all 0.3s;
 }
 
+.imgDiv {
+	position: relative;
+	width: 750px;
+	top: 0px;
+	overflow: visible;
+	margin: 1%
+}
+
+.textDiv {
+	position: relative;
+    width: 750px;
+    /* left: 200px; */
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+    margin: auto;
+}
