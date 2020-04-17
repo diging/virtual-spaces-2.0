@@ -66,7 +66,7 @@ public class ExhibitionDataAspect {
             ((Model) args[index]).addAttribute("showModal", "true");
             return jp.proceed();
         }
-        if(exhibition.getMode()==ExhibitionModes.OFFLINE && !exhibition.getCustomMessage().equals("")) {
+        if(exhibition.getMode()==ExhibitionModes.OFFLINE && exhibition.getCustomMessage() != null) {
             ((Model) args[index]).addAttribute("modeValue", exhibition.getCustomMessage());
         } else {
             ((Model) args[index]).addAttribute("modeValue", exhibition.getMode().getValue());

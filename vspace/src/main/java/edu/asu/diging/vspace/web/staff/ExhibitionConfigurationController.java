@@ -82,7 +82,7 @@ public class ExhibitionConfigurationController {
             || customMessage.equals(ExhibitionModes.OFFLINE.getValue()))) {
             exhibition.setCustomMessage(customMessage);
         } else {
-            exhibition.setCustomMessage("");
+            exhibition.setCustomMessage(null);
         }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");

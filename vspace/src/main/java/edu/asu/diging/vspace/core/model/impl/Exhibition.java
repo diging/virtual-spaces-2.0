@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -31,6 +33,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String title;
     
+    @Enumerated(EnumType.STRING)
     private ExhibitionModes mode;
     
     private String customMessage;
