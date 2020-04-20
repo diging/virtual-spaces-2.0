@@ -7,9 +7,10 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
@@ -64,6 +65,8 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     /*
      * (non-Javadoc)
      * 
@@ -218,8 +221,8 @@ public class SpaceManager implements ISpaceManager {
 				spaceRepo.deleteById(id);
 			}
 
-		} catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
-			throw new SpaceDoesNotExistException(exception);
+		} catch (IllegalArgumentException exception) {
+			logger.error("Sorry, some problem occurred while deleting space."+exception);
 		}
 
 	}
