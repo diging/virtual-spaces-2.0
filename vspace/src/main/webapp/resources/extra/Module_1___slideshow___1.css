@@ -1,17 +1,17 @@
 .Group_7_Class {
-	position: fixed;
-    width: 55%;
-    height: 72px;
-    left: 376px;
-    top: 205px;
+	position: relative;
+    width: 72%;
+    /* left: 376px; */
+    top: 65px;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    margin: auto;
 }
 .Slideshow_previous_Class {
 	position: absolute;
     width: 50px;
     height: 50px;
-    left: 10px;
+    left: 20px;
     top: 15px;
     overflow: visible;
 }
@@ -162,7 +162,7 @@ a, a:hover, a:focus {
 
 .imgDiv {
 	position: relative;
-	width: 750px;
+	width: 57%;
 	top: 0px;
 	overflow: visible;
 	margin: 1%
@@ -170,10 +170,16 @@ a, a:hover, a:focus {
 
 .textDiv {
 	position: relative;
-    width: 750px;
-    /* left: 200px; */
+    width: 57%;
     top: 0px;
     overflow: visible;
     text-align: justify;
     margin: auto;
+}
+.slideNumberClass{
+    position: relative;
+    width: 87%;
+    top: 36px;
+    display: flex;
+    justify-content: flex-end;
 }

@@ -61,9 +61,6 @@ public class ExhibitionSlideController {
         }
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
-
-//        List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
-//        boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist==null) {
             throw new SequenceNotFoundException(sequenceId);
@@ -90,18 +87,6 @@ public class ExhibitionSlideController {
         if (slideIndex > 0) {
             prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
         }
-//        if (slideIndex == slideSize - 1) {
-//            nextSlideId = sequenceSlides.get(0).getId();
-//        }
-//        if (slideIndex == 0) {
-//            prevSlideId = sequenceSlides.get(sequenceSlides.size() - 1).getId();
-//        }
-//        if (slideIndex < slideSize - 1) {
-//            nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
-//        }
-//        if (slideIndex > 0) {
-//            prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
-//        }
         model.addAttribute("slides", sequenceSlides);
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);

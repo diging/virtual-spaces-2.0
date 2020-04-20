@@ -49,8 +49,6 @@ public class ExhibitionSequencesController {
             model.addAttribute("error","Sorry, module has not been configured yet.");
             return "module";
         }
-        //List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
-        //boolean sequenceExist = sequences.stream().anyMatch(sequence -> sequence.getId().equals(sequenceId));
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist==null) {
             throw new SequenceNotFoundException(sequenceId);
