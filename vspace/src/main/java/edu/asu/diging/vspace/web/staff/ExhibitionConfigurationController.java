@@ -78,11 +78,8 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !(customMessage.equals("")
-            || customMessage.equals(ExhibitionModes.OFFLINE.getValue()))) {
+        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);
-        } else {
-            exhibition.setCustomMessage(null);
         }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");

@@ -119,12 +119,14 @@ function drawLinks() {
 
 <div class="row">
         <div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >
-            <c:if test="${exhibitionConfig.customMessage != null}">
-                <h6>${exhibitionConfig.customMessage}</h6>
-            </c:if>
-            <c:if test="${exhibitionConfig.customMessage == null}">
-           	    <h6>${exhibitionConfig.mode.value}</h6>
-            </c:if>
+            <c:choose>
+            	<c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
+                	<h6>${exhibitionConfig.customMessage}</h6>
+            	</c:when>
+            	<c:otherwise>
+           	    	<h6>${exhibitionConfig.mode.value}</h6>
+            	</c:otherwise>
+            </c:choose>
         </div>
     <div
         class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
