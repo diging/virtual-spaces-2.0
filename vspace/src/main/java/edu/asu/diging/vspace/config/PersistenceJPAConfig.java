@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:config.properties")
+@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class PersistenceJPAConfig {
 
     @Autowired
@@ -86,6 +86,7 @@ public class PersistenceJPAConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
         properties.setProperty("hibernate.show_sql", "false");
+        properties.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
         return properties;
     }
 }

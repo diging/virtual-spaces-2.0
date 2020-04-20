@@ -9,7 +9,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 @EnableAspectJAutoProxy
-@PropertySource("classpath:/config.properties")
+@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class VSpaceConfig {
 	
 	@Value("${max_upload_size}")

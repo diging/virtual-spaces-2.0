@@ -8,11 +8,13 @@ import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
+import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
@@ -133,7 +135,48 @@ public class ContentBlockManager implements IContentBlockManager {
         return returnValue;
     }
 
+    /**
+     * Delete a text block using an id
+     * 
+     * @param id - id of resource to be deleted. If the id is null then the
+     *           functions returns nothing.
+     *
+     */
+
     @Override
+    public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
+        try {
+            textBlockRepo.deleteById(id);         
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
+
+    /**
+     * Delete an image block using an id
+     * 
+     * @param id - id of resource to be deleted. If the id is null then the
+     *           functions returns nothing.
+     *
+     */
+
+    @Override
+    public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
+        try {
+            imageBlockRepo.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
+
     public void updateTextBlock(TextBlock textBlock) {
         textBlockRepo.save((TextBlock) textBlock);
     }

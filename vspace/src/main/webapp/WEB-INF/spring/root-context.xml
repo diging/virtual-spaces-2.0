@@ -28,9 +28,16 @@
     <aop:aspectj-autoproxy
         proxy-target-class="true" />
 
+    <bean
+        class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="propertiesArray">
+            <array>
+                <ref bean="configFile" />
+            </array>
+        </property>
+    </bean>
+
     <util:properties id="configFile"
         location="classpath:config.properties" />
-    <context:property-placeholder
-        properties-ref="configFile" />
 
 </beans>
