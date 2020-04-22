@@ -177,6 +177,7 @@ public class ImageServiceTest {
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(-2, SortByField.FILENAME.getValue(), Sort.Direction.DESC.toString());
+        assertEquals(true, checkSortByFileNameDesc(requestedImages));
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
     }
     
@@ -187,6 +188,7 @@ public class ImageServiceTest {
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(7, SortByField.FILENAME.getValue(), Sort.Direction.DESC.toString());
+        assertEquals(true, checkSortByFileNameDesc(requestedImages));
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
     }
     
