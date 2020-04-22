@@ -119,7 +119,7 @@ public class ImageService implements IImageService {
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
         List<IVSImage> results = new ArrayList<>();
-        if(!java.util.Objects.isNull(images)) {
+        if(images != null) {
             images.getContent().forEach(i -> results.add(i));
         }
         return results;
