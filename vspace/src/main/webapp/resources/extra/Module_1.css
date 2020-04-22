@@ -1,15 +1,18 @@
 .Module_1_Class {
-	margin: 0 auto 0 auto;
-    width: 80%;
+    margin: 0 auto 0 auto;
+    width: 100%;
 }
+
 .Group_8_Class {
-	text-align: center;
+    text-align: center;
 }
+
 .Module_header_Class {
     left: 604px;
     top: 78px;
     overflow: visible;
 }
+
 .Space_link_Class {
     position: absolute;
     left: 1166px;
@@ -18,49 +21,54 @@
     color: blue;
     font-size: larger;
 }
+
 .SLideshow_option_Class {
-	position: absolute;
-	width: 43.846px;
-	height: 44px;
-	left: 1026px;
-	top: 117px;
-	overflow: visible;
-	--web-animation: fadein 0.3s ease-out;
-	--web-action-type: page;
-	--web-action-target: Module_1___slideshow.html;
-	cursor: pointer;
+    position: absolute;
+    width: 43.846px;
+    height: 44px;
+    left: 1026px;
+    top: 117px;
+    overflow: visible; -
+    -web-animation: fadein 0.3s ease-out; -
+    -web-action-type: page; -
+    -web-action-target: Module_1___slideshow.html;
+    cursor: pointer;
 }
+
 .Ellipse_2 {
-	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-	position: absolute;
-	overflow: visible;
-	width: 103.846px;
-	height: 104px;
-	left: 0px;
-	top: 0px;
+    filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+    position: absolute;
+    overflow: visible;
+    width: 103.846px;
+    height: 104px;
+    left: 0px;
+    top: 0px;
 }
+
 .Icon_ionic_md_play_circle {
-	overflow: visible;
-	position: absolute;
-	width: 24px;
-	height: 24px;
-	left: 10px;
-	top: 10px;
-	transform: matrix(1,0,0,1,0,0);
+    overflow: visible;
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 10px;
+    top: 10px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
 }
+
 .Ellipse_5 {
-	filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-	position: absolute;
-	overflow: visible;
-	width: 104px;
-	height: 104px;
-	left: 0px;
-	top: 0px;
+    filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+    position: absolute;
+    overflow: visible;
+    width: 104px;
+    height: 104px;
+    left: 0px;
+    top: 0px;
 }
+
 a, a:hover, a:focus {
-	color: inherit;
-	text-decoration: none;
-	transition: all 0.3s;
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
 }
 
 .navbar-nav>li>a {
@@ -73,26 +81,82 @@ a, a:hover, a:focus {
     padding-bottom: 5px;
     line-height: 18px;
 }
+
 .sidenav {
-  height: auto;
-  width: auto;
-  position: absolute;
-  z-index: 1;
-  background-color: #fff;
-  padding-top: 50px;
-  overflow: auto;
-  display: none;
-  box-shadow: 5px 0px 0px 0px rgba(0, 0, 0, 0.19);
-  transition: 0.5s;
+    height: 1000px;;
+    width: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
+    padding-top: 60px;
 }
 
 .sidenav a {
-    font-size: 22px;
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
 }
 
 .sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 30px;
+    position: absolute;
+    top: 0;
+    right: 3px;
+    margin-left: 50px;
+}
+
+.barPosition {
+    position: absolute;
+}
+
+.backtoSpace {
+    position: absolute;
+    display: flex;
+    left: 3%;
+    top: 20%;
+    margin: auto;
+}
+
+.Ellipse_5_be {
+    filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
+    position: absolute;
+    overflow: visible;
+    width: 46px; height : 45px;
+    left: 0px;
+    top: 0px;
+    height: 45px;
+}
+
+.Icon_awesome_angle_double_left {
+    overflow: visible;
+    position: absolute;
+    width: 24px;
+    height: 19.269px;
+    left: 8px;
+    top: 8px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.exit_to_space_Class {
+    position: absolute;
+    width: 50px;
+    height: 44px;
+    left: 35px;
+    top: 178px;
+    overflow: visible; -
+    -web-animation: fadein 0.3s ease-out; -
+    -web-action-type: page; -
+    -web-action-target: Home.html;
+    cursor: pointer;
 }

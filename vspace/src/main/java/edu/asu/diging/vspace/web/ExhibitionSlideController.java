@@ -87,6 +87,7 @@ public class ExhibitionSlideController {
         if (slideIndex > 0) {
             prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
         }
+        model.addAttribute("sequence",sequenceExist);
         model.addAttribute("slides", sequenceSlides);
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
