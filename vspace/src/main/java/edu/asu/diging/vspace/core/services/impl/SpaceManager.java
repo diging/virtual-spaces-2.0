@@ -196,46 +196,47 @@ public class SpaceManager implements ISpaceManager {
 	 * @param id if id is null throws exception, else delete corresponding space
 	 * @throws SpaceDoesNotExistException
 	 */
-	@Override
-	public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
-		try {
-			// Order of deletion: Tables: SPACELINKDISPLAY (link_id), SPACELINK
-			// (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
-			List<String> linkedIds = null;
-			List<SpaceLink> spaceLinkIDs = spaceLinkRepo.getLinkedSpaceIds(id);
+    @Override
+    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
+        try {
+            // Order of deletion: Tables: SPACELINKDISPLAY (link_id), SPACELINK
+            // (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
 
-			// When the space has other links attached to it
-			if (spaceLinkIDs.size() > 0) {
-				linkedIds = new ArrayList<>();
-				for (SpaceLink spaceData : spaceLinkIDs) {
-					linkedIds.add(spaceData.getId());
-				}
-				spaceLinkDisplayRepo.deleteByLinkId(linkedIds);
-				spaceLinkRepo.deleteBySourceSpaceId(id);
-				spaceDisplayRepo.deleteBySpaceId(id);
-				spaceRepo.deleteById(id);
-			}
-			// When the space has no other links attached to it
-			else {
-				spaceDisplayRepo.deleteBySpaceId(id);
-				spaceRepo.deleteById(id);
-			}
+            List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
 
-		} catch (IllegalArgumentException exception) {
-			logger.error("Sorry, some problem occurred while deleting space."+exception);
-		}
+            // When the space has other links attached to it
+            List<String> linkedIds;
+            if (spaceLinks.size() > 0) {
+                linkedIds = new ArrayList<>();
+                for (SpaceLink spaceData : spaceLinks) {
+                    linkedIds.add(spaceData.getId());
+                }
+                spaceLinkDisplayRepo.deleteByLinkId(linkedIds);
+                spaceLinkRepo.deleteBySourceSpaceId(id);
+                spaceDisplayRepo.deleteBySpaceId(id);
+                spaceRepo.deleteById(id);
+            }
+            // When the space has no other links attached to it
+            else {
+                spaceDisplayRepo.deleteBySpaceId(id);
+                spaceRepo.deleteById(id);
+            }
 
-	}
+        } catch (IllegalArgumentException exception) {
+            logger.error("Sorry, some problem occurred while deleting space." + exception);
+        }
 
-	@Override
-	public boolean checkTargetSpaceIds(String id) {
+    }
 
-		List<SpaceLink> getLinksFromSpace = spaceLinkRepo.getLinkedSpaceIds(id);
-		boolean targetIdExists = false;
-		if (getLinksFromSpace.size() > 0)
-			targetIdExists = true;
-		else
-			targetIdExists = false;
-		return targetIdExists;
-	}
+    @Override
+    public boolean checkTargetSpaceIds(String id) {
+
+        List<SpaceLink> getLinksFromSpace = spaceLinkRepo.getLinkedSpaces(id);
+        boolean targetIdExists = false;
+        if (getLinksFromSpace.size() > 0)
+            targetIdExists = true;
+        else
+            targetIdExists = false;
+        return targetIdExists;
+    }
 }
