@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,11 +21,8 @@ public class ListImagesController {
 
     @RequestMapping({"/staff/images/list/{page}","/staff/images/list"})
     public String listSpaces(@PathVariable(required = false) String page, Model model) {
-        System.out.println("--"+page);
         int pageNo;
-        if(page == null || page.isEmpty()) {
-            page = "1";
-        }
+        page = StringUtils.isEmpty(page) ? "1" : page;
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page));
         } catch (NumberFormatException numberFormatException) {
