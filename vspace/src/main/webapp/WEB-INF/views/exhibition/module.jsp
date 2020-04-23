@@ -74,7 +74,7 @@ body {
             <div class="textDiv">
                 <h3>${module.name}</h3>
             </div>
-            <div class="Component_31___11 Component_31___11_Class">
+           <%--  <div class="Component_31___11 Component_31___11_Class">
                 <div class="language-picker js-language-picker">
                     <form action="" class="language-picker__form">
                         <label for="language-picker-select"><i
@@ -89,7 +89,7 @@ body {
                         </select>
                     </form>
                 </div>
-            </div>
+            </div> --%>
             <div class="slideNumberClass">
                 <p>Slide ${currentNumOfSlide}/${numOfSlides}</p>
             </div>
