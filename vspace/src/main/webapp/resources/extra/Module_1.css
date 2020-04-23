@@ -112,6 +112,9 @@ a, a:hover, a:focus {
     margin-left: 50px;
 }
 
+.sidenav .dropdown-item {
+    padding: 0px;
+}
 .barPosition {
     position: absolute;
     color: dimgrey;
