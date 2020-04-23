@@ -72,11 +72,11 @@
 					${exhibition.title}</c:if>
 				<c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
 				<ul class="navbar-nav ml-auto" style="flex-direction: row">
-					<li class="nav-item">
+					<!-- <li class="nav-item">
 						<a href="#" id="sidebarCollapse" class="nav-link">
 							<i class="fas fa-compass"></i>
 						</a>
-					</li>
+					</li> -->
 					<sec:authorize access="isAuthenticated() and hasAnyRole('ADMIN', 'STAFF')">
 						<li class="nav-item">
 							<a href="<c:url value="/staff/dashboard" />" class="nav-link">
@@ -86,15 +86,14 @@
 					</sec:authorize>
 					<sec:authorize access="isAnonymous()">
 						<li class="nav-item" style="padding-left: 20px;">
-							<a class="nav-link" href="<c:url value="/login" />"><i class="fas fa-sign-in-alt"></i></a>
+							<a class="nav-link" href="<c:url value="/login" />">Sign In</a>
 						</li>
 					</sec:authorize>
 					<sec:authorize access="isAuthenticated()">
 						<li class="nav-item" style="padding-left: 20px;">
 							<form action="<c:url value="/logout" />" method="POST">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-							<button class="btn navbar-link" type="submit" title="Logout"><i
-									class="fas fa-sign-out-alt"></i></button>
+							<button class="btn navbar-link" type="submit" title="Logout">Sign out</button>
 							</form>
 						</li>
 					</sec:authorize>

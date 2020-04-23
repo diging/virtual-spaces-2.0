@@ -94,19 +94,15 @@ a, a:hover, a:focus {
     transition: 0.5s;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
     padding-top: 60px;
+    word-break: break-all;
 }
 
 .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
+    white-space: pre-wrap;
 }
 
 .sidenav a:hover {
-    color: #f1f1f1;
+    color: #818181;
 }
 
 .sidenav .closebtn {
@@ -118,6 +114,8 @@ a, a:hover, a:focus {
 
 .barPosition {
     position: absolute;
+    color: dimgrey;
+    padding-left: 1%;
 }
 
 .backtoSpace {
@@ -132,7 +130,8 @@ a, a:hover, a:focus {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
     position: absolute;
     overflow: visible;
-    width: 46px; height : 45px;
+    width: 46px;
+    height: 45px;
     left: 0px;
     top: 0px;
     height: 45px;
@@ -146,17 +145,49 @@ a, a:hover, a:focus {
     left: 8px;
     top: 8px;
     transform: matrix(1, 0, 0, 1, 0, 0);
+    color: rgba(0, 0, 0, .5);
 }
 
 .exit_to_space_Class {
     position: absolute;
     width: 50px;
     height: 44px;
-    left: 35px;
-    top: 178px;
-    overflow: visible; -
-    -web-animation: fadein 0.3s ease-out; -
-    -web-action-type: page; -
-    -web-action-target: Home.html;
+    left: 4%;
+    top: 28%;
+    overflow: visible;
     cursor: pointer;
+}
+
+.sideLangnav {
+    height: 1000px;;
+    width: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
+    padding-top: 60px;
+}
+
+.sideLangnav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sideLangnav a:hover {
+    color: #f1f1f1;
+}
+
+.sideLangnav .closebtn {
+    position: absolute;
+    top: 11px;
+    right: 7px;
+    margin-left: 50px;
 }
