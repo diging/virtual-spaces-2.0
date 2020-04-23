@@ -1,26 +1,28 @@
 .Home_Class {
-    position: absolute;
-    transform: translateX(-50%);
-    left: 50%;
-    width: 1280px;
-    height: 720px;
-    background-color: rgba(255, 255, 255, 1);
-    overflow: hidden;
+    margin: 0 auto 0 auto;
+    width: 100%;
 }
-
 .Home__Class {
     position: absolute;
-    left: 750px;
+    left: 530px;
     top: 90px;
     overflow: visible;
     font-size: 30px;
 }
-
+.spaceClass{
+    text-align: center;
+}
+#wrapper_module {
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+	overflow: hidden;
+}
 .Home__Image__Class {
     position: absolute;
     width: 44px;
     height: 44px;
-    left: 400px;
+    left: 229px;
     top: 133px;
     overflow: visible;
 }
@@ -76,4 +78,42 @@
     #slide_sidebarCollapse span {
         display: none;
     }
+}
+.sidenav {
+    height: 840px;
+    width: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
+    padding-top: 60px;
+    word-break: break-all;
+}
+
+.sidenav a {
+    white-space: pre-wrap;
+}
+
+.sidenav a:hover {
+    color: #818181;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 3px;
+    margin-left: 50px;
+}
+
+.sidenav .dropdown-item {
+    padding: 0px;
+}
+.barPosition {
+    position: absolute;
+    color: dimgrey;
+    padding-left: 1%;
 }
