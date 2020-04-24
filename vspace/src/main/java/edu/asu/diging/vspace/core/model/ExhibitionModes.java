@@ -25,5 +25,5 @@ public enum ExhibitionModes {
         modesList.add(ExhibitionModes.MAINTENANCE);
         modesList.add(ExhibitionModes.OFFLINE);
         return modesList;
-   }
+    }
 }

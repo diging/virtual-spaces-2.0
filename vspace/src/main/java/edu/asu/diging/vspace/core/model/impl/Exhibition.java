@@ -23,19 +23,17 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     @Id
     @GeneratedValue(generator = "exhibit_id_generator")
-    @GenericGenerator(name = "exhibit_id_generator", 
-        parameters = @Parameter(name = "prefix", value = "EXH"),
-        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "exhibit_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = Space.class)
     private ISpace startSpace;
 
     private String title;
-    
+
     @Enumerated(EnumType.STRING)
     private ExhibitionModes mode;
-    
+
     private String customMessage;
 
     /*
@@ -90,20 +88,20 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.title = title;
     }
 
-	public ExhibitionModes getMode() {
-		return mode;
-	}
+    public ExhibitionModes getMode() {
+        return mode;
+    }
 
-	public void setMode(ExhibitionModes mode) {
-		this.mode = mode;
-	}
+    public void setMode(ExhibitionModes mode) {
+        this.mode = mode;
+    }
 
-	public String getCustomMessage() {
-		return customMessage;
-	}
+    public String getCustomMessage() {
+        return customMessage;
+    }
 
-	public void setCustomMessage(String customMessage) {
-		this.customMessage = customMessage;
-	}
+    public void setCustomMessage(String customMessage) {
+        this.customMessage = customMessage;
+    }
 
 }
