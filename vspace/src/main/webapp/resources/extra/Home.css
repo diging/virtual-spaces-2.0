@@ -123,8 +123,8 @@
     width: 0;
     position: absolute;
     z-index: 1;
-    top: 0;
-    right: 0;
+    top: 40px;
+    right: 24%;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
