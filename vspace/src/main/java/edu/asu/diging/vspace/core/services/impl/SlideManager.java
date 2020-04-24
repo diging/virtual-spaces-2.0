@@ -61,7 +61,12 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) {
-
+        
+        if(slideId == null) {
+            logger.error("Slide Id cannot be null.");
+            return;
+        }
+        
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         Slide slideObj = (Slide) getSlide(slideId);
         List<ISlide> slideObjToRemove = new ArrayList<>();
@@ -80,7 +85,7 @@ public class SlideManager implements ISlideManager {
             slideRepo.delete((Slide) getSlide(slideId));
             
         } catch (IllegalArgumentException exception) {
-            logger.error("Slide Id cannot be null. "+exception);
+            logger.error("Unable to delete Slide. "+exception);
         }
     }
 

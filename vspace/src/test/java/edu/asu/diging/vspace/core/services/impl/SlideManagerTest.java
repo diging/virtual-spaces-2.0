@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -145,15 +147,18 @@ public class SlideManagerTest {
         List<Sequence> sequencesList = new ArrayList<>();
         sequencesList.add(sequenceObj);
         sequencesList.add(sequenceObjOther);
-        String slideIdBeforeDeletion = sequencesList.get(1).getSlides().get(0).getId();
+        ISlide slideObjBeforeDeletion = sequencesList.get(1).getSlides().get(0);
         Mockito.when(sequenceRepo.findSequencesForModule(moduleId)).thenReturn(sequencesList);
 
         ISlide slideObj = slidesList.get(0);
         Mockito.when(slideRepo.findById(slideObj.getId())).thenReturn(Optional.of((Slide) slideObj));
         slideManagerToTest.deleteSlideById(slideId, moduleId);
         Mockito.verify(slideRepo).delete((Slide) slideObj);
-        String slideIdAfterDeletion = sequencesList.get(1).getSlides().get(0).getId();
+        ISlide slideObjAfterDeletion = sequencesList.get(1).getSlides().get(0);
 
-        Assert.assertNotEquals(slideIdBeforeDeletion, slideIdAfterDeletion);
+        Assert.assertNotEquals(slideObjBeforeDeletion, slideObjAfterDeletion);
+        Assert.assertEquals(true, !sequencesList.get(1).getSlides().contains(slideObjBeforeDeletion));
+        
+        
     }
 }
