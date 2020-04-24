@@ -85,7 +85,7 @@ public class SlideManager implements ISlideManager {
             slideRepo.delete((Slide) getSlide(slideId));
             
         } catch (IllegalArgumentException exception) {
-            logger.error("Unable to delete Slide. "+exception);
+            logger.error("Unable to delete slide.", exception);
         }
     }
 
