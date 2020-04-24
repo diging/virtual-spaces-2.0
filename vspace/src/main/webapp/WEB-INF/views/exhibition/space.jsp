@@ -176,7 +176,7 @@ function drawLinks() {
                 <h3>${space.name}</h3>
             </div>
             <div id="space"
-                style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+                style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; border-radius: 13px; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
             </div>
             <div class="textDiv">${space.description}</div>
         </div>
