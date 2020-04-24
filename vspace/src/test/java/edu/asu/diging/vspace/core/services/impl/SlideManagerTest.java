@@ -152,9 +152,9 @@ public class SlideManagerTest {
         Mockito.when(slideRepo.findById(slideObj.getId())).thenReturn(Optional.of((Slide) slideObj));
         slideManagerToTest.deleteSlideById(slideId, moduleId);
         Mockito.verify(slideRepo).delete((Slide) slideObj);
-        ISlide slideObjAfterDeletion = sequencesList.get(1).getSlides().get(0);
-
-        Assert.assertNotEquals(slideObjBeforeDeletion, slideObjAfterDeletion);        
+        
+        Assert.assertFalse(sequencesList.get(1).getSlides().contains(slideObjBeforeDeletion));
+        
         
     }
 }
