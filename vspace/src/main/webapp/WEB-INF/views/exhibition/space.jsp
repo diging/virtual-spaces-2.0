@@ -154,12 +154,14 @@ function drawLinks() {
                 <h5 class="modal-title">Exhibition Not Active</h5>
             </div>
             <div class="modal-body">
-                <c:if test="${exhibitionConfig.customMessage != ''}">
-                    <h6>${exhibitionConfig.customMessage}</h6>
-                </c:if>
-                <c:if test="${exhibitionConfig.customMessage == ''}">
-                    <h6>${exhibitionConfig.mode.value}</h6>
-                </c:if>
+                <c:choose>
+                    <c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
+                        <h6>${exhibitionConfig.customMessage}</h6>
+                    </c:when>
+                    <c:otherwise>
+           	            <h6>${exhibitionConfig.mode.value}</h6>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div class="modal-footer">
                 <button id="cancelExhibitionModal" type="button" class="btn light">Ok</button>
