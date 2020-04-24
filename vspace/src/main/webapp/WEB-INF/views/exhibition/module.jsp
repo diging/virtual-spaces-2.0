@@ -22,14 +22,6 @@ body {
 }
 </style>
 <script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "240px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
-
     function openLangNav() {
         document.getElementById("myLangSidenav").style.width = "240px";
     }
@@ -40,37 +32,6 @@ body {
 <div class="container-fluid">
     <div id="Module_1" class="Module_1_Class">
         <c:if test="${error == null}">
-            <!-- <div id="wrapper_module" class="toggled"> -->
-            <div class="dropdown">
-                <div id="mySidenav" class="sidenav" onclick="closeNav()">
-                    <i class="far fa-times-circle fa-2x closebtn"
-                        onclick="closeNav()"></i>
-                    <ul>
-                        <li>
-                            <h3>
-                                <a class="dropdown-item"
-                                    <%-- href="<c:url value="/exhibit/space/${spaceId}"/>">${spaceName}</a> --%>
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}/slide/${firstSlide}" />">${module.name}</a>
-                            </h3>
-                        </li>
-                        <ul style="list-style-type: none">
-                            <li><h4>
-                                    <a class="dropdown-item"
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}" />">${sequence.name}</a>
-                                </h4></li>
-                            <ul style="list-style-type: none">
-                                <c:forEach items="${slides}"
-                                    var="slides">
-                                    <li><a class="dropdown-item"
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${slides.id}" />">${slides.name}</a>
-                                </c:forEach>
-                            </ul>
-                        </ul>
-                    </ul>
-                </div>
-                <i class="fas fa-bars fa-2x barPosition"
-                    onclick="openNav()"></i>
-            </div>
             <div class="textDiv">
                 <h3>${module.name}</h3>
             </div>
