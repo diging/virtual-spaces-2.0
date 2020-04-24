@@ -14,6 +14,15 @@ function openNav(){
 function closeNav(){
     document.getElementById("mySidenav").style.width = "0px";
 }
+function openModuleNav(){
+    document.getElementById("mySideModulenav").style.width = "240px";
+    document.getElementById("mySideModulenav").style.height = "400px";
+}
+function closeModuleNav(){
+    document.getElementById("mySideModulenav").style.width = "0px";
+    document.getElementById("mySideModulenav").style.height = "0px";
+}
+
 $( document ).ready(function() {
     
 	$('#slide_sidebar').removeClass('active');
@@ -117,7 +126,6 @@ function drawLinks() {
         $("#space").append(link);
     }
     </c:forEach>
-    
     feather.replace();
 }
 </script>
@@ -125,18 +133,52 @@ function drawLinks() {
 </style>
 <div class="container-fluid">
     <div id="Module_1" class="Home_Class">
-    <div class="dropdown">
-        <div id="mySidenav" class="sidenav">
-            <i class="far fa-times-circle fa-2x closebtn" onclick="closeNav()"></i>
-        </div> 
-        <i class="fas fa-bars fa-2x barPosition"
-                    onclick="openNav()"></i>     
-    </div>
-<div class="spaceClass">
-        <div>${space.name}</div>
-        <div id="space"
-            style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+        <div class="dropdown">
+            <div id="mySidenav" class="sidenav">
+                <i class="far fa-times-circle fa-2x closebtn"
+                    onclick="closeNav()"></i>
+                <!-- <div class="sidebar-header">
+                    <p>In this Virtual Space</p>
+                </div> -->
+                <div class="list-group spaceNav">
+                    <ul>
+                        <c:forEach items="${allSpaces}" var="space">
+                            <li><a class="dropdown-item"
+                                href="<c:url value="/exhibit/space/${space.id}" />">${space.name}</a>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </div>
+            <i class="fas fa-bars fa-2x barPosition" onclick="openNav()"></i>
+        </div>
+        <div class="spaceClass">
+            <div class=dropdown>
+                <div id="mySideModulenav" class="sideModulenav">
+                    <i class="far fa-times-circle fa-2x closebtn"
+                        onclick="closeModuleNav()"></i>
+                    <!-- <div class="sidebar-header">
+                    <p>In this Virtual Space</p>
+                </div> -->
+                    <div class="list-group spaceNav">
+                        <ul style="list-style-type: none">
+                            <c:forEach items="${moduleList}"
+                                var="module">
+                                <li><a class="dropdown-item"
+                                    href="<c:url value="/exhibit/module/${module.link.module.id}" />">${module.link.name}</a>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </div>
+                <i class="fas fa-grip-vertical fa-2x moduleBarPosition"
+                    onclick="openModuleNav()"></i>
+            </div>
+            <div class="textDiv">
+                <h3>${space.name}</h3>
+            </div>
+            <div id="space"
+                style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+            </div>
+            <div class="textDiv">${space.description}</div>
         </div>
     </div>
-</div>
 </div>

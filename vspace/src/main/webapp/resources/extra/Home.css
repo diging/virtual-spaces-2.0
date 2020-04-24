@@ -2,6 +2,7 @@
     margin: 0 auto 0 auto;
     width: 100%;
 }
+
 .Home__Class {
     position: absolute;
     left: 530px;
@@ -9,15 +10,18 @@
     overflow: visible;
     font-size: 30px;
 }
-.spaceClass{
+
+.spaceClass {
     text-align: center;
 }
+
 #wrapper_module {
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-	overflow: hidden;
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    overflow: hidden;
 }
+
 .Home__Image__Class {
     position: absolute;
     width: 44px;
@@ -79,6 +83,7 @@
         display: none;
     }
 }
+
 .sidenav {
     height: 840px;
     width: 0;
@@ -112,8 +117,62 @@
 .sidenav .dropdown-item {
     padding: 0px;
 }
+
+.sideModulenav {
+    height: 0;
+    width: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: -8px 8px 5px -3px rgba(0, 0, 0, 0.19);
+    padding-top: 60px;
+    word-break: break-all;
+}
+
+.sideModulenav a {
+    white-space: pre-wrap;
+}
+
+.sideModulenav a:hover {
+    color: #818181;
+}
+
+.sideModulenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 0px;
+}
+
+.sideModulenav .dropdown-item {
+    padding: 0px;
+    text-align: justify;
+}
+
+.spaceNav ul {
+    padding-inline-start: 20px;
+}
+
 .barPosition {
     position: absolute;
     color: dimgrey;
     padding-left: 1%;
+}
+
+.textDiv {
+    position: relative;
+    width: 48%;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+    margin: auto;
+}
+
+.moduleBarPosition {
+    position: absolute;
+    color: dimgrey;
+    right: 0;
 }
