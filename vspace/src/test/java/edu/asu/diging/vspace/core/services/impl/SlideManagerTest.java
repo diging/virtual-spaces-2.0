@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -156,9 +154,7 @@ public class SlideManagerTest {
         Mockito.verify(slideRepo).delete((Slide) slideObj);
         ISlide slideObjAfterDeletion = sequencesList.get(1).getSlides().get(0);
 
-        Assert.assertNotEquals(slideObjBeforeDeletion, slideObjAfterDeletion);
-        Assert.assertEquals(true, !sequencesList.get(1).getSlides().contains(slideObjBeforeDeletion));
-        
+        Assert.assertNotEquals(slideObjBeforeDeletion, slideObjAfterDeletion);        
         
     }
 }
