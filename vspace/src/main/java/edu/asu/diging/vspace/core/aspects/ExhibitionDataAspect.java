@@ -15,8 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Component
@@ -28,6 +30,9 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private ISpaceManager spaceManager;
+
+    @Autowired
+    private ISpaceDisplayManager spaceDisplayManager;
 
     @Autowired
     private AuthenticationFacade authFacade;
@@ -57,19 +62,32 @@ public class ExhibitionDataAspect {
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
-        int index = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
+        int indexofModel = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
+        int indexofSpaceId = (Arrays.asList(signature.getParameterTypes())).indexOf(String.class);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
-            return jp.proceed();
+        ISpace space = spaceManager.getSpace(args[indexofSpaceId].toString());
+        if(exhibition==null) {
+            return "home";
         }
-        if(authFacade.getAuthenticatedUser()!=null && index>-1) {
-            ((Model) args[index]).addAttribute("showModal", "true");
-            return jp.proceed();
+        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
+            if(space!=null) {
+                return jp.proceed();
+            } else {
+                return "notFound";
+            }
+        }
+        if(authFacade.getAuthenticatedUser()!=null && indexofModel>-1) {
+            if(space!=null) {
+                ((Model) args[indexofModel]).addAttribute("showModal", "true");
+                return jp.proceed();
+            } else {
+                return "notFound";
+            }
         }
         if(exhibition.getMode()==ExhibitionModes.OFFLINE && !exhibition.getCustomMessage().equals("")) {
-            ((Model) args[index]).addAttribute("modeValue", exhibition.getCustomMessage());
+            ((Model) args[indexofModel]).addAttribute("modeValue", exhibition.getCustomMessage());
         } else {
-            ((Model) args[index]).addAttribute("modeValue", exhibition.getMode().getValue());
+            ((Model) args[indexofModel]).addAttribute("modeValue", exhibition.getMode().getValue());
         }
         return "maintenance";
     }
