@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 
 @Repository
 @JaversSpringDataAuditable
@@ -21,4 +22,8 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
 	@Modifying
 	@Query("delete from SpaceLinkDisplay d where d.link.id in (:linkIds)")
 	void deleteByLinkId(@Param("linkIds") List<String> linkId);
+	
+	@Modifying
+	@Query("delete from SpaceLinkDisplay d where d.link = (:spaceLinks)")
+	void deleteBySpaceLink(@Param("spaceLinks") List<SpaceLink> spaceLinks);
 }

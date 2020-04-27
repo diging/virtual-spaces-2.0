@@ -207,11 +207,12 @@ public class SpaceManager implements ISpaceManager {
             // When the space has other links attached to it
             List<String> linkedIds;
             if (spaceLinks.size() > 0) {
-                linkedIds = new ArrayList<>();
+                /*linkedIds = new ArrayList<>();
                 for (SpaceLink spaceData : spaceLinks) {
                     linkedIds.add(spaceData.getId());
-                }
-                spaceLinkDisplayRepo.deleteByLinkId(linkedIds);
+                }*/
+                
+                spaceLinkDisplayRepo.deleteBySpaceLink(spaceLinks);
                 spaceLinkRepo.deleteBySourceSpaceId(id);
                 spaceDisplayRepo.deleteBySpaceId(id);
                 spaceRepo.deleteById(id);
@@ -223,7 +224,7 @@ public class SpaceManager implements ISpaceManager {
             }
 
         } catch (IllegalArgumentException exception) {
-            logger.error("Sorry, some problem occurred while deleting space." + exception);
+            logger.error("Sorry, some problem occurred while deleting space.", exception);
         }
 
     }
