@@ -34,7 +34,8 @@ public class ExhibitionModuleController {
         if (module == null) {
             throw new ModuleNotFoundException(id);
         } else if (module.getStartSequence() == null) {
-            model.addAttribute("error","Sorry, module has not been configured yet.");
+            model.addAttribute("showAlert", true);
+            model.addAttribute("message", "Sorry, module has not been configured yet.");
             return "module";
         }
         String startSequenceID = module.getStartSequence().getId();

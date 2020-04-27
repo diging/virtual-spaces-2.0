@@ -21,8 +21,9 @@ public class ExhibitionExceptionHandler {
     @ExceptionHandler({ ModuleNotFoundException.class })
     protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
         modelAndView.addObject("error_code", module_not_found);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
         logger.info("ModuleNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+module_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
@@ -33,8 +34,9 @@ public class ExhibitionExceptionHandler {
     @ExceptionHandler({ SlideNotFoundException.class })
     protected ModelAndView handleSlideNotFoundException(HttpServletRequest request, SlideNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
         modelAndView.addObject("error_code", slide_not_found);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
         logger.info("SlideNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+slide_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
@@ -45,8 +47,9 @@ public class ExhibitionExceptionHandler {
     @ExceptionHandler({ SequenceNotFoundException.class })
     protected ModelAndView handleSequenceNotFoundException(HttpServletRequest request, SequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
         modelAndView.addObject("error_code", sequence_not_found);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
         logger.info("SequenceNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+sequence_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
@@ -58,8 +61,9 @@ public class ExhibitionExceptionHandler {
     protected ModelAndView handleSlidesInSequenceNotFoundException(HttpServletRequest request,
             SlidesInSequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
         modelAndView.addObject("error_code", slide_not_found_in_sequence);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
         logger.info("SlidesInSequenceNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+slide_not_found_in_sequence+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
@@ -71,8 +75,9 @@ public class ExhibitionExceptionHandler {
     protected ModelAndView handleSpaceNotFoundException(HttpServletRequest request,
             SlidesInSequenceNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", ex.getMessage());
         modelAndView.addObject("error_code", space_not_found);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
         logger.info("SpaceNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+space_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());

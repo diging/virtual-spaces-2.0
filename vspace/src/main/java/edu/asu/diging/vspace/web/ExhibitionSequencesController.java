@@ -46,7 +46,8 @@ public class ExhibitionSequencesController {
         }
         model.addAttribute("module", module);
         if (module.getStartSequence() == null) {
-            model.addAttribute("error","Sorry, module has not been configured yet.");
+            model.addAttribute("showAlert", true);
+            model.addAttribute("message", "Sorry, module has not been configured yet.");
             return "module";
         }
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);

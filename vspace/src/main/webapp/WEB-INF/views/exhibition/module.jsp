@@ -31,7 +31,7 @@ body {
 </script>
 <div class="container-fluid">
     <div id="Module_1" class="Module_1_Class">
-        <c:if test="${error == null}">
+        <c:if test="${showAlert != true}">
             <div class="textDiv">
                 <h3>${module.name}</h3>
             </div>
@@ -125,11 +125,5 @@ body {
                 </c:forEach>
             </div>
         </c:if>
-        <c:if test="${error != null}">
-            <div id="message">
-                <p style="color: red;">${error}</p>
-            </div>
-        </c:if>
-
     </div>
 </div>
