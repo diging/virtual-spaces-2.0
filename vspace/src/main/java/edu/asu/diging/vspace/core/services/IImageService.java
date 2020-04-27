@@ -19,6 +19,8 @@ public interface IImageService {
     
     List<IVSImage> getImages(int pageNo);
     
+    List<IVSImage> getImages(int pageNo, String sortedBy, String order);
+    
     long getTotalImageCount();
 
     int validatePageNumber(int pageNo);
