@@ -158,6 +158,7 @@ function drawLinks() {
                 <div id="mySideModulenav" class="sideModulenav">
                     <i class="far fa-times-circle fa-2x closebtn"
                         onclick="closeModuleNav()"></i>
+
                     <!-- <div class="sidebar-header">
                     <p>In this Virtual Space</p>
                 </div> -->
@@ -171,8 +172,29 @@ function drawLinks() {
                         </ul>
                     </div>
                 </div>
-                <i class="fas fa-grip-vertical fa-2x moduleBarPosition"
-                    onclick="openModuleNav()"></i>
+                <div class="Group_3_Class">
+                    <svg class="Ellipse_8_dc">
+                        <ellipse fill="rgba(222,222,222,1)"
+                            class="Ellipse_8_dc_Class" rx="19.5"
+                            ry="19.5" cx="19.5" cy="19.5">
+                        </ellipse>
+                    </svg>
+                    <svg class="Ellipse_10_dd">
+                        <ellipse fill="rgba(240,240,240,1)"
+                            class="Ellipse_10_dd_Class" rx="16.5"
+                            ry="16.5" cx="16.5" cy="16.5">
+                        </ellipse>
+                    </svg>
+                    <svg class="Ellipse_9_de">
+                        <ellipse fill="rgba(255,255,255,1)"
+                            class="Ellipse_9_de_Class" rx="13.5"
+                            ry="13.5" cx="13.5" cy="13.5">
+                        </ellipse>
+                    </svg>
+                    <i
+                        class="fas fa-grip-vertical fa-lg moduleBarPosition"
+                        onclick="openModuleNav()"></i>
+                </div>
             </div>
             <div class="textDiv">
                 <h3>${space.name}</h3>
