@@ -51,22 +51,24 @@ function drawLinks() {
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay=$('<i class="fas fa-walking fa-lg"></i><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
+            var linkDisplay=$('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p></div>');
         }
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-        linkDisplay.css('fill', 'red'); 
-        linkDisplay.css('color', 'red');
+        linkDisplay.css('fill', 'grey'); 
+        linkDisplay.css('color', 'rgba(128,128,128,1)');
         link.append(linkDisplay);
         $("#space").append(link);
+        /* 'top': ${link.positionY} + posY + 16, */
         $(".label-${loop.index}").css({
           'transform': 'rotate(0deg)',
           'left': ${link.positionX} + posX - 10,
-          'top': ${link.positionY} + posY + 16,
+          'padding-top': '30px',
           'color': 'red',
-          'font-size': '12px'
+          'font-size': '12px',
+          'overflow': 'visible'
         });	
     }
     </c:forEach>
@@ -76,15 +78,15 @@ function drawLinks() {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
         var link = $('<a></a>');
-        link.attr('href', '<c:url value="/exhibit/module/${link.link.module.id}" />');
-        var linkDisplay = $('<i class="fas fa-info-circle fa-lg"></i><p class="moduleLabel-${moduleLoop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
+        link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
+        var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><p class="moduleLabel-${moduleLoop.index}" data-link-id="${link.link.id}">${link.link.name}</p></div>');
      
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-        linkDisplay.css('fill', 'red');
-        linkDisplay.css('color', 'red');
+        linkDisplay.css('fill', 'grey');
+        linkDisplay.css('color', 'rgba(128,128,128,1)');
          
         link.append(linkDisplay);
         $("#space").append(link);
@@ -92,7 +94,7 @@ function drawLinks() {
         $(".moduleLabel-${moduleLoop.index}").css({
             'transform': 'rotate(0deg)',
             'left': ${link.positionX} + posX - 10,
-            'top': ${link.positionY} + posY + 16,
+            'padding-top': '30px',
             'color': 'red',
             'font-size': '12px'
           });
