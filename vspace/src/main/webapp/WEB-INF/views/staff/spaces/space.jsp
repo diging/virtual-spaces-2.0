@@ -750,6 +750,24 @@ $( document ).ready(function() {
 	<br>
 	Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
 </div>
+
+
+    <div style="padding-bottom: 10px;">
+        <c:url value="/staff/space/${space.id}/updateStatus" var="postUrl" />
+        <form:form method="POST"
+            action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+            <label for="sequences" style="width: 200px">Status:</label>
+            <select class="form-control" name="statusParam"
+                style="width: 200px; display: inline; padding-bottom: 110px">
+                    <option id="Published" value="Published" <c:if test="${space.spaceStatus=='Published'}">selected</c:if>>Published</option>
+                    <option id="Unpublished" value="Unpublished" <c:if test="${space.spaceStatus=='Unpublished'}">selected</c:if>>Unpublished</option>
+            </select>
+            <p style="display: inline; padding-left: 10px; padding-top: 1000px;">
+                <input class="btn btn-primary" type="submit" value="submit" />
+            </p>
+        </form:form>
+    </div>
+
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
 ${space.description}
