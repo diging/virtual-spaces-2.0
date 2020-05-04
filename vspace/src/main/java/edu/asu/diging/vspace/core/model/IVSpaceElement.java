@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.model;
 
 import java.time.OffsetDateTime;
 
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+
 public interface IVSpaceElement {
 
 	String getId();
@@ -31,4 +33,8 @@ public interface IVSpaceElement {
 	OffsetDateTime getModificationDate();
 
 	void setModificationDate(OffsetDateTime modificationDate);
+	
+	SpaceStatus getSpaceStatus();
+	
+    void setSpaceStatus(SpaceStatus status);
 }
