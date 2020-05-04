@@ -750,8 +750,6 @@ $( document ).ready(function() {
 	<br>
 	Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
 </div>
-
-
     <div style="padding-bottom: 10px;">
         <c:url value="/staff/space/${space.id}/updateStatus" var="postUrl" />
         <form:form method="POST"

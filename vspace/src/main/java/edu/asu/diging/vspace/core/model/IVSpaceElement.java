@@ -37,4 +37,5 @@ public interface IVSpaceElement {
 	SpaceStatus getSpaceStatus();
 	
     void setSpaceStatus(SpaceStatus status);
+    
 }

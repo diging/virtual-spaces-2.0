@@ -58,8 +58,7 @@ public class AddSpaceController {
         if (file != null) {
             bgImage = file.getBytes();
             filename = file.getOriginalFilename();
-        }
-        
+        } 
         CreationReturnValue creationValue = null;
         if(imageId != null && !imageId.isEmpty()) {
             IVSImage image;

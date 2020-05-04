@@ -17,6 +17,10 @@ public abstract class VSpaceElement implements IVSpaceElement {
 	private OffsetDateTime modificationDate;
 	private SpaceStatus spaceStatus;
 	
+	/* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.IVSpaceElement#getSpaceStatus()
+     */
+    @Override
 	public SpaceStatus getSpaceStatus() {
         return spaceStatus;
     }
