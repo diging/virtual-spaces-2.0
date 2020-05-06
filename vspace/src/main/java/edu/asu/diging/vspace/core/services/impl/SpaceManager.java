@@ -203,39 +203,19 @@ public class SpaceManager implements ISpaceManager {
             // (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
 
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-            
+
             // When the space has other links attached to it
-            List<String> linkedIds;
-            if(spaceLinks.size() > 0) {
-                linkedIds = new ArrayList<>();
-                for(SpaceLink spaceData : spaceLinks) {
-                    linkedIds.add(spaceData.getId());
-                }
+            if (spaceLinks.size() > 0) {
+                spaceLinkDisplayRepo.deleteBySpaceLink(spaceLinks);
+                spaceLinkRepo.deleteBySourceSpaceId(id);
+                spaceDisplayRepo.deleteBySpaceId(id);
+                spaceRepo.deleteById(id);
             }
+            // When the space has no other links attached to it
             else {
-                spaceLinks = new ArrayList<>();
+                spaceDisplayRepo.deleteBySpaceId(id);
+                spaceRepo.deleteById(id);
             }
-            spaceLinkDisplayRepo.deleteBySpaceLink(spaceLinks);
-            spaceLinkRepo.deleteBySourceSpaceId(id);
-            spaceDisplayRepo.deleteBySpaceId(id);
-            spaceRepo.deleteById(id);
-//            List<String> linkedIds;
-//            if (spaceLinks.size() > 0) {
-//                linkedIds = new ArrayList<>();
-//                for (SpaceLink spaceData : spaceLinks) {
-//                    linkedIds.add(spaceData.getId());
-//                }
-//                
-//                spaceLinkDisplayRepo.deleteBySpaceLink(spaceLinks);
-//                spaceLinkRepo.deleteBySourceSpaceId(id);
-//                spaceDisplayRepo.deleteBySpaceId(id);
-//                spaceRepo.deleteById(id);
-//            }
-//            // When the space has no other links attached to it
-//            else {
-//                spaceDisplayRepo.deleteBySpaceId(id);
-//                spaceRepo.deleteById(id);
-//            }
 
         } catch (IllegalArgumentException exception) {
             logger.error("Sorry, some problem occurred while deleting space.", exception);
