@@ -105,7 +105,7 @@
 				</div>
 
 				<div class="list-group spaceNav">
-					<c:forEach items="${allSpaces}" var="space">
+					<c:forEach items="${publishedSpaces}" var="space">
 						<a href="<c:url value="/exhibit/space/${space.id}" />" class="list-group-item
 						list-group-item-action"><i class="fas fa-grip-horizontal"></i> ${space.name}</a>
 					</c:forEach>
