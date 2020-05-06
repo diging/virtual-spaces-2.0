@@ -16,17 +16,7 @@ public abstract class VSpaceElement implements IVSpaceElement {
 	private String modifiedBy;
 	private OffsetDateTime modificationDate;
 	private SpaceStatus spaceStatus;
-	
-	/* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.IVSpaceElement#getSpaceStatus()
-     */
-    @Override
-	public SpaceStatus getSpaceStatus() {
-        return spaceStatus;
-    }
-    public void setSpaceStatus(SpaceStatus spaceStatus) {
-        this.spaceStatus = spaceStatus;
-    }
+
     /* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IVSpaceElement#getName()
 	 */
@@ -111,4 +101,12 @@ public abstract class VSpaceElement implements IVSpaceElement {
 	public void setModificationDate(OffsetDateTime modificationDate) {
 		this.modificationDate = modificationDate;
 	}
+	@Override
+    public SpaceStatus getSpaceStatus() {
+        return spaceStatus;
+    }
+    @Override
+    public void setSpaceStatus(SpaceStatus spaceStatus) {
+        this.spaceStatus = spaceStatus;
+    }
 }
