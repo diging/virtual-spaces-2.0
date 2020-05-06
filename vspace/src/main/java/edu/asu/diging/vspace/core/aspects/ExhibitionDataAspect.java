@@ -38,6 +38,9 @@ public class ExhibitionDataAspect {
                     if (!((Model) obj).containsAttribute("allSpaces")) {
                         ((Model) obj).addAttribute("allSpaces", spaceManager.getAllSpaces());
                     }
+                    if (!((Model) obj).containsAttribute("publishedSpaces")) {
+                        ((Model) obj).addAttribute("publishedSpaces", spaceManager.getPublishedSpaces());
+                    }
                 }
             }
         }

@@ -25,6 +25,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -179,6 +180,13 @@ public class SpaceManager implements ISpaceManager {
         return spaces;
     }
 
+    @Override
+    public List<ISpace> getPublishedSpaces() {
+        List<ISpace> spaces = new ArrayList<>();
+        spaceRepo.findAllBySpaceStatus(SpaceStatus.Published).forEach(s -> spaces.add(s));;
+        return spaces;
+    }
+    
     /**
      * Method to delete space based on id
      * 
