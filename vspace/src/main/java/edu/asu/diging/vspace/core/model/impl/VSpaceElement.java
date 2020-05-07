@@ -102,11 +102,11 @@ public abstract class VSpaceElement implements IVSpaceElement {
 		this.modificationDate = modificationDate;
 	}
 	@Override
-    public SpaceStatus getSpaceStatus() {
-        return spaceStatus;
-    }
-    @Override
-    public void setSpaceStatus(SpaceStatus spaceStatus) {
-        this.spaceStatus = spaceStatus;
-    }
+	public SpaceStatus getSpaceStatus() {
+	    return spaceStatus;
+	}
+	@Override
+	public void setSpaceStatus(SpaceStatus spaceStatus) {
+	    this.spaceStatus = spaceStatus;
+	}
 }
