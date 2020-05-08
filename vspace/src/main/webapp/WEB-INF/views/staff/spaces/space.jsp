@@ -7,6 +7,25 @@
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
 <script>
 //# sourceURL=click.js
+
+function checkSpaceLinkPresent(spaceId) {
+	console.log("Inside ---------->")
+	console.log("space ID: "+spaceId)
+	$.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
+        type: 'GET',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+            
+            },
+            error: function () {
+                
+            }
+    });
+}
+
+
 $( document ).ready(function() {	
 
 	
@@ -746,13 +765,13 @@ $( document ).ready(function() {
 <h1>
 	Space: ${space.name} <small style="margin-left: 10px;"> <a
 		href="<c:url value="/staff/space/${space.id}/edit" />"><span
-			data-feather="edit"></span></a> <a href="#" data-record-id="${space.id}"
+			data-feather="edit"></span></a> <%-- <a href="javascript:checkSlideInSequence('${space.id}')" class="checkSlideInSequence" data-record-id="${space.id}"
 		data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"
 		data-call-on-success="<c:url value="/staff/space/list"/>"
 		data-call-on-error="<c:url value="/staff/space/list"/>"
 		data-toggle="modal" data-target="#confirm-delete"
 		data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this space! Do you still want to delete?' : ''}"><span
-			data-feather="trash-2"></span></a></small>
+			data-feather="trash-2"></span></a> --%></small>
 </h1>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}. 
@@ -1033,11 +1052,15 @@ ${space.description}
 <button type="button" id="addModuleLinkButton" class="btn btn-primary btn-sm">Add Module Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
-<button type="button" class="btn btn-primary btn-sm" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" 
+<%-- <button type="button" class="btn btn-primary btn-sm checkSlideInSequence" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" 
 data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete" 
 data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this space! Do you still want to delete?' : ''}">
 Delete Space
-</button>
+</button> --%>
+
+<a id="${space.id}" href="javascript:checkSlideInSequence('${space.id}')" class="checkSpaceLinkPresent"> 
+ <button type="button" class="btn btn-primary btn-sm checkSpaceLinkPresent" >Delete Space</button>
+</a>
 </nav>
 
 <p></p>
