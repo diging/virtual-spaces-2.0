@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ILinkManager;
@@ -36,4 +37,5 @@ public class SpaceController {
         model.addAttribute("moduleList", moduleManager.getAllModules());
         return "staff/space";
     }
+    
 }

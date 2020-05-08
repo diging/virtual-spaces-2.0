@@ -11,18 +11,18 @@
 function checkSpaceLinkPresent(spaceId) {
 	console.log("Inside ---------->")
 	console.log("space ID: "+spaceId)
-	$.ajax({
-        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
+	/* $.ajax({
+        url: "<c:url value="/staff/spaceLink/{spaceId}" />" + '?${_csrf.parameterName}=${_csrf.token}',
         type: 'GET',
         cache       : false,
         contentType : false,
         success: function(data) {
-            
+            console.log("Inside success with data: "+data)
             },
             error: function () {
                 
             }
-    });
+    }); */
 }
 
 
@@ -1058,7 +1058,7 @@ data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this sp
 Delete Space
 </button> --%>
 
-<a id="${space.id}" href="javascript:checkSlideInSequence('${space.id}')" class="checkSpaceLinkPresent"> 
+<a id="${space.id}" href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent"> 
  <button type="button" class="btn btn-primary btn-sm checkSpaceLinkPresent" >Delete Space</button>
 </a>
 </nav>
