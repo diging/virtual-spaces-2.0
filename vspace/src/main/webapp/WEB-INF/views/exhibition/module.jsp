@@ -29,28 +29,12 @@ body {
         document.getElementById("myLangSidenav").style.width = "0";
     }
 </script>
-<div class="container-fluid">
+<!-- <div class="container-fluid"> -->
     <div id="Module_1" class="Module_1_Class">
         <c:if test="${showAlert != true}">
             <div class="textDiv">
                 <h3>${module.name}</h3>
             </div>
-           <%--  <div class="Component_31___11 Component_31___11_Class">
-                <div class="language-picker js-language-picker">
-                    <form action="" class="language-picker__form">
-                        <label for="language-picker-select"><i
-                            class="fas fa-globe fa-2x""></i></label> <select
-                            name="language-picker-select"
-                            id="language-picker-select">
-                            <option lang="en" value="english" selected>English</option>
-                            <option lang="de" value="deutsch">Deutsch</option>
-                            <option lang="fr" value="francais">Français</option>
-                            <option lang="it" value="italiano">Italiano</option>
-                            <!-- other language options -->
-                        </select>
-                    </form>
-                </div>
-            </div> --%>
             <div class="slideNumberClass">
                 <p>Slide ${currentNumOfSlide}/${numOfSlides}</p>
             </div>
@@ -109,6 +93,7 @@ body {
                 </div>
             </a>
             <div class="Group_8_Class">
+                <%-- <c:if test="${currentSlideCon.contents.size() gt 0}"> --%>
                 <c:forEach items="${currentSlideCon.contents}"
                     var="contents">
                     <c:if
@@ -123,7 +108,12 @@ body {
                         </div>
                     </c:if>
                 </c:forEach>
+                <%-- </c:if>
+                <c:if test="${currentSlideCon.contents.size() == 0}">
+                    <div class="emptyPlace"/>
+                </c:if> --%>
             </div>
         </c:if>
     </div>
-</div>
+<!-- </div> -->
+<div class="pushTop"></div>

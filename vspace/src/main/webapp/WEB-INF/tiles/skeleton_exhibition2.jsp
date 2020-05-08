@@ -59,6 +59,10 @@ body {
 }
 
 .footer {
+    /* margin: 15px 15px 15px 15px;
+    padding: 0px 30px 0px 30px;
+    display: flex;
+    justify-content: center; */
     margin: 15px 15px 15px 15px;
     padding: 0px 30px 0px 30px;
     display: flex;
@@ -69,6 +73,16 @@ body {
     color: #A34D63;
     width: 100%;
 }
+
+.footerBox, .pushTop {
+    height: 75px
+}
+
+/* .wrapper {
+    min-height: 100%;
+    display: contents;
+    /* margin-bottom: -75px; */
+} */
 </style>
 <!-- Custom styles for this template -->
 <link
@@ -90,6 +104,7 @@ body {
 </head>
 <body class="d-flex flex-column h-100">
     <div class="wrapper">
+    <div>
         <nav class="navbar navbar-light" style="">
             <a class="navbar-brand" href="<c:url value="/" />"><c:if
                     test="${not empty exhibition.title}">
@@ -141,28 +156,32 @@ body {
                 </c:forEach>
             </div>
         </nav>
-
+        </div>
 
         <!-- Begin page content -->
-        <main role="main" class="flex-shrink-0"
-            style="padding-top: 20px;"> <c:if
+        <!-- <main role="main" class="flex-shrink-0"
+            style="padding-top: 20px;"> --> 
+            <main class="wrapper">
+            <c:if
             test="${showAlert eq true}">
             <div id="errorMsg" class="alert alert-${alertType}">
                 ${message}</div>
         </c:if> <tiles:insertAttribute name="content" /> </main>
     </div>
+    <div>
     <div class="footerBox">
-        <footer class="footer">
+        <div class="footer">
             <span class="text-muted">This web application was
                 built with Virtual Spaces 2.0
                 (https://github.com/diging/virtual-spaces-2.0).</span>
-        </footer>
+        </div>
+    </div>
     </div>
     <!-- Icons -->
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <!-- <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
 			feather.replace()
-		</script>
+		</script> -->
 </body>
 
 </html>

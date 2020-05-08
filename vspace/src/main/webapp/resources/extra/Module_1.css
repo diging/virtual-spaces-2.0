@@ -1,6 +1,9 @@
 .Module_1_Class {
-    margin: 0 auto 0 auto;
+   /*  margin: 0 auto 0 auto;
+    width: 100%; */
     width: 100%;
+    margin-bottom: 20px;
+    min-height: 100%;
 }
 
 .Group_8_Class {
@@ -193,4 +196,9 @@ a, a:hover, a:focus {
     top: 11px;
     right: 7px;
     margin-left: 50px;
+}
+
+.emptyPlace{
+    /* min-height: 100%; */
+    height: 700px;
 }
