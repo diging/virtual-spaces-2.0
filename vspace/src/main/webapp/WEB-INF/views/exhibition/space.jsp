@@ -16,7 +16,7 @@ function closeNav(){
 }
 function openModuleNav(){
     document.getElementById("mySideModulenav").style.width = "240px";
-    document.getElementById("mySideModulenav").style.height = "400px";
+    document.getElementById("mySideModulenav").style.height = "auto";
 }
 function closeModuleNav(){
     document.getElementById("mySideModulenav").style.width = "0px";
@@ -51,7 +51,7 @@ function drawLinks() {
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay=$('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p></div>');
+            var linkDisplay=$('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><span class="tooltiptext">${link.link.name}</span></div>');
         }
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
@@ -79,7 +79,7 @@ function drawLinks() {
         var posY = $("#space").position().top;
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
-        var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><p class="moduleLabel-${moduleLoop.index}" data-link-id="${link.link.id}">${link.link.name}</p></div>');
+        var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
      
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
@@ -101,43 +101,68 @@ function drawLinks() {
     }
     </c:forEach>
 
-    <c:forEach items="${externalLinkList}" var="link">
+    <c:forEach items="${externalLinkList}" var="link" varStatus="externalLoop">
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
         var link = $('<a></a>');
         link.attr('href', "${link.externalLink.externalLink}");
         link.attr('target', "_blank");
-        
-        var linkDisplay = $('<span class="fa fa-globe"></span>');
+        var linkDisplay = $('<span class="fas fa-globe"></span>');
        
         if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay = $('<span class="fa fa-globe"></span>');
+            console.log("In else block");
+            var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i><span class="tooltiptext">${link.name}</span></div>');
         }
         
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
-        linkDisplay.css('fill', 'red');
-        linkDisplay.css('color', 'red');
-        linkDisplay.css('font-size', "15px");
+        linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
+        linkDisplay.css('fill', 'grey');
+        linkDisplay.css('color', 'rgba(128,128,128,1)');
+         /* linkDisplay.css('font-size', "15px"); */
          
         link.append(linkDisplay);
         $("#space").append(link);
+        
+        $(".externalLabel-${externalLoop.index}").css({
+            'transform': 'rotate(0deg)',
+            'left': ${link.positionX} + posX - 10,
+            'padding-top': '30px',
+            'color': 'red',
+            'font-size': '12px'
+          });
     }
     </c:forEach>
     feather.replace();
 }
 </script>
 <style>
+.Info_cz_Class .tooltiptext {
+  visibility: hidden;
+    width: 120px;
+    color: red;
+    text-align: center;
+    font-size: 12px
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 27px;
+}
+.Info_cz_Class:hover .tooltiptext {
+  visibility: visible;
+}
 </style>
 <div class="container-fluid">
     <div id="Module_1" class="Home_Class">
         <div class="dropdown">
             <div id="mySidenav" class="sidenav">
-                <i class="far fa-times-circle fa-2x closebtn"
+                <i class="far fa-times-circle fa-lg closebtn"
                     onclick="closeNav()"></i>
                 <!-- <div class="sidebar-header">
                     <p>In this Virtual Space</p>
@@ -153,15 +178,11 @@ function drawLinks() {
             </div>
             <i class="fas fa-bars fa-2x barPosition" onclick="openNav()"></i>
         </div>
-        <div class="spaceClass">
+        <div class="spaceClass" style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; border-radius: 13px;">
             <div class=dropdown>
                 <div id="mySideModulenav" class="sideModulenav">
-                    <i class="far fa-times-circle fa-2x closebtn"
+                    <i class="far fa-times-circle fa-lg closebtn"
                         onclick="closeModuleNav()"></i>
-
-                    <!-- <div class="sidebar-header">
-                    <p>In this Virtual Space</p>
-                </div> -->
                     <div class="list-group spaceNav">
                         <ul style="list-style-type: none">
                             <c:forEach items="${moduleList}"
