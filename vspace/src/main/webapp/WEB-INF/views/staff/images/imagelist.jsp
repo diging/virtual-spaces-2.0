@@ -24,7 +24,12 @@ $( document ).ready(function() {
 	    lastClass: 'last',
 	    firstClass: 'first'
 	}).on("page", function(event, num){
-		window.location.assign("./"+num);
+		if("${isShortUrl}" == "true") {
+			window.location.assign("./list/"+num);				
+		}
+		else {
+			window.location.assign("./"+num);
+		}
 	}); 
   });
   

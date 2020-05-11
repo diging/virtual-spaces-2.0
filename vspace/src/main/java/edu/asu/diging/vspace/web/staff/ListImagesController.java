@@ -19,8 +19,14 @@ public class ListImagesController {
     @Autowired
     private IImageService imageService;
 
-    @RequestMapping({"/staff/images/list/{page}","/staff/images/list"})
-    public String listSpaces(@PathVariable(required = false) String page, Model model) {
+    @RequestMapping("/staff/images/list")
+    public String listSpacesWithoutNum(Model model) {
+        model.addAttribute("isShortUrl", true);
+        return listSpaces("1", model);
+    }
+    
+    @RequestMapping(value = {"/staff/images/list/{page}", "/staff/images/list/"})
+    public String listSpaces(@PathVariable String page, Model model) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
         try {
