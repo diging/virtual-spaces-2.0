@@ -95,8 +95,9 @@
     background: #fff;
     transition: 0.5s;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
-    padding-top: 60px;
+    padding-top: 26px;
     word-break: break-all;
+}
 }
 
 .sidenav a {
@@ -109,7 +110,7 @@
 
 .sidenav .closebtn {
     position: absolute;
-    top: 0;
+    top: 8px;
     right: 3px;
     margin-left: 50px;
 }
@@ -123,14 +124,14 @@
     width: 0;
     position: absolute;
     z-index: 1;
-    top: 40px;
-    right: 23%;
+    top: 45px;
+    right: 5px;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
     box-shadow: -8px 8px 5px -3px rgba(0, 0, 0, 0.19);
-    border-radius: 30px 0px 30px 30px;
-    padding-top: 60px;
+    border-radius: 10px 10px 10px 10px;
+    padding-top: 32px;
     word-break: break-all;
 }
 
@@ -144,8 +145,9 @@
 
 .sideModulenav .closebtn {
     position: absolute;
-    top: 0;
-    right: 0px;
+    top: 8px;
+    right: 3px;
+    margin-left: 50px;
 }
 
 .sideModulenav .dropdown-item {
@@ -165,7 +167,7 @@
 
 .textDiv {
     position: relative;
-    width: 48%;
+    /* width: 48%; */
     top: 0px;
     overflow: visible;
     text-align: justify;
@@ -244,13 +246,26 @@
     color: rgba(150, 45, 62, 1);
 }
 
+.Icon_awesome_info_e {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 7px;
+    top: 8.4px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+}
+
 .Group_3_Class {
     position: absolute;
-    width: 39px;
-    height: 39px;
-    /* left: 0px; */
-    top: 43px;
-    right: 23%;
+    width: 37px;
+    /* height: 39px; */
+    /* left: 1px; */
+    right: 0%;
+    top: 46px;
+    right: 1%;
     overflow: visible;
 }
 
@@ -276,7 +291,8 @@
     filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
     position: absolute;
     overflow: visible;
-    width: 28px; height : 26px;
+    width: 28px;
+    height: 26px;
     left: 6px;
     top: 6px;
     height: 26px;
