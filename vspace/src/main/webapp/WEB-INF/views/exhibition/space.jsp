@@ -232,7 +232,7 @@ function drawLinks() {
             <div class="textDiv">
                 <h3>${space.name}
                     <i class="fas fa-info-circle fa-lg"
-                        style="font-size: inherit; color: rgba(150, 45, 62, 1);"
+                        style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                         onclick="openSpaceDescription()"></i>
                 </h3>
             </div>
