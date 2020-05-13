@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -35,11 +36,8 @@ public class ExhibitionDataAspect {
                     if (!((Model) obj).containsAttribute("exhibition")) {
                         ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
                     }
-                    if (!((Model) obj).containsAttribute("allSpaces")) {
-                        ((Model) obj).addAttribute("allSpaces", spaceManager.getAllSpaces());
-                    }
                     if (!((Model) obj).containsAttribute("publishedSpaces")) {
-                        ((Model) obj).addAttribute("publishedSpaces", spaceManager.getPublishedSpaces());
+                        ((Model) obj).addAttribute("publishedSpaces", spaceManager.getPublishedSpaces(SpaceStatus.Published));
                     }
                 }
             }
