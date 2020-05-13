@@ -1,13 +1,15 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -36,6 +38,13 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("moduleList", moduleManager.getAllModules());
         return "staff/space";
+    }
+    
+    @RequestMapping("/staff/spaceLink/spaces/{spaceId}")
+    public List<SpaceLink> isSpaceLinkPresent(@PathVariable("spaceId") String spaceId) {
+       System.out.println("Inside spaces!!!!!!");
+       List<SpaceLink> spaceLinkPresent =  spaceManager.isLinkedFromSpace(spaceId);
+       return spaceLinkPresent;
     }
     
 }

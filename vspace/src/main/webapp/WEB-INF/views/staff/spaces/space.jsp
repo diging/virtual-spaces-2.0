@@ -11,18 +11,19 @@
 function checkSpaceLinkPresent(spaceId) {
 	console.log("Inside ---------->")
 	console.log("space ID: "+spaceId)
-	/* $.ajax({
-        url: "<c:url value="/staff/spaceLink/{spaceId}" />" + '?${_csrf.parameterName}=${_csrf.token}',
+	$.ajax({
+        url: "<c:url value="/staff/spaceLink/spaces/" />" + spaceId + "?${_csrf.parameterName}=${_csrf.token}",
         type: 'GET',
         cache       : false,
+        processData : false,
         contentType : false,
         success: function(data) {
-            console.log("Inside success with data: "+data)
+            console.log("Inside success with data length: "+data.length)
             },
             error: function () {
-                
+                console.log("Inside Error!! "+data.length)
             }
-    }); */
+    }); 
 }
 
 
@@ -52,7 +53,7 @@ $( document ).ready(function() {
 		
 		$("#space").append(link);
 		
-		$(".label-${loop.index}").css({
+		$(".label-${lovop.index}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
 			'top': ${link.positionY} + posY + 16,
