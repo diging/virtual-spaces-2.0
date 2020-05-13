@@ -23,6 +23,16 @@ function closeModuleNav(){
     document.getElementById("mySideModulenav").style.height = "0px";
 }
 
+function closeSpaceDescription(){
+    document.getElementById("rightContent").style.width = "0px";
+    document.getElementById("rightContent").style.height = "0px";
+}
+
+function openSpaceDescription(){
+    document.getElementById("rightContent").style.width = "300px";
+    document.getElementById("rightContent").style.height = "800px";
+}
+
 $( document ).ready(function() {
     
 	$('#slide_sidebar').removeClass('active');
@@ -142,24 +152,25 @@ function drawLinks() {
 </script>
 <style>
 .Info_cz_Class .tooltiptext {
-  visibility: hidden;
+    visibility: hidden;
     width: 120px;
     color: red;
     text-align: center;
-    font-size: 12px
-    padding: 3px 0;
+    font-size: 12px padding: 3px 0;
     border-radius: 6px;
     position: absolute;
     z-index: 1;
     left: -38px;
     top: 27px;
 }
+
 .Info_cz_Class:hover .tooltiptext {
-  visibility: visible;
+    visibility: visible;
 }
 </style>
 <div class="container-fluid">
     <div id="Module_1" class="Home_Class">
+        <!-- <div class="leftContent"> -->
         <div class="dropdown">
             <div id="mySidenav" class="sidenav">
                 <i class="far fa-times-circle fa-lg closebtn"
@@ -178,7 +189,8 @@ function drawLinks() {
             </div>
             <i class="fas fa-bars fa-2x barPosition" onclick="openNav()"></i>
         </div>
-        <div class="spaceClass" style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; border-radius: 13px;">
+        <div class="spaceClass"
+            style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; border-radius: 13px;">
             <div class=dropdown>
                 <div id="mySideModulenav" class="sideModulenav">
                     <i class="far fa-times-circle fa-lg closebtn"
@@ -218,12 +230,21 @@ function drawLinks() {
                 </div>
             </div>
             <div class="textDiv">
-                <h3>${space.name}</h3>
+                <h3>${space.name}
+                    <i class="fas fa-info-circle fa-lg"
+                        style="font-size: inherit; color: rgba(150, 45, 62, 1);"
+                        onclick="openSpaceDescription()"></i>
+                </h3>
             </div>
+
             <div id="space"
                 style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; border-radius: 13px; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
             </div>
-            <div class="textDiv">${space.description}</div>
+            <div id="rightContent">
+                <i class="far fa-times-circle fa-lg closebtn"
+                    onclick="closeSpaceDescription()"></i>
+                <div class="spaceDescription">${space.description}</div>
+            </div>
         </div>
     </div>
 </div>
