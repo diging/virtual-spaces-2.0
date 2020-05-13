@@ -223,10 +223,10 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public boolean isLinkedFromSpace(String id) {
+    public List<SpaceLink> isLinkedFromSpace(String id) {
 
         List<SpaceLink> linksFromSpace = spaceLinkRepo.getLinkedSpaces(id);
         System.out.println("linksFromSpace: "+linksFromSpace.size());
-        return (linksFromSpace.size() > 0);
+        return linksFromSpace;
     }
 }
