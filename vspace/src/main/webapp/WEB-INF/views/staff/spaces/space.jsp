@@ -12,16 +12,17 @@ function checkSpaceLinkPresent(spaceId) {
 	console.log("Inside ---------->")
 	console.log("space ID: "+spaceId)
 	$.ajax({
-        url: "<c:url value="/staff/spaceLink/spaces/" />" + spaceId + "?${_csrf.parameterName}=${_csrf.token}",
+        url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
         type: 'GET',
         cache       : false,
-        processData : false,
         contentType : false,
         success: function(data) {
-            console.log("Inside success with data length: "+data.length)
-            },
-            error: function () {
-                console.log("Inside Error!! "+data.length)
+            if(data.length > 0){
+               console.log("Space Link present")         
+            }
+            else{
+                console.log("Space link not present")         
+              }	
             }
     }); 
 }
