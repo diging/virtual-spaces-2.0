@@ -59,10 +59,6 @@ body {
 }
 
 .footer {
-    /* margin: 15px 15px 15px 15px;
-    padding: 0px 30px 0px 30px;
-    display: flex;
-    justify-content: center; */
     margin: 15px 15px 15px 15px;
     padding: 0px 30px 0px 30px;
     display: flex;
@@ -77,12 +73,6 @@ body {
 .footerBox, .pushTop {
     height: 75px
 }
-
-/* .wrapper {
-    min-height: 100%;
-    display: contents;
-    /* margin-bottom: -75px; */
-} */
 </style>
 <!-- Custom styles for this template -->
 <link
@@ -104,84 +94,89 @@ body {
 </head>
 <body class="d-flex flex-column h-100">
     <div class="wrapper">
-    <div>
-        <nav class="navbar navbar-light" style="">
-            <a class="navbar-brand" href="<c:url value="/" />"><c:if
-                    test="${not empty exhibition.title}">
+        <div>
+            <nav class="navbar navbar-light" style="">
+                <a class="navbar-brand" href="<c:url value="/" />"><c:if
+                        test="${not empty exhibition.title}">
 					${exhibition.title}</c:if> <c:if test="${empty exhibition.title}">Virtual Spaces
                 </c:if></a>
-            <ul class="navbar-nav ml-auto" style="flex-direction: row">
-                <sec:authorize
-                    access="isAuthenticated() and hasAnyRole('ADMIN', 'STAFF')">
-                    <li class="nav-item"><a
-                        href="<c:url value="/staff/dashboard" />"
-                        class="nav-link"> <i
-                            class="fas fa-tachometer-alt"></i>
-                    </a></li>
-                </sec:authorize>
-                <sec:authorize access="isAnonymous()">
-                    <li class="nav-item" style="padding-left: 20px;">
-                        <a class="nav-link"
-                        href="<c:url value="/login" />"><i class="fas fa-sign-in-alt"></i></a>
-                    </li>
-                </sec:authorize>
-                <sec:authorize access="isAuthenticated()">
-                    <li class="nav-item" style="padding-left: 20px;">
-                        <form action="<c:url value="/logout" />"
-                            method="POST">
-                            <input type="hidden"
-                                name="${_csrf.parameterName}"
-                                value="${_csrf.token}" />
-                            <button class="btn nav-link" type="submit" title="Logout" style="font-size: large;"><i class="fas fa-sign-out-alt"></i></button>
-                        </form>
-                    </li>
-                </sec:authorize>
-            </ul>
-        </nav>
-        <!-- Sidebar -->
-        <nav id="sidebar"
-            class="mCustomScrollbar active float-left position-absolute">
-            <div class="sidebar-header">
-                <p>In this Virtual Space:</p>
-            </div>
+                <ul class="navbar-nav ml-auto"
+                    style="flex-direction: row">
+                    <sec:authorize
+                        access="isAuthenticated() and hasAnyRole('ADMIN', 'STAFF')">
+                        <li class="nav-item"><a
+                            href="<c:url value="/staff/dashboard" />"
+                            class="nav-link"> <i
+                                class="fas fa-tachometer-alt"></i>
+                        </a></li>
+                    </sec:authorize>
+                    <sec:authorize access="isAnonymous()">
+                        <li class="nav-item" style="padding-left: 20px;">
+                            <a class="nav-link"
+                            href="<c:url value="/login" />"><i
+                                class="fas fa-sign-in-alt"></i></a>
+                        </li>
+                    </sec:authorize>
+                    <sec:authorize access="isAuthenticated()">
+                        <li class="nav-item" style="padding-left: 20px;">
+                            <form action="<c:url value="/logout" />"
+                                method="POST">
+                                <input type="hidden"
+                                    name="${_csrf.parameterName}"
+                                    value="${_csrf.token}" />
+                                <button class="btn nav-link"
+                                    type="submit" title="Logout"
+                                    style="font-size: large;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </button>
+                            </form>
+                        </li>
+                    </sec:authorize>
+                </ul>
+            </nav>
+            <!-- Sidebar -->
+            <nav id="sidebar"
+                class="mCustomScrollbar active float-left position-absolute">
+                <div class="sidebar-header">
+                    <p>In this Virtual Space:</p>
+                </div>
 
-            <div class="list-group spaceNav">
-                <c:forEach items="${allSpaces}" var="space">
-                    <a
-                        href="<c:url value="/exhibit/space/${space.id}" />"
-                        class="list-group-item
+                <div class="list-group spaceNav">
+                    <c:forEach items="${allSpaces}" var="space">
+                        <a
+                            href="<c:url value="/exhibit/space/${space.id}" />"
+                            class="list-group-item
 						list-group-item-action"><i
-                        class="fas fa-grip-horizontal"></i>
-                        ${space.name}</a>
-                </c:forEach>
-            </div>
-        </nav>
+                            class="fas fa-grip-horizontal"></i>
+                            ${space.name}</a>
+                    </c:forEach>
+                </div>
+            </nav>
         </div>
 
         <!-- Begin page content -->
-        <!-- <main role="main" class="flex-shrink-0"
-            style="padding-top: 20px;"> --> 
-            <main class="wrapper">
-            <c:if
+        <main role="main" class="flex-shrink-0"
+            style="padding-top: 20px;"> <c:if
             test="${showAlert eq true}">
             <div id="errorMsg" class="alert alert-${alertType}">
                 ${message}</div>
-        </c:if> <tiles:insertAttribute name="content" /> </main>
+        </c:if> <tiles:insertAttribute name="content" />
+        <div class="pushTop"></div>
     </div>
     <div>
-    <div class="footerBox">
-        <div class="footer">
-            <span class="text-muted">This web application was
-                built with Virtual Spaces 2.0
-                (https://github.com/diging/virtual-spaces-2.0).</span>
+        <div class="footerBox">
+            <div class="footer">
+                <span class="text-muted">This web application was
+                    built with Virtual Spaces 2.0
+                    (https://github.com/diging/virtual-spaces-2.0).</span>
+            </div>
         </div>
     </div>
-    </div>
     <!-- Icons -->
-    <!-- <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
 			feather.replace()
-		</script> -->
+		</script>
 </body>
 
 </html>

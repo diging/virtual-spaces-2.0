@@ -93,7 +93,6 @@ body {
                 </div>
             </a>
             <div class="Group_8_Class">
-                <%-- <c:if test="${currentSlideCon.contents.size() gt 0}"> --%>
                 <c:forEach items="${currentSlideCon.contents}"
                     var="contents">
                     <c:if
@@ -108,12 +107,7 @@ body {
                         </div>
                     </c:if>
                 </c:forEach>
-                <%-- </c:if>
-                <c:if test="${currentSlideCon.contents.size() == 0}">
-                    <div class="emptyPlace"/>
-                </c:if> --%>
             </div>
         </c:if>
     </div>
 <!-- </div> -->
-<div class="pushTop"></div>
