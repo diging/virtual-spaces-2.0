@@ -6,36 +6,35 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 public interface IVSpaceElement {
 
-	String getId();
+    String getId();
 
-	void setId(String id);
+    void setId(String id);
 
-	String getName();
+    String getName();
 
-	void setName(String name);
+    void setName(String name);
 
-	String getDescription();
+    String getDescription();
 
-	void setDescription(String description);
+    void setDescription(String description);
 
-	String getCreatedBy();
+    String getCreatedBy();
 
-	void setCreatedBy(String createdBy);
+    void setCreatedBy(String createdBy);
 
-	OffsetDateTime getCreationDate();
+    OffsetDateTime getCreationDate();
 
-	void setCreationDate(OffsetDateTime creationDate);
+    void setCreationDate(OffsetDateTime creationDate);
 
-	String getModifiedBy();
+    String getModifiedBy();
 
-	void setModifiedBy(String modifiedBy);
+    void setModifiedBy(String modifiedBy);
 
-	OffsetDateTime getModificationDate();
+    OffsetDateTime getModificationDate();
 
-	void setModificationDate(OffsetDateTime modificationDate);
-	
-	SpaceStatus getSpaceStatus();
-	
+    void setModificationDate(OffsetDateTime modificationDate);
+
+    SpaceStatus getSpaceStatus();
+
     void setSpaceStatus(SpaceStatus status);
-    
 }
