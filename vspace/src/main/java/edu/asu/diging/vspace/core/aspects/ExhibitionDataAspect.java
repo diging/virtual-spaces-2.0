@@ -54,7 +54,7 @@ public class ExhibitionDataAspect {
                         ((Model) obj).addAttribute("allSpaces", spaceManager.getAllSpaces());
                     }
                 }
-            }
+            }  
         }
     }
 
@@ -66,12 +66,18 @@ public class ExhibitionDataAspect {
         int indexofSpaceId = (Arrays.asList(signature.getParameterTypes())).indexOf(String.class);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         ISpace space = spaceManager.getSpace(args[indexofSpaceId].toString());
+        System.out.println(args[indexofSpaceId].toString());
         if(exhibition==null) {
             return "home";
         }
+        if(exhibition.getMode() == null || !args[indexofSpaceId].toString().substring(0,3).equalsIgnoreCase("SPA")) {
+            return jp.proceed();
+        }
         if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
             if(space!=null) {
-                return jp.proceed();
+                Object ans = jp.proceed();
+                System.out.println(args.toString());
+                return ans;
             } else {
                 return "notFound";
             }
