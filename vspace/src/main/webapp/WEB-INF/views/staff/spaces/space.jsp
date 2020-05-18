@@ -9,8 +9,13 @@
 //# sourceURL=click.js
 
 function checkSpaceLinkPresent(spaceId) {
-	console.log("Inside ---------->")
+    
 	console.log("space ID: "+spaceId)
+	var urlToLoadOnSuccess = "<c:url value="/staff/space/list"/>";
+    var urlToLoadOnError = "<c:url value="/staff/space/list"/>";
+    var dataUrl = "<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>";
+    var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";
+    
 	$.ajax({
         url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
         type: 'GET',
@@ -18,10 +23,24 @@ function checkSpaceLinkPresent(spaceId) {
         contentType : false,
         success: function(data) {
             if(data.length > 0){
-               console.log("Space Link present")         
+               console.log("IF -----> "+data);
+               $('#deleteSpace').attr('data-toggle', 'modal');
+               $('#deleteSpace').attr('data-target', "#confirm-delete");
+               $('#deleteSpace').attr('data-url', dataUrl);
+               $('#deleteSpace').attr('data-record-id', spaceId);
+               $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
+               $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
+               $('#deleteSpace').attr('data-warning', warningMessage);
             }
             else{
-                console.log("Space link not present")         
+                console.log("ELSE -------> ");
+                $('#deleteSpace').attr('data-toggle', 'modal');
+                $('#deleteSpace').attr('data-target', "#confirm-delete");
+                $('#deleteSpace').attr('data-url', dataUrl);
+                $('#deleteSpace').attr('data-record-id', spaceId);
+                $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
+                $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
+                $('#deleteSpace').attr('data-warning', '');
               }	
             }
     }); 
@@ -1061,7 +1080,7 @@ Delete Space
 </button> --%>
 
 <a id="${space.id}" href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent"> 
- <button type="button" class="btn btn-primary btn-sm checkSpaceLinkPresent" >Delete Space</button>
+ <button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent" >Delete Space</button>
 </a>
 </nav>
 
