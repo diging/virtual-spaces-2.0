@@ -5,7 +5,8 @@
 }
 
 .Group_8_Class {
-    text-align: center;
+    /* text-align: center; */
+    text-align: -webkit-center;
 }
 
 .Module_header_Class {
