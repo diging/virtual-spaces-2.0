@@ -8,6 +8,35 @@
 <script>
 //# sourceURL=click.js
 
+$(function(){
+    $('#deleteSpace').click(function(){
+        var spaceId = "${space.id}";
+        var urlToLoadOnSuccess = "<c:url value="/staff/space/list"/>";
+        var urlToLoadOnError = "<c:url value="/staff/space/list"/>";
+        var dataUrl = "<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>";
+        var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";
+        
+            $.ajax({
+                url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
+                type: 'GET',
+                cache       : false,
+                contentType : false,
+                success: function(data) {
+                    if(data.length > 0){
+                       console.log("IF -----> "+data);
+                       
+                      
+                    }
+                    else{
+                        console.log("ELSE -------> ");
+                     
+                      }	
+                    }
+            }); 
+    })
+})
+
+
 function checkSpaceLinkPresent(spaceId) {
     
 	console.log("space ID: "+spaceId)
@@ -24,23 +53,11 @@ function checkSpaceLinkPresent(spaceId) {
         success: function(data) {
             if(data.length > 0){
                console.log("IF -----> "+data);
-               $('#deleteSpace').attr('data-toggle', 'modal');
-               $('#deleteSpace').attr('data-target', "#confirm-delete");
-               $('#deleteSpace').attr('data-url', dataUrl);
-               $('#deleteSpace').attr('data-record-id', spaceId);
-               $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
-               $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
-               $('#deleteSpace').attr('data-warning', warningMessage);
+               
             }
             else{
                 console.log("ELSE -------> ");
-                $('#deleteSpace').attr('data-toggle', 'modal');
-                $('#deleteSpace').attr('data-target', "#confirm-delete");
-                $('#deleteSpace').attr('data-url', dataUrl);
-                $('#deleteSpace').attr('data-record-id', spaceId);
-                $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
-                $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
-                $('#deleteSpace').attr('data-warning', '');
+                $('#confirm-delete').modal('show');
               }	
             }
     }); 
@@ -1079,9 +1096,16 @@ data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this sp
 Delete Space
 </button> --%>
 
-<a id="${space.id}" href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent"> 
+<%-- <a id="${space.id}" href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent"> 
  <button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent" >Delete Space</button>
-</a>
+</a> --%>
+<button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent" 
+data-record-id="${space.id}" 
+data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" 
+data-call-on-success = "<c:url value="/staff/space/list"/>" 
+data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal"
+data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this space! Do you still want to delete?' : ''}">
+Delete Space</button>
 </nav>
 
 <p></p>
