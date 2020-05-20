@@ -67,7 +67,6 @@ public class ExhibitionDataAspect {
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         String spaceId="";
         String moduleId = "";
-        String prefix = "";
         IModule module = null;
         ISpace space = null;
         Object[] args = jp.getArgs();
@@ -80,22 +79,19 @@ public class ExhibitionDataAspect {
         if(exhibition.getMode() == null) {
             return jp.proceed();
         }
-        // To check all string parameters for space and module Id's. 
         for(int i=0; i < signature.getParameterTypes().length; ++i) {
             if(signature.getParameterTypes()[i].equals(String.class)) {
                 if(((String) args[i]).length() > 2) {
-                    prefix = ((String) args[i]).substring(0,3);
+                    String prefix = ((String) args[i]).substring(0,3);
                     if(prefix.equalsIgnoreCase("SPA")) {
                         spaceId = (String) args[i];
                     }
                     else if(prefix.equalsIgnoreCase("MOD")) {
                         moduleId = (String) args[i];
-                        System.out.println("Found module!!!!!!!!!!!!!!!!!");
                     }
                 }
             }
         }
-        // To check if the Id's are valid and have relevant data in DB.
         if(spaceId.equals("") && moduleId.equals("")) {
             return "notFound";
         }
@@ -103,7 +99,6 @@ public class ExhibitionDataAspect {
             space = spaceManager.getSpace(spaceId);
             module = moduleManager.getModule(moduleId);
         }
-        // Validating the mode of exhibition and displaying relevant pages.
         if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
             if(space==null && module==null) {
                 return "notFound";
@@ -112,8 +107,6 @@ public class ExhibitionDataAspect {
                 return jp.proceed();
             }
         }
-        // If the user is logged in then show pop up/message on exhibition for maintenance
-        // and offline modes.
         if(authFacade.getAuthenticatedUser()!=null && indexofModel>-1) {
             if(space==null && module==null) {
                 return "notFound";
