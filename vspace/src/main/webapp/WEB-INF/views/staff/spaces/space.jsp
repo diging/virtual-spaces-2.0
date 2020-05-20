@@ -8,33 +8,7 @@
 <script>
 //# sourceURL=click.js
 
-$(function(){
-    $('#deleteSpace').click(function(){
-        var spaceId = "${space.id}";
-        var urlToLoadOnSuccess = "<c:url value="/staff/space/list"/>";
-        var urlToLoadOnError = "<c:url value="/staff/space/list"/>";
-        var dataUrl = "<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>";
-        var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";
-        
-            $.ajax({
-                url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
-                type: 'GET',
-                cache       : false,
-                contentType : false,
-                success: function(data) {
-                    if(data.length > 0){
-                       console.log("IF -----> "+data);
-                       
-                      
-                    }
-                    else{
-                        console.log("ELSE -------> ");
-                     
-                      }	
-                    }
-            }); 
-    })
-})
+
 
 
 function checkSpaceLinkPresent(spaceId) {
@@ -42,8 +16,9 @@ function checkSpaceLinkPresent(spaceId) {
 	console.log("space ID: "+spaceId)
 	var urlToLoadOnSuccess = "<c:url value="/staff/space/list"/>";
     var urlToLoadOnError = "<c:url value="/staff/space/list"/>";
-    var dataUrl = "<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>";
-    var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";
+    var dataUrl = "<c:url value="/staff/space/" />" + spaceId + '?${_csrf.parameterName}=${_csrf.token}';
+    var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";  
+
     
 	$.ajax({
         url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
@@ -52,21 +27,57 @@ function checkSpaceLinkPresent(spaceId) {
         contentType : false,
         success: function(data) {
             if(data.length > 0){
-               console.log("IF -----> "+data);
+                console.log("IF -----> "+data);
+               $('#deleteSpace').attr('data-toggle', 'modal');
+               $('#deleteSpace').attr('data-target', "#confirm-space-delete");
+               $('#deleteSpace').attr('data-url', dataUrl);
+               $('#deleteSpace').attr('data-record-id', spaceId);
+               $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
+               $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
+               $('#deleteSpace').attr('data-warning', warningMessage);
+               $('#confirm-space-delete').modal('show');
                
             }
             else{
                 console.log("ELSE -------> ");
-                $('#confirm-delete').modal('show');
+                $('#deleteSpace').attr('data-toggle', 'modal');
+                $('#deleteSpace').attr('data-target', "#confirm-space-delete");
+                $('#deleteSpace').attr('data-url', dataUrl);
+                $('#deleteSpace').attr('data-record-id', spaceId);
+                $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
+                $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
+                $('#deleteSpace').attr('data-warning', '');
+                $('#confirm-space-delete').modal('show');
               }	
             }
     }); 
 }
 
 
-$( document ).ready(function() {	
+$( document ).ready(function() {
+    
+    
+ // STORY-49 Ashmi Changes start
+    $('#confirm-space-delete').on('click', '.btn-ok', function(e) {
+        var url = $("#deleteSpace").data('url');
+        var urlToLoadOnSuccess = $("#deleteSpace").data('call-on-success');
+        console.log("urlToLoadOnSuccess: "+urlToLoadOnSuccess)
+		var urlToLoadOnError = $("#deleteSpace").data('call-on-error');
+		$.ajax({
+			url : url,
+			type : 'DELETE',
+			success : function(response) {
+				window.location.href = urlToLoadOnSuccess;
+			},
+			error : function(errorMessage) {
+				window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
+			}
+		});
+        
+  });    
+    
+    // Ashmi Changes end
 
-	
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
 		var posX = $("#bgImage").position().left;
@@ -1096,19 +1107,49 @@ data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this sp
 Delete Space
 </button> --%>
 
-<%-- <a id="${space.id}" href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent"> 
- <button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent" >Delete Space</button>
-</a> --%>
-<button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent" 
+<a id="${space.id}" href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent"> 
+ <button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent">Delete Space</button>
+</a>
+
+<%-- <button type="button" id="deleteSpace" class="btn btn-primary btn-sm checkSpaceLinkPresent" 
 data-record-id="${space.id}" 
 data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" 
 data-call-on-success = "<c:url value="/staff/space/list"/>" 
 data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal"
 data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this space! Do you still want to delete?' : ''}">
-Delete Space</button>
+Delete Space</button> --%>
 </nav>
 
 <p></p>
+
+<div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalTitle">
+                    Confirm
+                    ${space.id}
+                    Deletion?
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete ${space.id}?
+                </p>
+                <small class="text-danger" id="warning"></small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeButton" class="btn btn-default"
+                    data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <c:if test="${not empty space.image}">
 	<div id="space">
