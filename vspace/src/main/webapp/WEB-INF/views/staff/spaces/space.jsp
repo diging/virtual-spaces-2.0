@@ -757,10 +757,10 @@ $( document ).ready(function() {
         <label style="width: 200px"><h5>Space Status:</h5></label>
         <select class="form-control" name="statusParam"
             style="width: 200px; display: inline; padding-bottom: 110px">
-            <option id="Published" value="Published"
-                <c:if test="${space.spaceStatus=='Published'}">selected</c:if>>Published</option>
-            <option id="Unpublished" value="Unpublished"
-                <c:if test="${space.spaceStatus=='Unpublished'}">selected</c:if>>Unpublished</option>
+            <option id="Published" value="PUBLISHED"
+                <c:if test="${space.spaceStatus=='PUBLISHED'}">selected</c:if>>Published</option>
+            <option id="Unpublished" value="UNPUBLISHED"
+                <c:if test="${space.spaceStatus=='UNPUBLISHED'}">selected</c:if>>Unpublished</option>
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">
