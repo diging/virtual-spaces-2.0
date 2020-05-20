@@ -120,7 +120,7 @@
     
 	<definition name="notFound" extends="base.definition">	
 		<put-attribute name="currentPage" value="notFound" />
-		<put-attribute name="content" value="/WEB-INF/views/staff/spaces/notFound.jsp" />	
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/notFound.jsp" />	
 	</definition>
 	
 	<!-- Modules -->

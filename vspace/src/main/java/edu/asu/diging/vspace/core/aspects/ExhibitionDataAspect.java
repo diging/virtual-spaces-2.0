@@ -15,9 +15,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -30,6 +32,9 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private IModuleManager moduleManager;
 
     @Autowired
     private ISpaceDisplayManager spaceDisplayManager;
@@ -60,34 +65,62 @@ public class ExhibitionDataAspect {
 
     @Around("execution(public * edu.asu.diging.vspace.web.publicview..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
+        String spaceId="";
+        String moduleId = "";
+        String prefix = "";
+        IModule module = null;
+        ISpace space = null;
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int indexofModel = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
-        int indexofSpaceId = (Arrays.asList(signature.getParameterTypes())).indexOf(String.class);
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        ISpace space = spaceManager.getSpace(args[indexofSpaceId].toString());
-        System.out.println(args[indexofSpaceId].toString());
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition(); 
         if(exhibition==null) {
             return "home";
         }
-        if(exhibition.getMode() == null || !args[indexofSpaceId].toString().substring(0,3).equalsIgnoreCase("SPA")) {
+        if(exhibition.getMode() == null) {
             return jp.proceed();
         }
-        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
-            if(space!=null) {
-                Object ans = jp.proceed();
-                System.out.println(args.toString());
-                return ans;
-            } else {
-                return "notFound";
+        // To check all string parameters for space and module Id's. 
+        for(int i=0; i < signature.getParameterTypes().length; ++i) {
+            if(signature.getParameterTypes()[i].equals(String.class)) {
+                if(((String) args[i]).length() > 2) {
+                    prefix = ((String) args[i]).substring(0,3);
+                    if(prefix.equalsIgnoreCase("SPA")) {
+                        spaceId = (String) args[i];
+                    }
+                    else if(prefix.equalsIgnoreCase("MOD")) {
+                        moduleId = (String) args[i];
+                        System.out.println("Found module!!!!!!!!!!!!!!!!!");
+                    }
+                }
             }
         }
+        // To check if the Id's are valid and have relevant data in DB.
+        if(spaceId.equals("") && moduleId.equals("")) {
+            return "notFound";
+        }
+        else {
+            space = spaceManager.getSpace(spaceId);
+            module = moduleManager.getModule(moduleId);
+        }
+        // Validating the mode of exhibition and displaying relevant pages.
+        if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
+            if(space==null && module==null) {
+                return "notFound";
+            }
+            else {
+                return jp.proceed();
+            }
+        }
+        // If the user is logged in then show pop up/message on exhibition for maintenance
+        // and offline modes.
         if(authFacade.getAuthenticatedUser()!=null && indexofModel>-1) {
-            if(space!=null) {
+            if(space==null && module==null) {
+                return "notFound";
+            }
+            else {
                 ((Model) args[indexofModel]).addAttribute("showModal", "true");
                 return jp.proceed();
-            } else {
-                return "notFound";
             }
         }
         if(exhibition.getMode()==ExhibitionModes.OFFLINE && !exhibition.getCustomMessage().equals("")) {

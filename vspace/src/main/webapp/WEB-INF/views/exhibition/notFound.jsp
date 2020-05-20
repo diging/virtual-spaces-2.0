@@ -9,5 +9,5 @@ $( document ).ready(function() {
 });
 </script>
 <div class="alert alert-warning center col-md-12" style="text-align: center;">
-The space could not be found.
+The space or module could not be found.
 </div>
