@@ -93,6 +93,7 @@ body {
                 </div>
             </a>
             <div class="Group_8_Class">
+                <h3>${currentSlideCon.name}</h3>
                 <c:forEach items="${currentSlideCon.contents}"
                     var="contents">
                     <c:if
