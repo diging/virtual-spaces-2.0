@@ -14,30 +14,30 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ExhibitionSpaceController {
-	
-	@Autowired
-	private ISpaceManager spaceManager;
-	
-	@Autowired
-	private ISpaceDisplayManager spaceDisplayManager;
-	
-	@Autowired
-	private ILinkManager linkManager;
-	
-	@RequestMapping(value="/exhibit/space/{id}")
-	public String space(@PathVariable("id") String id, Model model) {
-		ISpace space = spaceManager.getSpace(id);
-		if(space.getSpaceStatus().equals(SpaceStatus.Unpublished)) {
-		    model.addAttribute("showAlert", true);
-		    model.addAttribute("message", "Access Denied to the Space");
-		}
-		else {
-		model.addAttribute("space", space);
-		model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
-		model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
-		model.addAttribute("display", spaceDisplayManager.getBySpace(space));
-		model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id));
-		}
-		return "space";
-	}
+
+    @Autowired
+    private ISpaceManager spaceManager;
+
+    @Autowired
+    private ISpaceDisplayManager spaceDisplayManager;
+
+    @Autowired
+    private ILinkManager linkManager;
+
+    @RequestMapping(value="/exhibit/space/{id}")
+    public String space(@PathVariable("id") String id, Model model) {
+        ISpace space = spaceManager.getSpace(id);
+        if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)) {
+            model.addAttribute("space", space);
+            model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+            model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
+            model.addAttribute("display", spaceDisplayManager.getBySpace(space));
+            model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id));  
+        }
+        else {
+            model.addAttribute("showAlert", true);
+            model.addAttribute("message", "Access Denied.");
+        }
+        return "space";
+    }
 }

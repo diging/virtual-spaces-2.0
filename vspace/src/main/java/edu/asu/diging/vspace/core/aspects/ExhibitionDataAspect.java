@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.aspects;
 
+import java.util.List;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -37,7 +40,9 @@ public class ExhibitionDataAspect {
                         ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
                     }
                     if (!((Model) obj).containsAttribute("publishedSpaces")) {
-                        ((Model) obj).addAttribute("publishedSpaces", spaceManager.getPublishedSpaces(SpaceStatus.Published));
+                        List<ISpace> publishedSpaces=spaceManager.getPublishedSpaces(SpaceStatus.PUBLISHED);
+                        publishedSpaces.addAll(spaceManager.getPublishedSpaces(null));
+                        ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                 }
             }
