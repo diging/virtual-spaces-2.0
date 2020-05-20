@@ -21,7 +21,6 @@ function openModuleNav(){
 }
 function closeModuleNav(){
     document.getElementById("mySideModulenav").style.width = "0px";
-    document.getElementById("mySideModulenav").style.height = "0px";
 }
 
 function closeSpaceDescription(){
@@ -153,7 +152,7 @@ function drawLinks() {
 .Info_cz_Class .tooltiptext {
     visibility: hidden;
     width: 120px;
-    color: rgba(150, 45, 62, 1);
+    color: white;
     text-align: center;
     font-size: 12px padding: 3px 0;
     border-radius: 6px;
@@ -161,6 +160,7 @@ function drawLinks() {
     z-index: 1;
     left: -38px;
     top: 27px;
+    background: rgba(0,0,0,0.6);
 }
 
 .Info_cz_Class:hover .tooltiptext {
@@ -186,7 +186,7 @@ function drawLinks() {
                     </ul>
                 </div>
             </div>
-            <i class="fas fa-bars fa-2x barPosition" onclick="openNav()"></i>
+            <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
         </div>
         <div class="spaceClass"
             style="width: ${display.width}px; height: ${display.height}px; min-height: 780px;  margin: auto; background-size: cover; border-radius: 13px;">
@@ -200,7 +200,7 @@ function drawLinks() {
                                 <c:forEach items="${moduleList}"
                                     var="module">
                                     <li><a class="dropdown-item"
-                                        href="<c:url value="/exhibit/module/${module.link.module.id}" />">${module.link.name}</a>
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />">${module.link.name}</a>
                                 </c:forEach>
                             </ul>
                         </div>
