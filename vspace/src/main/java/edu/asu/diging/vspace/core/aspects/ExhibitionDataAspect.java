@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.aspects;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,6 +19,7 @@ import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IdPrefix;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -65,8 +68,6 @@ public class ExhibitionDataAspect {
 
     @Around("execution(public * edu.asu.diging.vspace.web.publicview..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
-        String spaceId="";
-        String moduleId = "";
         IModule module = null;
         ISpace space = null;
         Object[] args = jp.getArgs();
@@ -79,20 +80,11 @@ public class ExhibitionDataAspect {
         if(exhibition.getMode() == null) {
             return jp.proceed();
         }
-        for(int i=0; i < signature.getParameterTypes().length; ++i) {
-            if(signature.getParameterTypes()[i].equals(String.class)) {
-                if(((String) args[i]).length() > 2) {
-                    String prefix = ((String) args[i]).substring(0,3);
-                    if(prefix.equalsIgnoreCase("SPA")) {
-                        spaceId = (String) args[i];
-                    }
-                    else if(prefix.equalsIgnoreCase("MOD")) {
-                        moduleId = (String) args[i];
-                    }
-                }
-            }
-        }
-        if(spaceId.equals("") && moduleId.equals("")) {
+        Map<String, String> ids = this.getIds(args, signature);
+        String spaceId = ids.getOrDefault("spaceId", "");
+        String moduleId = ids.getOrDefault("moduleId", "");
+        if(spaceId.equals("") && moduleId.equals("") && 
+            (exhibition.getMode().equals(ExhibitionModes.ACTIVE) || authFacade.getAuthenticatedUser()!=null)) {
             return "notFound";
         }
         else {
@@ -122,5 +114,23 @@ public class ExhibitionDataAspect {
             ((Model) args[indexofModel]).addAttribute("modeValue", exhibition.getMode().getValue());
         }
         return "maintenance";
+    }
+    
+    private Map<String, String> getIds(Object[] args, MethodSignature signature) {
+        Map<String, String> res = new HashMap<>();
+        for(int i=0; i <signature.getParameterTypes().length; ++i) {
+            if(signature.getParameterTypes()[i].equals(String.class)) {
+                if(((String) args[i]).length() > 2) {
+                    String prefix = ((String) args[i]).substring(0,3);
+                    if(prefix.equalsIgnoreCase(IdPrefix.SPACEID.getValue())) {
+                        res.put("spaceId", (String) args[i]);
+                    }
+                    else if(prefix.equalsIgnoreCase(IdPrefix.MODULEID.getValue())) {
+                        res.put("moduleId", (String) args[i]);
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
