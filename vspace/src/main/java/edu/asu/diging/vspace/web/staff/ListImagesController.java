@@ -26,7 +26,7 @@ public class ListImagesController {
         return listSpaces("1", SortByField.CREATION_DATE.getValue(), Direction.DESC.toString(), model);
     }
 
-    @RequestMapping("/staff/images/list/{page}")
+    @RequestMapping(value = {"/staff/images/list/", "/staff/images/list/{page}"})
     public String listSpaces(@PathVariable String page,
         @RequestParam(value = "sort", required = false) String sortedBy,
         @RequestParam(value = "order", required = false) String order, Model model) {
