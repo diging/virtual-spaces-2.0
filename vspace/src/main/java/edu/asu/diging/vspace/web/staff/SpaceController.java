@@ -45,7 +45,6 @@ public class SpaceController {
     
     @RequestMapping(value = "/staff/spaceLink/{spaceId}/spaces", method = RequestMethod.GET)
     public ResponseEntity<List<SpaceLink>> isSpaceLinkPresent(@PathVariable("spaceId") String spaceId) {
-       System.out.println("Inside spaces!!!!!!");
        List<SpaceLink> spaceLinkPresent =  spaceManager.isLinkedFromSpace(spaceId);
        return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }

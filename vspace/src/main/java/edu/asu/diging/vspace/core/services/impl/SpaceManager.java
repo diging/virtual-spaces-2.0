@@ -203,7 +203,6 @@ public class SpaceManager implements ISpaceManager {
             // (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
 
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-            System.out.println("spaceLinks present ?????????: "+spaceLinks.size());
             // When space has other links attached to it
             if (spaceLinks.size() > 0) {
                 spaceLinkDisplayRepo.deleteBySpaceLink(spaceLinks);
@@ -226,7 +225,6 @@ public class SpaceManager implements ISpaceManager {
     public List<SpaceLink> isLinkedFromSpace(String id) {
 
         List<SpaceLink> linksFromSpace = spaceLinkRepo.getLinkedSpaces(id);
-        System.out.println("linksFromSpace: "+linksFromSpace.size());
         return linksFromSpace;
     }
 }
