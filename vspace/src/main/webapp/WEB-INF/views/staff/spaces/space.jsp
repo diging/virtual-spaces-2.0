@@ -3,12 +3,10 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
+<%@page buffer="8192kb" autoFlush="true" %>
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
 <script>
 //# sourceURL=click.js
-
-
 
 
 function checkSpaceLinkPresent(spaceId) {
@@ -19,15 +17,14 @@ function checkSpaceLinkPresent(spaceId) {
     var dataUrl = "<c:url value="/staff/space/" />" + spaceId + '?${_csrf.parameterName}=${_csrf.token}';
     var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";  
 
-    
 	$.ajax({
         url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
         type: 'GET',
         cache       : false,
         contentType : false,
         success: function(data) {
+            
             if(data.length > 0){
-                console.log("IF -----> "+data);
                $('#deleteSpace').attr('data-toggle', 'modal');
                $('#deleteSpace').attr('data-target', "#confirm-space-delete");
                $('#deleteSpace').attr('data-url', dataUrl);
@@ -36,10 +33,8 @@ function checkSpaceLinkPresent(spaceId) {
                $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
                $('#deleteSpace').attr('data-warning', warningMessage);
                $('#confirm-space-delete').modal('show');
-               
             }
             else{
-                console.log("ELSE -------> ");
                 $('#deleteSpace').attr('data-toggle', 'modal');
                 $('#deleteSpace').attr('data-target', "#confirm-space-delete");
                 $('#deleteSpace').attr('data-url', dataUrl);
@@ -61,7 +56,6 @@ $( document ).ready(function() {
     $('#confirm-space-delete').on('click', '.btn-ok', function(e) {
         var url = $("#deleteSpace").data('url');
         var urlToLoadOnSuccess = $("#deleteSpace").data('call-on-success');
-        console.log("urlToLoadOnSuccess: "+urlToLoadOnSuccess)
 		var urlToLoadOnError = $("#deleteSpace").data('call-on-error');
 		$.ajax({
 			url : url,
@@ -1128,9 +1122,7 @@ Delete Space</button> --%>
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteModalTitle">
-                    Confirm
-                    ${space.id}
-                    Deletion?
+                    Confirm ${space.id} Deletion?
                 </h5>
                 <button type="button" class="close" data-dismiss="modal"
                     aria-hidden="true">×</button>
@@ -1156,6 +1148,6 @@ Delete Space</button> --%>
 		<img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
 	</div>
 </c:if>
-<jsp:include page="../../deleteModal.jsp" >
+<%-- <jsp:include page="../../deleteModal.jsp" >
 <jsp:param name="elementType" value="Space" /> 
-</jsp:include>
+</jsp:include> --%>

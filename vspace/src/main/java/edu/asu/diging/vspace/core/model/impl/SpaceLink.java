@@ -11,6 +11,8 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 
@@ -24,6 +26,7 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
 	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
+	@JsonIgnore
 	@ManyToOne(targetEntity=Space.class)
 	@JoinColumn(name = "source_space_id")
 	private ISpace sourceSpace;
