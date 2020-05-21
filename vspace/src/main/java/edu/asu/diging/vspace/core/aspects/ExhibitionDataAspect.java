@@ -68,8 +68,6 @@ public class ExhibitionDataAspect {
 
     @Around("execution(public * edu.asu.diging.vspace.web.publicview..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
-        IModule module = null;
-        ISpace space = null;
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int indexofModel = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
@@ -80,17 +78,20 @@ public class ExhibitionDataAspect {
         if(exhibition.getMode() == null) {
             return jp.proceed();
         }
-        Map<String, String> ids = this.getIds(args, signature);
+        Map<String, String> ids = getIds(args, signature);
         String spaceId = ids.getOrDefault("spaceId", "");
         String moduleId = ids.getOrDefault("moduleId", "");
         if(spaceId.equals("") && moduleId.equals("") && 
             (exhibition.getMode().equals(ExhibitionModes.ACTIVE) || authFacade.getAuthenticatedUser()!=null)) {
             return "notFound";
         }
-        else {
-            space = spaceManager.getSpace(spaceId);
-            module = moduleManager.getModule(moduleId);
-        }
+        return redirectRequest(jp, spaceId, moduleId, indexofModel, exhibition);
+    }
+    
+    public Object redirectRequest(ProceedingJoinPoint jp, String spaceId, String moduleId, int modelIndex, Exhibition exhibition) throws Throwable{
+        ISpace space = spaceManager.getSpace(spaceId);
+        IModule module = moduleManager.getModule(moduleId);
+        Object[] args = jp.getArgs();
         if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
             if(space==null && module==null) {
                 return "notFound";
@@ -99,24 +100,24 @@ public class ExhibitionDataAspect {
                 return jp.proceed();
             }
         }
-        if(authFacade.getAuthenticatedUser()!=null && indexofModel>-1) {
+        if(authFacade.getAuthenticatedUser()!=null && modelIndex>-1) {
             if(space==null && module==null) {
                 return "notFound";
             }
             else {
-                ((Model) args[indexofModel]).addAttribute("showModal", "true");
+                ((Model) args[modelIndex]).addAttribute("showModal", "true");
                 return jp.proceed();
             }
         }
         if(exhibition.getMode()==ExhibitionModes.OFFLINE && !exhibition.getCustomMessage().equals("")) {
-            ((Model) args[indexofModel]).addAttribute("modeValue", exhibition.getCustomMessage());
+            ((Model) args[modelIndex]).addAttribute("modeValue", exhibition.getCustomMessage());
         } else {
-            ((Model) args[indexofModel]).addAttribute("modeValue", exhibition.getMode().getValue());
+            ((Model) args[modelIndex]).addAttribute("modeValue", exhibition.getMode().getValue());
         }
         return "maintenance";
     }
     
-    private Map<String, String> getIds(Object[] args, MethodSignature signature) {
+    public Map<String, String> getIds(Object[] args, MethodSignature signature) {
         Map<String, String> res = new HashMap<>();
         for(int i=0; i <signature.getParameterTypes().length; ++i) {
             if(signature.getParameterTypes()[i].equals(String.class)) {
