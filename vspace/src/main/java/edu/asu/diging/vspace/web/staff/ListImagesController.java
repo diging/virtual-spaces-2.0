@@ -1,16 +1,17 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ImageCategory;
+import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
@@ -22,11 +23,13 @@ public class ListImagesController {
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model) {
         model.addAttribute("isShortUrl", true);
-        return listSpaces("1", model);
+        return listSpaces("1", SortByField.CREATION_DATE.getValue(), Direction.DESC.toString(), model);
     }
-    
-    @RequestMapping(value = {"/staff/images/list/", "/staff/images/list/{page}"})
-    public String listSpaces(@PathVariable(required = false) String page, Model model) {
+
+    @RequestMapping("/staff/images/list/{page}")
+    public String listSpaces(@PathVariable String page,
+        @RequestParam(value = "sort", required = false) String sortedBy,
+        @RequestParam(value = "order", required = false) String order, Model model) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
         try {
@@ -37,10 +40,12 @@ public class ListImagesController {
         model.addAttribute("totalPages", imageService.getTotalPages());
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
-        model.addAttribute("images", imageService.getImages(pageNo));
+        model.addAttribute("images", imageService.getImages(pageNo, sortedBy, order));
         model.addAttribute("imageCategories", ImageCategory.values());
-        
+        model.addAttribute("sortProperty",
+            (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
+        model.addAttribute("order",
+            (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
         return "staff/images/list";
     }
-    
 }
