@@ -16,14 +16,14 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 @JaversSpringDataAuditable
 public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<SpaceLinkDisplay, String> {
 
-	@Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
-	public List<SpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
+    @Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
+    public List<SpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
 
-	@Modifying
-	@Query("delete from SpaceLinkDisplay d where d.link.id in (:linkIds)")
-	void deleteByLinkId(@Param("linkIds") List<String> linkId);
-	
-	@Modifying
-	@Query("delete from SpaceLinkDisplay d where d.link = (:spaceLinks)")
-	void deleteBySpaceLink(@Param("spaceLinks") List<SpaceLink> spaceLinks);
+    @Modifying
+    @Query("delete from SpaceLinkDisplay d where d.link.id in (:linkIds)")
+    void deleteByLinkId(@Param("linkIds") List<String> linkId);
+
+    @Modifying
+    @Query("delete from SpaceLinkDisplay d where d.link = (:spaceLinks)")
+    void deleteBySpaceLink(@Param("spaceLinks") List<SpaceLink> spaceLinks);
 }

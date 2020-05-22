@@ -26,7 +26,7 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
 	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 	
-	@JsonIgnore
+    @JsonIgnore
 	@ManyToOne(targetEntity=Space.class)
 	@JoinColumn(name = "source_space_id")
 	private ISpace sourceSpace;
