@@ -32,7 +32,7 @@ public class ListImagesController {
         page = StringUtils.isEmpty(page) ? "1" : page;
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page));
-        } catch (NumberFormatException numberFormatException) {
+        } catch (NumberFormatException numberFormatException){
             pageNo = 1;
         }
         model.addAttribute("totalPages", imageService.getTotalPages());
