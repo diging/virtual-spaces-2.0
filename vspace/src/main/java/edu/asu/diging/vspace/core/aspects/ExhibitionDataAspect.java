@@ -40,8 +40,11 @@ public class ExhibitionDataAspect {
                         ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
                     }
                     if (!((Model) obj).containsAttribute("publishedSpaces")) {
-                        List<ISpace> publishedSpaces=spaceManager.getPublishedSpaces(SpaceStatus.PUBLISHED);
-                        publishedSpaces.addAll(spaceManager.getPublishedSpaces(null));
+                        List<ISpace> publishedSpaces=spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
+                        /* (non-Javadoc)
+                         * Added to show spaces with null status and accommodate existing spaces with null space status
+                         */
+                        publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                 }

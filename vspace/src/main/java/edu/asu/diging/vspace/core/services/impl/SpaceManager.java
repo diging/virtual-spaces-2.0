@@ -181,7 +181,7 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public List<ISpace> getPublishedSpaces(SpaceStatus status) {
+    public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
         List<ISpace> spaces = new ArrayList<>();
         spaceRepo.findAllBySpaceStatus(status).forEach(s -> spaces.add(s));
         return spaces;

@@ -20,7 +20,7 @@ public interface ISpaceManager {
 
     List<ISpace> getAllSpaces();
     
-    List<ISpace> getPublishedSpaces(SpaceStatus status);
+    List<ISpace> getSpacesWithStatus(SpaceStatus status);
     
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
 }

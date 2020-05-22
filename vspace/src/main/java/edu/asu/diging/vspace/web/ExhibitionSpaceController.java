@@ -27,6 +27,9 @@ public class ExhibitionSpaceController {
     @RequestMapping(value="/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
+        /* (non-Javadoc)
+         * Below null check is added to accommodate already existing spaces with null space status
+         */
         if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)) {
             model.addAttribute("space", space);
             model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
