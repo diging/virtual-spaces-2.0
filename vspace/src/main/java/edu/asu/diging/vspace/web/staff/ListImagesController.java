@@ -27,7 +27,7 @@ public class ListImagesController {
     }
 
     @RequestMapping(value = {"/staff/images/list/", "/staff/images/list/{page}"})
-    public String listSpaces(@PathVariable String page,
+    public String listSpaces(@PathVariable(required = false) String page,
         @RequestParam(value = "sort", required = false) String sortedBy,
         @RequestParam(value = "order", required = false) String order, Model model) {
         int pageNo;
