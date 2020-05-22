@@ -196,13 +196,17 @@ function drawLinks() {
                         <i class="far fa-times-circle fa-lg closebtn"
                             onclick="closeModuleNav()"></i>
                         <div class="list-group spaceNav">
-                            <ul style="list-style-type: none">
+                            <ol style="list-style-type:lower-roman">
                                 <c:forEach items="${moduleList}"
                                     var="module">
+                                    <c:if test="${not empty module.link.name}">
                                     <li><a class="dropdown-item"
-                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />">${module.link.name}</a>
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />">${module.link.name}</a></c:if>
+                                    <c:if test="${empty module.link.name}">
+                                    <li><a class="dropdown-item"
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />">${module.link.module.id}</a></c:if>
                                 </c:forEach>
-                            </ul>
+                            </ol>
                         </div>
                     </div>
                     <div class="Group_3_Class">
