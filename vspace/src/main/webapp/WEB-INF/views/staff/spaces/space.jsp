@@ -32,6 +32,7 @@ $(function(){
                    $('#deleteSpace').attr('data-record-id', spaceId);
                    $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
                    $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
+                   $('#warning').text(warningMessage);
                    $('#deleteSpace').attr('data-warning', warningMessage);
                    $('#confirm-space-delete').modal('show');
                 }
@@ -43,6 +44,7 @@ $(function(){
                     $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
                     $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
                     $('#deleteSpace').attr('data-warning', '');
+                    $('#warning').text('');
                     $('#confirm-space-delete').modal('show');
                   }	
             }
