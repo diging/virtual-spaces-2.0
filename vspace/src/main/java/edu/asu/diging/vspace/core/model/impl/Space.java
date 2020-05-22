@@ -31,8 +31,8 @@ public class Space extends VSpaceElement implements ISpace {
 	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 
-	@JsonIgnore
-	@OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
+    @JsonIgnore
+    @OneToMany(mappedBy = "sourceSpace", targetEntity = SpaceLink.class)
 	private List<ISpaceLink> spaceLinks;
 
 	@OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)

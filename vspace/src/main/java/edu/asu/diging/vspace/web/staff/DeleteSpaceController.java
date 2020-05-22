@@ -16,20 +16,20 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class DeleteSpaceController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-	private ISpaceManager spaceManager;
+    private ISpaceManager spaceManager;
 
-	@RequestMapping(value = "/staff/space/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteSpace(@PathVariable String id, Model model) {
-		try {
-			spaceManager.deleteSpaceById(id);
-		} catch (SpaceDoesNotExistException exception) {
-		    logger.error("Could not delete space.", exception);
-		    return new ResponseEntity<>("Sorry, unable to delete space.", HttpStatus.NOT_FOUND);
-			}
-		return new ResponseEntity<>(HttpStatus.OK);
-		}
+    @RequestMapping(value = "/staff/space/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteSpace(@PathVariable String id, Model model) {
+        try {
+            spaceManager.deleteSpaceById(id);
+        } catch (SpaceDoesNotExistException exception) {
+            logger.error("Could not delete space.", exception);
+            return new ResponseEntity<>("Sorry, unable to delete space.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
