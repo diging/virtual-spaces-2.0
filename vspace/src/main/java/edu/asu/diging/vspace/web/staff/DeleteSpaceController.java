@@ -27,9 +27,9 @@ public class DeleteSpaceController {
 		try {
 			spaceManager.deleteSpaceById(id);
 		} catch (SpaceDoesNotExistException exception) {
-			logger.error("Could not delete space.", exception);
-			return new ResponseEntity<>("Sorry, unable to delete space.", HttpStatus.NOT_FOUND);
-		}
+		    logger.error("Could not delete space.", exception);
+		    return new ResponseEntity<>("Sorry, unable to delete space.", HttpStatus.NOT_FOUND);
+			}
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
+		}
 }
