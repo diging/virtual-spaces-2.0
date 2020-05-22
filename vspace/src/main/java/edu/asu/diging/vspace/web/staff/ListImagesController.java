@@ -2,7 +2,6 @@ package edu.asu.diging.vspace.web.staff;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -25,7 +24,7 @@ public class ListImagesController {
         return "redirect:/staff/images/list/1?sort=creationDate&order=desc";
     }
 
-    @RequestMapping(value = {"/staff/images/list/", "/staff/images/list/{page}"})
+    @RequestMapping("/staff/images/list/{page}")
     public String listSpaces(@PathVariable(required = false) String page,
         @RequestParam(value = "sort", required = false) String sortedBy,
         @RequestParam(value = "order", required = false) String order, Model model) {
