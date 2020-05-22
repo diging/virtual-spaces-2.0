@@ -25,12 +25,7 @@ $( document ).ready(function() {
 	    lastClass: 'last',
 	    firstClass: 'first'
 	}).on("page", function(event, num){
-		if("${isShortUrl}" == "true") {
-			window.location.assign("./list/"+num+"?sort=${sortProperty}&order=${order}");
-		}
-		else {
 			window.location.assign("./"+num+"?sort=${sortProperty}&order=${order}");
-		}
 	});
   
   $("table.table thead th").each(function(){

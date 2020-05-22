@@ -22,8 +22,7 @@ public class ListImagesController {
 
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model) {
-        model.addAttribute("isShortUrl", true);
-        return listSpaces("1", SortByField.CREATION_DATE.getValue(), Direction.DESC.toString(), model);
+        return "redirect:/staff/images/list/1?sort=creationDate&order=desc";
     }
 
     @RequestMapping(value = {"/staff/images/list/", "/staff/images/list/{page}"})
