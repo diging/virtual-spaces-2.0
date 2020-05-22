@@ -76,4 +76,9 @@ public class ModuleManager implements IModuleManager {
     public List<ISequence> getModuleSequences(String moduleId) {
         return new LinkedList<>(sequenceRepo.findSequencesForModule(moduleId));
     }
+    
+    @Override
+    public ISequence checkIfSequenceExists(String moduleId, String sequenceId) {
+        return sequenceRepo.findSequenceForModuleAndSequence(moduleId,sequenceId);
+    }
 }

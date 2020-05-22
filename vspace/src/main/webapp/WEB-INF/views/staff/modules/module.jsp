@@ -5,17 +5,62 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+
+
 <script>
 //# sourceURL=click.js
+//------------Deleting Slides-------------------
+function deleteSlide(slideId) {
+    $.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
+        type: 'DELETE',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+            $("#"+slideId).closest('.slide').remove();
+        },
+        error: function(data) {
+            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.error').append(alert);
+        }
+    });
+}
+
+
+function checkSlideInSequence(slideId) {
+	$.ajax({
+        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
+        type: 'GET',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+            if(data.length > 0){
+                $("ol").empty();
+                $.each(data, function (index, sequenceData) {
+                    $('ol').append("<li>"+sequenceData.name+"</li>");
+                    });
+                $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
+                $("#deleteSlideAlert").data('value', slideId); // setter
+            }
+            else{
+              deleteSlide(slideId);
+              }	
+            }
+    });
+}
+
 $(document).ready(function($) {
-
-	$("#addSlideButton").on("click", function(e) {
-		$("#createSlideAlert").show();
+	
+    $("#closeSlide").click(function (){
+        $("#deleteSlideAlert").data('value', 0);
+        $('#deleteSlideAlert').modal('hide'); 
 	});
-
-	$("#cancelSlideBtn").click(function() {
-		$("#createSlideAlert").hide();
+	
+    $("#cancelSlideDelButton").click(function () {
+        $("#deleteSlideAlert").data('value', 0);
+        $("#deleteSlideAlert").hide();
 	});
+	
 	
 	$(".sequence").on("click", function(e) {
 		$(".sequence").css({ 'border' : ''});
@@ -39,7 +84,16 @@ $(document).ready(function($) {
 				}
 		});
 	});
-});
+
+	
+	$("#deleteSlideFromSequence").on("click", function() {
+		$('#deleteSlideAlert').modal('hide');
+		var slideId = $("#deleteSlideAlert").data('value'); // getter
+		deleteSlide(slideId);
+	});
+				
+});	
+
 </script>
 
 <h1>Module: ${module.name}</h1>
@@ -102,31 +156,60 @@ $(document).ready(function($) {
 		</div>
 	</div>
 	<div class="container" id="table">
-		<div class="row">
-			<div class="col justify-content-center" style="padding-left: 30px;">
-				<c:forEach items="${slides}" var="slide">									
-						<div class="card" style="max-width: 18rem; margin-bottom:10px;">
-							<div align="left" class="card-body">
-								<a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
-									<h5 class="card-title">${slide.name}</h5>
-									<p class="card-text">${slide.description}</p>
-								</a>						
-							</div>
-						</div>				
-				</c:forEach>
-			</div>
-			<div class="col justify-content-center" style="padding-left: 65px;">
-				<c:forEach items="${sequences}" var="sequences">
-					<div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
-						<div align="left" class="card-body">
-							<a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
-							<font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
-							<p class="card-text">${sequences.description}</p></font>	
-						</div>
-					</div>
-				</c:forEach>
-			</div>
-			<div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
-		</div>
-	</div>
+        <div class="row">
+            <div class="col justify-content-center" style="padding-left: 30px;">
+                <c:forEach items="${slides}" var="slide">
+                    <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
+                        <div align="left" class="card-body d-flex align-items-center" style="position:relative;">
+                            <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+                            <h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
+                            <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
+                            <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            </div>
+                        </div>
+                    </div>		
+                </c:forEach>
+            </div>
+            <div class="col justify-content-center" style="padding-left: 65px;">
+                <c:forEach items="${sequences}" var="sequences">
+                    <div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
+                    <div align="left" class="card-body">
+                        <a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
+                        <font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
+                        <p class="card-text">${sequences.description}</p></font>	
+                    </div>
+                    </div>
+                </c:forEach>
+                </div>	
+             <div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
+         </div>
+    </div>
+</div>
+
+
+<div id="deleteSlideAlert" class="modal fade" role="dialog"
+    data-value="0">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteModalTitle">Confirm
+                    Deletion?</h4>
+                <button type="button" id="closeSlide" class="close"
+                    data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This Slide is a part of Sequences shown below. Are you sure you want to delete it?
+                </p>
+                <ol>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelSlideDelButton"
+                    class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="deleteSlideFromSequence" type="submit"
+                    class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>
