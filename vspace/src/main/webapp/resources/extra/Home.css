@@ -14,6 +14,13 @@
 
 .spaceClass {
     text-align: center;
+    height: 800px;
+    /* width: 800px; */
+    width: 57%;
+    max-width: 57%;
+    margin: auto;
+    background-size: cover;
+    border-radius: 13px;
 }
 
 #wrapper_module {
@@ -123,8 +130,8 @@
     width: 0;
     position: absolute;
     z-index: 1;
-    top: 45px;
-    right: 5px;
+    top: 4px;
+    right: 0.5%;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
@@ -166,7 +173,7 @@
 
 .textDiv {
     position: relative;
-    /* width: 48%; */
+    width: 53%;
     top: 0px;
     overflow: visible;
     text-align: justify;
@@ -263,7 +270,7 @@
     /* height: 39px; */
     /* left: 1px; */
     right: 0%;
-    top: 46px;
+    top: 6px;
     right: 1%;
     overflow: visible;
 }
@@ -302,8 +309,8 @@
     width: 0px;
     position: absolute;
     z-index: 1;
-    top: 10%;
-    right: 15px;
+    /* top: 10%; */
+    right: 5px;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
