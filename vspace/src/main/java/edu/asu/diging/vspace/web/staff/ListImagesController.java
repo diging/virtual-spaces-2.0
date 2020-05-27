@@ -21,7 +21,7 @@ public class ListImagesController {
 
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model) {
-        return "redirect:/staff/images/list/1?sort=creationDate&order=desc";
+        return "redirect:/staff/images/list/1";
     }
 
     @RequestMapping("/staff/images/list/{page}")
