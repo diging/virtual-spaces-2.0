@@ -160,7 +160,7 @@ function drawLinks() {
     z-index: 1;
     left: -38px;
     top: 27px;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0,0,0,0.6);
 }
 
 .Info_cz_Class:hover .tooltiptext {
@@ -196,86 +196,17 @@ function drawLinks() {
                         <i class="far fa-times-circle fa-lg closebtn"
                             onclick="closeModuleNav()"></i>
                         <div class="list-group spaceNav">
-                            <ul style="list-style: none;">
+                            <ul  style="list-style: none;">
                                 <c:forEach items="${moduleList}"
                                     var="module">
-                                    <c:if
-                                        test="${not empty module.link.name}">
-                                        <li><a
-                                            class="dropdown-item"
-                                            style="padding-left: 15px; height: 30px;"
-                                            href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />"><div
-                                                    class="Info Info_cz_module_Class">
-                                                    <svg
-                                                        class="Ellipse_8_module_c">
-                                                        <ellipse
-                                                            fill="rgba(222,222,222,1)"
-                                                            class="Ellipse_8_c_Class"
-                                                            rx="14.5"
-                                                            ry="14.5"
-                                                            cx="14.5"
-                                                            cy="14.5"></ellipse></svg>
-                                                    <svg
-                                                        class="Ellipse_10_module_c">
-                                                        <ellipse
-                                                            fill="rgba(240,240,240,1)"
-                                                            class="Ellipse_10_c_Class"
-                                                            rx="12.5"
-                                                            ry="12.5"
-                                                            cx="12.5"
-                                                            cy="12.5"></ellipse></svg>
-                                                    <svg
-                                                        class="Ellipse_9_module_c">
-                                                        <ellipse
-                                                            fill="rgba(255,255,255,1)"
-                                                            class="Ellipse_9_c_Class"
-                                                            rx="10.5"
-                                                            ry="10.5"
-                                                            cx="10.5"
-                                                            cy="10.5"></ellipse></svg>
-                                                    <i
-                                                        class="fas fa-info fa-lg Icon_awesome_info_module_m"></i>
-                                                </div> ${module.link.name}</a></li>
-                                    </c:if>
-                                    <c:if
-                                        test="${empty module.link.name}">
-                                        <li><a
-                                            class="dropdown-item"
-                                            style="padding-left: 15px; height: 30px;"
-                                            href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />"><div
-                                                    class="Info Info_cz_module_Class">
-                                                    <svg
-                                                        class="Ellipse_8_module_c">
-                                                        <ellipse
-                                                            fill="rgba(222,222,222,1)"
-                                                            class="Ellipse_8_c_Class"
-                                                            rx="14.5"
-                                                            ry="14.5"
-                                                            cx="14.5"
-                                                            cy="14.5"></ellipse></svg>
-                                                    <svg
-                                                        class="Ellipse_10_module_c">
-                                                        <ellipse
-                                                            fill="rgba(240,240,240,1)"
-                                                            class="Ellipse_10_c_Class"
-                                                            rx="12.5"
-                                                            ry="12.5"
-                                                            cx="12.5"
-                                                            cy="12.5"></ellipse></svg>
-                                                    <svg
-                                                        class="Ellipse_9_module_c">
-                                                        <ellipse
-                                                            fill="rgba(255,255,255,1)"
-                                                            class="Ellipse_9_c_Class"
-                                                            rx="10.5"
-                                                            ry="10.5"
-                                                            cx="10.5"
-                                                            cy="10.5"></ellipse></svg>
-                                                    <i
-                                                        class="fas fa-info fa-lg Icon_awesome_info_module_m"></i>
-                                                </div>
-                                                ${module.link.module.id}</a></li>
-                                    </c:if>
+                                    <c:if test="${not empty module.link.name}">
+                                    <li>
+                                    <a class="dropdown-item" style="padding-left: 15px;height: 30px;"
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div> ${module.link.name}</a></li></c:if>
+                                    <c:if test="${empty module.link.name}">
+                                    <li>
+                                    <a class="dropdown-item" style="padding-left: 15px;height: 30px;"
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div> ${module.link.module.id}</a></li></c:if>
                                 </c:forEach>
                             </ul>
                         </div>
