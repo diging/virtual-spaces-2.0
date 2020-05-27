@@ -172,7 +172,8 @@ function drawLinks() {
  
   [class*="spaceClass"] {
     width: 100%;
-    height: 200px;
+    height: 220px;
+    max-width: 65%
   }
   [class*="barPosition"] {
     font-size: 10px;
@@ -186,6 +187,7 @@ function drawLinks() {
   }
   [class*="textDiv"] {
     font-size: 10px;
+    width: 66%
   }
   
 }
