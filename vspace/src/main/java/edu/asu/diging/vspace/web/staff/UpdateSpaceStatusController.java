@@ -20,7 +20,7 @@ public class UpdateSpaceStatusController {
     @Autowired
     private ISpaceManager spaceManager;
     
-    @RequestMapping(value="/staff/space/{spaceId}/updateStatus", method=RequestMethod.POST)
+    @RequestMapping(value="/staff/space/{spaceId}/status", method=RequestMethod.POST)
     public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("statusParam") SpaceStatus status) {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setSpaceStatus(status);

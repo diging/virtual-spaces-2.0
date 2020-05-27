@@ -751,7 +751,7 @@ $( document ).ready(function() {
 	Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
 </div>
 <div style="padding-bottom: 10px;">
-    <c:url value="/staff/space/${space.id}/updateStatus" var="postUrl" />
+    <c:url value="/staff/space/${space.id}/status" var="postUrl" />
     <form:form method="POST"
         action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
         <label style="width: 200px"><h5>Space Status:</h5></label>
