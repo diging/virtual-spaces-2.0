@@ -1,6 +1,7 @@
 .Home_Class {
     margin: 0 auto 0 auto;
     width: 100%;
+    min-height: 780px;
 }
 
 .Home__Class {
@@ -97,8 +98,8 @@
     padding-top: 26px;
     word-break: break-all;
 }
-}
 
+}
 .sidenav a {
     white-space: pre-wrap;
 }
@@ -295,6 +296,7 @@
     top: 6px;
     height: 26px;
 }
+
 #rightContent {
     height: 0px;
     width: 0px;
@@ -313,7 +315,8 @@
     float: left;
     width: 75%;
 }
-.spaceDescription{
+
+.spaceDescription {
     padding-top: 26px;
     padding-left: 5px;
     padding-right: 5px;
@@ -328,4 +331,50 @@
     top: 8px;
     right: 3px;
     margin-left: 50px;
+}
+
+.Info_cz_module_Class {
+    height: 26px;
+    left: 965.622px;
+    cursor: pointer;
+    display: inline
+}
+
+.Ellipse_8_module_c {
+    position: absolute;
+    overflow: visible;
+    width: 29px;
+    height: 29px;
+    left: 2px;
+}
+
+.Ellipse_10_module_c {
+    position: absolute;
+    overflow: visible;
+    width: 25px;
+    height: 25px;
+    left: 4px;
+    padding-top: 2px;
+}
+
+.Ellipse_9_module_c {
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+    position: absolute;
+    overflow: visible;
+    width: 21px;
+    height: 21px;
+    left: 6px;
+    padding-top: 4px;
+}
+
+.Icon_awesome_info_module_m {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 14.5px;
+    padding-top: 8px; transform : matrix( 1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+    transform: matrix(1, 0, 0, 1, 0, 0);
 }
