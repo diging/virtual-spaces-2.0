@@ -87,7 +87,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setTitle(String title) {
         this.title = title;
     }
-
+    
     public ExhibitionModes getMode() {
         return mode;
     }

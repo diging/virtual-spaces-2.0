@@ -25,6 +25,8 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Component
 @Aspect
