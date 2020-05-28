@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,7 +29,10 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
@@ -73,10 +77,13 @@ public class SpaceManagerTest {
 
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
-
+    private String spaceIdPublished, spaceIdUnpublished, spaceIdnullStatus, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        spaceIdPublished = "SPA000000001";
+        spaceIdUnpublished = "SPA000000002";
+        spaceIdnullStatus = "SPA000000003";
     }
 
     @Test
@@ -124,6 +131,36 @@ public class SpaceManagerTest {
        Mockito.doThrow(EmptyResultDataAccessException.class)
         .when(spaceRepo).deleteById(imgId);
        managerToTest.deleteSpaceById(imgId);
+    }
+    
+    @Test
+    public void test_getSpacesWithStatus_whenStatusIsNull() throws SpaceDoesNotExistException{
+        Space spaceObj = new Space();
+        spaceObj.setId(spaceIdnullStatus);
+        spaceObj.setSpaceStatus(null);
+        List<ISpace> nullStatusSpaces= managerToTest.getSpacesWithStatus(null);
+        SpaceStatus actualStatus = nullStatusSpaces.get(0).getSpaceStatus();
+        Assert.assertEquals(null, actualStatus);
+    }
+    
+    @Test
+    public void test_getSpacesWithStatus_whenStatusAsPublished() throws SpaceDoesNotExistException{
+        Space spaceObj = new Space();
+        spaceObj.setId(spaceIdPublished);
+        spaceObj.setSpaceStatus(SpaceStatus.PUBLISHED);
+        List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.PUBLISHED);
+        SpaceStatus actualStatus = spaceWithPublishedStatus.get(0).getSpaceStatus();
+        Assert.assertEquals(SpaceStatus.PUBLISHED, actualStatus);
+    }
+    
+    @Test
+    public void test_getSpacesWithStatus_whenStatusAsUnPublished() throws SpaceDoesNotExistException{
+        Space spaceObj = new Space();
+        spaceObj.setId(spaceIdUnpublished);
+        spaceObj.setSpaceStatus(SpaceStatus.PUBLISHED);
+        List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.UNPUBLISHED);
+        SpaceStatus actualStatus = spaceWithPublishedStatus.get(0).getSpaceStatus();
+        Assert.assertEquals(SpaceStatus.UNPUBLISHED, actualStatus);
     }
     
 }
