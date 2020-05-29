@@ -41,7 +41,7 @@ public class SpaceManagerTest {
 
     @Mock
     private SpaceRepository spaceRepo;
-    
+
     @Mock
     private SpaceDisplayRepository spaceDisplayRepo;
 
@@ -59,7 +59,7 @@ public class SpaceManagerTest {
 
     @Mock
     private IImageFactory imageFactory;
-    
+
     @Mock
     private IImageService imageService;
 
@@ -68,7 +68,7 @@ public class SpaceManagerTest {
 
     @Mock
     private ISpaceLinkDisplayFactory spaceLinkDisplayFactory;
-    
+
     @Mock
     private ISpaceDisplayFactory spaceDisplayFactory;
 
@@ -77,13 +77,12 @@ public class SpaceManagerTest {
 
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
-    private String spaceIdPublished, spaceIdUnpublished, spaceIdnullStatus, moduleId, sequenceId, slideIdNotInSequence, sequenceIdOther;
+    private String spaceId;
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        spaceIdPublished = "SPA000000001";
-        spaceIdUnpublished = "SPA000000002";
-        spaceIdnullStatus = "SPA000000003";
+        spaceId = "SPA000000001";
+
     }
 
     @Test
@@ -115,52 +114,60 @@ public class SpaceManagerTest {
         Mockito.verify(spaceRepo).save(space);
         Mockito.verify(spaceDisplayRepo).save((SpaceDisplay)spaceDisplay);
     }
-    
 
-    
+
+
     @Test(expected = SpaceDoesNotExistException.class)
     public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException {
-       Mockito.doThrow(IllegalArgumentException.class)
+        Mockito.doThrow(IllegalArgumentException.class)
         .when(spaceRepo).deleteById(null);
-       managerToTest.deleteSpaceById(null);
+        managerToTest.deleteSpaceById(null);
     }
-    
+
     @Test(expected = SpaceDoesNotExistException.class)
     public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {
-       String imgId = "imgId";
-       Mockito.doThrow(EmptyResultDataAccessException.class)
+        String imgId = "imgId";
+        Mockito.doThrow(EmptyResultDataAccessException.class)
         .when(spaceRepo).deleteById(imgId);
-       managerToTest.deleteSpaceById(imgId);
+        managerToTest.deleteSpaceById(imgId);
     }
-    
+
     @Test
     public void test_getSpacesWithStatus_whenStatusIsNull() throws SpaceDoesNotExistException{
-        Space spaceObj = new Space();
-        spaceObj.setId(spaceIdnullStatus);
-        spaceObj.setSpaceStatus(null);
+        Space space=new Space();
+        space.setId(spaceId);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(null)).thenReturn(spaceList);
         List<ISpace> nullStatusSpaces= managerToTest.getSpacesWithStatus(null);
-        SpaceStatus actualStatus = nullStatusSpaces.get(0).getSpaceStatus();
-        Assert.assertEquals(null, actualStatus);
+        String actualSpaceIdWithNull = nullStatusSpaces.get(0).getId();
+        Assert.assertEquals(spaceId, actualSpaceIdWithNull);
     }
-    
+
     @Test
     public void test_getSpacesWithStatus_whenStatusAsPublished() throws SpaceDoesNotExistException{
-        Space spaceObj = new Space();
-        spaceObj.setId(spaceIdPublished);
-        spaceObj.setSpaceStatus(SpaceStatus.PUBLISHED);
+        Space space=new Space();
+        space.setId(spaceId);
+        space.setSpaceStatus(SpaceStatus.PUBLISHED);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(spaceList);
         List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.PUBLISHED);
-        SpaceStatus actualStatus = spaceWithPublishedStatus.get(0).getSpaceStatus();
-        Assert.assertEquals(SpaceStatus.PUBLISHED, actualStatus);
+        String actualSpaceIdWithPubStatus = spaceWithPublishedStatus.get(0).getId();
+        Assert.assertEquals(spaceId, actualSpaceIdWithPubStatus);
     }
-    
+
     @Test
     public void test_getSpacesWithStatus_whenStatusAsUnPublished() throws SpaceDoesNotExistException{
-        Space spaceObj = new Space();
-        spaceObj.setId(spaceIdUnpublished);
-        spaceObj.setSpaceStatus(SpaceStatus.PUBLISHED);
+        Space space=new Space();
+        space.setId(spaceId);
+        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.UNPUBLISHED)).thenReturn(spaceList);
         List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.UNPUBLISHED);
-        SpaceStatus actualStatus = spaceWithPublishedStatus.get(0).getSpaceStatus();
-        Assert.assertEquals(SpaceStatus.UNPUBLISHED, actualStatus);
+        String actualSpaceIdWithUnPubStatus = spaceWithPublishedStatus.get(0).getId();
+        Assert.assertEquals(spaceId, actualSpaceIdWithUnPubStatus);
     }
-    
+
 }
