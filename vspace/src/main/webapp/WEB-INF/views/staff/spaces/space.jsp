@@ -754,9 +754,9 @@ $( document ).ready(function() {
     <c:url value="/staff/space/${space.id}/status" var="postUrl" />
     <form:form method="POST"
         action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
-        <label style="width: 200px"><h5>Space Status:</h5></label>
+        <label><h5>Space Status:</h5></label>
         <select class="form-control" name="statusParam"
-            style="width: 200px; display: inline; padding-bottom: 110px">
+            style="width: 200px; display: inline;">
             <option id="Published" value="PUBLISHED"
                 <c:if test="${space.spaceStatus=='PUBLISHED'}">selected</c:if>>Published</option>
             <option id="Unpublished" value="UNPUBLISHED"

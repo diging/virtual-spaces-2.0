@@ -73,6 +73,12 @@ body {
 .footerBox, .push {
     height: 75px;
 }
+
+.custom-invalidSpace {
+    text-align: center;
+    position: absolute;
+    top: 106px;
+    width: 100%;
 }
 </style>
 <!-- Custom styles for this template -->
@@ -157,7 +163,7 @@ body {
         <main role="main" class="flex-shrink-0"
             style="padding-top: 20px;"> <c:if
             test="${showAlert eq true}">
-            <div id="errorMsg" class="alert alert-${alertType}">
+            <div id="errorMsg" class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
         </c:if> <tiles:insertAttribute name="content" />
         <div class="push"></div>

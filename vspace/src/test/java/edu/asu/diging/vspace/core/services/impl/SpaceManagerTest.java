@@ -77,11 +77,12 @@ public class SpaceManagerTest {
 
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
-    private String spaceId;
+    private String spaceId1, spaceId2;
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        spaceId = "SPA000000001";
+        spaceId1 = "SPA000000001";
+        spaceId2 = "SPA000000001";
 
     }
 
@@ -135,39 +136,87 @@ public class SpaceManagerTest {
     @Test
     public void test_getSpacesWithStatus_whenStatusIsNull() throws SpaceDoesNotExistException{
         Space space=new Space();
-        space.setId(spaceId);
+        space.setId(spaceId1);
         List<Space> spaceList=new ArrayList<>();
         spaceList.add(space);
         Mockito.when(spaceRepo.findAllBySpaceStatus(null)).thenReturn(spaceList);
         List<ISpace> nullStatusSpaces= managerToTest.getSpacesWithStatus(null);
         String actualSpaceIdWithNull = nullStatusSpaces.get(0).getId();
-        Assert.assertEquals(spaceId, actualSpaceIdWithNull);
+        Assert.assertEquals(spaceId1, actualSpaceIdWithNull);
     }
 
     @Test
     public void test_getSpacesWithStatus_whenStatusAsPublished() throws SpaceDoesNotExistException{
         Space space=new Space();
-        space.setId(spaceId);
+        space.setId(spaceId1);
         space.setSpaceStatus(SpaceStatus.PUBLISHED);
         List<Space> spaceList=new ArrayList<>();
         spaceList.add(space);
         Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(spaceList);
         List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.PUBLISHED);
         String actualSpaceIdWithPubStatus = spaceWithPublishedStatus.get(0).getId();
-        Assert.assertEquals(spaceId, actualSpaceIdWithPubStatus);
+        Assert.assertEquals(spaceId1, actualSpaceIdWithPubStatus);
     }
 
     @Test
     public void test_getSpacesWithStatus_whenStatusAsUnPublished() throws SpaceDoesNotExistException{
         Space space=new Space();
-        space.setId(spaceId);
+        space.setId(spaceId1);
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
         List<Space> spaceList=new ArrayList<>();
         spaceList.add(space);
         Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.UNPUBLISHED)).thenReturn(spaceList);
         List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.UNPUBLISHED);
         String actualSpaceIdWithUnPubStatus = spaceWithPublishedStatus.get(0).getId();
-        Assert.assertEquals(spaceId, actualSpaceIdWithUnPubStatus);
+        Assert.assertEquals(spaceId1, actualSpaceIdWithUnPubStatus);
+    }
+
+    @Test
+    public void test_getSpacesWithPublishedStatus_spaceDoesNotExist() throws SpaceDoesNotExistException{
+        Space space=new Space();
+        space.setId(spaceId1);
+        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        Space space2=new Space();
+        space2.setId(spaceId2);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.UNPUBLISHED)).thenReturn(spaceList);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(null)).thenReturn(spaceList);
+        List<ISpace> spaceWithPublishedStatus= managerToTest.getSpacesWithStatus(SpaceStatus.PUBLISHED);
+        Assert.assertTrue(spaceWithPublishedStatus.isEmpty());
+    }
+
+    @Test
+    public void test_getSpacesWithNullStatus_spaceDoesNotExist() throws SpaceDoesNotExistException{
+        Space space=new Space();
+        space.setId(spaceId1);
+        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        Space space2=new Space();
+        space.setId(spaceId2);
+        space.setSpaceStatus(SpaceStatus.PUBLISHED);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        spaceList.add(space2);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.UNPUBLISHED)).thenReturn(spaceList);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(spaceList);
+        List<ISpace> spaceWithNullStatus= managerToTest.getSpacesWithStatus(null);
+        Assert.assertTrue(spaceWithNullStatus.isEmpty());
+    }
+
+    @Test
+    public void test_getSpacesWithUnPublishedStatus_spaceDoesNotExist() throws SpaceDoesNotExistException{
+        Space space=new Space();
+        space.setId(spaceId1);
+        space.setSpaceStatus(SpaceStatus.PUBLISHED);
+        Space space2=new Space();
+        space2.setId(spaceId2);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        spaceList.add(space2);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(spaceList);
+        Mockito.when(spaceRepo.findAllBySpaceStatus(null)).thenReturn(spaceList);
+        List<ISpace> spaceWithNullStatus= managerToTest.getSpacesWithStatus(SpaceStatus.UNPUBLISHED);
+        Assert.assertTrue(spaceWithNullStatus.isEmpty());
     }
 
 }

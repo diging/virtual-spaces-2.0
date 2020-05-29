@@ -39,6 +39,8 @@ public class ExhibitionSpaceController {
         }
         else {
             model.addAttribute("showAlert", true);
+            model.addAttribute("alertType", "danger");
+            model.addAttribute("messageType","invalidSpace");
             model.addAttribute("message", "Access Denied.");
         }
         return "space";
