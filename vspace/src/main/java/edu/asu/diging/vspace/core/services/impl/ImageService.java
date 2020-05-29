@@ -108,7 +108,7 @@ public class ImageService implements IImageService {
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
         pageNo = validatePageNumber(pageNo);
         if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
-                sortingParameters = Sort.by(sortedBy);
+            sortingParameters = Sort.by(sortedBy);
         }
         if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
             sortingParameters = sortingParameters.ascending();
