@@ -26,8 +26,8 @@ public class Space extends VSpaceElement implements ISpace {
     @Id
     @GeneratedValue(generator = "space_id_generator")
     @GenericGenerator(name = "space_id_generator", 
-    parameters = @Parameter(name = "prefix", value = IPrefix.spacePrefix), 
-    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+        parameters = @Parameter(name = "prefix", value = IPrefix.spacePrefix), 
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
