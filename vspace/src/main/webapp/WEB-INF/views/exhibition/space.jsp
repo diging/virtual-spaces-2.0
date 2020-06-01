@@ -179,7 +179,7 @@ function drawLinks() {
                 </div> -->
                 <div class="list-group spaceNav">
                     <ul>
-                        <c:forEach items="${allSpaces}" var="space">
+                        <c:forEach items="${publishedSpaces}" var="space">
                             <li><a class="dropdown-item"
                                 href="<c:url value="/exhibit/space/${space.id}" />">${space.name}</a>
                         </c:forEach>

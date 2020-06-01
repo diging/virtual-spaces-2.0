@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.aspects;
 
+import java.util.List;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -35,8 +39,13 @@ public class ExhibitionDataAspect {
                     if (!((Model) obj).containsAttribute("exhibition")) {
                         ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
                     }
-                    if (!((Model) obj).containsAttribute("allSpaces")) {
-                        ((Model) obj).addAttribute("allSpaces", spaceManager.getAllSpaces());
+                    if (!((Model) obj).containsAttribute("publishedSpaces")) {
+                        List<ISpace> publishedSpaces=spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
+                        /* (non-Javadoc)
+                         * Added to show spaces with null status and accommodate existing spaces with null space status
+                         */
+                        publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
+                        ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                 }
             }
