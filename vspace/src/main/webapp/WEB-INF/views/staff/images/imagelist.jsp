@@ -25,7 +25,7 @@ $( document ).ready(function() {
 	    lastClass: 'last',
 	    firstClass: 'first'
 	}).on("page", function(event, num){
-		window.location.assign("./"+num+"?sort=${sortProperty}&order=${order}");
+        window.location.assign("./"+num+"?sort=${sortProperty}&order=${order}");
 	});
   
   $("table.table thead th").each(function(){

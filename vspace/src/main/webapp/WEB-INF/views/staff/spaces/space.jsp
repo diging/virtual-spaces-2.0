@@ -750,6 +750,24 @@ $( document ).ready(function() {
 	<br>
 	Modified on <span class="date">${space.modificationDate}</span> by ${space.modifiedBy}.
 </div>
+<div style="padding-bottom: 10px;">
+    <c:url value="/staff/space/${space.id}/status" var="postUrl" />
+    <form:form method="POST"
+        action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+        <label><h5>Space Status:</h5></label>
+        <select class="form-control" name="statusParam"
+            style="width: 200px; display: inline;">
+            <option id="Published" value="PUBLISHED"
+                <c:if test="${space.spaceStatus=='PUBLISHED'}">selected</c:if>>Published</option>
+            <option id="Unpublished" value="UNPUBLISHED"
+                <c:if test="${space.spaceStatus=='UNPUBLISHED'}">selected</c:if>>Unpublished</option>
+        </select>
+        <p
+            style="display: inline; padding-left: 10px; padding-top: 1000px;">
+            <input class="btn btn-primary" type="submit" value="submit" />
+        </p>
+    </form:form>
+</div>
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
 ${space.description}
@@ -757,7 +775,7 @@ ${space.description}
 
 <c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" var="postUrl" />
 <form id="createSpaceLinkForm">
-	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 300px; right: 50px; z-index: 999">
+	<div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert" style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
 		<div class="row">
 			<div class="col">
 				<h6 class="alert-heading"> <small>Create new Space Link</small></h6>
@@ -841,7 +859,7 @@ ${space.description}
 <form id="createModuleLinkForm">
 	<div id="createModuleLinkAlert" class="alert alert-secondary"
 		role="alert"
-		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 300px; right: 50px; z-index: 999">
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
 		<div class="row">
 			<div class="col">
 				<h6 class="alert-heading">
@@ -932,7 +950,7 @@ ${space.description}
 </form:form>
 
 <form id="createExternalLinkForm">
-	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 300px; right: 50px; z-index:999">
+	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor:move; width:250px; height: 400px; display:none; position: absolute; top: 400px; right: 50px; z-index:999">
 		 <h6 class="alert-heading"><small>Create new External Link</small></h6>
 		  <p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
 		  <hr>  

@@ -3,8 +3,36 @@
 <%@ taglib prefix="sec"
     uri="http://www.springframework.org/security/tags"%>
 
+<link rel="stylesheet" type="text/css" id="applicationStylesheet"
+    href="<c:url value="/resources/extra/Home.css" />">
+
 <script>
 //# sourceURL=click.js
+function openNav(){
+    document.getElementById("mySidenav").style.width = "240px";
+    document.getElementById("mySidenav").style.height = ${display.height}+"px"
+}
+function closeNav(){
+    document.getElementById("mySidenav").style.width = "0px";
+}
+function openModuleNav(){
+    document.getElementById("mySideModulenav").style.width = "240px";
+    document.getElementById("mySideModulenav").style.height = "auto";
+}
+function closeModuleNav(){
+    document.getElementById("mySideModulenav").style.width = "0px";
+}
+
+function closeSpaceDescription(){
+    document.getElementById("rightContent").style.width = "0px";
+    document.getElementById("rightContent").style.height = "0px";
+}
+
+function openSpaceDescription(){
+    document.getElementById("rightContent").style.width = "300px";
+    document.getElementById("rightContent").style.height = ${display.height}+"px";
+}
+
 $( document ).ready(function() {
     if ('${showModal}' == 'true') {
         if(sessionStorage.getItem("popupShown") != 'true') {
@@ -15,6 +43,11 @@ $( document ).ready(function() {
             $(".modalDown").css("display","block");
         }
     }
+	$('#slide_sidebar').removeClass('active');
+	$('#slide_sidebarCollapse').on('click', function() {
+		$('#slide_sidebar').toggleClass('active');
+	});
+	
     drawLinks();
 
     $( window ).resize(function() {
@@ -41,52 +74,58 @@ function drawLinks() {
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay = $('<span data-feather="navigation-2" class="flex"></span><p class="label-${loop.index}" data-link-id="${link.link.id}">${link.link.name}</p>');
+            var linkDisplay=$('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><span class="tooltiptext">${link.link.name}</span></div>');
         }
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-        linkDisplay.css('fill', 'red'); 
-        linkDisplay.css('color', 'red');
-        linkDisplay.css('font-size', "12px");	
-
+        linkDisplay.css('fill', 'grey'); 
+        linkDisplay.css('color', 'rgba(128,128,128,1)');
         link.append(linkDisplay);
         $("#space").append(link);
 
         $(".label-${loop.index}").css({
-            'transform': 'rotate(0deg)',
-            'left': ${link.positionX} + posX - 10,
-            'top': ${link.positionY} + posY + 16,
-            'color': 'red'
+          'transform': 'rotate(0deg)',
+          'left': ${link.positionX} + posX - 10,
+          'padding-top': '30px',
+          'color': 'rgba(150, 45, 62, 1)',
+          'font-size': '12px',
+          'overflow': 'visible'
         });	
     }
     </c:forEach>
+    <c:forEach items="${moduleList}" var="link" varStatus="moduleLoop">
 
-    <c:forEach items="${moduleList}" var="link">
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
         var link = $('<a></a>');
 
-        link.attr('href', '<c:url value="/exhibit/${link.link.space.id}/module/${link.link.module.id}" />');
-
-        var linkDisplay = $('<span class="fas fa-book-open"></span>');
-
+        link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
+        var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
+     
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-        linkDisplay.css('fill', 'red');
-        linkDisplay.css('color', 'red');
-        linkDisplay.css('font-size', "15px");
-
+        linkDisplay.css('fill', 'grey');
+        linkDisplay.css('color', 'rgba(128,128,128,1)');
+         
         link.append(linkDisplay);
         $("#space").append(link);
+        
+        $(".moduleLabel-${moduleLoop.index}").css({
+            'transform': 'rotate(0deg)',
+            'left': ${link.positionX} + posX - 10,
+            'padding-top': '30px',
+            'color': 'rgba(150, 45, 62, 1)',
+            'font-size': '12px'
+          });
     }
     </c:forEach>
 
-    <c:forEach items="${externalLinkList}" var="link">
+    <c:forEach items="${externalLinkList}" var="link" varStatus="externalLoop">
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
@@ -94,57 +133,147 @@ function drawLinks() {
         link.attr('href', "${link.externalLink.externalLink}");
         link.attr('target', "_blank");
 
-        var linkDisplay = $('<span class="fa fa-globe"></span>');
-
+        var linkDisplay = $('<span class="fas fa-globe"></span>');
+       
         if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay = $('<span class="fa fa-globe"></span>');
+            console.log("In else block");
+            var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i><span class="tooltiptext">${link.name}</span></div>');
         }
         
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
-        linkDisplay.css('fill', 'red');
-        linkDisplay.css('color', 'red');
-        linkDisplay.css('font-size', "15px");
+
+        linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
+        linkDisplay.css('fill', 'grey');
+        linkDisplay.css('color', 'rgba(128,128,128,1)');
 
         link.append(linkDisplay);
         $("#space").append(link);
+        
+        $(".externalLabel-${externalLoop.index}").css({
+            'transform': 'rotate(0deg)',
+            'left': ${link.positionX} + posX - 10,
+            'padding-top': '30px',
+            'color': 'rgba(150, 45, 62, 1)',
+            'font-size': '12px'
+          });
     }
     </c:forEach>
-    
     feather.replace();
 }
 </script>
+<style>
+.Info_cz_Class .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 27px;
+    background: rgba(0,0,0,0.6);
+}
 
-<div class="row">
-        <div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >
-            <c:choose>
-            	<c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
-                	<h6>${exhibitionConfig.customMessage}</h6>
-            	</c:when>
-            	<c:otherwise>
-           	    	<h6>${exhibitionConfig.mode.value}</h6>
-            	</c:otherwise>
-            </c:choose>
-        </div>
-    <div
-        class="<c:if test="${not empty space.description}">col-md-1</c:if><c:if test="${empty space.description}">col-md-2</c:if>"></div>
-    <div id="space-container" class="col-md-8 text-center">
-        <div id="space"
-            style="width: ${display.width}px; height: ${display.height}px; min-height: 500px;  margin: auto; background-size: cover; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
-        </div>
-    </div>
-    <div
-        class="<c:if test="${not empty space.description}">col-md-3</c:if><c:if test="${empty space.description}">col-md-2</c:if>">
-        <c:if test="${not empty space.description}">
-            <div class="descriptionBox"
-                style="height: ${display.height - 20}px; overflow-y: scroll;">
-                <h5>${space.name}</h5>
-                ${space.description}
+.Info_cz_Class:hover .tooltiptext {
+    visibility: visible;
+}
+</style>
+<div class="container-fluid">
+    <div id="Module_1" class="Home_Class">
+        <!-- <div class="leftContent"> -->
+        <div class="dropdown">
+            <div id="mySidenav" class="sidenav">
+                <i class="far fa-times-circle fa-lg closebtn"
+                    onclick="closeNav()"></i>
+                <!-- <div class="sidebar-header">
+                    <p>In this Virtual Space</p>
+                </div> -->
+                <div class="list-group spaceNav">
+                    <ul>
+                        <c:forEach items="${publishedSpaces}" var="space">
+                            <li><a class="dropdown-item"
+                                href="<c:url value="/exhibit/space/${space.id}" />">${space.name}</a>
+                        </c:forEach>
+                    </ul>
+                </div>
             </div>
-        </c:if>
+            <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
+        </div>
+        <div class="spaceClass"
+            style="width: ${display.width}px; height: ${display.height}px; margin: auto; background-size: cover; border-radius: 13px;">
+            <c:if test="${not empty moduleList}">
+                <div class=dropdown>
+                    <div id="mySideModulenav" class="sideModulenav">
+                        <i class="far fa-times-circle fa-lg closebtn"
+                            onclick="closeModuleNav()"></i>
+                        <div class="list-group spaceNav">
+                            <ul  style="list-style: none;">
+                                <c:forEach items="${moduleList}"
+                                    var="module">
+                                    <c:if test="${not empty module.link.name}">
+                                    <li>
+                                    <a class="dropdown-item" style="padding-left: 15px;height: 30px;"
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div> ${module.link.name}</a></li></c:if>
+                                    <c:if test="${empty module.link.name}">
+                                    <li>
+                                    <a class="dropdown-item" style="padding-left: 15px;height: 30px;"
+                                        href="<c:url value="/exhibit/${space.id}/module/${module.link.module.id}" />"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div> ${module.link.module.name}</a></li></c:if>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="Group_3_Class">
+                        <svg class="Ellipse_8_dc">
+                        <ellipse fill="rgba(222,222,222,1)"
+                                class="Ellipse_8_dc_Class" rx="19.5"
+                                ry="19.5" cx="19.5" cy="19.5">
+                        </ellipse>
+                    </svg>
+                        <svg class="Ellipse_10_dd">
+                        <ellipse fill="rgba(240,240,240,1)"
+                                class="Ellipse_10_dd_Class" rx="16.5"
+                                ry="16.5" cx="16.5" cy="16.5">
+                        </ellipse>
+                    </svg>
+                        <svg class="Ellipse_9_de">
+                        <ellipse fill="rgba(255,255,255,1)"
+                                class="Ellipse_9_de_Class" rx="13.5"
+                                ry="13.5" cx="13.5" cy="13.5">
+                        </ellipse>
+                    </svg>
+                        <i
+                            class="fas fa-grip-vertical fa-lg moduleBarPosition"
+                            onclick="openModuleNav()"></i>
+                    </div>
+                </div>
+            </c:if>
+            <div class="textDiv">
+                <h3>${space.name}
+                    <c:if test="${not empty space.description}">
+                        <i class="fas fa-info-circle fa-lg"
+                            style="font-size: 20px; color: rgba(150, 45, 62, 1);"
+                            onclick="openSpaceDescription()"></i>
+                    </c:if>
+                </h3>
+            </div>
+
+            <div id="space"
+                style="width: ${display.width}px; height: ${display.height}px; margin: auto; background-size: cover; border-radius: 13px; background-image:url('<c:url value="/api/image/${space.image.id}" />')">
+            </div>
+            <c:if test="${not empty space.description}">
+                <div id="rightContent">
+                    <i class="far fa-times-circle fa-lg closebtn"
+                        onclick="closeSpaceDescription()"></i>
+                    <div class="spaceDescription">${space.description}</div>
+                </div>
+            </c:if>
+        </div>
     </div>
 </div>
 <div id="exhibitionDownModal" class="modal" tabindex="-1"

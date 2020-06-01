@@ -70,8 +70,15 @@ body {
     width: 100%;
 }
 
-.footerBox, .pushTop {
-    height: 75px
+.footerBox, .push {
+    height: 75px;
+}
+
+.custom-invalidSpace {
+    text-align: center;
+    position: absolute;
+    top: 106px;
+    width: 100%;
 }
 </style>
 <!-- Custom styles for this template -->
@@ -88,80 +95,79 @@ body {
         $('#sidebarCollapse').on('click', function() {
             $('#sidebar').toggleClass('active');
         });
-
     });
 </script>
 </head>
 <body class="d-flex flex-column h-100">
     <div class="wrapper">
-        <div>
-            <nav class="navbar navbar-light" style="">
-                <a class="navbar-brand" href="<c:url value="/" />"><c:if
-                        test="${not empty exhibition.title}">
-					${exhibition.title}</c:if> <c:if test="${empty exhibition.title}">Virtual Spaces
-                </c:if></a>
-                <ul class="navbar-nav ml-auto"
-                    style="flex-direction: row">
-                    <sec:authorize
-                        access="isAuthenticated() and hasAnyRole('ADMIN', 'STAFF')">
-                        <li class="nav-item"><a
-                            href="<c:url value="/staff/dashboard" />"
-                            class="nav-link"> <i
-                                class="fas fa-tachometer-alt"></i>
-                        </a></li>
-                    </sec:authorize>
-                    <sec:authorize access="isAnonymous()">
-                        <li class="nav-item" style="padding-left: 20px;">
-                            <a class="nav-link"
-                            href="<c:url value="/login" />"><i
-                                class="fas fa-sign-in-alt"></i></a>
-                        </li>
-                    </sec:authorize>
-                    <sec:authorize access="isAuthenticated()">
-                        <li class="nav-item" style="padding-left: 20px;">
-                            <form action="<c:url value="/logout" />"
-                                method="POST">
-                                <input type="hidden"
-                                    name="${_csrf.parameterName}"
-                                    value="${_csrf.token}" />
-                                <button class="btn nav-link"
-                                    type="submit" title="Logout"
-                                    style="font-size: large;">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                </button>
-                            </form>
-                        </li>
-                    </sec:authorize>
-                </ul>
-            </nav>
-            <!-- Sidebar -->
-            <nav id="sidebar"
-                class="mCustomScrollbar active float-left position-absolute">
-                <div class="sidebar-header">
-                    <p>In this Virtual Space:</p>
-                </div>
+        <nav class="navbar navbar-light" style="">
+            <a class="navbar-brand" href="<c:url value="/" />"><c:if
+                    test="${not empty exhibition.title}">
+					${exhibition.title}</c:if> <c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
 
-                <div class="list-group spaceNav">
-                    <c:forEach items="${allSpaces}" var="space">
-                        <a
-                            href="<c:url value="/exhibit/space/${space.id}" />"
-                            class="list-group-item
+            <ul class="navbar-nav ml-auto" style="flex-direction: row">
+                <!-- <li class="nav-item"><a href="#"
+                    id="sidebarCollapse" class="nav-link"> <i
+                        class="fas fa-compass"></i>
+                </a></li> -->
+                <sec:authorize
+                    access="isAuthenticated() and hasAnyRole('ADMIN', 'STAFF')">
+                    <li class="nav-item"><a
+                        href="<c:url value="/staff/dashboard" />"
+                        class="nav-link"> <i
+                            class="fas fa-tachometer-alt"></i>
+                    </a></li>
+                </sec:authorize>
+                <sec:authorize access="isAnonymous()">
+                    <li class="nav-item" style="padding-left: 20px;">
+                        <a class="nav-link"
+                        href="<c:url value="/login" />"><i
+                            class="fas fa-sign-in-alt"></i></a>
+                    </li>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <li class="nav-item" style="padding-left: 20px;">
+                        <form action="<c:url value="/logout" />"
+                            method="POST">
+                            <input type="hidden"
+                                name="${_csrf.parameterName}"
+                                value="${_csrf.token}" />
+                            <button class="btn navbar-link"
+                                type="submit" title="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </form>
+                    </li>
+                </sec:authorize>
+            </ul>
+        </nav>
+        <!-- Sidebar -->
+        <nav id="sidebar"
+            class="mCustomScrollbar active float-left position-absolute">
+            <div class="sidebar-header">
+                <p>In this Virtual Space:</p>
+            </div>
+
+            <div class="list-group spaceNav">
+                <c:forEach items="${publishedSpaces}" var="space">
+                    <a
+                        href="<c:url value="/exhibit/space/${space.id}" />"
+                        class="list-group-item
 						list-group-item-action"><i
-                            class="fas fa-grip-horizontal"></i>
-                            ${space.name}</a>
-                    </c:forEach>
-                </div>
-            </nav>
-        </div>
-
+                        class="fas fa-grip-horizontal"></i>
+                        ${space.name}</a>
+                </c:forEach>
+            </div>
+        </nav>
         <!-- Begin page content -->
         <main role="main" class="flex-shrink-0"
             style="padding-top: 20px;"> <c:if
             test="${showAlert eq true}">
-            <div id="errorMsg" class="alert alert-${alertType}">
+            <div id="errorMsg" class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
         </c:if> <tiles:insertAttribute name="content" />
-        <div class="pushTop"></div>
+        <div class="push"></div>
+        </main>
     </div>
     <div>
         <div class="footerBox">
@@ -175,8 +181,7 @@ body {
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
-			feather.replace()
-		</script>
+                    feather.replace()
+                </script>
 </body>
-
 </html>
