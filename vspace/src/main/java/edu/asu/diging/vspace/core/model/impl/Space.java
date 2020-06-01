@@ -15,6 +15,7 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModuleLink;
+import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -25,7 +26,7 @@ public class Space extends VSpaceElement implements ISpace {
 	@Id
 	@GeneratedValue(generator = "space_id_generator")
 	@GenericGenerator(name = "space_id_generator", 
-	    parameters = @Parameter(name = "prefix", value = "SPA"), 
+	    parameters = @Parameter(name = "prefix", value = IPrefix.spacePrefix), 
 	    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
 	private String id;
 
