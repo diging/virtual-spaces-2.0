@@ -86,6 +86,8 @@ function drawLinks() {
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
+        console.log(posX);
+        console.log(posY);
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
         var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
@@ -93,6 +95,8 @@ function drawLinks() {
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('left', ${link.positionX} + posX);
         linkDisplay.css('top', ${link.positionY} + posY);
+        console.log(${link.positionX});
+        console.log(${link.positionY});
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
@@ -160,7 +164,7 @@ function drawLinks() {
     z-index: 1;
     left: -38px;
     top: 27px;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .Info_cz_Class:hover .tooltiptext {
@@ -168,30 +172,41 @@ function drawLinks() {
 }
 
 @media only screen and (max-width: 800px) {
-  /* For mobile phones: */
- 
-  [class*="spaceClass"] {
-    width: 100%;
-    height: 220px;
-    max-width: 65%
-  }
-  [class*="barPosition"] {
-    font-size: 10px;
-  }
-  [class*="closebtn"] {
-    font-size: 10px;
-  }
-  [class*="sidenav"] {
-    font-size: 10px;
-    padding-top: 20px;
-  }
-  [class*="textDiv"] {
-    font-size: 10px;
-    width: 66%
-  }
-  
+    /* For mobile phones: */
+    [class*="spaceClass"] {
+        width: 100%;
+        height: 260px;
+        max-width: 81%;
+        min-height: 260px;
+    }
+    [class*="barPosition"] {
+        font-size: 10px;
+    }
+    [class*="closebtn"] {
+        font-size: 10px;
+    }
+    [class*="sidenav"] {
+        font-size: 10px;
+        padding-top: 20px;
+        width: 140px;
+        height: 260px;
+    }
+    [class*="textDiv"] {
+        font-size: 10px;
+        width: 66%;
+    }
+    [class*="Info_cz_Class"] {
+        font-size: 10px;
+        width: 66%;
+        left: 150px;
+        top: 150px;
+    }
+    [id*="rightContent"] {
+        width: 140px;
+        height: 260px;
+    }
+    
 }
-
 </style>
 <div class="container-fluid">
     <div id="Module_1" class="Home_Class">
