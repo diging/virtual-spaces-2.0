@@ -1051,7 +1051,7 @@ Delete Space
 
 <c:if test="${not empty space.image}">
 	<div id="space">
-		<img id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
+		<img style="min-height: 500px; min-width:800px;" id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
 	</div>
 </c:if>
 <jsp:include page="../../deleteModal.jsp" >
