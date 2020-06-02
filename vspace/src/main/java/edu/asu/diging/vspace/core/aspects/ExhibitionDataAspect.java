@@ -94,7 +94,7 @@ public class ExhibitionDataAspect {
         Object[] args = jp.getArgs();
         // For exhibition being active, if space or module is not found, show not found page or else give control to controller.
         if(exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
-            if(space==null || module==null) {
+            if(space==null && module==null) {
                 return "notFound";
             }
             return jp.proceed();

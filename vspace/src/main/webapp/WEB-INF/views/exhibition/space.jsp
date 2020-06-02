@@ -185,6 +185,16 @@ function drawLinks() {
 }
 </style>
 <div class="container-fluid">
+	<div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >
+    	<c:choose>
+        	<c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
+                <h6>${exhibitionConfig.customMessage}</h6>
+            </c:when>
+            <c:otherwise>
+           	    <h6>${exhibitionConfig.mode.value}</h6>
+            </c:otherwise>
+        </c:choose>
+    </div>
     <div id="Module_1" class="Home_Class">
         <!-- <div class="leftContent"> -->
         <div class="dropdown">
