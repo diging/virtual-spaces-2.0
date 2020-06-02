@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
@@ -31,14 +32,24 @@ public class ExhibitionSpaceController {
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
-        IExhibition exhibition = exhibitManager.getStartExhibition();
-        model.addAttribute("exhibitionConfig", exhibition);
-        model.addAttribute("space", space);
-        model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
-        model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
-        model.addAttribute("display", spaceDisplayManager.getBySpace(space));
-        model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id)); 
-
+        /* (non-Javadoc)
+         * Below null check is added to accommodate already existing spaces with null space status
+         */
+        if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)) {
+            IExhibition exhibition = exhibitManager.getStartExhibition();
+            model.addAttribute("exhibitionConfig", exhibition);
+            model.addAttribute("space", space);
+            model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+            model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
+            model.addAttribute("display", spaceDisplayManager.getBySpace(space));
+            model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id));  
+        }
+        else {
+            model.addAttribute("showAlert", true);
+            model.addAttribute("alertType", "danger");
+            model.addAttribute("messageType","invalidSpace");
+            model.addAttribute("message", "Access Denied.");
+        }
         return "space";
     }
 }
