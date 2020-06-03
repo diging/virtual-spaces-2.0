@@ -5,75 +5,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@page buffer="8192kb" autoFlush="true" %>
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
+<script src="space.js"></script>
 <script>
 //# sourceURL=click.js
-
 
 $(function(){
     $("#deleteSpace").click(function(){
         
         var spaceId = "${space.id}";
-    	var urlToLoadOnSuccess = "<c:url value="/staff/space/list"/>";
-        var urlToLoadOnError = "<c:url value="/staff/space/list"/>";
-        var dataUrl = "<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>";
-        var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";  
-
-    	$.ajax({
-            url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
-            type: 'GET',
-            cache       : false,
-            contentType : false,
-            success: function(data) {
-                
-                if(data.length > 0){
-                   $('#deleteSpace').attr('data-toggle', 'modal');
-                   $('#deleteSpace').attr('data-target', "#confirm-space-delete");
-                   $('#deleteSpace').attr('data-url', dataUrl);
-                   $('#deleteSpace').attr('data-record-id', spaceId);
-                   $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
-                   $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
-                   $('#warning').text(warningMessage);
-                   $('#deleteSpace').attr('data-warning', warningMessage);
-                   $('#confirm-space-delete').modal('show');
-                }
-                else{
-                    $('#deleteSpace').attr('data-toggle', 'modal');
-                    $('#deleteSpace').attr('data-target', "#confirm-space-delete");
-                    $('#deleteSpace').attr('data-url', dataUrl);
-                    $('#deleteSpace').attr('data-record-id', spaceId);
-                    $('#deleteSpace').attr('data-call-on-success', urlToLoadOnSuccess);
-                    $('#deleteSpace').attr('data-call-on-error', urlToLoadOnError);
-                    $('#deleteSpace').attr('data-warning', '');
-                    $('#warning').text('');
-                    $('#confirm-space-delete').modal('show');
-                  }	
-            }
-        }); 
+        checkSpaceLinkPresent(spaceId);
     });
 });    
 
 
 $( document ).ready(function() {
-    
-    
- // STORY-49 Ashmi Changes start
-    $('#confirm-space-delete').on('click', '.btn-ok', function(e) {
-        var url = $("#deleteSpace").data('url');
-        var urlToLoadOnSuccess = $("#deleteSpace").data('call-on-success');
-        var urlToLoadOnError = $("#deleteSpace").data('call-on-error');
-        $.ajax({
-            url : url,
-            type : 'DELETE',
-            success : function(response) {
-                window.location.href = urlToLoadOnSuccess;
-                },
-            error : function(errorMessage) {
-                window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
-                }
-            });
-  });    
-    
-    // Ashmi Changes end
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
@@ -98,7 +43,7 @@ $( document ).ready(function() {
 		
 		$("#space").append(link);
 		
-		$(".label-${lovop.index}").css({
+		$(".label-${loop.index}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
 			'top': ${link.positionY} + posY + 16,

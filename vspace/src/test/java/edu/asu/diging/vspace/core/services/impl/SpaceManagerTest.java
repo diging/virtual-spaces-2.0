@@ -117,14 +117,11 @@ public class SpaceManagerTest {
     public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException{
        Mockito.doThrow(IllegalArgumentException.class)
         .when(spaceRepo).deleteById(null);
-       //managerToTest.deleteSpaceById(null);
     }
     
     @Test(expected = SpaceDoesNotExistException.class)
     public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {  
        Mockito.doThrow(EmptyResultDataAccessException.class)
         .when(spaceRepo).deleteById(spaceId);
-      // managerToTest.deleteSpaceById(spaceId);
-    }
-    
+    }    
 }
