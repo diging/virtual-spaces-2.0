@@ -169,10 +169,9 @@ function drawLinks() {
             positionX=positionX-(widthFactor*positionX);
             /* positionY=positionY-heightFactor1;
             positionX=positionX-widthFactor1; */
-        	console.log(positionX)
+        	console.log(positionX);
             console.log(positionY);
             }
-            console.log(${positionX})
             linkDisplay.css('left', positionX);
             linkDisplay.css('top', positionY); 
             console.log(heightFactor);
