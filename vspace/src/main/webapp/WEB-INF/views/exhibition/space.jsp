@@ -9,15 +9,27 @@
 <script>
 //# sourceURL=click.js
 function openNav(){
-    document.getElementById("mySidenav").style.width = "240px";
-    document.getElementById("mySidenav").style.height = ${display.height}+"px"
+    if (window.matchMedia('(max-width: 800px)').matches){
+        document.getElementById("mySidenav").style.width = "140px";
+    	document.getElementById("mySidenav").style.height = "260px";
+    }
+    else{
+        document.getElementById("mySidenav").style.width = "240px";
+        document.getElementById("mySidenav").style.height = ${display.height}+"px";
+    }
 }
 function closeNav(){
     document.getElementById("mySidenav").style.width = "0px";
 }
 function openModuleNav(){
-    document.getElementById("mySideModulenav").style.width = "240px";
-    document.getElementById("mySideModulenav").style.height = "auto";
+    if (window.matchMedia('(max-width: 800px)').matches){
+        document.getElementById("mySideModulenav").style.width = "140px";
+        document.getElementById("mySideModulenav").style.height = "auto";
+    }
+    else{
+        document.getElementById("mySideModulenav").style.width = "240px";
+        document.getElementById("mySideModulenav").style.height = "auto";
+    }
 }
 function closeModuleNav(){
     document.getElementById("mySideModulenav").style.width = "0px";
@@ -29,8 +41,14 @@ function closeSpaceDescription(){
 }
 
 function openSpaceDescription(){
-    document.getElementById("rightContent").style.width = "300px";
-    document.getElementById("rightContent").style.height = ${display.height}+"px";
+    if (window.matchMedia('(max-width: 800px)').matches){
+        document.getElementById("rightContent").style.width = "140px";
+        document.getElementById("rightContent").style.height = "260px";
+    }
+    else{
+        document.getElementById("rightContent").style.width = "300px";
+        document.getElementById("rightContent").style.height = ${display.height}+"px";
+    }
 }
 
 $( document ).ready(function() {
@@ -61,14 +79,46 @@ function drawLinks() {
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            var linkDisplay=$('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><span class="tooltiptext">${link.link.name}</span></div>');
+            var linkDisplay=$('<div class="InfoSpace_${loop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><span class="tooltiptext">${link.link.name}</span></div>');
         }
         linkDisplay.css('position', 'absolute');
-        linkDisplay.css('left', ${link.positionX} + posX);
-        linkDisplay.css('top', ${link.positionY} + posY);
+        /* linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY); */
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey'); 
         linkDisplay.css('color', 'rgba(128,128,128,1)');
+        
+        if (window.matchMedia('(max-width: 800px)').matches)
+        {
+            var hght=parseInt($(".spaceClass").css("height"));
+            var width=parseInt($(".spaceClass").css("width"));
+            var heightFactor=hght/800;
+            var positionY = ${link.positionY} + posY;
+            if(positionY>=hght){
+            positionY=positionY-(heightFactor*positionY);
+            }
+            var widthFactor=width/940.5;
+            var positionX = ${link.positionX} + posX;
+            if(positionX>=width){
+            	positionX=positionX-(widthFactor*positionX);
+            	console.log(positionX)
+            }
+            linkDisplay.css('left', positionX);
+            linkDisplay.css('top', positionY);
+        }else{
+            linkDisplay.css('left', ${link.positionX} + posX);
+            linkDisplay.css('top', ${link.positionY} + posY);
+        }
+        
+        /* $(".InfoSpace_${loop.index}").css({
+            'position': 'absolute',
+            'left': ${link.positionX} + posX,
+            'top': ${link.positionY} + posY,
+            'transform': 'rotate(${link.rotation}deg)',
+            'fill': 'grey',
+            'color': 'rgba(128,128,128,1)'
+        }); */
+        
         link.append(linkDisplay);
         $("#space").append(link);
         $(".label-${loop.index}").css({
@@ -78,7 +128,7 @@ function drawLinks() {
           'color': 'rgba(150, 45, 62, 1)',
           'font-size': '12px',
           'overflow': 'visible'
-        });	
+        });
     }
     </c:forEach>
     
@@ -90,17 +140,60 @@ function drawLinks() {
         console.log(posY);
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
-        var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
+        var linkDisplay = $('<div class="InfoModule_${moduleLoop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
      
         linkDisplay.css('position', 'absolute');
-        linkDisplay.css('left', ${link.positionX} + posX);
-        linkDisplay.css('top', ${link.positionY} + posY);
-        console.log(${link.positionX});
-        console.log(${link.positionY});
+        /* linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY); */
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
-         
+        
+        if (window.matchMedia('(max-width: 800px)').matches)
+        {
+            var hght=parseInt($(".spaceClass").css("height"));
+            var width=parseInt($(".spaceClass").css("width"));
+            console.log("Smaller Screen");
+            console.log(hght);
+            console.log(width);
+            var heightFactor=hght/800;
+            var heightFactor1 = 800-hght;
+            var positionY = ${link.positionY} + posY;
+            console.log(positionY);
+            var widthFactor=width/940.5;
+            var widthFactor1 = 940.5-width;
+            console.log(widthFactor);
+            var positionX = ${link.positionX} + posX;
+            if(positionY>=hght || positionX>=width){
+            positionY=positionY-(heightFactor*positionY);
+            positionX=positionX-(widthFactor*positionX);
+            /* positionY=positionY-heightFactor1;
+            positionX=positionX-widthFactor1; */
+        	console.log(positionX)
+            console.log(positionY);
+            }
+            console.log(${positionX})
+            linkDisplay.css('left', positionX);
+            linkDisplay.css('top', positionY); 
+            console.log(heightFactor);
+            console.log(widthFactor);
+        }else{
+            linkDisplay.css('left', ${link.positionX} + posX);
+            linkDisplay.css('top', ${link.positionY} + posY);
+        }
+        /* $(".InfoModule_${moduleLoop.index}").css({
+            'position': 'absolute',
+            'left': ${link.positionX} + posX,
+            'top': ${link.positionY} + posY,
+            'transform': 'rotate(${link.rotation}deg)',
+            'fill': 'grey',
+            'color': 'rgba(128,128,128,1)'
+        });
+        $(document).ready(function(){
+                var left = $(".InfoModule_${moduleLoop.index}").css("left");
+                console.log(left) 
+        }); */
+
         link.append(linkDisplay);
         $("#space").append(link);
         
@@ -126,20 +219,46 @@ function drawLinks() {
         if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
             var linkDisplay = $('<img id="${link.image.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         } else {
-            console.log("In else block");
-            var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i><span class="tooltiptext">${link.name}</span></div>');
+            var linkDisplay = $('<div class="InfoExt_${externalLoop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i><span class="tooltiptext">${link.name}</span></div>');
         }
         
         linkDisplay.css('position', 'absolute');
-        linkDisplay.css('left', ${link.positionX} + posX);
-        linkDisplay.css('top', ${link.positionY} + posY);
+        /* linkDisplay.css('left', ${link.positionX} + posX);
+        linkDisplay.css('top', ${link.positionY} + posY); */
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
-         
+        if (window.matchMedia('(max-width: 800px)').matches)
+        {
+            var hght=parseInt($(".spaceClass").css("height"));
+            var width=parseInt($(".spaceClass").css("width"));
+            var heightFactor=hght/800;
+            var positionY = ${link.positionY} + posY;
+            if(positionY>=hght){
+            positionY=positionY-(heightFactor*positionY);
+            }
+            var widthFactor=width/940.5;
+            var positionX = ${link.positionX} + posX;
+            if(positionX>=width){
+            	positionX=positionX-(widthFactor*positionX);
+            	console.log(positionX)
+            }
+            linkDisplay.css('left', positionX);
+            linkDisplay.css('top', positionY);
+        }else{
+            linkDisplay.css('left', ${link.positionX} + posX);
+            linkDisplay.css('top', ${link.positionY} + posY);
+        }
+        /* $(".InfoExt_${externalLoop.index}").css({
+            'position': 'absolute',
+            'left': ${link.positionX} + posX,
+            'top': ${link.positionY} + posY,
+            'transform': 'rotate(${link.rotation}deg)',
+            'fill': 'grey',
+            'color': 'rgba(128,128,128,1)'
+        }); */
         link.append(linkDisplay);
         $("#space").append(link);
-        
         $(".externalLabel-${externalLoop.index}").css({
             'transform': 'rotate(0deg)',
             'left': ${link.positionX} + posX - 10,
@@ -188,23 +307,15 @@ function drawLinks() {
     [class*="sidenav"] {
         font-size: 10px;
         padding-top: 20px;
-        width: 140px;
         height: 260px;
     }
     [class*="textDiv"] {
         font-size: 10px;
         width: 66%;
     }
-    [class*="Info_cz_Class"] {
-        font-size: 10px;
-        width: 66%;
-        left: 150px;
-        top: 150px;
-    }
-    [id*="rightContent"] {
-        width: 140px;
-        height: 260px;
-    }
+    [class*="Home_Class"] {
+    min-height: 540px;
+}
     
 }
 </style>
