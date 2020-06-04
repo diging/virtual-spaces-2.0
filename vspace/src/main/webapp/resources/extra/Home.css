@@ -13,14 +13,14 @@
 }
 
 .spaceClass {
-    text-align: center;
+    /* text-align: center; */
     height: 800px;
     /* width: 800px; */
-    width: 57%;
+    /* width: 57%;
     max-width: 57%;
     margin: auto;
     background-size: cover;
-    border-radius: 13px;
+    border-radius: 13px; */
 }
 
 #wrapper_module {
@@ -130,7 +130,7 @@
     width: 0;
     position: absolute;
     z-index: 1;
-    top: 4px;
+    top: 45px;
     right: 0.5%;
     overflow-x: hidden;
     background: #fff;
@@ -173,7 +173,6 @@
 
 .textDiv {
     position: relative;
-    width: 53%;
     top: 0px;
     overflow: visible;
     text-align: justify;
@@ -268,7 +267,7 @@
     /* height: 39px; */
     /* left: 1px; */
     right: 0%;
-    top: 6px;
+    top: 48px;
     right: 1%;
     overflow: visible;
 }
@@ -382,4 +381,9 @@
     font-size: inherit;
     color: rgba(150, 45, 62, 1);
     transform: matrix(1, 0, 0, 1, 0, 0);
+}
+.imageStyle {
+    min-height: 500px; 
+    min-width:800px; 
+    border-radius:13px;
 }
