@@ -307,8 +307,8 @@ function drawLinks() {
             <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
         </div>
         <div class="spaceClass" id="spaceDiv" style="width: 800px; margin: auto; display: flex;">
-            <c:if test="${not empty moduleList}">
             <div>
+            <c:if test="${not empty moduleList}">
                 <div class=dropdown>
                     <div id="mySideModulenav" class="sideModulenav">
                         <i class="far fa-times-circle fa-lg closebtn"
