@@ -3,7 +3,12 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<script src ="space.js"></script>
+<script src="<c:url value="/resources/extra/space.js" />" ></script>
+<script>
+$( document ).ready(function() {
+	readyDoc($("#deleteSpace"), $('#confirm-space-delete'));
+});
+</script>
 
 <h1>Spaces</h1>
 
@@ -16,7 +21,7 @@
 				data-feather="box"></span> ${space.name}
 		</a> (Created on <span class="date">${space.creationDate}</span> by
 			${space.createdBy}) 
-           <a href="javascript:checkSpaceLinkPresent('${space.id}')" class="checkSpaceLinkPresent" >
+           <a href="javascript:checkSpaceLinkPresent('${space.id}', '<c:url value="/staff/" />', '?${_csrf.parameterName}=${_csrf.token}',$('#headerSpaceValue'))" class="checkSpaceLinkPresent" >
                <span class="float-right checkSpaceLinkPresent" id="deleteSpace" data-feather="trash-2"></span>
            </a>
         </li>

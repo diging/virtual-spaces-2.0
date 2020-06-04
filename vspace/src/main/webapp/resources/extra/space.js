@@ -1,11 +1,10 @@
-function checkSpaceLinkPresent(spaceId){
-    
-    var urlToLoad = "<c:url value="/staff/space/list"/>";
-    var dataUrl = "<c:url value="/staff/space/" />" + spaceId + '?${_csrf.parameterName}=${_csrf.token}';
+function checkSpaceLinkPresent(spaceId, baseUrl, params, header ){
+    var urlToLoad = baseUrl + "space/list";
+    var dataUrl = baseUrl + "space/" +spaceId + params;
     var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";  
 
     $.ajax({
-        url: "<c:url value="/staff/spaceLink/" />" + spaceId + "/spaces" + '?${_csrf.parameterName}=${_csrf.token}',
+        url: baseUrl + "spaceLink/" + spaceId + "/spaces" + params,
         type: 'GET',
         cache       : false,
         contentType : false,
@@ -13,7 +12,7 @@ function checkSpaceLinkPresent(spaceId){
             
             if(data.length > 0){
               
-               $("#headerSpaceValue").data('spaceValue', spaceIdGlobal);
+               header.data('spaceValue', spaceId);
                $('#deleteSpace').attr('data-toggle', 'modal');
                $('#deleteSpace').attr('data-target', "#confirm-space-delete");
                $('#deleteSpace').attr('data-url', dataUrl);
@@ -40,12 +39,10 @@ function checkSpaceLinkPresent(spaceId){
     });
 }
 
-$( document ).ready(function() {
-    
- // STORY-49 Ashmi Changes start
-    $('#confirm-space-delete').on('click', '.btn-ok', function(e) {
-        var url = $("#deleteSpace").data('url');
-        var urlToLoad = $("#deleteSpace").data('call-on-success');
+function readyDoc(deleteSpace, confirmDelete) {
+    confirmDelete.on('click', '.btn-ok', function(e) {
+        var url = deleteSpace.data('url');
+        var urlToLoad = deleteSpace.data('call-on-success');
         $.ajax({
             url : url,
             type : 'DELETE',
@@ -57,4 +54,4 @@ $( document ).ready(function() {
                 }
             });
   });
-});
+}

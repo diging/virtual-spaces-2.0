@@ -5,20 +5,23 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@page buffer="8192kb" autoFlush="true" %>
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
-<script src="space.js"></script>
+<script src="<c:url value="/resources/extra/space.js" />" ></script>
 <script>
-//# sourceURL=click.js
 
 $(function(){
     $("#deleteSpace").click(function(){
-        
         var spaceId = "${space.id}";
-        checkSpaceLinkPresent(spaceId);
-    });
+        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"));
 });    
 
 
 $( document ).ready(function() {
+    
+	readyDoc($("#deleteSpace"), $('#confirm-space-delete'));
+ // STORY-49 Ashmi Changes start
+  });    
+    
+    // Ashmi Changes end
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
@@ -43,7 +46,7 @@ $( document ).ready(function() {
 		
 		$("#space").append(link);
 		
-		$(".label-${loop.index}").css({
+		$(".label-${lovop.index}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
 			'top': ${link.positionY} + posY + 16,
