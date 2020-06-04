@@ -187,7 +187,8 @@ function drawLinks() {
             </div>
             <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
         </div>
-        <div class="spaceClass" style="width: 800px; margin: auto;">
+        <div class="spaceClass" style="width: 800px; margin: auto; display: flex;">
+        <div>
             <c:if test="${not empty moduleList}">
                 <div class=dropdown>
                     <div id="mySideModulenav" class="sideModulenav">
@@ -245,6 +246,7 @@ function drawLinks() {
             </div>
             <div id="space">
             <img style="min-height: 500px; min-width:800px; border-radius:13px;" id="bgImage" width="800px" src="<c:url value="/api/image/${space.image.id}" />" />
+            </div>
             </div>
             <c:if test="${not empty space.description}">
                 <div id="rightContent">
