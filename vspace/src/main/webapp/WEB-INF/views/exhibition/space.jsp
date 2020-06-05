@@ -245,7 +245,7 @@ function drawLinks() {
                 </h3>
             </div>
             <div id="space">
-            <img style="height: ${display.height}px; width:${display.width}px; border-radius:13px;" id="bgImage" width="${display.width}px" src="<c:url value="/api/image/${space.image.id}" />" />
+            <img style="max-width:${display.width}px; border-radius:13px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
             </div>
             </div>
             <c:if test="${not empty space.description}">
