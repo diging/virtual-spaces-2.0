@@ -51,16 +51,13 @@ function openSpaceDescription(){
     }
 }
 
-$( document ).ready(function() {
+$(document).ready(function() {
     
 	$('#slide_sidebar').removeClass('active');
 	$('#slide_sidebarCollapse').on('click', function() {
 		$('#slide_sidebar').toggleClass('active');
 	});
-	
-    drawLinks();
-    
-    $( window ).resize(function() {
+	$( window ).resize(function() {
         $("#space a").remove();
         drawLinks();
     });
@@ -74,6 +71,7 @@ $( document ).ready(function() {
         });
         
 }
+    drawLinks();
 });
 
 function drawLinks() {
@@ -92,27 +90,18 @@ function drawLinks() {
             var linkDisplay=$('<div class="InfoSpace_${loop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i><span class="tooltiptext">${link.link.name}</span></div>');
         }
         linkDisplay.css('position', 'absolute');
-        /* linkDisplay.css('left', ${link.positionX} + posX);
-        linkDisplay.css('top', ${link.positionY} + posY); */
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey'); 
         linkDisplay.css('color', 'rgba(128,128,128,1)');
         
         if (window.matchMedia('(max-width: 800px)').matches)
         {
-            var hght=parseInt($(".spaceClass").css("height"));
-            var width=parseInt($(".spaceClass").css("width"));
-            var heightFactor=hght/800;
-            var positionX = ${link.positionX} + posX;
-            var positionY = ${link.positionY} + posY;
-            if(positionY>=hght || positionX>=300){
-            	positionX = (300*positionX)/800;
-            	positionY = (hght*positionY)/800;
-            	positionY = positionY + 70;
-            	positionX = positionX + 10;
-            }
-            linkDisplay.css('left', positionX);
-            linkDisplay.css('top', positionY);
+            var height = parseInt($("#bgImage").css("height"));
+          	var width = parseInt($("#bgImage").css("width"));
+			var	linkPosX=(width*${link.positionX})/${display.width};
+			var	linkPosY=(height*${link.positionY})/${display.height};
+            linkDisplay.css('left',linkPosX + posX);
+            linkDisplay.css('top', linkPosY + posY);
         }else{
             linkDisplay.css('left', ${link.positionX} + posX);
             linkDisplay.css('top', ${link.positionY} + posY);
@@ -139,26 +128,19 @@ function drawLinks() {
         var linkDisplay = $('<div class="InfoModule_${moduleLoop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
      
         linkDisplay.css('position', 'absolute');
-        /* linkDisplay.css('left', ${link.positionX} + posX);
-        linkDisplay.css('top', ${link.positionY} + posY); */
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
         
         if (window.matchMedia('(max-width: 800px)').matches)
         {
-            var hght=parseInt($(".spaceClass").css("height"));
-            var width=parseInt($(".spaceClass").css("width"));
-            var positionX = ${link.positionX} + posX;
-            var positionY = ${link.positionY} + posY;
-            if(positionY>=hght || positionX>=300){
-            	positionX = (300*positionX)/800;
-            	positionY = (hght*positionY)/800;
-            	positionY = positionY + 100;
-            	positionX = positionX + 20;
-            }
-            linkDisplay.css('left', positionX);
-            linkDisplay.css('top', positionY);
+          	var height = parseInt($("#bgImage").css("height"));
+          	var width = parseInt($("#bgImage").css("width"));
+			var	linkPosX=(width*${link.positionX})/${display.width};
+			var	linkPosY=(height*${link.positionY})/${display.height};
+            linkDisplay.css('left',linkPosX + posX);
+            linkDisplay.css('top', linkPosY + posY);
+            
         }else{
             linkDisplay.css('left', ${link.positionX} + posX);
             linkDisplay.css('top', ${link.positionY} + posY);
@@ -192,26 +174,17 @@ function drawLinks() {
         }
         
         linkDisplay.css('position', 'absolute');
-        /* linkDisplay.css('left', ${link.positionX} + posX);
-        linkDisplay.css('top', ${link.positionY} + posY); */
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
         if (window.matchMedia('(max-width: 800px)').matches)
         {
-            var hght=parseInt($(".spaceClass").css("height"));
-            var width=parseInt($(".spaceClass").css("width"));
-            var heightFactor=hght/800;
-            var positionX = ${link.positionX} + posX;
-            var positionY = ${link.positionY} + posY;
-            if(positionY>=hght || positionX>=300){
-            	positionX = (300*positionX)/800;
-            	positionY = (hght*positionY)/800;
-            	positionY = positionY + 100;
-            	positionX = positionX + 10;
-            }
-            linkDisplay.css('left', positionX);
-            linkDisplay.css('top', positionY);
+            var height = parseInt($("#bgImage").css("height"));
+          	var width = parseInt($("#bgImage").css("width"));
+			var	linkPosX=(width*${link.positionX})/${display.width};
+			var	linkPosY=(height*${link.positionY})/${display.height};
+            linkDisplay.css('left',linkPosX + posX);
+            linkDisplay.css('top', linkPosY + posY);
         }else{
             linkDisplay.css('left', ${link.positionX} + posX);
             linkDisplay.css('top', ${link.positionY} + posY);
@@ -282,7 +255,6 @@ function drawLinks() {
     [class*="container-fluid"] {
         padding-right: 0px;
     }
-    
 }
 </style>
 <div class="container-fluid">
@@ -306,7 +278,7 @@ function drawLinks() {
             </div>
             <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
         </div>
-        <div class="spaceClass" style="width: ${display.width}px; margin: auto; display: flex;">
+        <div class="spaceClass" id="spaceDiv" style="width: ${display.width}px; margin: auto; display: flex;">
         <div>
             <c:if test="${not empty moduleList}">
                 <div class=dropdown>
