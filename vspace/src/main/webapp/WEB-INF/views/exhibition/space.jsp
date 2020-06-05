@@ -86,8 +86,6 @@ function drawLinks() {
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
-        console.log(posX);
-        console.log(posY);
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
         var linkDisplay = $('<div class="Info Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
@@ -116,8 +114,6 @@ function drawLinks() {
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
-        console.log(posX);
-        console.log(posY);
         var link = $('<a></a>');
         link.attr('href', "${link.externalLink.externalLink}");
         link.attr('target', "_blank");
