@@ -6,7 +6,7 @@
 <link href="<c:url value="/resources/bootstrap-4.1.2/login.css" />"
 	rel="stylesheet">
 
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="min-height:780px">
 	<div class="col-4">
 		<c:if test="${param.error != null}">
 			<div class="alert alert-danger" role="alert">Invalid Username

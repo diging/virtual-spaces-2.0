@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-
+<div style="min-height:780px">
 <div class="row">
 <div class="col-sm"></div>
 <div class="jumbotron col-sm">
@@ -35,4 +35,5 @@
 </div>
 
 <div class="col-sm"></div>
+</div>
 </div>

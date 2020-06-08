@@ -5,7 +5,7 @@
 <!-- Custom styles for this template -->
 <link href="<c:url value="/resources/bootstrap-4.1.2/login.css" />"
 	rel="stylesheet">
-
+<div style="min-height:780px">
 <div class="row">
 <div class="col-sm"></div>
 <div class="jumbotron col-sm">
@@ -35,5 +35,6 @@
 	</sec:authorize>
 </div>
 <div class="col-sm"></div>
+</div>
 </div>
 
