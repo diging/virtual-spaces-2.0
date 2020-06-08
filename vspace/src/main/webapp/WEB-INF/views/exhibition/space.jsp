@@ -8,8 +8,9 @@
 
 <script>
 //# sourceURL=click.js
+var maxWidth='(max-width: 800px)';
 function openNav(){
-    if (window.matchMedia('(max-width: 800px)').matches){
+    if (window.matchMedia(maxWidth).matches){
         document.getElementById("mySidenav").style.width = "170px";
     	document.getElementById("mySidenav").style.height = "260px";
     }
@@ -22,7 +23,7 @@ function closeNav(){
     document.getElementById("mySidenav").style.width = "0px";
 }
 function openModuleNav(){
-    if (window.matchMedia('(max-width: 800px)').matches){
+    if (window.matchMedia(maxWidth).matches){
         document.getElementById("mySideModulenav").style.width = "170px";
         document.getElementById("mySideModulenav").style.height = "auto";
     }
@@ -41,7 +42,7 @@ function closeSpaceDescription(){
 }
 
 function openSpaceDescription(){
-    if (window.matchMedia('(max-width: 800px)').matches){
+    if (window.matchMedia(maxWidth).matches){
         document.getElementById("rightContent").style.width = "170px";
         document.getElementById("rightContent").style.height = "260px";
     }
@@ -61,16 +62,7 @@ $(document).ready(function() {
         $("#space a").remove();
         drawLinks();
     });
-    
-    if (window.matchMedia('(max-width: 800px)').matches){
-        document.getElementById("bgImage").style.width = "300px";
-        document.getElementById("spaceDiv").style.width = "300px";
-        
-        $('.textDiv h3').replaceWith(function() {
-            return "<h5>" + $(this).html() + "</h5>";
-        });
-        
-}
+	
     drawLinks();
 });
 
@@ -94,7 +86,7 @@ function drawLinks() {
         linkDisplay.css('fill', 'grey'); 
         linkDisplay.css('color', 'rgba(128,128,128,1)');
         
-        if (window.matchMedia('(max-width: 800px)').matches)
+        if (window.matchMedia(maxWidth).matches)
         {
             var height = parseInt($("#bgImage").css("height"));
           	var width = parseInt($("#bgImage").css("width"));
@@ -132,7 +124,7 @@ function drawLinks() {
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
         
-        if (window.matchMedia('(max-width: 800px)').matches)
+        if (window.matchMedia(maxWidth).matches)
         {
           	var height = parseInt($("#bgImage").css("height"));
           	var width = parseInt($("#bgImage").css("width"));
@@ -177,7 +169,7 @@ function drawLinks() {
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey');
         linkDisplay.css('color', 'rgba(128,128,128,1)');
-        if (window.matchMedia('(max-width: 800px)').matches)
+        if (window.matchMedia(maxWidth).matches)
         {
             var height = parseInt($("#bgImage").css("height"));
           	var width = parseInt($("#bgImage").css("width"));
@@ -224,9 +216,6 @@ function drawLinks() {
 
 @media only screen and (max-width: 800px) {
     /* For mobile phones: */
-    [class*="spaceClass"] {
-        height: 260px;
-    }
     [class*="barPosition"] {
         font-size: 12px;
     }
@@ -241,20 +230,21 @@ function drawLinks() {
     [class*="Home_Class"] {
         min-height: 540px;
     }
-    [class*="imageStyle"] {
-        min-height: 220px;
-        min-width: 300px;
-        border-radius: 13px;
-    }
     [class*="Group_3_Class"] {
         top: 34px;
     }
     [class*="sideModulenav"] {
         top: 34px;
+        height: 260px;
     }
     [class*="container-fluid"] {
         padding-right: 0px;
     }
+    [class*="spaceName"] {
+        font-size: 20px;
+    }
+    
+    
 }
 </style>
 <div class="container-fluid">
@@ -264,9 +254,6 @@ function drawLinks() {
             <div id="mySidenav" class="sidenav">
                 <i class="far fa-times-circle fa-lg closebtn"
                     onclick="closeNav()"></i>
-                <!-- <div class="sidebar-header">
-                    <p>In this Virtual Space</p>
-                </div> -->
                 <div class="list-group spaceNav">
                     <ul>
                         <c:forEach items="${publishedSpaces}" var="space">
@@ -278,7 +265,7 @@ function drawLinks() {
             </div>
             <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
         </div>
-        <div class="spaceClass" id="spaceDiv" style="width: ${display.width}px; margin: auto; display: flex;">
+        <div class="spaceClass" id="spaceDiv" style="width: 80%; margin: auto; display: flex; justify-content: center;">
         <div>
             <c:if test="${not empty moduleList}">
                 <div class=dropdown>
@@ -327,7 +314,7 @@ function drawLinks() {
                 </div>
             </c:if>
             <div class="textDiv">
-                <h3>${space.name}
+                <h3 class="spaceName">${space.name}
                     <c:if test="${not empty space.description}">
                         <i class="fas fa-info-circle fa-lg"
                             style="font-size: 20px; color: rgba(150, 45, 62, 1);"
@@ -336,7 +323,7 @@ function drawLinks() {
                 </h3>
             </div>
             <div id="space">
-            <img style="max-width:${display.width}px; border-radius:13px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
+            <img style="max-width:${display.width}px; border-radius:13px; width: 100%" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
             </div>
             </div>
             <c:if test="${not empty space.description}">
