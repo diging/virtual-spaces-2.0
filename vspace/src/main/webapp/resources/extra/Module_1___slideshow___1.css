@@ -211,3 +211,10 @@ a, a:hover, a:focus {
     display: inline-block;
     position: relative;
 }
+
+@media only screen and (max-width: 800px) {
+    /* For mobile phones: */
+    [class*="Group_7_Class"] {
+        width: 98%;
+    }
+}
