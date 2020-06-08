@@ -28,15 +28,6 @@ body {
     function closeLangNav() {
         document.getElementById("myLangSidenav").style.width = "0";
     }
-    $( document ).ready(function() {
-    	if($.browser.chrome) {
-       		alert(1);
-     	} else if ($.browser.mozilla) {
-        	alert(2);
-     	} else if ($.browser.msie) {
-        	alert(3);
-     	}
-    });
 </script>
 <!-- <div class="container-fluid"> -->
     <div id="Module_1" class="Module_1_Class">
