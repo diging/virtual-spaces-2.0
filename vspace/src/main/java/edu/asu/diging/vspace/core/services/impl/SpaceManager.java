@@ -203,10 +203,19 @@ public class SpaceManager implements ISpaceManager {
             // (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
 
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
+            List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
             // When space has other links attached to it
             if (spaceLinks.size() > 0) {
-                spaceLinkDisplayRepo.deleteBySpaceLink(spaceLinks);
+                // To delete links that access to the space getting deleted
+                for(SpaceLink sp : fromSpaceLinks) {
+                    spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
+                }
+                // To delete the links on the space getting deleted
+                for(SpaceLink sp : spaceLinks) {
+                    spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
+                }
                 spaceLinkRepo.deleteBySourceSpaceId(id);
+                spaceLinkRepo.deleteByTargetSpaceId(id);
                 spaceDisplayRepo.deleteBySpaceId(id);
                 spaceRepo.deleteById(id);
             }

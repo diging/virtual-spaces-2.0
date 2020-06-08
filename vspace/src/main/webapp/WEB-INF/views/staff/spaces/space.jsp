@@ -16,12 +16,8 @@ $(function(){
 
 
 $( document ).ready(function() {
-    
 	readyDoc($("#deleteSpace"), $('#confirm-space-delete'));
- // STORY-49 Ashmi Changes start
   });    
-    
-    // Ashmi Changes end
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
@@ -46,7 +42,7 @@ $( document ).ready(function() {
 		
 		$("#space").append(link);
 		
-		$(".label-${lovop.index}").css({
+		$(".label-${loop.index}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
 			'top': ${link.positionY} + posY + 16,
