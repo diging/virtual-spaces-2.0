@@ -8,7 +8,7 @@
 
 <script>
 //# sourceURL=click.js
-var maxWidth='(max-width: 800px)';
+var maxWidth='(max-width: 1200px)';
 function openNav(){
     if (window.matchMedia(maxWidth).matches){
         document.getElementById("mySidenav").style.width = "170px";
