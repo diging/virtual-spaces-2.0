@@ -6,7 +6,7 @@
 <link href="<c:url value="/resources/bootstrap-4.1.2/login.css" />"
 	rel="stylesheet">
 
-<div style="min-height:780px">
+
 <div class="row justify-content-center">
 	<div class="col-8">
 		<div class="jumbotron">
@@ -20,6 +20,5 @@
             <a href="<c:url value="/login" />">Login to Virtual Spaces</a>
 		</div>
 	</div>
-</div>
 </div>
 
