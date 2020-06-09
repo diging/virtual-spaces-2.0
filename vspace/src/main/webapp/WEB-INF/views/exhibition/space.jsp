@@ -7,8 +7,7 @@
     href="<c:url value="/resources/extra/Home.css" />">
 
 <script>
-//# sourceURL=click.js
-var maxWidth='(max-width: 1200px)';
+let maxWidth='(max-width: 1200px)';
 function openNav(){
     if (window.matchMedia(maxWidth).matches){
         document.getElementById("mySidenav").style.width = "170px";
@@ -52,17 +51,14 @@ function openSpaceDescription(){
     }
 }
 
-$(document).ready(function() {
-    
-	$('#slide_sidebar').removeClass('active');
-	$('#slide_sidebarCollapse').on('click', function() {
-		$('#slide_sidebar').toggleClass('active');
-	});
+$(window).on("load", function() {
+    let spaceHeight = $("#bgImage").css("height");
+    $("#Module_1").css("min-height",spaceHeight);
 	$( window ).resize(function() {
+	    console.log("In Resize");
         $("#space a").remove();
         drawLinks();
     });
-	
     drawLinks();
 });
 
@@ -85,19 +81,12 @@ function drawLinks() {
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
         linkDisplay.css('fill', 'grey'); 
         linkDisplay.css('color', 'rgba(128,128,128,1)');
-        
-        if (window.matchMedia(maxWidth).matches)
-        {
-            var height = parseInt($("#bgImage").css("height"));
-          	var width = parseInt($("#bgImage").css("width"));
-			var	linkPosX=(width*${link.positionX})/${display.width};
-			var	linkPosY=(height*${link.positionY})/${display.height};
-            linkDisplay.css('left',linkPosX + posX);
-            linkDisplay.css('top', linkPosY + posY);
-        }else{
-            linkDisplay.css('left', ${link.positionX} + posX);
-            linkDisplay.css('top', ${link.positionY} + posY);
-        }
+        let height = parseInt($("#bgImage").css("height"));
+        let width = parseInt($("#bgImage").css("width"));
+        let	linkPosX=(width*${link.positionX})/${display.width};
+        let	linkPosY=(height*${link.positionY})/${display.height};
+        linkDisplay.css('left',linkPosX + posX);
+        linkDisplay.css('top', linkPosY + posY);
         link.append(linkDisplay);
         $("#space").append(link);
         $(".label-${loop.index}").css({
@@ -118,28 +107,18 @@ function drawLinks() {
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/${space.id}/module/${link.link.module.id}" />');
         var linkDisplay = $('<div class="InfoModule_${moduleLoop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">${link.link.name}</span></div>');
-     
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-        linkDisplay.css('fill', 'grey');
+        linkDisplay.css('fill', 'grey'); 
         linkDisplay.css('color', 'rgba(128,128,128,1)');
-        
-        if (window.matchMedia(maxWidth).matches)
-        {
-          	var height = parseInt($("#bgImage").css("height"));
-          	var width = parseInt($("#bgImage").css("width"));
-			var	linkPosX=(width*${link.positionX})/${display.width};
-			var	linkPosY=(height*${link.positionY})/${display.height};
-            linkDisplay.css('left',linkPosX + posX);
-            linkDisplay.css('top', linkPosY + posY);
-            
-        }else{
-            linkDisplay.css('left', ${link.positionX} + posX);
-            linkDisplay.css('top', ${link.positionY} + posY);
-        }
+        let height = parseInt($("#bgImage").css("height"));
+        let width = parseInt($("#bgImage").css("width"));
+        let	linkPosX=(width*${link.positionX})/${display.width};
+        let	linkPosY=(height*${link.positionY})/${display.height};
+        linkDisplay.css('left',linkPosX + posX);
+        linkDisplay.css('top', linkPosY + posY);
         link.append(linkDisplay);
         $("#space").append(link);
-        
         $(".moduleLabel-${moduleLoop.index}").css({
             'transform': 'rotate(0deg)',
             'left': ${link.positionX} + posX - 10,
@@ -164,23 +143,16 @@ function drawLinks() {
         } else {
             var linkDisplay = $('<div class="InfoExt_${externalLoop.index} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i><span class="tooltiptext">${link.name}</span></div>');
         }
-        
         linkDisplay.css('position', 'absolute');
         linkDisplay.css('transform', 'rotate(${link.rotation}deg)');
-        linkDisplay.css('fill', 'grey');
+        linkDisplay.css('fill', 'grey'); 
         linkDisplay.css('color', 'rgba(128,128,128,1)');
-        if (window.matchMedia(maxWidth).matches)
-        {
-            var height = parseInt($("#bgImage").css("height"));
-          	var width = parseInt($("#bgImage").css("width"));
-			var	linkPosX=(width*${link.positionX})/${display.width};
-			var	linkPosY=(height*${link.positionY})/${display.height};
-            linkDisplay.css('left',linkPosX + posX);
-            linkDisplay.css('top', linkPosY + posY);
-        }else{
-            linkDisplay.css('left', ${link.positionX} + posX);
-            linkDisplay.css('top', ${link.positionY} + posY);
-        }
+        let height = parseInt($("#bgImage").css("height"));
+        let width = parseInt($("#bgImage").css("width"));
+        let	linkPosX=(width*${link.positionX})/${display.width};
+        let	linkPosY=(height*${link.positionY})/${display.height};
+        linkDisplay.css('left',linkPosX + posX);
+        linkDisplay.css('top', linkPosY + posY);
         link.append(linkDisplay);
         $("#space").append(link);
         $(".externalLabel-${externalLoop.index}").css({
@@ -243,13 +215,10 @@ function drawLinks() {
     [class*="spaceName"] {
         font-size: 20px;
     }
-    
-    
 }
 </style>
 <div class="container-fluid">
     <div id="Module_1" class="Home_Class">
-        <!-- <div class="leftContent"> -->
         <div class="dropdown">
             <div id="mySidenav" class="sidenav">
                 <i class="far fa-times-circle fa-lg closebtn"
@@ -323,7 +292,7 @@ function drawLinks() {
                 </h3>
             </div>
             <div id="space">
-            <img style="max-width:${display.width}px; border-radius:13px; width: 100%" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
+            <img style="max-width:${space.image.width}px; border-radius:13px; width: 100%;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
             </div>
             </div>
             <c:if test="${not empty space.description}">
