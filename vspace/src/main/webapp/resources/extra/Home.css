@@ -1,7 +1,6 @@
 .Home_Class {
     margin: 0 auto 0 auto;
     width: 100%;
-    min-height: 780px;
 }
 
 .Home__Class {
@@ -13,7 +12,14 @@
 }
 
 .spaceClass {
-    text-align: center;
+    /* text-align: center; */
+    height: 800px;
+    /* width: 800px; */
+    /* width: 57%;
+    max-width: 57%;
+    margin: auto;
+    background-size: cover;
+    border-radius: 13px; */
 }
 
 #wrapper_module {
@@ -124,7 +130,7 @@
     position: absolute;
     z-index: 1;
     top: 45px;
-    right: 5px;
+    right: 0.5%;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
@@ -166,7 +172,6 @@
 
 .textDiv {
     position: relative;
-    /* width: 48%; */
     top: 0px;
     overflow: visible;
     text-align: justify;
@@ -185,8 +190,6 @@
     position: absolute;
     width: 29px;
     height: 29px;
-    left: 957.622px;
-    top: 275.275px;
     overflow: visible; -
     -web-animation: fadein 0.3s ease-out; -
     -web-action-type: view; -
@@ -263,7 +266,7 @@
     /* height: 39px; */
     /* left: 1px; */
     right: 0%;
-    top: 46px;
+    top: 48px;
     right: 1%;
     overflow: visible;
 }
@@ -302,8 +305,8 @@
     width: 0px;
     position: absolute;
     z-index: 1;
-    top: 10%;
-    right: 15px;
+    /* top: 10%; */
+    right: 5px;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
@@ -377,4 +380,13 @@
     font-size: inherit;
     color: rgba(150, 45, 62, 1);
     transform: matrix(1, 0, 0, 1, 0, 0);
+}
+.imageStyle {
+    min-height: 500px; 
+    min-width:800px; 
+    border-radius:13px;
+}
+
+.spaceName {
+    font-size: 25px;
 }
