@@ -7,6 +7,7 @@
     href="<c:url value="/resources/extra/Home.css" />">
 
 <script>
+//# sourceURL=click.js
 let maxWidth='(max-width: 1200px)';
 function openNav(){
     if (window.matchMedia(maxWidth).matches){
