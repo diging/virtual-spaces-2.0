@@ -58,11 +58,11 @@
     </definition>
 	
 	<!--  Exhibition  -->
-	<definition name="space" extends="base.definition">	
+	<definition name="space" extends="base.definition.no.exhibition">	
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
-	<definition name="module" extends="base.definition">	
+	<definition name="module" extends="base.definition.no.exhibition">	
 		<put-attribute name="currentPage" value="module" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
 	</definition>

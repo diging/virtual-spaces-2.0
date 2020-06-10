@@ -54,6 +54,10 @@
         font-size: 3.5rem;
     }
 }
+
+.push {
+    height: 100px;
+}
 </style>
 <!-- Custom styles for this template -->
 <link
@@ -144,10 +148,12 @@
             <div id="errorMsg"
                 class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
-        </c:if> <tiles:insertAttribute name="content" /> </main>
+        </c:if> <tiles:insertAttribute name="content" /> 
+        <div class="push"></div>
+        </main>
     </div>
 
-    <footer class="footer mt-auto">
+    <footer class="footer mt-auto" style="position: fixed; bottom: 0px; width: 100%;">
         <div class="d-flex justify-content-center">
             <span class="text-muted">This web application was
                 built with Virtual Spaces 2.0
