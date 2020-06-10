@@ -58,6 +58,10 @@
 .push {
     height: 100px;
 }
+
+.pushContent {
+    margin-top: 45px;
+}
 </style>
 <!-- Custom styles for this template -->
 <link
@@ -82,7 +86,7 @@
 
 <body class="d-flex flex-column h-100">
     <div class="wrapper">
-        <nav class="navbar navbar-light" style="">
+        <nav class="navbar navbar-light" style="position: fixed; width: 100%;">
             <a class="navbar-brand" href="<c:url value="/" />"><c:if
                     test="${not empty exhibition.title}">
 					${exhibition.title}</c:if> <c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
@@ -143,7 +147,9 @@
         </nav>
         <!-- Begin page content -->
         <main role="main" class="flex-shrink-0"
-            style="padding-top: 20px;"> <c:if
+            style="padding-top: 20px;">
+            <div class="pushContent"></div>
+            <c:if
             test="${showAlert eq true}">
             <div id="errorMsg"
                 class="alert alert-${alertType} custom-${messageType}">
@@ -155,9 +161,8 @@
 
     <footer class="footer mt-auto" style="position: fixed; bottom: 0px; width: 100%;">
         <div class="d-flex justify-content-center">
-            <span class="text-muted">This web application was
-                built with Virtual Spaces 2.0
-                (https://github.com/diging/virtual-spaces-2.0).</span>
+             <span class="text-muted">This web application was
+                built with <a class="text-muted" href="<c:url value="https://github.com/diging/virtual-spaces-2.0" />"> Virtual Spaces 2.0 </a></span>
         </div>
     </footer>
 

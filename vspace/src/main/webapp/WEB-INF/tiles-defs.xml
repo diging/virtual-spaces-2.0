@@ -5,7 +5,7 @@
 <tiles-definitions>
 
 	<!-- Base definitions -->
-	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
+	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition3.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -32,7 +32,7 @@
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
 	</definition>
-	<definition name="base.definition.no.exhibition" template="/WEB-INF/tiles/skeleton_exhibition3.jsp">
+	<definition name="base.definition.no.exhibition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -41,52 +41,52 @@
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
 	</definition>
-	<definition name="home" extends="base.definition.no.exhibition">
+	<definition name="home" extends="base.definition">
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
 	</definition>
 	
-	<definition name="login" extends="base.definition.no.exhibition">
+	<definition name="login" extends="base.definition">
 		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
 	</definition>
     
-    <definition name="setup" extends="base.definition.no.menu">
+    <definition name="setup" extends="base.definition">
         <put-attribute name="content" value="/WEB-INF/views/setup.jsp" />
     </definition>
     
-    <definition name="setup/complete" extends="base.definition.no.exhibition">
+    <definition name="setup/complete" extends="base.definition">
         <put-attribute name="content" value="/WEB-INF/views/setupComplete.jsp" />
     </definition>
 	
 	<!--  Exhibition  -->
-	<definition name="space" extends="base.definition.no.exhibition">	
+	<definition name="space" extends="base.definition">	
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
-	<definition name="module" extends="base.definition.no.exhibition">	
+	<definition name="module" extends="base.definition">	
 		<put-attribute name="currentPage" value="module" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
 	</definition>
     
     <!-- Register -->
-    <definition name="register" extends="base.definition.no.exhibition"> 
+    <definition name="register" extends="base.definition"> 
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/register.jsp" />    
     </definition>
     
     <!-- Password Reset -->
-    <definition name="reset/password/request" extends="base.definition.no.exhibition"> 
+    <definition name="reset/password/request" extends="base.definition"> 
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />    
     </definition>
-    <definition name="reset/request/sent" extends="base.definition.no.exhibition"> 
+    <definition name="reset/request/sent" extends="base.definition"> 
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/resetRequestSent.jsp" />    
     </definition>
-    <definition name="password/change" extends="base.definition.no.exhibition"> 
+    <definition name="password/change" extends="base.definition"> 
         <put-attribute name="currentPage" value="space" />
         <put-attribute name="content" value="/WEB-INF/views/passwordChange.jsp" />    
     </definition>
-    <definition name="accessDenied" extends="base.definition.no.exhibition"> 
+    <definition name="accessDenied" extends="base.definition"> 
         <put-attribute name="content" value="/WEB-INF/views/accessdenied.jsp" />    
     </definition>
 	<!-- Staff -->
