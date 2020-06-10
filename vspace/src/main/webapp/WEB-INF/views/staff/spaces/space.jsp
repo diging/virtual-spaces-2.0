@@ -1012,7 +1012,7 @@ ${space.description}
 </div>
 
 <div id="moduleLinkInfo" class="alert alert-secondary" role="alert"
-	style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+	style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
 	<p class="float-right">
 		<a href="#" id="closeModuleLinkInfo"><span data-feather="x-square"></span></a>
 	</p>
@@ -1022,6 +1022,82 @@ ${space.description}
 	<input type="hidden" name="moduleLinkId" id="moduleLinkId" />
 	<button id="deleteModuleLinkButton" type="reset"
 		class="btn btn-primary btn-xs">Delete Module Link</button>
+        
+     <div class="row">
+            <div class="col">
+                <h6 class="alert-heading">
+                    <small>Edit Module Link</small>
+                </h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <small>Please click on the image where you want to place the
+                    new module link. Then click "Edit Module".</small>
+                </p>
+                <hr>
+            </div>
+        </div>
+
+        <input type="hidden" name="x" id="moduleLinkX" /> 
+        <input type="hidden" name="y" id="moduleLinkY" />
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Rotation:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <input class="form-control-xs modulelink-target" type="number" id="moduleLinkRotation"
+                    name="rotation" value="0"><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Label:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <input class="form-control-xs modulelink-target" type="text"
+                    name="moduleLinkLabel" id="moduleLinkLabel"><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Type:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <select id="type" name="type" class="form-control-xs modulelink-target">
+                    <option selected value="">Choose...</option>
+                    <option value="MODULE">Module</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-5" style="padding-right: 0px;">
+                <label><small>Linked Modules:</small> </label>
+            </div>
+            <div class="col-sm-7">
+                <select id="linkedModule" name="linkedModule"
+                    class="form-control-xs modulelink-target">
+                    <option selected value="">Choose...</option>
+                    <c:forEach items="${moduleList}" var="module">
+                        <option value="${module.id}">${module.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+
+        <HR>
+        <p class="mb-0 text-right">
+            <button id="cancelModuleLinkBtn" type="reset"
+                class="btn btn-light btn-xs">Cancel</button>
+            <button id="createModuleLinkBtn" type="reset"
+                class="btn btn-primary btn-xs">Edit Module</button>
+        </p>
+        
+        
 </div>
 
 <div id="externalLinkInfo" class="alert alert-secondary" role="alert"
