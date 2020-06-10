@@ -47,12 +47,12 @@ $( document ).ready(function() {
                 </p>
                 <div id="warningMessage">
                 <small class="text-danger">
-                Warning! Other spaces have links to this space!
+                Other spaces have links to this space!
                 </small>
                 </div>
                 <div id="exhibitionMessage">
                 <small class="text-danger">
-                Warning! This space is exhibition start space!
+                This space is the exhibition start space! This will set exhibition to null.
                 </small>
                 </div>
                 <div id="finalWarning">
