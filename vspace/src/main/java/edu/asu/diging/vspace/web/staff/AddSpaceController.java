@@ -19,6 +19,7 @@ import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -51,13 +52,13 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
+        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {
             bgImage = file.getBytes();
             filename = file.getOriginalFilename();
-        }
-        
+        } 
         CreationReturnValue creationValue = null;
         if(imageId != null && !imageId.isEmpty()) {
             IVSImage image;

@@ -15,6 +15,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -26,6 +27,9 @@ public class SpaceController {
     @Autowired
     private IModuleManager moduleManager;
     
+    @Autowired
+    private ISpaceDisplayManager spaceDisplayManager;
+
     @Autowired
     private ILinkManager linkManager;
 
@@ -39,6 +43,7 @@ public class SpaceController {
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
         model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
+        model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
         return "staff/space";
     }

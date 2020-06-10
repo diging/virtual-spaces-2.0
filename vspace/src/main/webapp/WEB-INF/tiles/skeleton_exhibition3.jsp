@@ -7,6 +7,7 @@
 
 <!doctype html>
 <html lang="en" class="h-100">
+
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -39,10 +40,6 @@
 </script>
 
 <style>
-body {
-    font-family: 'Montserrat', sans-serif;
-}
-
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -58,27 +55,12 @@ body {
     }
 }
 
-.footer {
-    margin: 15px 15px 15px 15px;
-    padding: 0px 30px 0px 30px;
-    display: flex;
-    justify-content: center;
+.push {
+    height: 100px;
 }
 
-.footerBox {
-    color: #A34D63;
-    width: 100%;
-}
-
-.footerBox, .push {
-    height: 75px;
-}
-
-.custom-invalidSpace {
-    text-align: center;
-    position: absolute;
-    top: 106px;
-    width: 100%;
+.pushContent {
+    margin-top: 45px;
 }
 </style>
 <!-- Custom styles for this template -->
@@ -90,17 +72,21 @@ body {
 <link
     href="https://fonts.googleapis.com/css?family=EB+Garamond|Montserrat"
     rel="stylesheet">
+
 <script>
     $(document).ready(function() {
+
         $('#sidebarCollapse').on('click', function() {
             $('#sidebar').toggleClass('active');
         });
+
     });
 </script>
 </head>
+
 <body class="d-flex flex-column h-100">
     <div class="wrapper">
-        <nav class="navbar navbar-light" style="">
+        <nav class="navbar navbar-light" style="position: fixed; width: 100%; background-color: white; z-index: 100;">
             <a class="navbar-brand" href="<c:url value="/" />"><c:if
                     test="${not empty exhibition.title}">
 					${exhibition.title}</c:if> <c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
@@ -161,27 +147,30 @@ body {
         </nav>
         <!-- Begin page content -->
         <main role="main" class="flex-shrink-0"
-            style="padding-top: 20px;"> <c:if
+            style="padding-top: 20px;">
+            <div class="pushContent"></div>
+            <c:if
             test="${showAlert eq true}">
-            <div id="errorMsg" class="alert alert-${alertType} custom-${messageType}">
+            <div id="errorMsg"
+                class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
-        </c:if> <tiles:insertAttribute name="content" />
+        </c:if> <tiles:insertAttribute name="content" /> 
         <div class="push"></div>
         </main>
     </div>
-    <div>
-        <div class="footerBox">
-            <div class="footer">
-                <span class="text-muted">This web application was
-                    built with Virtual Spaces 2.0
-                    (https://github.com/diging/virtual-spaces-2.0).</span>
-            </div>
+
+    <footer class="footer mt-auto" style="position: fixed; bottom: 0px; width: 100%;">
+        <div class="d-flex justify-content-center">
+             <span class="text-muted">This web application was
+                built with <a class="text-muted" href="<c:url value="https://github.com/diging/virtual-spaces-2.0" />"> Virtual Spaces 2.0. </a></span>
         </div>
-    </div>
+    </footer>
+
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
-                    feather.replace()
-                </script>
+			feather.replace()
+		</script>
 </body>
+
 </html>

@@ -1,0 +1,392 @@
+.Home_Class {
+    margin: 0 auto 0 auto;
+    width: 100%;
+}
+
+.Home__Class {
+    position: absolute;
+    left: 530px;
+    top: 90px;
+    overflow: visible;
+    font-size: 30px;
+}
+
+.spaceClass {
+    /* text-align: center; */
+    height: 800px;
+    /* width: 800px; */
+    /* width: 57%;
+    max-width: 57%;
+    margin: auto;
+    background-size: cover;
+    border-radius: 13px; */
+}
+
+#wrapper_module {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.Home__Image__Class {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    left: 229px;
+    top: 133px;
+    overflow: visible;
+}
+
+#wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#slide_sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.3s;
+}
+
+#slide_sidebar.active {
+    margin-left: -250px;
+}
+
+#slide_sidebar .slide_sidebar-header {
+    padding: 10px;
+}
+
+.slide_sidebar-header h3 a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#slide_sidebar ul li {
+    padding-left: 35px;
+}
+
+#slide_sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#slide_content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+@media ( max-width : 768px) {
+    #slide_sidebar {
+        margin-left: -250px;
+    }
+    #slide_sidebar.active {
+        margin-left: 0;
+    }
+    #slide_sidebarCollapse span {
+        display: none;
+    }
+}
+
+.sidenav {
+    width: 0;
+    position: absolute;
+    z-index: 1;
+    top: -1px;
+    left: 0px;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
+    padding-top: 26px;
+    word-break: break-all;
+}
+
+}
+.sidenav a {
+    white-space: pre-wrap;
+}
+
+.sidenav a:hover {
+    color: #818181;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 8px;
+    right: 3px;
+    margin-left: 50px;
+}
+
+.sidenav .dropdown-item {
+    padding: 0px;
+}
+
+.sideModulenav {
+    width: 0;
+    position: absolute;
+    z-index: 1;
+    top: 45px;
+    right: 0.5%;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: -8px 8px 5px -3px rgba(0, 0, 0, 0.19);
+    border-radius: 10px 10px 10px 10px;
+    padding-top: 32px;
+    word-break: break-all;
+}
+
+.sideModulenav a {
+    white-space: pre-wrap;
+}
+
+.sideModulenav a:hover {
+    color: #818181;
+}
+
+.sideModulenav .closebtn {
+    position: absolute;
+    top: 8px;
+    right: 3px;
+    margin-left: 50px;
+}
+
+.sideModulenav .dropdown-item {
+    padding: 0px;
+    text-align: justify;
+}
+
+.spaceNav ul {
+    padding-inline-start: 20px;
+}
+
+.barPosition {
+    position: absolute;
+    color: dimgrey;
+    padding-left: 1%;
+}
+
+.textDiv {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+    margin: auto;
+}
+
+.moduleBarPosition {
+    position: absolute;
+    color: rgba(150, 45, 62, 1);
+    right: 30%;
+    /* top: 2%; */
+    padding-top: 12px;
+}
+
+.Info_cz_Class {
+    position: absolute;
+    width: 29px;
+    height: 29px;
+    overflow: visible; -
+    -web-animation: fadein 0.3s ease-out; -
+    -web-action-type: view; -
+    -web-action-target: Modal;
+    cursor: pointer;
+}
+
+.Ellipse_8_c {
+    position: absolute;
+    overflow: visible;
+    width: 29px;
+    height: 29px;
+    left: 0px;
+    top: 0px;
+}
+
+.Ellipse_10_c {
+    position: absolute;
+    overflow: visible;
+    width: 25px;
+    height: 25px;
+    left: 2px;
+    top: 2px;
+}
+
+.Ellipse_9_c {
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+    position: absolute;
+    overflow: visible;
+    width: 21px;
+    height: 21px;
+    left: 4px;
+    top: 4px;
+}
+
+.Icon_awesome_info_c {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 7.793px;
+    top: 6.48px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: larger;
+}
+
+.Icon_awesome_info_m {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 11.5px;
+    top: 7px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+}
+
+.Icon_awesome_info_e {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 7px;
+    top: 8.4px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+}
+
+.Group_3_Class {
+    position: absolute;
+    width: 37px;
+    /* height: 39px; */
+    /* left: 1px; */
+    right: 0%;
+    top: 48px;
+    right: 1%;
+    overflow: visible;
+}
+
+.Ellipse_8_dc {
+    position: absolute;
+    overflow: visible;
+    width: 39px;
+    height: 39px;
+    left: 0px;
+    top: 0px;
+}
+
+.Ellipse_10_dd {
+    position: absolute;
+    overflow: visible;
+    width: 33px;
+    height: 33px;
+    left: 3px;
+    top: 3px;
+}
+
+.Ellipse_9_de {
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+    position: absolute;
+    overflow: visible;
+    width: 28px;
+    height: 26px;
+    left: 6px;
+    top: 6px;
+    height: 26px;
+}
+
+#rightContent {
+    height: 0px;
+    width: 0px;
+    position: absolute;
+    z-index: 1;
+    /* top: 10%; */
+    right: 5px;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 0px 0px 5px 3px rgba(0.09, 0.09, 0.09, 0.09);
+    border-radius: 10px 10px 10px 10px;
+}
+
+.leftContent {
+    float: left;
+    width: 75%;
+}
+
+.spaceDescription {
+    padding-top: 26px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    word-break: break-word;
+    text-align: justify;
+    margin: 5px;
+}
+
+#rightContent .closebtn {
+    position: absolute;
+    top: 8px;
+    right: 3px;
+    margin-left: 50px;
+}
+
+.Info_cz_module_Class {
+    height: 26px;
+    left: 965.622px;
+    cursor: pointer;
+    display: inline
+}
+
+.Ellipse_8_module_c {
+    position: absolute;
+    overflow: visible;
+    width: 29px;
+    height: 29px;
+    left: 2px;
+}
+
+.Ellipse_10_module_c {
+    position: absolute;
+    overflow: visible;
+    width: 25px;
+    height: 25px;
+    left: 4px;
+    padding-top: 2px;
+}
+
+.Ellipse_9_module_c {
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+    position: absolute;
+    overflow: visible;
+    width: 21px;
+    height: 21px;
+    left: 6px;
+    padding-top: 4px;
+}
+
+.Icon_awesome_info_module_m {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 14.5px;
+    padding-top: 8px; transform : matrix( 1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+    transform: matrix(1, 0, 0, 1, 0, 0);
+}
+.imageStyle {
+    min-height: 500px; 
+    min-width:800px; 
+    border-radius:13px;
+}
+
+.spaceName {
+    font-size: 25px;
+}

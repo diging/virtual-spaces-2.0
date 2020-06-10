@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -195,6 +196,14 @@ public class SpaceManager implements ISpaceManager {
     public List<ISpace> getAllSpaces() {
         List<ISpace> spaces = new ArrayList<>();
         spaceRepo.findAll().forEach(s -> spaces.add(s));
+        return spaces;
+    }
+    
+    
+    @Override
+    public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
+        List<ISpace> spaces = new ArrayList<>();
+        spaceRepo.findAllBySpaceStatus(status).forEach(s -> spaces.add(s));
         return spaces;
     }
 
