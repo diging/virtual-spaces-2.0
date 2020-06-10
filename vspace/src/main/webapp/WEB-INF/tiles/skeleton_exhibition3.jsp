@@ -86,7 +86,7 @@
 
 <body class="d-flex flex-column h-100">
     <div class="wrapper">
-        <nav class="navbar navbar-light" style="position: fixed; width: 100%;">
+        <nav class="navbar navbar-light" style="position: fixed; width: 100%; background-color: white; z-index: 100;">
             <a class="navbar-brand" href="<c:url value="/" />"><c:if
                     test="${not empty exhibition.title}">
 					${exhibition.title}</c:if> <c:if test="${empty exhibition.title}">Virtual Spaces</c:if></a>
@@ -162,7 +162,7 @@
     <footer class="footer mt-auto" style="position: fixed; bottom: 0px; width: 100%;">
         <div class="d-flex justify-content-center">
              <span class="text-muted">This web application was
-                built with <a class="text-muted" href="<c:url value="https://github.com/diging/virtual-spaces-2.0" />"> Virtual Spaces 2.0 </a></span>
+                built with <a class="text-muted" href="<c:url value="https://github.com/diging/virtual-spaces-2.0" />"> Virtual Spaces 2.0. </a></span>
         </div>
     </footer>
 
