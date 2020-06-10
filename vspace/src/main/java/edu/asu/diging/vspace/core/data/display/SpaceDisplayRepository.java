@@ -15,7 +15,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 @JaversSpringDataAuditable
 public interface SpaceDisplayRepository extends PagingAndSortingRepository<SpaceDisplay, String> {
 
-	@Modifying
+    @Modifying
     @Query("delete from SpaceDisplay where space_id = ?1")
     void deleteBySpaceId(String id);
 	
