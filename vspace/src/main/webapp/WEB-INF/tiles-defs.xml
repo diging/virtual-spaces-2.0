@@ -5,7 +5,7 @@
 <tiles-definitions>
 
 	<!-- Base definitions -->
-	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
+	<definition name="base.definition" template="/WEB-INF/tiles/skeleton_exhibition3.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="navigation" value="" />
 		<put-attribute name="content" value="" />
@@ -32,7 +32,15 @@
 		<put-attribute name="currentPage" value="home" />
 		<put-attribute name="sidemenu" value="" />
 	</definition>
-	
+	<definition name="base.definition.no.exhibition" template="/WEB-INF/tiles/skeleton_exhibition2.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="navigation" value="" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="pageName" value="" />
+		<put-attribute name="currentPage" value="home" />
+		<put-attribute name="sidemenu" value="" />
+	</definition>
 	<definition name="home" extends="base.definition">
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />	
 	</definition>
@@ -41,7 +49,7 @@
 		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
 	</definition>
     
-    <definition name="setup" extends="base.definition.no.menu">
+    <definition name="setup" extends="base.definition">
         <put-attribute name="content" value="/WEB-INF/views/setup.jsp" />
     </definition>
     

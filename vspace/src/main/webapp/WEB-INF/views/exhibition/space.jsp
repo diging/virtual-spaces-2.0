@@ -54,7 +54,7 @@ function openSpaceDescription(){
 
 $(window).on("load", function() {
     let spaceHeight = $("#bgImage").css("height");
-    $("#Module_1").css("min-height",spaceHeight);
+    $("#Module_1").css("height",spaceHeight);
 	$( window ).resize(function() {
 	    console.log("In Resize");
         $("#space a").remove();
