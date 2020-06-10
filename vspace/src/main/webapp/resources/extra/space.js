@@ -1,7 +1,25 @@
-function checkSpaceLinkPresent(spaceId, baseUrl, params, header ){
+function checkExhibitionStartSpace(baseUrl) {
+	return $.ajax({
+        url: baseUrl + "exhibit/startSpace",
+        type: 'GET',
+        cache       : false,
+        contentType : false
+    });
+}
+
+
+function checkSpaceLinkPresent(spaceId, baseUrl, params, header){
+	$('#finalWarning').hide();
+	checkExhibitionStartSpace(baseUrl).done(function(value) {
+    	if(value == spaceId) {
+    		$('#finalWarning').show();
+    	}
+    	else {
+    		$('#exhibitionMessage').hide();
+    	}
+	});
     var urlToLoad = baseUrl + "space/list";
     var dataUrl = baseUrl + "space/" +spaceId + params;
-    var warningMessage = "Warning! Other spaces have links to this space! Do you still want to delete?";  
 
     $.ajax({
         url: baseUrl + "spaceLink/" + spaceId + "/spaces" + params,
@@ -9,9 +27,7 @@ function checkSpaceLinkPresent(spaceId, baseUrl, params, header ){
         cache       : false,
         contentType : false,
         success: function(data) {
-            
             if(data.length > 0){
-              
                header.data('spaceValue', spaceId);
                $('#deleteSpace').attr('data-toggle', 'modal');
                $('#deleteSpace').attr('data-target', "#confirm-space-delete");
@@ -19,22 +35,19 @@ function checkSpaceLinkPresent(spaceId, baseUrl, params, header ){
                $('#deleteSpace').attr('data-record-id', spaceId);
                $('#deleteSpace').attr('data-call-on-success', urlToLoad);
                $('#deleteSpace').attr('data-call-on-error', urlToLoad);
-               $('#warning').text(warningMessage);
-               $('#deleteSpace').attr('data-warning', warningMessage);
-               $('#confirm-space-delete').modal('show');
+               $('#warningMessage').show();
+               $('#finalWarning').show();
             }
             else{
-                
                 $('#deleteSpace').attr('data-toggle', 'modal');
                 $('#deleteSpace').attr('data-target', "#confirm-space-delete");
                 $('#deleteSpace').attr('data-url', dataUrl);
                 $('#deleteSpace').attr('data-record-id', spaceId);
                 $('#deleteSpace').attr('data-call-on-success', urlToLoad);
                 $('#deleteSpace').attr('data-call-on-error', urlToLoad);
-                $('#deleteSpace').attr('data-warning', '');
-                $('#warning').text('');
-                $('#confirm-space-delete').modal('show');
-              } 
+                $('#warningMessage').hide();
+              }
+            $('#confirm-space-delete').modal('show');
         }
     });
 }

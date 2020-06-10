@@ -5,8 +5,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,6 +83,17 @@ public class ExhibitionConfigurationController {
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    @RequestMapping(value = "/staff/exhibit/startSpace", method = RequestMethod.GET)
+    public ResponseEntity<String> startSpace() {
+        String exhibitionStartSpace = null;
+        try {
+            exhibitionStartSpace = exhibitManager.getStartExhibition().getStartSpace().getId();
+        }
+        catch(NullPointerException e) {  
+        }
+        return new ResponseEntity<>(exhibitionStartSpace, HttpStatus.OK);
     }
 
 }

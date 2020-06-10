@@ -11,7 +11,7 @@
 $(function(){
     $("#deleteSpace").click(function(){
         var spaceId = "${space.id}";
-        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"));
+        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"), $("#warningMessage"), $("#finalWarning"));
 });    
 
 
@@ -1063,7 +1063,21 @@ ${space.description}
                 <p>
                     Are you sure you want to delete ${space.id}?
                 </p>
-                <small class="text-danger" id="warning"></small>
+                <div id="warningMessage">
+                <small class="text-danger">
+                Warning! Other spaces have links to this space!
+                </small>
+                </div>
+                <div id="exhibitionMessage">
+                <small class="text-danger">
+                Warning! This space is exhibition start space!
+                </small>
+                </div>
+                <div id="finalWarning">
+                <small class="text-danger">
+                Do you still want to delete?
+                </small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="closeButton" class="btn btn-default"

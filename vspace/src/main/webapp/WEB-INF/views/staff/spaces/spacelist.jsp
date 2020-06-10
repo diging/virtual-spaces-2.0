@@ -45,7 +45,21 @@ $( document ).ready(function() {
                 <p id = "spaceData">
                     Are you sure you want to delete ?
                 </p>
-                <small class="text-danger" id="warning"></small>
+                <div id="warningMessage">
+                <small class="text-danger">
+                Warning! Other spaces have links to this space!
+                </small>
+                </div>
+                <div id="exhibitionMessage">
+                <small class="text-danger">
+                Warning! This space is exhibition start space!
+                </small>
+                </div>
+                <div id="finalWarning">
+                <small class="text-danger">
+                Do you still want to delete?
+                </small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="closeButton" class="btn btn-default"

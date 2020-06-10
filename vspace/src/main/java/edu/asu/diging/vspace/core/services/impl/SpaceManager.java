@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -27,6 +28,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -62,6 +64,12 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
+    
+    @Autowired
+    private ExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private ExhibitionRepository exhibitRepo;
     
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
@@ -204,26 +212,28 @@ public class SpaceManager implements ISpaceManager {
 
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
             List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
+            Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
             if (spaceLinks.size() > 0) {
-                // To delete links that access to the space getting deleted
+                // To delete links that access to the space getting deleted and replacing it as null
                 for(SpaceLink sp : fromSpaceLinks) {
-                    spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
+                    sp.setTargetSpace(null);
+                    spaceLinkRepo.save(sp);
                 }
                 // To delete the links on the space getting deleted
                 for(SpaceLink sp : spaceLinks) {
                     spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
                 }
                 spaceLinkRepo.deleteBySourceSpaceId(id);
-                spaceLinkRepo.deleteByTargetSpaceId(id);
-                spaceDisplayRepo.deleteBySpaceId(id);
-                spaceRepo.deleteById(id);
+            }
+            // If the space is startSpace, we delete the space from the exhibition first.
+            if(exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
+                exhibition.setStartSpace(null);
+                exhibitRepo.save(exhibition);
             }
             // When space has no other links attached to it
-            else {
-                spaceDisplayRepo.deleteBySpaceId(id);
-                spaceRepo.deleteById(id);
-            }
+            spaceDisplayRepo.deleteBySpaceId(id);
+            spaceRepo.deleteById(id);
 
         } catch (IllegalArgumentException exception) {
             logger.error("Sorry, some problem occurred while deleting space.", exception);
