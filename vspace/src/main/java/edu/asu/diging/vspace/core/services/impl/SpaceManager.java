@@ -236,7 +236,8 @@ public class SpaceManager implements ISpaceManager {
                 spaceLinkRepo.deleteBySourceSpaceId(id);
             }
             // If the space is startSpace, we delete the space from the exhibition first.
-            if(exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
+            if(exhibition != null && exhibition.getStartSpace() != null
+                    && exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
                 exhibition.setStartSpace(null);
                 exhibitRepo.save(exhibition);
             }

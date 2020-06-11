@@ -13,6 +13,7 @@ function checkSpaceLinkPresent(spaceId, baseUrl, params, header){
 	checkExhibitionStartSpace(baseUrl).done(function(value) {
     	if(value == spaceId) {
     		$('#finalWarning').show();
+    		$('#exhibitionMessage').show();
     	}
     	else {
     		$('#exhibitionMessage').hide();

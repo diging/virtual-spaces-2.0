@@ -87,12 +87,9 @@ public class ExhibitionConfigurationController {
     
     @RequestMapping(value = "/staff/exhibit/startSpace", method = RequestMethod.GET)
     public ResponseEntity<String> startSpace() {
-        String exhibitionStartSpace = null;
-        try {
-            exhibitionStartSpace = exhibitManager.getStartExhibition().getStartSpace().getId();
-        }
-        catch(NullPointerException e) {  
-        }
+        String exhibitionStartSpace = 
+                ((exhibitManager.getStartExhibition() == null) || (exhibitManager.getStartExhibition().getStartSpace() == null)) ?
+                        null : exhibitManager.getStartExhibition().getStartSpace().getId();
         return new ResponseEntity<>(exhibitionStartSpace, HttpStatus.OK);
     }
 
