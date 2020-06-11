@@ -43,7 +43,7 @@ $( document ).ready(function() {
             </div>
             <div class="modal-body">
                 <p id = "spaceData">
-                    Are you sure you want to delete ?
+                    Are you sure you want to delete ${space.id}?
                 </p>
                 <div id="warningMessage">
                 <small class="text-danger">
