@@ -4,6 +4,27 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<script>
+$(document).ready(function() {
+    var offlineMessage = $('#offlineMessage');
+    if ('${exhibition}' != null && '${exhibition.mode}' == 'OFFLINE') {
+        offlineMessage.show();
+    }
+    else {
+        offlineMessage.hide();
+    }
+});
+
+function modeChange(modeChosen) {
+    var offlineMessage = $('#offlineMessage');
+    if (modeChosen == 'OFFLINE') {
+        offlineMessage.show();
+    }
+    else {
+        offlineMessage.hide();
+    }
+}
+</script>
 <h1>Exhibition Configuration</h1>
 
 <div style="padding-bottom: 20px;">
@@ -43,24 +64,3 @@
 
     </form:form>
 </div>
-<script>
-$(document).ready(function() {
-    var offlineMessage = $('#offlineMessage');
-    if ('${exhibition}' != null && '${exhibition.mode}' == "OFFLINE") {
-        offlineMessage.show();
-    }
-    else {
-        offlineMessage.hide();
-    }
-});
-
-function modeChange(modeChosen) {
-    var offlineMessage = $('#offlineMessage');
-    if (modeChosen == "OFFLINE") {
-        offlineMessage.show();
-    }
-    else {
-        offlineMessage.hide();
-    }
-}
-</script>
