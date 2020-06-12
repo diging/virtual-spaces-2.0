@@ -29,6 +29,9 @@ public interface ILinkManager {
     IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
     
+    IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
+            String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId) throws SpaceDoesNotExistException;
+    
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 
     void deleteExternalLink(String linkId);

@@ -302,6 +302,33 @@ public class LinkManager implements ILinkManager {
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
         return display;
     }
+    
+    @Override
+    public IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY,
+            int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId)
+            throws SpaceDoesNotExistException {
+
+        source = spaceManager.getSpace(source.getId());
+        if (source == null) {
+            throw new SpaceDoesNotExistException();
+        }
+
+        IModule target = moduleManager.getModule(linkedModuleId);
+        IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
+        link.setModule(target);
+        moduleLinkRepo.save((ModuleLink) link);
+
+        IModuleLinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay(link);
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        display.setRotation(rotation);
+        display.setType(displayType != null ? displayType : DisplayType.MODULE);
+
+        moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
+        return display;
+    }
+    
+    
 
     @Override
     public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
