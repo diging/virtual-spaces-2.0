@@ -24,4 +24,13 @@ public class ModuleLinkFactory implements IModuleLinkFactory {
         link.setSpace(space);
         return link;
     }
+    
+    @Override
+    public IModuleLink editModuleLink(String title, ISpace space, String linkId) {
+        IModuleLink link = new ModuleLink();
+        link.setName(title);
+        link.setSpace(space);
+        link.setId(linkId);
+        return link;
+    }
 }

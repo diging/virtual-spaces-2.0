@@ -87,7 +87,7 @@ $( document ).ready(function() {
 		    <%-- console.log(${link.link.module.id});
 		    <%-- console.log(${link.type});
 		    <%-- console.log(${link.link_id}); --%>
-			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}");
+			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}","${link.id}");
 		});
 	}
 	</c:forEach> 	
@@ -304,7 +304,7 @@ $( document ).ready(function() {
 	        	$("#editModuleLinkBtn").click(function(e) {
 	        	    console.log("Edit Button Clicked");
 	        		e.preventDefault();
-	        		var linkId = $("#moduleLinkId").val();
+	        		var linkId = $("#moduleLinkIdEdit").val();
 	        		console.log("linkId in Edit : -",linkId);
 	        		if (storeX == undefined || storeY == undefined) {
 	        			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
@@ -313,8 +313,10 @@ $( document ).ready(function() {
 	        		}
 	        		
 	        		var linkedModules = $("#moduleLinkIdEdit").val();
-	        		$("#moduleLinkEditX").val(storeX);
-	        		$("#moduleLinkEditY").val(storeY);
+	        		console.log("storeX value :- ",storeX);
+	        		console.log("storeY value :- ",storeY);
+	        		$("#moduleLinkXEdit").val(storeX);
+	        		$("#moduleLinkYEdit").val(storeY);
 	        		
 	        		var form = $("#editModuleLinkForm");
 	        		console.log("Form data :- ",form);
@@ -325,7 +327,7 @@ $( document ).ready(function() {
 	                console.log("Before Ajax Call");
 	        	    $.ajax({
 	        			type: "POST",
-	        			url: "<c:url value="/staff/space/${space.id}/editmodulelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
+	        			url: "<c:url value="/staff/space/${space.id}/editmodulelink?${_csrf.parameterName}=${_csrf.token}" />",
 	        			cache       : false,
 	        	        contentType : false,
 	        	        processData : false,
@@ -814,17 +816,21 @@ $( document ).ready(function() {
         $("#spaceLinkInfo").show();
 	}
 	
-	function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit) {
+	function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId) {
 	    console.log("In makeModuleLinksEditable");
 	    console.log(moduleLinkName);
 	    console.log(moduleLinkId);
+	    console.log(displayLinkId);
 	    selectedModuleLinkId=moduleLinkId;
 	    storeX=posXEdit;
 		storeY=posYEdit;
 	    console.log(selectedModuleId);
+		$("#moduleLinkInfoLabel").text(moduleLinkName);
+		$("#moduleLinkDisplayId").val(displayLinkId);
 		$("#moduleLinkInfoLabelEdit").text(moduleLinkName);
 		$("#moduleLinkLabelEdit").val(moduleLinkName);
 		$("#moduleLinkId").val(moduleLinkId);
+		$("#moduleLinkIdValueEdit").val(moduleLinkId);
 		$("#moduleLinkRotationEdit").val(rotation);
 		$('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
 		resetHighlighting();     
@@ -1243,7 +1249,7 @@ $( document ).ready(function() {
             data-feather="x-square"></span></a>
     </p>
     <h6 class="alert-heading">
-        Module Link: <span id="moduleLinkInfoLabelEdit"></span>
+        Module Link: <span id="moduleLinkInfoLabel"></span>
     </h6>
     <input type="hidden" name="moduleLinkId" id="moduleLinkId" />
     <button id="deleteModuleLinkButton" type="reset"
@@ -1260,7 +1266,7 @@ $( document ).ready(function() {
     <h6 class="alert-heading">
         Module Link: <span id="moduleLinkInfoLabelEdit"></span>
     </h6>
-    <input type="hidden" name="moduleLinkId" id="moduleLinkId" />
+    <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" />
         <div class="row">
             <div class="col">
                 <h6 class="alert-heading">
@@ -1277,10 +1283,10 @@ $( document ).ready(function() {
                 <hr>
             </div>
         </div>
-        <input type="hidden" name="x" id="moduleLinkEditX" /> <input
-            type="hidden" name="y" id="moduleLinkEditY" />
-        <c:out value="writing value" />
-        <%-- <c:out value="${moduleLinkRotation}"/> --%>
+        <input type="hidden" name="x" id="moduleLinkXEdit" /> 
+        <input type="hidden" name="y" id="moduleLinkYEdit" />
+        <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
+        
         <div class="row">
             <div class="col-sm-4">
                 <label><small>Rotation:</small> </label>
@@ -1288,7 +1294,7 @@ $( document ).ready(function() {
             <div class="col-sm-8">
                 <input class="form-control-xs modulelink-targetEdit"
                     type="number" id="moduleLinkRotationEdit"
-                    name="rotationEdit"><br>
+                    name="rotation"><br>
             </div>
         </div>
         <div class="row">
@@ -1297,7 +1303,7 @@ $( document ).ready(function() {
             </div>
             <div class="col-sm-8">
                 <input class="form-control-xs modulelink-targetEdit"
-                    type="text" name="moduleLinkLabelEdit"
+                    type="text" name="moduleLinkLabel"
                     id="moduleLinkLabelEdit"><br>
             </div>
         </div>
@@ -1317,7 +1323,7 @@ $( document ).ready(function() {
                 <label><small>Linked Modules:</small> </label>
             </div>
             <div class="col-sm-7">
-                <select id="moduleLinkIdEdit" name="moduleLinkIdEdit"
+                <select id="moduleLinkIdEdit" name="linkedModule"
                     class="form-control-xs modulelink-targetEdit">
                     <c:forEach items="${moduleList}" var="module">
                         <option value="${module.id}">${module.name}</option>

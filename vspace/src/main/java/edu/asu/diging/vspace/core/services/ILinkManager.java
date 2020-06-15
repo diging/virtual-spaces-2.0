@@ -30,7 +30,7 @@ public interface ILinkManager {
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
     
     IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId) throws SpaceDoesNotExistException;
+            String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId, String moduleLinkDisplayId) throws SpaceDoesNotExistException;
     
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 

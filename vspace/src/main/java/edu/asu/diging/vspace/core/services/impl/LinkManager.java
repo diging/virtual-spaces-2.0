@@ -305,7 +305,7 @@ public class LinkManager implements ILinkManager {
     
     @Override
     public IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY,
-            int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId)
+            int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId, String moduleLinkDisplayId)
             throws SpaceDoesNotExistException {
 
         source = spaceManager.getSpace(source.getId());
@@ -314,11 +314,11 @@ public class LinkManager implements ILinkManager {
         }
 
         IModule target = moduleManager.getModule(linkedModuleId);
-        IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
+        IModuleLink link = moduleLinkFactory.editModuleLink(title, source, linkId);
         link.setModule(target);
         moduleLinkRepo.save((ModuleLink) link);
 
-        IModuleLinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay(link);
+        IModuleLinkDisplay display = moduleLinkDisplayFactory.editModuleLinkDisplay(link,moduleLinkDisplayId);
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setRotation(rotation);
@@ -328,8 +328,6 @@ public class LinkManager implements ILinkManager {
         return display;
     }
     
-    
-
     @Override
     public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
         return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));

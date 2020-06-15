@@ -30,11 +30,11 @@ public class EditModuleLinkController {
     @Autowired
     private ILinkManager linkManager;
 
-    @RequestMapping(value = "/staff/space/{id}/editmodulelink/{linkId}", method = RequestMethod.POST)
-    public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @PathVariable("linkId") String linkId,@RequestParam("x") String x,
+    @RequestMapping(value = "/staff/space/{id}/editmodulelink", method = RequestMethod.POST)
+    public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
             @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-            @RequestParam("type") String displayType)
+            @RequestParam("type") String displayType, @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit, @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
@@ -53,7 +53,7 @@ public class EditModuleLinkController {
         IModuleLinkDisplay display;
         try {
             display = linkManager.editModuleLink(title, source, new Float(x), new Float(y),
-                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, linkId);
+                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, moduleLinkIdValueEdit, moduleLinkDisplayId);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
