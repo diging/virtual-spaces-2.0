@@ -2,8 +2,8 @@ package edu.asu.diging.vspace.core.model;
 
 public enum IdPrefix {
 
-    SPACEID(IPrefix.spacePrefix),
-    MODULEID(IPrefix.modulePrefix);
+    SPACEID(IPrefix.SPACE_PREFIX),
+    MODULEID(IPrefix.MODULE_PREFIX);
 
     private final String value;
 

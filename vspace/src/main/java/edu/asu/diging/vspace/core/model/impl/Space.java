@@ -26,7 +26,7 @@ public class Space extends VSpaceElement implements ISpace {
     @Id
     @GeneratedValue(generator = "space_id_generator")
     @GenericGenerator(name = "space_id_generator", 
-        parameters = @Parameter(name = "prefix", value = IPrefix.spacePrefix), 
+        parameters = @Parameter(name = "prefix", value = IPrefix.SPACE_PREFIX), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 

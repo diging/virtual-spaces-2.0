@@ -1,9 +1,12 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,7 +49,7 @@ public class ExhibitionConfigurationController {
         } else {
             model.addAttribute("exhibition", new Exhibition());
         }
-        model.addAttribute("exhibitionModes", ExhibitionModes.getAllModes());
+        model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         return "staff/exhibit/config";
     }

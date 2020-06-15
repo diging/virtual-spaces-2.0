@@ -94,17 +94,18 @@ public class ExhibitionDataAspect {
         ISpace space = spaceManager.getSpace(spaceId);
         IModule module = moduleManager.getModule(moduleId);
         Object[] args = jp.getArgs();
+        ExhibitionModes exhibitionMode = exhibition.getMode();
         // If exhibition is set to offline, set the custom message or default message.
-        if(exhibition.getMode().equals(ExhibitionModes.OFFLINE)) {
-            String modeValue = exhibition.getCustomMessage().equals("") == false ? exhibition.getCustomMessage() : exhibition.getMode().getValue();
+        if(exhibitionMode.equals(ExhibitionModes.OFFLINE)) {
+            String modeValue = exhibition.getCustomMessage().equals("") == false ? exhibition.getCustomMessage() : exhibitionMode.getValue();
             ((Model) args[modelIndex]).addAttribute("modeValue", modeValue);
         }
         // If exhibition is set to maintenance, set the default message.
-        if(exhibition.getMode().equals(ExhibitionModes.MAINTENANCE)) {
-            ((Model) args[modelIndex]).addAttribute("modeValue", exhibition.getMode().getValue());
+        if(exhibitionMode.equals(ExhibitionModes.MAINTENANCE)) {
+            ((Model) args[modelIndex]).addAttribute("modeValue", exhibitionMode.getValue());
         }
         // If user is not logged in and exhibition is not active, show maintenance page.
-        if(authFacade.getAuthenticatedUser()==null && !exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
+        if(authFacade.getAuthenticatedUser()==null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
             return "maintenance";
         }
         // If the space and module Id is not found, show message on screen.
@@ -112,33 +113,11 @@ public class ExhibitionDataAspect {
             return "notFound";
         }
         // If user is logged in and exhibition is not active, show exhibition with pop up message.
-        if(authFacade.getAuthenticatedUser()!=null && !exhibition.getMode().equals(ExhibitionModes.ACTIVE)) {
+        if(authFacade.getAuthenticatedUser()!=null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
             ((Model) args[modelIndex]).addAttribute("showModal", "true"); 
             return jp.proceed();
         }
-        else {
-            return jp.proceed();
-        }
-//           
-//        
-//        // If the user is logged in, if space or module invalid, show not found page or else add attribute to show pop up
-//        // notifying user about status of exhibition. ModelIndex checks if there is a model to add attribute to.
-//        if(authFacade.getAuthenticatedUser()!=null && modelIndex>-1) {
-//            if(space==null && module==null) {
-//                return "notFound";
-//            }
-//            ((Model) args[modelIndex]).addAttribute("showModal", "true"); 
-//            return jp.proceed();
-//        }
-//        // When exhibition is offline, if custom message is setup, show that to user, or else show default message, or else
-//        // show maintenance default message if exhibition is set to maintenance mode.
-//        if(exhibition.getMode()==ExhibitionModes.OFFLINE) {
-//            String modeValue = exhibition.getCustomMessage().equals("") == false ? exhibition.getCustomMessage() : exhibition.getMode().getValue();
-//            ((Model) args[modelIndex]).addAttribute("modeValue", modeValue);
-//        } else {
-//            ((Model) args[modelIndex]).addAttribute("modeValue", exhibition.getMode().getValue());
-//        }
-//        return "maintenance";
+        return jp.proceed();
     }
     
 

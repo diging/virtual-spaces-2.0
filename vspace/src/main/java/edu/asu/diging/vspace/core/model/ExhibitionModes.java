@@ -18,12 +18,4 @@ public enum ExhibitionModes {
     public String getValue() {
         return value;
     }
-
-    public static List<ExhibitionModes> getAllModes (){
-        List<ExhibitionModes> modesList = new ArrayList<>();
-        modesList.add(ExhibitionModes.ACTIVE);
-        modesList.add(ExhibitionModes.MAINTENANCE);
-        modesList.add(ExhibitionModes.OFFLINE);
-        return modesList;
-    }
 }

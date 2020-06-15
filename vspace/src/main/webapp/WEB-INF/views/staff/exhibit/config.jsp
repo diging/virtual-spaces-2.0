@@ -53,7 +53,8 @@ function modeChange(modeChosen) {
                 </c:forEach>
             </select>
         </div>
-        <div id="offlineMessage" style="padding-top: 10px;">
+        <div id="offlineMessage" style="padding-top: 10px;
+        <c:if test='${exhibition.mode != "OFFLINE"}'>display: none;</c:if>">
             <label for="title">Offline Message:</label> <input type="text"
                 class="form-control" name="customMessage"
                 value="${exhibition.customMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
