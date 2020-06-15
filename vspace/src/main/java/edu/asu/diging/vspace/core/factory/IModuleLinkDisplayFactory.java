@@ -6,8 +6,5 @@ import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 public interface IModuleLinkDisplayFactory {
 
     IModuleLinkDisplay createModuleLinkDisplay(IModuleLink link);
-    
-    IModuleLinkDisplay editModuleLinkDisplay(IModuleLink link, String moduleLinkDisplayId);
-    
 
 }

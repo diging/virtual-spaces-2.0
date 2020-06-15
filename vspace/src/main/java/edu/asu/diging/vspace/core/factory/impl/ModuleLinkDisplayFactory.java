@@ -22,14 +22,4 @@ public class ModuleLinkDisplayFactory implements IModuleLinkDisplayFactory {
         display.setLink(link);
         return display;
     }
-    
-    @Override
-    public IModuleLinkDisplay editModuleLinkDisplay(IModuleLink link, String moduleLinkDisplayId) {
-        IModuleLinkDisplay display = new ModuleLinkDisplay();
-        display.setLink(link);
-        display.setId(moduleLinkDisplayId);
-        return display;
-    }
-    
-    
 }

@@ -42,7 +42,9 @@ import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
+import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
@@ -305,26 +307,45 @@ public class LinkManager implements ILinkManager {
     
     @Override
     public IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY,
-            int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType, String linkId, String moduleLinkDisplayId)
+            int rotation, String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId)
             throws SpaceDoesNotExistException {
 
-        source = spaceManager.getSpace(source.getId());
-        if (source == null) {
-            throw new SpaceDoesNotExistException();
-        }
-
-        IModule target = moduleManager.getModule(linkedModuleId);
-        IModuleLink link = moduleLinkFactory.editModuleLink(title, source, linkId);
-        link.setModule(target);
+        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
+        IModuleLink link = linkOptional.get();
+        link.setName(title);
+        IModule module = new Module();
+        module.setId(linkedModuleId);
+        link.setModule(module);
         moduleLinkRepo.save((ModuleLink) link);
-
-        IModuleLinkDisplay display = moduleLinkDisplayFactory.editModuleLinkDisplay(link,moduleLinkDisplayId);
+        Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        IModuleLinkDisplay display = moduleLinkOptional.get();
         display.setPositionX(positionX);
         display.setPositionY(positionY);
         display.setRotation(rotation);
-        display.setType(displayType != null ? displayType : DisplayType.MODULE);
-
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
+        return display;
+    }
+    
+    
+    @Override
+    public ISpaceLinkDisplay editSpaceLink(String title, ISpace source, float positionX, float positionY,
+            int rotation, String linkedSpaceId, String spaceLinkLabel, byte[] linkImage, String spaceLinkIdValueEdit, String spaceLinkDisplayId,
+            String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+        
+      
+        Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkIdValueEdit);
+        ISpaceLink link = linkOptional.get();
+        link.setName(title);
+        ISpace space = new Space();
+        space.setId(linkedSpaceId);
+        link.setTargetSpace(space);
+        spaceLinkRepo.save((SpaceLink) link);
+        Optional<SpaceLinkDisplay> spaceLinkOptional = spaceLinkDisplayRepo.findById(spaceLinkDisplayId);
+        ISpaceLinkDisplay display = spaceLinkOptional.get();
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        display.setRotation(rotation);
+        spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
         return display;
     }
     
