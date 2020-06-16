@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
@@ -36,7 +37,7 @@ public class EditExternalLinkController {
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title, @RequestParam("url") String externalLink,
             @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit, @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
             @RequestParam("externalLinkImage") MultipartFile file)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, LinkDoesNotExistsException {
         
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
@@ -50,7 +51,7 @@ public class EditExternalLinkController {
             filename = file.getOriginalFilename();
         }
        
-        IExternalLinkDisplay display = linkManager.editExternalLink(title, space, new Float(x), new Float(y), externalLink, linkImage, filename, externalLinkIdValueEdit, externalLinkDisplayId);
+        IExternalLinkDisplay display = linkManager.editExternalLink(title, id, new Float(x), new Float(y), externalLink, linkImage, filename, externalLinkIdValueEdit, externalLinkDisplayId);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());

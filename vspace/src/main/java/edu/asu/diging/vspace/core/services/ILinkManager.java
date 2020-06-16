@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -29,15 +30,15 @@ public interface ILinkManager {
     IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
     
-    IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId) throws SpaceDoesNotExistException;
+    IModuleLinkDisplay editModuleLink(String title, String id, float positionX, float positionY, int rotation,
+            String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
     
-    ISpaceLinkDisplay editSpaceLink(String title, ISpace source, float positionX, float positionY,
+    ISpaceLinkDisplay editSpaceLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedSpaceId, String spaceLinkLabel, byte[] linkImage, String spaceLinkIdValueEdit, String spaceLinkDisplayId,
-            String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
+            String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException, LinkDoesNotExistsException;
     
-    IExternalLinkDisplay editExternalLink(String title, ISpace source, float positionX, float positionY,
-            String externalLink, byte[] linkImage, String imageFilename, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
+    IExternalLinkDisplay editExternalLink(String title, String id, float positionX, float positionY,
+            String externalLink, byte[] linkImage, String imageFilename, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException, LinkDoesNotExistsException;
 
     
     

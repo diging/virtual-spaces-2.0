@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
@@ -34,7 +35,7 @@ public class EditModuleLinkController {
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
             @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel, 
             @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit, @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
+                    throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -49,7 +50,7 @@ public class EditModuleLinkController {
         }
         IModuleLinkDisplay display;
         try {
-            display = linkManager.editModuleLink(title, source, new Float(x), new Float(y),
+            display = linkManager.editModuleLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();

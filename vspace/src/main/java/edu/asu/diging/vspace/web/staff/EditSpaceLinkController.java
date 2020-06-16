@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
@@ -37,7 +38,7 @@ public class EditSpaceLinkController {
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, 
             @RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit, @RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId, 
             @RequestParam("spaceLinkImage") MultipartFile file)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
+                    throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -58,7 +59,7 @@ public class EditSpaceLinkController {
         }
         ISpaceLinkDisplay display;
         try {
-            display = linkManager.editSpaceLink(title, source, new Float(x), new Float(y),
+            display = linkManager.editSpaceLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedSpaceId, spaceLinkLabel, linkImage, spaceLinkIdValueEdit, spaceLinkDisplayId, filename);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
