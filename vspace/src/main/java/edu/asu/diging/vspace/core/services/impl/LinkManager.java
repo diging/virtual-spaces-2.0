@@ -309,7 +309,11 @@ public class LinkManager implements ILinkManager {
     public IModuleLinkDisplay editModuleLink(String title, ISpace source, float positionX, float positionY,
             int rotation, String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId)
             throws SpaceDoesNotExistException {
-
+        
+        source = spaceManager.getSpace(source.getId());
+        if (source == null) {
+            throw new SpaceDoesNotExistException();
+        }
         Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
         IModuleLink link = linkOptional.get();
         link.setName(title);
@@ -332,7 +336,10 @@ public class LinkManager implements ILinkManager {
             int rotation, String linkedSpaceId, String spaceLinkLabel, byte[] linkImage, String spaceLinkIdValueEdit, String spaceLinkDisplayId,
             String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         
-      
+        source = spaceManager.getSpace(source.getId());
+        if (source == null) {
+            throw new SpaceDoesNotExistException();
+        }
         Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkIdValueEdit);
         ISpaceLink link = linkOptional.get();
         link.setName(title);

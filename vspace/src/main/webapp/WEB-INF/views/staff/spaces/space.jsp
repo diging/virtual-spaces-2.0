@@ -44,7 +44,6 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-		    console.log("Inside Space Link Click");
 			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}", "${link.rotation}","${link.link.targetSpace.id}","${link.positionX}","${link.positionY}","${link.id}");
 		});
 	}
@@ -81,10 +80,6 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-		    console.log("Inside data link id click");
-		    console.log(${link.positionX});
-		    console.log(${link.positionY});
-		    console.log(${link.rotation});
 			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}","${link.id}");
 		});
 	}
@@ -165,11 +160,9 @@ $( document ).ready(function() {
 	});
 	
 	 $("#addModuleLinkButton").click(function(e) {
-	     console.log("In add Module Link");
 		$("#createModuleLinkAlert").hide();
 		$("#bgImage").off("click");
 		$("#bgImage").on("click", function(e){
-		    console.log("On click of image");
 			e.preventDefault();
 			$("#external-arrow").remove();
 			$("#module_label").remove();
@@ -277,7 +270,6 @@ $( document ).ready(function() {
 		var formData = new FormData(form[0]);
 		
 		var moduleLinkInfo = createModuleLinkInfo();
-		console.log("Form while creating module link :- ",form);
         
 	    $.ajax({
 			type: "POST",
@@ -300,98 +292,74 @@ $( document ).ready(function() {
 	        }
 		});
 	});
+	$("#editModuleLinkBtn").click(function(e) {
+	    e.preventDefault();
+	    var linkId = $("#moduleLinkIdEdit").val();
+	    if(storeX == undefined || storeY == undefined){
+	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
+	        $('#errorAlert').show();
+	        return;
+	   	}
+	    var linkedModules = $("#moduleLinkIdEdit").val();
+	    $("#moduleLinkXEdit").val(storeX);
+	    $("#moduleLinkYEdit").val(storeY);
+	    var form = $("#editModuleLinkForm");
+	    var formData = new FormData(form[0]);
+	    var moduleLinkInfo = editModuleLinkInfo();
+	    $.ajax({
+	        type: "POST",
+	        url: "<c:url value="/staff/space/link/module/${space.id}?${_csrf.parameterName}=${_csrf.token}" />",
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        enctype: 'multipart/form-data',
+	        data: formData,
+	        success: function(data){
+	            var linkData = JSON.parse(data);
+	            $("#bgImage").off("click");
+	            moduleLinkInfo["id"] = linkData["id"];
+	            showModuleLinkEdit(editModuleLinkInfo, true);
+	            $("#editModuleLinkInfo").hide();
+	            $("#errorMsg").text("");
+	            $('#errorAlert').hide();
+	        }
+	    });
+	});
 	
-	        	$("#editModuleLinkBtn").click(function(e) {
-	        	    console.log("Edit Button Clicked");
-	        		e.preventDefault();
-	        		var linkId = $("#moduleLinkIdEdit").val();
-	        		console.log("linkId in Edit : -",linkId);
-	        		if (storeX == undefined || storeY == undefined) {
-	        			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-	        			$('#errorAlert').show();
-	        			return;
-	        		}
-	        		
-	        		var linkedModules = $("#moduleLinkIdEdit").val();
-	        		console.log("storeX value :- ",storeX);
-	        		console.log("storeY value :- ",storeY);
-	        		$("#moduleLinkXEdit").val(storeX);
-	        		$("#moduleLinkYEdit").val(storeY);
-	        		
-	        		var form = $("#editModuleLinkForm");
-	        		console.log("Form data :- ",form);
-	        		var formData = new FormData(form[0]);
-	        		
-	        		var moduleLinkInfo = editModuleLinkInfo();
-	        		console.log("moduleLinkInfo in Edit Link :- ",moduleLinkInfo);
-	                console.log("Before Ajax Call");
-	        	    $.ajax({
-	        			type: "POST",
-	        			url: "<c:url value="/staff/space/${space.id}/editmodulelink?${_csrf.parameterName}=${_csrf.token}" />",
-	        			cache       : false,
-	        	        contentType : false,
-	        	        processData : false,
-	        	        enctype: 'multipart/form-data',
-	        	        data: formData,
-	        	        error: function (request, error) {
-	        	            console.log(request);
-	        	            alert(" Can't do because: " + error);
-	        	        },
-	        	        success: function(data) {
-	        	        	var linkData = JSON.parse(data);
-	        	        	$("#bgImage").off("click");
-	        	        	moduleLinkInfo["id"] = linkData["id"];
-	        	        	showModuleLinkEdit(editModuleLinkInfo, true);
-	        	        	$("#editModuleLinkInfo").hide();
-	        	        	$("#errorMsg").text("");
-	        	        	$('#errorAlert').hide();
-	        	        }
-	        		});
-	        	});
-	
-	        	        	$("#editSpaceLinkBtn").click(function(e) {
-	        	        	    console.log("Edit Space Button Clicked");
-	        	        		e.preventDefault();
-	        	        		var linkId = $("#spaceLinkIdEdit").val();
-	        	        		console.log("linkId in Edit : -",linkId);
-	        	        		if (storeX == undefined || storeY == undefined) {
-	        	        			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-	        	        			$('#errorAlert').show();
-	        	        			return;
-	        	        		}
-	        	        		
-	        	        		var linkedSpace = $("#spaceLinkIdEdit").val();
-	        	        		console.log("storeX value :- ",storeX);
-	        	        		console.log("storeY value :- ",storeY);
-	        	        		$("#spaceLinkXEdit").val(storeX);
-	        	        		$("#spaceLinkYEdit").val(storeY);
-	        	        		
-	        	        		var form = $("#editSpaceLinkForm");
-	        	        		console.log("Form data :- ",form);
-	        	        		var formData = new FormData(form[0]);
-	        	        		
-	        	        		var spaceLinkInfo = editSpaceLinkInfo();
-	        	        		console.log("spaceLinkInfo in Edit Link :- ",spaceLinkInfo);
-	        	                console.log("Before Ajax Call");
-	        	        	    $.ajax({
-	        	        			type: "POST",
-	        	        			url: "<c:url value="/staff/space/${space.id}/editSpacelink?${_csrf.parameterName}=${_csrf.token}" />",
-	        	        			cache       : false,
-	        	        	        contentType : false,
-	        	        	        processData : false,
-	        	        	        enctype: 'multipart/form-data',
-	        	        	        data: formData,
-	        	        	        success: function(data) {
-	        	        	        	var linkData = JSON.parse(data);
-	        	        	        	$("#bgImage").off("click");
-	        	        	        	spaceLinkInfo["id"] = linkData["id"];
-	        	        	        	showSpaceLinkEdit(editSpaceLinkInfo, true);
-	        	        	        	$("#editSpaceLinkInfo").hide();
-	        	        	        	$("#errorMsg").text("");
-	        	        	        	$('#errorAlert').hide();
-	        	        	        }
-	        	        		});
-	        	        	});
+	$("#editSpaceLinkBtn").click(function(e) {
+	    e.preventDefault();
+	    var linkId = $("#spaceLinkIdEdit").val();
+	    if (storeX == undefined || storeY == undefined) {
+	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	        $('#errorAlert').show();
+	        return;
+	   	}
+	    var linkedSpace = $("#spaceLinkIdEdit").val();
+	    $("#spaceLinkXEdit").val(storeX);
+	    $("#spaceLinkYEdit").val(storeY);
+
+	    var form = $("#editSpaceLinkForm");
+	    var formData = new FormData(form[0]);
+	    var spaceLinkInfo = editSpaceLinkInfo();
+	    $.ajax({
+	        type: "POST",
+	        url: "<c:url value="/staff/space/link/space/${space.id}?${_csrf.parameterName}=${_csrf.token}" />",
+	        cache: false,
+	        contentType : false,
+	        processData : false,
+	        enctype: 'multipart/form-data',
+	        data: formData,
+	        success: function(data) {
+	            var linkData = JSON.parse(data);
+	            $("#bgImage").off("click");
+	            spaceLinkInfo["id"] = linkData["id"];
+	            showSpaceLinkEdit(editSpaceLinkInfo, true);
+	            $("#editSpaceLinkInfo").hide();
+	            $("#errorMsg").text("");
+	            $('#errorAlert').hide();
+	       	}
+	 	});
+	});
 	        	
 	
 	$("#createExternalLinkBtn").click(function(e) {
@@ -450,7 +418,6 @@ $( document ).ready(function() {
 	
 	$("#deleteModuleLinkButton").click(function() {
 		var linkId = $("#moduleLinkId").val();
-		console.log("linkId in delete : -",linkId);
 		$.ajax({
 			url: "<c:url value="/staff/space/${space.id}/modulelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
 			method: "DELETE",
@@ -534,7 +501,6 @@ $( document ).ready(function() {
 	var moduleLinkIconReader = new FileReader();
     var moduleLinkIcon;
     moduleLinkIconReader.onload = function(e) {
-        console.log("In moduleLinkIconReader");
     	moduleLinkIcon = e.target.result;
         showModuleLink(createModuleLinkInfo());
     }
@@ -611,7 +577,6 @@ $( document ).ready(function() {
 	}			        
 	
 	function showModuleLink(moduleLink, show) {
-	    console.log("In Show module link");
 		$("#module_label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
@@ -639,7 +604,6 @@ $( document ).ready(function() {
 			link.find("div").css('fill', 'red');
 		}
 		link.css('position', 'absolute');
-		console.log("Changing the position of link");
 		link.css('left', moduleLink["x"] + posX);
 		link.css('top', moduleLink["y"] + posY);
 		link.css('color', 'red');
@@ -650,13 +614,11 @@ $( document ).ready(function() {
 			link.attr("data-link-id", moduleLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
-			    console.log("Inside link click function");
 				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
 			});
 			module_label.attr("data-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
 			module_label.click(function(e) {
-			    console.log("Inside label click function");
 				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
 			});
 		}
@@ -668,14 +630,8 @@ $( document ).ready(function() {
 	}
 	
 	function showModuleLinkEdit(moduleLink, show) {
-	    console.log("In Show module link Edit");
-	    console.log(selectedModuleLinkId)
-	    console.log(storeX);
-	    console.log(storeY);
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		console.log(posX);
-		console.log(posY);
 		moduleLink["x"]=storeX;
 		moduleLink["y"]=storeY;
 		$('.moduleLink-'+selectedModuleLinkId).css({ 'transform': 'rotate(' + moduleLink["rotation"] + 'deg)'});
@@ -689,14 +645,8 @@ $( document ).ready(function() {
 	}
 	
 	function showSpaceLinkEdit(spaceLink, show) {
-	    console.log("In Show Space link Edit");
-	    console.log(selectedSpaceLinkId)
-	    console.log(storeX);
-	    console.log(storeY);
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		console.log(posX);
-		console.log(posY);
 		spaceLink["x"]=storeX;
 		spaceLink["y"]=storeY;
 		$('.spaceLink-'+selectedSpaceLinkId).css({ 'transform': 'rotate(' + spaceLink["rotation"] + 'deg)'});
@@ -889,13 +839,11 @@ $( document ).ready(function() {
 	
 	
 	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId) {
-	    console.log("In makeSpaceLinksEditable");
 		$("#spaceLinkInfoLabel").text(spaceLinkName);
         $("#spaceLinkId").val(spaceLinkId);
         selectedSpaceLinkId=spaceLinkId;
         storeX=posXEdit;
 		storeY=posYEdit;
-		console.log(selectedSpaceLinkId);
 		$("#spaceLinkInfoLabel").text(spaceLinkName);
 		$("#spaceLinkDisplayId").val(displayLinkId);
 		$("#spaceLinkInfoLabelEdit").text(spaceLinkName);
@@ -914,7 +862,6 @@ $( document ).ready(function() {
         
         $("#bgImage").on("click", function(e){
 			e.preventDefault();
-			console.log("Clicked on image");
 			var posX = $(this).position().left;
 			var posY = $(this).position().top;    
 			storeX = e.pageX - $(this).offset().left;
@@ -931,14 +878,9 @@ $( document ).ready(function() {
 	}
 	
 	function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId) {
-	    console.log("In makeModuleLinksEditable");
-	    console.log(moduleLinkName);
-	    console.log(moduleLinkId);
-	    console.log(displayLinkId);
 	    selectedModuleLinkId=moduleLinkId;
 	    storeX=posXEdit;
 		storeY=posYEdit;
-	    console.log(selectedModuleId);
 		$("#moduleLinkInfoLabel").text(moduleLinkName);
 		$("#moduleLinkDisplayId").val(displayLinkId);
 		$("#moduleLinkInfoLabelEdit").text(moduleLinkName);
@@ -955,7 +897,6 @@ $( document ).ready(function() {
 		
 		$("#bgImage").on("click", function(e){
 			e.preventDefault();
-			console.log("Clicked on image");
 			var posX = $(this).position().left;
 			var posY = $(this).position().top;    
 			storeX = e.pageX - $(this).offset().left;
@@ -1356,17 +1297,19 @@ $( document ).ready(function() {
         class="btn btn-primary btn-xs">Delete Link</button>
 </div>
 <form id="editSpaceLinkForm">
-<div id="editSpaceLinkInfo" class="alert alert-secondary" role="alert"
-    style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-    <p class="float-right">
-        <a href="#" id="closeEditSpaceLinkInfo"><span
-            data-feather="x-square"></span></a>
-    </p>
-    <h6 class="alert-heading">
-        Space Link: <span id="spaceLinkInfoLabelEdit"></span>
-    </h6>
-    <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
-    <div class="row">
+    <div id="editSpaceLinkInfo" class="alert alert-secondary"
+        role="alert"
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
+        <p class="float-right">
+            <a href="#" id="closeEditSpaceLinkInfo"><span
+                data-feather="x-square"></span></a>
+        </p>
+        <h6 class="alert-heading">
+            Space Link: <span id="spaceLinkInfoLabelEdit"></span>
+        </h6>
+        <input type="hidden" name="spaceLinkIdValueEdit"
+            id="spaceLinkIdValueEdit" />
+        <div class="row">
             <div class="col">
                 <h6 class="alert-heading">
                     <small>Edit Space Link</small>
@@ -1384,17 +1327,19 @@ $( document ).ready(function() {
         </div>
 
         <input type="hidden" name="x" id="spaceLinkXEdit" /> <input
-            type="hidden" name="y" id="spaceLinkYEdit" />
-        <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
-        
+            type="hidden" name="y" id="spaceLinkYEdit" /> <input
+            type="hidden" name="spaceLinkDisplayId"
+            id="spaceLinkDisplayId" />
+
 
         <div class="row">
             <div class="col-sm-4">
                 <label><small>Rotation:</small> </label>
             </div>
             <div class="col-sm-8">
-                <input class="form-control-xs spacelink-targetEdit" type="number"
-                    id="spaceLinkRotationEdit" name="rotation"><br>
+                <input class="form-control-xs spacelink-targetEdit"
+                    type="number" id="spaceLinkRotationEdit"
+                    name="rotation"><br>
             </div>
         </div>
 
@@ -1403,8 +1348,9 @@ $( document ).ready(function() {
                 <label><small>Label:</small> </label>
             </div>
             <div class="col-sm-8">
-                <input class="form-control-xs spacelink-targetEdit" type="text"
-                    name="spaceLinkLabel" id="spaceLinkLabelEdit"><br>
+                <input class="form-control-xs spacelink-targetEdit"
+                    type="text" name="spaceLinkLabel"
+                    id="spaceLinkLabelEdit"><br>
             </div>
         </div>
 
@@ -1445,10 +1391,10 @@ $( document ).ready(function() {
                     name="spaceLinkImage" id="spaceLinkImage"><br>
             </div>
         </div>
-    
-    <button id="editSpaceLinkBtn" type="reset"
-        class="btn btn-primary btn-xs">Edit Space</button>
-</div>
+
+        <button id="editSpaceLinkBtn" type="reset"
+            class="btn btn-primary btn-xs">Edit Space</button>
+    </div>
 </form>
 
 <div id="moduleLinkInfo" class="alert alert-secondary" role="alert"
@@ -1462,20 +1408,22 @@ $( document ).ready(function() {
     </h6>
     <input type="hidden" name="moduleLinkId" id="moduleLinkId" />
     <button id="deleteModuleLinkButton" type="reset"
-        class="btn btn-primary btn-xs">Delete Module Link</button>   
+        class="btn btn-primary btn-xs">Delete Module Link</button>
 </div>
 
 <form id="editModuleLinkForm">
-<div id="editModuleLinkInfo" class="alert alert-secondary" role="alert"
-    style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
-    <p class="float-right">
-        <a href="#" id="closeEditModuleLinkInfo"><span
-            data-feather="x-square"></span></a>
-    </p>
-    <h6 class="alert-heading">
-        Module Link: <span id="moduleLinkInfoLabelEdit"></span>
-    </h6>
-    <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" />
+    <div id="editModuleLinkInfo" class="alert alert-secondary"
+        role="alert"
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
+        <p class="float-right">
+            <a href="#" id="closeEditModuleLinkInfo"><span
+                data-feather="x-square"></span></a>
+        </p>
+        <h6 class="alert-heading">
+            Module Link: <span id="moduleLinkInfoLabelEdit"></span>
+        </h6>
+        <input type="hidden" name="moduleLinkIdValueEdit"
+            id="moduleLinkIdValueEdit" />
         <div class="row">
             <div class="col">
                 <h6 class="alert-heading">
@@ -1492,10 +1440,11 @@ $( document ).ready(function() {
                 <hr>
             </div>
         </div>
-        <input type="hidden" name="x" id="moduleLinkXEdit" /> 
-        <input type="hidden" name="y" id="moduleLinkYEdit" />
-        <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
-        
+        <input type="hidden" name="x" id="moduleLinkXEdit" /> <input
+            type="hidden" name="y" id="moduleLinkYEdit" /> <input
+            type="hidden" name="moduleLinkDisplayId"
+            id="moduleLinkDisplayId" />
+
         <div class="row">
             <div class="col-sm-4">
                 <label><small>Rotation:</small> </label>
@@ -1545,7 +1494,7 @@ $( document ).ready(function() {
             <button id="editModuleLinkBtn" type="reset"
                 class="btn btn-primary btn-xs">Edit Module</button>
         </p>
-</div>
+    </div>
 </form>
 
 <div id="externalLinkInfo" class="alert alert-secondary" role="alert"

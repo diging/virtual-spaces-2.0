@@ -25,21 +25,22 @@ public class EditModuleLinkController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ILinkManager linkManager;
 
-    @RequestMapping(value = "/staff/space/{id}/editmodulelink", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
-            @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit, @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException {
+            @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel, 
+            @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit, @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId)
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+
         if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
@@ -56,8 +57,6 @@ public class EditModuleLinkController {
             node.put("errorMessage", "space could not be found.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        display.setRotation(new Integer(rotation));
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getLink().getId());

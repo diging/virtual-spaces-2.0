@@ -27,21 +27,23 @@ public class EditSpaceLinkController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ILinkManager linkManager;
 
-    @RequestMapping(value = "/staff/space/{id}/editSpacelink", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/link/space/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("spaceLinkLabel") String title,
-            @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit, @RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId, @RequestParam("spaceLinkImage") MultipartFile file)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException {
+            @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, 
+            @RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit, @RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId, 
+            @RequestParam("spaceLinkImage") MultipartFile file)
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+
         if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
@@ -64,7 +66,6 @@ public class EditSpaceLinkController {
             node.put("errorMessage", "Link icon could not be stored.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        display.setRotation(new Integer(rotation));
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getLink().getId());
