@@ -6,7 +6,5 @@ import edu.asu.diging.vspace.core.model.ISpace;
 public interface IModuleLinkFactory {
 
     IModuleLink createModuleLink(String title, ISpace space);
-    
-    IModuleLink editModuleLink(String title, ISpace space, String linkId);
 
 }
