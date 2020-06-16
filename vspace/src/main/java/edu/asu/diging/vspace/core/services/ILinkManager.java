@@ -36,6 +36,11 @@ public interface ILinkManager {
             int rotation, String linkedSpaceId, String spaceLinkLabel, byte[] linkImage, String spaceLinkIdValueEdit, String spaceLinkDisplayId,
             String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
     
+    IExternalLinkDisplay editExternalLink(String title, ISpace source, float positionX, float positionY,
+            String externalLink, byte[] linkImage, String imageFilename, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
+
+    
+    
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 
     void deleteExternalLink(String linkId);

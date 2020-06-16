@@ -357,6 +357,27 @@ public class LinkManager implements ILinkManager {
     }
     
     @Override
+    public IExternalLinkDisplay editExternalLink(String title, ISpace source, float positionX, float positionY,
+            String externalLink, byte[] linkImage, String imageFilename, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException{
+        source = spaceManager.getSpace(source.getId());
+        if (source == null) {
+            throw new SpaceDoesNotExistException();
+        }
+        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkIdValueEdit);
+        IExternalLink link = linkOptional.get();
+        link.setName(title);
+        link.setExternalLink(externalLink);
+        externalLinkRepo.save((ExternalLink) link);
+        Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
+        IExternalLinkDisplay display = externalLinkOptional.get();
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
+        return display;
+    }
+
+    
+    @Override
     public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
         return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
     }

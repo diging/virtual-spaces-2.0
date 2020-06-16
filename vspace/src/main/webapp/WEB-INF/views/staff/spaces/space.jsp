@@ -93,7 +93,7 @@ $( document ).ready(function() {
         if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
             link = $('<img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         }  else {
-            link = $('<span data-link-id="${link.externalLink.id}" ><span class="fa fa-globe"></span></span><p class="mlabel-${loop.index}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
+            link = $('<span data-link-id="${link.externalLink.id}" class="externalLink-${link.externalLink.id}"><span class="fa fa-globe"></span></span><p class="elabel-${link.externalLink.id}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
         }
         link.css('position', 'absolute');
         link.css('left', ${link.positionX} + posX);
@@ -103,7 +103,7 @@ $( document ).ready(function() {
         
         $("#space").append(link);
         
-        $("#label-${loop.index}").css({
+        $(".elabel-${link.externalLink.id}").css({
             'transform': 'rotate(0deg)',
             'left': ${link.positionX} + posX - 10,
             'top': ${link.positionY} + posY + 16,
@@ -112,7 +112,7 @@ $( document ).ready(function() {
         
         $('[data-link-id="${link.externalLink.id}"]').css('cursor', 'pointer');
         $('[data-link-id="${link.externalLink.id}"]').click(function(e) {
-            makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}");
+            makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}","${link.externalLink.externalLink}","${link.positionX}","${link.positionY}","${link.id}");
         });
 	}
 	</c:forEach> 
@@ -129,6 +129,7 @@ $( document ).ready(function() {
 	$("#moduleLinkInfo").draggable();
 	$("#editModuleLinkInfo").draggable();
 	$("#editSpaceLinkInfo").draggable();
+	$("#editExternalLinkInfo").draggable();
     
 	// store where a user clicked on an image
 	var storeX;
@@ -137,6 +138,7 @@ $( document ).ready(function() {
 	var storeYEdit; */
 	var selectedModuleLinkId;
 	var selectedSpaceLinkId;
+	var selectedExternalLinkId;
 
 	// -------- buttons that open modals (e.g. to create space links) ------
 	$("#addSpaceLinkButton").click(function(e) {
@@ -360,7 +362,41 @@ $( document ).ready(function() {
 	       	}
 	 	});
 	});
-	        	
+	
+	$("#editExternalLinkBtn").click(function(e) {
+	    e.preventDefault();
+	    var linkId = $("#externalLinkIdEdit").val();
+	    if (storeX == undefined || storeY == undefined) {
+	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	        $('#errorAlert').show();
+	        return;
+	   	}
+	    var linkedSpace = $("#externalLinkIdEdit").val();
+	    $("#externalLinkXEdit").val(storeX);
+	    $("#externalLinkYEdit").val(storeY);
+
+	    var form = $("#editExternalLinkForm");
+	    var formData = new FormData(form[0]);
+	    var externalLinkInfo = editExternalLinkInfo();
+	    $.ajax({
+	        type: "POST",
+	        url: "<c:url value="/staff/space/link/external/${space.id}?${_csrf.parameterName}=${_csrf.token}" />",
+	        cache: false,
+	        contentType : false,
+	        processData : false,
+	        enctype: 'multipart/form-data',
+	        data: formData,
+	        success: function(data) {
+	            var linkData = JSON.parse(data);
+	            $("#bgImage").off("click");
+	            externalLinkInfo["id"] = linkData["id"];
+	            showExternalLinkEdit(editExternalLinkInfo, true);
+	            $("#editExternalLinkInfo").hide();
+	            $("#errorMsg").text("");
+	            $('#errorAlert').hide();
+	       	}
+	 	});
+	});
 	
 	$("#createExternalLinkBtn").click(function(e) {
 		var payload = {};
@@ -488,6 +524,10 @@ $( document ).ready(function() {
 	
 	$(".spacelink-targetEdit").change(function() {
 	    showSpaceLinkEdit(editSpaceLinkInfo());
+    });
+	
+	$(".externallink-targetEdit").change(function() {
+	    showExternalLinkEdit(editExternalLinkInfo());
     });
 	
 	
@@ -659,6 +699,19 @@ $( document ).ready(function() {
 		feather.replace();
 	}
 	
+	function showExternalLinkEdit(externalLink, show) {
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		externalLink["x"]=storeX;
+		externalLink["y"]=storeY;
+		$('.elabel-'+selectedExternalLinkId).text(externalLink["externalLinkLabel"]);
+		$('.externalLink-'+selectedExternalLinkId).css({ 'left': externalLink["x"] + posX});
+		$('.externalLink-'+selectedExternalLinkId).css({ 'top': externalLink["y"] + posY});
+		$('.elabel-'+selectedExternalLinkId).css({ 'left': externalLink["x"] + posX - 10});
+		$('.elabel-'+selectedExternalLinkId).css({ 'top': externalLink["y"] + posY + 16});
+		feather.replace();
+	}
+	
 	function showExternalLinks(externalLink) {
 		$("#ext_label").remove();
 		$("#link").remove();
@@ -775,6 +828,14 @@ $( document ).ready(function() {
         $("#editSpaceLinkInfo").hide();
     }); 
     
+    $("#closeEditExternalLinkInfo").click(function(e) {
+    	e.preventDefault();
+    	$("#externalLinkInfoLabel").text("");
+        $("#externalLinkId").val("");
+        resetHighlighting();
+        $("#editExternalLinkInfo").hide();
+    }); 
+    
     $("#closeExternalLinkInfo").click(function(e) {
         e.preventDefault();
         $("#externalLinkInfoLabel").text("");
@@ -835,6 +896,16 @@ $( document ).ready(function() {
 		info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
 		/* info["type"] = $("#typeSpaceEdit").val(); */
 		return info;
+	}
+	
+	function editExternalLinkInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		/* info["type"] = $("#extType").val(); */
+		info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+		info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+	    return info;
 	}
 	
 	
@@ -910,19 +981,38 @@ $( document ).ready(function() {
         $("#editModuleLinkInfo").show();
 	}
 	
-	function makeExternalLinksEditable(linkName, linkId) {
+	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId) {
+	    selectedExternalLinkId=linkId;
+	    storeX=posXEdit;
+		storeY=posYEdit;
         $("#externalLinkInfoLabel").text(linkName);
         $("#externalLinkId").val(linkId);
+		$("#externalLinkDisplayId").val(displayLinkId);
+		$("#externalLinkInfoLabelEdit").text(linkName);
+		$("#externalLinkLabelEdit").val(linkName);
+		$("#externalLinkIdValueEdit").val(linkId);
+		$("#externalLinkURLEdit").val(externalLinkURL);
         resetHighlighting();
               
         $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
         $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
         $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
         $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
+        
+        $("#bgImage").on("click", function(e){
+			e.preventDefault();
+			var posX = $(this).position().left;
+			var posY = $(this).position().top;    
+			storeX = e.pageX - $(this).offset().left;
+			storeY = e.pageY - $(this).offset().top;
+			showExternalLinkEdit(editExternalLinkInfo());
+		});
+        
         $("#spaceLinkInfo").hide();
         $("#moduleLinkInfo").hide();
         $("#editModuleLinkInfo").hide();
         $("#externalLinkInfo").show();
+        $("#editExternalLinkInfo").show();
     }
 	
 	function resetHighlighting() {
@@ -1510,6 +1600,94 @@ $( document ).ready(function() {
     <button id="deleteExternalLinkButton" type="reset"
         class="btn btn-primary btn-xs">Delete External Link</button>
 </div>
+
+<form id="editExternalLinkForm">
+    <div id="editExternalLinkInfo" class="alert alert-secondary"
+        role="alert"
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
+        <p class="float-right">
+            <a href="#" id="closeEditExternalLinkInfo"><span
+                data-feather="x-square"></span></a>
+        </p>
+        <h6 class="alert-heading">
+            External Link: <span id="externalLinkInfoLabelEdit"></span>
+        </h6>
+        <input type="hidden" name="externalLinkIdValueEdit"
+            id="externalLinkIdValueEdit" />
+        <div class="row">
+            <div class="col">
+                <h6 class="alert-heading">
+                    <small>Edit External Link</small>
+                </h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <small>Please click on the image where you want
+                    to place the existing external link. Then click
+                    "Edit External Link".</small>
+                </p>
+                <hr>
+            </div>
+        </div>
+        <input type="hidden" name="x" id="externalLinkXEdit" /> <input
+            type="hidden" name="y" id="externalLinkYEdit" /> <input
+            type="hidden" name="externalLinkDisplayId"
+            id="externalLinkDisplayId" />
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Label:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <input class="form-control-xs externallink-targetEdit"
+                    type="text" name="externalLinkLabel"
+                    id="externalLinkLabelEdit"><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-5" style="padding-right: 0px;">
+                <label><small>External Link</small> </label>
+            </div>
+            <div class="col-sm-7">
+                <input class="form-control-xs externallink-targetEdit"
+                    type="text" name="url" id="externalLinkURLEdit">
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-sm-4">
+                <label><small>Type:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <select id="extType" name="type"
+                    class="form-control-xs externallink-targetEdit">
+                    <option selected value="">Choose...</option>
+                    <option value="IMAGE">Image</option>
+                    <option value="ARROW">Link</option>
+                </select>
+            </div>
+        </div> -->
+
+        <div class="row">
+            <div class="col-sm-3" style="padding-right: 0px;">
+                <label><small>Image:</small> </label>
+            </div>
+            <div class="col-sm-9">
+                <input type="file" class="form-control-xs" type="text"
+                    name="externalLinkImage" id="externalLinkImageEdit"><br>
+            </div>
+        </div>
+
+        <HR>
+        <p class="mb-0 text-right">
+            <button id="editExternalLinkBtn" type="reset"
+                class="btn btn-primary btn-xs">Edit External
+                Link</button>
+        </p>
+    </div>
+</form>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <button type="button" id="addSpaceLinkButton"
