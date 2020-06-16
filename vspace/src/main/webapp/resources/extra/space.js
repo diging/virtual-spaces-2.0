@@ -1,6 +1,6 @@
 function checkExhibitionStartSpace(baseUrl) {
 	return $.ajax({
-        url: baseUrl + "exhibit/startSpace",
+        url: baseUrl + "exhibit/start",
         type: 'GET',
         cache       : false,
         contentType : false
@@ -11,7 +11,8 @@ function checkExhibitionStartSpace(baseUrl) {
 function checkSpaceLinkPresent(spaceId, baseUrl, params, header){
 	$('#finalWarning').hide();
 	checkExhibitionStartSpace(baseUrl).done(function(value) {
-    	if(value == spaceId) {
+		var obj = JSON.parse(value);
+    	if(obj.startSpace == spaceId) {
     		$('#finalWarning').show();
     		$('#exhibitionMessage').show();
     	}
@@ -53,7 +54,7 @@ function checkSpaceLinkPresent(spaceId, baseUrl, params, header){
     });
 }
 
-function readyDoc(deleteSpace, confirmDelete) {
+function onPageReady(deleteSpace, confirmDelete) {
     confirmDelete.on('click', '.btn-ok', function(e) {
         var url = deleteSpace.data('url');
         var urlToLoad = deleteSpace.data('call-on-success');

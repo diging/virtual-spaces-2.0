@@ -62,19 +62,19 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageService imageService;
-    
+
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
-    
+
     @Autowired
     private ExhibitionManager exhibitionManager;
-    
+
     @Autowired
     private ExhibitionRepository exhibitRepo;
-    
+
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
     /*
      * (non-Javadoc)
@@ -133,7 +133,7 @@ public class SpaceManager implements ISpaceManager {
         returnValue.setElement(space);
         return returnValue;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -159,7 +159,7 @@ public class SpaceManager implements ISpaceManager {
             spaceDisplay.setHeight(image.getHeight());
             spaceDisplay.setWidth(image.getWidth());
         }
-        
+
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
 
@@ -198,8 +198,8 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
     }
-    
-    
+
+
     @Override
     public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
         List<ISpace> spaces = new ArrayList<>();
@@ -207,53 +207,42 @@ public class SpaceManager implements ISpaceManager {
         return spaces;
     }
 
-	/**
-	 * Method to delete space based on id
-	 * 
-	 * @param id if id is null throws exception, else delete corresponding space
-	 * @throws SpaceDoesNotExistException
-	 */
+    /**
+     * Method to delete space based on id
+     * 
+     * @param id if id is null throws exception, else delete corresponding space
+     * @throws SpaceDoesNotExistException
+     */
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
-        try {
-            // Order of deletion: Tables: SPACELINKDISPLAY (link_id), SPACELINK
-            // (source_space_id), SPACEDISPLAY (space_id), SPACE(id)
-
-            List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-            List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
-            Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-            // When space has other links attached to it
-            if (spaceLinks.size() > 0) {
-                // To delete links that access to the space getting deleted and replacing it as null
-                for(SpaceLink sp : fromSpaceLinks) {
-                    sp.setTargetSpace(null);
-                    spaceLinkRepo.save(sp);
-                }
-                // To delete the links on the space getting deleted
-                for(SpaceLink sp : spaceLinks) {
-                    spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
-                }
-                spaceLinkRepo.deleteBySourceSpaceId(id);
-            }
-            // If the space is startSpace, we delete the space from the exhibition first.
-            if(exhibition != null && exhibition.getStartSpace() != null
-                    && exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
-                exhibition.setStartSpace(null);
-                exhibitRepo.save(exhibition);
-            }
-            // When space has no other links attached to it
-            spaceDisplayRepo.deleteBySpaceId(id);
-            spaceRepo.deleteById(id);
-
-        } catch (IllegalArgumentException exception) {
-            logger.error("Sorry, some problem occurred while deleting space.", exception);
+        List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
+        List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+        // When space has other links attached to it
+        // To delete links that access to the space getting deleted and replacing it as null
+        for(SpaceLink sp : fromSpaceLinks) {
+            sp.setTargetSpace(null);
+            spaceLinkRepo.save(sp);
         }
+        // To delete the links on the space getting deleted
+        for(SpaceLink sp : spaceLinks) {
+            spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
+        }
+        spaceLinkRepo.deleteBySourceSpaceId(id);
+        // If the space is startSpace, we delete the space from the exhibition first.
+        if(exhibition != null && exhibition.getStartSpace() != null
+                && exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
+            exhibition.setStartSpace(null);
+            exhibitRepo.save(exhibition);
+        }
+        // When space has no other links attached to it
+        spaceDisplayRepo.deleteBySpaceId(id);
+        spaceRepo.deleteById(id);
     }
 
     @Override
-    public List<SpaceLink> isLinkedFromSpace(String id) {
+    public List<SpaceLink> linksFromSpace(String id) {
 
-        List<SpaceLink> linksFromSpace = spaceLinkRepo.getLinkedSpaces(id);
-        return linksFromSpace;
+        return spaceLinkRepo.getLinkedSpaces(id);
     }
 }

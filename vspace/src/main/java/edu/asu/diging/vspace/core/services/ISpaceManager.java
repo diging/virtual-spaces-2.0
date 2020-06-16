@@ -21,7 +21,7 @@ public interface ISpaceManager {
 
     List<ISpace> getAllSpaces();
     
-    List<SpaceLink> isLinkedFromSpace(String id);
+    List<SpaceLink> linksFromSpace(String id);
 
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
 

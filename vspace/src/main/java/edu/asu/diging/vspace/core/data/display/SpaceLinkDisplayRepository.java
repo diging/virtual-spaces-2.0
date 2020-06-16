@@ -24,10 +24,6 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
     void deleteByLinkId(@Param("linkIds") List<String> linkId);
 
     @Modifying
-    @Query("delete from SpaceLinkDisplay d where d.link = (:spaceLinks)")
-    void deleteBySpaceLink(@Param("spaceLinks") List<SpaceLink> spaceLinks);
-    
-    @Modifying
     @Query("delete from SpaceLinkDisplay d where d.link.id = ?1")
     void deleteBySpaceLinkId(String spaceLinkId);
 }

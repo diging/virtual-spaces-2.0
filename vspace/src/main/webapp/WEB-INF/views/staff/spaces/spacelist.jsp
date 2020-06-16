@@ -6,7 +6,7 @@
 <script src="<c:url value="/resources/extra/space.js" />" ></script>
 <script>
 $( document ).ready(function() {
-	readyDoc($("#deleteSpace"), $('#confirm-space-delete'));
+	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
 });
 </script>
 

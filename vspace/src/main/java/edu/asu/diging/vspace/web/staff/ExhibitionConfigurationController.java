@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.google.gson.JsonObject;
+
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -85,12 +87,14 @@ public class ExhibitionConfigurationController {
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
     
-    @RequestMapping(value = "/staff/exhibit/startSpace", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/exhibit/start", method = RequestMethod.GET)
     public ResponseEntity<String> startSpace() {
         String exhibitionStartSpace = 
                 ((exhibitManager.getStartExhibition() == null) || (exhibitManager.getStartExhibition().getStartSpace() == null)) ?
                         null : exhibitManager.getStartExhibition().getStartSpace().getId();
-        return new ResponseEntity<>(exhibitionStartSpace, HttpStatus.OK);
+       JsonObject jsonObj = new JsonObject();
+       jsonObj.addProperty("startSpace", exhibitionStartSpace);
+       return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
 
 }

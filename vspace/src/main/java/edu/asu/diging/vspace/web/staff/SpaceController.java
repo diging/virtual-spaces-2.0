@@ -38,7 +38,7 @@ public class SpaceController {
     	
     	
         ISpace space = spaceManager.getFullyLoadedSpace(id);
-        model.addAttribute("isSpaceLinkPresent", spaceManager.isLinkedFromSpace(id));
+        model.addAttribute("isSpaceLinkPresent", spaceManager.linksFromSpace(id));
         model.addAttribute("space", space);
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
         model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
@@ -50,7 +50,7 @@ public class SpaceController {
     
     @RequestMapping(value = "/staff/spaceLink/{spaceId}/spaces", method = RequestMethod.GET)
     public ResponseEntity<List<SpaceLink>> isSpaceLinkPresent(@PathVariable("spaceId") String spaceId) {
-        List<SpaceLink> spaceLinkPresent = spaceManager.isLinkedFromSpace(spaceId);
+        List<SpaceLink> spaceLinkPresent = spaceManager.linksFromSpace(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
     
