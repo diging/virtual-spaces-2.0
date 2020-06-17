@@ -37,6 +37,7 @@ import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
@@ -310,60 +311,75 @@ public class LinkManager implements ILinkManager {
             throws SpaceDoesNotExistException, LinkDoesNotExistsException{
         
         spaceValidation(id);
+        
         Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
         Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        
         linksValidation(linkOptional, moduleLinkOptional);
+        
         IModuleLink link = linkOptional.get();
+        IModuleLinkDisplay display = moduleLinkOptional.get();
+        
         link.setName(title);
         IModule module = moduleManager.getModule(linkedModuleId);
         link.setModule(module);
-        IModuleLinkDisplay display = moduleLinkOptional.get();
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
-        display.setRotation(rotation);
+        
+        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation);
+        
         moduleLinkRepo.save((ModuleLink) link);
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
+        
         return display;
     }
-    
     
     @Override
     public ISpaceLinkDisplay editSpaceLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException {
-        
-        
+ 
         spaceValidation(id);
+        
         Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkIdValueEdit);
         Optional<SpaceLinkDisplay> spaceLinkOptional = spaceLinkDisplayRepo.findById(spaceLinkDisplayId);
+        
         linksValidation(linkOptional, spaceLinkOptional);
+        
         ISpaceLink link = linkOptional.get();
+        ISpaceLinkDisplay display = spaceLinkOptional.get();
+        
         link.setName(title);
         ISpace space = spaceManager.getSpace(linkedSpaceId);
         link.setTargetSpace(space);
-        ISpaceLinkDisplay display = spaceLinkOptional.get();
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
-        display.setRotation(rotation);
+        
+        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation);
+        
         spaceLinkRepo.save((SpaceLink) link);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
+        
         return display;
     }
     
     @Override
     public IExternalLinkDisplay editExternalLink(String title, String id, float positionX, float positionY,
             String externalLink, String externalLinkIdValueEdit, String externalLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException{
+        
         spaceValidation(id);
+        
         Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkIdValueEdit);
         Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
+        
         linksValidation(linkOptional, externalLinkOptional);
+        
         IExternalLink link = linkOptional.get();
+        IExternalLinkDisplay display = externalLinkOptional.get();
+        
         link.setName(title);
         link.setExternalLink(externalLink);
-        IExternalLinkDisplay display = externalLinkOptional.get();
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
+        
+        populateDisplay((ILinkDisplay)display,positionX,positionY,0);
+        
         externalLinkRepo.save((ExternalLink) link);
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
+        
         return display;
     }
 
@@ -388,5 +404,11 @@ public class LinkManager implements ILinkManager {
         if(!dislpayLinkOptional.isPresent()) {
             throw new LinkDoesNotExistsException("Link Does Not Exists");
         }
+    }
+    
+    private void populateDisplay(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation) {
+        linkDisplay.setPositionX(positionX);
+        linkDisplay.setPositionY(positionY);
+        linkDisplay.setRotation(rotation);
     }
 }
