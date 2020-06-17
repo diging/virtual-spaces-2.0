@@ -381,7 +381,6 @@ public class LinkManager implements ILinkManager {
     
     private void linksValidation(Optional linkOptional,
             Optional dislpayLinkOptional) throws LinkDoesNotExistsException {
-        // TODO Auto-generated method stub
         if(!linkOptional.isPresent()) {
             throw new LinkDoesNotExistsException("Link Does Not Exists");
         }
