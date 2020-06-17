@@ -1472,7 +1472,7 @@ $( document ).ready(function() {
             </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-sm-3" style="padding-right: 0px;">
                 <label><small>Image:</small> </label>
             </div>
@@ -1480,7 +1480,7 @@ $( document ).ready(function() {
                 <input type="file" class="form-control-xs" type="text"
                     name="spaceLinkImage" id="spaceLinkImage"><br>
             </div>
-        </div>
+        </div> -->
 
         <button id="editSpaceLinkBtn" type="reset"
             class="btn btn-primary btn-xs">Edit Space</button>

@@ -34,14 +34,11 @@ public interface ILinkManager {
             String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
     
     ISpaceLinkDisplay editSpaceLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedSpaceId, String spaceLinkLabel, byte[] linkImage, String spaceLinkIdValueEdit, String spaceLinkDisplayId,
-            String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException, LinkDoesNotExistsException;
+            int rotation, String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
     
     IExternalLinkDisplay editExternalLink(String title, String id, float positionX, float positionY,
-            String externalLink, byte[] linkImage, String imageFilename, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException, LinkDoesNotExistsException;
+            String externalLink, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
 
-    
-    
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 
     void deleteExternalLink(String linkId);
