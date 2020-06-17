@@ -88,9 +88,17 @@ public class ExhibitionDataAspect {
     }
     
     
-    
-    // Based on exhibition mode, get the redirect page or pass control to controller.  
-    public Object redirectRequest(ProceedingJoinPoint jp, String spaceId, String moduleId, int modelIndex, Exhibition exhibition) throws Throwable{
+    /**
+     * Based on exhibition mode, get the redirect page or pass control to controller. 
+     * @param jp            The joinpoint variable, used to fetch request parameters and proceed with the request.
+     * @param spaceId       Current spaceId that is requested to be viewed by user.
+     * @param moduleId      The moduleId that the user has requested to view.
+     * @param modelIndex    Index of the model information in the reuest parameters.
+     * @param exhibition    Current exhibition that is being shown to user.
+     * @return              returns the page to load upon aspect completion.
+     * @throws Throwable    
+     */
+    private Object redirectRequest(ProceedingJoinPoint jp, String spaceId, String moduleId, int modelIndex, Exhibition exhibition) throws Throwable{
         ISpace space = spaceManager.getSpace(spaceId);
         IModule module = moduleManager.getModule(moduleId);
         Object[] args = jp.getArgs();
@@ -123,9 +131,13 @@ public class ExhibitionDataAspect {
 
 
 
-
-    // Method to get the space or module id's from the request body.
-    public Map<IdPrefix, String> getIds(Object[] args, MethodSignature signature) { 
+/**
+ * Method to get the space or module id's from the request body.
+ * @param args      The request parameters from the original request.
+ * @param signature Contains the information about the arguments present in args.
+ * @return          A map with spaceId and moduleId from the request args.
+ */
+    private Map<IdPrefix, String> getIds(Object[] args, MethodSignature signature) { 
         Map<IdPrefix, String> res = new HashMap<>();
         for(int i=0; i <signature.getParameterTypes().length; ++i) {
             if(signature.getParameterTypes()[i].equals(String.class)) {
