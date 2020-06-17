@@ -34,7 +34,7 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private IModuleManager moduleManager;
 
@@ -86,8 +86,8 @@ public class ExhibitionDataAspect {
         String moduleId = ids.getOrDefault(IdPrefix.MODULEID, "");
         return redirectRequest(jp, spaceId, moduleId, indexOfModel, exhibition);
     }
-    
-    
+
+
     /**
      * Based on exhibition mode, get the redirect page or pass control to controller. 
      * @param jp            The joinpoint variable, used to fetch request parameters and proceed with the request.
@@ -122,21 +122,18 @@ public class ExhibitionDataAspect {
         }
         // If user is logged in and exhibition is not active, show exhibition with pop up message.
         if(authFacade.getAuthenticatedUser()!=null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
-            ((Model) args[modelIndex]).addAttribute("showModal", "true"); 
             return jp.proceed();
         }
         return jp.proceed();
     }
-    
 
 
-
-/**
- * Method to get the space or module id's from the request body.
- * @param args      The request parameters from the original request.
- * @param signature Contains the information about the arguments present in args.
- * @return          A map with spaceId and moduleId from the request args.
- */
+    /**
+     * Method to get the space or module id's from the request body.
+     * @param args      The request parameters from the original request.
+     * @param signature Contains the information about the arguments present in args.
+     * @return          A map with spaceId and moduleId from the request args.
+     */
     private Map<IdPrefix, String> getIds(Object[] args, MethodSignature signature) { 
         Map<IdPrefix, String> res = new HashMap<>();
         for(int i=0; i <signature.getParameterTypes().length; ++i) {

@@ -53,20 +53,6 @@ function openSpaceDescription(){
 }
 
 $(window).on("load", function() {
-	if ('${showModal}' == 'true') {
-        if(sessionStorage.getItem("popupShown") != 'true') {
-            sessionStorage.setItem("popupShown","true");
-            $("#exhibitionDownModal").show();
-        }
-        else {
-            $(".modalDown").css("display","block");
-        }
-    }
-    $("#cancelExhibitionModal").click(function() {
-        $("#exhibitionDownModal").hide();
-        $(".modalDown").css("display","block");
-    });
-    
     let spaceHeight = $("#bgImage").css("height");
     $("#Module_1").css("height",spaceHeight);
 	$( window ).resize(function() {
@@ -232,7 +218,7 @@ function drawLinks() {
 }
 </style>
 <div class="container-fluid">
-	<div class="modalDown alert alert-warning center col-md-12" style="text-align: center; display: none;" >
+	<div class="modalDown alert alert-warning center col-md-12" style="text-align: center;<c:if test ='${exhibitionConfig.mode == "ACTIVE"}'>display: none;</c:if>" >
     	<c:choose>
         	<c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
                 <h6>${exhibitionConfig.customMessage}</h6>
