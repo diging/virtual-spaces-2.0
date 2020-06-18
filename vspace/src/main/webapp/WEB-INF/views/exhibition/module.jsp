@@ -114,7 +114,6 @@ body {
                     class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
             </div>
         </a>
-
         <a
             href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}" />">
             <div class="exit_to_branchingPoint_Class">
@@ -126,12 +125,8 @@ body {
                     </svg>
                 <i
                     class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
-
             </div>
         </a>
-
-
-
         <div class="Group_8_Class">
             <h3>${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
@@ -151,4 +146,3 @@ body {
         </div>
     </c:if>
 </div>
-<!-- </div> -->
