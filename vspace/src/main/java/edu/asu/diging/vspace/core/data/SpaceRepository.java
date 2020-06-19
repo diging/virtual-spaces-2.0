@@ -7,11 +7,14 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 @Repository
 @JaversSpringDataAuditable
 public interface SpaceRepository extends PagingAndSortingRepository<Space, String> {
     
     List<Space> findTop5ByOrderByCreationDateDesc();
+    
+    List<Space> findAllBySpaceStatus(SpaceStatus spaceStatus);
 
 }

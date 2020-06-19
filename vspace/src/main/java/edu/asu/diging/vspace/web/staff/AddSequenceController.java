@@ -31,13 +31,10 @@ public class AddSequenceController {
         model.addAttribute("slides", moduleManager.getModuleSlides(moduleId));
         return "staff/module/sequence/add";
     }
-    
     @RequestMapping(value = "/staff/module/{moduleId}/sequence/add", method = RequestMethod.POST)
     public String addSequence(Model model, @PathVariable("moduleId") String moduleId, @ModelAttribute SequenceForm sequenceForm,
             Principal principal) {
-
-        sequenceManager.storeSequence(moduleId, sequenceForm); 
-
+        sequenceManager.storeSequence(moduleId, sequenceForm);
         return "redirect:/staff/module/{moduleId}";
-    }    
+    }  
 }
