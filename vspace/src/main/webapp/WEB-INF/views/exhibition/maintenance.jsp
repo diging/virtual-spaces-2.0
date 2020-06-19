@@ -8,6 +8,9 @@ $( document ).ready(function() {
 
 });
 </script>
-<div class="alert alert-warning center col-md-12" style="text-align: center;">
-${modeValue}
+<div class="" style="text-align: center;">
+<h5>${modeValue}</h5>
+</div>
+<div style="text-align: center;">
+<img alt="Not FOund" src="../../resources/maintenance/img/maintenance.png" />
 </div>
