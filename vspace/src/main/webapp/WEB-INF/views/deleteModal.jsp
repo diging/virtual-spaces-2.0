@@ -6,6 +6,9 @@
 			var url = $(this).data('url');
 			var urlToLoadOnSuccess = $(this).data('urlToLoadOnSuccess');
 			var urlToLoadOnError = $(this).data('urlToLoadOnError');
+			console.log(url);
+			console.log(urlToLoadOnSuccess);
+			console.log(urlToLoadOnError);
 			$.ajax({
 				url : url,
 				type : 'DELETE',
@@ -13,7 +16,9 @@
 					window.location.href = urlToLoadOnSuccess;
 				},
 				error : function(errorMessage) {
-					window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
+				    console.log(errorMessage);
+					//window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
+				    window.location.href = urlToLoadOnError;
 				}
 			});
 		});

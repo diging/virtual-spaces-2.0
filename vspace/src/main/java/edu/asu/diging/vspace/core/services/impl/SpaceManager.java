@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -25,6 +26,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -56,6 +58,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageService imageService;
+    
+    @Autowired
+    private SpaceLinkRepository spaceLinkRepo;
 
     /*
      * (non-Javadoc)
@@ -198,9 +203,16 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
+            List<SpaceLink> sourcespaceLink=spaceLinkRepo.findBySourceSpace(getFullyLoadedSpace(id));
+            spaceLinkRepo.deleteAll(sourcespaceLink);
+            List<SpaceLink> targetSpaceLink=spaceLinkRepo.findByTargetSpace(getFullyLoadedSpace(id));
+            spaceLinkRepo.deleteAll(targetSpaceLink);
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new SpaceDoesNotExistException(exception);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
         }
 
     }
