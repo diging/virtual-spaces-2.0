@@ -601,6 +601,7 @@ $(window).on('load', function () {
                 <p>${contents.text}</p>
             </div>
         </c:if>
+        
         <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
         	<div id="${contents.id}" class="card card-body row" style="margin: 10px;">
         		<c:forEach items="${contents.choices}" var="choice">
