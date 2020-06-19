@@ -12,5 +12,5 @@ $( document ).ready(function() {
 <h5>${modeValue}</h5>
 </div>
 <div style="text-align: center;">
-<img alt="Not FOund" src="../../resources/maintenance/img/maintenance.png" />
+<img alt="Not Found" src="<c:url value="/resources/maintenance/img/maintenance.png" />" />
 </div>
