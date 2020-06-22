@@ -32,9 +32,6 @@ import edu.asu.diging.vspace.core.model.impl.Choice;
 public class SlideManager implements ISlideManager {
 
     @Autowired
-    private ModuleManager moduleManager;
-
-    @Autowired
     private SlideFactory slideFactory;
 
     @Autowired

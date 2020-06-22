@@ -451,6 +451,7 @@ $(document).ready(function() {
         formData.append('content', selectedChoice);
         ++contentCount;
         formData.append('contentOrder', contentCount);
+        console.log(contentCount);
         
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choicecontent?${_csrf.parameterName}=${_csrf.token}" />",
@@ -461,15 +462,18 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(choiceBlock) {
+                console.log("In Success Block"+choiceBlock);
             	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
             	$.each(choiceBlock.choices, function(index, choice) {
+            	    console.log()
             		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
             				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
             	});
             	$(choiceblock).css({
                     'margin': "10px"
                 });
-                $('#slideSpace').append(choiceblock);        
+                $('#slideSpace').append(choiceblock); 
+                console.log($('#slideSpace'));
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -628,7 +632,7 @@ $(window).on('load', function () {
 <div id="choiceSpace" style="margin-left: .1%;display:none;" class="row align-items-center">
 	<h5 style="margin-bottom: 0px;">Choices: </h5>
 	<c:forEach items="${choices}" var="choice">
-		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />">${choice.sequence.name}</a>
+		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
 	</c:forEach>
 </div>
 
