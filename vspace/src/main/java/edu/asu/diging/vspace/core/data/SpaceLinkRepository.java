@@ -16,4 +16,8 @@ public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLin
     List<SpaceLink> findBySourceSpace(ISpace space);
     
     List<SpaceLink> findByTargetSpace(ISpace space);
+    
+    void deleteByTargetSpace(ISpace space);
+    
+    void deleteBySourceSpace(ISpace space);
 }

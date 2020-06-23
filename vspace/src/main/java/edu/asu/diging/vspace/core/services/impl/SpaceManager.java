@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,6 +18,7 @@ import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -25,6 +28,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -61,6 +65,11 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
+    
+    @Autowired
+    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /*
      * (non-Javadoc)
@@ -203,15 +212,19 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
-            List<SpaceLink> sourcespaceLink=spaceLinkRepo.findBySourceSpace(getFullyLoadedSpace(id));
-            spaceLinkRepo.deleteAll(sourcespaceLink);
-            List<SpaceLink> targetSpaceLink=spaceLinkRepo.findByTargetSpace(getFullyLoadedSpace(id));
-            spaceLinkRepo.deleteAll(targetSpaceLink);
+            ISpace space = getSpace(id);
+            spaceLinkDisplayRepo.deleteBylink_sourceSpace(space);
+            spaceLinkDisplayRepo.deleteBylink_targetSpace(space);
+            spaceLinkRepo.deleteBySourceSpace(space);
+            spaceLinkRepo.deleteByTargetSpace(space);
+            spaceDisplayRepo.deleteBySpace((ISpace) getSpace(id));
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new SpaceDoesNotExistException(exception);
+            
         }
         catch(Exception e) {
+            logger.error("Could not delete space.", e.getMessage());
             e.printStackTrace();
         }
 

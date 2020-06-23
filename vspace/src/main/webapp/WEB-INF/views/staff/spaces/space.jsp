@@ -326,6 +326,47 @@ $( document ).ready(function() {
 		});
 	});
 	
+	$(document).on("click", ".deleteSpace", function(e) {
+	    $("#confirmDeleteSpaceAlert").show();
+		var alert = $('<input type="hidden" id="deleteSpaceId">');
+		$(alert).attr( 'value', $(this).siblings('input').val());
+		$('.modal-footer').append(alert); 
+  	});
+	
+	$("#deleteSpace").on("click", function(e) {
+		e.preventDefault();
+		console.log("deleteSpace clicked");
+		$("#confirmDeleteSpaceAlert").hide();
+		var spaceId = $('#deleteSpaceId').attr('value');
+		console.log(spaceId);
+		if(spaceId == null || spaceId == ''){
+			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			$('.error').append(alert); 
+			$(".error").delay(4000).slideUp(500, function(){
+			    $(".error").empty();
+			});
+		} else{
+			// ------------- delete space ------------
+			console.log("In else Block");
+			$.ajax({
+			    url: "<c:url value="/staff/space/" />" + spaceId + "?${_csrf.parameterName}=${_csrf.token}",
+			    type: 'DELETE',
+			    success: function(result) {
+			        console.log(result);
+			        window.location.href = "<c:url value="/staff/space/list" />";
+			    },
+				error: function(data) {
+				    console.log("error data :- ",data);
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.error').append(alert); 
+					$(".error").delay(4000).slideUp(500, function(){
+					    $(".error").empty();
+					});
+				}
+			});
+		}
+	});
+	
 	// ------------- other buttons ------------
 	$("#deleteSpaceLinkButton").click(function() {
 		var linkId = $("#spaceLinkId").val();
@@ -593,6 +634,10 @@ $( document ).ready(function() {
 	}
 	
 	// ------------ Cancel buttons -----------------
+	$("#cancelDeleteSpace").click(function() {
+		$("#confirmDeleteSpaceAlert").hide();
+	});
+	
 	$("#cancelSpaceLinkBtn").click(function() {
         storeX = null;
         storeY = null;
@@ -741,6 +786,28 @@ $( document ).ready(function() {
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
 	</button>
+</div>
+
+<div id="confirmDeleteSpaceAlert" class="modal" tabindex="-1"
+    role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure you want to delete this space?</h6>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDeleteSpace" type="reset" class="btn light">Cancel</button>
+                <button type="submit" id="deleteSpace" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <h1> Space: ${space.name} <small style="margin-left: 10px;"><a href="<c:url value="/staff/space/${space.id}/edit" />"><span data-feather="edit"></span></a></small></h1>
@@ -1042,10 +1109,12 @@ ${space.description}
 <button type="button" id="addModuleLinkButton" class="btn btn-primary btn-sm">Add Module Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
-<button type="button" class="btn btn-primary btn-sm" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete">
+<input type="hidden" id="deleteSpaceId" value="${space.id}"><button type="button" class="btn btn-primary btn-sm deleteSpace">
 Delete Space
 </button>
 </nav>
+
+<%-- data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete" --%>
 
 <p></p>
 
@@ -1054,6 +1123,6 @@ Delete Space
 		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
 	</div>
 </c:if>
-<jsp:include page="../../deleteModal.jsp" >
+<%-- <jsp:include page="../../deleteModal.jsp" >
 <jsp:param name="elementType" value="Space" /> 
-</jsp:include>
+</jsp:include> --%>
