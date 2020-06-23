@@ -448,7 +448,7 @@ $(document).ready(function() {
         // ------------- creating choice content blocks ------------
         
         var formData = new FormData();
-        formData.append('content', selectedChoice);
+        formData.append('selectedChoice', selectedChoice);
         ++contentCount;
         formData.append('contentOrder', contentCount);
         console.log(contentCount);

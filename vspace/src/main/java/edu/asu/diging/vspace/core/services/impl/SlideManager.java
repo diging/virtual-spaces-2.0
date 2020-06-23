@@ -59,7 +59,7 @@ public class SlideManager implements ISlideManager {
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type) {
         ISlide branchingPoint = slideFactory.createSlide(module, slideForm, type);            
-        bpointRepo.save((BranchingPoint) branchingPoint);        
+        branchingPoint = bpointRepo.save((BranchingPoint) branchingPoint);        
         return (IBranchingPoint) branchingPoint;
     }
 

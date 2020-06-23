@@ -1,14 +1,9 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -17,7 +12,6 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.ISequence;
-import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
 //@Inheritance(strategy = InheritanceType.JOINED)
@@ -29,12 +23,6 @@ public class Choice extends VSpaceElement implements IChoice {
         parameters = @Parameter(name = "prefix", value = "CHO"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
-//    @OneToMany(targetEntity = ChoiceBlock.class)
-//    @JoinTable(name = "ChoiceBlck_Choice",
-//    joinColumns = {@JoinColumn(name = "ChoiceBlock_id")},
-//    inverseJoinColumns = {@JoinColumn(name = "choices_id")}
-//    )
     
     @ManyToOne(targetEntity = ChoiceBlock.class)
     private IChoiceBlock choiceBlock;
@@ -84,11 +72,11 @@ public class Choice extends VSpaceElement implements IChoice {
         this.sequence = sequence;
     }
     
-//    public IChoiceBlock getChoiceBlock() {
-//        return choiceBlock;
-//    }
-//
-//    public void setChoiceBlock(IChoiceBlock choiceBlock) {
-//        this.choiceBlock = choiceBlock;
-//    }
+    public IChoiceBlock getChoiceBlock() {
+        return choiceBlock;
+    }
+
+    public void setChoiceBlock(IChoiceBlock choiceBlock) {
+        this.choiceBlock = choiceBlock;
+    }
 }
