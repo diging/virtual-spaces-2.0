@@ -14,29 +14,12 @@
 				type : 'DELETE',
 				success : function(result) {
 				    console.log(result);
-					window.location.href = urlToLoadOnSuccess;
+					window.location.href = urlToLoadOnSuccess+"?showAlert=true&alertType=success&message=Space delete successfully.";
 				},
 				error : function(data) {
 				    console.log("error data :- ",data);
-					window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
-				    //window.location.href = urlToLoadOnError;
+					window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message=We are sorry but something went wrong. Please try to delete again later.";
 				}
-				
-				/* url: "<c:url value="/staff/space/" />" + spaceId + "?${_csrf.parameterName}=${_csrf.token}",
-			    type: 'DELETE',
-			    success: function(result) {
-			        console.log(result);
-			        window.location.href = "<c:url value="/staff/space/list" />";
-			    },
-				error: function(data) {
-				    console.log("error data :- ",data);
-					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.error').append(alert); 
-					$(".error").delay(4000).slideUp(500, function(){
-					    $(".error").empty();
-					});
-				} */
-			    
 			});
 		});
 		$('#confirm-delete').on('show.bs.modal', function(e) {

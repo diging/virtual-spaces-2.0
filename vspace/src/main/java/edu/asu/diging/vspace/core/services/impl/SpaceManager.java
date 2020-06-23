@@ -7,16 +7,18 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
+import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -28,9 +30,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -62,14 +62,24 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageService imageService;
-    
+
     @Autowired
     private SpaceLinkRepository spaceLinkRepo;
-    
+
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private ExternalLinkDisplayRepository externalLinkDisplayRepo;
+
+    @Autowired
+    private ExternalLinkRepository externalLinkRepo;
+
+    @Autowired
+    private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
+
+    @Autowired
+    private ModuleLinkRepository moduleLinkRepo;
 
     /*
      * (non-Javadoc)
@@ -128,7 +138,7 @@ public class SpaceManager implements ISpaceManager {
         returnValue.setElement(space);
         return returnValue;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -154,7 +164,7 @@ public class SpaceManager implements ISpaceManager {
             spaceDisplay.setHeight(image.getHeight());
             spaceDisplay.setWidth(image.getWidth());
         }
-        
+
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
 
@@ -200,7 +210,7 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAllBySpaceStatus(status).forEach(s -> spaces.add(s));
         return spaces;
     }
-    
+
     /**
      * Method to delete space based on id
      * 
@@ -213,6 +223,10 @@ public class SpaceManager implements ISpaceManager {
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
             ISpace space = getSpace(id);
+            externalLinkDisplayRepo.deleteByexternalLink_space(space);
+            externalLinkRepo.deleteBySpace(space);
+            moduleLinkDisplayRepo.deleteByLink_space(space);
+            moduleLinkRepo.deleteBySpace(space);
             spaceLinkDisplayRepo.deleteBylink_sourceSpace(space);
             spaceLinkDisplayRepo.deleteBylink_targetSpace(space);
             spaceLinkRepo.deleteBySourceSpace(space);
@@ -221,11 +235,7 @@ public class SpaceManager implements ISpaceManager {
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new SpaceDoesNotExistException(exception);
-            
-        }
-        catch(Exception e) {
-            logger.error("Could not delete space.", e.getMessage());
-            e.printStackTrace();
+
         }
 
     }
