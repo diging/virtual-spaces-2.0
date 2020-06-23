@@ -19,13 +19,15 @@ public class ChoiceBlockFactory implements IChoiceBlockFactory {
      * edu.asu.diging.vspace.core.model.impl.IChoice)
      */    
     @Override
-    public IChoiceBlock createChoiceBlock(ISlide slide, Integer contentOrder, IChoice choice) {
+    public IChoiceBlock createChoiceBlock(ISlide slide, Integer contentOrder, List<IChoice> choices) {
         IChoiceBlock choiceBlock = new ChoiceBlock();
-        List<IChoice> choices = new ArrayList<IChoice>();
-        choices.add(choice);
+        List<IChoice> choicesList= new ArrayList<IChoice>();
+        for(int i=0;i<choices.size();i++) {
+            choicesList.add(choices.get(i));
+        }
         choiceBlock.setSlide(slide);
         choiceBlock.setContentOrder(contentOrder);
-        choiceBlock.setChoices(choices);
+        choiceBlock.setChoices(choicesList);
         return choiceBlock;
     }
 }

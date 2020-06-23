@@ -26,7 +26,7 @@ public class Choice extends VSpaceElement implements IChoice {
     
     @ManyToOne(targetEntity = ChoiceBlock.class)
     private IChoiceBlock choiceBlock;
-
+    
     @OneToOne(targetEntity = Sequence.class)
     private ISequence sequence;
 

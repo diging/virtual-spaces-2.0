@@ -278,9 +278,9 @@ $(document).ready(function() {
         $("#addImgAlert").show();
     });
     
-    $("#addChoice").click(function() {
+    /* $("#addChoice").click(function() {
         $("#addChoiceAlert").show();
-    });
+    }); */
     
     $("#uploadImage").click(function(e) {
         e.preventDefault();
@@ -385,9 +385,9 @@ $(document).ready(function() {
     $("#confirmDeleteTextAlert").draggable();
 	$("#confirmDeleteImageAlert").draggable();
     
-    $("#cancelSubmitChoice").click(function() {
+    /* $("#cancelSubmitChoice").click(function() {
         $("#addChoiceAlert").hide();	
-    });
+    }); */
     
     
     $("#cancelImageBtn").click(function() {
@@ -437,7 +437,7 @@ $(document).ready(function() {
         $("#textBlockText").val('')
     });
     
-    $("#submitChoices").on("click", function(e) {
+    /* $("#submitChoices").on("click", function(e) {
         e.preventDefault();
         $("#addChoiceAlert").hide();
         var selectedChoice = [];
@@ -481,7 +481,43 @@ $(document).ready(function() {
             }
         });
         $('input:checkbox').removeAttr('checked');
-    });
+    }); */
+    
+        $("#addChoice").on("click", function(e) {
+            e.preventDefault();
+            // ------------- creating choice content blocks ------------
+            var formData = new FormData();
+            ++contentCount;
+            formData.append('contentOrder', contentCount);
+            console.log(contentCount);
+            
+            $.ajax({
+                url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choicecontent?${_csrf.parameterName}=${_csrf.token}" />",
+                type: 'POST',
+                cache       : false,
+                contentType : false,
+                processData : false,
+                data: formData,
+                enctype: 'multipart/form-data',
+                success: function(choiceBlock) {
+                	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
+                	$.each(choiceBlock.choices, function(index, choice) {
+                		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
+                				'<h5 class="card-title">'+choice.sequence.name+'</h5></a>');
+                	});
+                	choiceblock.append('</div>');
+                	$(choiceblock).css({
+                        'margin': "10px"
+                    });
+                    $('#slideSpace').append(choiceblock); 
+                    console.log($('#slideSpace'));
+                },
+                error: function(data) {
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.error').append(alert);
+                }
+            });
+        });
 
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();
@@ -771,7 +807,7 @@ $(window).on('load', function () {
 		</div>
 	</div>
 </div>
-<div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
+<%-- <div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -797,7 +833,7 @@ $(window).on('load', function () {
             </form>
         </div>
     </div>
-</div>
+</div> --%>
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
