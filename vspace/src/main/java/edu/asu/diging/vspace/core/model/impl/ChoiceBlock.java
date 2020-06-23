@@ -3,10 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
@@ -20,7 +17,7 @@ public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.ISequence#getSequence()
+     * @see edu.asu.diging.vspace.core.model.impl.IChoice#getChoices()
      */
     @Override
     public List<IChoice> getChoices() {
@@ -30,7 +27,7 @@ public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.model.impl.IChoice#setSequence(edu.asu.diging.vspace.core.model.impl.ISequence)
+     * @see edu.asu.diging.vspace.core.model.impl.IChoice#setChoices(edu.asu.diging.vspace.core.model.impl.IChoice)
      */
     @Override
     public void setChoices(List<IChoice> choices) {
