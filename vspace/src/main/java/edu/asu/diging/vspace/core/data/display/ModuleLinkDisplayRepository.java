@@ -16,6 +16,6 @@ public interface ModuleLinkDisplayRepository extends PagingAndSortingRepository<
 
     @Query("SELECT d FROM ModuleLinkDisplay d WHERE d.link.space.id = ?1")
     public List<ModuleLinkDisplay> findModuleLinkDisplaysForSpace(String spaceId);
-    
+
     public void deleteByLink(IModuleLink link);
 }

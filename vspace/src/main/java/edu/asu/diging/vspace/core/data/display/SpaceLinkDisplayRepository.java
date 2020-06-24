@@ -14,8 +14,8 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 @JaversSpringDataAuditable
 public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<SpaceLinkDisplay, String> {
 
-	@Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
-	public List<SpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
-	
-	public void deleteByLink(ISpaceLink space);
+    @Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
+    public List<SpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
+
+    public void deleteByLink(ISpaceLink space);
 }
