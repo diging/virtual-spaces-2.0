@@ -278,10 +278,6 @@ $(document).ready(function() {
         $("#addImgAlert").show();
     });
     
-    /* $("#addChoice").click(function() {
-        $("#addChoiceAlert").show();
-    }); */
-    
     $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
@@ -385,10 +381,6 @@ $(document).ready(function() {
     $("#confirmDeleteTextAlert").draggable();
 	$("#confirmDeleteImageAlert").draggable();
     
-    /* $("#cancelSubmitChoice").click(function() {
-        $("#addChoiceAlert").hide();	
-    }); */
-    
     
     $("#cancelImageBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
@@ -437,18 +429,10 @@ $(document).ready(function() {
         $("#textBlockText").val('')
     });
     
-    /* $("#submitChoices").on("click", function(e) {
+    $("#addChoice").on("click", function(e) {
         e.preventDefault();
-        $("#addChoiceAlert").hide();
-        var selectedChoice = [];
-        $('#choiceDiv :checked').each(function() {
-        	selectedChoice.push($(this).attr("id"));
-          });
-
         // ------------- creating choice content blocks ------------
-        
         var formData = new FormData();
-        formData.append('selectedChoice', selectedChoice);
         ++contentCount;
         formData.append('contentOrder', contentCount);
         console.log(contentCount);
@@ -462,13 +446,12 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(choiceBlock) {
-                console.log("In Success Block"+choiceBlock);
             	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
             	$.each(choiceBlock.choices, function(index, choice) {
-            	    console.log()
             		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
-            				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
+            				'<h5 class="card-title">'+choice.sequence.name+'</h5></a>');
             	});
+            	choiceblock.append('</div>');
             	$(choiceblock).css({
                     'margin': "10px"
                 });
@@ -479,45 +462,8 @@ $(document).ready(function() {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 $('.error').append(alert);
             }
-        });
-        $('input:checkbox').removeAttr('checked');
-    }); */
-    
-        $("#addChoice").on("click", function(e) {
-            e.preventDefault();
-            // ------------- creating choice content blocks ------------
-            var formData = new FormData();
-            ++contentCount;
-            formData.append('contentOrder', contentCount);
-            console.log(contentCount);
-            
-            $.ajax({
-                url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choicecontent?${_csrf.parameterName}=${_csrf.token}" />",
-                type: 'POST',
-                cache       : false,
-                contentType : false,
-                processData : false,
-                data: formData,
-                enctype: 'multipart/form-data',
-                success: function(choiceBlock) {
-                	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
-                	$.each(choiceBlock.choices, function(index, choice) {
-                		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
-                				'<h5 class="card-title">'+choice.sequence.name+'</h5></a>');
-                	});
-                	choiceblock.append('</div>');
-                	$(choiceblock).css({
-                        'margin': "10px"
-                    });
-                    $('#slideSpace').append(choiceblock); 
-                    console.log($('#slideSpace'));
-                },
-                error: function(data) {
-                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                    $('.error').append(alert);
-                }
-            });
-        });
+        }); 
+   	});
 
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();
@@ -594,29 +540,6 @@ $(window).on('load', function () {
 			}
 		}
 	}
-	
-	/* //ajax to get all the contentblocks	of slide
-	$.ajax({
-            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/contents?${_csrf.parameterName}=${_csrf.token}" />",
-            type: 'GET',
-            cache       : false,
-            contentType : false,
-            processData : false,
-            success: function(contentBlocks) {
-            		console.log("success");
-            		console.log(contentBlocks);
-                //$('#slideSpace').append(choiceblock);  
-            		$.each(contentBlocks, function(index, choice) {
-                		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
-                				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
-                	});
-            },
-            error: function(data) {
-            	console.log("nothing to display");
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
-            }
-        }); */
 });
 
 </script>
@@ -807,33 +730,6 @@ $(window).on('load', function () {
 		</div>
 	</div>
 </div>
-<%-- <div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Select from the Choices</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form name="choiceForm" id="choiceForm"
-                enctype="multipart/form-data" method="post">
-                <div id = "choiceDiv" class="modal-body">
-                	<c:forEach items="${choices}" var="choice">
-	                	<input class="choice_check" id=${choice.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
-	                	<label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
-                	</c:forEach>                   
-				</div>
-                <div class="modal-footer">
-                    <button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
-                    <button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> --%>
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
