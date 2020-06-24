@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 
 @Repository
@@ -15,4 +16,6 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
 
 	@Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
 	public List<SpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
+	
+	public void deleteByLink(ISpaceLink space);
 }
