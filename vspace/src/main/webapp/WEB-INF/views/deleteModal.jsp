@@ -6,19 +6,14 @@
 			var url = $(this).data('url');
 			var urlToLoadOnSuccess = $(this).data('urlToLoadOnSuccess');
 			var urlToLoadOnError = $(this).data('urlToLoadOnError');
-			console.log(url);
-			console.log(urlToLoadOnSuccess);
-			console.log(urlToLoadOnError);
 			$.ajax({
 				url : url,
 				type : 'DELETE',
-				success : function(result) {
-				    console.log(result);
-					window.location.href = urlToLoadOnSuccess+"?showAlert=true&alertType=success&message=Space delete successfully.";
+				success : function(response) {
+					window.location.href = urlToLoadOnSuccess;
 				},
-				error : function(data) {
-				    console.log("error data :- ",data);
-					window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message=We are sorry but something went wrong. Please try to delete again later.";
+				error : function(errorMessage) {
+					window.location.href = urlToLoadOnError+"?showAlert=true&alertType=danger&message="+errorMessage.responseText;
 				}
 			});
 		});

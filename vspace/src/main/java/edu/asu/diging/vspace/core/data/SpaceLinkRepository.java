@@ -14,10 +14,4 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLink, String> {
 
     List<SpaceLink> findBySourceSpace(ISpace space);
-    
-    List<SpaceLink> findByTargetSpace(ISpace space);
-    
-    void deleteByTargetSpace(ISpace space);
-    
-    void deleteBySourceSpace(ISpace space);
 }

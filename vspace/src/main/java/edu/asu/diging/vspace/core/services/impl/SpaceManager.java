@@ -12,15 +12,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
-import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
-import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
-import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -62,24 +56,6 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageService imageService;
-
-    @Autowired
-    private SpaceLinkRepository spaceLinkRepo;
-
-    @Autowired
-    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-
-    @Autowired
-    private ExternalLinkDisplayRepository externalLinkDisplayRepo;
-
-    @Autowired
-    private ExternalLinkRepository externalLinkRepo;
-
-    @Autowired
-    private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
-
-    @Autowired
-    private ModuleLinkRepository moduleLinkRepo;
 
     /*
      * (non-Javadoc)
@@ -138,7 +114,7 @@ public class SpaceManager implements ISpaceManager {
         returnValue.setElement(space);
         return returnValue;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -164,7 +140,7 @@ public class SpaceManager implements ISpaceManager {
             spaceDisplay.setHeight(image.getHeight());
             spaceDisplay.setWidth(image.getWidth());
         }
-
+        
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
 
@@ -210,7 +186,7 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAllBySpaceStatus(status).forEach(s -> spaces.add(s));
         return spaces;
     }
-
+    
     /**
      * Method to delete space based on id
      * 
@@ -222,20 +198,9 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
         try {
-            ISpace space = getSpace(id);
-            externalLinkDisplayRepo.deleteByexternalLink_space(space);
-            externalLinkRepo.deleteBySpace(space);
-            moduleLinkDisplayRepo.deleteByLink_space(space);
-            moduleLinkRepo.deleteBySpace(space);
-            spaceLinkDisplayRepo.deleteBylink_sourceSpace(space);
-            spaceLinkDisplayRepo.deleteBylink_targetSpace(space);
-            spaceLinkRepo.deleteBySourceSpace(space);
-            spaceLinkRepo.deleteByTargetSpace(space);
-            spaceDisplayRepo.deleteBySpace((ISpace) getSpace(id));
             spaceRepo.deleteById(id);
         } catch (IllegalArgumentException | EmptyResultDataAccessException exception) {
             throw new SpaceDoesNotExistException(exception);
-
         }
 
     }

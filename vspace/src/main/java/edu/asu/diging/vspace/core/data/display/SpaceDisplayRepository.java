@@ -14,6 +14,4 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 public interface SpaceDisplayRepository extends PagingAndSortingRepository<SpaceDisplay, String> {
 
     public List<SpaceDisplay> getBySpace(ISpace space);
-    
-    public void deleteBySpace(ISpace space);
 }
