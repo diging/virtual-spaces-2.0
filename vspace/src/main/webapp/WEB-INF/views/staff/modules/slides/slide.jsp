@@ -284,6 +284,10 @@ $(document).ready(function() {
             uploadImage();
     });
     
+    $("#addChoice").click(function() {
+        $("#addChoiceAlert").show();
+    });
+    
     $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
 		var alert = $('<input type="hidden" id="deleteTextId">');
@@ -381,7 +385,10 @@ $(document).ready(function() {
     $("#confirmDeleteTextAlert").draggable();
 	$("#confirmDeleteImageAlert").draggable();
     
-    
+	$("#cancelSubmitChoice").click(function() {
+        $("#addChoiceAlert").hide();	
+    });
+	
     $("#cancelImageBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '');
@@ -429,7 +436,7 @@ $(document).ready(function() {
         $("#textBlockText").val('')
     });
     
-    $("#addChoice").on("click", function(e) {
+    /* $("#addChoice").on("click", function(e) {
         e.preventDefault();
         // ------------- creating choice content blocks ------------
         var formData = new FormData();
@@ -462,8 +469,53 @@ $(document).ready(function() {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 $('.error').append(alert);
             }
-        }); 
-   	});
+        });
+   	}); */
+   	
+    $("#submitChoices").on("click", function(e) {
+        e.preventDefault();
+        $("#addChoiceAlert").hide();
+        var selectedChoice = [];
+        $('#choiceDiv :checked').each(function() {
+        	selectedChoice.push($(this).attr("id"));
+          });
+        // ------------- creating choice content blocks ------------
+        
+        var formData = new FormData();
+        formData.append('content', selectedChoice);
+        ++contentCount;
+        formData.append('contentOrder', contentCount);
+        console.log(contentCount);
+        
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choice/content?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(choiceBlock) {
+                console.log("In Success Block"+choiceBlock);
+            	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
+            	$.each(choiceBlock.choices, function(index, choice) {
+            	    console.log()
+            		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
+            				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
+            	});
+            	$(choiceblock).css({
+                    'margin': "10px"
+                });
+                $('#slideSpace').append(choiceblock); 
+                console.log($('#slideSpace'));
+            },
+            error: function(data) {
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+        $('input:checkbox').removeAttr('checked');
+    });
 
     $("#addImgAlert").draggable();
     $("#addTextAlert").draggable();
@@ -730,6 +782,35 @@ $(window).on('load', function () {
 		</div>
 	</div>
 </div>
+
+<div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select from the Choices</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="choiceForm" id="choiceForm"
+                enctype="multipart/form-data" method="post">
+                <div id = "choiceDiv" class="modal-body">
+                    <c:forEach items="${choices}" var="choice">
+                        <input class="choice_check" id=${choice.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
+                        <label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
+                    </c:forEach>                   
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
+                    <button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
