@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
     uri="http://www.springframework.org/security/tags"%>
-
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     href="<c:url value="/resources/extra/Home.css" />">
 
@@ -312,29 +311,6 @@ function drawLinks() {
                     <div class="spaceDescription">${space.description}</div>
                 </div>
             </c:if>
-        </div>
-    </div>
-</div>
-<div id="exhibitionDownModal" class="modal" tabindex="-1"
-	role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Exhibition Not Active</h5>
-            </div>
-            <div class="modal-body">
-                <c:choose>
-                    <c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
-                        <h6>${exhibitionConfig.customMessage}</h6>
-                    </c:when>
-                    <c:otherwise>
-           	            <h6>${exhibitionConfig.mode.value}</h6>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelExhibitionModal" type="button" class="btn light">Ok</button>
-            </div>
         </div>
     </div>
 </div>

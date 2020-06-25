@@ -3,11 +3,6 @@
 <%@ taglib prefix="sec"
     uri="http://www.springframework.org/security/tags"%>
 
-<script>
-$( document ).ready(function() {
-
-});
-</script>
 <div class="" style="text-align: center;">
 <h5>${modeValue}</h5>
 </div>
