@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,10 +26,12 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -71,6 +74,9 @@ public class SpaceManagerTest {
 
     @Mock
     private ISpaceDisplayFactory spaceDisplayFactory;
+
+    @Mock
+    private ExhibitionManager exhibitionManager;
 
 
     @InjectMocks
@@ -119,20 +125,32 @@ public class SpaceManagerTest {
         Mockito.verify(spaceDisplayRepo).save((SpaceDisplay)spaceDisplay);
     }
 
-
-
-    @Test(expected = SpaceDoesNotExistException.class)
+    @Test
     public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException{
-        Mockito.doThrow(IllegalArgumentException.class)
-        .when(spaceRepo).deleteById(null);
+        Mockito.when(managerToTest.getSpace(spaceId)).thenReturn(null).thenReturn(null);
+        Assert.assertEquals(null, managerToTest.getSpace(null));
+        managerToTest.deleteSpaceById(null);
+        Assert.assertEquals(null, managerToTest.getSpace(null));
     }
 
-    @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {  
-        Mockito.doThrow(EmptyResultDataAccessException.class)
-        .when(spaceRepo).deleteById(spaceId);
+    @Test
+    public void test_deleteSpaceById_forNonExistentId() {  
+        Mockito.when(managerToTest.getSpace(spaceId)).thenReturn(null).thenReturn(null);
+        Assert.assertEquals(null, managerToTest.getSpace(spaceId));
+        managerToTest.deleteSpaceById(spaceId);
+        Assert.assertEquals(null, managerToTest.getSpace(spaceId));
     }
 
+    @Test
+    public void test_deleteSpaceById_forSuccess() {  
+        ISpace space = new Space();
+        Mockito.doReturn(space).when(managerToTest).getSpace(spaceId1);
+        //Mockito.when(managerToTest.getSpace(spaceId1)).thenReturn(space).thenReturn(null);
+        Assert.assertEquals(space, managerToTest.getSpace(spaceId1));
+        managerToTest.deleteSpaceById(spaceId1);
+        Assert.assertEquals(null, managerToTest.getSpace(spaceId));
+    }
+    
     @Test
     public void test_getSpacesWithStatus_whenStatusIsNull() throws SpaceDoesNotExistException{
         Space space=new Space();

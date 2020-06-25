@@ -173,7 +173,7 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public ISpace getSpace(String id) {
         Optional<Space> space = spaceRepo.findById(id);
-        if (space.isPresent()) {
+        if (space != null && space.isPresent()) {
             return space.get();
         }
         return null;
@@ -214,7 +214,7 @@ public class SpaceManager implements ISpaceManager {
      * @throws SpaceDoesNotExistException
      */
     @Override
-    public void deleteSpaceById(String id) throws SpaceDoesNotExistException {
+    public void deleteSpaceById(String id) {
         List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
         List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
