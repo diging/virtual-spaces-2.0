@@ -438,7 +438,7 @@ $(document).ready(function() {
         console.log(contentCount);
         
         $.ajax({
-            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choicecontent?${_csrf.parameterName}=${_csrf.token}" />",
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choice/content?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
             cache       : false,
             contentType : false,

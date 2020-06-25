@@ -28,8 +28,6 @@ import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name="DTYPE")
-@DiscriminatorValue("Slide")
 public class Slide extends VSpaceElement implements ISlide {
 
     @Id

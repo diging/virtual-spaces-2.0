@@ -52,7 +52,7 @@ public class SlideManager implements ISlideManager {
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
         ISlide slide = slideFactory.createSlide(module, slideForm, type);             
-        slideRepo.save((Slide) slide);        
+        slide = slideRepo.save((Slide) slide);        
         return slide;
     }
 

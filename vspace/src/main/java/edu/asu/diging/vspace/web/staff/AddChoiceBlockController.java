@@ -27,7 +27,7 @@ public class AddChoiceBlockController {
     @Autowired
     private ISlideManager slideManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choicecontent", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choice/content", method = RequestMethod.POST)
     public ResponseEntity<IChoiceBlock> addChoiceBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId,
             @RequestParam("contentOrder") Integer contentOrder) throws IOException {
