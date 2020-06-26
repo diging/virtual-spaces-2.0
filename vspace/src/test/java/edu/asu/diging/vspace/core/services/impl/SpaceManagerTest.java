@@ -143,12 +143,12 @@ public class SpaceManagerTest {
 
     @Test
     public void test_deleteSpaceById_forSuccess() {  
-        ISpace space = new Space();
-        Mockito.doReturn(space).when(managerToTest).getSpace(spaceId1);
-        //Mockito.when(managerToTest.getSpace(spaceId1)).thenReturn(space).thenReturn(null);
+        Space space = new Space();
+        Optional<Space> spaceOpt = Optional.of(space);
+        Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(spaceOpt).thenReturn(null);
         Assert.assertEquals(space, managerToTest.getSpace(spaceId1));
         managerToTest.deleteSpaceById(spaceId1);
-        Assert.assertEquals(null, managerToTest.getSpace(spaceId));
+        Assert.assertEquals(null, managerToTest.getSpace(spaceId1));
     }
     
     @Test
