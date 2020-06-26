@@ -66,6 +66,10 @@
 		<put-attribute name="currentPage" value="module" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	
 	</definition>
+	<definition name="maintenance" extends="base.definition">	
+		<put-attribute name="currentPage" value="maintenance" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/maintenance.jsp" />	
+	</definition>
     
     <!-- Register -->
     <definition name="register" extends="base.definition"> 
@@ -121,6 +125,11 @@
     <definition name="staff/space/edit" extends="space.base.def">
         <put-attribute name="content" value="/WEB-INF/views/staff/spaces/edit.jsp" />
     </definition>
+    
+	<definition name="notFound" extends="base.definition">	
+		<put-attribute name="currentPage" value="notFound" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/notFound.jsp" />	
+	</definition>
 	
 	<!-- Modules -->
 	<definition name="module.base.def" extends="base.definition.bt4">	

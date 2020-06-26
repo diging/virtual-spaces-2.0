@@ -8,7 +8,7 @@ public class SpaceNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public SpaceNotFoundException(String id) {
-        super("Space not found");
+        super("Space with id "+ id +" not found");
     }
 
 }

@@ -13,10 +13,9 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModuleLink;
+import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -27,12 +26,11 @@ public class Space extends VSpaceElement implements ISpace {
     @Id
     @GeneratedValue(generator = "space_id_generator")
     @GenericGenerator(name = "space_id_generator", 
-    parameters = @Parameter(name = "prefix", value = "SPA"), 
+    parameters = @Parameter(name = "prefix", value = IPrefix.SPACE_PREFIX), 
     strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "sourceSpace", targetEntity = SpaceLink.class)
+    @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
     private List<ISpaceLink> spaceLinks;
 
     @OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
