@@ -2,9 +2,8 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
@@ -12,9 +11,10 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 @Entity
 public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
 
-    @OneToMany(targetEntity = Choice.class, mappedBy = "choiceBlock", cascade=CascadeType.ALL)
-    //@JoinTable(name="ChoiceBlock_Choice")
+    @ManyToMany(targetEntity = Choice.class)
     private List<IChoice> choices;
+
+    private boolean showsAll;
 
     /*
      * (non-Javadoc)
@@ -34,5 +34,15 @@ public class ChoiceBlock extends ContentBlock implements IChoiceBlock {
     @Override
     public void setChoices(List<IChoice> choices) {
         this.choices = choices;
+    }
+
+    @Override
+    public boolean isShowsAll() {
+        return showsAll;
+    }
+
+    @Override
+    public void setShowsAll(boolean showsAll) {
+        this.showsAll = showsAll;
     }
 }

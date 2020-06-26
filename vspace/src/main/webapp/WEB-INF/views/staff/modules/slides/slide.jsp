@@ -11,7 +11,6 @@ function createImageBlock(reader, width) {
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
-    console.log("hi1");
     return imageblock;
 }
 
@@ -435,42 +434,6 @@ $(document).ready(function() {
         });
         $("#textBlockText").val('')
     });
-    
-    /* $("#addChoice").on("click", function(e) {
-        e.preventDefault();
-        // ------------- creating choice content blocks ------------
-        var formData = new FormData();
-        ++contentCount;
-        formData.append('contentOrder', contentCount);
-        console.log(contentCount);
-        
-        $.ajax({
-            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choice/content?${_csrf.parameterName}=${_csrf.token}" />",
-            type: 'POST',
-            cache       : false,
-            contentType : false,
-            processData : false,
-            data: formData,
-            enctype: 'multipart/form-data',
-            success: function(choiceBlock) {
-            	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
-            	$.each(choiceBlock.choices, function(index, choice) {
-            		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
-            				'<h5 class="card-title">'+choice.sequence.name+'</h5></a>');
-            	});
-            	choiceblock.append('</div>');
-            	$(choiceblock).css({
-                    'margin': "10px"
-                });
-                $('#slideSpace').append(choiceblock); 
-                console.log($('#slideSpace'));
-            },
-            error: function(data) {
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
-            }
-        });
-   	}); */
    	
     $("#submitChoices").on("click", function(e) {
         e.preventDefault();
@@ -485,8 +448,6 @@ $(document).ready(function() {
         formData.append('content', selectedChoice);
         ++contentCount;
         formData.append('contentOrder', contentCount);
-        console.log(contentCount);
-        
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choice/content?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
@@ -496,18 +457,14 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(choiceBlock) {
-                console.log("In Success Block"+choiceBlock);
-            	var choiceblock = $('<div id="'+ choiceBlock.id +'" class="valueDiv card card-body row" style="margin: 10px;">');
-            	$.each(choiceBlock.choices, function(index, choice) {
-            	    console.log()
-            		choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+
-            				'<h5 class="card-title">'+choice.sequence.name+'</h5></a></div>');
+                var choiceblock = $('<div id="'+ choiceBlock.id +'" class="card card-body row" style="margin: 10px;">');
+                $.each(choiceBlock.choices, function(index, choice) {
+                    choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+choice.sequence.name+'</a></div>');
             	});
             	$(choiceblock).css({
                     'margin': "10px"
                 });
-                $('#slideSpace').append(choiceblock); 
-                console.log($('#slideSpace'));
+                $('#slideSpace').append(choiceblock);
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -609,12 +566,7 @@ $(window).on('load', function () {
 <div class="row align-items-center">
 	<h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
 		${slide.name}</h1>
-	<a id="editTitle" class="btn" href="#"
-		style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
-	<button id="submitTitle" type="button" class="btn btn-primary"
-		style="float: left; margin-right: 1%;">Save</button>
-	<button id="cancelEditTitle" type="button" class="btn btn-primary"
-		style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
+        <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit" />"><span data-feather="edit"></span></a>
 </div>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${slide.creationDate}</span> by
@@ -624,16 +576,7 @@ $(window).on('load', function () {
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
 	<h5 style="margin-bottom: 0px;">Description:</h5>
-	<a id="editDescription" class="btn" href="#"
-		style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
-		class="fas fa-edit"></i></a>
 	<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${slide.description}</p>
-	<button id="submitDescription" type="button"
-		class="btn btn-primary btn-sm"
-		style="margin-top: 1%; margin-bottom: 1%;">Save</button>
-	<button id="cancelEditDescription" type="button"
-		class="btn btn-primary btn-sm"
-		style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 </div>
 <div style="margin-top: 1%; margin-bottom: 2%;">
 	<a class="btn btn-primary"

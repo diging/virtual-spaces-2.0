@@ -22,9 +22,7 @@ public class ChoiceBlockFactory implements IChoiceBlockFactory {
     public IChoiceBlock createChoiceBlock(ISlide slide, Integer contentOrder, List<IChoice> choices) {
         IChoiceBlock choiceBlock = new ChoiceBlock();
         List<IChoice> choicesList= new ArrayList<IChoice>();
-        for(int i=0;i<choices.size();i++) {
-            choicesList.add(choices.get(i));
-        }
+        choicesList.addAll(choices);
         choiceBlock.setSlide(slide);
         choiceBlock.setContentOrder(contentOrder);
         choiceBlock.setChoices(choicesList);
