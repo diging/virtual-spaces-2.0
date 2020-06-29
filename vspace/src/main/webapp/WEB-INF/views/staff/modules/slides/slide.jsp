@@ -254,21 +254,22 @@ $(document).ready(function() {
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
         $("#newTitle").closest('div').remove();
-        $("#title").text("Silde: " + getTitleText)       
-    });
-   
-   $('.choice_check').each(function() {
-	    $(this).addClass('unselected');
+        $("#title").text("Silde: " + getTitleText);
    });
    
-   $('.choice_check').on('click', function() {
-	    $(this).toggleClass('unselected');
-	    $(this).toggleClass('selected');
-	    $('.choice_check').not(this).prop('checked', false);
-	    $('.choice_check').not(this).removeClass('selected');
-	    $('.choice_check').not(this).addClass('unselected');
-	  });
-   
+   $('.showAllChoices').click(function(event) {
+       if(this.checked) {
+           $(':checkbox').each(function() {
+               this.checked = true;
+           });    
+       } 
+       else {
+           $(':checkbox').each(function() {
+               this.checked = false;
+           });
+       }
+       
+   });
     $("#addText").click(function() {
         $("#addTextAlert").show();
     });
@@ -439,15 +440,21 @@ $(document).ready(function() {
         e.preventDefault();
         $("#addChoiceAlert").hide();
         var selectedChoice = [];
-        $('#choiceDiv :checked').each(function() {
+        var showsAll = false;
+        $('#selectChoices :checked').each(function() {
         	selectedChoice.push($(this).attr("id"));
           });
         // ------------- creating choice content blocks ------------
-        
+        console.log("Selected Choices in Submit");
+        console.log(selectedChoice);
+        if ($('.showAllChoices').is(':checked')) {
+            showsAll = true;
+        }
         var formData = new FormData();
-        formData.append('content', selectedChoice);
+        formData.append('selectedChoices', selectedChoice);
         ++contentCount;
         formData.append('contentOrder', contentCount);
+        formData.append('showsAll', showsAll);
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choice/content?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
@@ -739,11 +746,17 @@ $(window).on('load', function () {
             </div>
             <form name="choiceForm" id="choiceForm"
                 enctype="multipart/form-data" method="post">
-                <div id = "choiceDiv" class="modal-body">
+                <div id = "choiceDiv" class="modal-body">  
+                    <input class="showAllChoices" id=showAll type="checkbox" name="showAll" value="showAll" />
+                    <label for="showAll">Select All</label><br/>
+                    <div id = "selectChoices">
                     <c:forEach items="${choices}" var="choice">
-                        <input class="choice_check" id=${choice.id} type="checkbox" name=${choice.sequence.name} value=${choice.sequence.name} />
-                        <label for=${choice.sequence.name}>${choice.sequence.name}</label><br/>
-                    </c:forEach>                   
+                        
+                        <input class="choice_options" id="${choice.id}" type="checkbox" name="${choice.sequence.name}" value="${choice.sequence.name}" />
+                        <label for="${choice.id}">${choice.sequence.name}</label><br/>
+                        
+                    </c:forEach>
+                    </div>                   
                 </div>
                 <div class="modal-footer">
                     <button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>

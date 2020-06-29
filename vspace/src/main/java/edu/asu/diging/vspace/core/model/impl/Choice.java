@@ -12,7 +12,6 @@ import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
 
 @Entity
-//@Inheritance(strategy = InheritanceType.JOINED)
 public class Choice extends VSpaceElement implements IChoice {
 
     @Id

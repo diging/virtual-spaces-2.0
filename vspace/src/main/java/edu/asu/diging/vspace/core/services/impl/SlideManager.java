@@ -51,22 +51,19 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
-        ISlide slide = slideFactory.createSlide(module, slideForm, type);             
-        slide = slideRepo.save((Slide) slide);        
-        return slide;
+        ISlide slide = slideFactory.createSlide(module, slideForm, type);     
+        return slideRepo.save((Slide) slide);
     }
 
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type) {
-        ISlide branchingPoint = slideFactory.createSlide(module, slideForm, type);            
-        branchingPoint = bpointRepo.save((BranchingPoint) branchingPoint);        
-        return (IBranchingPoint) branchingPoint;
+        ISlide branchingPoint = slideFactory.createSlide(module, slideForm, type);                 
+        return bpointRepo.save((BranchingPoint) branchingPoint);
     }
 
     @Override
-    public IBranchingPoint updateBranchingPoint(IBranchingPoint branchingPoint) {
-        branchingPoint = bpointRepo.save((BranchingPoint) branchingPoint);        
-        return (IBranchingPoint) branchingPoint;
+    public void updateBranchingPoint(IBranchingPoint branchingPoint) {       
+        bpointRepo.save((BranchingPoint) branchingPoint);;
     }
 
     @Override
