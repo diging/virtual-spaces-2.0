@@ -21,8 +21,10 @@ public interface ISlideManager {
 
     IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type);
 
+    IBranchingPoint updateBranchingPoint(IBranchingPoint branchingPoint);
+
     IChoice getChoice(String choiceId);
-    
+
     void deleteSlideById(String slideId, String moduleId);
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);

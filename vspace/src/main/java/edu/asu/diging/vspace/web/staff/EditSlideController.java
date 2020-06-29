@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -32,6 +33,9 @@ public class EditSlideController {
 
     @Autowired
     private ModuleManager moduleManager;
+
+    @Autowired
+    private IChoiceFactory choiceFactory;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description,
@@ -59,12 +63,13 @@ public class EditSlideController {
         slideForm.setDescription(slide.getDescription());
         if(slide instanceof BranchingPoint) {
             slideForm.setType(SlideType.BRANCHING_POINT.toString());
-            IBranchingPoint bp = (IBranchingPoint) slide;
+            IBranchingPoint branchingPoint = (IBranchingPoint) slide;
             List<String> choices = new ArrayList<String>();
-            for(IChoice choice : bp.getChoices()) {
+            for(IChoice choice : branchingPoint.getChoices()) {
                 choices.add(choice.getSequence().getId());
             }
             slideForm.setChoices(choices);
+            model.addAttribute("choices", choices);
         }
         else {
             slideForm.setType(SlideType.SLIDE.toString());
@@ -81,8 +86,15 @@ public class EditSlideController {
         ISlide slide = slideManager.getSlide(slideId);
         slide.setName(slideForm.getName());
         slide.setDescription(slideForm.getDescription());
-
-        slideManager.updateSlide((Slide)slide);
+        SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
+        if(type.equals(SlideType.BRANCHING_POINT)) {
+            List<IChoice> choices = choiceFactory.createChoices(slideForm.getChoices());
+            IBranchingPoint branchingPoint = (IBranchingPoint) slide;
+            branchingPoint.setChoices(choices);
+            slideManager.updateBranchingPoint(branchingPoint);
+        } else {
+            slideManager.updateSlide((Slide)slide);
+        }
         return "redirect:/staff/module/{moduleId}/slide/{slideId}";
     }
 }

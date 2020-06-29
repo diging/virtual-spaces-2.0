@@ -39,16 +39,16 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private SequenceRepository sequenceRepo;
-    
-    
+
+
     @Autowired
     private BranchingPointRepository bpointRepo;
-    
+
     @Autowired
     private ChoiceRepository choiceRepo;
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
         ISlide slide = slideFactory.createSlide(module, slideForm, type);             
@@ -64,6 +64,12 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
+    public IBranchingPoint updateBranchingPoint(IBranchingPoint branchingPoint) {
+        branchingPoint = bpointRepo.save((BranchingPoint) branchingPoint);        
+        return (IBranchingPoint) branchingPoint;
+    }
+
+    @Override
     public ISlide getSlide(String slideId) {
         Optional<Slide> slide = slideRepo.findById(slideId);
         if (slide.isPresent()) {
@@ -71,7 +77,7 @@ public class SlideManager implements ISlideManager {
         }
         return null;
     }
-    
+
     @Override
     public IChoice getChoice(String choiceId) {
         Optional<Choice> choice = choiceRepo.findById(choiceId);
@@ -88,12 +94,12 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) {
-        
+
         if(slideId == null) {
             logger.error("Slide Id cannot be null.");
             return;
         }
-        
+
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         Slide slideObj = (Slide) getSlide(slideId);
         List<ISlide> slideObjToRemove = new ArrayList<>();
@@ -108,9 +114,9 @@ public class SlideManager implements ISlideManager {
             }
         }
         try {
-            
+
             slideRepo.delete((Slide) getSlide(slideId));
-            
+
         } catch (IllegalArgumentException exception) {
             logger.error("Unable to delete slide.", exception);
         }
