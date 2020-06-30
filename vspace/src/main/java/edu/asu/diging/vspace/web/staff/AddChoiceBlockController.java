@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,6 @@ import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
@@ -32,9 +32,6 @@ public class AddChoiceBlockController {
     private ISlideManager slideManager;
     
     @Autowired
-    private ISequenceManager sequenceManager;
-    
-    @Autowired
     private ChoiceRepository choiceRepo;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choice/content", method = RequestMethod.POST)
@@ -43,7 +40,7 @@ public class AddChoiceBlockController {
             @RequestParam("contentOrder") Integer contentOrder, @RequestParam("selectedChoices") List<String> selectedChoice, @RequestParam("showsAll") boolean showsAll) throws IOException {
 
         IBranchingPoint branchingPoint = (IBranchingPoint) slideManager.getSlide(slideId);
-        List<IChoice> choices = null;
+        List<IChoice> choices = new ArrayList<IChoice>();
         if(showsAll) {
             choices = branchingPoint.getChoices();
         }else {
