@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
     uri="http://www.springframework.org/security/tags"%>
-
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     href="<c:url value="/resources/extra/Home.css" />">
 
@@ -56,9 +55,8 @@ $(window).on("load", function() {
     let spaceHeight = $("#bgImage").css("height");
     $("#Module_1").css("height",spaceHeight);
 	$( window ).resize(function() {
-	    console.log("In Resize");
-        $("#space a").remove();
-        drawLinks();
+		$("#space a").remove();
+    	drawLinks();
     });
     drawLinks();
 });
@@ -70,7 +68,7 @@ function drawLinks() {
         var posY = $("#space").position().top;
         var link = $('<a></a>');
         link.attr('href', '<c:url value="/exhibit/space/${link.link.targetSpace.id}" />');
-        
+
         if ("${link.type}" == 'ALERT') {
             var linkDisplay = $('<div class="alert alert-primary" role="alert">');
         } else if ("${link.type}" == 'IMAGE' && "${link.image}" != '') {
@@ -100,8 +98,8 @@ function drawLinks() {
         });
     }
     </c:forEach>
-    
     <c:forEach items="${moduleList}" var="link" varStatus="moduleLoop">
+
     {
         var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
         var posY = $("#space").position().top;
@@ -219,6 +217,16 @@ function drawLinks() {
 }
 </style>
 <div class="container-fluid">
+	<div class="modalDown alert alert-warning center col-md-12" style="text-align: center;<c:if test ='${exhibitionConfig.mode == "ACTIVE"}'>display: none;</c:if>" >
+    	<c:choose>
+        	<c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
+                <h6>${exhibitionConfig.customMessage}</h6>
+            </c:when>
+            <c:otherwise>
+           	    <h6>${exhibitionConfig.mode.value}</h6>
+            </c:otherwise>
+        </c:choose>
+    </div>
     <div id="Module_1" class="Home_Class">
         <div class="dropdown">
             <div id="mySidenav" class="sidenav">
@@ -311,3 +319,8 @@ function drawLinks() {
         </div>
     </div>
 </div>
+<script>
+$(function() {
+
+});
+</script>
