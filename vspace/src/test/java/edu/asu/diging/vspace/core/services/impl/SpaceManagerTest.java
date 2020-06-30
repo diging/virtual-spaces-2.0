@@ -127,28 +127,23 @@ public class SpaceManagerTest {
 
     @Test
     public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException{
-        Mockito.when(managerToTest.getSpace(spaceId)).thenReturn(null).thenReturn(null);
-        Assert.assertEquals(null, managerToTest.getSpace(null));
         managerToTest.deleteSpaceById(null);
-        Assert.assertEquals(null, managerToTest.getSpace(null));
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(null);
+        Mockito.verify(spaceRepo).deleteById(null);
     }
 
     @Test
     public void test_deleteSpaceById_forNonExistentId() {  
-        Mockito.when(managerToTest.getSpace(spaceId)).thenReturn(null).thenReturn(null);
-        Assert.assertEquals(null, managerToTest.getSpace(spaceId));
         managerToTest.deleteSpaceById(spaceId);
-        Assert.assertEquals(null, managerToTest.getSpace(spaceId));
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId);
+        Mockito.verify(spaceRepo).deleteById(spaceId);
     }
 
     @Test
     public void test_deleteSpaceById_forSuccess() {  
-        Space space = new Space();
-        Optional<Space> spaceOpt = Optional.of(space);
-        Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(spaceOpt).thenReturn(null);
-        Assert.assertEquals(space, managerToTest.getSpace(spaceId1));
         managerToTest.deleteSpaceById(spaceId1);
-        Assert.assertEquals(null, managerToTest.getSpace(spaceId1));
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
+        Mockito.verify(spaceRepo).deleteById(spaceId1);
     }
     
     @Test

@@ -42,6 +42,7 @@ public class SpaceController {
         model.addAttribute("space", space);
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
         model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+        model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
