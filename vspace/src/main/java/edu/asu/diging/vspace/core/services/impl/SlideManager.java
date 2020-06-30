@@ -63,7 +63,7 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void updateBranchingPoint(IBranchingPoint branchingPoint) {       
-        bpointRepo.save((BranchingPoint) branchingPoint);;
+        bpointRepo.save((BranchingPoint) branchingPoint);
     }
 
     @Override
