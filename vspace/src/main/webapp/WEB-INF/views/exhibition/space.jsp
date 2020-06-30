@@ -290,7 +290,11 @@ function drawLinks() {
                             style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                             onclick="openSpaceDescription()"></i>
                     </c:if>
+                    <sec:authorize access="hasAnyRole('STAFF', 'ADMIN')">
+            			<a href="<c:url value="/staff/space/${space.id}" />"><span data-feather="edit" style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>
+            		</sec:authorize>
                 </h3>
+				
             </div>
             <div id="space">
             <img style="max-width:${space.image.width}px; border-radius:13px; width: 100%;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
@@ -303,6 +307,7 @@ function drawLinks() {
                     <div class="spaceDescription">${space.description}</div>
                 </div>
             </c:if>
+            
         </div>
     </div>
 </div>
