@@ -15,22 +15,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
-import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
 public class AddChoiceBlockController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
-    @Autowired
-    private ISlideManager slideManager;
-    
+
     @Autowired
     private ChoiceRepository choiceRepo;
 
@@ -38,19 +33,14 @@ public class AddChoiceBlockController {
     public ResponseEntity<IChoiceBlock> addChoiceBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId,
             @RequestParam("contentOrder") Integer contentOrder, @RequestParam("selectedChoices") List<String> selectedChoice, @RequestParam("showsAll") boolean showsAll) throws IOException {
-
-        IBranchingPoint branchingPoint = (IBranchingPoint) slideManager.getSlide(slideId);
         List<IChoice> choices = new ArrayList<IChoice>();
-        if(showsAll) {
-            choices = branchingPoint.getChoices();
-        }else {
+        if(!showsAll) {
             for(String choiceID : selectedChoice) {
                 Optional<Choice> choice = choiceRepo.findById(choiceID);
                 choices.add(choice.get());
             }
         }
         IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, choices, contentOrder, showsAll);
-
         return new ResponseEntity<>(choiceBlock, HttpStatus.OK);
     }
 }
