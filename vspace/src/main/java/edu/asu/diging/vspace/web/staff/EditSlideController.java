@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
@@ -88,9 +89,19 @@ public class EditSlideController {
         slide.setDescription(slideForm.getDescription());
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
         if(type.equals(SlideType.BRANCHING_POINT)) {
+            List<ISequence> choiceSequences = new ArrayList<ISequence>(); 
+            List<IChoice> existingChoices=((IBranchingPoint)slide).getChoices();
+            for(IChoice choice : existingChoices) {
+                choiceSequences.add(choice.getSequence());
+            }
             List<IChoice> choices = choiceFactory.createChoices(slideForm.getChoices());
+            for(IChoice choice : choices) {
+                if(!choiceSequences.contains(choice.getSequence())) {
+                    existingChoices.add(choice);
+                }
+            }
             IBranchingPoint branchingPoint = (IBranchingPoint) slide;
-            branchingPoint.setChoices(choices);
+            branchingPoint.setChoices(existingChoices);
             slideManager.updateBranchingPoint(branchingPoint);
         } else {
             slideManager.updateSlide((Slide)slide);
