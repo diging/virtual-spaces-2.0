@@ -27,13 +27,6 @@ public class EditSpaceLinks {
         return null;
     }
     
-    public ResponseEntity<String> imageCouldNotBeStored() throws IOException{
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("errorMessage", "Link icon could not be stored.");
-        return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    
     public ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();

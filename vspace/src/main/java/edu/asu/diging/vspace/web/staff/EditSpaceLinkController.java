@@ -37,9 +37,8 @@ public class EditSpaceLinkController extends EditSpaceLinks{
         if(validation!=null) {
             return validation;
         }
-        ISpaceLinkDisplay display;
-        display = linkManager.editSpaceLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId);
+        ISpaceLinkDisplay display = linkManager.editSpaceLink(title, id, new Float(x), new Float(y),
+                new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId);
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), null);
     }
 
