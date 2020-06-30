@@ -298,7 +298,7 @@ function drawLinks() {
                             style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                             onclick="openSpaceDescription()"></i>
                     </c:if>
-                    <sec:authorize access="hasRole('STAFF')">
+                    <sec:authorize access="hasAnyRole('ADMIN','STAFF')">
             			<a href="<c:url value="/staff/space/${space.id}" />"><span data-feather="edit" style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>
             		</sec:authorize>
                 </h3>
