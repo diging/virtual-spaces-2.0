@@ -34,7 +34,7 @@ public class ChoiceBlockFactoryTest {
         choiceList.add(choice);
         choiceList.add(choice2);
  
-        IChoiceBlock actualChoiceBlock = choiceBlockFactoryToTest.createChoiceBlock(slide, contentOrder, choiceList);
+        IChoiceBlock actualChoiceBlock = choiceBlockFactoryToTest.createChoiceBlock(slide, contentOrder, choiceList, true);
         Assert.assertEquals(slide.getId(), actualChoiceBlock.getSlide().getId());
         Assert.assertEquals(contentOrder, actualChoiceBlock.getContentOrder());
         Assert.assertEquals(choice.getId(), actualChoiceBlock.getChoices().get(0).getId());

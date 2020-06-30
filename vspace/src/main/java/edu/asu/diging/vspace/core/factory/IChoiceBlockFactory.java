@@ -8,6 +8,6 @@ import edu.asu.diging.vspace.core.model.ISlide;
 
 public interface IChoiceBlockFactory {
 
-    IChoiceBlock createChoiceBlock(ISlide slide, Integer contentOrder, List<IChoice> choices);
+    IChoiceBlock createChoiceBlock(ISlide slide, Integer contentOrder, List<IChoice> choices, boolean showsAll);
 
 }

@@ -26,10 +26,10 @@ public class AddSlideController {
 
     @Autowired
     private ISlideManager slideManager;
-    
+
     @Autowired
     private ModuleManager moduleManager;
-    
+
     @Autowired
     private IContentBlockManager contentBlockManager;
 
@@ -38,7 +38,7 @@ public class AddSlideController {
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("slide", new SlideForm());
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
-        
+
         return "staff/module/slide/add";
     }
 
@@ -52,11 +52,11 @@ public class AddSlideController {
             IBranchingPoint branchingPoint = slideManager.createBranchingPoint(module, slideForm, type);
             List<IChoice> choices = branchingPoint.getChoices();
             int contentOrder=branchingPoint.getContents().size()+1;
-            IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(branchingPoint.getId(), choices, contentOrder, false);
+            IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(branchingPoint.getId(), choices, contentOrder, true);
         } else {
             slideManager.createSlide(module, slideForm, type);
         }
-        
+
         return "redirect:/staff/module/{moduleId}";
     }
 }

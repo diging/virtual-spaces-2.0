@@ -236,8 +236,7 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public IChoiceBlock createChoiceBlock(String slideId, List<IChoice> choices, Integer contentOrder, boolean showsAll) {
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices); 
-        choiceBlock.setShowsAll(showsAll);
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
     }
     

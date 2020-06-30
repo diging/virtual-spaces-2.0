@@ -445,8 +445,6 @@ $(document).ready(function() {
         	selectedChoice.push($(this).attr("id"));
           });
         // ------------- creating choice content blocks ------------
-        console.log("Selected Choices in Submit");
-        console.log(selectedChoice);
         if ($('.showAllChoices').is(':checked')) {
             showsAll = true;
         }
@@ -793,9 +791,16 @@ $(window).on('load', function () {
 		</c:if>
         <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
             <div id="${contents.id}" class="card card-body row" style="margin: 10px;">
+            <c:if test="${contents.showsAll eq true}">
+                <c:forEach items="${choices}" var="choice">
+                    <a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+                </c:forEach>
+            </c:if>
+            <c:if test="${contents.showsAll eq false}">
                 <c:forEach items="${contents.choices}" var="choice">
                     <a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
                 </c:forEach>
+            </c:if>
             </div>
         </c:if>
 	</c:forEach>
