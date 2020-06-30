@@ -3,11 +3,9 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 <!doctype html>
 <html lang="en">
-
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -52,6 +50,14 @@
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
+              <sec:authorize access="hasAnyRole('ADMIN', 'STAFF')">
+              	<li class="nav-link alert alert-warning" 
+              	  style="text-align: center;<c:if test ='${exhibition.mode == "ACTIVE"}'>display: none;</c:if>">
+              		<span data-feather="alert-triangle"></span>
+              		<c:if test="${exhibition.mode == 'MAINTENANCE'}">Exhibition under maintenance</c:if>
+              		<c:if test="${exhibition.mode == 'OFFLINE'}">Exhibition is offline</c:if>
+              	</li>
+              </sec:authorize>      
               <li class="nav-item">
                 <a class="nav-link ${currentPage == " home" ? "active" : "" }"
                   href="<c:url value="/staff/dashboard" />">
