@@ -19,9 +19,9 @@ $( document ).ready(function() {
 		
 		var link;
 		if ("${link.type}" == "ALERT") {
-			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
+			link = $('<div class="alert alert-primary spaceLink-${link.link.id}" role="alert" data-link-id="${link.link.id}"><p class="slabel-${link.link.id}">${link.link.name}</p></div>');
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+           link = $('<img id="${link.image.id} class="spaceLink-${link.link.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
 			link = $('<span data-link-id="${link.link.id}" class="spaceLink-${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="slabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
@@ -44,7 +44,7 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}", "${link.rotation}","${link.link.targetSpace.id}","${link.positionX}","${link.positionY}","${link.id}");
+			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}", "${link.rotation}","${link.link.targetSpace.id}","${link.positionX}","${link.positionY}","${link.id}","${link.type}");
 		});
 	}
 	</c:forEach>
@@ -55,9 +55,9 @@ $( document ).ready(function() {
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		if ("${link.type}" == "ALERT") {
-			link = $('<div class="alert alert-primary" role="alert" data-link-id="${link.link.id}"><p>${link.link.name}</p></div>');
+			link = $('<div class="alert alert-primary moduleLink-${link.link.id}" role="alert" data-link-id="${link.link.id}"><p class="mlabel-${link.link.id}">${link.link.name}</p></div>');
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" class="moduleLink-${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
 			link = $('<span data-link-id="${link.link.id}" class="moduleLink-${link.link.id}"><span class="fas fa-book-open"></span></span><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
@@ -80,7 +80,7 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}","${link.id}");
+			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}","${link.id}", "${link.type}");
 		});
 	}
 	</c:forEach> 	
@@ -91,7 +91,7 @@ $( document ).ready(function() {
         var posY = $("#bgImage").position().top;
         var link ;
         if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-            link = $('<img id="${link.image.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+            link = $('<img id="${link.image.id}" class="externalLink-${link.externalLink.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         }  else {
             link = $('<span data-link-id="${link.externalLink.id}" class="externalLink-${link.externalLink.id}"><span class="fa fa-globe"></span></span><p class="elabel-${link.externalLink.id}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
         }
@@ -112,7 +112,7 @@ $( document ).ready(function() {
         
         $('[data-link-id="${link.externalLink.id}"]').css('cursor', 'pointer');
         $('[data-link-id="${link.externalLink.id}"]').click(function(e) {
-            makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}","${link.externalLink.externalLink}","${link.positionX}","${link.positionY}","${link.id}");
+            makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}","${link.externalLink.externalLink}","${link.positionX}","${link.positionY}","${link.id}","${link.type}");
         });
 	}
 	</c:forEach> 
@@ -675,7 +675,6 @@ $( document ).ready(function() {
 		moduleLink["x"]=storeX;
 		moduleLink["y"]=storeY;
 		$('.moduleLink-'+selectedModuleLinkId).css({ 'transform': 'rotate(' + moduleLink["rotation"] + 'deg)'});
-		$('.mlabel-'+selectedModuleLinkId).css({ 'transform': 'rotate(' + moduleLink["rotation"] + 'deg)'});
 		$('.mlabel-'+selectedModuleLinkId).text(moduleLink["moduleLinkLabel"]);
 		$('.moduleLink-'+selectedModuleLinkId).css({ 'left': moduleLink["x"] + posX});
 		$('.moduleLink-'+selectedModuleLinkId).css({ 'top': moduleLink["y"] + posY});
@@ -690,7 +689,6 @@ $( document ).ready(function() {
 		spaceLink["x"]=storeX;
 		spaceLink["y"]=storeY;
 		$('.spaceLink-'+selectedSpaceLinkId).css({ 'transform': 'rotate(' + spaceLink["rotation"] + 'deg)'});
-		$('.slabel-'+selectedSpaceLinkId).css({ 'transform': 'rotate(' + spaceLink["rotation"] + 'deg)'});
 		$('.slabel-'+selectedSpaceLinkId).text(spaceLink["spaceLinkLabel"]);
 		$('.spaceLink-'+selectedSpaceLinkId).css({ 'left': spaceLink["x"] + posX});
 		$('.spaceLink-'+selectedSpaceLinkId).css({ 'top': spaceLink["y"] + posY});
@@ -883,7 +881,7 @@ $( document ).ready(function() {
 		info["rotation"] = $("#moduleLinkRotationEdit").val();
 		info["linkedModule"] = $("#moduleLinkIdEdit").val();
 		info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
-		/* info["type"] = $("#typeEdit").val(); */
+		info["type"] = $("#typeEdit").val();
 		return info;
 	}
 	
@@ -894,7 +892,7 @@ $( document ).ready(function() {
 		info["rotation"] = $("#spaceLinkRotationEdit").val();
 		info["linkedSpace"] = $("#spaceLinkIdEdit").val();
 		info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
-		/* info["type"] = $("#typeSpaceEdit").val(); */
+		info["type"] = $("#typeSpaceEdit").val();
 		return info;
 	}
 	
@@ -902,14 +900,14 @@ $( document ).ready(function() {
 		var info = {};
 		info["x"] = storeX;
 		info["y"] = storeY;
-		/* info["type"] = $("#extType").val(); */
+		info["type"] = $("#extTypeEdit").val();
 		info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
 		info["externalLinkURL"] = $("#externalLinkURLEdit").val();
 	    return info;
 	}
 	
 	
-	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId) {
+	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
 		$("#spaceLinkInfoLabel").text(spaceLinkName);
         $("#spaceLinkId").val(spaceLinkId);
         selectedSpaceLinkId=spaceLinkId;
@@ -922,6 +920,8 @@ $( document ).ready(function() {
 		$("#spaceLinkId").val(spaceLinkId);
 		$("#spaceLinkIdValueEdit").val(spaceLinkId);
 		$("#spaceLinkRotationEdit").val(rotation);
+		
+		$('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
 		$('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
         resetHighlighting(); 
         
@@ -948,7 +948,7 @@ $( document ).ready(function() {
         $("#editSpaceLinkInfo").show();
 	}
 	
-	function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId) {
+	function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
 	    selectedModuleLinkId=moduleLinkId;
 	    storeX=posXEdit;
 		storeY=posYEdit;
@@ -959,6 +959,7 @@ $( document ).ready(function() {
 		$("#moduleLinkId").val(moduleLinkId);
 		$("#moduleLinkIdValueEdit").val(moduleLinkId);
 		$("#moduleLinkRotationEdit").val(rotation);
+		$('#typeEdit option[value="'+linkType+'"]').attr("selected", "selected");
 		$('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
 		resetHighlighting();     
 		$('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
@@ -981,7 +982,7 @@ $( document ).ready(function() {
         $("#editModuleLinkInfo").show();
 	}
 	
-	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId) {
+	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
 	    selectedExternalLinkId=linkId;
 	    storeX=posXEdit;
 		storeY=posYEdit;
@@ -992,6 +993,7 @@ $( document ).ready(function() {
 		$("#externalLinkLabelEdit").val(linkName);
 		$("#externalLinkIdValueEdit").val(linkId);
 		$("#externalLinkURLEdit").val(externalLinkURL);
+		$('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
         resetHighlighting();
               
         $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
@@ -1444,7 +1446,7 @@ $( document ).ready(function() {
             </div>
         </div>
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-sm-4">
                 <label><small>Type:</small> </label>
             </div>
@@ -1456,7 +1458,7 @@ $( document ).ready(function() {
                     <option value="ALERT">Alert</option>
                 </select>
             </div>
-        </div> -->
+        </div>
 
         <div class="row">
             <div class="col-sm-5" style="padding-right: 0px;">
@@ -1472,15 +1474,15 @@ $( document ).ready(function() {
             </div>
         </div>
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-sm-3" style="padding-right: 0px;">
                 <label><small>Image:</small> </label>
             </div>
             <div class="col-sm-9">
                 <input type="file" class="form-control-xs" type="text"
-                    name="spaceLinkImage" id="spaceLinkImage"><br>
+                    name="spaceLinkImage" id="spaceLinkImageEdit"><br>
             </div>
-        </div> -->
+        </div>
 
         <button id="editSpaceLinkBtn" type="reset"
             class="btn btn-primary btn-xs">Edit Space</button>
@@ -1555,17 +1557,17 @@ $( document ).ready(function() {
                     id="moduleLinkLabelEdit"><br>
             </div>
         </div>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-sm-4">
                 <label><small>Type:</small> </label>
             </div>
             <div class="col-sm-8">
                 <select id="typeEdit" name="type"
                     class="form-control-xs modulelink-targetEdit">
-                    <option selected value="MODULE">Module</option>
+                    <option value="MODULE">Module</option>
                 </select>
             </div>
-        </div> -->
+        </div>
         <div class="row">
             <div class="col-sm-5" style="padding-right: 0px;">
                 <label><small>Linked Modules:</small> </label>
@@ -1656,20 +1658,19 @@ $( document ).ready(function() {
             </div>
         </div>
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-sm-4">
                 <label><small>Type:</small> </label>
             </div>
             <div class="col-sm-8">
-                <select id="extType" name="type"
+                <select id="extTypeEdit" name="type"
                     class="form-control-xs externallink-targetEdit">
-                    <option selected value="">Choose...</option>
                     <option value="IMAGE">Image</option>
                     <option value="ARROW">Link</option>
                 </select>
             </div>
-        </div> -->
-
+        </div>
+        
         <div class="row">
             <div class="col-sm-3" style="padding-right: 0px;">
                 <label><small>Image:</small> </label>

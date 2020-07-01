@@ -191,7 +191,7 @@ public class LinkManager implements ILinkManager {
         moduleLinkDisplayRepo.deleteByLink(link);
         moduleLinkRepo.delete((ModuleLink) link);
     }
-    
+
     @Override
     public void deleteExternalLink(String linkId) {
         Optional<ExternalLink> linkOptional = externalLinkRepo.findById(linkId);
@@ -245,7 +245,7 @@ public class LinkManager implements ILinkManager {
     @Override
     public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
             String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename)
-            throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+                    throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceManager.getSpace(source.getId());
         if (source == null) {
@@ -286,7 +286,7 @@ public class LinkManager implements ILinkManager {
     @Override
     public IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY,
             int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType)
-            throws SpaceDoesNotExistException {
+                    throws SpaceDoesNotExistException {
 
         source = spaceManager.getSpace(source.getId());
         if (source == null) {
@@ -307,82 +307,83 @@ public class LinkManager implements ILinkManager {
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
         return display;
     }
-    
+
     @Override
     public IModuleLinkDisplay editModuleLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId)
-            throws SpaceDoesNotExistException, LinkDoesNotExistsException{
-        
+            int rotation, String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId,
+            DisplayType displayType)
+                    throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
+
         spaceValidation(id);
-        
+
         Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
         Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
-        
+
         linksValidation(linkOptional, moduleLinkOptional);
-        
+
         IModuleLink link = linkOptional.get();
         IModuleLinkDisplay display = moduleLinkOptional.get();
-        
+
         link.setName(title);
         IModule module = moduleManager.getModule(linkedModuleId);
         link.setModule(module);
-        
-        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation);
-        
+
+        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation,displayType,null,null);
+
         moduleLinkRepo.save((ModuleLink) link);
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
-        
+
         return display;
     }
-    
+
     @Override
     public ISpaceLinkDisplay editSpaceLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException {
- 
+            int rotation, String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId, DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, LinkDoesNotExistsException {
+
         spaceValidation(id);
-        
+
         Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkIdValueEdit);
         Optional<SpaceLinkDisplay> spaceLinkOptional = spaceLinkDisplayRepo.findById(spaceLinkDisplayId);
-        
+
         linksValidation(linkOptional, spaceLinkOptional);
-        
+
         ISpaceLink link = linkOptional.get();
         ISpaceLinkDisplay display = spaceLinkOptional.get();
-        
+
         link.setName(title);
         ISpace space = spaceManager.getSpace(linkedSpaceId);
         link.setTargetSpace(space);
-        
-        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation);
-        
+
+        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation, displayType, linkImage, imageFilename);
+
         spaceLinkRepo.save((SpaceLink) link);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) display);
-        
+
         return display;
     }
-    
+
     @Override
     public IExternalLinkDisplay editExternalLink(String title, String id, float positionX, float positionY,
-            String externalLink, String externalLinkIdValueEdit, String externalLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException{
-        
+            String externalLink, String externalLinkIdValueEdit, String externalLinkDisplayId, DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
+
         spaceValidation(id);
-        
+
         Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkIdValueEdit);
         Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
-        
+
         linksValidation(linkOptional, externalLinkOptional);
-        
+
         IExternalLink link = linkOptional.get();
         IExternalLinkDisplay display = externalLinkOptional.get();
-        
+
         link.setName(title);
         link.setExternalLink(externalLink);
-        
-        populateDisplay((ILinkDisplay)display,positionX,positionY,0);
-        
+
+        populateDisplay((ILinkDisplay)display,positionX,positionY,0, displayType, linkImage, imageFilename);
+
         externalLinkRepo.save((ExternalLink) link);
         externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
-        
+
         return display;
     }
 
@@ -390,28 +391,44 @@ public class LinkManager implements ILinkManager {
     public List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId) {
         return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
     }
-    
+
     private void spaceValidation(String id) throws SpaceDoesNotExistException{
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
     }
-    
+
     private void linksValidation(Optional linkOptional,
             Optional dislpayLinkOptional) throws LinkDoesNotExistsException {
         if(!linkOptional.isPresent()) {
             throw new LinkDoesNotExistsException("Link Does Not Exists");
         }
-        
+
         if(!dislpayLinkOptional.isPresent()) {
             throw new LinkDoesNotExistsException("Link Does Not Exists");
         }
     }
-    
-    private void populateDisplay(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation) {
+
+    private void populateDisplay(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);
+        linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
+        if (linkImage != null && linkImage.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(linkImage);
+            IVSImage image = imageFactory.createImage(imageFilename, contentType);
+            image = imageRepo.save((VSImage) image);
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
+            } catch (FileStorageException e) {
+                throw new ImageCouldNotBeStoredException(e);
+            }
+            image.setParentPath(relativePath);
+            imageRepo.save((VSImage) image);
+            linkDisplay.setImage(image);
+        }
     }
 }

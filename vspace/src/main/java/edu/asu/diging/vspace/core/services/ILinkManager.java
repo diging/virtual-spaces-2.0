@@ -24,20 +24,20 @@ public interface ILinkManager {
             String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
     void deleteSpaceLink(String linkId);
-    
+
     void deleteModuleLink(String linkId);
-    
+
     IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
-    
+
     IModuleLinkDisplay editModuleLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
-    
+            String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId, DisplayType displayType) throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, LinkDoesNotExistsException;
+
     ISpaceLinkDisplay editSpaceLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
-    
+            int rotation, String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId, DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, LinkDoesNotExistsException;
+
     IExternalLinkDisplay editExternalLink(String title, String id, float positionX, float positionY,
-            String externalLink, String externalLinkIdValueEdit, String externalLinkDisplayId ) throws SpaceDoesNotExistException, LinkDoesNotExistsException;
+            String externalLink, String externalLinkIdValueEdit, String externalLinkDisplayId, DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, LinkDoesNotExistsException;
 
     List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
 

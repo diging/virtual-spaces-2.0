@@ -26,7 +26,7 @@ public class EditSpaceLinks {
         }
         return null;
     }
-    
+
     public ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
