@@ -22,12 +22,9 @@ public class ChoiceBlockFactory implements IChoiceBlockFactory {
         IChoiceBlock choiceBlock = new ChoiceBlock();
         choiceBlock.setSlide(slide);
         choiceBlock.setContentOrder(contentOrder);
+        choiceBlock.setShowsAll(showsAll);
         if(showsAll) {
-            choiceBlock.setShowsAll(showsAll);
-        }
-        else {
             choiceBlock.setChoices(choices);
-            choiceBlock.setShowsAll(showsAll);
         }
         return choiceBlock;
     }

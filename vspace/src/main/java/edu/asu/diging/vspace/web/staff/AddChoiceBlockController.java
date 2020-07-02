@@ -3,7 +3,6 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
-import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.impl.SlideManager;
 
 @Controller
 public class AddChoiceBlockController {
@@ -27,7 +27,7 @@ public class AddChoiceBlockController {
     private IContentBlockManager contentBlockManager;
 
     @Autowired
-    private ChoiceRepository choiceRepo;
+    private ISlideManager slideManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choice/content", method = RequestMethod.POST)
     public ResponseEntity<IChoiceBlock> addChoiceBlock(@PathVariable("id") String slideId,
@@ -36,8 +36,8 @@ public class AddChoiceBlockController {
         List<IChoice> choices = new ArrayList<IChoice>();
         if(!showsAll) {
             for(String choiceID : selectedChoice) {
-                Optional<Choice> choice = choiceRepo.findById(choiceID);
-                choices.add(choice.get());
+                IChoice choice = slideManager.getChoice(choiceID);
+                choices.add(choice);
             }
         }
         IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, choices, contentOrder, showsAll);
