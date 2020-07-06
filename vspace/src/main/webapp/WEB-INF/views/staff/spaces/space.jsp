@@ -134,8 +134,6 @@ $( document ).ready(function() {
 	// store where a user clicked on an image
 	var storeX;
 	var storeY;
-	/* var storeXEdit;
-	var storeYEdit; */
 	var selectedModuleLinkId;
 	var selectedSpaceLinkId;
 	var selectedExternalLinkId;
@@ -906,7 +904,6 @@ $( document ).ready(function() {
 	    return info;
 	}
 	
-	
 	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
 		$("#spaceLinkInfoLabel").text(spaceLinkName);
         $("#spaceLinkId").val(spaceLinkId);
@@ -920,12 +917,9 @@ $( document ).ready(function() {
 		$("#spaceLinkId").val(spaceLinkId);
 		$("#spaceLinkIdValueEdit").val(spaceLinkId);
 		$("#spaceLinkRotationEdit").val(rotation);
-		
 		$('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
 		$('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
         resetHighlighting(); 
-        
-        
         $('[data-link-id="' + spaceLinkId + '"]').css("color", "#c1bb88");
         $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
         $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");

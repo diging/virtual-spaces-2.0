@@ -19,7 +19,7 @@ import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
-public class EditModuleLinkController extends EditSpaceLinks{
+public class EditModuleLinkController extends EditSpaceLinksController{
 
     @Autowired
     private ISpaceManager spaceManager;

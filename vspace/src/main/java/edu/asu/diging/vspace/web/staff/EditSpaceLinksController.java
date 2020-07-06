@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
-public class EditSpaceLinks {
+public class EditSpaceLinksController {
 
     public ResponseEntity<String> checkIfSpaceExists(ISpaceManager spaceManager, String id, String x, String y) throws IOException{
         ISpace source = spaceManager.getSpace(id);
