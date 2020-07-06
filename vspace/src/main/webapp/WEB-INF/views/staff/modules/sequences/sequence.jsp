@@ -3,8 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<link href="<c:url value="/resources/multiselect/css/multiselect.css" />" rel="stylesheet">
-<script src="<c:url value="/resources/multiselect/js/multiselect.min.js" />" ></script>
+<link
+	href="<c:url value="/resources/multiselect/css/multiselect.css" />"
+	rel="stylesheet">
+<link href="<c:url value="/resources/extra/Sequence.css" />"
+	rel="stylesheet">
+<script
+	src="<c:url value="/resources/multiselect/js/multiselect.min.js" />"></script>
 
 <ol class="breadcrumb">
 	<li class="breadcrumb-item"><a
@@ -166,6 +171,14 @@ $(document).ready(function() {
             processData : false,
             data: formData,
             enctype: 'multipart/form-data',
+            beforeSend: function(){
+            	$(".blur").css("filter","blur(3px)");
+            	$("#spinner").show();
+            },
+            complete: function(){
+            	$("#spinner").hide();
+            	$(".blur").css("filter","none");
+            },
             success: function(data) {
                 // replace text box with new description
                 $("#submitTitle").hide()
@@ -198,30 +211,33 @@ $(document).ready(function() {
     });
    // ------- Edit/Save Sequence Title ends --------
 });
-
 </script>
 
 <!-- title -->
-<div class="row align-items-center">
-	<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;"
-		data-value="${sequence.name}">Sequence: ${sequence.name}</h2>
-	<a id="editTitle" class="btn" href="#"
-		style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
-	<button id="submitTitle" type="button" class="btn btn-primary"
-		style="float: left; margin-right: 1%;">Save</button>
-	<button id="cancelEditTitle" type="button" class="btn btn-primary"
-		style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
-</div>
-<div class="alert alert-light" role="alert">
-	Created on <span class="date">${sequence.creationDate}</span> by
-	${sequence.createdBy}.<br> Modified on <span class="date">${sequence.modificationDate}</span>
-	by ${sequence.modifiedBy}.
+<div class ="blur">
+	<div class="row align-items-center">
+		<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;"
+			data-value="${sequence.name}">Sequence: ${sequence.name}</h2>
+		<a id="editTitle" class="btn" href="#"
+			style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
+		<button id="submitTitle" type="button" class="btn btn-primary"
+			style="float: left; margin-right: 1%;">Save</button>
+		<button id="cancelEditTitle" type="button" class="btn btn-primary"
+			style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
+	</div>
+	<div class="alert alert-light" role="alert">
+		Created on <span class="date">${sequence.creationDate}</span> by
+		${sequence.createdBy}.<br> Modified on <span class="date">${sequence.modificationDate}</span>
+		by ${sequence.modifiedBy}.
+	</div>
 </div>
 
-
+<div id="spinner" class="loaderAjax">
+	<span class="loadericon" data-feather="loader" height="56px" width="56px"></span>
+</div>
 
 <!-- description -->
-<div style="margin-left: .1%;" class="row align-items-center">
+<div style="margin-left: .1%;" class="blur row align-items-center">
 	<h4 style="margin-bottom: 0px;">Description:</h4>
 	<a id="editDescription" class="btn" href="#"
 		style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
@@ -240,7 +256,7 @@ $(document).ready(function() {
 <c:url
 	value="/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides"
 	var="postUrl" />
-<div id="slideSpace">
+<div id="slideSpace" class="blur">
 	<form:form method="POST" action="${postUrl}?"
 		modelAttribute="sequenceForm">
 		<div class="form-group row">

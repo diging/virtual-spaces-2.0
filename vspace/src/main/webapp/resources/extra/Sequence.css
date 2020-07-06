@@ -1,0 +1,13 @@
+.loaderAjax {
+  display: none;
+  background-color: rgb(255,255,255);
+  position: fixed;
+  z-index: 99999;
+  left: 50%;
+  top: 50%;
+}
+
+.loadericon {
+	width: 45px;
+	height: 45px;
+}
