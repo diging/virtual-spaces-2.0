@@ -4,28 +4,31 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.BranchingPointRepository;
+import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
+import edu.asu.diging.vspace.core.model.IBranchingPoint;
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.display.SlideType;
+import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
-import edu.asu.diging.vspace.core.data.BranchingPointRepository;
-import edu.asu.diging.vspace.core.data.ChoiceRepository;
-import edu.asu.diging.vspace.core.model.IBranchingPoint;
-import edu.asu.diging.vspace.core.model.IChoice;
-import edu.asu.diging.vspace.core.model.display.SlideType;
-import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
-import edu.asu.diging.vspace.core.model.impl.Choice;
 
 
 @Service
@@ -40,12 +43,14 @@ public class SlideManager implements ISlideManager {
     @Autowired
     private SequenceRepository sequenceRepo;
 
-
     @Autowired
     private BranchingPointRepository bpointRepo;
 
     @Autowired
     private ChoiceRepository choiceRepo;
+
+    @Autowired
+    private ChoiceFactory choiceFactory;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -62,8 +67,36 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public void updateBranchingPoint(IBranchingPoint branchingPoint) {       
+    public void updateBranchingPoint(IBranchingPoint branchingPoint, List<String> editedChoices) {
+        List<String> existingChoiceSequences = new ArrayList<String>(); 
+        List<IChoice> existingChoices=branchingPoint.getChoices();
+        for(IChoice choice : existingChoices) {
+            existingChoiceSequences.add(choice.getSequence().getId());
+        }
+        List<String> deletedChoices = (List<String>) CollectionUtils.subtract(existingChoiceSequences, editedChoices);
+        List<String> addedChoices = (List<String>) CollectionUtils.subtract(editedChoices,existingChoiceSequences);
+
+        if(addedChoices.size()>0) {
+            List<IChoice> choices = choiceFactory.createChoices(addedChoices);
+            for(IChoice choice : choices) {
+                existingChoices.add(choice);
+            }
+        }
+        List<IChoice> choicestoDelete = new ArrayList<IChoice>();
+        if(deletedChoices.size()>0) {
+            choicestoDelete = existingChoices.stream().filter(choice -> deletedChoices.contains(choice.getSequence().getId())).collect(Collectors.toList());
+            for(String choice : deletedChoices) {
+                existingChoices.removeIf(choices -> choices.getSequence().getId().equals(choice));
+            }
+        }
+        branchingPoint.setChoices(existingChoices);
         bpointRepo.save((BranchingPoint) branchingPoint);
+
+        if(choicestoDelete.size()>0) {
+            for(IChoice choice:choicestoDelete) {
+                choiceRepo.deleteById(choice.getId());
+            }
+        }
     }
 
     @Override

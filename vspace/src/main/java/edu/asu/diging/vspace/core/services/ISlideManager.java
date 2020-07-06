@@ -21,7 +21,7 @@ public interface ISlideManager {
 
     IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type);
 
-    void updateBranchingPoint(IBranchingPoint branchingPoint);
+    void updateBranchingPoint(IBranchingPoint branchingPoint, List<String> editedChoices);
 
     IChoice getChoice(String choiceId);
 

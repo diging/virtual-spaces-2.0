@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,8 +24,9 @@ public class ChoiceBlockFactory implements IChoiceBlockFactory {
         choiceBlock.setSlide(slide);
         choiceBlock.setContentOrder(contentOrder);
         choiceBlock.setShowsAll(showsAll);
+        List<IChoice> choicesList = new ArrayList<IChoice>(choices);
         if(showsAll) {
-            choiceBlock.setChoices(choices);
+            choiceBlock.setChoices(choicesList);
         }
         return choiceBlock;
     }

@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.impl.SlideManager;
 
 @Controller
 public class AddChoiceBlockController {
@@ -32,10 +30,10 @@ public class AddChoiceBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choice/content", method = RequestMethod.POST)
     public ResponseEntity<IChoiceBlock> addChoiceBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId,
-            @RequestParam("contentOrder") Integer contentOrder, @RequestParam("selectedChoices") List<String> selectedChoice, @RequestParam("showsAll") boolean showsAll) throws IOException {
+            @RequestParam("contentOrder") Integer contentOrder, @RequestParam("selectedChoices") List<String> selectedChoices, @RequestParam("showsAll") boolean showsAll) throws IOException {
         List<IChoice> choices = new ArrayList<IChoice>();
         if(!showsAll) {
-            for(String choiceID : selectedChoice) {
+            for(String choiceID : selectedChoices) {
                 IChoice choice = slideManager.getChoice(choiceID);
                 choices.add(choice);
             }

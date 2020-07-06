@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
-import edu.asu.diging.vspace.core.model.IChoice;
-import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
@@ -64,11 +62,8 @@ public class EditSlideController {
         slideForm.setDescription(slide.getDescription());
         if(slide instanceof BranchingPoint) {
             slideForm.setType(SlideType.BRANCHING_POINT.toString());
-            IBranchingPoint branchingPoint = (IBranchingPoint) slide;
-            List<String> choices = new ArrayList<String>();
-            for(IChoice choice : branchingPoint.getChoices()) {
-                choices.add(choice.getSequence().getId());
-            }
+            IBranchingPoint branchingPoint = (IBranchingPoint) slide;           
+            List<String> choices = branchingPoint.getChoices().stream().map(choice -> choice.getSequence().getId()).collect(Collectors.toList());
             slideForm.setChoices(choices);
             model.addAttribute("choices", choices);
         }
@@ -89,20 +84,8 @@ public class EditSlideController {
         slide.setDescription(slideForm.getDescription());
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
         if(type.equals(SlideType.BRANCHING_POINT)) {
-            List<ISequence> choiceSequences = new ArrayList<ISequence>(); 
-            List<IChoice> existingChoices=((IBranchingPoint)slide).getChoices();
-            for(IChoice choice : existingChoices) {
-                choiceSequences.add(choice.getSequence());
-            }
-            List<IChoice> choices = choiceFactory.createChoices(slideForm.getChoices());
-            for(IChoice choice : choices) {
-                if(!choiceSequences.contains(choice.getSequence())) {
-                    existingChoices.add(choice);
-                }
-            }
-            IBranchingPoint branchingPoint = (IBranchingPoint) slide;
-            branchingPoint.setChoices(existingChoices);
-            slideManager.updateBranchingPoint(branchingPoint);
+            List<String> editedChoices = slideForm.getChoices();
+            slideManager.updateBranchingPoint((IBranchingPoint)slide, editedChoices);
         } else {
             slideManager.updateSlide((Slide)slide);
         }
