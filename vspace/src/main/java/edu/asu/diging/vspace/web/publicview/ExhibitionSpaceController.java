@@ -10,8 +10,10 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
+import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -27,7 +29,13 @@ public class ExhibitionSpaceController {
     private IExhibitionManager exhibitManager;
 
     @Autowired
-    private ILinkManager linkManager;
+    private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private ISpaceLinkManager spaceLinkManager;
+    
+    @Autowired
+    private IExternalLinkManager externalLinkManager;
 
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
@@ -39,10 +47,10 @@ public class ExhibitionSpaceController {
             IExhibition exhibition = exhibitManager.getStartExhibition();
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
-            model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
-            model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
+            model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
+            model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
-            model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id));  
+            model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
         }
         else {
             model.addAttribute("showAlert", true);

@@ -15,7 +15,7 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -25,7 +25,7 @@ public class EditModuleLinkController extends EditSpaceLinksController{
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ILinkManager linkManager;
+    private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -41,8 +41,8 @@ public class EditModuleLinkController extends EditSpaceLinksController{
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
-        display = linkManager.editModuleLink(title, id, new Float(x), new Float(y),
-                new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type);
+        display = moduleLinkManager.editLink(title, id, new Float(x), new Float(y),
+                new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type, null, null);
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null);
     }
 

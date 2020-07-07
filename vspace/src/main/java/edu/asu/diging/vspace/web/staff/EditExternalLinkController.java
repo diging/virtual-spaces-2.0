@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -26,7 +26,7 @@ public class EditExternalLinkController extends EditSpaceLinksController{
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ILinkManager linkManager;
+    private IExternalLinkManager externalLinkManager;
 
     @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -47,7 +47,7 @@ public class EditExternalLinkController extends EditSpaceLinksController{
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
 
-        IExternalLinkDisplay display = linkManager.editExternalLink(title, id, new Float(x), new Float(y), externalLink, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename);        
+        IExternalLinkDisplay display = externalLinkManager.editLink(title, id, new Float(x), new Float(y), 0, externalLink, title, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename);        
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink());
 
     }

@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
+import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -25,15 +27,21 @@ public class SpaceController {
     private ISpaceDisplayManager spaceDisplayManager;
 
     @Autowired
-    private ILinkManager linkManager;
+    private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private ISpaceLinkManager spaceLinkManager;
+    
+    @Autowired
+    private IExternalLinkManager externalLinkManager;
 
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("space", space);
-        model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
-        model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
-        model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
+        model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
+        model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
+        model.addAttribute("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());

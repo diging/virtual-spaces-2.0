@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -26,7 +26,7 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ILinkManager linkManager;
+    private ISpaceLinkManager spaceLinkManager;
 
     @RequestMapping(value = "/staff/space/link/space/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -48,7 +48,7 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        ISpaceLinkDisplay display = linkManager.editSpaceLink(title, id, new Float(x), new Float(y),
+        ISpaceLinkDisplay display = spaceLinkManager.editLink(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId, type, linkImage, filename);
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), null);
     }
