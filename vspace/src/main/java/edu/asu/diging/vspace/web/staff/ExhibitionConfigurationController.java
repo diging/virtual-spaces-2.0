@@ -98,8 +98,8 @@ public class ExhibitionConfigurationController {
         String exhibitionStartSpace = 
                 ((exhibitManager.getStartExhibition() == null) || (exhibitManager.getStartExhibition().getStartSpace() == null)) ?
                         null : exhibitManager.getStartExhibition().getStartSpace().getId();
-       JsonObject jsonObj = new JsonObject();
-       jsonObj.addProperty("startSpace", exhibitionStartSpace);
-       return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("startSpace", exhibitionStartSpace);
+        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
 }

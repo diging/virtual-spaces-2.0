@@ -2,9 +2,6 @@ package edu.asu.diging.vspace.core.exception;
 
 public class SpaceLinkDoesNotExistException extends Exception {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public SpaceLinkDoesNotExistException() {
