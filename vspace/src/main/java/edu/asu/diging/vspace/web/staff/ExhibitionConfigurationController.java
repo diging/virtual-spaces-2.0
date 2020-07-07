@@ -1,13 +1,13 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.google.gson.JsonObject;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
@@ -89,5 +91,15 @@ public class ExhibitionConfigurationController {
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    @RequestMapping(value = "/staff/exhibit/start", method = RequestMethod.GET)
+    public ResponseEntity<String> startSpace() {
+        String exhibitionStartSpace = 
+                ((exhibitManager.getStartExhibition() == null) || (exhibitManager.getStartExhibition().getStartSpace() == null)) ?
+                        null : exhibitManager.getStartExhibition().getStartSpace().getId();
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("startSpace", exhibitionStartSpace);
+        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
 }
