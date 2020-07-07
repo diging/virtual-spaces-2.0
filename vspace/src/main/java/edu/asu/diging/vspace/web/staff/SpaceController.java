@@ -28,10 +28,10 @@ public class SpaceController {
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
-    
+
     @Autowired
     private ISpaceLinkManager spaceLinkManager;
-    
+
     @Autowired
     private IExternalLinkManager externalLinkManager;
 

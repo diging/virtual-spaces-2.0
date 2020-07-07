@@ -27,7 +27,7 @@ public class AddModuleLinkController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private IModuleLinkManager moduleLinkManager;
 
@@ -36,13 +36,13 @@ public class AddModuleLinkController {
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
             @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
             @RequestParam("type") String displayType)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+
         if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

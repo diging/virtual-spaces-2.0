@@ -28,7 +28,7 @@ public class AddExternalLinkController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private IExternalLinkManager externalLinkManager;
 
@@ -36,13 +36,13 @@ public class AddExternalLinkController {
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title, @RequestParam("url") String externalLink,
             @RequestParam("type") String displayType, @RequestParam("externalLinkImage") MultipartFile file)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
-        
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -50,7 +50,7 @@ public class AddExternalLinkController {
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        
+
         IExternalLinkDisplay display = externalLinkManager.createLink(title, space, new Float(x), new Float(y), 0, externalLink, title, type, linkImage, filename);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
