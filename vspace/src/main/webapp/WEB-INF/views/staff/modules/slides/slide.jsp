@@ -4,6 +4,31 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <script>
 //# sourceURL=click.js
+
+/*function Bold() {
+    /* var txtarea = document.getElementById('textBlockText');
+    console.log(txtarea);
+    var start = txtarea.selectionStart;
+    var finish = txtarea.selectionEnd;
+    var str = txtarea.value.substring(start, finish);
+    console.log(str);
+    var result = str.bold(); 
+    
+    var highlight = window.getSelection();  
+    console.log(highlight);
+    var span = '<span class="bold">' + highlight + '</span>';
+    var text = $('.textBlockText').html();
+    console.log(text);
+    $('.textBlockText').html(text.replace(highlight, span));
+    
+    //document.execCommand('bold');
+}
+*/
+
+function Italic() {
+    var str = document.getElementById('textBlockText').value();
+    var result = str.italic();
+}
 var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
@@ -151,6 +176,36 @@ function uploadImage() {
 } 
     
 $(document).ready(function() { 
+    
+    $('#makeBold').click(function(){
+        //var highlight = window.getSelection(); 
+        
+        var txtarea = document.getElementById('textBlockText');
+    	console.log(txtarea);
+    	var start = txtarea.selectionStart;
+    	var finish = txtarea.selectionEnd;
+    	var str = txtarea.value.substring(start, finish);
+    	console.log(str);
+        //console.log(highlight);
+        var span = '<span class="bold">' + str + '</span>';
+        //var text = $('#textBlockText').html();
+        //console.log(text);
+        $('#textBlockText').html(txtarea.toString().replace(str, span));
+    });
+    
+   /*  $('#addTextAlert').on('shown.bs.modal', function () {
+        $('#textBlockText').focus();
+        $('#makeBold').click( function () {
+          //alert($('#textareaID').val());
+          var highlight = window.getSelection(); 
+          console.log(highlight);
+          var span = '<span class="bold">' + highlight + '</span>';
+          var text = $('#textBlockText').html();
+          console.log(text);
+          $('#textBlockText').html(text.replace(highlight, span));
+        });
+      }) */
+    
     //-------- edit contentblock description --------
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
@@ -618,6 +673,10 @@ $(window).on('load', function () {
 				<div class="modal-footer">
 					<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
 					<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
+                    <button type="button" id="makeBold" class="btn btn-primary">Bold</button>
+                    <button type="button" id="makeItalic" class="btn btn-primary">Italic</button>
+                    <!-- <input type="button" id="makeBold" class="btn btn-primary" value="Bold"> 
+                    <input type="button" id="makeItalic" class="btn btn-primary" value="Italic"> -->
 				</div>
 			</form>
 		</div>
