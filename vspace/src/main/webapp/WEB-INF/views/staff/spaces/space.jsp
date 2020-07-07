@@ -755,13 +755,7 @@ $( document ).ready(function() {
 <h1>
 	Space: ${space.name} <small style="margin-left: 10px;"> <a
 		href="<c:url value="/staff/space/${space.id}/edit" />"><span
-			data-feather="edit"></span></a> <%-- <a href="javascript:checkSlideInSequence('${space.id}')" class="checkSlideInSequence" data-record-id="${space.id}"
-		data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>"
-		data-call-on-success="<c:url value="/staff/space/list"/>"
-		data-call-on-error="<c:url value="/staff/space/list"/>"
-		data-toggle="modal" data-target="#confirm-delete"
-		data-warning="${isSpaceLinkPresent? 'Warning! Other spaces have links to this space! Do you still want to delete?' : ''}"><span
-			data-feather="trash-2"></span></a> --%></small>
+			data-feather="edit"></span></a></small>
 </h1>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}. 
@@ -1063,9 +1057,7 @@ ${space.description}
 <button type="button" id="deleteSpace" class="btn btn-primary btn-sm">Delete Space</button>
 
 </nav>
-
 <p></p>
-
 <div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
     aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1109,7 +1101,27 @@ ${space.description}
 
 <c:if test="${not empty space.image}">
 	<div id="space">
-		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
+		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" align="left" HSpace ="10"/>
 	</div>
 </c:if>
+<div>
+<c:if test="${not empty linksOnThisSpace}">
+<p>Spaces Links on this Space:</p>
+<ul>
+<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
+<li>${spaceLinks.targetSpace.name}</li>
+</c:forEach>
+</ul>
+</c:if>
+</div>
+<div>
+<c:if test="${not empty linksToThisSpace}">
+<p>Spaces Links to this Space:</p>
+<ul>
+<c:forEach items="${linksToThisSpace}" var="spaceLinks">
+<li>${spaceLinks.sourceSpace.name}</li>
+</c:forEach>
+</ul>
+</c:if>
+</div>
 
