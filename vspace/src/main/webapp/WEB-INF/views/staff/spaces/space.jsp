@@ -16,7 +16,7 @@ $(function(){
 
 
 $( document ).ready(function() {
-	readyDoc($("#deleteSpace"), $('#confirm-space-delete'));
+	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
   });    
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
