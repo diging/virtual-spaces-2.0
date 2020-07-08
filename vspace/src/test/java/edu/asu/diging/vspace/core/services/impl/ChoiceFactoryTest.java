@@ -50,7 +50,6 @@ public class ChoiceFactoryTest {
         List<IChoice> actualChoices = choiceFactoryToTest.createChoices(sequenceIds);
         int i = 0;
         for(IChoice actualChoice : actualChoices) {
-            Assert.assertEquals(newSequences.get(i), actualChoice.getSequence());
             Assert.assertEquals(newSequences.get(i).getId(), actualChoice.getSequence().getId());
             i++;
         }

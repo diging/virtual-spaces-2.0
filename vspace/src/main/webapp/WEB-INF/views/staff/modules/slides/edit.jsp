@@ -92,5 +92,5 @@ $(window).on("load", function() {
 	
 	<button class="btn btn-primary btn-sm" type="submit" value="submit">Save
 		Slide</button>
-	<a href="<c:url value="/staff/space/${moduleId}/slide/${slideId}" />" class="btn btn-light btn-sm">Cancel</a>
+	<a href="<c:url value="/staff/module/${moduleId}/slide/${slideId}" />" class="btn btn-light btn-sm">Cancel</a>
 </form:form>

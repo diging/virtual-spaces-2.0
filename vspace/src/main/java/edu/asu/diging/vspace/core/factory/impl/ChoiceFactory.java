@@ -27,7 +27,6 @@ public class ChoiceFactory implements IChoiceFactory {
     @Override
     public List<IChoice> createChoices(List<String> sequenceIds) {
         List<ISequence> sequences=sequenceIds.stream().map(sequenceId->sequenceManager.getSequence(sequenceId)).collect(Collectors.toList());
-        List<IChoice> choices=sequences.stream().map(sequence -> new Choice(sequence)).collect(Collectors.toList());
-        return choices;        
+        return sequences.stream().map(sequence -> new Choice(sequence)).collect(Collectors.toList());        
     }
 }

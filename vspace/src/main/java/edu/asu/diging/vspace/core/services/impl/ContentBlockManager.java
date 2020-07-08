@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
@@ -235,8 +236,17 @@ public class ContentBlockManager implements IContentBlockManager {
      * lang.String, java.lang.String, java.lang.Integer)
      */
     @Override
-    public IChoiceBlock createChoiceBlock(String slideId, List<IChoice> choices, Integer contentOrder, boolean showsAll) {
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
+    public IChoiceBlock createChoiceBlock(IBranchingPoint branchingPoint, List<String> selectedChoices, boolean showsAll) {
+        //List<IChoice> choices = branchingPoint.getChoices();
+        List<IChoice> choices = new ArrayList<IChoice>();
+        if(!showsAll) {
+            for(String choiceID : selectedChoices) {
+                IChoice choice = slideManager.getChoice(choiceID);
+                choices.add(choice);
+            }
+        }
+        int contentOrder=branchingPoint.getContents().size()+1;
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(branchingPoint.getId()), contentOrder, choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
     }
     
