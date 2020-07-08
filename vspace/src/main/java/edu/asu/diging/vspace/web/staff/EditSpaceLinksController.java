@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 public class EditSpaceLinksController {
 
-    public ResponseEntity<String> checkIfSpaceExists(ISpaceManager spaceManager, String id, String x, String y) throws IOException{
+    protected ResponseEntity<String> checkIfSpaceExists(ISpaceManager spaceManager, String id, String x, String y) throws IOException{
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
@@ -27,7 +27,7 @@ public class EditSpaceLinksController {
         return null;
     }
 
-    public ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url) throws IOException{
+    protected ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", id);
