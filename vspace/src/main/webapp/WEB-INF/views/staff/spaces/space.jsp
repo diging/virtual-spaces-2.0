@@ -1098,30 +1098,26 @@ ${space.description}
     </div>
 </div>
 
-
+<p>
 <c:if test="${not empty space.image}">
-	<div id="space">
-		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" align="left" HSpace ="10"/>
+	<div id="space" style ="float: left">
+		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />"/>
 	</div>
 </c:if>
-<div>
 <c:if test="${not empty linksOnThisSpace}">
-<p>Spaces Links on this Space:</p>
-<ul>
+<h5 style ="overflow: hidden; padding-left: 0.5em">Space links on this space:</h5>
+<ul style ="overflow: hidden;">
 <c:forEach items="${linksOnThisSpace}" var="spaceLinks">
-<li>${spaceLinks.targetSpace.name}</li>
+<li><h6>${spaceLinks.targetSpace.name}</h6></li>
 </c:forEach>
 </ul>
 </c:if>
-</div>
-<div>
 <c:if test="${not empty linksToThisSpace}">
-<p>Spaces Links to this Space:</p>
-<ul>
+<h5 style ="overflow: hidden; padding-left: 0.5em">Space links to this space:</h5>
+<ul style ="overflow: hidden;">
 <c:forEach items="${linksToThisSpace}" var="spaceLinks">
-<li>${spaceLinks.sourceSpace.name}</li>
+<li><h6>${spaceLinks.sourceSpace.name}</h6></li>
 </c:forEach>
 </ul>
 </c:if>
-</div>
-
+</p>
