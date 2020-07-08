@@ -188,6 +188,27 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
     }
+    
+    /**
+     * Delete a choices block using an id
+     * 
+     * @param id - id of resource to be deleted. If the id is null then the
+     *           functions returns nothing.
+     *
+     */
+
+    @Override
+    public void deleteChoiceBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
+        try {
+            choiceBlockRepo.deleteById(id);         
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
 
     public void updateTextBlock(TextBlock textBlock) {
         textBlockRepo.save((TextBlock) textBlock);

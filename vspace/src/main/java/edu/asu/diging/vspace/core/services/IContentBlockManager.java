@@ -24,6 +24,8 @@ public interface IContentBlockManager {
     void deleteTextBlockById(String blockid) throws BlockDoesNotExistException;
 
     void deleteImageBlockById(String blockid) throws BlockDoesNotExistException;
+    
+    void deleteChoiceBlockById(String blockid) throws BlockDoesNotExistException;
 
     void updateTextBlock(TextBlock textBlock);
 
