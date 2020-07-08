@@ -233,8 +233,6 @@ $(document).ready(function() {
 </div>
 
 <div id="spinner" class="loaderAjax">
-	<!-- <span class="loadericon" data-feather="loader" height="56px" width="56px"></span>
-	 -->
 	 <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
 </div>
 
