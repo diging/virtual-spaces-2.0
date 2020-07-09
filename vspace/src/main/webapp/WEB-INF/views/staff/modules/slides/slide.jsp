@@ -670,7 +670,7 @@ $(window).on('load', function () {
          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a id="addText" class="dropdown-item" href="#">Add Text</a>
             <a id="addImage" class="dropdown-item" href="#">Add Image</a>          
-            <a id="addChoice" class="dropdown-item" href="#" style="display:none;">Add Choices</a>    
+            <a id="addChoice" class="dropdown-item" href="#" style="display:none;">Add Choices (Links to other sequences)</a>    
         </div>
         <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
     </div>

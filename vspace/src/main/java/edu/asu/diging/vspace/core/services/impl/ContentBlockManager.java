@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -259,10 +260,7 @@ public class ContentBlockManager implements IContentBlockManager {
     public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll) {
         List<IChoice> choices = new ArrayList<IChoice>();
         if(!showsAll) {
-            for(String choiceID : selectedChoices) {
-                IChoice choice = slideManager.getChoice(choiceID);
-                choices.add(choice);
-            }
+            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice)).collect(Collectors.toList());
         }
         IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock)choiceBlock);

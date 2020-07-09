@@ -67,20 +67,17 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public void updateBranchingPoint(IBranchingPoint branchingPoint, List<String> editedChoices) {
+    public void updateBranchingPoint(IBranchingPoint branchingPoint, List<String> editedChoiceSequenceIds) {
         List<IChoice> existingChoices=branchingPoint.getChoices();
-        List<String> existingChoiceSequences=existingChoices.stream().map(choiceSequence -> choiceSequence.getSequence().getId()).collect(Collectors.toList());
-        List<String> deletedChoices = (List<String>) CollectionUtils.subtract(existingChoiceSequences, editedChoices);
-        List<String> addedChoices = (List<String>) CollectionUtils.subtract(editedChoices,existingChoiceSequences);
-        List<IChoice> newlyAddedChoices = choiceFactory.createChoices(addedChoices);
+        List<String> existingChoiceSequenceIds=existingChoices.stream().map(choiceSequence -> choiceSequence.getSequence().getId()).collect(Collectors.toList());
+        List<String> deletedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(existingChoiceSequenceIds, editedChoiceSequenceIds);
+        List<String> addedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(editedChoiceSequenceIds,existingChoiceSequenceIds);
+        List<IChoice> newlyAddedChoices = choiceFactory.createChoices(addedChoiceSequenceIds);
         for(IChoice addedChoice : newlyAddedChoices) {
             existingChoices.add(addedChoice);
         }
-        List<IChoice> choicesToDelete = new ArrayList<IChoice>();
-        choicesToDelete = existingChoices.stream().filter(choice -> deletedChoices.contains(choice.getSequence().getId())).collect(Collectors.toList());
-        for(String deletedChoice : deletedChoices) {
-            existingChoices.removeIf(choice -> choice.getSequence().getId().equals(deletedChoice));
-        }
+        List<IChoice> choicesToDelete = existingChoices.stream().filter(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId())).collect(Collectors.toList());
+        existingChoices.removeIf(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId()));
         branchingPoint.setChoices(existingChoices);
         bpointRepo.save((BranchingPoint) branchingPoint);
         for(IChoice choice:choicesToDelete) {
