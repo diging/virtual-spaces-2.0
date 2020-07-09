@@ -516,9 +516,22 @@ $(document).ready(function() {
             enctype: 'multipart/form-data',
             success: function(choiceBlock) {
                 var choiceblock = $('<div id="'+ choiceBlock.id +'" class="card card-body row" style="margin: 10px;">');
+                if (choiceBlock.showsAll == false){
                 $.each(choiceBlock.choices, function(index, choice) {
-                    choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+choice.sequence.name+'</a></div>');
+                    choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+choice.sequence.name+'</a>');
             	});
+                }else{
+                	$(function() {
+                        var links = $("#choiceSpace a").map(function(e) {
+                            text = '<a href='+this.href+'>'+this.name+'</a>';
+                            return text;
+                        }).get();
+                        $(links).each(function(index, choice) {
+                            choiceblock.append(choice);
+                        });
+                   });
+                }
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ choiceBlock.id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
                     'margin': "10px"
                 });
@@ -644,7 +657,7 @@ $(window).on('load', function () {
 <div id="choiceSpace" style="margin-left: .1%;display:none;" class="row align-items-center">
 	<h5 style="margin-bottom: 0px;">Choices: </h5>
 	<c:forEach items="${choices}" var="choice">
-		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />" name="${choice.sequence.name}">${choice.sequence.name}</a>
 	</c:forEach>
 </div>
 

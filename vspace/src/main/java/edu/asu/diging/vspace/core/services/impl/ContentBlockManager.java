@@ -23,7 +23,6 @@ import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
@@ -41,10 +40,10 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 @Transactional
 @Service
 public class ContentBlockManager implements IContentBlockManager {
-    
+
     @Autowired
     private ISlideManager slideManager;
-    
+
     @Autowired
     private IImageFactory imageFactory;
 
@@ -53,7 +52,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private IImageBlockFactory imageBlockFactory;
-    
+
     @Autowired
     private IChoiceBlockFactory choiceBlockFactory;
 
@@ -83,7 +82,7 @@ public class ContentBlockManager implements IContentBlockManager {
         ISlide slide = slideManager.getSlide(slideId);
         return slide.getContents();
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -188,7 +187,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
     }
-    
+
     /**
      * Delete a choices block using an id
      * 
@@ -240,7 +239,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-    
+
     @Override
     public IChoiceBlock getChoiceBlock(String choiceBlockId) {
         Optional<ChoiceBlock> choiceBlock = choiceBlockRepo.findById(choiceBlockId);
@@ -249,7 +248,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -257,8 +256,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * lang.String, java.lang.String, java.lang.Integer)
      */
     @Override
-    public IChoiceBlock createChoiceBlock(IBranchingPoint branchingPoint, List<String> selectedChoices, boolean showsAll) {
-        //List<IChoice> choices = branchingPoint.getChoices();
+    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll) {
         List<IChoice> choices = new ArrayList<IChoice>();
         if(!showsAll) {
             for(String choiceID : selectedChoices) {
@@ -266,9 +264,8 @@ public class ContentBlockManager implements IContentBlockManager {
                 choices.add(choice);
             }
         }
-        int contentOrder=branchingPoint.getContents().size()+1;
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(branchingPoint.getId()), contentOrder, choices, showsAll);
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
     }
-    
+
 }
