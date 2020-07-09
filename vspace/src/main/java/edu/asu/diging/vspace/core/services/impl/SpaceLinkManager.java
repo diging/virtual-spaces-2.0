@@ -62,10 +62,10 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     private IStorageEngine storage;
 
     @Override
-    public ISpaceLinkDisplay createLink(String title, ISpace source, float positionX, float positionY, int rotation,
+    public ISpaceLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedSpaceId, String spaceLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-        source = spaceManager.getSpace(source.getId());
+        ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
@@ -111,7 +111,7 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     }
 
     @Override
-    public ISpaceLinkDisplay editLink(String title, String id, float positionX, float positionY, int rotation,
+    public ISpaceLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedSpaceId, String spaceLinkLabel, String spaceLinkIdValueEdit, String spaceLinkDisplayId, DisplayType displayType,
             byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {

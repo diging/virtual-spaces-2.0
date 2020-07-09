@@ -62,10 +62,10 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     private IStorageEngine storage;
 
     @Override
-    public IExternalLinkDisplay createLink(String title, ISpace source, float positionX, float positionY, int rotation,
+    public IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
             String externalLink, String externalLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-        source = spaceManager.getSpace(source.getId());
+        ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
@@ -107,7 +107,7 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     }
 
     @Override
-    public IExternalLinkDisplay editLink(String title, String id, float positionX, float positionY, int rotation,
+    public IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
             String externalLink, String externalLinkLabel, String externalLinkIdValueEdit, String externalLinkDisplayId, DisplayType displayType,
             byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {

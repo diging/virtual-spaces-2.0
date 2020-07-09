@@ -34,14 +34,14 @@ public abstract class LinkManager{
     @Autowired
     private IStorageEngine storage;
 
-    public abstract ILinkDisplay createLink(String title, ISpace source, float positionX, float positionY,
+    public abstract ILinkDisplay createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkinkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename)
                     throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
     public abstract List getLinkDisplays(String spaceId);
 
-    public abstract ILinkDisplay editLink(String title, String id, float positionX, float positionY,
+    public abstract ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
 

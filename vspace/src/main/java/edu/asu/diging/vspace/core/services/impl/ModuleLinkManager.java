@@ -51,10 +51,10 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public IModuleLinkDisplay createLink(String title, ISpace source, float positionX, float positionY, int rotation,
+    public IModuleLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-        source = spaceManager.getSpace(source.getId());
+        ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
@@ -80,7 +80,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    public IModuleLinkDisplay editLink(String title, String id, float positionX, float positionY, int rotation,
+    public IModuleLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId, DisplayType displayType,
             byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
