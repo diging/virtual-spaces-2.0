@@ -215,33 +215,35 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void deleteSpaceById(String id) {
-        List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-        List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        // When space has other links attached to it
-        // To delete links that access to the space getting deleted and replacing it as null
-        for(SpaceLink sp : fromSpaceLinks) {
-            sp.setTargetSpace(null);
-            spaceLinkRepo.save(sp);
+        if(id != null) {
+            List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
+            List<SpaceLink> linksFromOtherSpaces = spaceLinkRepo.getLinkedFromSpaces(id);
+            Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+            // When space has other links attached to it
+            // To delete links that access to the space getting deleted and replacing it as null
+            for(SpaceLink sp : linksFromOtherSpaces) {
+                sp.setTargetSpace(null);
+                spaceLinkRepo.save(sp);
+            }
+            // To delete the links on the space getting deleted
+            for(SpaceLink sp : spaceLinks) {
+                spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
+            }
+            spaceLinkRepo.deleteBySourceSpaceId(id);
+            // If the space is startSpace, we delete the space from the exhibition first.
+            if(exhibition != null && exhibition.getStartSpace() != null
+                    && exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
+                exhibition.setStartSpace(null);
+                exhibitRepo.save(exhibition);
+            }
+            // When space has no other links attached to it
+            spaceDisplayRepo.deleteBySpaceId(id);
+            spaceRepo.deleteById(id);
         }
-        // To delete the links on the space getting deleted
-        for(SpaceLink sp : spaceLinks) {
-            spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
-        }
-        spaceLinkRepo.deleteBySourceSpaceId(id);
-        // If the space is startSpace, we delete the space from the exhibition first.
-        if(exhibition != null && exhibition.getStartSpace() != null
-                && exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
-            exhibition.setStartSpace(null);
-            exhibitRepo.save(exhibition);
-        }
-        // When space has no other links attached to it
-        spaceDisplayRepo.deleteBySpaceId(id);
-        spaceRepo.deleteById(id);
     }
 
     @Override
-    public List<SpaceLink> linksFromSpace(String id) {
+    public List<SpaceLink> getLinkedSpace(String id) {
 
         return spaceLinkRepo.getLinkedSpaces(id);
     }

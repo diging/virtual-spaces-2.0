@@ -92,14 +92,4 @@ public class ExhibitionConfigurationController {
         attributes.addAttribute("showAlert", "true");
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
-    
-    @RequestMapping(value = "/staff/exhibit/start", method = RequestMethod.GET)
-    public ResponseEntity<String> startSpace() {
-        String exhibitionStartSpace = 
-                ((exhibitManager.getStartExhibition() == null) || (exhibitManager.getStartExhibition().getStartSpace() == null)) ?
-                        null : exhibitManager.getStartExhibition().getStartSpace().getId();
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("startSpace", exhibitionStartSpace);
-        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
-    }
 }

@@ -35,6 +35,7 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -86,6 +87,7 @@ public class SpaceManagerTest {
     private final String IMG_CONTENT_TYPE = "content/type";
     private String spaceId = "spaceId";
     private String spaceId1, spaceId2;
+    private SpaceLink spaceLink;
 
     @Before
     public void setUp() {
@@ -128,8 +130,8 @@ public class SpaceManagerTest {
     @Test
     public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException{
         managerToTest.deleteSpaceById(null);
-        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(null);
-        Mockito.verify(spaceRepo).deleteById(null);
+        Mockito.verify(spaceDisplayRepo, Mockito.never()).deleteBySpaceId(null);
+        Mockito.verify(spaceRepo, Mockito.never()).deleteById(null);
     }
 
     @Test
@@ -142,6 +144,17 @@ public class SpaceManagerTest {
     @Test
     public void test_deleteSpaceById_forSuccess() {  
         managerToTest.deleteSpaceById(spaceId1);
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
+        Mockito.verify(spaceRepo).deleteById(spaceId1);
+    }
+    
+    @Test
+    public void test_deleteSpaceById_whenSpaceHasLinks() {  
+        spaceLink = new SpaceLink();
+        spaceLink.setId(spaceId2);
+        Mockito.when(spaceLinkRepo.getLinkedSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
+        managerToTest.deleteSpaceById(spaceId1);
+        Mockito.verify(spaceLinkDisplayRepo).deleteBySpaceLinkId(spaceId2);
         Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
         Mockito.verify(spaceRepo).deleteById(spaceId1);
     }
