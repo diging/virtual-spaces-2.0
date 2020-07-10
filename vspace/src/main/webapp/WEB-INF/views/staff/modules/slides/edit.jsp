@@ -11,15 +11,12 @@ $(window).on("load", function() {
     var choices = [];
     var selectedchoices = ${choices};
     var selectedType =  $('select[id="type"]');
-    console.log(selectedType.val());
-    console.log(selectedchoices);
     if (selectedType.val() == "BRANCHING_POINT"){
             $('#sequences').show();
             $('#selectSequence').multiSelect({                  
                 dblClick : true,
                 afterInit : function(container) {
                     $("#selectSequence").find("option").each(function() {
-                        console.log($(this).val());
                         vals.push($(this).val());
                     });
                     $(".ms-selection ul").find("li").each(function(index) {
@@ -44,7 +41,6 @@ $(window).on("load", function() {
                 }
             });
             $(selectedchoices).each(function() {
-                console.log($(this).val());
                 $('#selectSequence').multiSelect('select', $(this).val());
             });
             

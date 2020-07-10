@@ -73,16 +73,12 @@ public class SlideManager implements ISlideManager {
         List<String> deletedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(existingChoiceSequenceIds, editedChoiceSequenceIds);
         List<String> addedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(editedChoiceSequenceIds,existingChoiceSequenceIds);
         List<IChoice> newlyAddedChoices = choiceFactory.createChoices(addedChoiceSequenceIds);
-        for(IChoice addedChoice : newlyAddedChoices) {
-            existingChoices.add(addedChoice);
-        }
+        existingChoices.addAll(newlyAddedChoices);
         List<IChoice> choicesToDelete = existingChoices.stream().filter(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId())).collect(Collectors.toList());
         existingChoices.removeIf(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId()));
         branchingPoint.setChoices(existingChoices);
         bpointRepo.save((BranchingPoint) branchingPoint);
-        for(IChoice choice:choicesToDelete) {
-            choiceRepo.deleteById(choice.getId());
-        }
+        choiceRepo.deleteAll((Iterable<? extends Choice>) choicesToDelete);
     }
 
     @Override
