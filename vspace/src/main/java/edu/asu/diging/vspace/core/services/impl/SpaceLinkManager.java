@@ -21,9 +21,11 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
@@ -32,6 +34,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+
 
 @Transactional
 @Service
@@ -151,6 +154,31 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
         spaceLinkDisplayRepo.deleteByLink(link);
         spaceLinkRepo.delete((SpaceLink) link);
 
+    }
+
+    @Override
+    protected ILinkDisplay setProperties(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ILink createLinkObject(String title, String id, IVSpaceElement target) {
+        // TODO Auto-generated method stub
+        ISpace source = spaceManager.getSpace(id);
+        ISpaceLink link = spaceLinkFactory.createSpaceLink(title, source);
+//        link.setTarget(target);
+//        link.setName(spaceLinkLabel);
+        spaceLinkRepo.save((SpaceLink) link);
+        return (ILink) link;
+    }
+
+    @Override
+    protected IVSpaceElement getTarget(String linkedSpaceId) {
+        // TODO Auto-generated method stub
+        ISpace target = spaceManager.getSpace(linkedSpaceId);
+        return target;
     }
 
 }

@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.LinkManager;
 
 @Controller
 public class AddModuleLinkController {

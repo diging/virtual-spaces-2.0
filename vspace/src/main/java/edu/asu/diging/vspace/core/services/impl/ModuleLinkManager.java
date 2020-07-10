@@ -16,9 +16,11 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
+import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
@@ -54,7 +56,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     public IModuleLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedModuleId, String moduleLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
                     throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-        ISpace source = spaceManager.getSpace(id);
+        /*ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
@@ -71,12 +73,15 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
         display.setType(displayType != null ? displayType : DisplayType.MODULE);
 
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
-        return display;
+        return display;*/
+        
+        return (IModuleLinkDisplay) createLinkTemplate(title, id, positionX, positionY, rotation, linkedModuleId, moduleLinkLabel, displayType, linkImage, imageFilename);
     }
 
     @Override
     public List<ModuleLinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
+        //return getLinkDisplaysTemplate(spaceId);
     }
 
     @Override
@@ -105,6 +110,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
 
         return display;
+        //return (IModuleLinkDisplay) updateLinkTemplate(title, id, positionX, positionY, rotation, linkedModuleId, moduleLinkLabel, linkId, moduleLinkDisplayId, displayType, linkImage, imageFilename);
     }
 
     @Override
@@ -120,6 +126,33 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
         moduleLinkDisplayRepo.deleteByLink(link);
         moduleLinkRepo.delete((ModuleLink) link);
 
+    }
+
+    @Override
+    protected IModule getTarget(String linkedModuleId) {
+        IModule target = moduleManager.getModule(linkedModuleId);
+        return target;
+    }
+
+    @Override
+    protected ILink createLinkObject(String title, String id, IVSpaceElement target) {
+        ISpace source = spaceManager.getSpace(id);
+        IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
+        link.setModule((IModule) target);
+        moduleLinkRepo.save((ModuleLink) link);
+        return link;
+    }
+
+    @Override
+    protected ILinkDisplay setProperties(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType) {
+        ILinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay((IModuleLink)link);
+        display.setPositionX(positionX);
+        display.setPositionY(positionY);
+        display.setRotation(rotation);
+;        display.setType(displayType != null ? displayType : DisplayType.MODULE);
+        moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
+        return display;
     }
 
 }

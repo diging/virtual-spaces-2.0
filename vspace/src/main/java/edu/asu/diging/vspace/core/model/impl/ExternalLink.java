@@ -11,6 +11,7 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 @Entity
 public class ExternalLink extends VSpaceElement implements IExternalLink {
@@ -74,5 +75,15 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     @Override
     public void setExternalLink(String externalLink) {
         this.externalLink = externalLink;
+    }
+
+    @Override
+    public ExternalLinkValue getTarget() {
+        return new ExternalLinkValue(this.externalLink);
+    }
+
+    @Override
+    public void setTarget(ExternalLinkValue target) {
+        this.externalLink = target.getValue();
     }
 }

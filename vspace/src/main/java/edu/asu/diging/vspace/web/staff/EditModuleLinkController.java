@@ -26,6 +26,7 @@ public class EditModuleLinkController extends EditSpaceLinksController{
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
+    
 
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,

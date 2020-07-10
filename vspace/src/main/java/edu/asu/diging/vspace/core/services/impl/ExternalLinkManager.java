@@ -22,8 +22,10 @@ import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
@@ -145,6 +147,25 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
         externalLinkDisplayRepo.deleteByExternalLink(link);
         externalLinkRepo.delete((ExternalLink) link);
 
+    }
+
+    @Override
+    protected ILinkDisplay setProperties(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected ILink createLinkObject(String title, String id, IVSpaceElement target) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected IVSpaceElement getTarget(String linkedId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

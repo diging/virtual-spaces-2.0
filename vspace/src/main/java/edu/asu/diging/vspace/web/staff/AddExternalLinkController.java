@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.LinkManager;
 
 @Controller
 public class AddExternalLinkController {
