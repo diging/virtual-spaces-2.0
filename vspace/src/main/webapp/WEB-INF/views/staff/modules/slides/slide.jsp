@@ -257,19 +257,6 @@ $(document).ready(function() {
         $("#title").text("Silde: " + getTitleText);
    });
    
-   $('.showAllChoices').click(function(event) {
-       if(this.checked) {
-           $(':checkbox').each(function() {
-               this.checked = true;
-           });    
-       } 
-       else {
-           $(':checkbox').each(function() {
-               this.checked = false;
-           });
-       }
-       
-   });
     $("#addText").click(function() {
         $("#addTextAlert").show();
     });
@@ -542,7 +529,7 @@ $(document).ready(function() {
                 $('.error').append(alert);
             }
         });
-        $('input:checkbox').removeAttr('checked');
+        $('#choiceForm')[0].reset();
     });
 
     $("#addImgAlert").draggable();
@@ -837,7 +824,7 @@ $(window).on('load', function () {
                 enctype="multipart/form-data" method="post">
                 <div id = "choiceDiv" class="modal-body">  
                     <input class="showAllChoices" id=showAll type="checkbox" name="showAll" value="showAll" />
-                    <label for="showAll">Select All</label><br/>
+                    <label for="showAll">Always show all choices</label><br/>
                     <div id = "selectChoices">
                     <c:forEach items="${choices}" var="choice">
                         
