@@ -92,7 +92,6 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
 
     @Override
     protected ILink getLink(String spaceLinkIdValueEdit) throws LinkDoesNotExistsException {
-        // TODO Auto-generated method stub
         Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkIdValueEdit);
         linksValidation(linkOptional);
         ISpaceLink link = linkOptional.get();

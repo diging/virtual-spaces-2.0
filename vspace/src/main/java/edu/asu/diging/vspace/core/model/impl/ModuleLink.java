@@ -70,15 +70,17 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.model.impl.IModuleLink#setModule(edu.asu.diging.vspace.core.model.IModule)
 	 */
-	@Override
+    @Override
 	public void setModule(IModule module) {
-	    this.module = module;
+        this.module = module;
 	}
-	@Override
+    
+    @Override
 	public IVSpaceElement getTarget() {
-	    return this.module;
+        return this.module;
 	}
-	@Override
+    
+    @Override
 	public void setTarget(IModule target) {
 	    this.module = target;
 	}
