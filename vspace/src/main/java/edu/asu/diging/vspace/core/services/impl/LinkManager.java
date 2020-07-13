@@ -36,7 +36,7 @@ public abstract class LinkManager implements ILinkManager{
     @Autowired
     private IStorageEngine storage;
 
-    public ILinkDisplay createLinkTemplate(String title, String id, float positionX, float positionY,
+    public ILinkDisplay createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException{
 
@@ -48,7 +48,7 @@ public abstract class LinkManager implements ILinkManager{
 
     }
 
-    public ILinkDisplay updateLinkTemplate(String title, String id, float positionX, float positionY,
+    public ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
 

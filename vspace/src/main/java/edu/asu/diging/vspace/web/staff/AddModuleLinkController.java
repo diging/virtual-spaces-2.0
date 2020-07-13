@@ -54,7 +54,7 @@ public class AddModuleLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
         try {
-            display = (IModuleLinkDisplay) moduleLinkManager.createLinkTemplate(title, id, new Float(x), new Float(y),
+            display = (IModuleLinkDisplay) moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedModuleId, moduleLinkLabel, type, null, null);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();

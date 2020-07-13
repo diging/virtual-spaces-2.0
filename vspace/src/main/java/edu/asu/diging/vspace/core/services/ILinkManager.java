@@ -10,11 +10,11 @@ import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
 public interface ILinkManager {
 
-    ILinkDisplay createLinkTemplate(String title, String id, float positionX, float positionY,
+    ILinkDisplay createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
-    ILinkDisplay updateLinkTemplate(String title, String id, float positionX, float positionY,
+    ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
     
