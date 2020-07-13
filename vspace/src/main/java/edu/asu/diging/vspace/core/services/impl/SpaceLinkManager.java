@@ -46,7 +46,7 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Override
-    public List<SpaceLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<ILinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
     }
 

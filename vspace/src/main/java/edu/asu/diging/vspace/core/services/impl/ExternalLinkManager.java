@@ -46,7 +46,7 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
     @Override
-    public List<ExternalLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<ILinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId));
     }
 

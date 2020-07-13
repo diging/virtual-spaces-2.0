@@ -50,7 +50,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public List<ModuleLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<ILinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
     }
 
