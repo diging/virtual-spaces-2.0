@@ -5,9 +5,9 @@ public class ExternalLinkValue extends VSpaceElement {
     private String value;
 
     public ExternalLinkValue() {
-        
+
     }
-    
+
     public ExternalLinkValue(String value) {
         this.value=value;
     }
@@ -22,14 +22,12 @@ public class ExternalLinkValue extends VSpaceElement {
 
     @Override
     public String getId() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void setId(String id) {
-        // TODO Auto-generated method stub
-        
+
     }
-    
+
 }

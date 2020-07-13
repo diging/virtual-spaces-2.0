@@ -6,32 +6,23 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
-import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.exception.FileStorageException;
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
-import edu.asu.diging.vspace.core.factory.IImageFactory;
-import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
-import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -54,84 +45,9 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     @Autowired
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
-    @Autowired
-    private IImageFactory imageFactory;
-
-    @Autowired
-    private ImageRepository imageRepo;
-
-    @Autowired
-    private IStorageEngine storage;
-
-    @Override
-    public IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
-            String externalLink, String externalLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
-                    throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-        ISpace source = spaceManager.getSpace(id);
-        if (source == null) {
-            throw new SpaceDoesNotExistException();
-        }
-        IExternalLink link = externalLinkFactory.createExternalLink(title, source, externalLink);
-        externalLinkRepo.save((ExternalLink) link);
-
-        IExternalLinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay(link);
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
-        display.setName(title);
-        display.setType(displayType != null ? displayType : DisplayType.ARROW);
-
-        if (linkImage != null && linkImage.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(linkImage);
-
-            IVSImage image = imageFactory.createImage(imageFilename, contentType);
-            image = imageRepo.save((VSImage) image);
-
-            String relativePath = null;
-            try {
-                relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
-            } catch (FileStorageException e) {
-                throw new ImageCouldNotBeStoredException(e);
-            }
-            image.setParentPath(relativePath);
-            imageRepo.save((VSImage) image);
-
-            display.setImage(image);
-        }
-
-        externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
-        return display;
-    }
-
     @Override
     public List<ExternalLinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId));
-    }
-
-    @Override
-    public IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
-            String externalLink, String externalLinkLabel, String externalLinkIdValueEdit, String externalLinkDisplayId, DisplayType displayType,
-            byte[] linkImage, String imageFilename)
-                    throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
-        spaceValidation(id);
-
-        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkIdValueEdit);
-        Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
-
-        linksValidation(linkOptional, externalLinkOptional);
-
-        IExternalLink link = linkOptional.get();
-        IExternalLinkDisplay display = externalLinkOptional.get();
-
-        link.setName(title);
-        link.setExternalLink(externalLink);
-
-        populateDisplay((ILinkDisplay)display,positionX,positionY,0, displayType, linkImage, imageFilename);
-
-        externalLinkRepo.save((ExternalLink) link);
-        externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
-
-        return display;
     }
 
     @Override
@@ -150,22 +66,53 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     }
 
     @Override
-    protected ILinkDisplay setProperties(ILink link, float positionX, float positionY, int rotation,
-            DisplayType displayType) {
-        // TODO Auto-generated method stub
-        return null;
+    protected ILink createLinkObject(String title, String id, IVSpaceElement target, String linkLabel) {
+        ISpace source = spaceManager.getSpace(id);
+        IExternalLink link = externalLinkFactory.createExternalLink(title, source, ((ExternalLinkValue)target).getValue());
+        link.setName(linkLabel);
+        externalLinkRepo.save((ExternalLink) link);
+        return link;
     }
 
     @Override
-    protected ILink createLinkObject(String title, String id, IVSpaceElement target) {
-        // TODO Auto-generated method stub
-        return null;
+    protected IVSpaceElement getTarget(String externalLink) {
+        ExternalLinkValue value = new ExternalLinkValue(externalLink);
+        return value;
     }
 
     @Override
-    protected IVSpaceElement getTarget(String linkedId) {
-        // TODO Auto-generated method stub
-        return null;
+    protected ILinkDisplay saveLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
+        externalLinkRepo.save((ExternalLink) link);
+        externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
+        return displayLink;
+    }
+
+    @Override
+    protected void setTarget(ILink link, IVSpaceElement target) {
+        ((IExternalLink) link).setExternalLink(((ExternalLinkValue)target).getValue());
+
+    }
+
+    @Override
+    protected ILinkDisplay getDisplayLink(String externalLinkDisplayId) throws LinkDoesNotExistsException {
+        Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
+        linksValidation(externalLinkOptional);
+        IExternalLinkDisplay display = externalLinkOptional.get();
+        return display;
+    }
+
+    @Override
+    protected ILink getLink(String externalLinkIDValueEdit) throws LinkDoesNotExistsException {
+        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkIDValueEdit);
+        linksValidation(linkOptional);
+        IExternalLink link = linkOptional.get();
+        return link;
+    }
+
+    @Override
+    protected ILinkDisplay createLinkDisplay(ILink link) {
+        ILinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay((IExternalLink)link);
+        return display;
     }
 
 }

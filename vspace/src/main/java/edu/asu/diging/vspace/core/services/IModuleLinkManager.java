@@ -2,25 +2,12 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 
-public interface IModuleLinkManager {
+public interface IModuleLinkManager extends ILinkManager{
 
-    public IModuleLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
-                    throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException;
+    List<ModuleLinkDisplay> getLinkDisplays(String spaceId);
 
-    public List<ModuleLinkDisplay> getLinkDisplays(String spaceId);
+    void deleteLink(String linkId);
 
-    public void deleteLink(String linkId);
-
-    public IModuleLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId, DisplayType displayType,
-            byte[] linkImage, String imageFilename)
-                    throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
 }

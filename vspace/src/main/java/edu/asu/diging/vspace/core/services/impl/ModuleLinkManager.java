@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.model.ILink;
@@ -21,7 +19,6 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
-import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
@@ -53,64 +50,8 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public IModuleLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
-                    throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-        /*ISpace source = spaceManager.getSpace(id);
-        if (source == null) {
-            throw new SpaceDoesNotExistException();
-        }
-
-        IModule target = moduleManager.getModule(linkedModuleId);
-        IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
-        link.setModule(target);
-        moduleLinkRepo.save((ModuleLink) link);
-
-        IModuleLinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay(link);
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
-        display.setRotation(rotation);
-        display.setType(displayType != null ? displayType : DisplayType.MODULE);
-
-        moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
-        return display;*/
-        
-        return (IModuleLinkDisplay) createLinkTemplate(title, id, positionX, positionY, rotation, linkedModuleId, moduleLinkLabel, displayType, linkImage, imageFilename);
-    }
-
-    @Override
     public List<ModuleLinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
-        //return getLinkDisplaysTemplate(spaceId);
-    }
-
-    @Override
-    public IModuleLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, String linkId, String moduleLinkDisplayId, DisplayType displayType,
-            byte[] linkImage, String imageFilename)
-                    throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
-
-        spaceValidation(id);
-
-        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
-        Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
-
-        linksValidation(linkOptional, moduleLinkOptional);
-
-        IModuleLink link = linkOptional.get();
-        IModuleLinkDisplay display = moduleLinkOptional.get();
-
-        link.setName(title);
-        IModule module = moduleManager.getModule(linkedModuleId);
-        link.setModule(module);
-
-        populateDisplay((ILinkDisplay)display,positionX,positionY,rotation,displayType,null,null);
-
-        moduleLinkRepo.save((ModuleLink) link);
-        moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
-
-        return display;
-        //return (IModuleLinkDisplay) updateLinkTemplate(title, id, positionX, positionY, rotation, linkedModuleId, moduleLinkLabel, linkId, moduleLinkDisplayId, displayType, linkImage, imageFilename);
     }
 
     @Override
@@ -135,23 +76,46 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    protected ILink createLinkObject(String title, String id, IVSpaceElement target) {
+    protected ILink createLinkObject(String title, String id, IVSpaceElement target, String linkLabel) {
         ISpace source = spaceManager.getSpace(id);
         IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
         link.setModule((IModule) target);
-        moduleLinkRepo.save((ModuleLink) link);
+        link.setName(linkLabel);
         return link;
     }
 
     @Override
-    protected ILinkDisplay setProperties(ILink link, float positionX, float positionY, int rotation,
-            DisplayType displayType) {
+    protected ILinkDisplay saveLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
+        moduleLinkRepo.save((ModuleLink) link);
+        moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
+        return displayLink;
+    }
+
+    @Override
+    protected void setTarget(ILink link, IVSpaceElement target) {
+        ((IModuleLink) link).setTarget((IModule)target);
+
+    }
+
+    @Override
+    protected ILinkDisplay getDisplayLink(String moduleLinkDisplayId) throws LinkDoesNotExistsException {
+        Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        linksValidation(moduleLinkOptional);
+        IModuleLinkDisplay display = moduleLinkOptional.get();
+        return display;
+    }
+
+    @Override
+    protected ILink getLink(String moduleLinkIDValueEdit) throws LinkDoesNotExistsException {
+        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(moduleLinkIDValueEdit);
+        linksValidation(linkOptional);
+        IModuleLink link = linkOptional.get();
+        return link;
+    }
+
+    @Override
+    protected ILinkDisplay createLinkDisplay(ILink link) {
         ILinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay((IModuleLink)link);
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
-        display.setRotation(rotation);
-;        display.setType(displayType != null ? displayType : DisplayType.MODULE);
-        moduleLinkDisplayRepo.save((ModuleLinkDisplay) display);
         return display;
     }
 

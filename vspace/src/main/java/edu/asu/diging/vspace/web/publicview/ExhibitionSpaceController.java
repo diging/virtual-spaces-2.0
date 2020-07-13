@@ -30,10 +30,10 @@ public class ExhibitionSpaceController {
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
-    
+
     @Autowired
     private ISpaceLinkManager spaceLinkManager;
-    
+
     @Autowired
     private IExternalLinkManager externalLinkManager;
 

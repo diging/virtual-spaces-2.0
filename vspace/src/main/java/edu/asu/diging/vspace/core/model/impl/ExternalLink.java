@@ -11,7 +11,6 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 @Entity
 public class ExternalLink extends VSpaceElement implements IExternalLink {

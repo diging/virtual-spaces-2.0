@@ -26,7 +26,6 @@ public class EditModuleLinkController extends EditSpaceLinksController{
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
-    
 
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -42,7 +41,7 @@ public class EditModuleLinkController extends EditSpaceLinksController{
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
-        display = moduleLinkManager.updateLink(title, id, new Float(x), new Float(y),
+        display = (IModuleLinkDisplay) moduleLinkManager.updateLinkTemplate(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type, null, null);
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null);
     }

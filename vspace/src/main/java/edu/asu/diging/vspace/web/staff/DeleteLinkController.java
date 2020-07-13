@@ -14,13 +14,13 @@ import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 
 @Controller
 public class DeleteLinkController {
-    
+
     @Autowired
     private IModuleLinkManager moduleLinkManager;
-    
+
     @Autowired
     private ISpaceLinkManager spaceLinkManager;
-    
+
     @Autowired
     private IExternalLinkManager externalLinkManager;
 
@@ -29,13 +29,13 @@ public class DeleteLinkController {
         moduleLinkManager.deleteLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/staff/space/{id}/spacelink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSpaceLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
         spaceLinkManager.deleteLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/staff/space/{id}/externallink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteExternalLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
         externalLinkManager.deleteLink(linkId);
