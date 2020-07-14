@@ -2,6 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <script>
 //# sourceURL=click.js
 
@@ -24,11 +26,6 @@
     //document.execCommand('bold');
 }
 */
-
-function Italic() {
-    var str = document.getElementById('textBlockText').value();
-    var result = str.italic();
-}
 var contentCount = ${fn:length(slideContents)};
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
@@ -176,23 +173,9 @@ function uploadImage() {
 } 
     
 $(document).ready(function() { 
-    
-    $('#makeBold').click(function(){
-        //var highlight = window.getSelection(); 
-        
-        var txtarea = document.getElementById('textBlockText');
-    	console.log(txtarea);
-    	var start = txtarea.selectionStart;
-    	var finish = txtarea.selectionEnd;
-    	var str = txtarea.value.substring(start, finish);
-    	console.log(str);
-        //console.log(highlight);
-        var span = '<span class="bold">' + str + '</span>';
-        //var text = $('#textBlockText').html();
-        //console.log(text);
-        $('#textBlockText').html(txtarea.toString().replace(str, span));
-    });
-    
+	
+	var markDown;
+
    /*  $('#addTextAlert').on('shown.bs.modal', function () {
         $('#textBlockText').focus();
         $('#makeBold').click( function () {
@@ -310,6 +293,8 @@ $(document).ready(function() {
     });
     
     $("#addText").click(function() {
+    	
+    	markDown = new EasyMDE({element: $('#textBlockText')[0]});
         $("#addTextAlert").show();
       });
     
@@ -434,10 +419,11 @@ $(document).ready(function() {
         // ------------- creating text content blocks ------------
         
         var formData = new FormData();
-        var text = $("#textBlockText").val()
-        formData.append('content', $("#textBlockText").val());
+        var text = markDown.value()
+        formData.append('content', text);
         ++contentCount;
         formData.append('contentOrder', contentCount);
+        markDown.value('');
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
@@ -464,12 +450,15 @@ $(document).ready(function() {
                 	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 	$('.error').append(alert);
             	}
+            },
+            complete: function(data) {
+            	markDown.toTextArea();
+            	markDown = null;
             }
         });
-        $("#textBlockText").val('')
     });
     $("#addImgAlert").draggable();
-    $("#addTextAlert").draggable();
+    //$("#addTextAlert").draggable();
     
     // ------------- edit text block ----------------
     
@@ -673,10 +662,6 @@ $(window).on('load', function () {
 				<div class="modal-footer">
 					<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
 					<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
-                    <button type="button" id="makeBold" class="btn btn-primary">Bold</button>
-                    <button type="button" id="makeItalic" class="btn btn-primary">Italic</button>
-                    <!-- <input type="button" id="makeBold" class="btn btn-primary" value="Bold"> 
-                    <input type="button" id="makeItalic" class="btn btn-primary" value="Italic"> -->
 				</div>
 			</form>
 		</div>
