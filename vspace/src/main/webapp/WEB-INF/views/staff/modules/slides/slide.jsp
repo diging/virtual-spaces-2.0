@@ -478,10 +478,8 @@ $(document).ready(function() {
     
     $('input:checkbox').click(function() {
         if ($(this).is(':checked')) {
-            console.log("In If block");
         	$('#submitChoices').prop("disabled", false);
         } else {
-            console.log("In else block");
         if ($('.choiceOptions').filter(':checked').length < 1){
         	$('#submitChoices').attr('disabled',true);}
         }
