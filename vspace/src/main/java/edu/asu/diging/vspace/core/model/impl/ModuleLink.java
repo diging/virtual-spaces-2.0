@@ -76,7 +76,7 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
     }
 
     @Override
-    public IVSpaceElement getTarget() {
+    public IModule getTarget() {
         return this.module;
     }
 

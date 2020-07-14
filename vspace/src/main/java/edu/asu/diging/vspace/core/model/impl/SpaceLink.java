@@ -86,7 +86,7 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
         
     }
     @Override
-    public IVSpaceElement getTarget() {
+    public ISpace getTarget() {
         return targetSpace;
     }
     @Override

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
@@ -18,6 +19,7 @@ import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
@@ -76,12 +78,11 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
 
     @Override
     protected IVSpaceElement getTarget(String externalLink) {
-        ExternalLinkValue value = new ExternalLinkValue(externalLink);
-        return value;
+        return new ExternalLinkValue(externalLink);
     }
 
     @Override
-    protected ILinkDisplay saveLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
+    protected ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
         externalLinkRepo.save((ExternalLink) link);
         externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
         return displayLink;
@@ -110,9 +111,13 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     }
 
     @Override
-    protected ILinkDisplay createLinkDisplay(ILink link) {
-        ILinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay((IExternalLink)link);
-        return display;
+    protected ILinkDisplay saveDisplayLinkRepo(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
+        ILinkDisplay displayLink = externalLinkDisplayFactory.createExternalLinkDisplay((IExternalLink)link);
+        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        externalLinkRepo.save((ExternalLink) link);
+        externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
+        return displayLink;
     }
 
 }

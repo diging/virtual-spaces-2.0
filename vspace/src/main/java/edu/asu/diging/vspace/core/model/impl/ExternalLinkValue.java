@@ -4,9 +4,7 @@ public class ExternalLinkValue extends VSpaceElement {
 
     private String value;
 
-    public ExternalLinkValue() {
-
-    }
+    public ExternalLinkValue() {}
 
     public ExternalLinkValue(String value) {
         this.value=value;

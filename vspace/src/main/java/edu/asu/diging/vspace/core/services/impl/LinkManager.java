@@ -42,11 +42,11 @@ public abstract class LinkManager implements ILinkManager{
 
         IVSpaceElement target = getTarget(linkedId);
         ILink link = (ILink) createLinkObject(title, id, target, linkLabel); 
-        ILinkDisplay displayLink = createLinkDisplay(link);
-        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
-        return saveLinkAndDisplay(link, displayLink);
-
+        return saveDisplayLinkRepo(link,positionX, positionY, rotation, displayType, linkImage, imageFilename);
     }
+
+    protected abstract ILinkDisplay saveDisplayLinkRepo(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType, byte[] linkImage, String imageFilename)  throws ImageCouldNotBeStoredException;
 
     public ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
@@ -57,16 +57,17 @@ public abstract class LinkManager implements ILinkManager{
         ILink link = getLink(linkId);
         ILinkDisplay displayLink = getDisplayLink(linkDisplayId);
 
+
         IVSpaceElement target = getTarget(linkedId);
         link.setName(title);
         setTarget(link,target);
 
         setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
 
-        return saveLinkAndDisplay(link,displayLink);
+        return updateLinkAndDisplay(link,displayLink);
     }
 
-    protected abstract ILinkDisplay saveLinkAndDisplay(ILink link, ILinkDisplay displayLink);
+    protected abstract ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink);
 
     protected abstract void setTarget(ILink link, IVSpaceElement target);
 
@@ -77,8 +78,6 @@ public abstract class LinkManager implements ILinkManager{
     protected abstract ILink createLinkObject(String title, String id, IVSpaceElement target, String linkLabel);
 
     protected abstract IVSpaceElement getTarget(String linkedId);
-
-    protected abstract ILinkDisplay createLinkDisplay(ILink link);
 
     public void spaceValidation(String id) throws SpaceDoesNotExistException{
         ISpace source = spaceManager.getSpace(id);

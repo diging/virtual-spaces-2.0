@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
@@ -18,6 +19,7 @@ import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
@@ -104,16 +106,20 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     }
 
     @Override
-    protected ILinkDisplay saveLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
+    protected ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
         spaceLinkRepo.save((SpaceLink) link);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) displayLink);
         return displayLink;
     }
 
     @Override
-    protected ILinkDisplay createLinkDisplay(ILink link) {
-        ILinkDisplay display = spaceLinkDisplayFactory.createSpaceLinkDisplay((ISpaceLink)link);
-        return display;
+    protected ILinkDisplay saveDisplayLinkRepo(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
+        ILinkDisplay displayLink = spaceLinkDisplayFactory.createSpaceLinkDisplay((ISpaceLink)link);
+        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        spaceLinkRepo.save((SpaceLink) link);
+        spaceLinkDisplayRepo.save((SpaceLinkDisplay) displayLink);
+        return displayLink;
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
@@ -19,6 +20,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
@@ -85,7 +87,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    protected ILinkDisplay saveLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
+    protected ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink) {
         moduleLinkRepo.save((ModuleLink) link);
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
         return displayLink;
@@ -114,9 +116,14 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    protected ILinkDisplay createLinkDisplay(ILink link) {
-        ILinkDisplay display = moduleLinkDisplayFactory.createModuleLinkDisplay((IModuleLink)link);
-        return display;
+    protected ILinkDisplay saveDisplayLinkRepo(ILink link, float positionX, float positionY, int rotation,
+            DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
+        ILinkDisplay displayLink = moduleLinkDisplayFactory.createModuleLinkDisplay((IModuleLink)link);
+        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        moduleLinkRepo.save((ModuleLink) link);
+        moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
+        return displayLink;
+
     }
 
 }
