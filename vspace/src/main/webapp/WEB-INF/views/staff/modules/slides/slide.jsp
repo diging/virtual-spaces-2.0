@@ -475,7 +475,18 @@ $(document).ready(function() {
         });
         $("#textBlockText").val('')
     });
-   	
+    
+    $('input:checkbox').click(function() {
+        if ($(this).is(':checked')) {
+            console.log("In If block");
+        	$('#submitChoices').prop("disabled", false);
+        } else {
+            console.log("In else block");
+        if ($('.choiceOptions').filter(':checked').length < 1){
+        	$('#submitChoices').attr('disabled',true);}
+        }
+    });
+    
     $("#submitChoices").on("click", function(e) {
         e.preventDefault();
         $("#addChoiceAlert").hide();
@@ -485,7 +496,7 @@ $(document).ready(function() {
         	selectedChoice.push($(this).attr("id"));
           });
         // ------------- creating choice content blocks ------------
-        if ($('.showAllChoices').is(':checked')) {
+        if ($('#showAllChoices').is(':checked')) {
             showsAll = true;
         }
         var formData = new FormData();
@@ -815,23 +826,20 @@ $(window).on('load', function () {
             <div class="modal-header">
                 <h5 class="modal-title">Select from the Choices</h5>
                 <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"
-                >
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form name="choiceForm" id="choiceForm"
                 enctype="multipart/form-data" method="post">
-                <div id = "choiceDiv" class="modal-body">  
-                    <input class="showAllChoices" id=showAll type="checkbox" name="showAll" value="showAll" />
+                <div id = "choiceDiv" class="modal-body">
+                    <input class="choiceOptions" id="showAllChoices" type="checkbox" name="showAll" value="showAll" checked="true"/>
                     <label for="showAll">Always show all choices</label><br/>
                     <div id = "selectChoices">
-                    <c:forEach items="${choices}" var="choice">
-                        
-                        <input class="choice_options" id="${choice.id}" type="checkbox" name="${choice.sequence.name}" value="${choice.sequence.name}" />
-                        <label for="${choice.id}">${choice.sequence.name}</label><br/>
-                        
-                    </c:forEach>
+                        <c:forEach items="${choices}" var="choice">
+                            <input class="choiceOptions" id="${choice.id}" type="checkbox" name="${choice.sequence.name}" value="${choice.sequence.name}" />
+                            <label for="${choice.id}">${choice.sequence.name}</label><br/>
+                        </c:forEach>
                     </div>                   
                 </div>
                 <div class="modal-footer">
