@@ -78,7 +78,10 @@ public class SlideManager implements ISlideManager {
         existingChoices.removeIf(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId()));
         branchingPoint.setChoices(existingChoices);
         bpointRepo.save((BranchingPoint) branchingPoint);
-        //We did not use deleteAll on choiceRepo as choicesToDelete is a list of IChoice and cannot be casted into Choice and objects of other type can also implement IChoice
+        /*
+         * We did not use deleteAll on choiceRepo as choicesToDelete is a list of IChoice 
+         * and cannot be casted into Choice and objects of other type can also implement IChoice
+         */
         for(IChoice deletedChoice : choicesToDelete) {
             choiceRepo.deleteById(deletedChoice.getId());
         }
