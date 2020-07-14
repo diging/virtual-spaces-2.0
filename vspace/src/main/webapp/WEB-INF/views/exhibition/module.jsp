@@ -28,6 +28,13 @@ body {
     function closeLangNav() {
         document.getElementById("myLangSidenav").style.width = "0";
     }
+    
+    $(document).ready(function() {
+    	let data = ${currentSlideCon.contents};
+    	for(i=0; i < data.length; ++i) {
+    		document.getElementById("textBlockHolder").innerHTML += "<div id=data[i].id class='textDiv'><p>data[i].text</p></div>";
+    	}
+    })
 </script>
 <!-- <div class="container-fluid"> -->
     <div id="Module_1" class="Module_1_Class">
@@ -103,9 +110,7 @@ body {
                     </c:if>
                     <c:if
                         test="${contents['class'].simpleName ==  'TextBlock'}">
-                        <div id="${contents.id}" class="textDiv">
-                            <p>${contents.text}</p>
-                        </div>
+                        <div id="textBlockHolder"></div>
                     </c:if>
                 </c:forEach>
             </div>
