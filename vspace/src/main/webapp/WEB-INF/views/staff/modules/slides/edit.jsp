@@ -1,0 +1,92 @@
+<%@ page pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link href="<c:url value="/resources/multiselect/css/multiselect.css" />" rel="stylesheet">
+<script src="<c:url value="/resources/multiselect/js/multiselect.min.js" />" ></script>
+
+<script>
+//# sourceURL=click.js
+$(window).on("load", function() {
+    var vals = [];
+    var choices = [];
+    var selectedchoices = ${choices};
+    var selectedType =  $('select[id="type"]');
+    if (selectedType.val() == "BRANCHING_POINT"){
+            $('#sequences').show();
+            $('#selectSequence').multiSelect({                  
+                dblClick : true,
+                afterInit : function(container) {
+                    $("#selectSequence").find("option").each(function() {
+                        vals.push($(this).val());
+                    });
+                    $(".ms-selection ul").find("li").each(function(index) {
+                        $(this).attr('value', vals[index]);
+                    });
+                },
+                afterSelect : function(value) {
+                    choices = [];
+                    $('.ms-selection ul li.ms-selected').each(function(index, value) {
+                        choices.push($(this).attr('value'));                    
+                    });
+                    $("#choices").val(choices);
+                },
+                afterDeselect : function(value, text) {
+                    for (var i=choices.length-1; i>=0; i--) {
+                        if (String(choices[i]) === String(value)) {
+                            choices.splice(i, 1);
+                            break;
+                        }
+                    }
+                    $("#choices").val(choices);
+                }
+            });
+            $(selectedchoices).each(function() {
+                $('#selectSequence').multiSelect('select', $(this).val());
+            });
+            
+         } else {
+             $('#sequences').hide();
+         }
+});
+</script>
+
+<h1>Edit Slide: ${slideForm.name}</h1>
+
+<c:url value="/staff/module/${moduleId}/slide/${slideId}/edit" var="postUrl" />
+<form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}" modelAttribute="slideForm" enctype="multipart/form-data">
+
+	<div class="form-group row">
+		<label for="name" class="col-md-2 col-form-label">Slide Name:</label>
+		<form:input type="text" class="form-control col-md-10" id="name"
+			path="name" />
+	</div>
+
+     <div class="form-group row">
+     <label for="type" class="col-md-2 col-form-label">Type:</label>
+         <form:select path="type" id="type" class="form-control-xs target" style="height:50px;width:300px;" disabled="true">
+             <option  id="slide" value="SLIDE" label="Slide" <c:if test="${slideForm.type=='SLIDE'}">selected</c:if>>Slide</option>
+             <option id="branchingPoint" value="BRANCHING_POINT" label="BranchingPoint" <c:if test="${slideForm.type=='BRANCHING_POINT'}">selected</c:if>>Branching Point</option>
+         </form:select>
+         <form:input type="hidden" id="type" name="type" path="type" value="${slideForm.type}"></form:input>
+    </div>
+ 
+    <div class="form-group row" id="sequences" style="display:none;">
+    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>   
+            <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
+                 <c:forEach items="${sequences}" var="sequence">
+                    <option value='${sequence.id}' id="${sequence.id}">${sequence.name}</option>
+                 </c:forEach>
+           </select>
+    <form:input type="hidden" id="choices" path="choices"></form:input>
+    </div> 
+ 
+	<div class="form-group row">
+		<label for="description" class="col-md-2 col-form-label">Description:</label>
+		<form:textarea class="form-control col-md-10" rows="5" cols="30"
+			id="description" path="description" />
+	</div>
+	
+	<button class="btn btn-primary btn-sm" type="submit" value="submit">Save
+		Slide</button>
+	<a href="<c:url value="/staff/module/${moduleId}/slide/${slideId}" />" class="btn btn-light btn-sm">Cancel</a>
+</form:form>
