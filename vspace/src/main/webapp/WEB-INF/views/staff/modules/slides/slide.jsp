@@ -187,7 +187,7 @@ $(document).ready(function() {
 	            $("#cancelEditDescription").hide()
 	            $("#editDescription").show()
 	            var val = $("#newDescription").val();
-	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
 	            $("#newDescription").remove();
 	            $("#description").text(val)
 	        },
@@ -203,7 +203,7 @@ $(document).ready(function() {
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description)
         
