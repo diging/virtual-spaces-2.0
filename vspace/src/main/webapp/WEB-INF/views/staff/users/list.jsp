@@ -2,7 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<<script type="text/javascript">
+console.log(${exhibition});
+</script>
 <h2>Users</h2>
 <ul class="list-group">
 <c:forEach items="${users}" var="user">

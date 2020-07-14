@@ -14,6 +14,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 
@@ -23,7 +24,7 @@ public class Module extends VSpaceElement implements IModule {
     @Id
     @GeneratedValue(generator = "module_id_generator")
     @GenericGenerator(name = "module_id_generator",
-        parameters = @Parameter(name = "prefix", value = "MOD"),
+        parameters = @Parameter(name = "prefix", value = IPrefix.MODULE_PREFIX),
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 

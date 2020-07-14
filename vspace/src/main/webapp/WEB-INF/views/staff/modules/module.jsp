@@ -26,7 +26,6 @@ function deleteSlide(slideId) {
     });
 }
 
-
 function checkSlideInSequence(slideId) {
 	$.ajax({
         url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
@@ -50,6 +49,10 @@ function checkSlideInSequence(slideId) {
 }
 
 $(document).ready(function($) {
+	
+	$("#addSlideButton").on("click", function(e) {
+		$("#createSlideAlert").show();
+	});
 	
     $("#closeSlide").click(function (){
         $("#deleteSlideAlert").data('value', 0);
@@ -114,7 +117,7 @@ $(document).ready(function($) {
 			<label for="sequences" style="width: 200px">Select the start
 				sequence of the Module:</label>
 			<select class="form-control" name="sequenceParam"
-				style="width: 200px; display: inline; padding-bottom: 110px">
+				style="width: 200px; display: inline;">
 				<option id="Select" value="Select">Select</option>
 				<c:forEach items="${sequences}" var="sequences">
 					<option id=${sequences.id } value=${sequences.id
@@ -162,6 +165,9 @@ $(document).ready(function($) {
                     <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
                         <div align="left" class="card-body d-flex align-items-center" style="position:relative;">
                             <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
+                            <c:if test="${slide['class'].simpleName ==  'BranchingPoint'}">
+                                   <span id="branchingPoint" style="float: right;" data-feather="git-branch"></span> 
+                                </c:if>
                             <h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
                             <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
                             <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>

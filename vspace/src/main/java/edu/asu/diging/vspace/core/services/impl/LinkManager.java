@@ -172,6 +172,7 @@ public class LinkManager implements ILinkManager {
         ISpace space = linkOptional.get().getSourceSpace();
         ISpaceLink link = linkOptional.get();
         space.getSpaceLinks().remove(link);
+        spaceLinkDisplayRepo.deleteByLink(link);
         spaceLinkRepo.delete((SpaceLink) link);
     }
 
@@ -185,6 +186,7 @@ public class LinkManager implements ILinkManager {
         ISpace space = linkOptional.get().getSpace();
         IModuleLink link = linkOptional.get();
         space.getModuleLinks().remove(link);
+        moduleLinkDisplayRepo.deleteByLink(link);
         moduleLinkRepo.delete((ModuleLink) link);
     }
     
@@ -198,6 +200,7 @@ public class LinkManager implements ILinkManager {
         ISpace space = linkOptional.get().getSpace();
         IExternalLink link = linkOptional.get();
         space.getExternalLinks().remove(link);
+        externalLinkDisplayRepo.deleteByExternalLink(link);
         externalLinkRepo.delete((ExternalLink) link);
     }
 
