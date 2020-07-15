@@ -80,9 +80,8 @@ public class ExhibitionSlideController {
         model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
         String nextSlideId = "";
         String prevSlideId = "";
-        int slideIndex = 0;
         ISlide currentSlide = sildeManager.getSlide(slideId);
-        slideIndex = sequenceSlides.indexOf(currentSlide);
+        int slideIndex = sequenceSlides.indexOf(currentSlide);
         int slideSize = sequenceSlides.size();
         if (slideSize > slideIndex + 1) {
             nextSlideId = sequenceSlides.get(slideIndex + 1).getId();

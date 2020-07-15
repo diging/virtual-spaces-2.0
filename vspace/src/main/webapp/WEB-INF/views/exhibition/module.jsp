@@ -29,8 +29,8 @@ body {
         document.getElementById("myLangSidenav").style.width = "0";
     }
     function openNav(){
-            document.getElementById("mySidenav").style.width = "170px";
-        	document.getElementById("mySidenav").style.height = "700px";
+        document.getElementById("mySidenav").style.width = "170px";
+        document.getElementById("mySidenav").style.height = "700px";
     }
     function closeNav(){
         document.getElementById("mySidenav").style.width = "0px";
