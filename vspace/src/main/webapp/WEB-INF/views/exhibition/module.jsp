@@ -42,7 +42,11 @@ body {
     
     $(window).on("load", function() {
         var previousSequenceId = localStorage.getItem("previousSequenceId");
-        $(".previousChoice").attr('href','<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/" />'+previousSequenceId);  	
+        if(previousSequenceId == null){
+            $(".previousChoice").attr('href','<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}" />'); 
+        }else{
+        	$(".previousChoice").attr('href','<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/" />'+previousSequenceId); 
+        }
     });
 </script>
 <div id="Module_1" class="Module_1_Class">
