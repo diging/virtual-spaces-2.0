@@ -87,6 +87,7 @@ public class SpaceManagerTest {
     private final String IMG_CONTENT_TYPE = "content/type";
     private String spaceId = "spaceId";
     private String spaceId1, spaceId2;
+    private String spaceLinkId1;
     private SpaceLink spaceLink;
 
     @Before
@@ -94,6 +95,7 @@ public class SpaceManagerTest {
         MockitoAnnotations.initMocks(this);
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000001";
+        spaceLinkId1 = "SPL000000001";
 
     }
 
@@ -150,14 +152,34 @@ public class SpaceManagerTest {
     
     @Test
     public void test_deleteSpaceById_whenSpaceHasLinks() {  
+        ISpace space = new Space();
         spaceLink = new SpaceLink();
-        spaceLink.setId(spaceId2);
+        space.setId(spaceId2);
+        spaceLink.setId(spaceLinkId1);
+        spaceLink.setTargetSpace(space);
         Mockito.when(spaceLinkRepo.getLinkedSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
         managerToTest.deleteSpaceById(spaceId1);
-        Mockito.verify(spaceLinkDisplayRepo).deleteBySpaceLinkId(spaceId2);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
+        Mockito.verify(spaceLinkDisplayRepo).deleteBySpaceLinkId(spaceLinkId1);
         Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
         Mockito.verify(spaceRepo).deleteById(spaceId1);
     }
+    
+    @Test
+    public void test_deleteSpaceById_whenLinksToSpace() {  
+        Space space = new Space();
+        spaceLink = new SpaceLink();
+        space.setId(spaceId1);
+        spaceLink.setId(spaceLinkId1);
+        spaceLink.setTargetSpace(space);
+        Mockito.when(spaceLinkRepo.getLinkedFromSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
+        managerToTest.deleteSpaceById(spaceId1);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
+        Mockito.verify(spaceLinkRepo).save(spaceLink);
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
+        Mockito.verify(spaceRepo).deleteById(spaceId1);
+    }
+    
     
     @Test
     public void test_getSpacesWithStatus_whenStatusIsNull() throws SpaceDoesNotExistException{

@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page buffer="8192kb" autoFlush="true" %>
+
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
 <script src="<c:url value="/resources/extra/space.js" />" ></script>
 <script>
@@ -1082,19 +1082,19 @@ ${space.description}
                 </div>
                 <div id="exhibitionMessage">
                 <small class="text-danger">
-                This space is the exhibition start space! This will set exhibition to null.
+                This space is the start of the exhibition. Deleting it will make your exhibition unavailable.
                 </small>
                 </div>
                 <div id="finalWarning">
                 <small class="text-danger">
-                Do you still want to delete?
+                Do you want to continue?
                 </small>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="closeButton" class="btn btn-default"
                     data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                <button type="button" class="btn btn-danger btn-ok">Yes, delete!</button>
             </div>
         </div>
     </div>

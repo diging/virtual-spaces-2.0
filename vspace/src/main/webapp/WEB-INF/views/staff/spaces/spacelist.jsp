@@ -57,7 +57,7 @@ $( document ).ready(function() {
                 </div>
                 <div id="finalWarning">
                 <small class="text-danger">
-                Do you still want to delete?
+                Do you want to continue?
                 </small>
                 </div>
             </div>
