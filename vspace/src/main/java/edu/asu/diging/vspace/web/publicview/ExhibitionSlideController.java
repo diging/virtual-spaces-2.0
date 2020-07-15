@@ -43,9 +43,9 @@ public class ExhibitionSlideController {
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId)
-            throws ModuleNotFoundException, SequenceNotFoundException,
-            SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
-            SpaceNotFoundException {
+                    throws ModuleNotFoundException, SequenceNotFoundException,
+                    SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
+                    SpaceNotFoundException {
 
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
@@ -99,7 +99,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", currentSlide);
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-          }
+        }
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
