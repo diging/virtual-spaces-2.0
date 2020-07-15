@@ -229,7 +229,7 @@ a, a:hover, a:focus {
     }
 }
 
-.exit_to_space_Class .tooltiptext {
+.tooltiptext {
     visibility: hidden;
     width: 120px;
     color: white;
@@ -247,36 +247,8 @@ a, a:hover, a:focus {
     visibility: visible;
 }
 
-.exit_to_branchingPoint_Class .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    color: white;
-    text-align: center;
-    font-size: 12px padding: 3px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: -38px;
-    top: 46px;
-    background: rgba(0, 0, 0, 0.6);
-}
-
 .exit_to_branchingPoint_Class:hover .tooltiptext {
     visibility: visible;
-}
-
-.exit_to_previousChoice_Class .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    color: white;
-    text-align: center;
-    font-size: 12px padding: 3px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: -38px;
-    top: 46px;
-    background: rgba(0, 0, 0, 0.6);
 }
 
 .exit_to_previousChoice_Class:hover .tooltiptext {
