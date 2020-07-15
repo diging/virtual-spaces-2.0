@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -80,7 +81,8 @@ public class ExhibitionSlideController {
         String nextSlideId = "";
         String prevSlideId = "";
         int slideIndex = 0;
-        slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
+        ISlide currentSlide = sildeManager.getSlide(slideId);
+        slideIndex = sequenceSlides.indexOf(currentSlide);
         int slideSize = sequenceSlides.size();
         if (slideSize > slideIndex + 1) {
             nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
@@ -94,7 +96,10 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
-        model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
+        model.addAttribute("currentSlideCon", currentSlide);
+        if(currentSlide instanceof BranchingPoint) {
+            model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
+          }
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);

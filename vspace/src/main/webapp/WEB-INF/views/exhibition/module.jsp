@@ -35,24 +35,18 @@ body {
     function closeNav(){
         document.getElementById("mySidenav").style.width = "0px";
     }
+    function storeCurrentChoice(){
+        var currentSequenceId = "${currentSequenceId}";
+        localStorage.setItem("previousSequenceId", currentSequenceId);    
+    }
+    
+    $(window).on("load", function() {
+        var previousSequenceId = localStorage.getItem("previousSequenceId");
+        $(".previousChoice").attr('href','<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/" />'+previousSequenceId);  	
+    });
 </script>
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-        <div class="dropdown">
-            <div id="mySidenav" class="sidenav">
-                <i class="far fa-times-circle fa-lg closebtn"
-                    onclick="closeNav()"></i>
-                <div class="list-group spaceNav">
-                    <ul>
-                        <c:forEach items="${sequences}" var="sequences">
-                            <li><a class="dropdown-item"
-                                href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${sequences.id}" />">${sequences.name}</a>
-                        </c:forEach>
-                    </ul>
-                </div>
-            </div>
-            <i class="fas fa-bars fa-lg barPosition" onclick="openNav()"></i>
-        </div>
         <div class="textDiv">
             <h3>${module.name}</h3>
         </div>
@@ -124,6 +118,18 @@ body {
                         </ellipse>
                     </svg>
                 <i
+                    class="fas fa-fast-backward fa-2x Icon_awesome_angle_double_left"></i>
+            </div>
+        </a>
+        <a href="#" class="previousChoice">
+            <div class="exit_to_previousChoice_Class">
+                <svg class="Ellipse_5_be">
+              <ellipse fill="rgba(255,255,255,1)"
+                        class="Ellipse_5_be_Class" rx="22" ry="22"
+                        cx="22" cy="22">
+              </ellipse>
+            </svg>
+                <i
                     class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
             </div>
         </a>
@@ -140,6 +146,33 @@ body {
                     test="${contents['class'].simpleName ==  'TextBlock'}">
                     <div id="${contents.id}" class="textDiv">
                         <p>${contents.text}</p>
+                    </div>
+                </c:if>
+                <c:if
+                    test="${contents['class'].simpleName == 'ChoiceBlock'}">
+                    <div id="${contents.id}"
+                        class="textDiv card card-body row"
+                        style="margin: 1%;">
+                        <c:if test="${contents.showsAll eq true}">
+                            <div class="list-group">
+                                <c:forEach items="${choices}"
+                                    var="choice">
+                                    <a
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}" />"
+                                        onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
+                                </c:forEach>
+                            </div>
+                        </c:if>
+                        <c:if test="${contents.showsAll eq false}">
+                            <div class="list-group">
+                                <c:forEach items="${contents.choices}"
+                                    var="choice">
+                                    <a
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}" />"
+                                        onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
+                                </c:forEach>
+                            </div>
+                        </c:if>
                     </div>
                 </c:if>
             </c:forEach>

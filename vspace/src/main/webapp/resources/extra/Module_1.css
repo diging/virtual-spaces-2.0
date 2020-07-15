@@ -173,6 +173,16 @@ a, a:hover, a:focus {
     cursor: pointer;
 }
 
+.exit_to_previousChoice_Class {
+    position: absolute;
+    width: 50px;
+    height: 44px;
+    left: 4%;
+    top: 72%;
+    overflow: visible;
+    cursor: pointer;
+}
+
 .sideLangnav {
     height: 1000px;;
     width: 0;
