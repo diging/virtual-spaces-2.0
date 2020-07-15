@@ -108,8 +108,8 @@ body {
                         cx="22" cy="22">
                             </ellipse>
                         </svg>
-                <i
-                    class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
+                <i class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
+                <span class="tooltiptext">Go To Space</span>
             </div>
         </a>
         <a
@@ -121,8 +121,8 @@ body {
                         cy="22">
                         </ellipse>
                     </svg>
-                <i
-                    class="fas fa-fast-backward fa-2x Icon_awesome_angle_double_left"></i>
+                <i class="fas fa-fast-backward fa-2x Icon_awesome_angle_double_left"></i>
+                <span class="tooltiptext">Go To Start Sequence of Module</span>
             </div>
         </a>
         <a href="#" class="previousChoice">
@@ -133,8 +133,8 @@ body {
                         cx="22" cy="22">
               </ellipse>
             </svg>
-                <i
-                    class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
+                <i class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
+                <span class="tooltiptext">Go To Previous Branching Choice</span>
             </div>
         </a>
         <div class="Group_8_Class">
@@ -155,7 +155,7 @@ body {
                 <c:if
                     test="${contents['class'].simpleName == 'ChoiceBlock'}">
                     <div id="${contents.id}"
-                        class="textDiv card card-body row"
+                        class="textDiv"
                         style="margin: 1%;">
                         <c:if test="${contents.showsAll eq true}">
                             <div class="list-group">
