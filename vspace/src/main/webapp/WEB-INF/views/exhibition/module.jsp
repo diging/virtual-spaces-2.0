@@ -35,19 +35,6 @@ body {
     function closeNav(){
         document.getElementById("mySidenav").style.width = "0px";
     }
-    function storeCurrentChoice(){
-        var currentSequenceId = "${currentSequenceId}";
-        localStorage.setItem("previousSequenceId", currentSequenceId);    
-    }
-    
-    $(window).on("load", function() {
-        var previousSequenceId = localStorage.getItem("previousSequenceId");
-        if(previousSequenceId == null){
-            $(".previousChoice").attr('href','<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}" />'); 
-        }else{
-        	$(".previousChoice").attr('href','<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/" />'+previousSequenceId); 
-        }
-    });
 </script>
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
@@ -60,7 +47,7 @@ body {
         <div class="Group_7_Class">
             <c:if test="${prevSlide !=  ''}">
                 <a
-                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
+                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}?back=false&choice=false" />">
                     <div
                         class="Slideshow_previous Slideshow_previous_Class">
                         <svg class="Ellipse_11">
@@ -81,7 +68,7 @@ body {
             </c:if>
             <c:if test="${nextSlide !=  ''}">
                 <a
-                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
+                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}?back=false&choice=false" />">
                     <div class="slideshow_next slideshow_next_Class">
                         <svg class="Ellipse_12">
                                     <ellipse fill="rgba(255,255,255,1)"
@@ -113,7 +100,7 @@ body {
             </div>
         </a>
         <a
-            href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}" />">
+            href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?choice=false" />">
             <div class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                         <ellipse fill="rgba(255,255,255,1)"
@@ -125,7 +112,8 @@ body {
                 <span class="tooltiptext">Go To Start Sequence of Module</span>
             </div>
         </a>
-        <a href="#" class="previousChoice">
+        <c:if test="${showBackToPreviousChoice eq true}">
+        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousChoiceSequence}/slide/${previousChoiceSlide}?back=true&choice=false" />">
             <div class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
               <ellipse fill="rgba(255,255,255,1)"
@@ -137,6 +125,7 @@ body {
                 <span class="tooltiptext">Go To Previous Branching Choice</span>
             </div>
         </a>
+        </c:if>
         <div class="Group_8_Class">
             <h3>${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
@@ -162,7 +151,7 @@ body {
                                 <c:forEach items="${choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true" />"
                                         onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>
@@ -172,7 +161,7 @@ body {
                                 <c:forEach items="${contents.choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true" />"
                                         onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>

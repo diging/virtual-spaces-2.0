@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -34,7 +35,7 @@ public class ExhibitionSequencesController {
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
-            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId)
+            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId, @RequestParam("choice") boolean choice)
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
@@ -60,6 +61,6 @@ public class ExhibitionSequencesController {
             throw new SlidesInSequenceNotFoundException();
         }
         String firstSlideId = slides.get(0).getId();
-        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId;
+        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId + "?back=false&choice="+choice;
     }
 }

@@ -39,6 +39,6 @@ public class ExhibitionModuleController {
             return "module";
         }
         String startSequenceID = module.getStartSequence().getId();
-        return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;
+        return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID + "?choice=false";
     }
 }
