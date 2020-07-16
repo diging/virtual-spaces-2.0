@@ -10,21 +10,21 @@ import org.springframework.stereotype.Component;
 @Scope(value="session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ChoicesHistory{
     private Stack<String> sequenceSlideHistory = new Stack<>();
-    
+
     public void addToSequenceSlideHistory(String sequenceId, String slideId) {
         sequenceSlideHistory.push(sequenceId+","+slideId);
     }
-    
+
     public void addToSequenceSlideHistory(String lastElement) {
         sequenceSlideHistory.push(lastElement);
     }
-    
+
     public Stack<String> getFromSequenceSlideHistory() {
         return sequenceSlideHistory;
     }
-    
+
     public String removeLastElementFromSequenceSlideHistory() {
         return sequenceSlideHistory.pop();
     }
-    
+
 }

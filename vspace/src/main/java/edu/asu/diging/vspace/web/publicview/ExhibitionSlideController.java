@@ -44,7 +44,7 @@ public class ExhibitionSlideController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ChoicesHistory choiceHistory;
 
@@ -54,7 +54,7 @@ public class ExhibitionSlideController {
                     throws ModuleNotFoundException, SequenceNotFoundException,
                     SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
                     SpaceNotFoundException {
-        
+
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             throw new SpaceNotFoundException(spaceId);
@@ -104,7 +104,7 @@ public class ExhibitionSlideController {
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
         model.addAttribute("currentSlideCon", currentSlide);
-        
+
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
             if(choiceHistory.getFromSequenceSlideHistory().size()==0) {
