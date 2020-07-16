@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +16,13 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
@@ -103,5 +109,25 @@ public class SlideManager implements ISlideManager {
             }
         }
         return sequenceSlides;
+    }
+    
+    @Override
+    public ISlide convertTextToMarkdown(ISlide slide) {
+        List<IContentBlock> content = slide.getContents();
+        System.out.println("lolololol");
+        for(int i=0; i<content.size(); ++i) {
+                if(content.get(i).getClass().equals(TextBlock.class)) {
+                    System.out.println("Transforming");
+                    ITextBlock textBlock = (ITextBlock) content.get(i);
+                    Parser parser = Parser.builder().build();
+                    Node document = parser.parse(textBlock.getText());
+                    HtmlRenderer renderer = HtmlRenderer.builder().build();
+                    textBlock.setText(renderer.render(document));
+                    content.set(i, textBlock);
+
+            }
+        }
+        slide.setContents(content);
+        return slide;
     }
 }

@@ -3,6 +3,10 @@ package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+
 import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
@@ -18,7 +22,10 @@ public class TextBlock extends ContentBlock implements ITextBlock {
      */
     @Override
     public String getText() {
-        return text;
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(text);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(document);
     }
 
     /*

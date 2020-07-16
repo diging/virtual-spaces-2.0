@@ -31,7 +31,7 @@ public class ExhibitionSlideController {
     private IModuleManager moduleManager;
 
     @Autowired
-    private SlideManager sildeManager;
+    private SlideManager slideManager;
 
     @Autowired
     private ISequenceManager sequenceManager;
@@ -80,7 +80,7 @@ public class ExhibitionSlideController {
         String nextSlideId = "";
         String prevSlideId = "";
         int slideIndex = 0;
-        slideIndex = sequenceSlides.indexOf(sildeManager.getSlide(slideId));
+        slideIndex = sequenceSlides.indexOf(slideManager.getSlide(slideId));
         int slideSize = sequenceSlides.size();
         if (slideSize > slideIndex + 1) {
             nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
@@ -93,7 +93,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
-        model.addAttribute("currentSlideCon", sildeManager.getSlide(slideId));
+        model.addAttribute("currentSlideCon", slideManager.getSlide(slideId));
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
