@@ -88,8 +88,6 @@ public class SpaceManagerTest {
     private String spaceId = "spaceId";
     private String spaceId1, spaceId2;
     private String spaceLinkId1;
-    
-    @Mock
     private SpaceLink spaceLink;
 
     @Before
@@ -170,13 +168,14 @@ public class SpaceManagerTest {
     @Test
     public void test_deleteSpaceById_whenLinksToSpace() {  
         Space space = new Space();
+        spaceLink = new SpaceLink();
         space.setId(spaceId1);
         spaceLink.setId(spaceLinkId1);
         spaceLink.setTargetSpace(space);
         Mockito.when(spaceLinkRepo.getLinkedFromSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
         managerToTest.deleteSpaceById(spaceId1);
+        Assert.assertEquals(spaceLink.getTargetSpace(), null);
         Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
-        Mockito.verify(spaceLink).setTargetSpace(null);
         Mockito.verify(spaceLinkRepo).save(spaceLink);
         Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
         Mockito.verify(spaceRepo).deleteById(spaceId1);
