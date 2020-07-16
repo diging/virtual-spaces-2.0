@@ -52,7 +52,7 @@ $( document ).ready(function() {
                 </div>
                 <div id="exhibitionMessage">
                 <div class="text-danger">
-                This space is the exhibition start space! This will set exhibition to null.
+                This space is the start of the exhibition. Deleting it will make your exhibition unavailable.
                 </div>
                 </div>
                 <div id="finalWarning">
