@@ -27,6 +27,7 @@
 }
 */
 var contentCount = ${fn:length(slideContents)};
+var markDown;
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -60,10 +61,12 @@ function onDoubleClick(e){
         //remove card border
         $(".open").css('border', 'none');
         // get text from p tag
-        var description = $(".open").children("p:first").text();
+        var description = $("div.open p:eq(1)").html();
+        alert(description);
         // insert text box and buttons
         $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
-        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
+        mardDown = new EasyMDE({element: $('#newTextBlock')[0]});
+        //$('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
         $(".open").children("p:first").remove();
         $(".open").children("input:first").remove();
         $(".open").children("a:first").remove();
@@ -173,8 +176,6 @@ function uploadImage() {
 } 
     
 $(document).ready(function() { 
-	
-	var markDown;
 
    /*  $('#addTextAlert').on('shown.bs.modal', function () {
         $('#textBlockText').focus();
