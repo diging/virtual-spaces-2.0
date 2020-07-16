@@ -64,7 +64,7 @@ $( document ).ready(function() {
             <div class="modal-footer">
                 <button type="button" id="closeButton" class="btn btn-default"
                     data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                <button type="button" class="btn btn-danger btn-ok">Yes, delete!</button>
             </div>
         </div>
     </div>
