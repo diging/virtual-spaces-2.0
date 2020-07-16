@@ -46,19 +46,19 @@ $( document ).ready(function() {
                     Are you sure you want to delete ?
                 </p>
                 <div id="warningMessage">
-                <small class="text-danger">
+                <div class="text-danger">
                 Other spaces have links to this space!
-                </small>
+                </div>
                 </div>
                 <div id="exhibitionMessage">
-                <small class="text-danger">
+                <div class="text-danger">
                 This space is the exhibition start space! This will set exhibition to null.
-                </small>
+                </div>
                 </div>
                 <div id="finalWarning">
-                <small class="text-danger">
+                <div class="text-danger">
                 Do you want to continue?
-                </small>
+                </div>
                 </div>
             </div>
             <div class="modal-footer">
