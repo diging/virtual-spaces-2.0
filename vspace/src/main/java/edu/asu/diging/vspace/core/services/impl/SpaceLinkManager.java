@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.model.ILink;
@@ -85,17 +84,21 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     }
 
     @Override
-    protected ILinkDisplay getDisplayLink(String spaceLinkDisplayId) throws LinkDoesNotExistsException{
+    protected ILinkDisplay getDisplayLink(String spaceLinkDisplayId){
         Optional<SpaceLinkDisplay> spaceLinkOptional = spaceLinkDisplayRepo.findById(spaceLinkDisplayId);
-        linksValidation(spaceLinkOptional);
+        if(!linksValidation(spaceLinkOptional)) {
+            return null;
+        }
         ISpaceLinkDisplay display = spaceLinkOptional.get();
         return display;
     }
 
     @Override
-    protected ILink getLink(String spaceLinkIdValueEdit) throws LinkDoesNotExistsException {
-        Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkIdValueEdit);
-        linksValidation(linkOptional);
+    protected ILink getLink(String spaceLinkId){
+        Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(spaceLinkId);
+        if(!linksValidation(linkOptional)) {
+            return null;
+        }
         ISpaceLink link = linkOptional.get();
         return link;
     }
@@ -120,6 +123,21 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
         spaceLinkRepo.save((SpaceLink) link);
         spaceLinkDisplayRepo.save((SpaceLinkDisplay) displayLink);
         return displayLink;
+    }
+
+    @Override
+    protected void deleteLinkDisplayRepo(ILink link) {
+        spaceLinkDisplayRepo.deleteByLink((ISpaceLink)link);
+    }
+
+    @Override
+    protected void removeFromLinkList(ISpace space, ILink link) {
+        space.getSpaceLinks().remove((ISpaceLink)link);
+    }
+
+    @Override
+    protected void deleteLinkRepo(ILink link) {
+        spaceLinkRepo.delete((SpaceLink)link);
     }
 
 }

@@ -17,7 +17,7 @@ public interface ILinkManager {
     ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
-    
+
     List<ILinkDisplay> getLinkDisplays(String spaceId);
 
     void deleteLink(String linkId);

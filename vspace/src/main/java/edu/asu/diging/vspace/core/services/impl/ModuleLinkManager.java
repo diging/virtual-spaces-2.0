@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.model.ILink;
@@ -100,17 +99,21 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    protected ILinkDisplay getDisplayLink(String moduleLinkDisplayId) throws LinkDoesNotExistsException {
+    protected ILinkDisplay getDisplayLink(String moduleLinkDisplayId){
         Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
-        linksValidation(moduleLinkOptional);
+        if(!linksValidation(moduleLinkOptional)) {
+            return null;
+        }
         IModuleLinkDisplay display = moduleLinkOptional.get();
         return display;
     }
 
     @Override
-    protected ILink getLink(String moduleLinkIDValueEdit) throws LinkDoesNotExistsException {
-        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(moduleLinkIDValueEdit);
-        linksValidation(linkOptional);
+    protected ILink getLink(String moduleLinkID){
+        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(moduleLinkID);
+        if(!linksValidation(linkOptional)) {
+            return null;
+        }
         IModuleLink link = linkOptional.get();
         return link;
     }
@@ -124,6 +127,21 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
         moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
         return displayLink;
 
+    }
+
+    @Override
+    protected void deleteLinkDisplayRepo(ILink link) {
+        moduleLinkDisplayRepo.deleteByLink((IModuleLink)link);
+    }
+
+    @Override
+    protected void removeFromLinkList(ISpace space, ILink link) {
+        space.getModuleLinks().remove((IModuleLink)link);
+    }
+
+    @Override
+    protected void deleteLinkRepo(ILink link) {
+        moduleLinkRepo.delete((ModuleLink)link);
     }
 
 }

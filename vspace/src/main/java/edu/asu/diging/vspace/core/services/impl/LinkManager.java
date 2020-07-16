@@ -13,11 +13,13 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ILink;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -66,6 +68,21 @@ public abstract class LinkManager implements ILinkManager{
 
         return updateLinkAndDisplay(link,displayLink);
     }
+    
+    @Override
+    public void deleteLink(String linkId){
+        
+        ILink link = getLink(linkId);
+        removeFromLinkList(link.getSpace(),link);
+        deleteLinkDisplayRepo(link);
+        deleteLinkRepo(link);
+    }
+
+    protected abstract void deleteLinkRepo(ILink link);
+
+    protected abstract void deleteLinkDisplayRepo(ILink link);
+
+    protected abstract void removeFromLinkList(ISpace space, ILink link);
 
     protected abstract ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink);
 
@@ -73,26 +90,24 @@ public abstract class LinkManager implements ILinkManager{
 
     protected abstract ILinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException;
 
-    protected abstract ILink getLink(String linkId) throws LinkDoesNotExistsException;
+    protected abstract ILink getLink(String linkId);
 
     protected abstract ILink createLinkObject(String title, String id, IVSpaceElement target, String linkLabel);
 
     protected abstract IVSpaceElement getTarget(String linkedId);
 
-    public void spaceValidation(String id) throws SpaceDoesNotExistException{
+    protected void spaceValidation(String id) throws SpaceDoesNotExistException{
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
     }
 
-    public void linksValidation(Optional link) throws LinkDoesNotExistsException {
-        if(!link.isPresent()) {
-            throw new LinkDoesNotExistsException("Link Does Not Exists");
-        }
+    protected boolean linksValidation(Optional link){
+        return link.isPresent();
     }
 
-    public void setDisplayProperties(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
+    protected void setDisplayProperties(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);

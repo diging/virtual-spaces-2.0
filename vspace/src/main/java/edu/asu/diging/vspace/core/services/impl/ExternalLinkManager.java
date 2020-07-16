@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
@@ -95,17 +94,21 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     }
 
     @Override
-    protected ILinkDisplay getDisplayLink(String externalLinkDisplayId) throws LinkDoesNotExistsException {
+    protected ILinkDisplay getDisplayLink(String externalLinkDisplayId){
         Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
-        linksValidation(externalLinkOptional);
+        if(!linksValidation(externalLinkOptional)) {
+            return null;
+        }
         IExternalLinkDisplay display = externalLinkOptional.get();
         return display;
     }
 
     @Override
-    protected ILink getLink(String externalLinkIDValueEdit) throws LinkDoesNotExistsException {
-        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkIDValueEdit);
-        linksValidation(linkOptional);
+    protected ILink getLink(String externalLinkID){
+        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkID);
+        if(!linksValidation(linkOptional)) {
+            return null;
+        }
         IExternalLink link = linkOptional.get();
         return link;
     }
@@ -118,6 +121,21 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
         externalLinkRepo.save((ExternalLink) link);
         externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
         return displayLink;
+    }
+
+    @Override
+    protected void deleteLinkDisplayRepo(ILink link) {
+        externalLinkDisplayRepo.deleteByExternalLink((IExternalLink)link);
+    }
+
+    @Override
+    protected void removeFromLinkList(ISpace space, ILink link) {
+        space.getExternalLinks().remove((IExternalLink)link);
+    }
+
+    @Override
+    protected void deleteLinkRepo(ILink link) {
+        externalLinkRepo.delete((ExternalLink)link);
     }
 
 }
