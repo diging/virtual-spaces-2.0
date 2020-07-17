@@ -1,27 +1,26 @@
 package edu.asu.diging.vspace.core.aspects;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IdPrefix;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -140,7 +139,7 @@ public class ExhibitionDataAspect {
         Map<IdPrefix, String> res = new HashMap<>();
         for(int i=0; i <signature.getParameterTypes().length; ++i) {
             if(signature.getParameterTypes()[i].equals(String.class)) {
-                if(((String) args[i]).length() > 2) {
+                if(args[i] != null && ((String) args[i]).length() > 2) {
                     String prefix = ((String) args[i]).substring(0,3);
                     if(prefix.equalsIgnoreCase(IdPrefix.SPACEID.getValue())) {
                         res.put(IdPrefix.SPACEID, (String) args[i]);

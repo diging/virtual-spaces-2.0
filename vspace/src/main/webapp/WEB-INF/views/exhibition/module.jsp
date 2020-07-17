@@ -47,7 +47,7 @@ body {
         <div class="Group_7_Class">
             <c:if test="${prevSlide !=  ''}">
                 <a
-                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}?back=false&choice=false" />">
+                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
                     <div
                         class="Slideshow_previous Slideshow_previous_Class">
                         <svg class="Ellipse_11">
@@ -68,7 +68,7 @@ body {
             </c:if>
             <c:if test="${nextSlide !=  ''}">
                 <a
-                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}?back=false&choice=false" />">
+                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
                     <div class="slideshow_next slideshow_next_Class">
                         <svg class="Ellipse_12">
                                     <ellipse fill="rgba(255,255,255,1)"
@@ -100,7 +100,7 @@ body {
             </div>
         </a>
         <a
-            href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?choice=false" />">
+            href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}" />">
             <div class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                         <ellipse fill="rgba(255,255,255,1)"
@@ -113,7 +113,7 @@ body {
             </div>
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
-        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousChoiceSequence}/slide/${previousChoiceSlide}?back=true&choice=false" />">
+        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousChoiceId}/slide/${previousBranchingPointId}?back=true&choice=false" />">
             <div class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
               <ellipse fill="rgba(255,255,255,1)"
@@ -151,7 +151,7 @@ body {
                                 <c:forEach items="${choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true&choiceId=${currentSequenceId}&branchingPoint=${slideId}" />"
                                         onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>
@@ -161,7 +161,7 @@ body {
                                 <c:forEach items="${contents.choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true&choiceId=${currentSequenceId}&branchingPoint=${slideId}" />"
                                         onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>

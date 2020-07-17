@@ -9,22 +9,43 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value="session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ChoicesHistory{
-    private Stack<String> sequenceSlideHistory = new Stack<>();
 
-    public void addToSequenceSlideHistory(String sequenceId, String slideId) {
-        sequenceSlideHistory.push(sequenceId+","+slideId);
+    class ChoicesHistoryData{
+        String choiceId;
+        String branchingPointId;
+        public ChoicesHistoryData(String choiceId, String branchingPointId) {
+            this.choiceId = choiceId;
+            this.branchingPointId = branchingPointId;
+        }
+        public String getChoiceId() {
+            return choiceId;
+        }
+        public String getBranchingPointId() {
+            return branchingPointId;
+        }
+
     }
 
-    public void addToSequenceSlideHistory(String lastElement) {
-        sequenceSlideHistory.push(lastElement);
+    private Stack<ChoicesHistoryData> sequenceSlideHistory = new Stack<>();
+
+    public void addToSequenceSlideHistory(String choiceId, String branchingPointId) {
+        sequenceSlideHistory.push(new ChoicesHistoryData(choiceId, branchingPointId));
     }
 
-    public Stack<String> getFromSequenceSlideHistory() {
+    public Stack<ChoicesHistoryData> getFromSequenceSlideHistory() {
         return sequenceSlideHistory;
     }
 
-    public String removeLastElementFromSequenceSlideHistory() {
-        return sequenceSlideHistory.pop();
+    public void removeLastElementFromSequenceSlideHistory() {
+        sequenceSlideHistory.pop();
+    }
+
+    public String peekTopBranchingPointId() {
+        return sequenceSlideHistory.peek().getBranchingPointId();
+    }
+
+    public String peekTopChoiceId() {
+        return sequenceSlideHistory.peek().getChoiceId();
     }
 
 }

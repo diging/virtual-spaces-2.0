@@ -2,8 +2,6 @@ package edu.asu.diging.vspace.web.publicview;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -49,8 +46,9 @@ public class ExhibitionSlideController {
     private ChoicesHistory choiceHistory;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
-    public String slide(Model model, HttpServletRequest request, SessionStatus sessionStatus,@PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId, @RequestParam("back") boolean back, @RequestParam("choice") boolean choice)
+    public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
+            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId, @RequestParam(required=false, name="back") boolean back, @RequestParam(required = false, name="choice") boolean choice,
+            @RequestParam(required = false, name="branchingPoint") String branchingPoint, @RequestParam(required = false, name="choiceId") String choiceId)
                     throws ModuleNotFoundException, SequenceNotFoundException,
                     SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
                     SpaceNotFoundException {
@@ -104,35 +102,16 @@ public class ExhibitionSlideController {
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
         model.addAttribute("currentSlideCon", currentSlide);
-
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-            if(choiceHistory.getFromSequenceSlideHistory().size()==0) {
-                choiceHistory.addToSequenceSlideHistory(sequenceId, slideId);
-            }
         }
-        if(choice){
-            String lastElement = choiceHistory.removeLastElementFromSequenceSlideHistory();
-            if(lastElement.equals(sequenceId+","+slideId)){
-                choiceHistory.addToSequenceSlideHistory(lastElement);
-            }else {
-                choiceHistory.addToSequenceSlideHistory(lastElement);
-                choiceHistory.addToSequenceSlideHistory(sequenceId+","+slideId);
-            }
-        }
-        if(choiceHistory.getFromSequenceSlideHistory().size()>=2) {
-            model.addAttribute("showBackToPreviousChoice", true);
-            String lastElement = choiceHistory.removeLastElementFromSequenceSlideHistory();
-            String seondLastElement = choiceHistory.removeLastElementFromSequenceSlideHistory();
-            String[] elementValues = seondLastElement.split(",");
-            model.addAttribute("previousChoiceSequence", elementValues[0]);
-            model.addAttribute("previousChoiceSlide", elementValues[1]);
-            choiceHistory.addToSequenceSlideHistory(seondLastElement);
-            choiceHistory.addToSequenceSlideHistory(lastElement);
-        }
-
         if(back) {
             choiceHistory.removeLastElementFromSequenceSlideHistory();
+        }
+        if(choiceHistory.getFromSequenceSlideHistory().size()>0) {
+            model.addAttribute("showBackToPreviousChoice", true);
+            model.addAttribute("previousChoiceId", choiceHistory.peekTopChoiceId());
+            model.addAttribute("previousBranchingPointId", choiceHistory.peekTopBranchingPointId());
         }
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);

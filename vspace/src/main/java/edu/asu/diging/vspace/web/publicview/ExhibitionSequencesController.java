@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.ChoicesHistory;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -33,10 +34,14 @@ public class ExhibitionSequencesController {
     @Autowired
     private ISpaceManager spaceManager;
 
+    @Autowired
+    private ChoicesHistory choiceHistory;
+
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
-            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId, @RequestParam("choice") boolean choice)
-            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
+            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId, @RequestParam(required = false, name="choice") boolean choice,
+            @RequestParam(required = false, name="branchingPoint") String branchingPointId, @RequestParam(required = false, name="choiceId") String choiceId)
+                    throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             throw new SpaceNotFoundException(spaceId);
@@ -55,12 +60,20 @@ public class ExhibitionSequencesController {
         if (sequenceExist==null) {
             throw new SequenceNotFoundException(sequenceId);
         }
-        
+
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         if (slides.size() == 0) {
             throw new SlidesInSequenceNotFoundException();
         }
+
+        if(choiceId==null) {
+            choiceId=sequenceId;
+            branchingPointId = sequenceManager.getSequence(sequenceId).getSlides().get(0).getId();
+        }
+        if(choice){
+            choiceHistory.addToSequenceSlideHistory(choiceId,branchingPointId);
+        }
         String firstSlideId = slides.get(0).getId();
-        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId + "?back=false&choice="+choice;
+        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId + "?choice="+choice+"&branchingPoint="+branchingPointId+"&choiceId="+choiceId;
     }
 }
