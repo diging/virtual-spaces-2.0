@@ -12,14 +12,14 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.ILLink;
 import edu.asu.diging.vspace.core.model.ILink;
-import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ITVSpaceElement;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -56,11 +56,11 @@ public abstract class LinkManager implements ILinkManager{
 
         spaceValidation(id);
 
-        ILink link = getLink(linkId);
+        ILink link =  getLink(linkId);
         ILinkDisplay displayLink = getDisplayLink(linkDisplayId);
 
 
-        IVSpaceElement target = getTarget(linkedId);
+        IVSpaceElement target = (IVSpaceElement) getTarget(linkedId);
         link.setName(title);
         setTarget(link,target);
 
