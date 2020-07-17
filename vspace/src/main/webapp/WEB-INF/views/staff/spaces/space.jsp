@@ -11,7 +11,7 @@
 $(function(){
     $("#deleteSpace").click(function(){
         var spaceId = "${space.id}";
-        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"), $("#warningMessage"), $("#finalWarning"));
+        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"));
 });    
 
 

@@ -50,7 +50,7 @@ public class SpaceController {
     
     @RequestMapping(value = "/staff/spaceLink/{spaceId}/spaces", method = RequestMethod.GET)
     public ResponseEntity<List<SpaceLink>> getSpaceLinksPresent(@PathVariable("spaceId") String spaceId) {
-        List<SpaceLink> spaceLinkPresent = spaceManager.getLinkedSpace(spaceId);
+        List<SpaceLink> spaceLinkPresent = spaceManager.getLinkedFromSpace(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
     

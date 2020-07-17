@@ -26,5 +26,7 @@ public interface ISpaceManager {
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
 
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
+    
+    List<SpaceLink> getLinkedFromSpace(String id);
 
 }
