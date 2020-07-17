@@ -103,7 +103,7 @@ body {
                     </c:if>
                     <c:if
                         test="${contents['class'].simpleName ==  'TextBlock'}">
-                        <div id="${contents.id}" class="textDiv">${contents.text}</div>
+                        <div id="${contents.id}" class="textDiv">${contents.htmlRenderedText()}</div>
                     </c:if>
                 </c:forEach>
             </div>

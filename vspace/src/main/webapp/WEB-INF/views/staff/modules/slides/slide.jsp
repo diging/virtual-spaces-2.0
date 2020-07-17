@@ -61,13 +61,16 @@ function onDoubleClick(e){
         //remove card border
         $(".open").css('border', 'none');
         // get text from p tag
-        var description = $("div.open p:eq(1)").html();
+        var description = $("div.open p:eq(0)").text();
         alert(description);
         // insert text box and buttons
-        $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
-        mardDown = new EasyMDE({element: $('#newTextBlock')[0]});
+        //$('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text"></textarea></div>').insertBefore( ".open" );
+        markDown = new EasyMDE({element: $('#textBlockText')[0]});
+        markDown.value(description);
+        $("#addTextAlert button#submitText").attr("id","submitTextBlock");
+        $("#addTextAlert").show();
         //$('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
-        $(".open").children("p:first").remove();
+        $(".open").children("p").remove();
         $(".open").children("input:first").remove();
         $(".open").children("a:first").remove();
         // unbind events to prevent multiple instances of buttons and constant highlighting

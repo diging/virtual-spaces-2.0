@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.Transient;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -22,10 +23,7 @@ public class TextBlock extends ContentBlock implements ITextBlock {
      */
     @Override
     public String getText() {
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(text);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        return renderer.render(document);
+        return text;
     }
 
     /*
@@ -37,6 +35,14 @@ public class TextBlock extends ContentBlock implements ITextBlock {
     @Override
     public void setText(String text) {
         this.text = text;
+    }
+    
+    @Transient
+    public String htmlRenderedText() {
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(text);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(document);
     }
 
 }
