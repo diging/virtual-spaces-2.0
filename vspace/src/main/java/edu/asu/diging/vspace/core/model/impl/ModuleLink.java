@@ -80,8 +80,13 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
         return this.module;
     }
 
+    //    @Override
+    //    public void setTarget(IModule target) {
+    //        this.module = target;
+    //    }
     @Override
-    public void setTarget(IModule target) {
-        this.module = target;
+    public void setTarget(IVSpaceElement target) {
+        // TODO Auto-generated method stub
+        this.module = (IModule) target;
     }
 }

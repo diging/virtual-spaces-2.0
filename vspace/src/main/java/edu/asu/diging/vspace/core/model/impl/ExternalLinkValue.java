@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-public class ExternalLinkValue extends VSpaceElement {
+import edu.asu.diging.vspace.core.model.ITVSpaceElement;
+
+public class ExternalLinkValue extends VSpaceElement implements ITVSpaceElement<ExternalLink>{
 
     private String value;
 

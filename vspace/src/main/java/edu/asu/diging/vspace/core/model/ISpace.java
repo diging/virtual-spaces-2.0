@@ -2,22 +2,22 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-public interface ISpace extends IVSpaceElement {
+public interface ISpace extends ITVSpaceElement {
 
-	List<ISpaceLink> getSpaceLinks();
+    List<ISpaceLink> getSpaceLinks();
 
-	void setSpaceLinks(List<ISpaceLink> spaceLinks);
+    void setSpaceLinks(List<ISpaceLink> spaceLinks);
 
-	List<IModuleLink> getModuleLinks();
+    List<IModuleLink> getModuleLinks();
 
-	void setModuleLinks(List<IModuleLink> moduleLinks);
+    void setModuleLinks(List<IModuleLink> moduleLinks);
 
-	List<IExternalLink> getExternalLinks();
-	
-	void setExternalLinks(List<IExternalLink> externalLinks);
+    List<IExternalLink> getExternalLinks();
 
-	IVSImage getImage();
-	
-	void setImage(IVSImage image);
+    void setExternalLinks(List<IExternalLink> externalLinks);
+
+    IVSImage getImage();
+
+    void setImage(IVSImage image);
 
 }

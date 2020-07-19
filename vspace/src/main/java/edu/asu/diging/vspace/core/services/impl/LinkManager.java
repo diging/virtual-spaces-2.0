@@ -62,16 +62,15 @@ public abstract class LinkManager implements ILinkManager{
 
         IVSpaceElement target = (IVSpaceElement) getTarget(linkedId);
         link.setName(title);
-        setTarget(link,target);
+        setTarget((ILLink) link,(ITVSpaceElement) target);
 
         setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
 
         return updateLinkAndDisplay(link,displayLink);
     }
-    
+
     @Override
     public void deleteLink(String linkId){
-        
         ILink link = getLink(linkId);
         removeFromLinkList(link.getSpace(),link);
         deleteLinkDisplayRepo(link);
@@ -86,7 +85,7 @@ public abstract class LinkManager implements ILinkManager{
 
     protected abstract ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink);
 
-    protected abstract void setTarget(ILink link, IVSpaceElement target);
+    protected abstract void setTarget(ILLink link, ITVSpaceElement target);
 
     protected abstract ILinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException;
 

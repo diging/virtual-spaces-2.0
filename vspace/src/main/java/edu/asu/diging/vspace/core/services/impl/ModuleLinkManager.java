@@ -14,10 +14,12 @@ import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
+import edu.asu.diging.vspace.core.model.ILLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ITVSpaceElement;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
@@ -93,8 +95,8 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    protected void setTarget(ILink link, IVSpaceElement target) {
-        ((IModuleLink) link).setTarget((IModule)target);
+    protected void setTarget(ILLink link, ITVSpaceElement target) {
+        link.setTarget(target);
 
     }
 
@@ -143,5 +145,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     protected void deleteLinkRepo(ILink link) {
         moduleLinkRepo.delete((ModuleLink)link);
     }
+
+
 
 }

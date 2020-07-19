@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface ILink<T extends IVSpaceElement> extends IVSpaceElement {
+public interface ILink<T extends IVSpaceElement> extends IVSpaceElement{
 
     ISpace getSpace();
 
