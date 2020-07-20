@@ -8,6 +8,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
 
@@ -21,6 +23,7 @@ public class Choice extends VSpaceElement implements IChoice {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
+    @JsonIgnore
     @OneToOne(targetEntity = Sequence.class)
     private ISequence sequence;
 
