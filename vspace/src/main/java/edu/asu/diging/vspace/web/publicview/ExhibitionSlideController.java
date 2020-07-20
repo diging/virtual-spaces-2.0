@@ -103,13 +103,13 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", currentSlide);
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-        }
-        if(back) {
-            choiceHistory.removeLastElementFromSequenceSlideHistory();
+            if(back) {
+                choiceHistory.removeLastElementFromSequenceSlideHistory();
+            }
         }
         if(choiceHistory.backNavigationExists()) {
             model.addAttribute("showBackToPreviousChoice", true);
-            model.addAttribute("previousChoiceId", choiceHistory.peekTopChoiceId());
+            model.addAttribute("previousSequenceId", choiceHistory.peekTopChoiceId());
             model.addAttribute("previousBranchingPointId", choiceHistory.peekTopBranchingPointId());
         }
         model.addAttribute("numOfSlides", sequenceSlides.size());
