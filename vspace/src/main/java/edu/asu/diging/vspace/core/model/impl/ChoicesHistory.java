@@ -32,8 +32,8 @@ public class ChoicesHistory{
         sequenceSlideHistory.push(new ChoicesHistoryData(choiceId, branchingPointId));
     }
 
-    public Stack<ChoicesHistoryData> getFromSequenceSlideHistory() {
-        return sequenceSlideHistory;
+    public boolean backNavigationExists() {
+        return !sequenceSlideHistory.isEmpty();
     }
 
     public void removeLastElementFromSequenceSlideHistory() {

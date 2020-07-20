@@ -113,7 +113,7 @@ body {
             </div>
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
-        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousChoiceId}/slide/${previousBranchingPointId}?back=true&choice=false" />">
+        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousChoiceId}/slide/${previousBranchingPointId}?back=true" />">
             <div class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
               <ellipse fill="rgba(255,255,255,1)"
@@ -151,7 +151,7 @@ body {
                                 <c:forEach items="${choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true&choiceId=${currentSequenceId}&branchingPoint=${slideId}" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choiceId=${currentSequenceId}&branchingPoint=${slideId}" />"
                                         onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>
@@ -161,7 +161,7 @@ body {
                                 <c:forEach items="${contents.choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choice=true&choiceId=${currentSequenceId}&branchingPoint=${slideId}" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?choiceId=${currentSequenceId}&branchingPoint=${slideId}" />"
                                         onclick="storeCurrentChoice();" class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>

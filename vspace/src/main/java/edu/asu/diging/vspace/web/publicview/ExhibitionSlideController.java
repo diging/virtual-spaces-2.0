@@ -47,8 +47,7 @@ public class ExhibitionSlideController {
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId, @RequestParam(required=false, name="back") boolean back, @RequestParam(required = false, name="choice") boolean choice,
-            @RequestParam(required = false, name="branchingPoint") String branchingPoint, @RequestParam(required = false, name="choiceId") String choiceId)
+            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId, @RequestParam(required=false, name="back") boolean back)
                     throws ModuleNotFoundException, SequenceNotFoundException,
                     SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
                     SpaceNotFoundException {
@@ -108,7 +107,7 @@ public class ExhibitionSlideController {
         if(back) {
             choiceHistory.removeLastElementFromSequenceSlideHistory();
         }
-        if(choiceHistory.getFromSequenceSlideHistory().size()>0) {
+        if(choiceHistory.backNavigationExists()) {
             model.addAttribute("showBackToPreviousChoice", true);
             model.addAttribute("previousChoiceId", choiceHistory.peekTopChoiceId());
             model.addAttribute("previousBranchingPointId", choiceHistory.peekTopBranchingPointId());

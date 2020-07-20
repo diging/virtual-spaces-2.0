@@ -39,8 +39,9 @@ public class ExhibitionSequencesController {
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
-            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId, @RequestParam(required = false, name="choice") boolean choice,
-            @RequestParam(required = false, name="branchingPoint") String branchingPointId, @RequestParam(required = false, name="choiceId") String choiceId)
+            @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
+            @RequestParam(required = false, name="branchingPoint") String branchingPointId,
+            @RequestParam(required = false, name="choiceId") String choiceId)
                     throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
@@ -65,15 +66,10 @@ public class ExhibitionSequencesController {
         if (slides.size() == 0) {
             throw new SlidesInSequenceNotFoundException();
         }
-
-        if(choiceId==null) {
-            choiceId=sequenceId;
-            branchingPointId = sequenceManager.getSequence(sequenceId).getSlides().get(0).getId();
-        }
-        if(choice){
+        if(branchingPointId!=null){
             choiceHistory.addToSequenceSlideHistory(choiceId,branchingPointId);
         }
         String firstSlideId = slides.get(0).getId();
-        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId + "?choice="+choice+"&branchingPoint="+branchingPointId+"&choiceId="+choiceId;
+        return "redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId + "?branchingPoint="+branchingPointId+"&choiceId="+choiceId;
     }
 }
