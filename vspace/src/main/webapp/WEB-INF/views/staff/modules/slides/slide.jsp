@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<link rel="stylesheet"
+	href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <script>
 //# sourceURL=click.js
@@ -62,14 +63,15 @@ function onDoubleClick(e){
         $(".open").css('border', 'none');
         // get text from p tag
         var description = $("div.open p:eq(0)").text();
-        alert(description);
+        alert(description.trim());
         // insert text box and buttons
-        //$('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text"></textarea></div>').insertBefore( ".open" );
-        markDown = new EasyMDE({element: $('#textBlockText')[0]});
-        markDown.value(description);
-        $("#addTextAlert button#submitText").attr("id","submitTextBlock");
-        $("#addTextAlert").show();
+        $('<div class="col-xs-12" id="newTextBlockDiv" ><div><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div><div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div></div>').insertBefore( ".open" );
         //$('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
+        markDown = new EasyMDE({element: $('#newTextBlock')[0]});
+        markDown.value(description.trim());
+        //$("#addTextAlert button#submitText").attr("id","submitTextBlock");
+        //$("#newTextBlock").show();
+        
         $(".open").children("p").remove();
         $(".open").children("input:first").remove();
         $(".open").children("a:first").remove();
@@ -423,7 +425,7 @@ $(document).ready(function() {
         // ------------- creating text content blocks ------------
         
         var formData = new FormData();
-        var text = markDown.value()
+        var text = markDown.value();
         formData.append('content', text);
         ++contentCount;
         formData.append('contentOrder', contentCount);
@@ -456,6 +458,7 @@ $(document).ready(function() {
             	}
             },
             complete: function(data) {
+            	console.log("In complete");
             	markDown.toTextArea();
             	markDown = null;
             }
@@ -468,7 +471,7 @@ $(document).ready(function() {
     
     
     function closeTextBox(blockId) {
-        var description = $("#newTextBlock").val()
+        var description =markDown.value();
         // clear text box and buttons
         $(".open").empty()
         $(".open").append('<p>'+description+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
@@ -491,20 +494,27 @@ $(document).ready(function() {
     $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $(document).on('click','#submitTextBlock',function(){
-       var formData = new FormData();
-       var blockId = $(this).closest(".open").attr("id");
-       formData.append('textBlockDesc', $("#newTextBlock").val());
-       formData.append('textBlockId', blockId);
-       $.ajax({
-           url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
-           type: 'POST',
-           cache       : false,
-           contentType : false,
-           processData : false,
-           data: formData,
-           enctype: 'multipart/form-data',
-           success: function(data) {
-               // replace text box with new description
+    	$("#addTextAlert").hide();
+        // ------------- editting text content blocks ------------
+        
+        var formData = new FormData();
+        var text = markDown.value();
+        markDown.value('');
+        var formData = new FormData();
+        var blockId = $(".open").attr("id");
+        formData.append('textBlockDesc', text);
+        formData.append('textBlockId', blockId);
+        console.log(blockId + '-----'+ text);
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                // replace text box with new description
                closeTextBox(blockId)
                $(".open").removeClass("open");
            },
@@ -516,6 +526,10 @@ $(document).ready(function() {
                		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                		$('.error').append(alert);
            		}
+           },
+           complete: function(data) {
+           	markDown.toTextArea();
+           	markDown = null;
            }
        });
     });    
@@ -709,9 +723,7 @@ $(window).on('load', function () {
 				<h5 class="modal-title">Login</h5>
 			</div>
 			<div class="modal-body">
-				<h6>
-					You are not logged in, please login.
-				</h6>
+				<h6>You are not logged in, please login.</h6>
 			</div>
 			<div class="modal-footer">
 				<a class="btn btn-primary" style="color: white;"
