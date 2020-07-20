@@ -64,8 +64,7 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
 
     @Override
     protected IVSpaceElement getTarget(String linkedSpaceId) {
-        ISpace target = spaceManager.getSpace(linkedSpaceId);
-        return target;
+        return spaceManager.getSpace(linkedSpaceId);
     }
 
     @Override
@@ -74,8 +73,7 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
         if(!linksValidation(spaceLinkOptional)) {
             return null;
         }
-        ISpaceLinkDisplay display = spaceLinkOptional.get();
-        return display;
+        return spaceLinkOptional.get();
     }
 
     @Override
@@ -84,8 +82,7 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
         if(!linksValidation(linkOptional)) {
             return null;
         }
-        ISpaceLink link = linkOptional.get();
-        return link;
+        return linkOptional.get();
     }
 
     @Override

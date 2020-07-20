@@ -84,8 +84,7 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
         if(!linksValidation(externalLinkOptional)) {
             return null;
         }
-        IExternalLinkDisplay display = externalLinkOptional.get();
-        return display;
+        return externalLinkOptional.get();
     }
 
     @Override
@@ -94,7 +93,7 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
         if(!linksValidation(linkOptional)) {
             return null;
         }
-        return (ILink) linkOptional.get();
+        return linkOptional.get();
     }
 
     @Override

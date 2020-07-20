@@ -57,8 +57,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
 
     @Override
     protected IModule getTarget(String linkedModuleId) {
-        IModule target = moduleManager.getModule(linkedModuleId);
-        return target;
+        return moduleManager.getModule(linkedModuleId);
     }
 
     @Override
@@ -89,8 +88,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
         if(!linksValidation(moduleLinkOptional)) {
             return null;
         }
-        IModuleLinkDisplay display = moduleLinkOptional.get();
-        return display;
+        return moduleLinkOptional.get();
     }
 
     @Override
@@ -99,8 +97,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
         if(!linksValidation(linkOptional)) {
             return null;
         }
-        IModuleLink link = linkOptional.get();
-        return link;
+        return linkOptional.get();
     }
 
     @Override
