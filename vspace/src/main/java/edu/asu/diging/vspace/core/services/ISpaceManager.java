@@ -5,6 +5,7 @@ import java.util.List;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -20,7 +21,12 @@ public interface ISpaceManager {
 
     List<ISpace> getAllSpaces();
     
+    List<SpaceLink> getLinkedSpaces(String id);
+
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
-    
+
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
+    
+    List<SpaceLink> getLinkedFromSpaces(String id);
+
 }
