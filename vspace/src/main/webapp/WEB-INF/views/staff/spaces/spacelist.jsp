@@ -46,25 +46,25 @@ $( document ).ready(function() {
                     Are you sure you want to delete ?
                 </p>
                 <div id="warningMessage">
-                <small class="text-danger">
+                <div class="text-danger">
                 Other spaces have links to this space!
-                </small>
+                </div>
                 </div>
                 <div id="exhibitionMessage">
-                <small class="text-danger">
-                This space is the exhibition start space! This will set exhibition to null.
-                </small>
+                <div class="text-danger">
+                This space is the start of the exhibition. Deleting it will make your exhibition unavailable.
+                </div>
                 </div>
                 <div id="finalWarning">
-                <small class="text-danger">
-                Do you still want to delete?
-                </small>
+                <div class="text-danger">
+                Do you want to continue?
+                </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="closeButton" class="btn btn-default"
                     data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                <button type="button" class="btn btn-danger btn-ok">Yes, delete!</button>
             </div>
         </div>
     </div>

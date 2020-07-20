@@ -11,12 +11,12 @@
 $(function(){
     $("#deleteSpace").click(function(){
         var spaceId = "${space.id}";
-        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"), $("#warningMessage"), $("#finalWarning"));
+        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"));
 });    
 
 
 $( document ).ready(function() {
-	readyDoc($("#deleteSpace"), $('#confirm-space-delete'));
+	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
   });    
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
@@ -1098,12 +1098,57 @@ ${space.description}
     </div>
 </div>
 
+<<<<<<< HEAD
 <p>
+=======
+<div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalTitle">
+                    Confirm ${space.id} Deletion?
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete ${space.id}?
+                </p>
+                <div id="warningMessage">
+                <div class="text-danger">
+                Other spaces have links to this space!
+                </div>
+                </div>
+                <div id="exhibitionMessage">
+                <div class="text-danger">
+                This space is the start of the exhibition. Deleting it will make your exhibition unavailable.
+                </div>
+                </div>
+                <div id="finalWarning">
+                <div class="text-danger">
+                Do you want to continue?
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeButton" class="btn btn-default"
+                    data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-ok">Yes, delete!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+>>>>>>> refs/remotes/origin/develop
 <c:if test="${not empty space.image}">
 	<div id="space" style ="float: left">
 		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />"/>
 	</div>
 </c:if>
+<<<<<<< HEAD
 <c:if test="${not empty linksOnThisSpace}">
 <h5 style ="overflow: hidden; padding-left: 0.5em">Space links on this space:</h5>
 <ul style ="overflow: hidden;">
@@ -1121,3 +1166,6 @@ ${space.description}
 </ul>
 </c:if>
 </p>
+=======
+
+>>>>>>> refs/remotes/origin/develop

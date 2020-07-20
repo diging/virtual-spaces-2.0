@@ -20,13 +20,13 @@ public interface ISpaceManager {
     ISpace getFullyLoadedSpace(String id);
 
     List<ISpace> getAllSpaces();
-    
-    List<SpaceLink> linksFromSpace(String id);
-    
-    List<SpaceLink> linksToSpace(String id);
+
+    List<SpaceLink> getLinkedSpaces(String id);
 
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
 
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
+    
+    List<SpaceLink> getLinkedFromSpaces(String id);
 
 }
