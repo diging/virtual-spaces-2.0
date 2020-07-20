@@ -780,6 +780,24 @@ $( document ).ready(function() {
         </p>
     </form:form>
 </div>
+<div style="padding-bottom: 10px;">
+    <c:url value="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
+    <form:form method="POST"
+        action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+        <label><h5>Show Links to Unpublished Spaces:</h5></label>
+        <select class="form-control" name="showSpaceLinksParam"
+            style="width: 200px; display: inline;">
+            <option id="Yes" value="YES"
+                <c:if test="${space.showSpaceLinksToUnpublishedSpaces=='YES'}">selected</c:if>>Yes</option>
+            <option id="No" value="NO"
+                <c:if test="${space.showSpaceLinksToUnpublishedSpaces=='NO'}">selected</c:if>>No</option>
+        </select>
+        <p
+            style="display: inline; padding-left: 10px; padding-top: 1000px;">
+            <input class="btn btn-primary" type="submit" value="submit" />
+        </p>
+    </form:form>
+</div>
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
 ${space.description}

@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model;
 
 import java.time.OffsetDateTime;
 
+import edu.asu.diging.vspace.core.model.impl.ShowSpaceLinksToUnpublishedSpaces;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 public interface IVSpaceElement {
@@ -37,4 +38,9 @@ public interface IVSpaceElement {
     SpaceStatus getSpaceStatus();
 
     void setSpaceStatus(SpaceStatus status);
+
+    ShowSpaceLinksToUnpublishedSpaces getShowSpaceLinksToUnpublishedSpaces();
+
+    void setShowSpaceLinksToUnpublishedSpaces(ShowSpaceLinksToUnpublishedSpaces showSpaceLinksToUnpublishedSpaces);
+
 }
