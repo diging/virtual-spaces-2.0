@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -12,10 +13,8 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.ITVSpaceElement;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -24,6 +23,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
+@Transactional
 public abstract class LinkManager implements ILinkManager{
 
     @Autowired
@@ -60,9 +60,9 @@ public abstract class LinkManager implements ILinkManager{
         ILinkDisplay displayLink = getDisplayLink(linkDisplayId);
 
 
-        IVSpaceElement target = (IVSpaceElement) getTarget(linkedId);
+        IVSpaceElement target = getTarget(linkedId);
         link.setName(title);
-        setTarget((ILLink) link,(ITVSpaceElement) target);
+        setTarget(link,target);
 
         setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
 
@@ -85,7 +85,7 @@ public abstract class LinkManager implements ILinkManager{
 
     protected abstract ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink);
 
-    protected abstract void setTarget(ILLink link, ITVSpaceElement target);
+    protected abstract void setTarget(ILink link, IVSpaceElement target);
 
     protected abstract ILinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException;
 

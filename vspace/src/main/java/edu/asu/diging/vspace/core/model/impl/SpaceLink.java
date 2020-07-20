@@ -13,7 +13,6 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 @Entity
 public class SpaceLink extends VSpaceElement implements ISpaceLink {
@@ -89,14 +88,10 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     public ISpace getTarget() {
         return targetSpace;
     }
-    //    @Override
-    //    public void setTarget(ISpace target) {
-    //        this.targetSpace = target;
-    //    }
+
     @Override
-    public void setTarget(IVSpaceElement target) {
-        // TODO Auto-generated method stub
-        this.targetSpace = (ISpace) target;
+    public void setTarget(ISpace target) {
+        this.targetSpace = target;
 
     }
 }

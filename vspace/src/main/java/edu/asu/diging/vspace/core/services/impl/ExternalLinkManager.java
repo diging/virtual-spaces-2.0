@@ -15,10 +15,8 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
-import edu.asu.diging.vspace.core.model.ILLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.ITVSpaceElement;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
@@ -54,21 +52,6 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     }
 
     @Override
-    public void deleteLink(String linkId) {
-        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(linkId);
-        if (!linkOptional.isPresent()) {
-            return;
-        }
-
-        ISpace space = linkOptional.get().getSpace();
-        IExternalLink link = linkOptional.get();
-        space.getExternalLinks().remove(link);
-        externalLinkDisplayRepo.deleteByExternalLink(link);
-        externalLinkRepo.delete((ExternalLink) link);
-
-    }
-
-    @Override
     protected ILink createLinkObject(String title, String id, IVSpaceElement target, String linkLabel) {
         ISpace source = spaceManager.getSpace(id);
         IExternalLink link = externalLinkFactory.createExternalLink(title, source, ((ExternalLinkValue)target).getValue());
@@ -90,7 +73,7 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
     }
 
     @Override
-    protected void setTarget(ILLink link, ITVSpaceElement target) {
+    protected void setTarget(ILink link, IVSpaceElement target) {
         link.setTarget(target);
 
     }
@@ -111,8 +94,7 @@ public class ExternalLinkManager extends LinkManager implements IExternalLinkMan
         if(!linksValidation(linkOptional)) {
             return null;
         }
-        IExternalLink link = linkOptional.get();
-        return link;
+        return (ILink) linkOptional.get();
     }
 
     @Override

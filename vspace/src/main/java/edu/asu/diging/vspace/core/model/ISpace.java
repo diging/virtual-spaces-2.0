@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-public interface ISpace extends ITVSpaceElement {
+public interface ISpace extends IVSpaceElement {
 
     List<ISpaceLink> getSpaceLinks();
 

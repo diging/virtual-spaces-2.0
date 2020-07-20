@@ -14,12 +14,10 @@ import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
-import edu.asu.diging.vspace.core.model.ILLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.ITVSpaceElement;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
@@ -58,21 +56,6 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    public void deleteLink(String linkId) {
-        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(linkId);
-        if (!linkOptional.isPresent()) {
-            return;
-        }
-
-        ISpace space = linkOptional.get().getSpace();
-        IModuleLink link = linkOptional.get();
-        space.getModuleLinks().remove(link);
-        moduleLinkDisplayRepo.deleteByLink(link);
-        moduleLinkRepo.delete((ModuleLink) link);
-
-    }
-
-    @Override
     protected IModule getTarget(String linkedModuleId) {
         IModule target = moduleManager.getModule(linkedModuleId);
         return target;
@@ -95,7 +78,7 @@ public class ModuleLinkManager extends LinkManager implements IModuleLinkManager
     }
 
     @Override
-    protected void setTarget(ILLink link, ITVSpaceElement target) {
+    protected void setTarget(ILink link, IVSpaceElement target) {
         link.setTarget(target);
 
     }

@@ -14,11 +14,9 @@ import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
-import edu.asu.diging.vspace.core.model.ILLink;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
-import edu.asu.diging.vspace.core.model.ITVSpaceElement;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
@@ -51,21 +49,6 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     @Override
     public List<ILinkDisplay> getLinkDisplays(String spaceId) {
         return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
-    }
-
-    @Override
-    public void deleteLink(String linkId) {
-        Optional<SpaceLink> linkOptional = spaceLinkRepo.findById(linkId);
-        if (!linkOptional.isPresent()) {
-            return;
-        }
-
-        ISpace space = linkOptional.get().getSourceSpace();
-        ISpaceLink link = linkOptional.get();
-        space.getSpaceLinks().remove(link);
-        spaceLinkDisplayRepo.deleteByLink(link);
-        spaceLinkRepo.delete((SpaceLink) link);
-
     }
 
     @Override
@@ -106,7 +89,7 @@ public class SpaceLinkManager extends LinkManager implements ISpaceLinkManager{
     }
 
     @Override
-    protected void setTarget(ILLink link, ITVSpaceElement target) {
+    protected void setTarget(ILink link, IVSpaceElement target) {
         link.setTarget(target);
     }
 

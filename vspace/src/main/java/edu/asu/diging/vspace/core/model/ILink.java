@@ -6,7 +6,7 @@ public interface ILink<T extends IVSpaceElement> extends IVSpaceElement{
 
     void setSpace(ISpace space);
 
-    IVSpaceElement getTarget();
+    T getTarget();
 
     void setTarget(T target);
 }

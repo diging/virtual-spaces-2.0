@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-public interface IModule extends ITVSpaceElement {
+public interface IModule extends IVSpaceElement {
 
     List<ISlide> getSlides();
 
