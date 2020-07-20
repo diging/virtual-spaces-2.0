@@ -1058,49 +1058,7 @@ ${space.description}
 
 </nav>
 <p></p>
-<div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalTitle">
-                    Confirm ${space.id} Deletion?
-                </h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Are you sure you want to delete ${space.id}?
-                </p>
-                <div id="warningMessage">
-                <small class="text-danger">
-                Other spaces have links to this space!
-                </small>
-                </div>
-                <div id="exhibitionMessage">
-                <small class="text-danger">
-                This space is the exhibition start space! This will set exhibition to null.
-                </small>
-                </div>
-                <div id="finalWarning">
-                <small class="text-danger">
-                Do you still want to delete?
-                </small>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="closeButton" class="btn btn-default"
-                    data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<<<<<<< HEAD
-<p>
-=======
 <div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
     aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1141,19 +1099,23 @@ ${space.description}
     </div>
 </div>
 
-
->>>>>>> refs/remotes/origin/develop
 <c:if test="${not empty space.image}">
 	<div id="space" style ="float: left">
 		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />"/>
 	</div>
 </c:if>
-<<<<<<< HEAD
+
+<!-- To display the spacelinks on current space and spaces from where curent space is linked. -->
 <c:if test="${not empty linksOnThisSpace}">
 <h5 style ="overflow: hidden; padding-left: 0.5em">Space links on this space:</h5>
 <ul style ="overflow: hidden;">
 <c:forEach items="${linksOnThisSpace}" var="spaceLinks">
-<li><h6>${spaceLinks.targetSpace.name}</h6></li>
+<c:if test="${not empty spaceLinks.targetSpace}">
+<li><h6>${spaceLinks.name}&nbsp;  ->  &nbsp;${spaceLinks.targetSpace.name}</h6></li>
+</c:if>
+<c:if test="${empty spaceLinks.targetSpace}">
+<li><h6>${spaceLinks.name}&nbsp;  ->  &nbsp;&lt;No Space&gt;</h6></li>
+</c:if>
 </c:forEach>
 </ul>
 </c:if>
@@ -1165,7 +1127,3 @@ ${space.description}
 </c:forEach>
 </ul>
 </c:if>
-</p>
-=======
-
->>>>>>> refs/remotes/origin/develop
