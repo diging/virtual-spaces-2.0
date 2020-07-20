@@ -243,13 +243,13 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public List<SpaceLink> getLinkedSpace(String id) {
+    public List<SpaceLink> getLinkedSpaces(String id) {
 
         return spaceLinkRepo.getLinkedSpaces(id);
     }
     
     @Override
-    public List<SpaceLink> getLinkedFromSpace(String id) {
+    public List<SpaceLink> getLinkedFromSpaces(String id) {
 
         return spaceLinkRepo.getLinkedFromSpaces(id);
     }
