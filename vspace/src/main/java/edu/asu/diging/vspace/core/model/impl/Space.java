@@ -13,6 +13,8 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.IPrefix;
@@ -30,12 +32,15 @@ public class Space extends VSpaceElement implements ISpace {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
+    @JsonIgnore
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
     private List<ISpaceLink> spaceLinks;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
     private List<IModuleLink> moduleLinks;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "space", targetEntity=ExternalLink.class)
     private List<IExternalLink> externalLinks;
 
