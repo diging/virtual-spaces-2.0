@@ -151,7 +151,7 @@ body {
                                 <c:forEach items="${choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}/slide/${choice.sequence.slides[0].id}?previousSequenceId=${currentSequenceId}&branchingPoint=${slideId}" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?branchingPoint=${slideId}&previousSequenceId=${currentSequenceId}" />"
                                         class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>
@@ -161,7 +161,7 @@ body {
                                 <c:forEach items="${contents.choices}"
                                     var="choice">
                                     <a
-                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}/slide/${choice.sequence.slides[0].id}?previousSequenceId=${currentSequenceId}&branchingPoint=${slideId}" />"
+                                        href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${choice.sequence.id}?branchingPoint=${slideId}&previousSequenceId=${currentSequenceId}" />"
                                         class="list-group-item list-group-item-action">${choice.sequence.name}</a>
                                 </c:forEach>
                             </div>

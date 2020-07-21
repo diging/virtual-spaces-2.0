@@ -106,11 +106,13 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", currentSlide);
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-            if(back && sequenceHistory.peekSequenceId().equalsIgnoreCase(sequenceId)) {
+            if(back && sequenceHistory.peekSequenceId().equalsIgnoreCase(sequenceId) && 
+                    sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
                 sequenceHistory.popFromHistory();
             }
         }
-        if(branchingPointId!=null){
+        //On initial load of module through space branchingPointId null check fails hence adding String null check
+        if(branchingPointId!=null && !branchingPointId.equalsIgnoreCase("null")){
             sequenceHistory.addToHistory(previousSequenceId,branchingPointId);
         }
         if(sequenceHistory.hasHistory()) {
