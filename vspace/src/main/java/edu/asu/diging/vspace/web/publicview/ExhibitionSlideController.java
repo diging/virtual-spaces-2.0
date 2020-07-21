@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
-import edu.asu.diging.vspace.core.model.impl.ChoicesHistory;
+import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -43,11 +43,14 @@ public class ExhibitionSlideController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ChoicesHistory choiceHistory;
+    private SequenceHistory sequenceHistory;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
-            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId, @RequestParam(required=false, name="back") boolean back)
+            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
+            @RequestParam(required=false, name="back") boolean back,
+            @RequestParam(required = false, name="branchingPoint") String branchingPointId,
+            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId)
                     throws ModuleNotFoundException, SequenceNotFoundException,
                     SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
                     SpaceNotFoundException {
@@ -103,14 +106,17 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", currentSlide);
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-            if(back) {
-                choiceHistory.removeLastElementFromSequenceSlideHistory();
+            if(back && sequenceHistory.peekSequenceId().equalsIgnoreCase(sequenceId)) {
+                sequenceHistory.popFromHistory();
             }
         }
-        if(choiceHistory.backNavigationExists()) {
+        if(branchingPointId!=null){
+            sequenceHistory.addToHistory(previousSequenceId,branchingPointId);
+        }
+        if(sequenceHistory.hasHistory()) {
             model.addAttribute("showBackToPreviousChoice", true);
-            model.addAttribute("previousSequenceId", choiceHistory.peekTopChoiceId());
-            model.addAttribute("previousBranchingPointId", choiceHistory.peekTopBranchingPointId());
+            model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
+            model.addAttribute("previousBranchingPointId", sequenceHistory.peekBranchingPointId());
         }
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
