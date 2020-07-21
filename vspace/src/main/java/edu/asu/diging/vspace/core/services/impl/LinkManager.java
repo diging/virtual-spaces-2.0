@@ -24,7 +24,7 @@ import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
-public abstract class LinkManager implements ILinkManager{
+public abstract class LinkManager<L,T> implements ILinkManager<L,T>{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -42,13 +42,13 @@ public abstract class LinkManager implements ILinkManager{
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException{
 
-        IVSpaceElement target = getTarget(linkedId);
-        ILink link = (ILink) createLinkObject(title, id, target, linkLabel); 
-        return saveDisplayLinkRepo(link,positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        T target = getTarget(linkedId);
+        L link = createLinkObject(title, id, target, linkLabel); 
+        ILinkDisplay displayLink = createDisplayLink(link);
+        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        return updateLinkAndDisplay(link,displayLink);
+        
     }
-
-    protected abstract ILinkDisplay saveDisplayLinkRepo(ILink link, float positionX, float positionY, int rotation,
-            DisplayType displayType, byte[] linkImage, String imageFilename)  throws ImageCouldNotBeStoredException;
 
     public ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
@@ -56,45 +56,47 @@ public abstract class LinkManager implements ILinkManager{
 
         spaceValidation(id);
 
-        ILink link =  getLink(linkId);
+        L link =  getLink(linkId);
         ILinkDisplay displayLink = getDisplayLink(linkDisplayId);
 
 
-        IVSpaceElement target = getTarget(linkedId);
-        link.setName(title);
+        T target = getTarget(linkedId);
+        ((IVSpaceElement) link).setName(title);
         setTarget(link,target);
 
         setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
-
+        
         return updateLinkAndDisplay(link,displayLink);
     }
 
     @Override
     public void deleteLink(String linkId){
-        ILink link = getLink(linkId);
-        removeFromLinkList(link.getSpace(),link);
+        L link = getLink(linkId);
+        removeFromLinkList(((ILink) link).getSpace(),link);
         deleteLinkDisplayRepo(link);
         deleteLinkRepo(link);
     }
 
-    protected abstract void deleteLinkRepo(ILink link);
+    protected abstract void deleteLinkRepo(L link);
 
-    protected abstract void deleteLinkDisplayRepo(ILink link);
+    protected abstract void deleteLinkDisplayRepo(L link);
 
-    protected abstract void removeFromLinkList(ISpace space, ILink link);
+    protected abstract void removeFromLinkList(ISpace space, L link);
 
-    protected abstract ILinkDisplay updateLinkAndDisplay(ILink link, ILinkDisplay displayLink);
+    protected abstract ILinkDisplay updateLinkAndDisplay(L link, ILinkDisplay displayLink);
 
-    protected abstract void setTarget(ILink link, IVSpaceElement target);
+    protected abstract void setTarget(L link, T target);
 
     protected abstract ILinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException;
 
-    protected abstract ILink getLink(String linkId);
+    protected abstract L getLink(String linkId);
 
-    protected abstract ILink createLinkObject(String title, String id, IVSpaceElement target, String linkLabel);
+    protected abstract L createLinkObject(String title, String id, T target, String linkLabel);
 
-    protected abstract IVSpaceElement getTarget(String linkedId);
+    protected abstract T getTarget(String linkedId);
 
+    protected abstract ILinkDisplay createDisplayLink(L link);
+    
     protected void spaceValidation(String id) throws SpaceDoesNotExistException{
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {

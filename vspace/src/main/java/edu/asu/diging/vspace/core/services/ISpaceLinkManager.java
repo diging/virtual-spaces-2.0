@@ -1,5 +1,5 @@
 package edu.asu.diging.vspace.core.services;
 
-public interface ISpaceLinkManager extends ILinkManager{
+public interface ISpaceLinkManager<ISpaceLink,ISpace> extends ILinkManager<ISpaceLink,ISpace>{
     
 }

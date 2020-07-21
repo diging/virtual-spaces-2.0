@@ -8,7 +8,7 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
-public interface ILinkManager {
+public interface ILinkManager<L,T> {
 
     ILinkDisplay createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
