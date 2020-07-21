@@ -106,8 +106,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSlideCon", currentSlide);
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-            if(back && sequenceHistory.peekSequenceId().equalsIgnoreCase(sequenceId) && 
-                    sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
+            if(back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
                 sequenceHistory.popFromHistory();
             }
         }
