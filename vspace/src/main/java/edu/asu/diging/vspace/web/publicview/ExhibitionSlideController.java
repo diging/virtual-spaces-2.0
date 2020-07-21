@@ -110,8 +110,7 @@ public class ExhibitionSlideController {
                 sequenceHistory.popFromHistory();
             }
         }
-        //On initial load of module through space branchingPointId null check fails hence adding String null check
-        if(branchingPointId!=null && !branchingPointId.equalsIgnoreCase("null")){
+        if(branchingPointId!=null){
             sequenceHistory.addToHistory(previousSequenceId,branchingPointId);
         }
         if(sequenceHistory.hasHistory()) {
