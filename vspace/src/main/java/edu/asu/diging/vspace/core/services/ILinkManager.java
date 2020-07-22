@@ -8,17 +8,17 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
-public interface ILinkManager<L,T> {
+public interface ILinkManager<L,T,U> {
 
-    ILinkDisplay createLink(String title, String id, float positionX, float positionY,
+    U createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
-    ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
+    U updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
 
-    List<ILinkDisplay> getLinkDisplays(String spaceId);
+    List<U> getLinkDisplays(String spaceId);
 
     void deleteLink(String linkId);
 

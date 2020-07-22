@@ -17,11 +17,10 @@ public class ExternalLinkFactory implements IExternalLinkFactory {
      * createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
      */
     @Override
-    public IExternalLink createExternalLink(String title, ISpace space, String externalLink) {
+    public IExternalLink createExternalLink(String title, ISpace space) {
         IExternalLink link = new ExternalLink();
         link.setName(title);
         link.setSpace(space);
-        link.setExternalLink(externalLink);
         return link;
     }
 }

@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.Optional;
-
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +22,7 @@ import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
-public abstract class LinkManager<L,T> implements ILinkManager<L,T>{
+public abstract class LinkManager<L,T, U> implements ILinkManager<L,T,U>{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -38,34 +36,32 @@ public abstract class LinkManager<L,T> implements ILinkManager<L,T>{
     @Autowired
     private IStorageEngine storage;
 
-    public ILinkDisplay createLink(String title, String id, float positionX, float positionY,
+    public U createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException{
 
+        L link = createLinkObject(title, id);
         T target = getTarget(linkedId);
-        L link = createLinkObject(title, id, target, linkLabel); 
-        ILinkDisplay displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        ((IVSpaceElement) link).setName(linkLabel);
+        ((ILink) link).setTarget((IVSpaceElement) target);
+        U displayLink = createDisplayLink(link);
+        setDisplayProperties((ILinkDisplay) displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
-        
+
     }
 
-    public ILinkDisplay updateLink(String title, String id, float positionX, float positionY,
+    public U updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
 
         spaceValidation(id);
 
         L link =  getLink(linkId);
-        ILinkDisplay displayLink = getDisplayLink(linkDisplayId);
-
-
         T target = getTarget(linkedId);
         ((IVSpaceElement) link).setName(title);
-        setTarget(link,target);
-
-        setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
-        
+        ((ILink) link).setTarget((IVSpaceElement) target);
+        U displayLink = getDisplayLink(linkDisplayId);
+        setDisplayProperties((ILinkDisplay) displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
     }
 
@@ -83,29 +79,23 @@ public abstract class LinkManager<L,T> implements ILinkManager<L,T>{
 
     protected abstract void removeFromLinkList(ISpace space, L link);
 
-    protected abstract ILinkDisplay updateLinkAndDisplay(L link, ILinkDisplay displayLink);
+    protected abstract U updateLinkAndDisplay(L link, U displayLink);
 
-    protected abstract void setTarget(L link, T target);
-
-    protected abstract ILinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException;
+    protected abstract U getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException;
 
     protected abstract L getLink(String linkId);
 
-    protected abstract L createLinkObject(String title, String id, T target, String linkLabel);
+    protected abstract L createLinkObject(String title, String id);
 
     protected abstract T getTarget(String linkedId);
 
-    protected abstract ILinkDisplay createDisplayLink(L link);
-    
+    protected abstract U createDisplayLink(L link);
+
     protected void spaceValidation(String id) throws SpaceDoesNotExistException{
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
-    }
-
-    protected boolean linksValidation(Optional link){
-        return link.isPresent();
     }
 
     protected void setDisplayProperties(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {

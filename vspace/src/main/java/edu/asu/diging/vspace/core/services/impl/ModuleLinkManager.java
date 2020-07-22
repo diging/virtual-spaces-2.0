@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +15,6 @@ import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -25,7 +23,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager<IModuleLink,IModule> implements IModuleLinkManager<IModuleLink,IModule>{
+public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLinkDisplay> implements IModuleLinkManager<IModuleLink,IModule,ModuleLinkDisplay>{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -46,8 +44,8 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule> implemen
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public List<ILinkDisplay> getLinkDisplays(String spaceId) {
-        return new ArrayList<>(moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId));
+    public List<ModuleLinkDisplay> getLinkDisplays(String spaceId) {
+        return moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId);
     }
 
     @Override
@@ -56,48 +54,40 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule> implemen
     }
 
     @Override
-    protected IModuleLink createLinkObject(String title, String id, IModule target, String linkLabel) {
+    protected IModuleLink createLinkObject(String title, String id) {
         ISpace source = spaceManager.getSpace(id);
         IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
-        link.setModule(target);
-        link.setName(linkLabel);
         return link;
     }
 
     @Override
-    protected ILinkDisplay updateLinkAndDisplay(IModuleLink link, ILinkDisplay displayLink) {
+    protected ModuleLinkDisplay updateLinkAndDisplay(IModuleLink link, ModuleLinkDisplay displayLink) {
         moduleLinkRepo.save((ModuleLink) link);
-        moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
+        displayLink = moduleLinkDisplayRepo.save(displayLink);
         return displayLink;
     }
 
     @Override
-    protected void setTarget(IModuleLink link, IModule target) {
-        link.setTarget(target);
-
-    }
-
-    @Override
-    protected ILinkDisplay getDisplayLink(String moduleLinkDisplayId){
-        Optional<ModuleLinkDisplay> moduleLinkOptional = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
-        if(!linksValidation(moduleLinkOptional)) {
-            return null;
+    protected ModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId){
+        Optional<ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        if(moduleLinkDisplay.isPresent()) {
+            return moduleLinkDisplay.get();
         }
-        return moduleLinkOptional.get();
+        return null;
     }
 
     @Override
     protected IModuleLink getLink(String moduleLinkID){
-        Optional<ModuleLink> linkOptional = moduleLinkRepo.findById(moduleLinkID);
-        if(!linksValidation(linkOptional)) {
-            return null;
+        Optional<ModuleLink> moduleLink = moduleLinkRepo.findById(moduleLinkID);
+        if(moduleLink.isPresent()) {
+            return moduleLink.get();
         }
-        return linkOptional.get();
+        return null;
     }
 
     @Override 
-    protected ILinkDisplay createDisplayLink(IModuleLink link) {
-        return moduleLinkDisplayFactory.createModuleLinkDisplay(link);
+    protected ModuleLinkDisplay createDisplayLink(IModuleLink link) {
+        return (ModuleLinkDisplay) moduleLinkDisplayFactory.createModuleLinkDisplay(link);
     }
 
     @Override

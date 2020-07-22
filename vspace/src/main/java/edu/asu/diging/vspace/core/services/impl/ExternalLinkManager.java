@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,6 @@ import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
@@ -24,7 +22,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue> implements IExternalLinkManager<IExternalLink, ExternalLinkValue>{
+public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue,ExternalLinkDisplay> implements IExternalLinkManager<IExternalLink, ExternalLinkValue,ExternalLinkDisplay>{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -42,17 +40,15 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
     @Override
-    public List<ILinkDisplay> getLinkDisplays(String spaceId) {
-        return new ArrayList<>(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId));
+    public List<ExternalLinkDisplay> getLinkDisplays(String spaceId) {
+        return externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId);
     }
 
     @Override
-    protected IExternalLink createLinkObject(String title, String id, ExternalLinkValue target, String linkLabel) {
+    protected IExternalLink createLinkObject(String title, String id) {
         ISpace source = spaceManager.getSpace(id);
-        IExternalLink link = externalLinkFactory.createExternalLink(title, source, target.getValue());
-        link.setName(linkLabel);
-        externalLinkRepo.save((ExternalLink) link);
-        return link;
+        IExternalLink link = externalLinkFactory.createExternalLink(title, source);
+        return externalLinkRepo.save((ExternalLink) link);
     }
 
     @Override
@@ -61,39 +57,32 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     }
 
     @Override
-    protected ILinkDisplay updateLinkAndDisplay(IExternalLink link, ILinkDisplay displayLink) {
+    protected ExternalLinkDisplay updateLinkAndDisplay(IExternalLink link, ExternalLinkDisplay displayLink) {
         externalLinkRepo.save((ExternalLink) link);
-        externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
-        return displayLink;
+        return externalLinkDisplayRepo.save(displayLink);
     }
 
     @Override
-    protected void setTarget(IExternalLink link, ExternalLinkValue target) {
-        link.setTarget(target);
-
-    }
-
-    @Override
-    protected ILinkDisplay getDisplayLink(String externalLinkDisplayId){
-        Optional<ExternalLinkDisplay> externalLinkOptional = externalLinkDisplayRepo.findById(externalLinkDisplayId);
-        if(!linksValidation(externalLinkOptional)) {
-            return null;
+    protected ExternalLinkDisplay getDisplayLink(String externalLinkDisplayId){
+        Optional<ExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo.findById(externalLinkDisplayId);
+        if(externalLinkDisplay.isPresent()) {
+            return externalLinkDisplay.get();
         }
-        return externalLinkOptional.get();
+        return null;
     }
 
     @Override
     protected IExternalLink getLink(String externalLinkID){
-        Optional<ExternalLink> linkOptional = externalLinkRepo.findById(externalLinkID);
-        if(!linksValidation(linkOptional)) {
-            return null;
+        Optional<ExternalLink> externalLink = externalLinkRepo.findById(externalLinkID);
+        if(externalLink.isPresent()) {
+            return externalLink.get();
         }
-        return linkOptional.get();
+        return null;
     }
 
     @Override
-    protected ILinkDisplay createDisplayLink(IExternalLink link) {
-        return externalLinkDisplayFactory.createExternalLinkDisplay(link);
+    protected ExternalLinkDisplay createDisplayLink(IExternalLink link) {
+        return (ExternalLinkDisplay) externalLinkDisplayFactory.createExternalLinkDisplay(link);
     }
 
     @Override

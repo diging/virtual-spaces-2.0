@@ -306,8 +306,8 @@ $( document ).ready(function() {
 	    if(storeX == undefined || storeY == undefined){
 	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
 	        $('#errorAlert').show();
-	        return;
-	   	}
+	        return;    
+	    }
 	    var linkedModules = $("#moduleLinkIdEdit").val();
 	    $("#moduleLinkXEdit").val(storeX);
 	    $("#moduleLinkYEdit").val(storeY);
@@ -340,8 +340,8 @@ $( document ).ready(function() {
 	    if (storeX == undefined || storeY == undefined) {
 	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
 	        $('#errorAlert').show();
-	        return;
-	   	}
+	        return;    
+	    }
 	    var linkedSpace = $("#spaceLinkIdEdit").val();
 	    $("#spaceLinkXEdit").val(storeX);
 	    $("#spaceLinkYEdit").val(storeY);
@@ -376,7 +376,7 @@ $( document ).ready(function() {
 	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
 	        $('#errorAlert').show();
 	        return;
-	   	}
+	    }
 	    var linkedSpace = $("#externalLinkIdEdit").val();
 	    $("#externalLinkXEdit").val(storeX);
 	    $("#externalLinkYEdit").val(storeY);
