@@ -8,25 +8,6 @@
 <script>
 //# sourceURL=click.js
 
-/*function Bold() {
-    /* var txtarea = document.getElementById('textBlockText');
-    console.log(txtarea);
-    var start = txtarea.selectionStart;
-    var finish = txtarea.selectionEnd;
-    var str = txtarea.value.substring(start, finish);
-    console.log(str);
-    var result = str.bold(); 
-    
-    var highlight = window.getSelection();  
-    console.log(highlight);
-    var span = '<span class="bold">' + highlight + '</span>';
-    var text = $('.textBlockText').html();
-    console.log(text);
-    $('.textBlockText').html(text.replace(highlight, span));
-    
-    //document.execCommand('bold');
-}
-*/
 var contentCount = ${fn:length(slideContents)};
 var markDown = null;
 var defaultValue;
@@ -479,7 +460,6 @@ $(document).ready(function() {
         var blockId = $(".open").attr("id");
         formData.append('textBlockDesc', text);
         formData.append('textBlockId', blockId);
-        console.log(blockId + '-----'+ text);
     	$("#editTextAlert").hide();
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",

@@ -117,7 +117,6 @@ public class SlideManager implements ISlideManager {
         System.out.println("lolololol");
         for(int i=0; i<content.size(); ++i) {
                 if(content.get(i).getClass().equals(TextBlock.class)) {
-                    System.out.println("Transforming");
                     ITextBlock textBlock = (ITextBlock) content.get(i);
                     Parser parser = Parser.builder().build();
                     Node document = parser.parse(textBlock.getText());
