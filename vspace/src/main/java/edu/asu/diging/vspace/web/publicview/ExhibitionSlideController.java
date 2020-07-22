@@ -110,7 +110,7 @@ public class ExhibitionSlideController {
                 sequenceHistory.popFromHistory();
             }
         }
-        if(branchingPointId!="" && branchingPointId!=null){
+        if(branchingPointId!=null && !branchingPointId.isEmpty()){
             sequenceHistory.addToHistory(previousSequenceId,branchingPointId);
         }
         if(sequenceHistory.hasHistory()) {

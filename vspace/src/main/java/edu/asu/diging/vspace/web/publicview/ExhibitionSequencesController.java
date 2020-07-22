@@ -64,8 +64,8 @@ public class ExhibitionSequencesController {
         }
         String firstSlideId = slides.get(0).getId();
 
-        return String.format("redirect:/exhibit/{spaceId}/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + firstSlideId + "?branchingPoint=%s&previousSequenceId=%s",
-                (branchingPointId != null ? branchingPointId : ""),(previousSequenceId != null ? previousSequenceId : ""));
+        return String.format("redirect:/exhibit/{spaceId}/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
+                moduleId,sequenceId,firstSlideId,(branchingPointId != null ? branchingPointId : ""),(previousSequenceId != null ? previousSequenceId : ""));
 
     }
 }
