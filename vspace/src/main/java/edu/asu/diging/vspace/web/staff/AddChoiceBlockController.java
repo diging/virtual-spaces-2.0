@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
@@ -22,12 +25,24 @@ public class AddChoiceBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choice/content", method = RequestMethod.POST)
-    public ResponseEntity<IChoiceBlock> addChoiceBlock(@PathVariable("id") String slideId,
+    public ResponseEntity<List<Object>> addChoiceBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId,
             @RequestParam("contentOrder") Integer contentOrder, @RequestParam("selectedChoices") List<String> selectedChoices,
             @RequestParam("showsAll") boolean showsAll) throws IOException {
 
         IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, selectedChoices, contentOrder, showsAll);
-        return new ResponseEntity<>(choiceBlock, HttpStatus.OK);
+        /*After annotating sequence attribute with JsonIgnore in Choice model to fix stack overflow issue 
+         * the sequences are not returned as part of choiceBlock object, hence sequences are explicitly passed 
+         * as part of Response in a list form*/
+        List<Object> responseData = new ArrayList<>();
+        responseData.add(choiceBlock);
+        if(!choiceBlock.isShowsAll()) {
+            List<ISequence> selectedSequences = new ArrayList<ISequence>();
+            for(IChoice choice:choiceBlock.getChoices()) {
+                selectedSequences.add(choice.getSequence());
+            }
+            responseData.add(selectedSequences);
+        }
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 }

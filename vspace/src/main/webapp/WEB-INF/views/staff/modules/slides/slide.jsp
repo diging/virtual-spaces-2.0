@@ -510,11 +510,14 @@ $(document).ready(function() {
             processData : false,
             data: formData,
             enctype: 'multipart/form-data',
-            success: function(choiceBlock) {
-                var choiceblock = $('<div id="'+ choiceBlock.id +'" class="card card-body row" style="margin: 10px;">');
-                if (choiceBlock.showsAll == false){
-                $.each(choiceBlock.choices, function(index, choice) {
-                    choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+choice.sequence.name+'</a>');
+            success: function(data) {
+                console.log(data);
+                console.log(data[0]);
+                console.log(data[1]);
+                var choiceblock = $('<div id="'+ data[0].id +'" class="card card-body row" style="margin: 10px;">');
+                if (data[0].showsAll == false){
+                $.each(data[1], function(index, sequence) {
+                    choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+sequence.id+'" >'+sequence.name+'</a>');
             	});
                 }else{
                 	$(function() {
@@ -527,7 +530,7 @@ $(document).ready(function() {
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ choiceBlock.id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data[0].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
                     'margin': "10px"
                 });
