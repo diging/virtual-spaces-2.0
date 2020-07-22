@@ -5,11 +5,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
+<script src="<c:url value="/resources/extra/space.js" />" ></script>
 <script>
-//# sourceURL=click.js
-$( document ).ready(function() {	
 
-	
+$(function(){
+    $("#deleteSpace").click(function(){
+        var spaceId = "${space.id}";
+        checkSpaceLinkPresent(spaceId, "<c:url value='/staff/' />", "?${_csrf.parameterName}=${_csrf.token}", $("#headerSpaceValue"));
+});    
+
+
+$( document ).ready(function() {
+	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
+  });    
+
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
 		var posX = $("#bgImage").position().left;
@@ -743,8 +752,11 @@ $( document ).ready(function() {
 	</button>
 </div>
 
-<h1> Space: ${space.name} <small style="margin-left: 10px;"><a href="<c:url value="/staff/space/${space.id}/edit" />"><span data-feather="edit"></span></a></small></h1>
-
+<h1>
+	Space: ${space.name} <small style="margin-left: 10px;"> <a
+		href="<c:url value="/staff/space/${space.id}/edit" />"><span
+			data-feather="edit"></span></a></small>
+</h1>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by ${space.createdBy}. 
 	<br>
@@ -1042,18 +1054,56 @@ ${space.description}
 <button type="button" id="addModuleLinkButton" class="btn btn-primary btn-sm">Add Module Link</button> &nbsp
 <button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
 <button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
-<button type="button" class="btn btn-primary btn-sm" data-record-id="${space.id}" data-url="<c:url value="/staff/space/${space.id}?${_csrf.parameterName}=${_csrf.token}"/>" data-call-on-success = "<c:url value="/staff/space/list"/>" data-call-on-error="<c:url value="/staff/space/list"/>" data-toggle="modal" data-target="#confirm-delete">
-Delete Space
-</button>
+<button type="button" id="deleteSpace" class="btn btn-primary btn-sm">Delete Space</button>
+
 </nav>
 
 <p></p>
+
+<div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalTitle">
+                    Confirm ${space.id} Deletion?
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete ${space.id}?
+                </p>
+                <div id="warningMessage">
+                <div class="text-danger">
+                Other spaces have links to this space!
+                </div>
+                </div>
+                <div id="exhibitionMessage">
+                <div class="text-danger">
+                This space is the start of the exhibition. Deleting it will make your exhibition unavailable.
+                </div>
+                </div>
+                <div id="finalWarning">
+                <div class="text-danger">
+                Do you want to continue?
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeButton" class="btn btn-default"
+                    data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-ok">Yes, delete!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <c:if test="${not empty space.image}">
 	<div id="space">
 		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
 	</div>
 </c:if>
-<jsp:include page="../../deleteModal.jsp" >
-<jsp:param name="elementType" value="Space" /> 
-</jsp:include>
+
