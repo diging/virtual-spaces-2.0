@@ -511,7 +511,6 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                console.log(data);
                 var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="card card-body row" style="margin: 10px;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
