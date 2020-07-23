@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.ShowSpaceLinksToUnpublishedSpaces;
+import edu.asu.diging.vspace.core.model.impl.ShowUnpublishedLinks;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 
 @Controller
-public class UpdateShowLinksToUnpublishedSpacesController {
+public class UpdateShowUnpublishedLinksController {
     @Autowired
     private ISpaceManager spaceManager;
 
     @RequestMapping(value="/staff/space/{spaceId}/showSpaceLinks", method=RequestMethod.POST)
-    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("showSpaceLinksParam") ShowSpaceLinksToUnpublishedSpaces showSpaceLinksToUnpublishedSpaces) {
+    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("showSpaceLinksParam") ShowUnpublishedLinks showUnpublishedLinks) {
         ISpace space = spaceManager.getSpace(spaceId);
-        space.setShowSpaceLinksToUnpublishedSpaces(showSpaceLinksToUnpublishedSpaces);
+        space.setShowUnpublishedLinks(showUnpublishedLinks);
         spaceManager.storeSpace(space, null,null);
         attributes.addAttribute("alertType", "success");
-        attributes.addAttribute("message", "Show space links to Unpublished Spaces successfully updated!");
+        attributes.addAttribute("message", "Show Links to Unpublished Spaces successfully updated!");
         attributes.addAttribute("showAlert", "true");
         return "redirect:/staff/space/{spaceId}";
     }
