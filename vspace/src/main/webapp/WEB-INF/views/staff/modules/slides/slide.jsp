@@ -5,7 +5,7 @@
 
 <script>
 //# sourceURL=click.js
-var contentCount = ${fn:length(slideContents)};
+var contentCount = ${contentCount};
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -511,9 +511,6 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                console.log(data);
-                console.log(data[0]);
-                console.log(data[1]);
                 var choiceblock = $('<div id="'+ data[0].id +'" class="card card-body row" style="margin: 10px;">');
                 if (data[0].showsAll == false){
                 $.each(data[1], function(index, sequence) {

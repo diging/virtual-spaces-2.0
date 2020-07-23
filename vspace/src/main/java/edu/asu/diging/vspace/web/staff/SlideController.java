@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IContentBlock;
-import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.impl.ContentBlockManager;
@@ -44,7 +43,9 @@ public class SlideController {
         ISlide slide = slideManager.getSlide(id);
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
-        model.addAttribute("slideContents", contentBlockManager.getAllContentBlocks(id));
+        List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
+        model.addAttribute("slideContents", slideContents);
+        model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
         }           
