@@ -221,6 +221,8 @@ $( document ).ready(function() {
 		$("#spaceLinkY").val(storeY);
 		
 		var form = $("#createSpaceLinkForm");
+		var label = $("#spaceLinkLabel").val();
+		var spaceName = $("#linkedSpace option:selected").text();
 		var formData = new FormData(form[0]);
 		
 		var spaceLinkInfo = createSpaceLinkInfo();
@@ -243,6 +245,7 @@ $( document ).ready(function() {
 	            $("#createSpaceLinkAlert").hide();  
 	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
+	    		$("#outgoingLinks").append("<li>"+label+"  ->  "+spaceName);
 	        }
 		});
 	});
@@ -1104,25 +1107,28 @@ ${space.description}
 	</div>
 </c:if>
 
-<!-- To display the spacelinks on current space and spaces from where curent space is linked. -->
-<c:if test="${not empty linksOnThisSpace}">
-<h5 style ="overflow: hidden; padding-left: 0.5em">Space links on this space:</h5>
-<ul style ="overflow: hidden;">
-<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
-<c:if test="${not empty spaceLinks.targetSpace}">
-<li><h6>${spaceLinks.name}&nbsp;  ->  &nbsp;${spaceLinks.targetSpace.name}</h6></li>
-</c:if>
-<c:if test="${empty spaceLinks.targetSpace}">
-<li><h6>${spaceLinks.name}&nbsp;  ->  &nbsp;&lt;No Space&gt;</h6></li>
-</c:if>
-</c:forEach>
-</ul>
-</c:if>
-<c:if test="${not empty linksToThisSpace}">
-<h5 style ="overflow: hidden; padding-left: 0.5em">Space links to this space:</h5>
-<ul style ="overflow: hidden;">
-<c:forEach items="${linksToThisSpace}" var="spaceLinks">
-<li><h6>${spaceLinks.sourceSpace.name}</h6></li>
-</c:forEach>
-</ul>
-</c:if>
+<!-- To display the spacelinks on current space and spaces from where current space is linked. -->
+	<c:if test="${not empty linksOnThisSpace}">
+		<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space links on
+			this space:</h5>
+		<ul id="outgoingLinks" style="overflow: hidden; padding-right: 0.5em; text-align: right;">
+			<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
+				<c:if test="${not empty spaceLinks.targetSpace}">
+					<li>${spaceLinks.name}&nbsp;->
+							&nbsp;${spaceLinks.targetSpace.name}</li>
+				</c:if>
+				<c:if test="${empty spaceLinks.targetSpace}">
+					<li>${spaceLinks.name}&nbsp;->&nbsp;&lt;No Space&gt;</li>
+				</c:if>
+			</c:forEach>
+		</ul>
+	</c:if>
+	<c:if test="${not empty linksToThisSpace}">
+		<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
+			links to this space:</h5>
+		<ul style="overflow: hidden; padding-right: 0.5em; text-align: right;">
+			<c:forEach items="${linksToThisSpace}" var="spaceLinks">
+				<li>${spaceLinks.sourceSpace.name}</li>
+			</c:forEach>
+		</ul>
+	</c:if>

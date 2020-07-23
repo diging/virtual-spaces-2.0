@@ -21,12 +21,12 @@ public interface ISpaceManager {
 
     List<ISpace> getAllSpaces();
 
-    List<SpaceLink> getLinkedSpaces(String id);
+    List<SpaceLink> getOutgoingLinks(String id);
 
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
 
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
     
-    List<SpaceLink> getLinkedFromSpaces(String id);
+    List<SpaceLink> getIncomingLinks(String id);
 
 }
