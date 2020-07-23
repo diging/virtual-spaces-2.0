@@ -39,7 +39,7 @@ public class SlideController {
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
-        
+
         ISlide slide = slideManager.getSlide(id);
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
@@ -51,7 +51,7 @@ public class SlideController {
         }           
         return "staff/module/slide/contents";
     }
-    
+
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/contents", method = RequestMethod.GET)
     public ResponseEntity<List<IContentBlock>> getAllContentBlocks(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, @ModelAttribute SequenceForm sequenceForm,
             Principal principal) {
