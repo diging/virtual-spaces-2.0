@@ -1,5 +1,5 @@
 package edu.asu.diging.vspace.core.services;
 
-public interface IExternalLinkManager<IExternalLink, ExternalLinkValue, ExternalLinkDisplay> extends ILinkManager<IExternalLink, ExternalLinkValue, ExternalLinkDisplay>{
+public interface IExternalLinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay> extends ILinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay>{
 
 }

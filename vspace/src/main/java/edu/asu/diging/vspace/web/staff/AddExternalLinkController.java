@@ -20,8 +20,8 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
-import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 
 @Controller
 public class AddExternalLinkController {
@@ -30,7 +30,7 @@ public class AddExternalLinkController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private IExternalLinkManager externalLinkManager;
+    private ExternalLinkManager externalLinkManager;
 
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -51,7 +51,7 @@ public class AddExternalLinkController {
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
 
-        IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0, externalLink, title, type, linkImage, filename);
+        IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0, externalLink, title, type, linkImage, filename);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());

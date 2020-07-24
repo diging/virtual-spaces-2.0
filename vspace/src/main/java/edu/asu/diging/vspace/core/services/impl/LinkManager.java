@@ -22,7 +22,7 @@ import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
-public abstract class LinkManager<L,T, U> implements ILinkManager<L,T,U>{
+public abstract class LinkManager<L extends ILink,T extends IVSpaceElement, U extends ILinkDisplay> implements ILinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -42,8 +42,8 @@ public abstract class LinkManager<L,T, U> implements ILinkManager<L,T,U>{
 
         L link = createLinkObject(title, id);
         T target = getTarget(linkedId);
-        ((IVSpaceElement) link).setName(linkLabel);
-        ((ILink) link).setTarget((IVSpaceElement) target);
+        link.setName(linkLabel);
+        link.setTarget(target);
         U displayLink = createDisplayLink(link);
         setDisplayProperties((ILinkDisplay) displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
@@ -54,12 +54,12 @@ public abstract class LinkManager<L,T, U> implements ILinkManager<L,T,U>{
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
 
-        spaceValidation(id);
+        validateSpace(id);
 
         L link =  getLink(linkId);
         T target = getTarget(linkedId);
-        ((IVSpaceElement) link).setName(title);
-        ((ILink) link).setTarget((IVSpaceElement) target);
+        link.setName(title);
+        link.setTarget((IVSpaceElement) target);
         U displayLink = getDisplayLink(linkDisplayId);
         setDisplayProperties((ILinkDisplay) displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
@@ -91,7 +91,7 @@ public abstract class LinkManager<L,T, U> implements ILinkManager<L,T,U>{
 
     protected abstract U createDisplayLink(L link);
 
-    protected void spaceValidation(String id) throws SpaceDoesNotExistException{
+    protected void validateSpace(String id) throws SpaceDoesNotExistException{
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();

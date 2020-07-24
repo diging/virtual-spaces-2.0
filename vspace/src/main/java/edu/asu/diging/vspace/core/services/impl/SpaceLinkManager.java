@@ -22,7 +22,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,SpaceLinkDisplay> implements ISpaceLinkManager<ISpaceLink,ISpace,SpaceLinkDisplay>{
+public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,SpaceLinkDisplay> implements ISpaceLinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;

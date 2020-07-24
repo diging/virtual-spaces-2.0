@@ -20,8 +20,8 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.SpaceLinkManager;
 
 @Controller
 public class AddSpaceLinkController {
@@ -30,7 +30,7 @@ public class AddSpaceLinkController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ISpaceLinkManager spaceLinkManager;
+    private SpaceLinkManager spaceLinkManager;
 
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -61,7 +61,7 @@ public class AddSpaceLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display;
         try {
-            display = (ISpaceLinkDisplay) spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
+            display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();

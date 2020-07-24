@@ -22,7 +22,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue,ExternalLinkDisplay> implements IExternalLinkManager<IExternalLink, ExternalLinkValue,ExternalLinkDisplay>{
+public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue,ExternalLinkDisplay> implements IExternalLinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;

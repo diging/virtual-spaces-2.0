@@ -23,7 +23,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLinkDisplay> implements IModuleLinkManager<IModuleLink,IModule,ModuleLinkDisplay>{
+public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLinkDisplay> implements IModuleLinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -63,8 +63,7 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLin
     @Override
     protected ModuleLinkDisplay updateLinkAndDisplay(IModuleLink link, ModuleLinkDisplay displayLink) {
         moduleLinkRepo.save((ModuleLink) link);
-        displayLink = moduleLinkDisplayRepo.save(displayLink);
-        return displayLink;
+        return moduleLinkDisplayRepo.save(displayLink);
     }
 
     @Override

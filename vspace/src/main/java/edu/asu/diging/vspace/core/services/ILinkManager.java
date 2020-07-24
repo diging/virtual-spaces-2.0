@@ -6,7 +6,6 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
 public interface ILinkManager<L,T,U> {
 
