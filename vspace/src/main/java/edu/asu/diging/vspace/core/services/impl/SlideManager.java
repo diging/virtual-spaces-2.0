@@ -121,7 +121,6 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) {
-
         if(slideId == null) {
             logger.error("Slide Id cannot be null.");
             return;
@@ -164,20 +163,18 @@ public class SlideManager implements ISlideManager {
         }
         return sequenceSlides;
     }
-    
+
     @Override
     public ISlide convertTextToMarkdown(ISlide slide) {
         List<IContentBlock> content = slide.getContents();
-        System.out.println("lolololol");
         for(int i=0; i<content.size(); ++i) {
-                if(content.get(i).getClass().equals(TextBlock.class)) {
-                    ITextBlock textBlock = (ITextBlock) content.get(i);
-                    Parser parser = Parser.builder().build();
-                    Node document = parser.parse(textBlock.getText());
-                    HtmlRenderer renderer = HtmlRenderer.builder().build();
-                    textBlock.setText(renderer.render(document));
-                    content.set(i, textBlock);
-
+            if(content.get(i).getClass().equals(TextBlock.class)) {
+                ITextBlock textBlock = (ITextBlock) content.get(i);
+                Parser parser = Parser.builder().build();
+                Node document = parser.parse(textBlock.getText());
+                HtmlRenderer renderer = HtmlRenderer.builder().build();
+                textBlock.setText(renderer.render(document));
+                content.set(i, textBlock);
             }
         }
         slide.setContents(content);
