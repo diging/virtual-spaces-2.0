@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -12,8 +14,12 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 
 public class SpaceLinkManagerTest {
@@ -63,5 +69,60 @@ public class SpaceLinkManagerTest {
     public void test_getLink_idNotExists() throws Exception {
         Mockito.when(spaceLinkRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
         Assert.assertNull(managerToTest.getLink(Mockito.anyString()));
+    }
+
+    @Test
+    public void test_deleteLinkDisplayRepo_linkPresent(){
+        ISpace space = new Space();
+        space.setId("SPA001");
+        List<SpaceLinkDisplay> SpaceLinkDisplayList = new ArrayList<SpaceLinkDisplay>();
+        SpaceLinkDisplay SpaceLinkDisplay = new SpaceLinkDisplay();
+        ISpaceLink spaceLink = new SpaceLink();
+        spaceLink.setId("SPL001");
+        spaceLink.setSpace(space);
+        SpaceLinkDisplay.setLink(spaceLink);
+        SpaceLinkDisplayList.add(SpaceLinkDisplay);
+        SpaceLinkDisplay = new SpaceLinkDisplay();
+        spaceLink = new SpaceLink();
+        spaceLink.setId("SPL002");
+        spaceLink.setSpace(space);
+        SpaceLinkDisplay.setLink(spaceLink);
+        SpaceLinkDisplayList.add(SpaceLinkDisplay);
+        List<SpaceLinkDisplay> spaceLinkObj = SpaceLinkDisplayList;
+        Mockito.when(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(space.getId())).thenReturn(spaceLinkObj);
+        managerToTest.deleteLinkDisplayRepo(spaceLink);
+        Mockito.verify(spaceLinkDisplayRepo).deleteByLink(spaceLink);
+    }
+
+    @Test
+    public void test_updateDisplayLink_success() {
+        ISpace space = new Space();
+        space.setId("SPA001");
+        SpaceLinkDisplay spaceLinkDisplay = new SpaceLinkDisplay();
+        ISpaceLink spaceLink = new SpaceLink();
+        spaceLink.setId("SPL001");
+        spaceLink.setSpace(space);
+        spaceLinkDisplay.setName("TestSpace");
+        spaceLinkDisplay.setPositionX(10);
+        spaceLinkDisplay.setPositionY(30);
+        spaceLinkDisplay.setRotation(20);
+        spaceLinkDisplay.setType(DisplayType.ARROW);
+        spaceLinkDisplay.setLink(spaceLink);
+        Mockito.when(spaceLinkDisplayRepo.save(spaceLinkDisplay)).thenReturn(spaceLinkDisplay);
+
+        spaceLinkDisplay.setName("TestSpaceEdited");
+        spaceLinkDisplay.setPositionX(100);
+        spaceLinkDisplay.setPositionY(300);
+        spaceLinkDisplay.setRotation(200);
+        spaceLinkDisplay.setType(DisplayType.ALERT);
+
+        ISpaceLinkDisplay actualUpdatedLink = managerToTest.updateLinkAndDisplay(spaceLink, spaceLinkDisplay);
+        Assert.assertEquals(spaceLinkDisplay.getId(), actualUpdatedLink.getId());
+        Assert.assertEquals(spaceLinkDisplay.getName(), actualUpdatedLink.getName());
+        Assert.assertEquals(new Double(spaceLinkDisplay.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
+        Assert.assertEquals(new Double(spaceLinkDisplay.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
+        Assert.assertEquals(spaceLinkDisplay.getRotation(), actualUpdatedLink.getRotation());
+        Assert.assertEquals(spaceLinkDisplay.getLink().getId(), actualUpdatedLink.getLink().getId());
+        Assert.assertEquals(spaceLinkDisplay.getType(), actualUpdatedLink.getType());
     }
 }
