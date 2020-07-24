@@ -16,6 +16,13 @@ $(function(){
 
 $( document ).ready(function() {
 	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
+	
+	if ($("ul#outgoingLinks li").length == 0) {
+		  $("#noLinksOnSpace").show()
+	  }
+	if ($("ul#incomingLinks li").length == 0) {
+		  $("#noLinksToSpace").show()
+	  }
   });    
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
@@ -245,9 +252,11 @@ $( document ).ready(function() {
 	            $("#createSpaceLinkAlert").hide();  
 	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
+	            $("#noLinksOnSpace").hide();
 	    		$("#outgoingLinks").append("<li id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</li>");
 	    		if (spaceName == "${space.name}") {
-	    			$("#incomingLinks").append("<li id="+linkData["id"]+">"+spaceName+"</li>")
+	    			$("#noLinksToSpace").hide();
+	    			$("#incomingLinks").append("<li id="+linkData["id"]+">"+spaceName+"</li>");
 	    		}
 	        }
 		});
@@ -349,6 +358,12 @@ $( document ).ready(function() {
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
 			  $('li#'+linkId).remove();
+			  if ($("ul#outgoingLinks li").length == 0) {
+				  $("#noLinksOnSpace").show();
+			  }
+			  if ($("ul#incomingLinks li").length == 0) {
+				  $("#noLinksToSpace").show();
+			  }
 	          $("#spaceLinkInfo").hide();
 		    }
 		});
@@ -1112,26 +1127,41 @@ ${space.description}
 </c:if>
 
 <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
+
+<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
+	links on this space:</h5>
+<div id="noLinksOnSpace"
+	style="overflow: hidden; padding-right: 0.5em; text-align: right; display: none">
+	There are no links on this space.
+</div>
+<ul id="outgoingLinks"
+	style="overflow: hidden; padding-right: 0.5em; text-align: right;">
 	<c:if test="${not empty linksOnThisSpace}">
-		<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space links on
-			this space:</h5>
-		<ul id="outgoingLinks" style="overflow: hidden; padding-right: 0.5em; text-align: right;">
-			<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
-				<c:if test="${not empty spaceLinks.targetSpace}">
-					<li id="${spaceLinks.id}">${spaceLinks.name} &nbsp;-> &nbsp;${spaceLinks.targetSpace.name}</li>
-				</c:if>
-				<c:if test="${empty spaceLinks.targetSpace}">
-					<li id="${spaceLinks.id}">${spaceLinks.name} &nbsp;-> &nbsp;&lt;No Space&gt;</li>
-				</c:if>
-			</c:forEach>
-		</ul>
+		<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
+			<c:if test="${not empty spaceLinks.targetSpace}">
+				<li id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+					&nbsp;${spaceLinks.targetSpace.name}</li>
+			</c:if>
+			<c:if test="${empty spaceLinks.targetSpace}">
+				<li id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+					&nbsp;&lt;No Space&gt;</li>
+			</c:if>
+		</c:forEach>
 	</c:if>
+</ul>
+<p></p>
+<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
+	links to this space:</h5>
+<div id="noLinksToSpace"
+	style="overflow: hidden; padding-right: 0.5em; text-align: right; display: none">
+	There are no links to this space.
+</div>
+
+<ul id="incomingLinks"
+	style="overflow: hidden; padding-right: 0.5em; text-align: right;">
 	<c:if test="${not empty linksToThisSpace}">
-		<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
-			links to this space:</h5>
-		<ul id="incomingLinks" style="overflow: hidden; padding-right: 0.5em; text-align: right;">
-			<c:forEach items="${linksToThisSpace}" var="spaceLinks">
-				<li id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</li>
-			</c:forEach>
-		</ul>
+		<c:forEach items="${linksToThisSpace}" var="spaceLinks">
+			<li id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</li>
+		</c:forEach>
 	</c:if>
+</ul>
