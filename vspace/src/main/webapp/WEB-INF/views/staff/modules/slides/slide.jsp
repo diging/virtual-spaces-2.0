@@ -548,8 +548,6 @@ $(document).ready(function() {
 
     $("#addImgAlert").draggable();
 
-    //$("#editTextAlert").draggable();
-    
     // ------------- edit text block ----------------
     
     $("#addChoiceAlert").draggable();

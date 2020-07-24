@@ -134,10 +134,9 @@ body {
                     <img id="${contents.id}" class="imgDiv"
                         src="<c:url value="/api/image/${contents.image.id}" />" />
                 </c:if>
-                <c:if
-                        test="${contents['class'].simpleName ==  'TextBlock'}">
-                        <div id="${contents.id}" class="textDiv">${contents.htmlRenderedText()}</div>
-                    </c:if>
+                <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
+                	<div id="${contents.id}" class="textDiv">${contents.htmlRenderedText()}</div>
+                </c:if>
                 <c:if
                     test="${contents['class'].simpleName == 'ChoiceBlock'}">
                     <div id="${contents.id}"
