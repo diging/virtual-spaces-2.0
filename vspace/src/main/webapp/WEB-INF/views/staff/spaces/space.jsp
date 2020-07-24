@@ -245,7 +245,10 @@ $( document ).ready(function() {
 	            $("#createSpaceLinkAlert").hide();  
 	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
-	    		$("#outgoingLinks").append("<li>"+label+"  ->  "+spaceName);
+	    		$("#outgoingLinks").append("<li id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</li>");
+	    		if (spaceName == "${space.name}") {
+	    			$("#incomingLinks").append("<li id="+linkData["id"]+">"+spaceName+"</li>")
+	    		}
 	        }
 		});
 	});
@@ -345,6 +348,7 @@ $( document ).ready(function() {
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
+			  $('li#'+linkId).remove();
 	          $("#spaceLinkInfo").hide();
 		    }
 		});
@@ -1114,11 +1118,10 @@ ${space.description}
 		<ul id="outgoingLinks" style="overflow: hidden; padding-right: 0.5em; text-align: right;">
 			<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
 				<c:if test="${not empty spaceLinks.targetSpace}">
-					<li>${spaceLinks.name}&nbsp;->
-							&nbsp;${spaceLinks.targetSpace.name}</li>
+					<li id="${spaceLinks.id}">${spaceLinks.name} &nbsp;-> &nbsp;${spaceLinks.targetSpace.name}</li>
 				</c:if>
 				<c:if test="${empty spaceLinks.targetSpace}">
-					<li>${spaceLinks.name}&nbsp;->&nbsp;&lt;No Space&gt;</li>
+					<li id="${spaceLinks.id}">${spaceLinks.name} &nbsp;-> &nbsp;&lt;No Space&gt;</li>
 				</c:if>
 			</c:forEach>
 		</ul>
@@ -1126,9 +1129,9 @@ ${space.description}
 	<c:if test="${not empty linksToThisSpace}">
 		<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
 			links to this space:</h5>
-		<ul style="overflow: hidden; padding-right: 0.5em; text-align: right;">
+		<ul id="incomingLinks" style="overflow: hidden; padding-right: 0.5em; text-align: right;">
 			<c:forEach items="${linksToThisSpace}" var="spaceLinks">
-				<li>${spaceLinks.sourceSpace.name}</li>
+				<li id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</li>
 			</c:forEach>
 		</ul>
 	</c:if>
