@@ -164,6 +164,7 @@ $( document ).ready(function() {
 			
 		    showSpaceLink(createSpaceLinkInfo());
 		});
+		hideLinkInfoTabs();
 		$("#createSpaceLinkAlert").show();
 	});
 	
@@ -183,6 +184,7 @@ $( document ).ready(function() {
 			
 		    showModuleLink(createModuleLinkInfo());
 		});
+		hideLinkInfoTabs();
 		$("#createModuleLinkAlert").show();
 	}); 
 	
@@ -204,6 +206,7 @@ $( document ).ready(function() {
 		    
 		    showExternalLinks(createExternalLinkInfo());
 		});
+		hideLinkInfoTabs();
 		$("#createExternalLinkAlert").show();
 	});
 	
@@ -327,9 +330,7 @@ $( document ).ready(function() {
 	            $("#bgImage").off("click");
 	            moduleLinkInfo["id"] = linkData["id"];
 	            showModuleLinkEdit(editModuleLinkInfo, true);
-	            $("#editModuleLinkInfo").hide();
-	            $("#errorMsg").text("");
-	            $('#errorAlert').hide();
+	            hideLinkInfoTabs();
 	        }
 	    });
 	});
@@ -362,9 +363,7 @@ $( document ).ready(function() {
 	            $("#bgImage").off("click");
 	            spaceLinkInfo["id"] = linkData["id"];
 	            showSpaceLinkEdit(editSpaceLinkInfo, true);
-	            $("#editSpaceLinkInfo").hide();
-	            $("#errorMsg").text("");
-	            $('#errorAlert').hide();
+	            hideLinkInfoTabs();
 	       	}
 	 	});
 	});
@@ -397,9 +396,7 @@ $( document ).ready(function() {
 	            $("#bgImage").off("click");
 	            externalLinkInfo["id"] = linkData["id"];
 	            showExternalLinkEdit(editExternalLinkInfo, true);
-	            $("#editExternalLinkInfo").hide();
-	            $("#errorMsg").text("");
-	            $('#errorAlert').hide();
+	            hideLinkInfoTabs();
 	       	}
 	 	});
 	});
@@ -452,7 +449,7 @@ $( document ).ready(function() {
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
-	          $("#spaceLinkInfo").hide();
+			  hideLinkInfoTabs();
 		    }
 		});
 	});
@@ -465,8 +462,7 @@ $( document ).ready(function() {
 			method: "DELETE",
 				success:function(data) {
 					$('[data-link-id="' + linkId + '"]').remove();
-					$("#moduleLinkInfo").hide();
-					$("#editModuleLinkInfo").hide();
+					hideLinkInfoTabs();
 				}
 			});
 	});
@@ -478,7 +474,7 @@ $( document ).ready(function() {
             method: "DELETE",
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
-                    $("#externalLinkInfo").hide();
+                    hideLinkInfoTabs();
                 }
             });
     });
@@ -676,44 +672,51 @@ $( document ).ready(function() {
 	}
 	
 	function showModuleLinkEdit(moduleLink, show) {
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
 		moduleLink["x"]=storeX;
 		moduleLink["y"]=storeY;
-		$('.moduleLink-'+selectedModuleLinkId).css({ 'transform': 'rotate(' + moduleLink["rotation"] + 'deg)'});
-		$('.mlabel-'+selectedModuleLinkId).text(moduleLink["moduleLinkLabel"]);
-		$('.moduleLink-'+selectedModuleLinkId).css({ 'left': moduleLink["x"] + posX});
-		$('.moduleLink-'+selectedModuleLinkId).css({ 'top': moduleLink["y"] + posY});
-		$('.mlabel-'+selectedModuleLinkId).css({ 'left': moduleLink["x"] + posX - 10});
-		$('.mlabel-'+selectedModuleLinkId).css({ 'top': moduleLink["y"] + posY + 16});
-		feather.replace();
+		var selectedLinkClass = '.moduleLink-'+selectedModuleLinkId;
+		var selectedLabelClass = '.mlabel-'+selectedModuleLinkId;
+		updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],moduleLink["x"],moduleLink["y"],moduleLink["moduleLinkLabel"]);
 	}
 	
 	function showSpaceLinkEdit(spaceLink, show) {
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
 		spaceLink["x"]=storeX;
 		spaceLink["y"]=storeY;
-		$('.spaceLink-'+selectedSpaceLinkId).css({ 'transform': 'rotate(' + spaceLink["rotation"] + 'deg)'});
-		$('.slabel-'+selectedSpaceLinkId).text(spaceLink["spaceLinkLabel"]);
-		$('.spaceLink-'+selectedSpaceLinkId).css({ 'left': spaceLink["x"] + posX});
-		$('.spaceLink-'+selectedSpaceLinkId).css({ 'top': spaceLink["y"] + posY});
-		$('.slabel-'+selectedSpaceLinkId).css({ 'left': spaceLink["x"] + posX - 10});
-		$('.slabel-'+selectedSpaceLinkId).css({ 'top': spaceLink["y"] + posY + 16});
-		feather.replace();
+		var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
+		var selectedLabelClass = '.slabel-'+selectedSpaceLinkId;
+		updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"]);
 	}
 	
 	function showExternalLinkEdit(externalLink, show) {
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
 		externalLink["x"]=storeX;
 		externalLink["y"]=storeY;
-		$('.elabel-'+selectedExternalLinkId).text(externalLink["externalLinkLabel"]);
-		$('.externalLink-'+selectedExternalLinkId).css({ 'left': externalLink["x"] + posX});
-		$('.externalLink-'+selectedExternalLinkId).css({ 'top': externalLink["y"] + posY});
-		$('.elabel-'+selectedExternalLinkId).css({ 'left': externalLink["x"] + posX - 10});
-		$('.elabel-'+selectedExternalLinkId).css({ 'top': externalLink["y"] + posY + 16});
-		feather.replace();
+		var selectedLinkClass = '.externalLink-'+selectedExternalLinkId;
+		var selectedLabelClass = '.elabel-'+selectedExternalLinkId;
+		updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],externalLink["x"],externalLink["y"],externalLink["externalLinkLabel"]);
+	}
+	
+	function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel){
+	    var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		console.log(selectedLinkClass);
+	    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
+	    $(selectedLinkClass).css({ 'left': x + posX});
+	    $(selectedLinkClass).css({ 'top': y + posY});
+	    $(selectedLabelClass).text(linkLabel);
+	    $(selectedLabelClass).css({ 'left': x + posX - 10});
+	    $(selectedLabelClass).css({ 'top': y + posY + 16});
+	    feather.replace();    
+	}
+	
+	function hideLinkInfoTabs(){
+	    $("#editExternalLinkInfo").hide();
+	    $("#editSpaceLinkInfo").hide();
+	    $("#editModuleLinkInfo").hide();
+	    $("#spaceLinkInfo").hide();
+	    $("#moduleLinkInfo").hide();
+	    $("#externalLinkInfo").hide();
+        $("#errorMsg").text("");
+        $('#errorAlert').hide();    
 	}
 	
 	function showExternalLinks(externalLink) {
@@ -941,11 +944,7 @@ $( document ).ready(function() {
 			storeY = e.pageY - $(this).offset().top;
 			showSpaceLinkEdit(editSpaceLinkInfo());
 		});
-        
-        $("#moduleLinkInfo").hide();
-        $("#externalLinkInfo").hide();
-        $("#moduleLinkInfo").hide();
-        $("#editModuleLinkInfo").hide();
+        hideLinkInfoTabs();
         $("#spaceLinkInfo").show();
         $("#editSpaceLinkInfo").show();
 	}
@@ -977,9 +976,7 @@ $( document ).ready(function() {
 			storeY = e.pageY - $(this).offset().top;
 			showModuleLinkEdit(editModuleLinkInfo());
 		});
-		
-		$("#externalLinkInfo").hide();
-        $("#spaceLinkInfo").hide();
+		hideLinkInfoTabs();
         $("#moduleLinkInfo").show();
         $("#editModuleLinkInfo").show();
 	}
@@ -1011,10 +1008,7 @@ $( document ).ready(function() {
 			storeY = e.pageY - $(this).offset().top;
 			showExternalLinkEdit(editExternalLinkInfo());
 		});
-        
-        $("#spaceLinkInfo").hide();
-        $("#moduleLinkInfo").hide();
-        $("#editModuleLinkInfo").hide();
+        hideLinkInfoTabs();
         $("#externalLinkInfo").show();
         $("#editExternalLinkInfo").show();
     }
