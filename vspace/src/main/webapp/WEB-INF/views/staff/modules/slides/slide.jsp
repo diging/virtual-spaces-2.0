@@ -5,12 +5,14 @@
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
 <script>
 //# sourceURL=click.js
 
 var contentCount = ${fn:length(slideContents)};
 var markDown = null;
 var defaultValue;
+
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -97,7 +99,6 @@ function uploadImage() {
         $("#uploadImage").data('value', '');
       }
   	else {
-  	
         var url = "<c:url value="/staff/module/${module.id}/slide/${slide.id}/image?${_csrf.parameterName}=${_csrf.token}" />";
         reader.onload = function (theFile) {        	
         	var image = new Image();
@@ -150,11 +151,16 @@ function uploadImage() {
     });
     // Reset the image file name 
    	$('#file').val('');
-} 
-    
-$(document).ready(function() { 
-    
+}
+
+$(document).ready(function() {
+	if(${slide['class'].simpleName == 'BranchingPoint'}) {
+		$('#addChoice').show();
+		$('#choiceSpace').show();	
+	}			
+
     //-------- edit contentblock description --------
+
     $("#submitDescription").hide()
     $("#cancelEditDescription").hide()
     var description = $("#description").text()
@@ -170,38 +176,37 @@ $(document).ready(function() {
     $("#submitDescription").click(function() {
         var formData = new FormData();
         formData.append('description', $("#newDescription").val());
-        $.ajax({
-        url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
-        type: 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        enctype: 'multipart/form-data',
-        success: function(data) {
-            // replace text box with new description
-            $("#submitDescription").hide()
-            $("#cancelEditDescription").hide()
-            $("#editDescription").show()
-            var val = $("#newDescription").val();
-            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
-            $("#newDescription").remove();
-            $("#description").text(val)
-        },
-        error: function(data) {
-            $(".open").removeClass("open");
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
-            }
-        });
-        
+        $.ajax({ 
+	        url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit/description?${_csrf.parameterName}=${_csrf.token}" />",
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData,
+	        enctype: 'multipart/form-data',
+	        success: function(data) {
+	            // replace text box with new description
+	            $("#submitDescription").hide()
+	            $("#cancelEditDescription").hide()
+	            $("#editDescription").show()
+	            var val = $("#newDescription").val();
+	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+	            $("#newDescription").remove();
+	            $("#description").text(val)
+	        },
+	        error: function(data) {
+	            $(".open").removeClass("open");
+	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	                $('.error').append(alert);
+	        }
+         });       
       });
     
     $("#cancelEditDescription").click(function(){
         $("#submitDescription").hide()
         $("#editDescription").show()
         $("#cancelEditDescription").hide()
-        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">val</p>').insertBefore( "#newDescription" );
+        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
         $("#newDescription").remove()
         $("#description").text(description)
         
@@ -217,8 +222,7 @@ $(document).ready(function() {
         $("#newTitle").val(getTitleText)
         $("#editTitle").hide()
         $("#submitTitle").show()
-        $("#cancelEditTitle").show()
-        
+        $("#cancelEditTitle").show()       
     });
     
     $("#submitTitle").click(function() {
@@ -253,25 +257,28 @@ $(document).ready(function() {
         $("#editTitle").show()
         $("#cancelEditTitle").hide()
         $("#newTitle").closest('div').remove();
-        $("#title").text("Silde: " + getTitleText)
-        
-    });
-    
+        $("#title").text("Silde: " + getTitleText);
+   });
+   
     $("#addText").click(function() {
         $(".EasyMDEContainer").remove();
     	markDown = new EasyMDE({element: $('#textBlockText')[0]});
         $("#addTextAlert").show();
-      });
+    });
     
     $("#addImage").click(function() {
         $("#addImgAlert").show();
-      });
+    });
     
     $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
             uploadImage();
-      });
+    });
+    
+    $("#addChoice").click(function() {
+        $("#addChoiceAlert").show();
+    });
     
     $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
@@ -286,7 +293,13 @@ $(document).ready(function() {
 		$(alert).attr( 'value', $(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
-    
+	
+	$(document).on("click", ".deleteChoiceBlock", function(e) {
+		$("#confirmDeleteChoiceBlockAlert").show();
+		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
+		$(alert).attr( 'value', $(this).siblings('input').val());
+		$('.modal-footer').append(alert); 
+  	});
     
     $("#cancelSubmitText").click(function() {
 		$("#addTextAlert").hide();	
@@ -295,6 +308,7 @@ $(document).ready(function() {
 	$("#cancelDeleteText").click(function() {
 		$("#confirmDeleteTextAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 	});
 	
@@ -302,9 +316,17 @@ $(document).ready(function() {
 		$("#confirmDeleteImageAlert").hide();
 	});
 	
+	$("#cancelDeleteChoiceBlock").click(function() {
+	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+	    $("#confirmDeleteTextAlert").find('input').remove();
+		$("#confirmDeleteImageAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").hide();
+	});
+	
 	$("#cancelDelete").click(function() {
 		$("#confirmDeleteTextAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").hide();	
 	});
 	
@@ -313,6 +335,7 @@ $(document).ready(function() {
 		$("#deleteText").on("click", function(e) {
 		e.preventDefault();
 		$("#confirmDeleteImageAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 		var blockId = $('#deleteTextId').attr('value');
 		$('#deleteTextId').remove()
@@ -340,6 +363,7 @@ $(document).ready(function() {
 	$("#deleteImage").on("click", function(e) {
 		e.preventDefault();
 		$("#confirmDeleteTextAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").hide();
 		var blockId = $('#deleteImageId').attr('value');
 		if(blockId == null || blockId == ''){
@@ -367,10 +391,49 @@ $(document).ready(function() {
 			});
 		}
 	});
+	
+	$("#deleteChoiceBlock").on("click", function(e) {
+	    e.preventDefault();
+	    $("#confirmDeleteTextAlert").find('input').remove();
+	    $("#confirmDeleteImageAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").hide();
+		var blockId = $('#deleteChoiceBlockId').attr('value');
+		if(blockId == null || blockId == ''){
+			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			$('.error').append(alert); 
+			$(".error").delay(4000).slideUp(500, function(){
+			    $(".error").empty();
+			});
+		} else{
+			$('#deleteChoiceBlockId').remove()
+			// ------------- delete choices content blocks ------------
+			$.ajax({
+			    url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choiceBlock/" />" + blockId + "?${_csrf.parameterName}=${_csrf.token}",
+			    type: 'DELETE',
+			    success: function(result) {
+			    	$('#' + blockId).remove();
+			    },
+				error: function(data) {
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.error').append(alert); 
+					$(".error").delay(4000).slideUp(500, function(){
+					    $(".error").empty();
+					});
+				}
+			});
+		}
+	});
+	
+					
     
     $("#confirmDeleteTextAlert").draggable();
 	$("#confirmDeleteImageAlert").draggable();
+	$("#confirmDeleteChoiceBlockAlert").draggable();
     
+	$("#cancelSubmitChoice").click(function() {
+        $("#addChoiceAlert").hide();	
+    });
+	
     $("#cancelImageBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '');
@@ -404,8 +467,7 @@ $(document).ready(function() {
                     'margin': "10px"
                 });
                 $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(textblock);
-               
+                $('#slideSpace').append(textblock);             
             },
             error: function(data) {
             	if (data.status == 403){
@@ -418,16 +480,83 @@ $(document).ready(function() {
             }
         });
     });
+    
+    $('input:checkbox').click(function() {
+        if ($(this).is(':checked')) {
+        	$('#submitChoices').prop("disabled", false);
+        } else {
+        if ($('.choiceOptions').filter(':checked').length < 1){
+        	$('#submitChoices').attr('disabled',true);}
+        }
+    });
+    
+    $("#submitChoices").on("click", function(e) {
+        e.preventDefault();
+        $("#addChoiceAlert").hide();
+        var selectedChoice = [];
+        var showsAll = false;
+        $('#selectChoices :checked').each(function() {
+        	selectedChoice.push($(this).attr("id"));
+          });
+        // ------------- creating choice content blocks ------------
+        if ($('#showAllChoices').is(':checked')) {
+            showsAll = true;
+        }
+        var formData = new FormData();
+        formData.append('selectedChoices', selectedChoice);
+        ++contentCount;
+        formData.append('contentOrder', contentCount);
+        formData.append('showsAll', showsAll);
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/choice/content?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="card card-body row" style="margin: 10px;">');
+                if (data['choiceBlock'].showsAll == false){
+                    $.each(data['selectedSequences'], function(index, sequence) {
+                        choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+sequence.id+'" >'+sequence.name+'</a>');
+            	});
+                }else{
+                	$(function() {
+                        var links = $("#choiceSpace a").map(function(e) {
+                            text = '<a href='+this.href+'>'+this.name+'</a>';
+                            return text;
+                        }).get();
+                        $(links).each(function(index, choice) {
+                            choiceblock.append(choice);
+                        });
+                   });
+                }
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
+            	$(choiceblock).css({
+                    'margin': "10px"
+                });
+                $('#slideSpace').append(choiceblock);
+            },
+            error: function(data) {
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.error').append(alert);
+            }
+        });
+        $('#choiceForm')[0].reset();
+    });
+
     $("#addImgAlert").draggable();
+
     //$("#editTextAlert").draggable();
     
     // ------------- edit text block ----------------
     
+    $("#addChoiceAlert").draggable();
     
     function updateTextBox(blockId, text) {
         // clear text box and buttons
         $(".open").empty();
-        //$("#newTextBlockDiv").css('display', 'none');
         $(".open").append('<p>'+text+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
@@ -521,12 +650,7 @@ $(window).on('load', function () {
 <div class="row align-items-center">
 	<h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
 		${slide.name}</h1>
-	<a id="editTitle" class="btn" href="#"
-		style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
-	<button id="submitTitle" type="button" class="btn btn-primary"
-		style="float: left; margin-right: 1%;">Save</button>
-	<button id="cancelEditTitle" type="button" class="btn btn-primary"
-		style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
+        <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit" />"><span data-feather="edit"></span></a>
 </div>
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${slide.creationDate}</span> by
@@ -536,34 +660,33 @@ $(window).on('load', function () {
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
 	<h5 style="margin-bottom: 0px;">Description:</h5>
-	<a id="editDescription" class="btn" href="#"
-		style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
-		class="fas fa-edit"></i></a>
 	<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${slide.description}</p>
-	<button id="submitDescription" type="button"
-		class="btn btn-primary btn-sm"
-		style="margin-top: 1%; margin-bottom: 1%;">Save</button>
-	<button id="cancelEditDescription" type="button"
-		class="btn btn-primary btn-sm"
-		style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 </div>
 <div style="margin-top: 1%; margin-bottom: 2%;">
 	<a class="btn btn-primary"
 		href="<c:url value="/staff/module/${module.id}" />">Go Back</a>
 </div>
+<!-- choices -->
+<div id="choiceSpace" style="margin-left: .1%;display:none;" class="row align-items-center">
+	<h5 style="margin-bottom: 0px;">Choices: </h5>
+	<c:forEach items="${choices}" var="choice">
+		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />" name="${choice.sequence.name}">${choice.sequence.name}</a>
+	</c:forEach>
+</div>
+
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-	<div class="dropdown">
-		<button class="btn btn-primary dropdown-toggle" type="button"
-			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-			aria-expanded="false" style="float: left;">Add content</button>
-		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			<a id="addText" class="dropdown-item" href="#">Add Text</a> <a
-				id="addImage" class="dropdown-item" href="#">Add Image</a>
-		</div>
-		<p style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
-			Click on a Block to Edit it
-		<p>
-	</div>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button"
+            id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" style="float:left;"
+        >Add content</button>
+         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a id="addText" class="dropdown-item" href="#">Add Text</a>
+            <a id="addImage" class="dropdown-item" href="#">Add Image</a>          
+            <a id="addChoice" class="dropdown-item" href="#" style="display:none;">Add Choices (Links to other sequences)</a>    
+        </div>
+        <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
+    </div>
 </nav>
 
 <!-- Delete Text Modal -->
@@ -611,6 +734,31 @@ $(window).on('load', function () {
 	</div>
 </div>
 
+<!-- Delete ChoiceBlock Modal -->
+<div id="confirmDeleteChoiceBlockAlert" class="modal" tabindex="-1"
+    role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure you want to delete this choices Block?</h6>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDeleteChoiceBlock" type="reset" class="btn light">Cancel</button>
+                <button type="submit" id="deleteChoiceBlock" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -648,7 +796,7 @@ $(window).on('load', function () {
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form name="textForm" id="textUploadForm"
+			<form name="textForm" id="textEditUploadForm"
 				enctype="multipart/form-data" method="post">
 				<div class="modal-body">
 					<h6>
@@ -713,6 +861,38 @@ $(window).on('load', function () {
 		</div>
 	</div>
 </div>
+
+<div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select from the Choices</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="choiceForm" id="choiceForm"
+                enctype="multipart/form-data" method="post">
+                <div id = "choiceDiv" class="modal-body">
+                    <input class="choiceOptions" id="showAllChoices" type="checkbox" name="showAll" value="showAll" checked="true"/>
+                    <label for="showAll">Always show all choices</label><br/>
+                    <div id = "selectChoices">
+                        <c:forEach items="${choices}" var="choice">
+                            <input class="choiceOptions" id="${choice.id}" type="checkbox" name="${choice.sequence.name}" value="${choice.sequence.name}" />
+                            <label for="${choice.id}">${choice.sequence.name}</label><br/>
+                        </c:forEach>
+                    </div>                   
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
+                    <button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div id="slideSpace">
 	<c:forEach items="${slideContents}" var="contents">
 		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
@@ -737,7 +917,28 @@ $(window).on('load', function () {
 				</p>
 			</div>
 		</c:if>
-	</c:forEach>
+        <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
+            <div id="${contents.id}" class="textDiv card card-body row"
+                style="margin: 1%;">
+                <c:if test="${contents.showsAll eq true}">
+                    <c:forEach items="${choices}" var="choice">
+                        <a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${contents.showsAll eq false}">
+                    <c:forEach items="${contents.choices}" var="choice">
+                        <a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+                    </c:forEach>
+                </c:if>
+                <input type="hidden" id="deleteChoiceBlockId"
+                    value="${contents.id}"> <a
+                    class="btn deleteChoiceBlock" href="javascript:;"
+                    style="float: right; position: absolute; right: 20px; top: 0;">
+                    <i style="color: black;" class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+        </c:if>
+    </c:forEach>
 </div>
 
 <style type="text/css">

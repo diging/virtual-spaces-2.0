@@ -167,6 +167,10 @@
 	<definition name="staff/module/slide/add" extends="slide.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/add.jsp" />	
 	</definition>
+
+	<definition name="staff/module/slide/edit" extends="slide.base.def">
+		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/edit.jsp" />
+	</definition>
 	
 	<definition name="staff/module/slide/contents" extends="slide.base.def">
 		<put-attribute name="content" value="/WEB-INF/views/staff/modules/slides/slide.jsp" />
