@@ -698,7 +698,6 @@ $( document ).ready(function() {
 	function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel){
 	    var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		console.log(selectedLinkClass);
 	    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
 	    $(selectedLinkClass).css({ 'left': x + posX});
 	    $(selectedLinkClass).css({ 'top': y + posY});
