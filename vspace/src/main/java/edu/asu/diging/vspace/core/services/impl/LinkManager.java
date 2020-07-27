@@ -17,12 +17,13 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.LinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
-public abstract class LinkManager<L extends ILink,T extends IVSpaceElement, U extends ILinkDisplay> implements ILinkManager{
+public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends LinkDisplay> implements ILinkManager<L, T, U>{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -36,6 +37,7 @@ public abstract class LinkManager<L extends ILink,T extends IVSpaceElement, U ex
     @Autowired
     private IStorageEngine storage;
 
+    @Override
     public U createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException{
@@ -50,6 +52,7 @@ public abstract class LinkManager<L extends ILink,T extends IVSpaceElement, U ex
 
     }
 
+    @Override
     public U updateLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
@@ -59,7 +62,7 @@ public abstract class LinkManager<L extends ILink,T extends IVSpaceElement, U ex
         L link =  getLink(linkId);
         T target = getTarget(linkedId);
         link.setName(title);
-        link.setTarget((IVSpaceElement) target);
+        link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
         setDisplayProperties((ILinkDisplay) displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
@@ -68,7 +71,7 @@ public abstract class LinkManager<L extends ILink,T extends IVSpaceElement, U ex
     @Override
     public void deleteLink(String linkId){
         L link = getLink(linkId);
-        removeFromLinkList(((ILink) link).getSpace(),link);
+        removeFromLinkList(link.getSpace(),link);
         deleteLinkDisplayRepo(link);
         deleteLinkRepo(link);
     }

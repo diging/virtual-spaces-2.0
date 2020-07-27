@@ -56,8 +56,7 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLin
     @Override
     protected IModuleLink createLinkObject(String title, String id) {
         ISpace source = spaceManager.getSpace(id);
-        IModuleLink link = moduleLinkFactory.createModuleLink(title, source);
-        return link;
+        return moduleLinkFactory.createModuleLink(title, source);
     }
 
     @Override

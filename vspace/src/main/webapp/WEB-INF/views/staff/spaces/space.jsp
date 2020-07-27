@@ -132,9 +132,6 @@ $( document ).ready(function() {
 	 
 	$("#createExternalLinkAlert").draggable();
 	$("#changeBgImgAlert").draggable();
-	$("#spaceLinkInfo").draggable();
-	$("#externalLinkInfo").draggable();
-	$("#moduleLinkInfo").draggable();
 	$("#editModuleLinkInfo").draggable();
 	$("#editSpaceLinkInfo").draggable();
 	$("#editExternalLinkInfo").draggable();
@@ -330,7 +327,7 @@ $( document ).ready(function() {
 	            $("#bgImage").off("click");
 	            moduleLinkInfo["id"] = linkData["id"];
 	            showModuleLinkEdit(editModuleLinkInfo, true);
-	            hideLinkInfoTabs();
+	            location.reload(true);
 	        }
 	    });
 	});
@@ -363,7 +360,7 @@ $( document ).ready(function() {
 	            $("#bgImage").off("click");
 	            spaceLinkInfo["id"] = linkData["id"];
 	            showSpaceLinkEdit(editSpaceLinkInfo, true);
-	            hideLinkInfoTabs();
+	            location.reload(true);
 	       	}
 	 	});
 	});
@@ -396,7 +393,7 @@ $( document ).ready(function() {
 	            $("#bgImage").off("click");
 	            externalLinkInfo["id"] = linkData["id"];
 	            showExternalLinkEdit(editExternalLinkInfo, true);
-	            hideLinkInfoTabs();
+	            location.reload(true);
 	       	}
 	 	});
 	});
@@ -443,7 +440,7 @@ $( document ).ready(function() {
 	
 	// ------------- other buttons ------------
 	$("#deleteSpaceLinkButton").click(function() {
-		var linkId = $("#spaceLinkId").val();
+		var linkId = $("#spaceLinkIdValueEdit").val();
 		$.ajax({
 		  url: "<c:url value="/staff/space/${space.id}/spacelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
 		  method: "DELETE",
@@ -456,7 +453,7 @@ $( document ).ready(function() {
 	
 	
 	$("#deleteModuleLinkButton").click(function() {
-		var linkId = $("#moduleLinkId").val();
+		var linkId = $("#moduleLinkIdValueEdit").val();
 		$.ajax({
 			url: "<c:url value="/staff/space/${space.id}/modulelink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
 			method: "DELETE",
@@ -468,7 +465,7 @@ $( document ).ready(function() {
 	});
 	
 	$("#deleteExternalLinkButton").click(function() {
-        var linkId = $("#externalLinkId").val();
+        var linkId = $("#externalLinkIdValueEdit").val();
         $.ajax({
             url: "<c:url value="/staff/space/${space.id}/externallink/" />" + linkId + "?${_csrf.parameterName}=${_csrf.token}",
             method: "DELETE",
@@ -603,12 +600,12 @@ $( document ).ready(function() {
 			link.attr("data-link-id", spaceLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
-				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"]);
+				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["id"], spaceLink["type"]);
 	        });
 			space_label.attr("data-link-id", spaceLink["id"]);
             space_label.css('cursor', 'pointer');
             space_label.click(function(e) {
-                makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"]);
+                makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["id"], spaceLink["type"]);
             });
 		}
 
@@ -656,12 +653,12 @@ $( document ).ready(function() {
 			link.attr("data-link-id", moduleLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
-				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
+				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["id"], moduleLink["type"]);
 			});
 			module_label.attr("data-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
 			module_label.click(function(e) {
-				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"]);
+				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["id"], moduleLink["type"]);
 			});
 		}
 
@@ -711,9 +708,6 @@ $( document ).ready(function() {
 	    $("#editExternalLinkInfo").hide();
 	    $("#editSpaceLinkInfo").hide();
 	    $("#editModuleLinkInfo").hide();
-	    $("#spaceLinkInfo").hide();
-	    $("#moduleLinkInfo").hide();
-	    $("#externalLinkInfo").hide();
         $("#errorMsg").text("");
         $('#errorAlert').hide();    
 	}
@@ -752,7 +746,7 @@ $( document ).ready(function() {
 			link.css('cursor', 'pointer');
 			link.attr('href', externalLink["url"]);
 			link.click(function(e) {
-                makeExternalLinksEditable(externalLink["spaceLinkLabel"], externalLink["id"]);
+                makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["id"], externalLink["type"]);
             });
 			
 			ext_label.attr("data-link-id", externalLink["id"]);
@@ -760,7 +754,7 @@ $( document ).ready(function() {
             ext_label.attr("data-link-id", externalLink["id"]);
             ext_label.css('cursor', 'pointer');
             ext_label.click(function(e) {
-            	makeExternalLinksEditable(externalLink["spaceLinkLabel"], externalLink["id"]);
+                makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["id"], externalLink["type"]);
             });
 		}
 
@@ -802,22 +796,6 @@ $( document ).ready(function() {
         $("#changeBgImgAlert").hide();
     });
     
-    $("#closeSpaceLinkInfo").click(function(e) {
-    	e.preventDefault();
-    	$("#spaceLinkInfoLabel").text("");
-        $("#spaceLinkId").val("");
-        resetHighlighting();
-        $("#spaceLinkInfo").hide();
-    });
-    
-    $("#closeModuleLinkInfo").click(function(e) {
-    	e.preventDefault();
-    	$("#moduleLinkInfoLabel").text("");
-        $("#moduleLinkId").val("");
-        resetHighlighting();
-        $("#moduleLinkInfo").hide();
-    }); 
-    
     $("#closeEditModuleLinkInfo").click(function(e) {
     	e.preventDefault();
     	$("#moduleLinkInfoLabel").text("");
@@ -841,14 +819,6 @@ $( document ).ready(function() {
         resetHighlighting();
         $("#editExternalLinkInfo").hide();
     }); 
-    
-    $("#closeExternalLinkInfo").click(function(e) {
-        e.preventDefault();
-        $("#externalLinkInfoLabel").text("");
-        $("#externalLinkId").val("");
-        resetHighlighting();
-        $("#externalLinkInfo").hide();
-    }); 
 	
 	// --------- Utility functions -------------
 	function createSpaceLinkInfo() {
@@ -868,6 +838,7 @@ $( document ).ready(function() {
 		info["y"] = storeY;
 		info["type"] = $("#extType").val();
 		info["externalLinkLabel"] = $("#externalLinkLabel").val();
+		info["externalLinkURL"] = $("#externalLink").val();
 	    return info;
 	}
 
@@ -1370,23 +1341,10 @@ $( document ).ready(function() {
     </div>
 </form>
 
-<div id="spaceLinkInfo" class="alert alert-secondary" role="alert"
-    style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-    <p class="float-right">
-        <a href="#" id="closeSpaceLinkInfo"><span
-            data-feather="x-square"></span></a>
-    </p>
-    <h6 class="alert-heading">
-        Space Link: <span id="spaceLinkInfoLabel"></span>
-    </h6>
-    <input type="hidden" name="spaceLinkId" id="spaceLinkId" />
-    <button id="deleteSpaceLinkButton" type="reset"
-        class="btn btn-primary btn-xs">Delete Link</button>
-</div>
 <form id="editSpaceLinkForm">
     <div id="editSpaceLinkInfo" class="alert alert-secondary"
         role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
         <p class="float-right">
             <a href="#" id="closeEditSpaceLinkInfo"><span
                 data-feather="x-square"></span></a>
@@ -1399,7 +1357,7 @@ $( document ).ready(function() {
         <div class="row">
             <div class="col">
                 <h6 class="alert-heading">
-                    <small>Edit Space Link</small>
+                    <small>Modify Space Link</small>
                 </h6>
             </div>
         </div>
@@ -1461,7 +1419,8 @@ $( document ).ready(function() {
             </div>
             <div class="col-sm-7">
                 <select id="spaceLinkIdEdit" name="linkedSpace"
-                    class="form-control-xs spacelink-targetEdit">
+                    class="form-control-xs spacelink-targetEdit"
+                    style="width: 100%;">
                     <c:forEach items="${spaces}" var="space">
                         <option value="${space.id}">${space.name}</option>
                     </c:forEach>
@@ -1478,30 +1437,24 @@ $( document ).ready(function() {
                     name="spaceLinkImage" id="spaceLinkImageEdit"><br>
             </div>
         </div>
-
-        <button id="editSpaceLinkBtn" type="reset"
-            class="btn btn-primary btn-xs">Edit Space</button>
+        <HR>
+        <div class="row">
+            <div class="col-sm-4">
+                <button id="editSpaceLinkBtn" type="reset"
+                    class="btn btn-primary btn-xs">Edit Link</button>
+            </div>
+            <div class="col-sm-8">
+                <button id="deleteSpaceLinkButton" type="reset"
+                    class="btn btn-primary btn-xs">Delete Link</button>
+            </div>
+        </div>
     </div>
 </form>
-
-<div id="moduleLinkInfo" class="alert alert-secondary" role="alert"
-    style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-    <p class="float-right">
-        <a href="#" id="closeModuleLinkInfo"><span
-            data-feather="x-square"></span></a>
-    </p>
-    <h6 class="alert-heading">
-        Module Link: <span id="moduleLinkInfoLabel"></span>
-    </h6>
-    <input type="hidden" name="moduleLinkId" id="moduleLinkId" />
-    <button id="deleteModuleLinkButton" type="reset"
-        class="btn btn-primary btn-xs">Delete Module Link</button>
-</div>
 
 <form id="editModuleLinkForm">
     <div id="editModuleLinkInfo" class="alert alert-secondary"
         role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
         <p class="float-right">
             <a href="#" id="closeEditModuleLinkInfo"><span
                 data-feather="x-square"></span></a>
@@ -1514,7 +1467,7 @@ $( document ).ready(function() {
         <div class="row">
             <div class="col">
                 <h6 class="alert-heading">
-                    <small>Edit Module Link</small>
+                    <small>Modify Module Link</small>
                 </h6>
             </div>
         </div>
@@ -1569,7 +1522,8 @@ $( document ).ready(function() {
             </div>
             <div class="col-sm-7">
                 <select id="moduleLinkIdEdit" name="linkedModule"
-                    class="form-control-xs modulelink-targetEdit">
+                    class="form-control-xs modulelink-targetEdit"
+                    style="width: 100%;">
                     <c:forEach items="${moduleList}" var="module">
                         <option value="${module.id}">${module.name}</option>
                     </c:forEach>
@@ -1577,31 +1531,23 @@ $( document ).ready(function() {
             </div>
         </div>
         <HR>
-        <p class="mb-0 text-right">
-            <button id="editModuleLinkBtn" type="reset"
-                class="btn btn-primary btn-xs">Edit Module</button>
-        </p>
+        <div class="row">
+            <div class="col-sm-4">
+                <button id="editModuleLinkBtn" type="reset"
+                    class="btn btn-primary btn-xs">Edit Link</button>
+            </div>
+            <div class="col-sm-8">
+                <button id="deleteModuleLinkButton" type="reset"
+                    class="btn btn-primary btn-xs">Delete Link</button>
+            </div>
+        </div>
     </div>
 </form>
-
-<div id="externalLinkInfo" class="alert alert-secondary" role="alert"
-    style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-    <p class="float-right">
-        <a href="#" id="closeExternalLinkInfo"><span
-            data-feather="x-square"></span></a>
-    </p>
-    <h6 class="alert-heading">
-        External Link: <span id="externalLinkInfoLabel"></span>
-    </h6>
-    <input type="hidden" name="externalLinkId" id="externalLinkId" />
-    <button id="deleteExternalLinkButton" type="reset"
-        class="btn btn-primary btn-xs">Delete External Link</button>
-</div>
 
 <form id="editExternalLinkForm">
     <div id="editExternalLinkInfo" class="alert alert-secondary"
         role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 600px; right: 50px; z-index: 999">
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
         <p class="float-right">
             <a href="#" id="closeEditExternalLinkInfo"><span
                 data-feather="x-square"></span></a>
@@ -1614,7 +1560,7 @@ $( document ).ready(function() {
         <div class="row">
             <div class="col">
                 <h6 class="alert-heading">
-                    <small>Edit External Link</small>
+                    <small>Modify External Link</small>
                 </h6>
             </div>
         </div>
@@ -1665,7 +1611,7 @@ $( document ).ready(function() {
                 </select>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-sm-3" style="padding-right: 0px;">
                 <label><small>Image:</small> </label>
@@ -1677,11 +1623,17 @@ $( document ).ready(function() {
         </div>
 
         <HR>
-        <p class="mb-0 text-right">
-            <button id="editExternalLinkBtn" type="reset"
-                class="btn btn-primary btn-xs">Edit External
-                Link</button>
-        </p>
+        <div class="row">
+            <div class="col-sm-4">
+                <button id="editExternalLinkBtn" type="reset"
+                    class="btn btn-primary btn-xs">Edit Link</button>
+            </div>
+            <div class="col-sm-8">
+                <button id="deleteExternalLinkButton" type="reset"
+                    class="btn btn-primary btn-xs">Delete
+                    External Link</button>
+            </div>
+        </div>
     </div>
 </form>
 

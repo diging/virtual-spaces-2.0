@@ -5,9 +5,12 @@ import java.util.List;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.model.ILink;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.impl.LinkDisplay;
 
-public interface ILinkManager<L,T,U> {
+public interface ILinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends LinkDisplay> {
 
     U createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,

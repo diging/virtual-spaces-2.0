@@ -1,5 +1,9 @@
 package edu.asu.diging.vspace.core.services;
 
-public interface IModuleLinkManager<IModuleLink,IModule,IModuleLinkDisplay> extends ILinkManager<IModuleLink,IModule,IModuleLinkDisplay>{
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.IModuleLink;
+import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
+
+public interface IModuleLinkManager extends ILinkManager<IModuleLink,IModule,ModuleLinkDisplay>{
 
 }

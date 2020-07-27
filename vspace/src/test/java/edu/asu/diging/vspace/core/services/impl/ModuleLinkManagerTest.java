@@ -83,7 +83,7 @@ public class ModuleLinkManagerTest {
         moduleLinkDisplay.setRotation(20);
         moduleLinkDisplay.setType(DisplayType.MODULE);
         moduleLinkDisplay.setLink(moduleLink);
-        Mockito.when(moduleLinkDisplayRepo.save(moduleLinkDisplay)).thenReturn(moduleLinkDisplay);;
+        Mockito.when(moduleLinkDisplayRepo.save(moduleLinkDisplay)).thenReturn(moduleLinkDisplay);
         managerToTest.deleteLinkDisplayRepo(moduleLink);
         Mockito.verify(moduleLinkDisplayRepo).deleteByLink(moduleLink);
     }
