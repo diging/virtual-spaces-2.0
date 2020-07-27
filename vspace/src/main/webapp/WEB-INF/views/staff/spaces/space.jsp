@@ -787,10 +787,10 @@ $( document ).ready(function() {
         <label><h5>Show Links to Unpublished Spaces:</h5></label>
         <select class="form-control" name="showSpaceLinksParam"
             style="width: 200px; display: inline;">
-            <option id="No" value="NO"
-                <c:if test="${space.showUnpublishedLinks=='NO'}">selected</c:if>>No</option>
-            <option id="Yes" value="YES"
-                <c:if test="${space.showUnpublishedLinks=='YES'}">selected</c:if>>Yes</option>
+            <option id="No" value=false
+                <c:if test="${space.showUnpublishedLinks==false}">selected</c:if>>No</option>
+            <option id="Yes" value=true
+                <c:if test="${space.showUnpublishedLinks==true}">selected</c:if>>Yes</option>
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">

@@ -18,7 +18,7 @@ public interface ILinkManager {
 
     List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId);
 
-    List<ISpaceLinkDisplay> getSpaceLinkDisplaysForPublishedSpace(String spaceId, SpaceStatus spaceStatus);
+    List<ISpaceLinkDisplay> getSpaceLinkDisplaysToPublishedSpace(String spaceId, SpaceStatus spaceStatus);
 
     List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId);
 

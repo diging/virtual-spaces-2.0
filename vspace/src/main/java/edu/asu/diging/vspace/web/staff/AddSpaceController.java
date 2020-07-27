@@ -19,7 +19,6 @@ import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.ShowUnpublishedLinks;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -54,7 +53,7 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
-        space.setShowUnpublishedLinks(ShowUnpublishedLinks.NO);
+        space.setShowUnpublishedLinks(false);
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {

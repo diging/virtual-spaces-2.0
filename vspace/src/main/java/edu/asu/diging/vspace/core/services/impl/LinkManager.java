@@ -218,8 +218,8 @@ public class LinkManager implements ILinkManager {
     }
 
     @Override
-    public List<ISpaceLinkDisplay> getSpaceLinkDisplaysForPublishedSpace(String spaceId, SpaceStatus spaceStatus){
-        return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForPublishedSpace(spaceId,spaceStatus));
+    public List<ISpaceLinkDisplay> getSpaceLinkDisplaysToPublishedSpace(String spaceId, SpaceStatus spaceStatus){
+        return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysToPublishedSpace(spaceId,spaceStatus));
     }
 
     /*

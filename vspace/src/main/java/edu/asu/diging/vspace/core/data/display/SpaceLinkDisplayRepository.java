@@ -21,7 +21,7 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
     public List<SpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
 
     @Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1 AND d.link.targetSpace.spaceStatus = ?2")
-    public List<SpaceLinkDisplay> findSpaceLinkDisplaysForPublishedSpace(String spaceId, SpaceStatus spaceStatus);
+    public List<SpaceLinkDisplay> findSpaceLinkDisplaysToPublishedSpace(String spaceId, SpaceStatus spaceStatus);
 
     @Modifying
     @Query("delete from SpaceLinkDisplay d where d.link.id in (:linkIds)")

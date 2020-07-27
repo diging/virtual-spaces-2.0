@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.ShowUnpublishedLinks;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
-import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
@@ -37,16 +35,11 @@ public class SpaceController {
 
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
-
-
+        
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("space", space);
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
-        if(space.getShowUnpublishedLinks()!=null && space.getShowUnpublishedLinks().equals(ShowUnpublishedLinks.YES)) {
-            model.addAttribute("spaceLinks",linkManager.getSpaceLinkDisplays(id));
-        }else {
-            model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplaysForPublishedSpace(id, SpaceStatus.PUBLISHED));
-        }
+        model.addAttribute("spaceLinks",linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));

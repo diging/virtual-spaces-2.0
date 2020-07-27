@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.ShowUnpublishedLinks;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ILinkManager;
@@ -40,10 +39,10 @@ public class ExhibitionSpaceController {
             IExhibition exhibition = exhibitManager.getStartExhibition();
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
-            if(space.getShowUnpublishedLinks()!=null && space.getShowUnpublishedLinks().equals(ShowUnpublishedLinks.YES)) {
+            if(space.getShowUnpublishedLinks()!=null && space.getShowUnpublishedLinks()) {
                 model.addAttribute("spaceLinks",linkManager.getSpaceLinkDisplays(id));
             }else {
-                model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplaysForPublishedSpace(id, SpaceStatus.PUBLISHED));
+                model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplaysToPublishedSpace(id, SpaceStatus.PUBLISHED));
             }
             model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));

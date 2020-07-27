@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.ShowUnpublishedLinks;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 
@@ -21,7 +20,7 @@ public class UpdateShowUnpublishedLinksController {
     private ISpaceManager spaceManager;
 
     @RequestMapping(value="/staff/space/{spaceId}/showSpaceLinks", method=RequestMethod.POST)
-    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("showSpaceLinksParam") ShowUnpublishedLinks showUnpublishedLinks) {
+    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("showSpaceLinksParam") Boolean showUnpublishedLinks) {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setShowUnpublishedLinks(showUnpublishedLinks);
         spaceManager.storeSpace(space, null,null);
