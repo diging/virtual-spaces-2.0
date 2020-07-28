@@ -15,6 +15,7 @@ import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -23,7 +24,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLinkDisplay> implements IModuleLinkManager{
+public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLinkDisplay> implements IModuleLinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -44,7 +45,7 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLin
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public List<ModuleLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<IModuleLinkDisplay> getLinkDisplays(String spaceId) {
         return moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId);
     }
 
@@ -60,13 +61,13 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLin
     }
 
     @Override
-    protected ModuleLinkDisplay updateLinkAndDisplay(IModuleLink link, ModuleLinkDisplay displayLink) {
+    protected IModuleLinkDisplay updateLinkAndDisplay(IModuleLink link, IModuleLinkDisplay displayLink) {
         moduleLinkRepo.save((ModuleLink) link);
-        return moduleLinkDisplayRepo.save(displayLink);
+        return moduleLinkDisplayRepo.save((ModuleLinkDisplay)displayLink);
     }
 
     @Override
-    protected ModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId){
+    protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId){
         Optional<ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
         if(moduleLinkDisplay.isPresent()) {
             return moduleLinkDisplay.get();
@@ -84,8 +85,8 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,ModuleLin
     }
 
     @Override 
-    protected ModuleLinkDisplay createDisplayLink(IModuleLink link) {
-        return (ModuleLinkDisplay) moduleLinkDisplayFactory.createModuleLinkDisplay(link);
+    protected IModuleLinkDisplay createDisplayLink(IModuleLink link) {
+        return moduleLinkDisplayFactory.createModuleLinkDisplay(link);
     }
 
     @Override

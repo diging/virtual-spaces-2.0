@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
@@ -22,7 +23,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,SpaceLinkDisplay> implements ISpaceLinkManager{
+public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,ISpaceLinkDisplay> implements ISpaceLinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -40,7 +41,7 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,SpaceLinkDis
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Override
-    public List<SpaceLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<ISpaceLinkDisplay> getLinkDisplays(String spaceId) {
         return spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId);
     }
 
@@ -58,7 +59,7 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,SpaceLinkDis
     }
 
     @Override
-    protected SpaceLinkDisplay getDisplayLink(String spaceLinkDisplayId){
+    protected ISpaceLinkDisplay getDisplayLink(String spaceLinkDisplayId){
         Optional<SpaceLinkDisplay> spaceLinkDisplay = spaceLinkDisplayRepo.findById(spaceLinkDisplayId);
         if(spaceLinkDisplay.isPresent()) {
             return spaceLinkDisplay.get();
@@ -77,14 +78,14 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,SpaceLinkDis
     }
 
     @Override
-    protected SpaceLinkDisplay updateLinkAndDisplay(ISpaceLink link, SpaceLinkDisplay displayLink) {
+    protected ISpaceLinkDisplay updateLinkAndDisplay(ISpaceLink link, ISpaceLinkDisplay displayLink) {
         spaceLinkRepo.save((SpaceLink) link);
-        return spaceLinkDisplayRepo.save(displayLink);
+        return spaceLinkDisplayRepo.save((SpaceLinkDisplay) displayLink);
     }
 
     @Override
-    protected SpaceLinkDisplay createDisplayLink(ISpaceLink link){
-        return (SpaceLinkDisplay) spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
+    protected ISpaceLinkDisplay createDisplayLink(ISpaceLink link){
+        return spaceLinkDisplayFactory.createSpaceLinkDisplay(link);
     }
 
     @Override

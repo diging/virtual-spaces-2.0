@@ -44,7 +44,7 @@ public class SpaceLinkManagerTest {
         Optional<SpaceLinkDisplay> mockSpaceLinkDisplay = Optional.of(newSpaceLinkDisplay);
         Mockito.when(spaceLinkDisplayRepo.findById(newSpaceLinkDisplay.getId())).thenReturn(mockSpaceLinkDisplay);
 
-        SpaceLinkDisplay spaceLinkDisplayActual = managerToTest.getDisplayLink(newSpaceLinkDisplay.getId());
+        ISpaceLinkDisplay spaceLinkDisplayActual = managerToTest.getDisplayLink(newSpaceLinkDisplay.getId());
         Assert.assertEquals(mockSpaceLinkDisplay.get().getId(), spaceLinkDisplayActual.getId());
     }
 
@@ -75,7 +75,7 @@ public class SpaceLinkManagerTest {
     public void test_deleteLinkDisplayRepo_linkPresent(){
         ISpace space = new Space();
         space.setId("SPA001");
-        List<SpaceLinkDisplay> SpaceLinkDisplayList = new ArrayList<SpaceLinkDisplay>();
+        List<ISpaceLinkDisplay> SpaceLinkDisplayList = new ArrayList<ISpaceLinkDisplay>();
         SpaceLinkDisplay SpaceLinkDisplay = new SpaceLinkDisplay();
         ISpaceLink spaceLink = new SpaceLink();
         spaceLink.setId("SPL001");
@@ -88,10 +88,22 @@ public class SpaceLinkManagerTest {
         spaceLink.setSpace(space);
         SpaceLinkDisplay.setLink(spaceLink);
         SpaceLinkDisplayList.add(SpaceLinkDisplay);
-        List<SpaceLinkDisplay> spaceLinkObj = SpaceLinkDisplayList;
+        List<ISpaceLinkDisplay> spaceLinkObj = SpaceLinkDisplayList;
         Mockito.when(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(space.getId())).thenReturn(spaceLinkObj);
         managerToTest.deleteLinkDisplayRepo(spaceLink);
         Mockito.verify(spaceLinkDisplayRepo).deleteByLink(spaceLink);
+    }
+
+    @Test
+    public void test_deleteLinkRepo_linkPresent(){
+        ISpace space = new Space();
+        space.setId("SPA001");
+        SpaceLink spaceLink = new SpaceLink();
+        spaceLink.setId("SPL001");
+        spaceLink.setSpace(space);
+        Mockito.when(spaceLinkRepo.save(spaceLink)).thenReturn(spaceLink);
+        managerToTest.deleteLinkRepo(spaceLink);
+        Mockito.verify(spaceLinkRepo).delete(spaceLink);
     }
 
     @Test

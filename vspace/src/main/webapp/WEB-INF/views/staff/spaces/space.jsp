@@ -52,6 +52,7 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
+		    console.log("Space link clicked");
 			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}", "${link.rotation}","${link.link.targetSpace.id}","${link.positionX}","${link.positionY}","${link.id}","${link.type}");
 		});
 	}
@@ -88,6 +89,7 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
+		    console.log("New Module Clicked");
 			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}","${link.id}", "${link.type}");
 		});
 	}
@@ -244,6 +246,9 @@ $( document ).ready(function() {
 	        	var linkData = JSON.parse(data);
 	        	$("#bgImage").off("click");
 	        	spaceLinkInfo["id"] = linkData["id"];
+	        	spaceLinkInfo["displayId"]=linkData["displayId"];
+	        	spaceLinkInfo["x"]=linkData["x"];
+	        	spaceLinkInfo["y"]=linkData["y"];
 	            showSpaceLink(spaceLinkInfo, true);
 	            $("#space_label").attr("id","");
 	            $("#link").attr("id","");
@@ -290,7 +295,11 @@ $( document ).ready(function() {
 	        success: function(data) {
 	        	var linkData = JSON.parse(data);
 	        	$("#bgImage").off("click");
+	        	console.log(linkData);
 	        	moduleLinkInfo["id"] = linkData["id"];
+	        	moduleLinkInfo["displayId"]=linkData["displayId"];
+	        	moduleLinkInfo["x"]=linkData["x"];
+	        	moduleLinkInfo["y"]=linkData["y"];
 	        	showModuleLink(moduleLinkInfo, true);
 	        	$("#module_label").attr("id","");
 	        	$("#link").attr("id","");
@@ -326,8 +335,11 @@ $( document ).ready(function() {
 	            var linkData = JSON.parse(data);
 	            $("#bgImage").off("click");
 	            moduleLinkInfo["id"] = linkData["id"];
-	            showModuleLinkEdit(editModuleLinkInfo, true);
-	            location.reload(true);
+	            moduleLinkInfo["displayId"]=linkData["displayId"];
+	            moduleLinkInfo["x"]=linkData["x"];
+	        	moduleLinkInfo["y"]=linkData["y"];
+	            showModuleLinkEdit(moduleLinkInfo, true);
+	            hideLinkInfoTabs();
 	        }
 	    });
 	});
@@ -359,8 +371,12 @@ $( document ).ready(function() {
 	            var linkData = JSON.parse(data);
 	            $("#bgImage").off("click");
 	            spaceLinkInfo["id"] = linkData["id"];
-	            showSpaceLinkEdit(editSpaceLinkInfo, true);
-	            location.reload(true);
+	            spaceLinkInfo["displayId"]=linkData["displayId"];
+	            spaceLinkInfo["x"]=linkData["x"];
+	            spaceLinkInfo["y"]=linkData["y"];
+	            console.log(linkData);
+	            showSpaceLinkEdit(spaceLinkInfo, true);
+	            hideLinkInfoTabs();
 	       	}
 	 	});
 	});
@@ -392,8 +408,11 @@ $( document ).ready(function() {
 	            var linkData = JSON.parse(data);
 	            $("#bgImage").off("click");
 	            externalLinkInfo["id"] = linkData["id"];
+	            externalLinkInfo["displayId"]=linkData["displayId"];
+	            externalLinkInfo["x"]=linkData["x"];
+	            externalLinkInfo["y"]=linkData["y"];
 	            showExternalLinkEdit(editExternalLinkInfo, true);
-	            location.reload(true);
+	            hideLinkInfoTabs();
 	       	}
 	 	});
 	});
@@ -427,6 +446,9 @@ $( document ).ready(function() {
 	        	var linkData = JSON.parse(data);
 	        	$("#bgImage").off("click");
 	        	externalLinkInfo["id"] = linkData["id"];
+	        	externalLinkInfo["displayId"]=linkData["displayId"];
+	        	externalLinkInfo["x"]=linkData["x"];
+	        	externalLinkInfo["y"]=linkData["y"];
 	        	showExternalLinks(externalLinkInfo, true);
 	        	$("#ext_label").attr("id","");
 	        	$("#link").attr("id","");
@@ -572,7 +594,7 @@ $( document ).ready(function() {
 		
 		var link;
 		if (spaceLink["type"] == "ALERT") {
-			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
+			link = $('<div id="link" class="alert alert-primary spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
 		} else if(spaceLink["type"] == "IMAGE" && linkIcon) {
 			link = $('<div id="link" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
 		} else {
@@ -584,7 +606,7 @@ $( document ).ready(function() {
 				'top': spaceLink["y"] + posY + 16,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + spaceLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
+			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
 		}
 		if(show) {
 			link.find("div").css('fill', 'red');
@@ -600,12 +622,14 @@ $( document ).ready(function() {
 			link.attr("data-link-id", spaceLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
-				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["id"], spaceLink["type"]);
+				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
 	        });
+			
 			space_label.attr("data-link-id", spaceLink["id"]);
+			space_label.attr("class", "slabel-"+spaceLink["id"]);
             space_label.css('cursor', 'pointer');
             space_label.click(function(e) {
-                makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["id"], spaceLink["type"]);
+                makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
             });
 		}
 
@@ -625,9 +649,9 @@ $( document ).ready(function() {
 		
 		var link;
 		if (moduleLink["type"] == "ALERT") {
-			link = $('<div id="link" class="alert alert-primary" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
+			link = $('<div id="link" class="alert alert-primary moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
 		} else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
-			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
+			link = $('<div id="link" data-link-id="' + moduleLink["id"] + '" ><img src="' + moduleLinkIcon + '"></div>');
 		} else { 
 			$(module_label).css({
 				'position': 'absolute',
@@ -637,7 +661,7 @@ $( document ).ready(function() {
 				'top': moduleLink["y"] + posY + 16,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + moduleLink["id"] + '"><div id="link" class="fas fa-book-open"></div></span>');
+			link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="fas fa-book-open"></div></span>');
 		} 
 		if(show) {
 			link.find("div").css('fill', 'red');
@@ -653,12 +677,13 @@ $( document ).ready(function() {
 			link.attr("data-link-id", moduleLink["id"]);
 			link.css('cursor', 'pointer');
 			link.click(function(e) {
-				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["id"], moduleLink["type"]);
+				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
 			});
 			module_label.attr("data-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
+			module_label.attr("class", "mlabel-"+moduleLink["id"]);
 			module_label.click(function(e) {
-				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["id"], moduleLink["type"]);
+				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
 			});
 		}
 
@@ -732,7 +757,7 @@ $( document ).ready(function() {
 				'top': externalLink["y"] + posY + 16,
 				'color': 'blue'
 			});
-			link = $('<span data-link-id="' + externalLink["id"] + '"><div id="link" class="fa fa-globe"></div></span>');
+			link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="fa fa-globe"></div></span>');
 		}
 		
 		link.css('position', 'absolute');
@@ -746,15 +771,14 @@ $( document ).ready(function() {
 			link.css('cursor', 'pointer');
 			link.attr('href', externalLink["url"]);
 			link.click(function(e) {
-                makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["id"], externalLink["type"]);
+                makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"]);
             });
 			
 			ext_label.attr("data-link-id", externalLink["id"]);
             ext_label.css('cursor', 'pointer');
-            ext_label.attr("data-link-id", externalLink["id"]);
-            ext_label.css('cursor', 'pointer');
+            ext_label.attr("class", "elabel-"+externalLink["id"]);
             ext_label.click(function(e) {
-                makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["id"], externalLink["type"]);
+                makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"]);
             });
 		}
 
@@ -882,7 +906,7 @@ $( document ).ready(function() {
 		info["type"] = $("#extTypeEdit").val();
 		info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
 		info["externalLinkURL"] = $("#externalLinkURLEdit").val();
-	    return info;
+		return info;
 	}
 	
 	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
@@ -915,7 +939,6 @@ $( document ).ready(function() {
 			showSpaceLinkEdit(editSpaceLinkInfo());
 		});
         hideLinkInfoTabs();
-        $("#spaceLinkInfo").show();
         $("#editSpaceLinkInfo").show();
 	}
 	
@@ -923,6 +946,8 @@ $( document ).ready(function() {
 	    selectedModuleLinkId=moduleLinkId;
 	    storeX=posXEdit;
 		storeY=posYEdit;
+		console.log(displayLinkId);
+		console.log(type);
 		$("#moduleLinkInfoLabel").text(moduleLinkName);
 		$("#moduleLinkDisplayId").val(displayLinkId);
 		$("#moduleLinkInfoLabelEdit").text(moduleLinkName);
@@ -947,7 +972,6 @@ $( document ).ready(function() {
 			showModuleLinkEdit(editModuleLinkInfo());
 		});
 		hideLinkInfoTabs();
-        $("#moduleLinkInfo").show();
         $("#editModuleLinkInfo").show();
 	}
 	
@@ -1630,8 +1654,7 @@ $( document ).ready(function() {
             </div>
             <div class="col-sm-8">
                 <button id="deleteExternalLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete
-                    External Link</button>
+                    class="btn btn-primary btn-xs">Delete Link</button>
             </div>
         </div>
     </div>

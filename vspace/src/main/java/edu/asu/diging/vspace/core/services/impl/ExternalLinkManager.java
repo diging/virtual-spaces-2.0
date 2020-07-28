@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
@@ -22,7 +23,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue,ExternalLinkDisplay> implements IExternalLinkManager{
+public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay> implements IExternalLinkManager{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -40,7 +41,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
     @Override
-    public List<ExternalLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<IExternalLinkDisplay> getLinkDisplays(String spaceId) {
         return externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId);
     }
 
@@ -57,13 +58,13 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     }
 
     @Override
-    protected ExternalLinkDisplay updateLinkAndDisplay(IExternalLink link, ExternalLinkDisplay displayLink) {
+    protected IExternalLinkDisplay updateLinkAndDisplay(IExternalLink link, IExternalLinkDisplay displayLink) {
         externalLinkRepo.save((ExternalLink) link);
-        return externalLinkDisplayRepo.save(displayLink);
+        return externalLinkDisplayRepo.save((ExternalLinkDisplay)displayLink);
     }
 
     @Override
-    protected ExternalLinkDisplay getDisplayLink(String externalLinkDisplayId){
+    protected IExternalLinkDisplay getDisplayLink(String externalLinkDisplayId){
         Optional<ExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo.findById(externalLinkDisplayId);
         if(externalLinkDisplay.isPresent()) {
             return externalLinkDisplay.get();
@@ -81,8 +82,8 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     }
 
     @Override
-    protected ExternalLinkDisplay createDisplayLink(IExternalLink link) {
-        return (ExternalLinkDisplay) externalLinkDisplayFactory.createExternalLinkDisplay(link);
+    protected IExternalLinkDisplay createDisplayLink(IExternalLink link) {
+        return externalLinkDisplayFactory.createExternalLinkDisplay(link);
     }
 
     @Override

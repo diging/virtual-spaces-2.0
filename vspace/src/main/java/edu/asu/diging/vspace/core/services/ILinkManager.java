@@ -8,9 +8,9 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.impl.LinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
-public interface ILinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends LinkDisplay> {
+public interface ILinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends ILinkDisplay> {
 
     U createLink(String title, String id, float positionX, float positionY,
             int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,

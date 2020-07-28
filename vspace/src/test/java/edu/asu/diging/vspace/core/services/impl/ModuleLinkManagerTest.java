@@ -42,7 +42,7 @@ public class ModuleLinkManagerTest {
         Optional<ModuleLinkDisplay> mockModuleLinkDisplay = Optional.of(newModuleLinkDisplay);
         Mockito.when(moduleLinkDisplayRepo.findById(newModuleLinkDisplay.getId())).thenReturn(mockModuleLinkDisplay);
 
-        ModuleLinkDisplay moduleLinkDisplayActual = managerToTest.getDisplayLink(newModuleLinkDisplay.getId());
+        IModuleLinkDisplay moduleLinkDisplayActual = managerToTest.getDisplayLink(newModuleLinkDisplay.getId());
         Assert.assertEquals(mockModuleLinkDisplay.get().getId(), moduleLinkDisplayActual.getId());
     }
 
@@ -86,6 +86,18 @@ public class ModuleLinkManagerTest {
         Mockito.when(moduleLinkDisplayRepo.save(moduleLinkDisplay)).thenReturn(moduleLinkDisplay);
         managerToTest.deleteLinkDisplayRepo(moduleLink);
         Mockito.verify(moduleLinkDisplayRepo).deleteByLink(moduleLink);
+    }
+
+    @Test
+    public void test_deleteLinkRepo_linkPresent(){
+        ISpace space = new Space();
+        space.setId("SPA001");
+        ModuleLink moduleLink = new ModuleLink();
+        moduleLink.setId("MOL001");
+        moduleLink.setSpace(space);
+        Mockito.when(moduleLinkRepo.save(moduleLink)).thenReturn(moduleLink);
+        managerToTest.deleteLinkRepo(moduleLink);
+        Mockito.verify(moduleLinkRepo).delete(moduleLink);
     }
 
     @Test

@@ -17,13 +17,12 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.LinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
-public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends LinkDisplay> implements ILinkManager<L, T, U>{
+public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends ILinkDisplay> implements ILinkManager<L, T, U>{
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -47,7 +46,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(linkLabel);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
-        setDisplayProperties((ILinkDisplay) displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
 
     }
@@ -64,7 +63,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties((ILinkDisplay) displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
     }
 
