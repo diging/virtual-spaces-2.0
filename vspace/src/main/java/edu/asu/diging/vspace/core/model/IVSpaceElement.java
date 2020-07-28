@@ -38,8 +38,8 @@ public interface IVSpaceElement {
 
     void setSpaceStatus(SpaceStatus status);
 
-    Boolean getShowUnpublishedLinks();
+    Boolean getIsShowUnpublishedLinks();
 
-    void setShowUnpublishedLinks(Boolean showUnpublishedLinks);
+    void setIsShowUnpublishedLinks(Boolean isShowUnpublishedLinks);
 
 }
