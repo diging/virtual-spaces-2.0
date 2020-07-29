@@ -788,9 +788,9 @@ $( document ).ready(function() {
         <select class="form-control" name="showSpaceLinksParam"
             style="width: 200px; display: inline;">
             <option id="No" value=false
-                <c:if test="${showUnpublishedLinks eq false}">selected</c:if>>No</option>
+                <c:if test="${space.showUnpublishedLinks eq false}">selected</c:if>>No</option>
             <option id="Yes" value=true
-                <c:if test="${showUnpublishedLinks eq true}">selected</c:if>>Yes</option>
+                <c:if test="${space.showUnpublishedLinks eq true}">selected</c:if>>Yes</option>
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">

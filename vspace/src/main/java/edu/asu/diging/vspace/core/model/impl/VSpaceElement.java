@@ -16,7 +16,7 @@ public abstract class VSpaceElement implements IVSpaceElement {
     private String modifiedBy;
     private OffsetDateTime modificationDate;
     private SpaceStatus spaceStatus;
-    private Boolean showUnpublishedLinks;
+    private boolean showUnpublishedLinks;
 
 
     /* (non-Javadoc)
@@ -119,12 +119,16 @@ public abstract class VSpaceElement implements IVSpaceElement {
     }
 
     @Override
-    public Boolean isShowUnpublishedLinks() {
+    public boolean isShowUnpublishedLinks() {
         return showUnpublishedLinks;
     }
 
     @Override
     public void setShowUnpublishedLinks(Boolean showUnpublishedLinks) {
+        if(showUnpublishedLinks==null) {
+            this.showUnpublishedLinks=false;
+            return;
+        }
         this.showUnpublishedLinks = showUnpublishedLinks;
     }
 
