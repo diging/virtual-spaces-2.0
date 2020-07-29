@@ -40,7 +40,28 @@ $( document ).ready(function() {
 		link.find("span").css('fill', 'red');
 		link.css('color', 'red');
 		link.css('font-size', "10px");
-		
+		var inputRotation = document.createElement("input");
+		inputRotation.setAttribute("type", "hidden");
+		inputRotation.setAttribute("id", "spaceLinkRotation-${link.link.id}");
+		inputRotation.setAttribute("value", "${link.rotation}");
+		var inputLabel = document.createElement("input");
+		inputLabel.setAttribute("type", "hidden");
+		inputLabel.setAttribute("id", "spaceLinkLabel-${link.link.id}");
+		inputLabel.setAttribute("value", "${link.link.name}");
+		var inputType = document.createElement("input");
+		inputType.setAttribute("type", "hidden");
+		inputType.setAttribute("id", "spaceLinkType-${link.link.id}");
+		inputType.setAttribute("value", "${link.type}");
+		var inputLinkedSpace = document.createElement("input");
+		inputLinkedSpace.setAttribute("type", "hidden");
+		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-${link.link.id}");
+		inputLinkedSpace.setAttribute("value", "${link.link.targetSpace.id}");
+
+		//append to form element that you want .
+		$("#space").append(inputRotation);
+		$("#space").append(inputLabel);
+		$("#space").append(inputType);
+		$("#space").append(inputLinkedSpace);
 		$("#space").append(link);
 		
 		$(".slabel-${link.link.id}").css({
@@ -52,8 +73,11 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-		    console.log("Space link clicked");
-			makeSpaceLinksEditable("${link.link.name}", "${link.link.id}", "${link.rotation}","${link.link.targetSpace.id}","${link.positionX}","${link.positionY}","${link.id}","${link.type}");
+		    var rotation = document.getElementById("spaceLinkRotation-${link.link.id}").value;
+		    var label = document.getElementById("spaceLinkLabel-${link.link.id}").value;
+		    var type = document.getElementById("spaceLinkType-${link.link.id}").value;
+		    var targetSpace = document.getElementById("spaceLinkTarget-${link.link.id}").value;
+			makeSpaceLinksEditable(label, "${link.link.id}", rotation ,targetSpace,"${link.positionX}","${link.positionY}","${link.id}",type);
 		});
 	}
 	</c:forEach>
@@ -78,6 +102,27 @@ $( document ).ready(function() {
 		link.css('color', 'red');
 		link.css('font-size', "10px");
 		
+		var inputRotation = document.createElement("input");
+		inputRotation.setAttribute("type", "hidden");
+		inputRotation.setAttribute("id", "moduleLinkRotation-${link.link.id}");
+		inputRotation.setAttribute("value", "${link.rotation}");
+		var inputLabel = document.createElement("input");
+		inputLabel.setAttribute("type", "hidden");
+		inputLabel.setAttribute("id", "moduleLinkLabel-${link.link.id}");
+		inputLabel.setAttribute("value", "${link.link.name}");
+		var inputType = document.createElement("input");
+		inputType.setAttribute("type", "hidden");
+		inputType.setAttribute("id", "moduleLinkType-${link.link.id}");
+		inputType.setAttribute("value", "${link.type}");
+		var inputLinkedSpace = document.createElement("input");
+		inputLinkedSpace.setAttribute("type", "hidden");
+		inputLinkedSpace.setAttribute("id", "moduleLinkTarget-${link.link.id}");
+		inputLinkedSpace.setAttribute("value", "${link.link.module.id}");
+		
+		$("#space").append(inputRotation);
+		$("#space").append(inputLabel);
+		$("#space").append(inputType);
+		$("#space").append(inputLinkedSpace);
 		$("#space").append(link);
 		
 		$(".mlabel-${link.link.id}").css({
@@ -89,8 +134,11 @@ $( document ).ready(function() {
 		
 		$('[data-link-id="${link.link.id}"]').css('cursor', 'pointer');
 		$('[data-link-id="${link.link.id}"]').click(function(e) {
-		    console.log("New Module Clicked");
-			makeModuleLinksEditable("${link.link.name}", "${link.link.id}","${link.rotation}","${link.link.module.id}","${link.positionX}","${link.positionY}","${link.id}", "${link.type}");
+		    var rotation = document.getElementById("moduleLinkRotation-${link.link.id}").value;
+		    var label = document.getElementById("moduleLinkLabel-${link.link.id}").value;
+		    var type = document.getElementById("moduleLinkType-${link.link.id}").value;
+		    var targetModule = document.getElementById("moduleLinkTarget-${link.link.id}").value;
+			makeModuleLinksEditable(label, "${link.link.id}",rotation,targetModule,"${link.positionX}","${link.positionY}","${link.id}", type);
 		});
 	}
 	</c:forEach> 	
@@ -111,6 +159,22 @@ $( document ).ready(function() {
         link.css('color', 'blue');
         link.css('font-size', "12px");
         
+		var inputLabel = document.createElement("input");
+		inputLabel.setAttribute("type", "hidden");
+		inputLabel.setAttribute("id", "externalLinkLabel-${link.externalLink.id}");
+		inputLabel.setAttribute("value", "${link.externalLink.name}");
+		var inputType = document.createElement("input");
+		inputType.setAttribute("type", "hidden");
+		inputType.setAttribute("id", "externalLinkType-${link.externalLink.id}");
+		inputType.setAttribute("value", "${link.type}");
+		var inputExternalLinkURL = document.createElement("input");
+		inputExternalLinkURL.setAttribute("type", "hidden");
+		inputExternalLinkURL.setAttribute("id", "externalLinkTarget-${link.externalLink.id}");
+		inputExternalLinkURL.setAttribute("value", "${link.externalLink.externalLink}");
+		
+		$("#space").append(inputLabel);
+		$("#space").append(inputType);
+		$("#space").append(inputExternalLinkURL);
         $("#space").append(link);
         
         $(".elabel-${link.externalLink.id}").css({
@@ -122,7 +186,10 @@ $( document ).ready(function() {
         
         $('[data-link-id="${link.externalLink.id}"]').css('cursor', 'pointer');
         $('[data-link-id="${link.externalLink.id}"]').click(function(e) {
-            makeExternalLinksEditable("${link.externalLink.name}", "${link.externalLink.id}","${link.externalLink.externalLink}","${link.positionX}","${link.positionY}","${link.id}","${link.type}");
+		    var label = document.getElementById("externalLinkLabel-${link.externalLink.id}").value;
+		    var type = document.getElementById("externalLinkType-${link.externalLink.id}").value;
+		    var targetLink = document.getElementById("externalLinkTarget-${link.externalLink.id}").value;
+            makeExternalLinksEditable(label,"${link.externalLink.id}",targetLink,"${link.positionX}","${link.positionY}","${link.id}",type);
         });
 	}
 	</c:forEach> 
@@ -295,7 +362,6 @@ $( document ).ready(function() {
 	        success: function(data) {
 	        	var linkData = JSON.parse(data);
 	        	$("#bgImage").off("click");
-	        	console.log(linkData);
 	        	moduleLinkInfo["id"] = linkData["id"];
 	        	moduleLinkInfo["displayId"]=linkData["displayId"];
 	        	moduleLinkInfo["x"]=linkData["x"];
@@ -338,6 +404,10 @@ $( document ).ready(function() {
 	            moduleLinkInfo["displayId"]=linkData["displayId"];
 	            moduleLinkInfo["x"]=linkData["x"];
 	        	moduleLinkInfo["y"]=linkData["y"];
+	        	$('#moduleLinkRotation-'+selectedModuleLinkId).val(linkData["rotation"]);
+	            $('#moduleLinkLabel-'+selectedModuleLinkId).val(linkData["label"]);
+	            $('#moduleLinkType-'+selectedModuleLinkId).val(linkData["dislpayType"]);
+	            $('#moduleLinkTarget-'+selectedModuleLinkId).val(linkData["linkedId"]);
 	            showModuleLinkEdit(moduleLinkInfo, true);
 	            hideLinkInfoTabs();
 	        }
@@ -374,8 +444,11 @@ $( document ).ready(function() {
 	            spaceLinkInfo["displayId"]=linkData["displayId"];
 	            spaceLinkInfo["x"]=linkData["x"];
 	            spaceLinkInfo["y"]=linkData["y"];
-	            console.log(linkData);
 	            showSpaceLinkEdit(spaceLinkInfo, true);
+	            $('#spaceLinkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
+	            $('#spaceLinkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
+	            $('#spaceLinkType-'+selectedSpaceLinkId).val(linkData["dislpayType"]);
+	            $('#spaceLinkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
 	            hideLinkInfoTabs();
 	       	}
 	 	});
@@ -392,7 +465,6 @@ $( document ).ready(function() {
 	    var linkedSpace = $("#externalLinkIdEdit").val();
 	    $("#externalLinkXEdit").val(storeX);
 	    $("#externalLinkYEdit").val(storeY);
-
 	    var form = $("#editExternalLinkForm");
 	    var formData = new FormData(form[0]);
 	    var externalLinkInfo = editExternalLinkInfo();
@@ -411,6 +483,9 @@ $( document ).ready(function() {
 	            externalLinkInfo["displayId"]=linkData["displayId"];
 	            externalLinkInfo["x"]=linkData["x"];
 	            externalLinkInfo["y"]=linkData["y"];
+	            $('#externalLinkLabel-'+selectedExternalLinkId).val(linkData["label"]);
+	            $('#externalLinkType-'+selectedExternalLinkId).val(linkData["dislpayType"]);
+	            $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
 	            showExternalLinkEdit(editExternalLinkInfo, true);
 	            hideLinkInfoTabs();
 	       	}
@@ -946,8 +1021,6 @@ $( document ).ready(function() {
 	    selectedModuleLinkId=moduleLinkId;
 	    storeX=posXEdit;
 		storeY=posYEdit;
-		console.log(displayLinkId);
-		console.log(type);
 		$("#moduleLinkInfoLabel").text(moduleLinkName);
 		$("#moduleLinkDisplayId").val(displayLinkId);
 		$("#moduleLinkInfoLabelEdit").text(moduleLinkName);
