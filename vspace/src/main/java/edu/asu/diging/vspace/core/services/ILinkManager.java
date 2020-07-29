@@ -9,8 +9,6 @@ import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
-import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 public interface ILinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends ILinkDisplay> {
 
@@ -23,8 +21,6 @@ public interface ILinkManager<L extends ILink<T>,T extends IVSpaceElement, U ext
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
 
     List<U> getLinkDisplays(String spaceId);
-    
-    List<ISpaceLinkDisplay> getSpaceLinkForGivenOrNullSpaceStatus(String spaceId, SpaceStatus spaceStatus);
 
 
     void deleteLink(String linkId);

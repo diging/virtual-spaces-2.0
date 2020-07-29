@@ -11,7 +11,6 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
-import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
@@ -37,9 +36,6 @@ public class ExhibitionSpaceController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
-    @Autowired
-    private ILinkManager linkManager;
 
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
@@ -55,7 +51,7 @@ public class ExhibitionSpaceController {
             if(space.isShowUnpublishedLinks()) {
                 model.addAttribute("spaceLinks",spaceLinkManager.getLinkDisplays(id));
             }else {
-                model.addAttribute("spaceLinks", linkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED));
+                model.addAttribute("spaceLinks", spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED));
             }
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
             model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
