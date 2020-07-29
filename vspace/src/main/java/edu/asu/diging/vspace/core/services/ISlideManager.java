@@ -28,7 +28,5 @@ public interface ISlideManager {
     void deleteSlideById(String slideId, String moduleId);
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
-    
-    ISlide convertTextToMarkdown(ISlide slide);
 
 }

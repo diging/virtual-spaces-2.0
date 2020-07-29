@@ -188,9 +188,9 @@
         
         <!-- MarkDown -->
 		<dependency>
-    		<groupId>com.atlassian.commonmark</groupId>
-    		<artifactId>commonmark</artifactId>
-    		<version>0.15.0</version>
+			<groupId>com.atlassian.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>0.15.0</version>
 		</dependency>
 		
         <!-- Testing -->
