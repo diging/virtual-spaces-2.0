@@ -89,24 +89,24 @@ body {
         </div>
         <a href="<c:url value="/exhibit/space/${spaceId}" />">
             <div class="exit_to_space_Class">
-				<svg class="Ellipse_5_be">
-                            <ellipse fill="rgba(255,255,255,1)"
+                <svg class="Ellipse_5_be">
+                    <ellipse fill="rgba(255,255,255,1)"
 						class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
-                            </ellipse>
-                        </svg>
+                    </ellipse>
+                </svg>
                 <i class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
-				<span class="tooltiptext">Go To Space</span>
+                <span class="tooltiptext">Go To Space</span>
             </div>
         </a>
         <a
             href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}" />">
             <div class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
-                        <ellipse fill="rgba(255,255,255,1)"
+                    <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_Class" rx="22" ry="22" cx="22"
                         cy="22">
-                        </ellipse>
-                    </svg>
+                    </ellipse>
+                </svg>
                 <i class="fas fa-fast-backward fa-2x Icon_awesome_angle_double_left"></i>
                 <span class="tooltiptext">Go To Start Sequence of Module</span>
             </div>
@@ -115,11 +115,11 @@ body {
         <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPointId}?back=true" />">
             <div class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
-              <ellipse fill="rgba(255,255,255,1)"
+                    <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_be_Class" rx="22" ry="22"
                         cx="22" cy="22">
-              </ellipse>
-            </svg>
+                    </ellipse>
+                </svg>
                 <i class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
                 <span class="tooltiptext">Go To Previous Branching Choice</span>
             </div>
