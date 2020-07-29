@@ -35,9 +35,10 @@ public class SpaceController {
 
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
-        
+
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("space", space);
+        model.addAttribute("showUnpublishedLinks", space.isShowUnpublishedLinks());
         model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
         model.addAttribute("spaceLinks",linkManager.getSpaceLinkDisplays(id));
         model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));

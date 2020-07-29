@@ -20,9 +20,9 @@ public class UpdateShowUnpublishedLinksController {
     private ISpaceManager spaceManager;
 
     @RequestMapping(value="/staff/space/{spaceId}/showSpaceLinks", method=RequestMethod.POST)
-    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("showSpaceLinksParam") Boolean isShowUnpublishedLinks) {
+    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("showSpaceLinksParam") Boolean showUnpublishedLinks) {
         ISpace space = spaceManager.getSpace(spaceId);
-        space.setIsShowUnpublishedLinks(isShowUnpublishedLinks);
+        space.setShowUnpublishedLinks(showUnpublishedLinks);
         spaceManager.storeSpace(space, null,null);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Show Links to Unpublished Spaces successfully updated!");
