@@ -27,7 +27,7 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
 public class AddSpaceController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -35,10 +35,10 @@ public class AddSpaceController {
 
     @Autowired
     private ISpaceFactory spaceFactory;
-    
+
     @Autowired
     private IImageService imageService;
-    
+
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
@@ -75,11 +75,11 @@ public class AddSpaceController {
         }else {
             creationValue = spaceManager.storeSpace(space, bgImage, filename);
         }
-        
+
         if (creationValue != null) {
             return "redirect:/staff/space/" + creationValue.getElement().getId();
         }
-        
+
         redirectAttrs.addAttribute("showAlert", true);
         redirectAttrs.addAttribute("alertType", "danger");
         redirectAttrs.addAttribute("message", "Unkown error. Space could not be created.");

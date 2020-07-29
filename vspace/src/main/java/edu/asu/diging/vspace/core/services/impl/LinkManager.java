@@ -1,10 +1,14 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
@@ -17,6 +21,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -35,6 +41,9 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
 
     @Autowired
     private IStorageEngine storage;
+    
+    @Autowired
+    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Override
     public U createLink(String title, String id, float positionX, float positionY,
@@ -80,6 +89,11 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
     protected abstract void deleteLinkDisplayRepo(L link);
 
     protected abstract void removeFromLinkList(ISpace space, L link);
+    
+    @Override
+    public List<ISpaceLinkDisplay> getSpaceLinkForGivenOrNullSpaceStatus(String spaceId, SpaceStatus spaceStatus){
+        return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinksForGivenOrNullSpaceStatus(spaceId,spaceStatus));
+    }
 
     protected abstract U updateLinkAndDisplay(L link, U displayLink);
 
@@ -120,5 +134,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
             imageRepo.save((VSImage) image);
             linkDisplay.setImage(image);
         }
+
     }
+
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 @Repository
 @JaversSpringDataAuditable
@@ -19,6 +20,9 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
 
     @Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
     public List<ISpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
+
+    @Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1 AND (d.link.targetSpace.spaceStatus = ?2 OR d.link.targetSpace.spaceStatus is null)")
+    public List<SpaceLinkDisplay> findSpaceLinksForGivenOrNullSpaceStatus(String spaceId, SpaceStatus spaceStatus);
 
     @Modifying
     @Query("delete from SpaceLinkDisplay d where d.link.id in (:linkIds)")
