@@ -17,10 +17,10 @@ $(function(){
 $( document ).ready(function() {
 	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
 	
-	if ($("ul#outgoingLinks li").length == 0) {
+	if ($("div#outgoingLinks a").length < 2) {
 		  $("#noLinksOnSpace").show()
-	  }
-	if ($("ul#incomingLinks li").length == 0) {
+	 }
+	if ($("div#incomingLinks a").length < 2) {
 		  $("#noLinksToSpace").show()
 	  }
   });    
@@ -230,6 +230,7 @@ $( document ).ready(function() {
 		var form = $("#createSpaceLinkForm");
 		var label = $("#spaceLinkLabel").val();
 		var spaceName = $("#linkedSpace option:selected").text();
+		var spaceId = $("#linkedSpace option:selected").val(); 
 		var formData = new FormData(form[0]);
 		
 		var spaceLinkInfo = createSpaceLinkInfo();
@@ -253,10 +254,10 @@ $( document ).ready(function() {
 	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
 	            $("#noLinksOnSpace").hide();
-	    		$("#outgoingLinks").append("<li id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</li>");
+	    		$("#outgoingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
 	    		if (spaceName == "${space.name}") {
 	    			$("#noLinksToSpace").hide();
-	    			$("#incomingLinks").append("<li id="+linkData["id"]+">"+spaceName+"</li>");
+	    			$("div#incomingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
 	    		}
 	        }
 		});
@@ -357,11 +358,11 @@ $( document ).ready(function() {
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
-			  $('li#'+linkId).remove();
-			  if ($("ul#outgoingLinks li").length == 0) {
+			  $('a#'+linkId).remove();
+			  if ($("div#outgoingLinks a").length < 2) {
 				  $("#noLinksOnSpace").show();
 			  }
-			  if ($("ul#incomingLinks li").length == 0) {
+			  if ($("div#incomingLinks a").length < 2) {
 				  $("#noLinksToSpace").show();
 			  }
 	          $("#spaceLinkInfo").hide();
@@ -1128,40 +1129,35 @@ ${space.description}
 
 <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
 
-<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
-	links on this space:</h5>
-<div id="noLinksOnSpace"
-	style="overflow: hidden; padding-right: 0.5em; text-align: right; display: none">
-	There are no links on this space.
+<div id="outgoingLinks" class="list-group" style="padding-right: 0.25em; text-align: right;">
+  	<a href="#" style="padding-right: 0.25em;" class="list-group-item active">
+    	Space links on this space:
+  	</a>
+	<div id="noLinksOnSpace"
+	style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
+		There are no links on this space.
+	</div>
+    <c:forEach items="${linksOnThisSpace}" var="spaceLinks">
+    	<c:if test="${not empty spaceLinks.targetSpace}">
+    		<a href="<c:url value='/staff/space/${spaceLinks.targetSpace.id}'/>" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+					&nbsp;${spaceLinks.targetSpace.name}</a>
+		</c:if>
+		<c:if test="${empty spaceLinks.targetSpace}">
+			<a href="#" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+				&nbsp;&lt;No Space&gt;</a>
+		</c:if>
+  	</c:forEach>
 </div>
-<ul id="outgoingLinks"
-	style="overflow: hidden; padding-right: 0.5em; text-align: right;">
-	<c:if test="${not empty linksOnThisSpace}">
-		<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
-			<c:if test="${not empty spaceLinks.targetSpace}">
-				<li id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
-					&nbsp;${spaceLinks.targetSpace.name}</li>
-			</c:if>
-			<c:if test="${empty spaceLinks.targetSpace}">
-				<li id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
-					&nbsp;&lt;No Space&gt;</li>
-			</c:if>
-		</c:forEach>
-	</c:if>
-</ul>
 <p></p>
-<h5 style="overflow: hidden; padding-right: 0.5em; text-align: right;">Space
-	links to this space:</h5>
-<div id="noLinksToSpace"
-	style="overflow: hidden; padding-right: 0.5em; text-align: right; display: none">
-	There are no links to this space.
+<div id="incomingLinks" class="list-group" style="padding-right: 0.25em; text-align: right;">
+  	<a href="#" style="padding-right: 0.25em;" class="list-group-item active">
+    	Space links to this space:
+  	</a>
+	<div id="noLinksToSpace"
+		style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
+		There are no links to this space.
+	</div>
+    <c:forEach items="${linksToThisSpace}" var="spaceLinks">
+  	<a href="<c:url value='/staff/space/${spaceLinks.sourceSpace.id}'/>" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</a>
+  	</c:forEach>
 </div>
-
-<ul id="incomingLinks"
-	style="overflow: hidden; padding-right: 0.5em; text-align: right;">
-	<c:if test="${not empty linksToThisSpace}">
-		<c:forEach items="${linksToThisSpace}" var="spaceLinks">
-			<li id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</li>
-		</c:forEach>
-	</c:if>
-</ul>
