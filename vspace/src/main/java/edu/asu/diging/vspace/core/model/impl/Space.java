@@ -32,6 +32,9 @@ public class Space extends VSpaceElement implements ISpace {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
+    private SpaceStatus spaceStatus;
+    private boolean showUnpublishedLinks;
+
     @JsonIgnore
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
     private List<ISpaceLink> spaceLinks;
@@ -118,5 +121,34 @@ public class Space extends VSpaceElement implements ISpace {
 
     public void setImage(IVSImage image) {
         this.image = image;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.Space#getSpaceStatus()
+     */
+    @Override
+    public SpaceStatus getSpaceStatus() {
+        return spaceStatus;
+    }
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.Space#setSpaceStatus(edu.asu.diging.vspace.core.model.impl.SpaceStatus)
+     */
+    @Override
+    public void setSpaceStatus(SpaceStatus spaceStatus) {
+        this.spaceStatus = spaceStatus;
+    }
+
+    @Override
+    public boolean isShowUnpublishedLinks() {
+        return showUnpublishedLinks;
+    }
+
+    @Override
+    public void setShowUnpublishedLinks(Boolean showUnpublishedLinks) {
+        if(showUnpublishedLinks==null) {
+            this.showUnpublishedLinks=false;
+            return;
+        }
+        this.showUnpublishedLinks = showUnpublishedLinks;
     }
 }
