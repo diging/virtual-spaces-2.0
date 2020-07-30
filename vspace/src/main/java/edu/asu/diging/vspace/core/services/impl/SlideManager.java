@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.apache.commons.collections.CollectionUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +22,20 @@ import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
+
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
+
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
@@ -112,7 +121,6 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) {
-
         if(slideId == null) {
             logger.error("Slide Id cannot be null.");
             return;

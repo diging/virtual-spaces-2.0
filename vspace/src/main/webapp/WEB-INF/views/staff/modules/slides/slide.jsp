@@ -2,10 +2,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link rel="stylesheet"
+	href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <script>
 //# sourceURL=click.js
-var contentCount = ${contentCount};
+
+var contentCount = ${fn:length(slideContents)};
+var markDown = null;
+var defaultValue;
+
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -32,24 +39,20 @@ function onMouseLeave(e) {
 
 function onDoubleClick(e){
     // get to the nearest divs class attribute
+    $(".EasyMDEContainer").remove();
     var divName = $(e.target).closest('div').attr('class');
     //if the div is a text content block 
     if(divName.includes("textDiv")){
+
     	$(e.target).closest('.textDiv').addClass("open");
+        var description = $("div.open p:eq(0)").text();
+    	defaultValue = description;
+
+        $("#editTextAlert").show();
+        markDown = new EasyMDE({element: $('#editTextBlock')[0]});
+        markDown.value(description.trim());
         //remove card border
-        $(".open").css('border', 'none');
-        // get text from p tag
-        var description = $(".open").children("p:first").text();
-        // insert text box and buttons
-        $('<div class="col-xs-12" id="newTextBlockDiv" ><textarea id="newTextBlock" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea></div>').insertBefore( ".open p" );
-        $('<div class="col-xs-1" style="margin-top: 1%"><a id="cancelTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-times"></i></a><a id="submitTextBlock" class="btn" href="javascript:;" style="float: right;"><i class="fas fa-check"></i></a></div>').insertAfter( "#newTextBlockDiv" );
-        $(".open").children("p:first").remove();
-        $(".open").children("input:first").remove();
-        $(".open").children("a:first").remove();
-        // unbind events to prevent multiple instances of buttons and constant highlighting
-        $('.textDiv').unbind('mouseenter mouseleave dblclick');
-        // remove highlighting if present
-        $(this).removeClass("hova");
+        $(".open").css('display', 'none');
     } else {
     	
     	// store image ID selected by the user to replace, onDoubleClick
@@ -149,7 +152,7 @@ function uploadImage() {
     // Reset the image file name 
    	$('#file').val('');
 }
-    
+
 $(document).ready(function() {
 	if(${slide['class'].simpleName == 'BranchingPoint'}) {
 		$('#addChoice').show();
@@ -258,6 +261,8 @@ $(document).ready(function() {
    });
    
     $("#addText").click(function() {
+        $(".EasyMDEContainer").remove();
+    	markDown = new EasyMDE({element: $('#textBlockText')[0]});
         $("#addTextAlert").show();
     });
     
@@ -442,10 +447,11 @@ $(document).ready(function() {
         // ------------- creating text content blocks ------------
         
         var formData = new FormData();
-        var text = $("#textBlockText").val()
-        formData.append('content', $("#textBlockText").val());
+        var text = markDown.value();
+        formData.append('content', text);
         ++contentCount;
         formData.append('contentOrder', contentCount);
+        markDown.value('');
         $.ajax({
             url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/textcontent?${_csrf.parameterName}=${_csrf.token}" />",
             type: 'POST',
@@ -473,7 +479,6 @@ $(document).ready(function() {
             	}
             }
         });
-        $("#textBlockText").val('')
     });
     
     $('input:checkbox').click(function() {
@@ -542,48 +547,58 @@ $(document).ready(function() {
     });
 
     $("#addImgAlert").draggable();
-    $("#addTextAlert").draggable();
+
+    // ------------- edit text block ----------------
+    
     $("#addChoiceAlert").draggable();
     
-    function closeTextBox(blockId) {
-        var description = $("#newTextBlock").val()
+    function updateTextBox(blockId, text) {
         // clear text box and buttons
-        $(".open").empty()
-        $(".open").append('<p>'+description+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
+        $(".open").empty();
+        $(".open").append('<p>'+text+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
         // reset border of the card
         $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
+        
         $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $(".open").css('display', 'block');
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
     }
     
     // must add the event to the document since the buttons are added dynamically
-    $(document).on('click','#cancelTextBlock',function(){
-    	document.getElementById("newTextBlock").value = document.getElementById("newTextBlock").defaultValue;
+    $('#cancelTextBlock').on('click',function(){
+    	$("#editTextAlert").hide();
     	var blockId = $(this).closest(".open").attr("id");
-    	closeTextBox(blockId);
+    	updateTextBox(blockId, defaultValue);
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
     $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
-    $(document).on('click','#submitTextBlock',function(){
-       var formData = new FormData();
-       var blockId = $(this).closest(".open").attr("id");
-       formData.append('textBlockDesc', $("#newTextBlock").val());
-       formData.append('textBlockId', blockId);
-       $.ajax({
-           url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
-           type: 'POST',
-           cache       : false,
-           contentType : false,
-           processData : false,
-           data: formData,
-           enctype: 'multipart/form-data',
-           success: function(data) {
-               // replace text box with new description
-               closeTextBox(blockId)
+    $("#submitTextBlock").on("click", function(e){
+    	e.preventDefault();
+        // ------------- editting text content blocks ------------
+        
+        var formData = new FormData();
+        var text = markDown.value();
+        markDown.value('');
+        var formData = new FormData();
+        var blockId = $(".open").attr("id");
+        formData.append('textBlockDesc', text);
+        formData.append('textBlockId', blockId);
+    	$("#editTextAlert").hide();
+        $.ajax({
+            url: "<c:url value="/staff/module/${module.id}/slide/${slide.id}/text/edit?${_csrf.parameterName}=${_csrf.token}" />",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                // replace text box with new description
+               updateTextBox(blockId, text)
                $(".open").removeClass("open");
            },
            error: function(data) {
@@ -768,6 +783,35 @@ $(window).on('load', function () {
 		</div>
 	</div>
 </div>
+
+<div id="editTextAlert" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Text Block</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form name="textForm" id="textEditUploadForm"
+				enctype="multipart/form-data" method="post">
+				<div class="modal-body">
+					<h6>
+						<small>Edit Text: </small>
+					</h6>
+					<textarea class="form-control" id="editTextBlock" rows="3"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button id="cancelTextBlock" type="reset" class="btn light">Cancel</button>
+					<button type="submit" id="submitTextBlock" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
 <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -806,9 +850,7 @@ $(window).on('load', function () {
 				<h5 class="modal-title">Login</h5>
 			</div>
 			<div class="modal-body">
-				<h6>
-					You are not logged in, please login.
-				</h6>
+				<h6>You are not logged in, please login.</h6>
 			</div>
 			<div class="modal-footer">
 				<a class="btn btn-primary" style="color: white;"
