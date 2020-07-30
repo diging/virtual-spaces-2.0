@@ -39,7 +39,11 @@ public class ExhibitionSpaceController {
             IExhibition exhibition = exhibitManager.getStartExhibition();
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
-            model.addAttribute("spaceLinks", linkManager.getSpaceLinkDisplays(id));
+            if(space.isShowUnpublishedLinks()) {
+                model.addAttribute("spaceLinks",linkManager.getSpaceLinkDisplays(id));
+            }else {
+                model.addAttribute("spaceLinks", linkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED));
+            }
             model.addAttribute("moduleList", linkManager.getModuleLinkDisplays(id));
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
             model.addAttribute("externalLinkList", linkManager.getExternalLinkDisplays(id));  

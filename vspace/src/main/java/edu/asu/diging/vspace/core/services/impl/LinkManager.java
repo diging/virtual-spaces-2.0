@@ -44,6 +44,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -189,7 +190,7 @@ public class LinkManager implements ILinkManager {
         moduleLinkDisplayRepo.deleteByLink(link);
         moduleLinkRepo.delete((ModuleLink) link);
     }
-    
+
     @Override
     public void deleteExternalLink(String linkId) {
         Optional<ExternalLink> linkOptional = externalLinkRepo.findById(linkId);
@@ -214,6 +215,11 @@ public class LinkManager implements ILinkManager {
     @Override
     public List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId) {
         return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId));
+    }
+
+    @Override
+    public List<ISpaceLinkDisplay> getSpaceLinkForGivenOrNullSpaceStatus(String spaceId, SpaceStatus spaceStatus){
+        return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinksForGivenOrNullSpaceStatus(spaceId,spaceStatus));
     }
 
     /*
@@ -243,7 +249,7 @@ public class LinkManager implements ILinkManager {
     @Override
     public IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
             String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename)
-            throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+                    throws ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         // we need this to fully load the space
         source = spaceManager.getSpace(source.getId());
         if (source == null) {
@@ -284,7 +290,7 @@ public class LinkManager implements ILinkManager {
     @Override
     public IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY,
             int rotation, String linkedModuleId, String moduleLinkLabel, DisplayType displayType)
-            throws SpaceDoesNotExistException {
+                    throws SpaceDoesNotExistException {
 
         source = spaceManager.getSpace(source.getId());
         if (source == null) {
