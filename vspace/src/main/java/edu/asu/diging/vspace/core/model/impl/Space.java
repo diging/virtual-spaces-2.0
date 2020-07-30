@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -144,6 +146,7 @@ public class Space extends VSpaceElement implements ISpace {
     }
 
     @Override
+    @Access(AccessType.PROPERTY)
     public void setShowUnpublishedLinks(Boolean showUnpublishedLinks) {
         if(showUnpublishedLinks==null) {
             this.showUnpublishedLinks=false;
