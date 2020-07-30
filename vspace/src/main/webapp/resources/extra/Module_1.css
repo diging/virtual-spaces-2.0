@@ -85,17 +85,16 @@ a, a:hover, a:focus {
 }
 
 .sidenav {
-    height: 1000px;;
     width: 0;
     position: absolute;
     z-index: 1;
-    top: 0;
-    left: 0;
+    top: -4px;
+    left: 0px;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
-    padding-top: 60px;
+    padding-top: 26px;
     word-break: break-all;
 }
 
@@ -109,7 +108,7 @@ a, a:hover, a:focus {
 
 .sidenav .closebtn {
     position: absolute;
-    top: 0;
+    top: 8px;
     right: 3px;
     margin-left: 50px;
 }
@@ -117,6 +116,7 @@ a, a:hover, a:focus {
 .sidenav .dropdown-item {
     padding: 0px;
 }
+
 .barPosition {
     position: absolute;
     color: dimgrey;
@@ -158,7 +158,27 @@ a, a:hover, a:focus {
     width: 50px;
     height: 44px;
     left: 4%;
-    top: 28%;
+    top: 30%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.exit_to_branchingPoint_Class {
+    position: absolute;
+    width: 50px;
+    height: 44px;
+    left: 4%;
+    top: 40%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.exit_to_previousChoice_Class {
+    position: absolute;
+    width: 50px;
+    height: 44px;
+    left: 4%;
+    top: 50%;
     overflow: visible;
     cursor: pointer;
 }
@@ -207,4 +227,30 @@ a, a:hover, a:focus {
     [class*="exit_to_space_Class"] {
         top: 45%;
     }
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.exit_to_space_Class:hover .tooltiptext {
+    visibility: visible;
+}
+
+.exit_to_branchingPoint_Class:hover .tooltiptext {
+    visibility: visible;
+}
+
+.exit_to_previousChoice_Class:hover .tooltiptext {
+    visibility: visible;
 }

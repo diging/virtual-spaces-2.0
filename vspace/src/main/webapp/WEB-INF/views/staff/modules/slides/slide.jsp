@@ -5,7 +5,7 @@
 
 <script>
 //# sourceURL=click.js
-var contentCount = ${fn:length(slideContents)};
+var contentCount = ${contentCount};
 function createImageBlock(reader, width) {
     var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
@@ -510,11 +510,11 @@ $(document).ready(function() {
             processData : false,
             data: formData,
             enctype: 'multipart/form-data',
-            success: function(choiceBlock) {
-                var choiceblock = $('<div id="'+ choiceBlock.id +'" class="card card-body row" style="margin: 10px;">');
-                if (choiceBlock.showsAll == false){
-                $.each(choiceBlock.choices, function(index, choice) {
-                    choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+choice.sequence.id+'" >'+choice.sequence.name+'</a>');
+            success: function(data) {
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="card card-body row" style="margin: 10px;">');
+                if (data['choiceBlock'].showsAll == false){
+                    $.each(data['selectedSequences'], function(index, sequence) {
+                        choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+sequence.id+'" >'+sequence.name+'</a>');
             	});
                 }else{
                 	$(function() {
@@ -527,7 +527,7 @@ $(document).ready(function() {
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ choiceBlock.id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
                     'margin': "10px"
                 });
