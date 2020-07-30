@@ -15,8 +15,6 @@ public abstract class VSpaceElement implements IVSpaceElement {
     private OffsetDateTime creationDate;
     private String modifiedBy;
     private OffsetDateTime modificationDate;
-    private SpaceStatus spaceStatus;
-    private boolean showUnpublishedLinks;
 
 
     /* (non-Javadoc)
@@ -102,34 +100,6 @@ public abstract class VSpaceElement implements IVSpaceElement {
     @Override
     public void setModificationDate(OffsetDateTime modificationDate) {
         this.modificationDate = modificationDate;
-    }
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.IVSpaceElement#getSpaceStatus()
-     */
-    @Override
-    public SpaceStatus getSpaceStatus() {
-        return spaceStatus;
-    }
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.IVSpaceElement#setSpaceStatus(edu.asu.diging.vspace.core.model.impl.SpaceStatus)
-     */
-    @Override
-    public void setSpaceStatus(SpaceStatus spaceStatus) {
-        this.spaceStatus = spaceStatus;
-    }
-
-    @Override
-    public boolean isShowUnpublishedLinks() {
-        return showUnpublishedLinks;
-    }
-
-    @Override
-    public void setShowUnpublishedLinks(Boolean showUnpublishedLinks) {
-        if(showUnpublishedLinks==null) {
-            this.showUnpublishedLinks=false;
-            return;
-        }
-        this.showUnpublishedLinks = showUnpublishedLinks;
     }
 
 }
