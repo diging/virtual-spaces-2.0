@@ -34,7 +34,7 @@ public class ExhibitionSlideController {
     private IModuleManager moduleManager;
 
     @Autowired
-    private SlideManager sildeManager;
+    private SlideManager slideManager;
 
     @Autowired
     private ISequenceManager sequenceManager;
@@ -88,8 +88,10 @@ public class ExhibitionSlideController {
         model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
         String nextSlideId = "";
         String prevSlideId = "";
-        ISlide currentSlide = sildeManager.getSlide(slideId);
+
+        ISlide currentSlide = slideManager.getSlide(slideId);
         int slideIndex = sequenceSlides.indexOf(currentSlide);
+
         int slideSize = sequenceSlides.size();
         if (slideSize > slideIndex + 1) {
             nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
@@ -103,6 +105,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
+
         model.addAttribute("currentSlideCon", currentSlide);
         if(currentSlide instanceof BranchingPoint) {
             model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
@@ -118,6 +121,7 @@ public class ExhibitionSlideController {
             model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
             model.addAttribute("previousBranchingPointId", sequenceHistory.peekBranchingPointId());
         }
+
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);

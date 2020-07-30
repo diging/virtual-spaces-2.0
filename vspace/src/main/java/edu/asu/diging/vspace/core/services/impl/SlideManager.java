@@ -112,7 +112,6 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) {
-
         if(slideId == null) {
             logger.error("Slide Id cannot be null.");
             return;

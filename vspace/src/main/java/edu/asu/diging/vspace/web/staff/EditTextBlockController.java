@@ -25,7 +25,6 @@ public class EditTextBlockController {
     public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
             @RequestParam("textBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("textBlockDesc") String textBlockDesc) throws IOException {
-
         ITextBlock textBlock = contentBlockManager.getTextBlock(blockId);
         textBlock.setText(textBlockDesc);
         contentBlockManager.updateTextBlock((TextBlock) textBlock);
