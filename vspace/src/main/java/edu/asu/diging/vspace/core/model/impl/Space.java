@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,6 +33,10 @@ public class Space extends VSpaceElement implements ISpace {
         parameters = @Parameter(name = "prefix", value = IPrefix.SPACE_PREFIX), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
+
+    private SpaceStatus spaceStatus;
+    @Access(AccessType.PROPERTY)
+    private boolean showUnpublishedLinks;
 
     @JsonIgnore
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
@@ -118,5 +124,35 @@ public class Space extends VSpaceElement implements ISpace {
 
     public void setImage(IVSImage image) {
         this.image = image;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.Space#getSpaceStatus()
+     */
+    @Override
+    public SpaceStatus getSpaceStatus() {
+        return spaceStatus;
+    }
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.Space#setSpaceStatus(edu.asu.diging.vspace.core.model.impl.SpaceStatus)
+     */
+    @Override
+    public void setSpaceStatus(SpaceStatus spaceStatus) {
+        this.spaceStatus = spaceStatus;
+    }
+
+    @Override
+    public boolean isShowUnpublishedLinks() {
+        return showUnpublishedLinks;
+    }
+
+    @Override
+    @Access(AccessType.PROPERTY)
+    public void setShowUnpublishedLinks(Boolean showUnpublishedLinks) {
+        if(showUnpublishedLinks==null) {
+            this.showUnpublishedLinks=false;
+            return;
+        }
+        this.showUnpublishedLinks = showUnpublishedLinks;
     }
 }
