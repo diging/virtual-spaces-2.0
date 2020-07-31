@@ -211,6 +211,20 @@ $( document ).ready(function() {
 	// ----------- submit buttons (e.g. to create space links) ------------------
 	$("#createSpaceLinkBtn").click(function(e) {
 		e.preventDefault();
+		var label = $("#spaceLinkLabel").text();
+		var spaceName = $("#linkedSpace option:selected").text();
+
+		if (label == undefined || label == "") {
+			$("#errorMsg").text("Please fill the Label field before submitting.")
+			$('#errorAlert').show();
+			return;
+		}
+		
+		if (spaceName == undefined || spaceName == "Choose...") {
+			$("#errorMsg").text("Please select a space to link to.")
+			$('#errorAlert').show();
+			return;
+		}
 		
 		if (storeX == undefined || storeY == undefined) {
 			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
