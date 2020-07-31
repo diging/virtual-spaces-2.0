@@ -1147,8 +1147,8 @@ ${space.description}
 
 <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
 
-<div id="outgoingLinks" class="list-group" style="padding-right: 0.25em; text-align: right;">
-  	<a href="#" style="padding-right: 0.25em;" class="list-group-item active">
+<div id="outgoingLinks" class="list-group" style=" margin-left: auto; padding-right: 0.25em; text-align: right; width :20%">
+  	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;" class="list-group-item active">
     	Space links on this space:
   	</a>
 	<div id="noLinksOnSpace"
@@ -1167,8 +1167,8 @@ ${space.description}
   	</c:forEach>
 </div>
 <p></p>
-<div id="incomingLinks" class="list-group" style="padding-right: 0.25em; text-align: right;">
-  	<a href="#" style="padding-right: 0.25em;" class="list-group-item active">
+<div id="incomingLinks" class="list-group" style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
+  	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;" class="list-group-item active">
     	Space links to this space:
   	</a>
 	<div id="noLinksToSpace"
