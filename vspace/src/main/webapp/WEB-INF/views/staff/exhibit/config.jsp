@@ -60,7 +60,7 @@ function modeChange(modeChosen) {
                 value="${exhibition.customMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
         </div>
         <p style="padding-top: 10px;">
-            <input class="btn btn-primary" type="submit" value="submit" />
+            <input class="btn btn-primary" type="submit" value="Submit" />
         </p>
 
     </form:form>

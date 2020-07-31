@@ -1130,7 +1130,7 @@ $( document ).ready(function() {
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">
-            <input class="btn btn-primary" type="submit" value="submit" />
+            <input class="btn btn-primary" type="submit" value="Submit" />
         </p>
     </form:form>
 </div>
@@ -1148,7 +1148,7 @@ $( document ).ready(function() {
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">
-            <input class="btn btn-primary" type="submit" value="submit" />
+            <input class="btn btn-primary" type="submit" value="Submit" />
         </p>
     </form:form>
 </div>
