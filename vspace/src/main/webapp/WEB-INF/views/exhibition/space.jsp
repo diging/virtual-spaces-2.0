@@ -216,7 +216,7 @@ function drawLinks() {
     }
 }
 </style>
-<div class="container-fluid">
+<div class="container-fluid" <c:if test ='${showAlert eq "true"}'>style="display: none;"</c:if>>
 	<div class="modalDown alert alert-warning center col-md-12" style="text-align: center;<c:if test ='${exhibitionConfig.mode == "ACTIVE"}'>display: none;</c:if>" >
     	<c:choose>
         	<c:when test="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">
