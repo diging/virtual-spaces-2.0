@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -13,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
@@ -32,22 +35,22 @@ public class ModuleLinkManagerTest {
 
     @Mock
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
-    
+
     @Mock
     private SpaceManager spaceManager;
-    
+
     @Mock
     private ModuleManager moduleManager;
-    
+
     @Mock
     private IModuleLinkFactory moduleLinkFactory;
-    
+
     @Mock
     private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
 
     @InjectMocks
     private ModuleLinkManager managerToTest = new ModuleLinkManager();
-    
+
     private String spaceId1;
 
     @Before
@@ -55,23 +58,23 @@ public class ModuleLinkManagerTest {
         MockitoAnnotations.initMocks(this);
         spaceId1 = "SPA000000014";
     }
-    
+
     @Test
     public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException {
-        
+
         Space space = new Space();
         space.setId(spaceId1);
         Mockito.when(spaceManager.getSpace(space.getId())).thenReturn(space);
-        
+
         IModuleLink moduleLink = new ModuleLink();
         Mockito.when(managerToTest.createLinkObject("New Module Link", spaceId1)).thenReturn(moduleLink);
-        
+
         IModule target = new Module();
         target.setId("MOD001");
         Mockito.when(managerToTest.getTarget("MOD001")).thenReturn(target);
-        
+
         moduleLink.setTarget(target);
-        
+
         IModuleLinkDisplay moduleDisplayLink = new ModuleLinkDisplay();
         moduleDisplayLink.setId("MDLD001");
         Mockito.when(managerToTest.createDisplayLink(moduleLink)).thenReturn(moduleDisplayLink);
@@ -80,9 +83,9 @@ public class ModuleLinkManagerTest {
         moduleDisplayLink.setRotation(40);
         moduleDisplayLink.setType(DisplayType.ARROW);
         moduleDisplayLink.setLink(moduleLink);
-        
+
         Mockito.when(managerToTest.updateLinkAndDisplay(moduleLink, moduleDisplayLink)).thenReturn(moduleDisplayLink);
-        
+
         IModuleLinkDisplay savedModuleLinkDisplay1 = managerToTest.createLink("New Module Link", spaceId1, 10, 30, 40, "MOD001", "New Module Link", DisplayType.ARROW, null, null);
         Assert.assertEquals(moduleDisplayLink.getId(), savedModuleLinkDisplay1.getId());
         Assert.assertEquals(moduleDisplayLink.getName(), savedModuleLinkDisplay1.getName());
@@ -107,8 +110,8 @@ public class ModuleLinkManagerTest {
 
     @Test
     public void test_getDisplayLink_idNotExists() throws Exception {
-        Mockito.when(moduleLinkDisplayRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
-        Assert.assertNull(managerToTest.getDisplayLink(Mockito.anyString()));
+        Mockito.when(moduleLinkDisplayRepo.findById("MDLD001")).thenReturn(Optional.empty());
+        Assert.assertNull(managerToTest.getDisplayLink("MDLD001"));
     }
 
     @Test
@@ -124,8 +127,8 @@ public class ModuleLinkManagerTest {
 
     @Test
     public void test_getLink_idNotExists() throws Exception {
-        Mockito.when(moduleLinkRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
-        Assert.assertNull(managerToTest.getLink(Mockito.anyString()));
+        Mockito.when(moduleLinkRepo.findById("MOL001")).thenReturn(Optional.empty());
+        Assert.assertNull(managerToTest.getLink("MOL001"));
     }
 
     @Test
@@ -160,33 +163,96 @@ public class ModuleLinkManagerTest {
     }
 
     @Test
-    public void test_updateDisplayLink_success() {
+    public void test_updateDisplayLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+        ISpace space = new Space();
+        space.setId(spaceId1);
+        ModuleLinkDisplay moduleLinkDisplay = new ModuleLinkDisplay();
+        IModuleLink moduleLink = new ModuleLink();
+        moduleLink.setId("MOL001");
+        moduleLink.setSpace(space);
+
+        IModule target = new Module();
+        target.setId("MOD001");
+        Mockito.when(managerToTest.getTarget("MOD001")).thenReturn(target);
+
+        moduleLink.setTarget(target);
+        moduleLinkDisplay.setId("MDLD001");
+        moduleLinkDisplay.setLink(moduleLink);
+
+        moduleLinkDisplay.setName("TestModule");
+        moduleLinkDisplay.setPositionX(10);
+        moduleLinkDisplay.setPositionY(30);
+        moduleLinkDisplay.setPositionY(20);
+        moduleLinkDisplay.setType(DisplayType.ARROW);
+
+        Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
+        ModuleLink newModuleLink = new ModuleLink();
+        newModuleLink.setId("moduleLink1");
+        Optional<ModuleLink> mockModuleLink = Optional.of((ModuleLink)moduleLink);
+        Mockito.when(moduleLinkRepo.findById(moduleLink.getId())).thenReturn(mockModuleLink);
+
+        Optional<ModuleLinkDisplay> mockModuleLinkDisplay = Optional.of((ModuleLinkDisplay)moduleLinkDisplay);
+        Mockito.when(moduleLinkDisplayRepo.findById(moduleLinkDisplay.getId())).thenReturn(mockModuleLinkDisplay);
+
+
+        ModuleLinkDisplay moduleLinkDisplayUpdated = moduleLinkDisplay;
+        moduleLinkDisplayUpdated.setName("TestModuleEdited");
+        moduleLinkDisplayUpdated.setPositionX(100);
+        moduleLinkDisplayUpdated.setPositionY(300);
+        moduleLinkDisplayUpdated.setRotation(180);
+        moduleLinkDisplayUpdated.setType(DisplayType.ALERT);
+
+        IModule newTarget = new Module();
+        newTarget.setId("MOD002");
+        Mockito.when(managerToTest.getTarget("MOD002")).thenReturn(newTarget);
+        moduleLinkDisplayUpdated.getLink().setTarget(newTarget);
+
+        Mockito.when(managerToTest.updateLinkAndDisplay(moduleLink, moduleLinkDisplay)).thenReturn(moduleLinkDisplayUpdated);
+
+        IModuleLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", "MDLD001", DisplayType.ALERT, null, null);
+        Assert.assertEquals(moduleLinkDisplayUpdated.getId(), actualUpdatedLink.getId());
+        Assert.assertEquals(moduleLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
+        Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
+        Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
+        Assert.assertEquals(moduleLinkDisplayUpdated.getLink().getTarget().getId(), actualUpdatedLink.getLink().getTarget().getId());
+        Assert.assertEquals(moduleLinkDisplayUpdated.getType(), actualUpdatedLink.getType());
+    }
+
+    @Test
+    public void test_deleteLink_linkPresent() {
         ISpace space = new Space();
         space.setId("SPA001");
         ModuleLinkDisplay moduleLinkDisplay = new ModuleLinkDisplay();
         IModuleLink moduleLink = new ModuleLink();
         moduleLink.setId("MOL001");
         moduleLink.setSpace(space);
+
+        List<IModuleLink> moduleLinks = new ArrayList<IModuleLink>();
+        moduleLinks.add(moduleLink);
+
+        space.setModuleLinks(moduleLinks);
+        IModule target = new Module();
+        target.setId("MOD001");
+        moduleLink.setTarget(target);
+
+        moduleLinkDisplay.setId("SPLD001");
+        moduleLinkDisplay.setLink(moduleLink);
+
         moduleLinkDisplay.setName("TestModule");
         moduleLinkDisplay.setPositionX(10);
         moduleLinkDisplay.setPositionY(30);
-        moduleLinkDisplay.setRotation(20);
-        moduleLinkDisplay.setType(DisplayType.MODULE);
-        moduleLinkDisplay.setLink(moduleLink);
-        Mockito.when(moduleLinkDisplayRepo.save(moduleLinkDisplay)).thenReturn(moduleLinkDisplay);
+        moduleLinkDisplay.setPositionY(20);
+        moduleLinkDisplay.setType(DisplayType.ARROW);
 
-        moduleLinkDisplay.setName("TestModuleEdited");
-        moduleLinkDisplay.setPositionX(100);
-        moduleLinkDisplay.setPositionY(300);
-        moduleLinkDisplay.setRotation(200);
+        Optional<ModuleLink> mockModuleLink = Optional.of((ModuleLink)moduleLink);
+        Mockito.when(moduleLinkRepo.findById(moduleLink.getId())).thenReturn(mockModuleLink);
 
-        IModuleLinkDisplay actualUpdatedLink = managerToTest.updateLinkAndDisplay(moduleLink, moduleLinkDisplay);
-        Assert.assertEquals(moduleLinkDisplay.getId(), actualUpdatedLink.getId());
-        Assert.assertEquals(moduleLinkDisplay.getName(), actualUpdatedLink.getName());
-        Assert.assertEquals(new Double(moduleLinkDisplay.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
-        Assert.assertEquals(new Double(moduleLinkDisplay.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
-        Assert.assertEquals(moduleLinkDisplay.getRotation(), actualUpdatedLink.getRotation());
-        Assert.assertEquals(moduleLinkDisplay.getLink().getId(), actualUpdatedLink.getLink().getId());
-        Assert.assertEquals(moduleLinkDisplay.getType(), actualUpdatedLink.getType());
+        Optional<ModuleLinkDisplay> mockModuleLinkDisplay = Optional.of((ModuleLinkDisplay)moduleLinkDisplay);
+        Mockito.when(moduleLinkDisplayRepo.findById(moduleLinkDisplay.getId())).thenReturn(mockModuleLinkDisplay);
+
+        managerToTest.deleteLink("MOL001");
+
+        Mockito.verify(moduleLinkDisplayRepo).deleteByLink(moduleLink);
+        Mockito.verify(moduleLinkRepo).delete((ModuleLink)moduleLink);
     }
 }
