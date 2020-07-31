@@ -99,7 +99,7 @@ body {
             </div>
         </a>
         <a
-            href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}" />">
+            href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?clearHistory=true" />">
             <div class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                     <ellipse fill="rgba(255,255,255,1)"
