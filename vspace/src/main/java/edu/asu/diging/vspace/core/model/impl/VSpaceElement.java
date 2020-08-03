@@ -16,7 +16,6 @@ public abstract class VSpaceElement implements IVSpaceElement {
     private String modifiedBy;
     private OffsetDateTime modificationDate;
 
-
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.IVSpaceElement#getName()
      */
@@ -101,5 +100,4 @@ public abstract class VSpaceElement implements IVSpaceElement {
     public void setModificationDate(OffsetDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
-
 }
