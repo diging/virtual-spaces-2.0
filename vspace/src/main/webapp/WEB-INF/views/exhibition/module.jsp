@@ -121,7 +121,7 @@ body {
                     </ellipse>
                 </svg>
                 <i class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
-                <span class="tooltiptext">Go To Previous Branching Choice</span>
+                <span class="tooltiptext">Go back to ${previousBranchingPointName}</span>
             </div>
         </a>
         </c:if>
