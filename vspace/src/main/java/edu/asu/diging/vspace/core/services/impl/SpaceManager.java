@@ -217,17 +217,17 @@ public class SpaceManager implements ISpaceManager {
     public void deleteSpaceById(String id) {
         if(id != null) {
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-            List<SpaceLink> linksFromOtherSpaces = spaceLinkRepo.getLinkedFromSpaces(id);
+            List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
             // To delete links that access to the space getting deleted and replacing it as null
-            for(SpaceLink sp : linksFromOtherSpaces) {
-                sp.setTargetSpace(null);
-                spaceLinkRepo.save(sp);
+            for(SpaceLink spaceLink : fromSpaceLinks) {
+                spaceLink.setTargetSpace(null);
+                spaceLinkRepo.save(spaceLink);
             }
             // To delete the links on the space getting deleted
-            for(SpaceLink sp : spaceLinks) {
-                spaceLinkDisplayRepo.deleteBySpaceLinkId(sp.getId());
+            for(SpaceLink spaceLink : spaceLinks) {
+                spaceLinkDisplayRepo.deleteBySpaceLinkId(spaceLink.getId());
             }
             spaceLinkRepo.deleteBySourceSpaceId(id);
             // If the space is startSpace, we delete the space from the exhibition first.
@@ -243,13 +243,13 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public List<SpaceLink> getLinkedSpaces(String id) {
+    public List<SpaceLink> getOutgoingLinks(String id) {
 
         return spaceLinkRepo.getLinkedSpaces(id);
     }
     
     @Override
-    public List<SpaceLink> getLinkedFromSpaces(String id) {
+    public List<SpaceLink> getIncomingLinks(String id) {
 
         return spaceLinkRepo.getLinkedFromSpaces(id);
     }
