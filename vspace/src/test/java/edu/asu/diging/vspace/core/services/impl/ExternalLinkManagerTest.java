@@ -69,18 +69,23 @@ public class ExternalLinkManagerTest {
         ExternalLinkValue externalLinkValue = new ExternalLinkValue(externalLinkURL);
         externalLink.setId("EXL001");
         externalLink.setTarget(externalLinkValue);
-        Mockito.when(managerToTest.createLinkObject("New External Link", spaceId1)).thenReturn(externalLink);
+        Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
+        Mockito.when(externalLinkFactory.createExternalLink("New External Link", space)).thenReturn(externalLink);
+
+        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
 
         IExternalLinkDisplay externalDisplayLink = new ExternalLinkDisplay();
         externalDisplayLink.setId("EXLD001");
-        Mockito.when(managerToTest.createDisplayLink(externalLink)).thenReturn(externalDisplayLink);
+
         externalDisplayLink.setPositionX(10);
         externalDisplayLink.setPositionY(30);
         externalDisplayLink.setRotation(40);
         externalDisplayLink.setType(DisplayType.ARROW);
         externalDisplayLink.setExternalLink(externalLink);
+        Mockito.when(externalLinkDisplayFactory.createExternalLinkDisplay(externalLink)).thenReturn(externalDisplayLink);
 
-        Mockito.when(managerToTest.updateLinkAndDisplay(externalLink, externalDisplayLink)).thenReturn(externalDisplayLink);
+        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
+        Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalDisplayLink)).thenReturn((ExternalLinkDisplay)externalDisplayLink);
 
         IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link", spaceId1, 10, 30, 40, "EXL001", "New External Link", DisplayType.ARROW, null, null);
         Assert.assertEquals(externalDisplayLink.getId(), savedExternalLinkDisplay1.getId());
@@ -91,75 +96,6 @@ public class ExternalLinkManagerTest {
         Assert.assertEquals(externalDisplayLink.getType(), savedExternalLinkDisplay1.getType());
         Assert.assertEquals(externalDisplayLink.getExternalLink(), savedExternalLinkDisplay1.getExternalLink());
         Mockito.verify(externalLinkDisplayRepo).save((ExternalLinkDisplay)externalDisplayLink);
-    }
-
-    @Test
-    public void test_getDisplayLink_idExists() {
-        ExternalLinkDisplay newExternalLinkDisplay = new ExternalLinkDisplay();
-        newExternalLinkDisplay.setId("EXLD001");
-        Optional<ExternalLinkDisplay> mockExternalLinkDisplay = Optional.of(newExternalLinkDisplay);
-        Mockito.when(externalLinkDisplayRepo.findById(newExternalLinkDisplay.getId())).thenReturn(mockExternalLinkDisplay);
-
-        IExternalLinkDisplay externalLinkDisplayActual = managerToTest.getDisplayLink(newExternalLinkDisplay.getId());
-        Assert.assertEquals(mockExternalLinkDisplay.get().getId(), externalLinkDisplayActual.getId());
-    }
-
-    @Test
-    public void test_getDisplayLink_idNotExists() throws Exception {
-        Mockito.when(externalLinkDisplayRepo.findById("EXLD001")).thenReturn(Optional.empty());
-        Assert.assertNull(managerToTest.getDisplayLink("EXLD001"));
-    }
-
-    @Test
-    public void test_getLink_idExists() {
-        ExternalLink newExternalLink = new ExternalLink();
-        newExternalLink.setId("EXL001");
-        Optional<ExternalLink> mockExternalLink = Optional.of(newExternalLink);
-        Mockito.when(externalLinkRepo.findById(newExternalLink.getId())).thenReturn(mockExternalLink);
-
-        IExternalLink externalLinkActual = managerToTest.getLink(newExternalLink.getId());
-        Assert.assertEquals(mockExternalLink.get().getId(), externalLinkActual.getId());
-    }
-
-    @Test
-    public void test_getLink_idNotExists() throws Exception {
-        Mockito.when(externalLinkRepo.findById("EXL001")).thenReturn(Optional.empty());
-        Assert.assertNull(managerToTest.getLink("EXL001"));
-    }
-
-    @Test
-    public void test_deleteLinkDisplayRepo_linkPresent(){
-        ISpace space = new Space();
-        space.setId("SPA001");
-        List<IExternalLinkDisplay> externalLinkDisplayList = new ArrayList<IExternalLinkDisplay>();
-        ExternalLinkDisplay externalLinkDisplay = new ExternalLinkDisplay();
-        IExternalLink externalLink = new ExternalLink();
-        externalLink.setId("EXL001");
-        externalLink.setSpace(space);
-        externalLinkDisplay.setExternalLink(externalLink);
-        externalLinkDisplayList.add(externalLinkDisplay);
-        externalLinkDisplay = new ExternalLinkDisplay();
-        externalLink = new ExternalLink();
-        externalLink.setId("EXL002");
-        externalLink.setSpace(space);
-        externalLinkDisplay.setExternalLink(externalLink);
-        externalLinkDisplayList.add(externalLinkDisplay);
-        List<IExternalLinkDisplay> externalLinkObj = externalLinkDisplayList;
-        Mockito.when(externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(space.getId())).thenReturn(externalLinkObj);
-        managerToTest.deleteLinkDisplayRepo(externalLink);
-        Mockito.verify(externalLinkDisplayRepo).deleteByExternalLink(externalLink);
-    }
-
-    @Test
-    public void test_deleteLinkRepo_linkPresent(){
-        ISpace space = new Space();
-        space.setId("SPA001");
-        ExternalLink externalLink = new ExternalLink();
-        externalLink.setId("EXL001");
-        externalLink.setSpace(space);
-        Mockito.when(externalLinkRepo.save(externalLink)).thenReturn(externalLink);
-        managerToTest.deleteLinkRepo(externalLink);
-        Mockito.verify(externalLinkRepo).delete(externalLink);
     }
 
     @Test
@@ -189,7 +125,8 @@ public class ExternalLinkManagerTest {
         Optional<ExternalLinkDisplay> mockExternalLinkDisplay = Optional.of((ExternalLinkDisplay)externalLinkDisplay);
         Mockito.when(externalLinkDisplayRepo.findById(externalLinkDisplay.getId())).thenReturn(mockExternalLinkDisplay);
 
-        Mockito.when(managerToTest.updateLinkAndDisplay(externalLink, externalLinkDisplay)).thenReturn(externalLinkDisplay);
+        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
+        Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalLinkDisplay)).thenReturn((ExternalLinkDisplay)externalLinkDisplay);
 
         IExternalLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestExternalNew", spaceId1, 20, 40, 0, "www.google.com", "TestExternalNew", "EXL001", "EXLD001", DisplayType.ARROW, null, null);
         Assert.assertEquals(externalLinkDisplay.getId(), actualUpdatedLink.getId());
@@ -206,7 +143,7 @@ public class ExternalLinkManagerTest {
         space.setId(spaceId1);
         ExternalLinkDisplay externalLinkDisplay = new ExternalLinkDisplay();
         IExternalLink externalLink = new ExternalLink();
-        externalLink.setId("MOL001");
+        externalLink.setId("EXL001");
         externalLink.setSpace(space);
 
         List<IExternalLink> externalLinks = new ArrayList<IExternalLink>();
@@ -232,7 +169,7 @@ public class ExternalLinkManagerTest {
         Optional<ExternalLinkDisplay> mockExternalLinkDisplay = Optional.of((ExternalLinkDisplay)externalLinkDisplay);
         Mockito.when(externalLinkDisplayRepo.findById(externalLinkDisplay.getId())).thenReturn(mockExternalLinkDisplay);
 
-        managerToTest.deleteLink("MOL001");
+        managerToTest.deleteLink("EXL001");
 
         Mockito.verify(externalLinkDisplayRepo).deleteByExternalLink(externalLink);
         Mockito.verify(externalLinkRepo).delete((ExternalLink)externalLink);
