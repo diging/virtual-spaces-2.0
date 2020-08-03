@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
@@ -37,9 +38,12 @@ public class ExhibitionSpaceController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
+
     @Autowired
     private IAuthenticationFacade authenticationFacade;
+
+    @Autowired
+    private SequenceHistory sequenceHistory;
 
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
@@ -66,6 +70,10 @@ public class ExhibitionSpaceController {
             model.addAttribute("alertType", "danger");
             model.addAttribute("messageType","invalidSpace");
             model.addAttribute("message", "Access Denied.");
+        }
+
+        if(sequenceHistory.hasHistory()) {
+            sequenceHistory.flushFromHistory();
         }
         return "space";
     }
