@@ -198,7 +198,7 @@ $( document ).ready(function() {
             makeExternalLinksEditable(label,"${link.externalLink.id}",targetLink,"${link.positionX}","${link.positionY}","${link.id}",type);
         });
 	}
-	</c:forEach> 
+	</c:forEach>
 	
 	// --------- draggable modals -----------
 	$("#createSpaceLinkAlert").draggable();
@@ -1579,11 +1579,11 @@ $( document ).ready(function() {
         <div class="row">
             <div class="col-sm-4">
                 <button id="editSpaceLinkBtn" type="reset"
-                    class="btn btn-primary btn-xs">Edit Link</button>
+                    class="btn btn-primary btn-xs">Save</button>
             </div>
             <div class="col-sm-8">
                 <button id="deleteSpaceLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete Link</button>
+                    class="btn btn-primary btn-xs">Delete</button>
             </div>
         </div>
     </div>
@@ -1672,11 +1672,11 @@ $( document ).ready(function() {
         <div class="row">
             <div class="col-sm-4">
                 <button id="editModuleLinkBtn" type="reset"
-                    class="btn btn-primary btn-xs">Edit Link</button>
+                    class="btn btn-primary btn-xs">Save</button>
             </div>
             <div class="col-sm-8">
                 <button id="deleteModuleLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete Link</button>
+                    class="btn btn-primary btn-xs">Delete</button>
             </div>
         </div>
     </div>
@@ -1764,11 +1764,11 @@ $( document ).ready(function() {
         <div class="row">
             <div class="col-sm-4">
                 <button id="editExternalLinkBtn" type="reset"
-                    class="btn btn-primary btn-xs">Edit Link</button>
+                    class="btn btn-primary btn-xs">Save</button>
             </div>
             <div class="col-sm-8">
                 <button id="deleteExternalLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete Link</button>
+                    class="btn btn-primary btn-xs">Delete</button>
             </div>
         </div>
     </div>
