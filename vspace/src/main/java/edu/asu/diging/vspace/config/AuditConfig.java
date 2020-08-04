@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.config;
 
+import java.util.Map;
+
+import org.javers.common.collections.Maps;
 import org.javers.core.Javers;
 import org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook;
 import org.javers.repository.sql.ConnectionProvider;
@@ -17,48 +20,51 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.google.common.collect.ImmutableMap;
-
 @Configuration
 public class AuditConfig {
-	
-	@Autowired
-	private PlatformTransactionManager txManager;
 
-	@Bean
-	public Javers javers() {
-		JaversSqlRepository sqlRepository = SqlRepositoryBuilder 
+    @Autowired
+    private PlatformTransactionManager txManager;
+
+    @Bean
+    public Javers javers() {
+        JaversSqlRepository sqlRepository = SqlRepositoryBuilder 
                 .sqlRepository() 
                 .withConnectionProvider(jpaConnectionProvider()) 
                 .withDialect(DialectName.MYSQL) 
                 .build(); 
- 
+
         return TransactionalJaversBuilder 
                 .javers() 
                 .withTxManager(txManager)
                 .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()) 
                 .registerJaversRepository(sqlRepository) 
                 .build();
-	}
+    }
 
-	@Bean 
+    @Bean 
     public ConnectionProvider jpaConnectionProvider() { 
         return new JpaHibernateConnectionProvider(); 
     } 
-	
-	@Bean
-	public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
-	    return new JaversSpringDataAuditableRepositoryAspect(
-	            javers(), authorProvider(), commitPropertiesProvider());
-	}
-	
-	@Bean
+
+    @Bean
+    public JaversSpringDataAuditableRepositoryAspect javersSpringDataAuditableAspect() {
+        return new JaversSpringDataAuditableRepositoryAspect(
+                javers(), authorProvider(), commitPropertiesProvider());
+    }
+
+    @Bean
     public AuthorProvider authorProvider() {
         return new SpringSecurityAuthorProvider();
     }
-	
-	@Bean
+
+    @Bean
     public CommitPropertiesProvider commitPropertiesProvider() {
-        return () -> ImmutableMap.of("key", "ok");
+        return new CommitPropertiesProvider() {
+            @Override
+            public Map<String, String> provideForCommittedObject(Object domainObject) {
+                return Maps.of("key", "ok");
+            }
+        };
     }
 }
