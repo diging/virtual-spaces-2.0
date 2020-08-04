@@ -3,7 +3,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
 <script src="<c:url value="/resources/extra/space.js" />" ></script>
 <script>
@@ -17,6 +16,13 @@ $(function(){
 
 $( document ).ready(function() {
 	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
+	
+	if ($("div#outgoingLinks a").length < 2) {
+		  $("#noLinksOnSpace").show()
+	 }
+	if ($("div#incomingLinks a").length < 2) {
+		  $("#noLinksToSpace").show()
+	  }
   });    
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
@@ -236,6 +242,9 @@ $( document ).ready(function() {
 		$("#spaceLinkY").val(storeY);
 		
 		var form = $("#createSpaceLinkForm");
+		var label = $("#spaceLinkLabel").val();
+		var spaceName = $("#linkedSpace option:selected").text();
+		var spaceId = $("#linkedSpace option:selected").val(); 
 		var formData = new FormData(form[0]);
 		
 		var spaceLinkInfo = createSpaceLinkInfo();
@@ -258,6 +267,12 @@ $( document ).ready(function() {
 	            $("#createSpaceLinkAlert").hide();  
 	            $("#errorMsg").text("");
 	            $('#errorAlert').hide();
+	            $("#noLinksOnSpace").hide();
+	    		$("#outgoingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
+	    		if (spaceName == "${space.name}") {
+	    			$("#noLinksToSpace").hide();
+	    			$("div#incomingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
+	    		}
 	        }
 		});
 	});
@@ -379,6 +394,13 @@ $( document ).ready(function() {
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
+			  $('a#'+linkId).remove();
+			  if ($("div#outgoingLinks a").length < 2) {
+				  $("#noLinksOnSpace").show();
+			  }
+			  if ($("div#incomingLinks a").length < 2) {
+				  $("#noLinksToSpace").show();
+			  }
 	          $("#spaceLinkInfo").hide();
 		    }
 		});
@@ -816,7 +838,7 @@ $( document ).ready(function() {
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">
-            <input class="btn btn-primary" type="submit" value="submit" />
+            <input class="btn btn-primary" type="submit" value="Submit" />
         </p>
     </form:form>
 </div>
@@ -834,7 +856,7 @@ $( document ).ready(function() {
         </select>
         <p
             style="display: inline; padding-left: 10px; padding-top: 1000px;">
-            <input class="btn btn-primary" type="submit" value="submit" />
+            <input class="btn btn-primary" type="submit" value="Submit" />
         </p>
     </form:form>
 </div>
@@ -1102,7 +1124,6 @@ ${space.description}
 <button type="button" id="deleteSpace" class="btn btn-primary btn-sm">Delete Space</button>
 
 </nav>
-
 <p></p>
 
 <div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
@@ -1145,10 +1166,43 @@ ${space.description}
     </div>
 </div>
 
-
 <c:if test="${not empty space.image}">
-	<div id="space">
-		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />" />
+	<div id="space" style ="float: left">
+		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />"/>
 	</div>
 </c:if>
 
+<!-- To display the spacelinks on current space and spaces from where current space is linked. -->
+
+<div id="outgoingLinks" class="list-group" style=" margin-left: auto; padding-right: 0.25em; text-align: right; width :20%">
+  	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;" class="list-group-item active">
+    	Space links on this space:
+  	</a>
+	<div id="noLinksOnSpace"
+	style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
+		There are no links on this space.
+	</div>
+    <c:forEach items="${linksOnThisSpace}" var="spaceLinks">
+    	<c:if test="${not empty spaceLinks.targetSpace}">
+    		<a href="<c:url value='/staff/space/${spaceLinks.targetSpace.id}'/>" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+					&nbsp;${spaceLinks.targetSpace.name}</a>
+		</c:if>
+		<c:if test="${empty spaceLinks.targetSpace}">
+			<a href="#" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+				&nbsp;&lt;No Space&gt;</a>
+		</c:if>
+  	</c:forEach>
+</div>
+<p></p>
+<div id="incomingLinks" class="list-group" style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
+  	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;" class="list-group-item active">
+    	Space links to this space:
+  	</a>
+	<div id="noLinksToSpace"
+		style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
+		There are no links to this space.
+	</div>
+    <c:forEach items="${linksToThisSpace}" var="spaceLinks">
+  	<a href="<c:url value='/staff/space/${spaceLinks.sourceSpace.id}'/>" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</a>
+  	</c:forEach>
+</div>

@@ -48,4 +48,8 @@ public class SequenceHistory{
         return sequenceSlideHistory.peek().getSequenceId();
     }
 
+    public void flushFromHistory() {
+        sequenceSlideHistory.removeAllElements();
+    }
+
 }

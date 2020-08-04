@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -33,11 +34,15 @@ public class ExhibitionSequencesController {
     @Autowired
     private ISpaceManager spaceManager;
 
+    @Autowired
+    private SequenceHistory sequenceHistory;
+
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
             @RequestParam(required = false, name="branchingPoint") String branchingPointId,
-            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId)
+            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId,
+            @RequestParam(required = false, name="clearHistory") Boolean clearHistory)
                     throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
@@ -63,7 +68,11 @@ public class ExhibitionSequencesController {
             throw new SlidesInSequenceNotFoundException();
         }
         String firstSlideId = slides.get(0).getId();
-
+        if(sequenceHistory.hasHistory()){
+            if(clearHistory!=null && clearHistory==true) {
+                sequenceHistory.flushFromHistory();
+            }
+        }
         return String.format("redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
                 spaceId,moduleId,sequenceId,firstSlideId,(branchingPointId != null ? branchingPointId : ""),(previousSequenceId != null ? previousSequenceId : ""));
 

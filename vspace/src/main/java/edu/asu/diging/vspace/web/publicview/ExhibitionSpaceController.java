@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ILinkManager;
@@ -29,13 +31,20 @@ public class ExhibitionSpaceController {
     @Autowired
     private ILinkManager linkManager;
 
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
+
+    @Autowired
+    private SequenceHistory sequenceHistory;
+
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         /* (non-Javadoc)
          * Below null check is added to accommodate already existing spaces with null space status
          */
-        if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)) {
+        if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
+                || authenticationFacade.getAuthenticatedUser() != null) {
             IExhibition exhibition = exhibitManager.getStartExhibition();
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
@@ -53,6 +62,10 @@ public class ExhibitionSpaceController {
             model.addAttribute("alertType", "danger");
             model.addAttribute("messageType","invalidSpace");
             model.addAttribute("message", "Access Denied.");
+        }
+
+        if(sequenceHistory.hasHistory()) {
+            sequenceHistory.flushFromHistory();
         }
         return "space";
     }
