@@ -60,8 +60,7 @@ $(document).ready(function(){
  <div class="form-group row">
  	 <label for="type" class="col-md-2 col-form-label">Type:</label>
          <form:select path="type" id="type" class="form-control-xs target" style="height:50px;width:300px;">
-             <option selected value="">Choose from existing</option>
-             <option  id="slide" value="SLIDE" label="Slide" >Slide</option>
+             <option  id="slide" selected  value="SLIDE" label="Slide" >Slide</option>
              <option id="branchingPoint" value="BRANCHING_POINT" label="BranchingPoint">Branching Point</option>
          </form:select>
  </div>
