@@ -211,17 +211,17 @@ $( document ).ready(function() {
 	// ----------- submit buttons (e.g. to create space links) ------------------
 	$("#createSpaceLinkBtn").click(function(e) {
 		e.preventDefault();
-		var label = $("#spaceLinkLabel").text();
+		$('#errorAlert').hide();
+		var label = $("#spaceLinkLabel").val();
 		var spaceName = $("#linkedSpace option:selected").text();
-
+		
 		if (label == undefined || label == "") {
 			$("#errorMsg").text("Please fill the Label field before submitting.")
 			$('#errorAlert').show();
 			return;
 		}
-		
 		if (spaceName == undefined || spaceName == "Choose...") {
-			$("#errorMsg").text("Please select a space to link to.")
+			$("#errorMsg").text("Please select a space in Linked Space dropdown.")
 			$('#errorAlert').show();
 			return;
 		}
@@ -272,6 +272,13 @@ $( document ).ready(function() {
 		}
 		
 		var linkedModules = $("#linkedModule").val();
+		var moduleLabel = $("#moduleLinkLabel").val();
+		
+		if (moduleLabel == undefined || moduleLabel == "") {
+			$("#errorMsg").text("Please enter the label for module.")
+			$('#errorAlert').show();
+			return;
+		}
 		
 		if (linkedModules == undefined || linkedModules == "") {
 			$("#errorMsg").text("Please select linked modules.")
@@ -310,6 +317,7 @@ $( document ).ready(function() {
 	});
 	
 	$("#createExternalLinkBtn").click(function(e) {
+		e.preventDefault();
 		var payload = {};
 		
 		if (storeX == undefined || storeY == undefined) {
@@ -318,12 +326,26 @@ $( document ).ready(function() {
 			return;
 		}
 		
+		var externalLink = $("#externalLink").val();
+		var externalLinkLabel = $("#externalLinkLabel").val();
+		
+		
+		if (externalLink == undefined || externalLink == "") {
+			$("#errorMsg").text("Please provide the link to the external link.")
+			$('#errorAlert').show();
+			return;
+		}
+		
+		if (externalLinkLabel == undefined || externalLinkLabel == "") {
+			$("#errorMsg").text("Please enter a label for this external link.")
+			$('#errorAlert').show();
+			return;
+		}
 		$("#externalLinkX").val(storeX);
 		$("#externalLinkY").val(storeY);
 		
 		var form = $("#createExternalLinkForm");
 		var formData = new FormData(form[0]);
-		
 		var externalLinkInfo = createExternalLinkInfo();
         
 	    $.ajax({
@@ -385,6 +407,10 @@ $( document ).ready(function() {
                     $("#externalLinkInfo").hide();
                 }
             });
+    });
+	
+    $("#closeAlert").click(function() {
+    	$('#errorAlert').hide();
     });
 	
 	// ------------- adjust links on background image (e.g. when inputs are changed) ------------
@@ -611,7 +637,6 @@ $( document ).ready(function() {
 		$("#space").append(link);
 		$("#space").append(ext_label);
 		$("#external-link").remove();
-
 		
 	}
 	
@@ -636,6 +661,7 @@ $( document ).ready(function() {
         storeX = null;
         storeY = null;
         $("#external-link").remove();
+        $("div#link").remove();
         $("#external-arrow").remove();
         $("#ext_label").remove();
         $("#createExternalLinkAlert").hide();
@@ -761,7 +787,7 @@ $( document ).ready(function() {
 
 <div id="errorAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none; position: absolute; top: 10px; right: 50px;">
 	<strong>Error!</strong> <span id="errorMsg"></span>
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	<button type="button" class="close" id="closeAlert" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
 	</button>
 </div>
@@ -1031,21 +1057,8 @@ ${space.description}
 	      </div>
 		  
 		  <HR>
-		  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset" class="btn btn-primary btn-xs">Create External Link</button></p>
+		  <p class="mb-0 text-right"><button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="submit" class="btn btn-primary btn-xs">Create External Link</button></p>
 </div>
-</form>
-<form>
-	<div id="createExternalLinkAlert" class="alert alert-secondary" role="alert" style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 300px; right: 50px; z-index: 999">
-		<h6 class="alert-heading"> <small>Create new External Link</small></h6>
-		<p><small>Please click on the image where you want to place the new external link. Then click "Create External Link".</small></p>
-		<hr>
-		<label style="margin-right: 5px;"><small>Label:</small> </label> 
-		<input class="form-control-xs extlink-target" type="text" id="externalLinkLabel"><br> 
-		<label style="margin-right: 5px;"><small>External Link</small> </label> 
-		<input class="form-control-xs" type="text" size="15" id="externalLink"><br>
-		<HR>
-		<p class="mb-0 text-right"> <button id="cancelExternalLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button> <button id="createExternalLinkBtn" type="reset"  class="btn btn-primary btn-xs">Create External Link</button></p>
-	</div>
 </form>
 
 <div id="spaceLinkInfo" class="alert alert-secondary" role="alert" style="cursor: move; width: 250px; height: 200px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
