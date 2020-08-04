@@ -444,6 +444,7 @@ $( document ).ready(function() {
 	    var form = $("#editSpaceLinkForm");
 	    var formData = new FormData(form[0]);
 	    var spaceLinkInfo = editSpaceLinkInfo();
+	    console.log(spaceLinkInfo);
 	    $.ajax({
 	        type: "POST",
 	        url: "<c:url value="/staff/space/link/space/${space.id}?${_csrf.parameterName}=${_csrf.token}" />",
@@ -453,7 +454,9 @@ $( document ).ready(function() {
 	        enctype: 'multipart/form-data',
 	        data: formData,
 	        success: function(data) {
+	            console.log(data);
 	            var linkData = JSON.parse(data);
+	            console.log(linkData);
 	            $("#bgImage").off("click");
 	            spaceLinkInfo["id"] = linkData["id"];
 	            spaceLinkInfo["displayId"]=linkData["displayId"];
