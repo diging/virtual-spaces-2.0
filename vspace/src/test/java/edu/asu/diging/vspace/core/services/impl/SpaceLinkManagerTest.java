@@ -139,7 +139,7 @@ public class SpaceLinkManagerTest {
     }
 
     @Test
-    public void test_updateDisplayLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
         ISpace space = new Space();
         space.setId(spaceId1);
         SpaceLinkDisplay spaceLinkDisplay = new SpaceLinkDisplay();
@@ -195,7 +195,7 @@ public class SpaceLinkManagerTest {
         Assert.assertEquals(spaceLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(new Double(spaceLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
         Assert.assertEquals(new Double(spaceLinkDisplayUpdated.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
-        Assert.assertEquals(spaceLinkDisplayUpdated.getLink().getTargetSpace().getId(), actualUpdatedLink.getLink().getTargetSpace().getId());
+        Assert.assertEquals(spaceLinkDisplayUpdated.getLink().getTargetSpace(), actualUpdatedLink.getLink().getTargetSpace());
         Assert.assertEquals(spaceLinkDisplayUpdated.getType(), actualUpdatedLink.getType());
     }
 }

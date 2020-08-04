@@ -98,11 +98,12 @@ public class ModuleLinkManagerTest {
         Assert.assertEquals(moduleDisplayLink.getRotation(), savedModuleLinkDisplay1.getRotation());
         Assert.assertEquals(moduleDisplayLink.getLink().getId(), savedModuleLinkDisplay1.getLink().getId());
         Assert.assertEquals(moduleDisplayLink.getType(), savedModuleLinkDisplay1.getType());
+        Assert.assertEquals(moduleDisplayLink.getLink().getTarget().getId(), savedModuleLinkDisplay1.getLink().getTarget().getId());
         Mockito.verify(moduleLinkDisplayRepo).save((ModuleLinkDisplay)moduleDisplayLink);
     }
 
     @Test
-    public void test_updateDisplayLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
         ISpace space = new Space();
         space.setId(spaceId1);
         ModuleLinkDisplay moduleLinkDisplay = new ModuleLinkDisplay();
@@ -154,7 +155,7 @@ public class ModuleLinkManagerTest {
         Assert.assertEquals(moduleLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
         Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
-        Assert.assertEquals(moduleLinkDisplayUpdated.getLink().getTarget().getId(), actualUpdatedLink.getLink().getTarget().getId());
+        Assert.assertEquals(moduleLinkDisplayUpdated.getLink().getTarget(), actualUpdatedLink.getLink().getTarget());
         Assert.assertEquals(moduleLinkDisplayUpdated.getType(), actualUpdatedLink.getType());
     }
 

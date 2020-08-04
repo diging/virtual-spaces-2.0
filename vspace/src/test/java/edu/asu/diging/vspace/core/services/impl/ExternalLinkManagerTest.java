@@ -95,11 +95,12 @@ public class ExternalLinkManagerTest {
         Assert.assertEquals(externalDisplayLink.getRotation(), savedExternalLinkDisplay1.getRotation());
         Assert.assertEquals(externalDisplayLink.getType(), savedExternalLinkDisplay1.getType());
         Assert.assertEquals(externalDisplayLink.getExternalLink(), savedExternalLinkDisplay1.getExternalLink());
+        Assert.assertEquals(externalDisplayLink.getExternalLink().getTarget().getValue(), savedExternalLinkDisplay1.getExternalLink().getTarget().getValue());
         Mockito.verify(externalLinkDisplayRepo).save((ExternalLinkDisplay)externalDisplayLink);
     }
 
     @Test
-    public void test_updateDisplayLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
         ISpace space = new Space();
         space.setId(spaceId1);
         ExternalLinkDisplay externalLinkDisplay = new ExternalLinkDisplay();
@@ -134,6 +135,7 @@ public class ExternalLinkManagerTest {
         Assert.assertEquals(new Double(externalLinkDisplay.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
         Assert.assertEquals(new Double(externalLinkDisplay.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
         Assert.assertEquals(externalLinkDisplay.getExternalLink().getId(), actualUpdatedLink.getExternalLink().getId());
+        Assert.assertEquals(externalLinkDisplay.getExternalLink().getTarget().getValue(), actualUpdatedLink.getExternalLink().getTarget().getValue());
         Assert.assertEquals(externalLinkDisplay.getType(), actualUpdatedLink.getType());
     }
 
