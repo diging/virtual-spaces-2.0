@@ -25,7 +25,6 @@
     top: 33px;
     background: rgba(0, 0, 0, 0.5);
 }
-
 .startSpaceFlagClass:hover .tooltiptext {
     visibility: visible;
 }
