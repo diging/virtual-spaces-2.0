@@ -6,6 +6,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
 <script src="<c:url value="/resources/extra/space.js" />" ></script>
+<link rel="stylesheet" type="text/css" id="applicationStylesheet"
+    href="<c:url value="/resources/extra/Home.css" />">
 <script>
 
 $(function(){
@@ -37,15 +39,15 @@ $( document ).ready(function() {
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
            link = $('<img id="${link.image.id} class="spaceLink-${link.link.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="${link.link.id}" class="spaceLink-${link.link.id}"><span data-feather="navigation-2" class="flex"></span></span><p class="slabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span data-link-id="${link.link.id}" class="spaceLink-${link.link.id}"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i></span><p class="slabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
 		link.css('top', ${link.positionY} + posY);
 		link.css('transform', 'rotate(${link.rotation}deg)');
 		link.find("span").css('fill', 'red');
-		link.css('color', 'red');
-		link.css('font-size', "10px");
+		link.css('color', 'rgba(128,128,128,1)');
+		link.css('font-size', "12px");
 		var inputRotation = document.createElement("input");
 		inputRotation.setAttribute("type", "hidden");
 		inputRotation.setAttribute("id", "spaceLinkRotation-${link.link.id}");
@@ -73,7 +75,7 @@ $( document ).ready(function() {
 		$(".slabel-${link.link.id}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
-			'top': ${link.positionY} + posY + 16,
+			'top': ${link.positionY} + posY + 35,
 			'color': 'red'
 		});		
 		
@@ -98,7 +100,7 @@ $( document ).ready(function() {
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
            link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" class="moduleLink-${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="${link.link.id}" class="moduleLink-${link.link.id}"><span class="fas fa-book-open"></span></span><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span data-link-id="${link.link.id}" class="moduleLink-${link.link.id}"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i></span><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -106,7 +108,7 @@ $( document ).ready(function() {
 		link.css('transform', 'rotate(${link.rotation}deg)');
 		link.find("span").css('fill', 'red');
 		link.css('color', 'red');
-		link.css('font-size', "10px");
+		link.css('font-size', "12px");
 		
 		var inputRotation = document.createElement("input");
 		inputRotation.setAttribute("type", "hidden");
@@ -134,7 +136,7 @@ $( document ).ready(function() {
 		$(".mlabel-${link.link.id}").css({
 			'transform': 'rotate(0deg)',
 			'left': ${link.positionX} + posX - 10,
-			'top': ${link.positionY} + posY + 16,
+			'top': ${link.positionY} + posY + 35,
 			'color': 'red'
 		});		
 		
@@ -157,7 +159,7 @@ $( document ).ready(function() {
         if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
             link = $('<img id="${link.image.id}" class="externalLink-${link.externalLink.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         }  else {
-            link = $('<span data-link-id="${link.externalLink.id}" class="externalLink-${link.externalLink.id}"><span class="fa fa-globe"></span></span><p class="elabel-${link.externalLink.id}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
+            link = $('<span data-link-id="${link.externalLink.id}" class="externalLink-${link.externalLink.id}"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i></span><p class="elabel-${link.externalLink.id}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
         }
         link.css('position', 'absolute');
         link.css('left', ${link.positionX} + posX);
@@ -186,7 +188,7 @@ $( document ).ready(function() {
         $(".elabel-${link.externalLink.id}").css({
             'transform': 'rotate(0deg)',
             'left': ${link.positionX} + posX - 10,
-            'top': ${link.positionY} + posY + 16,
+            'top': ${link.positionY} + posY + 35,
             'text-color': 'blue'
         });
         
@@ -701,24 +703,25 @@ $( document ).ready(function() {
 				'font-size': "10px",
 				'transform': 'rotate(0deg)',
 				'left': spaceLink["x"] + posX - 10,
-				'top': spaceLink["y"] + posY + 16,
+				'top': spaceLink["y"] + posY + 35,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" data-feather="navigation-2" class="flex"></div></span>');
+			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i></div></span>');
 		}
 		if(show) {
-			link.find("div").css('fill', 'red');
+			link.find("div").css('fill', 'rgba(128,128,128,1)');
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
 		link.css('top', spaceLink["y"] + posY);
-		link.css('color', 'red');
+		link.css('color', 'rgba(128,128,128,1)');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		link.css('font-size', "10px");
 		
 		if (spaceLink["id"]) {
 			link.attr("data-link-id", spaceLink["id"]);
 			link.css('cursor', 'pointer');
+			link.css('color', 'rgba(128,128,128,1)');
 			link.click(function(e) {
 				makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
 	        });
@@ -756,10 +759,10 @@ $( document ).ready(function() {
 				'font-size': "10px",
 				'transform': 'rotate(0deg)',
 				'left': moduleLink["x"] + posX - 10,
-				'top': moduleLink["y"] + posY + 16,
+				'top': moduleLink["y"] + posY + 35,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="fas fa-book-open"></div></span>');
+			link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i></div></span>');
 		} 
 		if(show) {
 			link.find("div").css('fill', 'red');
@@ -852,10 +855,10 @@ $( document ).ready(function() {
 				'font-size': "12px",
 				'transform': 'rotate(0deg)',
 				'left': externalLink["x"] + posX - 10,
-				'top': externalLink["y"] + posY + 16,
+				'top': externalLink["y"] + posY + 35,
 				'color': 'blue'
 			});
-			link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="fa fa-globe"></div></span>');
+			link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i></div></span>');
 		}
 		
 		link.css('position', 'absolute');
