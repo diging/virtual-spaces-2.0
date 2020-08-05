@@ -10,6 +10,27 @@
     });
 </script>
 
+<style>
+.unpublishedSpaceClass .unpublishedtooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 15px;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: 27%;
+    top: 33px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.unpublishedSpaceClass:hover .unpublishedtooltiptext {
+    visibility: visible;
+}
+</style>
+
 <h1>Spaces</h1>
 
 <div style="padding-bottom: 20px;">This virtual exhibition
@@ -22,8 +43,11 @@
         </a> (Created on <span class="date">${space.creationDate}</span> by
             ${space.createdBy}) <c:if
                 test="${space.spaceStatus=='UNPUBLISHED'}">
-                <i class="fa fa-exclamation-triangle fa-sm"
-                    aria-hidden="true" style="color: #bfb168;"></i>
+                <i
+                    class="fa fa-exclamation-triangle fa-sm unpublishedSpaceClass"
+                    aria-hidden="true" style="color: #bfb168;"><span
+                    class="unpublishedtooltiptext">This space is
+                        currently unpublished.</span></i>
             </c:if> <a
             href="javascript:checkSpaceLinkPresent('${space.id}', '<c:url value="/staff/" />', '?${_csrf.parameterName}=${_csrf.token}',$('#headerSpaceValue'))"
             class="checkSpaceLinkPresent"> <span
