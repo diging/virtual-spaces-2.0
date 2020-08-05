@@ -119,7 +119,7 @@ public class ExhibitionSlideController {
         if(sequenceHistory.hasHistory()) {
             model.addAttribute("showBackToPreviousChoice", true);
             model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
-            model.addAttribute("previousBranchingPointId", sequenceHistory.peekBranchingPointId());
+            model.addAttribute("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
 
         model.addAttribute("numOfSlides", sequenceSlides.size());

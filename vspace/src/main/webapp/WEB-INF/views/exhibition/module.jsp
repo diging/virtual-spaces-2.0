@@ -112,7 +112,7 @@ body {
             </div>
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
-        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPointId}?back=true" />">
+        <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPoint.id}?back=true" />">
             <div class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
@@ -121,7 +121,7 @@ body {
                     </ellipse>
                 </svg>
                 <i class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
-                <span class="tooltiptext">Go To Previous Branching Choice</span>
+                <span class="tooltiptext">Go back to ${previousBranchingPoint.name}</span>
             </div>
         </a>
         </c:if>
