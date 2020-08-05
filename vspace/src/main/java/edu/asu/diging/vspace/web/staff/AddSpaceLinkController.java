@@ -20,37 +20,37 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.SpaceLinkManager;
 
 @Controller
 public class AddSpaceLinkController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
-    private ILinkManager linkManager;
+    private SpaceLinkManager spaceLinkManager;
 
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("spaceLinkLabel") String title,
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel,
             @RequestParam("type") String displayType, @RequestParam("spaceLinkImage") MultipartFile file)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException {
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+
         if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "No link coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
-        
+
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -61,7 +61,7 @@ public class AddSpaceLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display;
         try {
-            display = linkManager.createSpaceLink(title, source, new Float(x), new Float(y),
+            display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();

@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
-import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
+import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -31,7 +33,13 @@ public class SpaceController {
     private ISpaceDisplayManager spaceDisplayManager;
 
     @Autowired
-    private ILinkManager linkManager;
+    private IModuleLinkManager moduleLinkManager;
+
+    @Autowired
+    private ISpaceLinkManager spaceLinkManager;
+
+    @Autowired
+    private IExternalLinkManager externalLinkManager;
 
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
@@ -40,9 +48,9 @@ public class SpaceController {
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
         model.addAttribute("linksToThisSpace",spaceManager.getIncomingLinks(id));
         model.addAttribute("space", space);
-        model.addAttribute("externalLinks", linkManager.getExternalLinkDisplays(id));
-        model.addAttribute("spaceLinks",linkManager.getSpaceLinkDisplays(id));
-        model.addAttribute("moduleLinks", linkManager.getModuleLinkDisplays(id));
+        model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
+        model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
+        model.addAttribute("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
@@ -54,5 +62,5 @@ public class SpaceController {
         List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
-
+    
 }

@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface ISpaceLink extends IVSpaceElement {
+public interface ISpaceLink extends ILink<ISpace> {
 
 	ISpace getSourceSpace();
 
