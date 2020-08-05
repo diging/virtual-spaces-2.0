@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 
 @Controller
 public class ListSpacesController {
@@ -13,11 +15,17 @@ public class ListSpacesController {
 	@Autowired
 	private SpaceRepository spaceRepo;
 	
+	@Autowired
+    private ExhibitionManager exhibitionManager;
+	
 	@RequestMapping("/staff/space/list")
 	public String listSpaces(Model model) {
 		
-		model.addAttribute("spaces", spaceRepo.findAll());		
-		
+		model.addAttribute("spaces", spaceRepo.findAll());
+		IExhibition startExhibition = exhibitionManager.getStartExhibition();
+		if(startExhibition!=null) {
+		    model.addAttribute("startSpace", startExhibition.getStartSpace());
+		}
 		
 		return "staff/space/list";
 	}
