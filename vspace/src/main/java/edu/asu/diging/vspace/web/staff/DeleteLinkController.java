@@ -8,29 +8,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 
 @Controller
 public class DeleteLinkController {
-    
+
     @Autowired
-    private ILinkManager linkManager;
+    private IModuleLinkManager moduleLinkManager;
+
+    @Autowired
+    private ISpaceLinkManager spaceLinkManager;
+
+    @Autowired
+    private IExternalLinkManager externalLinkManager;
 
     @RequestMapping(value = "/staff/space/{id}/modulelink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteModuleLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
-        linkManager.deleteModuleLink(linkId);
+        moduleLinkManager.deleteLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/staff/space/{id}/spacelink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSpaceLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
-        linkManager.deleteSpaceLink(linkId);
+        spaceLinkManager.deleteLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/staff/space/{id}/externallink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteExternalLink(@PathVariable("id") String spaceId, @PathVariable("linkId") String linkId) {
-        linkManager.deleteExternalLink(linkId);
+        externalLinkManager.deleteLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

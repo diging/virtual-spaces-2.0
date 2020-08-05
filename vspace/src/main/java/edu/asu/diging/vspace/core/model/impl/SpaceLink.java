@@ -78,4 +78,23 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     public void setTargetSpace(ISpace targetSpace) {
         this.targetSpace = targetSpace;
     }
+    @Override
+    public ISpace getSpace() {
+        return sourceSpace;
+    }
+    @Override
+    public void setSpace(ISpace space) {
+        this.sourceSpace = space;
+
+    }
+    @Override
+    public ISpace getTarget() {
+        return targetSpace;
+    }
+
+    @Override
+    public void setTarget(ISpace target) {
+        this.targetSpace = target;
+
+    }
 }
