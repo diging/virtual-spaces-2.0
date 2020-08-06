@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
-    uri="http://www.springframework.org/security/tags"%>
+	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
@@ -294,6 +294,20 @@ $( document ).ready(function() {
 	// ----------- submit buttons (e.g. to create space links) ------------------
 	$("#createSpaceLinkBtn").click(function(e) {
 		e.preventDefault();
+		$('#errorAlert').hide();
+		var label = $("#spaceLinkLabel").val();
+		var spaceName = $("#linkedSpace option:selected").text();
+		
+		if (label == undefined || label == "") {
+			$("#errorMsg").text("Please fill the Label field before submitting.")
+			$('#errorAlert').show();
+			return;
+		}
+		if (spaceName == undefined || spaceName == "Choose...") {
+			$("#errorMsg").text("Please select a space in Linked Space dropdown.")
+			$('#errorAlert').show();
+			return;
+		}
 		
 		if (storeX == undefined || storeY == undefined) {
 			$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
@@ -353,6 +367,13 @@ $( document ).ready(function() {
 		}
 		
 		var linkedModules = $("#linkedModule").val();
+		var moduleLabel = $("#moduleLinkLabel").val();
+		
+		if (moduleLabel == undefined || moduleLabel == "") {
+			$("#errorMsg").text("Please enter the label for module.")
+			$('#errorAlert').show();
+			return;
+		}
 		
 		if (linkedModules == undefined || linkedModules == "") {
 			$("#errorMsg").text("Please select linked modules.")
@@ -510,6 +531,7 @@ $( document ).ready(function() {
 	});
 	
 	$("#createExternalLinkBtn").click(function(e) {
+		e.preventDefault();
 		var payload = {};
 		
 		if (storeX == undefined || storeY == undefined) {
@@ -518,12 +540,26 @@ $( document ).ready(function() {
 			return;
 		}
 		
+		var externalLink = $("#externalLink").val();
+		var externalLinkLabel = $("#externalLinkLabel").val();
+		
+		
+		if (externalLink == undefined || externalLink == "") {
+			$("#errorMsg").text("Please provide the link to the external link.")
+			$('#errorAlert').show();
+			return;
+		}
+		
+		if (externalLinkLabel == undefined || externalLinkLabel == "") {
+			$("#errorMsg").text("Please enter a label for this external link.")
+			$('#errorAlert').show();
+			return;
+		}
 		$("#externalLinkX").val(storeX);
 		$("#externalLinkY").val(storeY);
 		
 		var form = $("#createExternalLinkForm");
 		var formData = new FormData(form[0]);
-		
 		var externalLinkInfo = createExternalLinkInfo();
         
 	    $.ajax({
@@ -596,6 +632,10 @@ $( document ).ready(function() {
                     hideLinkInfoTabs();
                 }
             });
+    });
+	
+    $("#closeAlert").click(function() {
+    	$('#errorAlert').hide();
     });
 	
 	// ------------- adjust links on background image (e.g. when inputs are changed) ------------
@@ -888,7 +928,6 @@ $( document ).ready(function() {
 		$("#space").append(link);
 		$("#link").append(ext_label);
 		$("#external-link").remove();
-
 		
 	}
 	
@@ -898,7 +937,8 @@ $( document ).ready(function() {
         storeY = null;
         $("#link").remove();
         $("#space_label").remove();
-        $("#createSpaceLinkAlert").hide();  
+        $("#createSpaceLinkAlert").hide(); 
+        $('#errorAlert').hide();
     });
 	
 	$("#cancelModuleLinkBtn").click(function() {
@@ -907,15 +947,18 @@ $( document ).ready(function() {
         $("#link").remove();
         $("#module_label").remove();
         $("#createModuleLinkAlert").hide();  
+        $('#errorAlert').hide();
     }); 
     
     $("#cancelExternalLinkBtn").click(function() {
         storeX = null;
         storeY = null;
         $("#external-link").remove();
+        $("div#link").remove();
         $("#external-arrow").remove();
         $("#ext_label").remove();
         $("#createExternalLinkAlert").hide();
+        $('#errorAlert').hide();
     });
     
     $("#cancelBgImgBtn").click(function() {
@@ -1142,748 +1185,700 @@ $( document ).ready(function() {
 }
 </style>
 
-<div id="errorAlert"
-    class="alert alert-danger alert-dismissible fade show" role="alert"
-    style="display: none; position: absolute; top: 10px; right: 50px;">
-    <strong>Error!</strong> <span id="errorMsg"></span>
-    <button type="button" class="close" data-dismiss="alert"
-        aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-
 <h1>
-    Space: ${space.name} <small style="margin-left: 10px;"><a
-        href="<c:url value="/staff/space/${space.id}/edit" />"><span
-            data-feather="edit"></span></a></small>
+	Space: ${space.name} <small style="margin-left: 10px;"><a
+		href="<c:url value="/staff/space/${space.id}/edit" />"><span
+			data-feather="edit"></span></a></small>
 </h1>
 
 <div class="alert alert-light" role="alert">
-    Created on <span class="date">${space.creationDate}</span> by
-    ${space.createdBy}. <br> Modified on <span class="date">${space.modificationDate}</span>
-    by ${space.modifiedBy}.
+	Created on <span class="date">${space.creationDate}</span> by
+	${space.createdBy}. <br> Modified on <span class="date">${space.modificationDate}</span>
+	by ${space.modifiedBy}.
 </div>
 <div style="padding-bottom: 10px;">
-    <c:url value="/staff/space/${space.id}/status" var="postUrl" />
-    <form:form method="POST"
-        action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
-        <label><h5>Space Status:</h5></label>
-        <select class="form-control" name="statusParam"
-            style="width: 200px; display: inline;">
-            <option id="Published" value="PUBLISHED"
-                <c:if test="${space.spaceStatus=='PUBLISHED'}">selected</c:if>>Published</option>
-            <option id="Unpublished" value="UNPUBLISHED"
-                <c:if test="${space.spaceStatus=='UNPUBLISHED'}">selected</c:if>>Unpublished</option>
-        </select>
-        <p
-            style="display: inline; padding-left: 10px; padding-top: 1000px;">
-            <input class="btn btn-primary" type="submit" value="Submit" />
-        </p>
-    </form:form>
+	<c:url value="/staff/space/${space.id}/status" var="postUrl" />
+	<form:form method="POST"
+		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+		<label><h5>Space Status:</h5></label>
+		<select class="form-control" name="statusParam"
+			style="width: 200px; display: inline;">
+			<option id="Published" value="PUBLISHED"
+				<c:if test="${space.spaceStatus=='PUBLISHED'}">selected</c:if>>Published</option>
+			<option id="Unpublished" value="UNPUBLISHED"
+				<c:if test="${space.spaceStatus=='UNPUBLISHED'}">selected</c:if>>Unpublished</option>
+		</select>
+		<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
+			<input class="btn btn-primary" type="submit" value="Submit" />
+		</p>
+	</form:form>
 </div>
 <div style="padding-bottom: 10px;">
-    <c:url value="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
-    <form:form method="POST"
-        action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
-        <label><h5>Show Links to Unpublished Spaces:</h5></label>
-        <select class="form-control" name="showSpaceLinksParam"
-            style="width: 200px; display: inline;">
-            <option id="No" value=false
-                <c:if test="${space.showUnpublishedLinks eq false}">selected</c:if>>No</option>
-            <option id="Yes" value=true
-                <c:if test="${space.showUnpublishedLinks eq true}">selected</c:if>>Yes</option>
-        </select>
-        <p
-            style="display: inline; padding-left: 10px; padding-top: 1000px;">
-            <input class="btn btn-primary" type="submit" value="Submit" />
-        </p>
-    </form:form>
+	<c:url value="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
+	<form:form method="POST"
+		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+		<label><h5>Show Links to Unpublished Spaces:</h5></label>
+		<select class="form-control" name="showSpaceLinksParam"
+			style="width: 200px; display: inline;">
+			<option id="No" value=false
+				<c:if test="${space.showUnpublishedLinks eq false}">selected</c:if>>No</option>
+			<option id="Yes" value=true
+				<c:if test="${space.showUnpublishedLinks eq true}">selected</c:if>>Yes</option>
+		</select>
+		<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
+			<input class="btn btn-primary" type="submit" value="Submit" />
+		</p>
+	</form:form>
 </div>
+
+
+
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
-    ${space.description}</p>
+	${space.description}</p>
+
+
+<div id="errorAlert"
+	class="alert alert-danger alert-dismissible fade show" role="alert"
+	style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+	<strong>Error!</strong> <span id="errorMsg"></span>
+	<button type="button" class="close" id="closeAlert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
 
 <c:url
-    value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}"
-    var="postUrl" />
+	value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}"
+	var="postUrl" />
 <form id="createSpaceLinkForm">
-    <div id="createSpaceLinkAlert" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <div class="row">
-            <div class="col">
-                <h6 class="alert-heading">
-                    <small>Create new Space Link</small>
-                </h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <small>Please click on the image where you want
-                    to place the new space link. Then click "Create
-                    Space Link".</small>
-                </p>
-                <hr>
-            </div>
-        </div>
+	<div id="createSpaceLinkAlert" class="alert alert-secondary"
+		role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+		<div class="row">
+			<div class="col">
+				<h6 class="alert-heading">
+					<small>Create new Space Link</small>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<small>Please click on the image where you want to place the
+					new space link. Then click "Create Space Link".</small>
+				</p>
+				<hr>
+			</div>
+		</div>
 
-        <input type="hidden" name="x" id="spaceLinkX" /> <input
-            type="hidden" name="y" id="spaceLinkY" />
+		<input type="hidden" name="x" id="spaceLinkX" /> <input type="hidden"
+			name="y" id="spaceLinkY" />
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Rotation:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs" type="number"
-                    id="spaceLinkRotation" name="rotation" value="0"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Rotation:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs" type="number" id="spaceLinkRotation"
+					name="rotation" value="0"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Label:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs target" type="text"
-                    name="spaceLinkLabel" id="spaceLinkLabel"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Label:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs target" type="text"
+					name="spaceLinkLabel" id="spaceLinkLabel"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Type:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <select id="type" name="type"
-                    class="form-control-xs target">
-                    <option selected value="">Choose...</option>
-                    <option value="IMAGE">Image</option>
-                    <option value="ARROW">Link</option>
-                    <option value="ALERT">Alert</option>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="type" name="type" class="form-control-xs target">
+					<option selected value="">Choose...</option>
+					<option value="IMAGE">Image</option>
+					<option value="ARROW">Link</option>
+					<option value="ALERT">Alert</option>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-5" style="padding-right: 0px;">
-                <label><small>Linked Space:</small> </label>
-            </div>
-            <div class="col-sm-7">
-                <select id="linkedSpace" name="linkedSpace"
-                    class="form-control-xs target">
-                    <option selected value="">Choose...</option>
-                    <c:forEach items="${spaces}" var="space">
-                        <option value="${space.id}">${space.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-5" style="padding-right: 0px;">
+				<label><small>Linked Space:</small> </label>
+			</div>
+			<div class="col-sm-7">
+				<select id="linkedSpace" name="linkedSpace"
+					class="form-control-xs target">
+					<option selected value="">Choose...</option>
+					<c:forEach items="${spaces}" var="space">
+						<option value="${space.id}">${space.name}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-3" style="padding-right: 0px;">
-                <label><small>Image:</small> </label>
-            </div>
-            <div class="col-sm-9">
-                <input type="file" class="form-control-xs" type="text"
-                    name="spaceLinkImage" id="spaceLinkImage"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-3" style="padding-right: 0px;">
+				<label><small>Image:</small> </label>
+			</div>
+			<div class="col-sm-9">
+				<input type="file" class="form-control-xs" type="text"
+					name="spaceLinkImage" id="spaceLinkImage"><br>
+			</div>
+		</div>
 
-        <HR>
-        <p class="mb-0 text-right">
-            <button id="cancelSpaceLinkBtn" type="reset"
-                class="btn btn-light btn-xs">Cancel</button>
-            <button id="createSpaceLinkBtn" type="reset"
-                class="btn btn-primary btn-xs">Create Space
-                Link</button>
-        </p>
+		<HR>
+		<p class="mb-0 text-right">
+			<button id="cancelSpaceLinkBtn" type="reset"
+				class="btn btn-light btn-xs">Cancel</button>
+			<button id="createSpaceLinkBtn" type="reset"
+				class="btn btn-primary btn-xs">Create Space Link</button>
+		</p>
 
-    </div>
+	</div>
 </form>
 
 <c:url
-    value="/staff/space/${space.id}/modulelink?${_csrf.parameterName}=${_csrf.token}"
-    var="postUrl" />
+	value="/staff/space/${space.id}/modulelink?${_csrf.parameterName}=${_csrf.token}"
+	var="postUrl" />
 <form id="createModuleLinkForm">
-    <div id="createModuleLinkAlert" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <div class="row">
-            <div class="col">
-                <h6 class="alert-heading">
-                    <small>Create new Module Link</small>
-                </h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <small>Please click on the image where you want
-                    to place the new module link. Then click "Create
-                    Module Link".</small>
-                </p>
-                <hr>
-            </div>
-        </div>
+	<div id="createModuleLinkAlert" class="alert alert-secondary"
+		role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+		<div class="row">
+			<div class="col">
+				<h6 class="alert-heading">
+					<small>Create new Module Link</small>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<small>Please click on the image where you want to place the
+					new module link. Then click "Create Module Link".</small>
+				</p>
+				<hr>
+			</div>
+		</div>
 
-        <input type="hidden" name="x" id="moduleLinkX" /> <input
-            type="hidden" name="y" id="moduleLinkY" />
+		<input type="hidden" name="x" id="moduleLinkX" /> <input
+			type="hidden" name="y" id="moduleLinkY" />
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Rotation:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs modulelink-target"
-                    type="number" id="moduleLinkRotation"
-                    name="rotation" value="0"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Rotation:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs modulelink-target" type="number"
+					id="moduleLinkRotation" name="rotation" value="0"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Label:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs modulelink-target"
-                    type="text" name="moduleLinkLabel"
-                    id="moduleLinkLabel"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Label:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs modulelink-target" type="text"
+					name="moduleLinkLabel" id="moduleLinkLabel"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Type:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <select id="type" name="type"
-                    class="form-control-xs modulelink-target">
-                    <option selected value="">Choose...</option>
-                    <option value="MODULE">Module</option>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="type" name="type"
+					class="form-control-xs modulelink-target">
+					<option selected value="">Choose...</option>
+					<option value="MODULE">Module</option>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-5" style="padding-right: 0px;">
-                <label><small>Linked Modules:</small> </label>
-            </div>
-            <div class="col-sm-7">
-                <select id="linkedModule" name="linkedModule"
-                    class="form-control-xs modulelink-target">
-                    <option selected value="">Choose...</option>
-                    <c:forEach items="${moduleList}" var="module">
-                        <option value="${module.id}">${module.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-5" style="padding-right: 0px;">
+				<label><small>Linked Modules:</small> </label>
+			</div>
+			<div class="col-sm-7">
+				<select id="linkedModule" name="linkedModule"
+					class="form-control-xs modulelink-target">
+					<option selected value="">Choose...</option>
+					<c:forEach items="${moduleList}" var="module">
+						<option value="${module.id}">${module.name}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
 
-        <HR>
-        <p class="mb-0 text-right">
-            <button id="cancelModuleLinkBtn" type="reset"
-                class="btn btn-light btn-xs">Cancel</button>
-            <button id="createModuleLinkBtn" type="reset"
-                class="btn btn-primary btn-xs">Create Module
-                Link</button>
-        </p>
+		<HR>
+		<p class="mb-0 text-right">
+			<button id="cancelModuleLinkBtn" type="reset"
+				class="btn btn-light btn-xs">Cancel</button>
+			<button id="createModuleLinkBtn" type="reset"
+				class="btn btn-primary btn-xs">Create Module Link</button>
+		</p>
 
-    </div>
+	</div>
 </form>
 
 <c:url value="/staff/space/update/${space.id}" var="postUrl" />
 <form:form method="post"
-    action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
-    enctype="multipart/form-data">
+	action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"
+	enctype="multipart/form-data">
 
-    <div id="changeBgImgAlert" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 340px; height: 130px; display: none; position: absolute; top: 100px; right: 50px; z-index: 999">
-        <h6>
-            <small>Change Background Image: </small>
-        </h6>
-        <input type="file" name="file" rows="5" cols="500" id="file" /><br>
-        <br>
-        <p class="mb-0 text-right">
-            <button type="submit" id="changeBgImgBtn"
-                class="btn btn-primary btn-xs">Upload Image</button>
-            &nbsp
-            <button id="cancelBgImgBtn" type="button"
-                class="btn light btn-xs">Cancel</button>
-        </p>
-    </div>
+	<div id="changeBgImgAlert" class="alert alert-secondary" role="alert"
+		style="cursor: move; width: 340px; height: 130px; display: none; position: absolute; top: 100px; right: 50px; z-index: 999">
+		<h6>
+			<small>Change Background Image: </small>
+		</h6>
+		<input type="file" name="file" rows="5" cols="500" id="file" /><br>
+		<br>
+		<p class="mb-0 text-right">
+			<button type="submit" id="changeBgImgBtn"
+				class="btn btn-primary btn-xs">Upload Image</button>
+			&nbsp
+			<button id="cancelBgImgBtn" type="button" class="btn light btn-xs">Cancel</button>
+		</p>
+	</div>
 
 </form:form>
 
 <form id="createExternalLinkForm">
-    <div id="createExternalLinkAlert" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <h6 class="alert-heading">
-            <small>Create new External Link</small>
-        </h6>
-        <p>
-            <small>Please click on the image where you want to
-                place the new external link. Then click "Create External
-                Link".</small>
-        </p>
-        <hr>
+	<div id="createExternalLinkAlert" class="alert alert-secondary"
+		role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+		<h6 class="alert-heading">
+			<small>Create new External Link</small>
+		</h6>
+		<p>
+			<small>Please click on the image where you want to place the
+				new external link. Then click "Create External Link".</small>
+		</p>
+		<hr>
 
-        <input type="hidden" name="x" id="externalLinkX" /> <input
-            type="hidden" name="y" id="externalLinkY" /> <label
-            style="margin-right: 5px;"><small>Label:</small> </label> <input
-            class="form-control-xs extlink-target" type="text"
-            name="externalLinkLabel" id="externalLinkLabel"><br>
+		<input type="hidden" name="x" id="externalLinkX" /> <input
+			type="hidden" name="y" id="externalLinkY" /> <label
+			style="margin-right: 5px;"><small>Label:</small> </label> <input
+			class="form-control-xs extlink-target" type="text"
+			name="externalLinkLabel" id="externalLinkLabel"><br> <label
+			style="margin-right: 5px;"><small>External Link</small> </label> <input
+			class="form-control-xs extlink-target" type="text" size="15"
+			name="url" id="externalLink"><br>
 
-        <label style="margin-right: 5px;"><small>External
-                Link</small> </label> <input class="form-control-xs extlink-target"
-            type="text" size="15" name="url" id="externalLink"><br>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="extType" name="type"
+					class="form-control-xs extlink-target">
+					<option selected value="">Choose...</option>
+					<option value="IMAGE">Image</option>
+					<option value="ARROW">Link</option>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Type:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <select id="extType" name="type"
-                    class="form-control-xs extlink-target">
-                    <option selected value="">Choose...</option>
-                    <option value="IMAGE">Image</option>
-                    <option value="ARROW">Link</option>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-3" style="padding-right: 0px;">
+				<label><small>Image:</small> </label>
+			</div>
+			<div class="col-sm-9">
+				<input type="file" class="form-control-xs" type="text"
+					name="externalLinkImage" id="externalLinkImage"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-3" style="padding-right: 0px;">
-                <label><small>Image:</small> </label>
-            </div>
-            <div class="col-sm-9">
-                <input type="file" class="form-control-xs" type="text"
-                    name="externalLinkImage" id="externalLinkImage"><br>
-            </div>
-        </div>
-
-        <HR>
-        <p class="mb-0 text-right">
-            <button id="cancelExternalLinkBtn" type="reset"
-                class="btn btn-light btn-xs">Cancel</button>
-            <button id="createExternalLinkBtn" type="reset"
-                class="btn btn-primary btn-xs">Create External
-                Link</button>
-        </p>
-    </div>
-</form>
-<form>
-    <div id="createExternalLinkAlert" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 300px; right: 50px; z-index: 999">
-        <h6 class="alert-heading">
-            <small>Create new External Link</small>
-        </h6>
-        <p>
-            <small>Please click on the image where you want to
-                place the new external link. Then click "Create External
-                Link".</small>
-        </p>
-        <hr>
-        <label style="margin-right: 5px;"><small>Label:</small>
-        </label> <input class="form-control-xs extlink-target" type="text"
-            id="externalLinkLabel"><br> <label
-            style="margin-right: 5px;"><small>External
-                Link</small> </label> <input class="form-control-xs" type="text"
-            size="15" id="externalLink"><br>
-        <HR>
-        <p class="mb-0 text-right">
-            <button id="cancelExternalLinkBtn" type="reset"
-                class="btn btn-light btn-xs">Cancel</button>
-            <button id="createExternalLinkBtn" type="reset"
-                class="btn btn-primary btn-xs">Create External
-                Link</button>
-        </p>
-    </div>
+		<HR>
+		<p class="mb-0 text-right">
+			<button id="cancelExternalLinkBtn" type="reset"
+				class="btn btn-light btn-xs">Cancel</button>
+			<button id="createExternalLinkBtn" type="submit"
+				class="btn btn-primary btn-xs">Create External Link</button>
+		</p>
+	</div>
 </form>
 
 <form id="editSpaceLinkForm">
-    <div id="editSpaceLinkInfo" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <p class="float-right">
-            <a href="#" id="closeEditSpaceLinkInfo"><span
-                data-feather="x-square"></span></a>
-        </p>
-        <h6 class="alert-heading">
-            Space Link: <span id="spaceLinkInfoLabelEdit"></span>
-        </h6>
-        <input type="hidden" name="spaceLinkIdValueEdit"
-            id="spaceLinkIdValueEdit" />
-        <div class="row">
-            <div class="col">
-                <h6 class="alert-heading">
-                    <small>Modify Space Link</small>
-                </h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <small>Please click on the image where you want
-                    to place the selected space link. Then click "Edit
-                    Space Link".</small>
-                </p>
-                <hr>
-            </div>
-        </div>
+	<div id="editSpaceLinkInfo" class="alert alert-secondary" role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+		<p class="float-right">
+			<a href="#" id="closeEditSpaceLinkInfo"><span
+				data-feather="x-square"></span></a>
+		</p>
+		<h6 class="alert-heading">
+			Space Link: <span id="spaceLinkInfoLabelEdit"></span>
+		</h6>
+		<input type="hidden" name="spaceLinkIdValueEdit"
+			id="spaceLinkIdValueEdit" />
+		<div class="row">
+			<div class="col">
+				<h6 class="alert-heading">
+					<small>Modify Space Link</small>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<small>Please click on the image where you want to place the
+					selected space link. Then click "Edit Space Link".</small>
+				</p>
+				<hr>
+			</div>
+		</div>
 
-        <input type="hidden" name="x" id="spaceLinkXEdit" /> <input
-            type="hidden" name="y" id="spaceLinkYEdit" /> <input
-            type="hidden" name="spaceLinkDisplayId"
-            id="spaceLinkDisplayId" />
+		<input type="hidden" name="x" id="spaceLinkXEdit" /> <input
+			type="hidden" name="y" id="spaceLinkYEdit" /> <input type="hidden"
+			name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
 
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Rotation:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs spacelink-targetEdit"
-                    type="number" id="spaceLinkRotationEdit"
-                    name="rotation"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Rotation:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs spacelink-targetEdit" type="number"
+					id="spaceLinkRotationEdit" name="rotation"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Label:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs spacelink-targetEdit"
-                    type="text" name="spaceLinkLabel"
-                    id="spaceLinkLabelEdit"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Label:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs spacelink-targetEdit" type="text"
+					name="spaceLinkLabel" id="spaceLinkLabelEdit"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Type:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <select id="typeSpaceEdit" name="type"
-                    class="form-control-xs spacelink-targetEdit">
-                    <option value="IMAGE">Image</option>
-                    <option value="ARROW">Link</option>
-                    <option value="ALERT">Alert</option>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="typeSpaceEdit" name="type"
+					class="form-control-xs spacelink-targetEdit">
+					<option value="IMAGE">Image</option>
+					<option value="ARROW">Link</option>
+					<option value="ALERT">Alert</option>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-5" style="padding-right: 0px;">
-                <label><small>Linked Space:</small> </label>
-            </div>
-            <div class="col-sm-7">
-                <select id="spaceLinkIdEdit" name="linkedSpace"
-                    class="form-control-xs spacelink-targetEdit"
-                    style="width: 100%;">
-                    <c:forEach items="${spaces}" var="space">
-                        <option value="${space.id}">${space.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-5" style="padding-right: 0px;">
+				<label><small>Linked Space:</small> </label>
+			</div>
+			<div class="col-sm-7">
+				<select id="spaceLinkIdEdit" name="linkedSpace"
+					class="form-control-xs spacelink-targetEdit" style="width: 100%;">
+					<c:forEach items="${spaces}" var="space">
+						<option value="${space.id}">${space.name}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-3" style="padding-right: 0px;">
-                <label><small>Image:</small> </label>
-            </div>
-            <div class="col-sm-9">
-                <input type="file" class="form-control-xs" type="text"
-                    name="spaceLinkImage" id="spaceLinkImageEdit"><br>
-            </div>
-        </div>
-        <HR>
-        <div class="row">
-            <div class="col-sm-4">
-                <button id="editSpaceLinkBtn" type="reset"
-                    class="btn btn-primary btn-xs">Save</button>
-            </div>
-            <div class="col-sm-8">
-                <button id="deleteSpaceLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete</button>
-            </div>
-        </div>
-    </div>
+		<div class="row">
+			<div class="col-sm-3" style="padding-right: 0px;">
+				<label><small>Image:</small> </label>
+			</div>
+			<div class="col-sm-9">
+				<input type="file" class="form-control-xs" type="text"
+					name="spaceLinkImage" id="spaceLinkImageEdit"><br>
+			</div>
+		</div>
+		<HR>
+		<div class="row">
+			<div class="col-sm-4">
+				<button id="editSpaceLinkBtn" type="reset"
+					class="btn btn-primary btn-xs">Save</button>
+			</div>
+			<div class="col-sm-8">
+				<button id="deleteSpaceLinkButton" type="reset"
+					class="btn btn-primary btn-xs">Delete</button>
+			</div>
+		</div>
+	</div>
 </form>
 
 <form id="editModuleLinkForm">
-    <div id="editModuleLinkInfo" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <p class="float-right">
-            <a href="#" id="closeEditModuleLinkInfo"><span
-                data-feather="x-square"></span></a>
-        </p>
-        <h6 class="alert-heading">
-            Module Link: <span id="moduleLinkInfoLabelEdit"></span>
-        </h6>
-        <input type="hidden" name="moduleLinkIdValueEdit"
-            id="moduleLinkIdValueEdit" />
-        <div class="row">
-            <div class="col">
-                <h6 class="alert-heading">
-                    <small>Modify Module Link</small>
-                </h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <small>Please click on the image where you want
-                    to place the existing module link. Then click "Edit
-                    Module".</small>
-                </p>
-                <hr>
-            </div>
-        </div>
-        <input type="hidden" name="x" id="moduleLinkXEdit" /> <input
-            type="hidden" name="y" id="moduleLinkYEdit" /> <input
-            type="hidden" name="moduleLinkDisplayId"
-            id="moduleLinkDisplayId" />
+	<div id="editModuleLinkInfo" class="alert alert-secondary" role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+		<p class="float-right">
+			<a href="#" id="closeEditModuleLinkInfo"><span
+				data-feather="x-square"></span></a>
+		</p>
+		<h6 class="alert-heading">
+			Module Link: <span id="moduleLinkInfoLabelEdit"></span>
+		</h6>
+		<input type="hidden" name="moduleLinkIdValueEdit"
+			id="moduleLinkIdValueEdit" />
+		<div class="row">
+			<div class="col">
+				<h6 class="alert-heading">
+					<small>Modify Module Link</small>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<small>Please click on the image where you want to place the
+					existing module link. Then click "Edit Module".</small>
+				</p>
+				<hr>
+			</div>
+		</div>
+		<input type="hidden" name="x" id="moduleLinkXEdit" /> <input
+			type="hidden" name="y" id="moduleLinkYEdit" /> <input type="hidden"
+			name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Rotation:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs modulelink-targetEdit"
-                    type="number" id="moduleLinkRotationEdit"
-                    name="rotation"><br>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Label:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs modulelink-targetEdit"
-                    type="text" name="moduleLinkLabel"
-                    id="moduleLinkLabelEdit"><br>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Type:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <select id="typeEdit" name="type"
-                    class="form-control-xs modulelink-targetEdit">
-                    <option value="MODULE">Module</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-5" style="padding-right: 0px;">
-                <label><small>Linked Modules:</small> </label>
-            </div>
-            <div class="col-sm-7">
-                <select id="moduleLinkIdEdit" name="linkedModule"
-                    class="form-control-xs modulelink-targetEdit"
-                    style="width: 100%;">
-                    <c:forEach items="${moduleList}" var="module">
-                        <option value="${module.id}">${module.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-        </div>
-        <HR>
-        <div class="row">
-            <div class="col-sm-4">
-                <button id="editModuleLinkBtn" type="reset"
-                    class="btn btn-primary btn-xs">Save</button>
-            </div>
-            <div class="col-sm-8">
-                <button id="deleteModuleLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete</button>
-            </div>
-        </div>
-    </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Rotation:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs modulelink-targetEdit" type="number"
+					id="moduleLinkRotationEdit" name="rotation"><br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Label:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs modulelink-targetEdit" type="text"
+					name="moduleLinkLabel" id="moduleLinkLabelEdit"><br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="typeEdit" name="type"
+					class="form-control-xs modulelink-targetEdit">
+					<option value="MODULE">Module</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-5" style="padding-right: 0px;">
+				<label><small>Linked Modules:</small> </label>
+			</div>
+			<div class="col-sm-7">
+				<select id="moduleLinkIdEdit" name="linkedModule"
+					class="form-control-xs modulelink-targetEdit" style="width: 100%;">
+					<c:forEach items="${moduleList}" var="module">
+						<option value="${module.id}">${module.name}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
+		<HR>
+		<div class="row">
+			<div class="col-sm-4">
+				<button id="editModuleLinkBtn" type="reset"
+					class="btn btn-primary btn-xs">Save</button>
+			</div>
+			<div class="col-sm-8">
+				<button id="deleteModuleLinkButton" type="reset"
+					class="btn btn-primary btn-xs">Delete</button>
+			</div>
+		</div>
+	</div>
 </form>
 
 <form id="editExternalLinkForm">
-    <div id="editExternalLinkInfo" class="alert alert-secondary"
-        role="alert"
-        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <p class="float-right">
-            <a href="#" id="closeEditExternalLinkInfo"><span
-                data-feather="x-square"></span></a>
-        </p>
-        <h6 class="alert-heading">
-            External Link: <span id="externalLinkInfoLabelEdit"></span>
-        </h6>
-        <input type="hidden" name="externalLinkIdValueEdit"
-            id="externalLinkIdValueEdit" />
-        <div class="row">
-            <div class="col">
-                <h6 class="alert-heading">
-                    <small>Modify External Link</small>
-                </h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <small>Please click on the image where you want
-                    to place the existing external link. Then click
-                    "Edit External Link".</small>
-                </p>
-                <hr>
-            </div>
-        </div>
-        <input type="hidden" name="x" id="externalLinkXEdit" /> <input
-            type="hidden" name="y" id="externalLinkYEdit" /> <input
-            type="hidden" name="externalLinkDisplayId"
-            id="externalLinkDisplayId" />
+	<div id="editExternalLinkInfo" class="alert alert-secondary"
+		role="alert"
+		style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+		<p class="float-right">
+			<a href="#" id="closeEditExternalLinkInfo"><span
+				data-feather="x-square"></span></a>
+		</p>
+		<h6 class="alert-heading">
+			External Link: <span id="externalLinkInfoLabelEdit"></span>
+		</h6>
+		<input type="hidden" name="externalLinkIdValueEdit"
+			id="externalLinkIdValueEdit" />
+		<div class="row">
+			<div class="col">
+				<h6 class="alert-heading">
+					<small>Modify External Link</small>
+				</h6>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<small>Please click on the image where you want to place the
+					existing external link. Then click "Edit External Link".</small>
+				</p>
+				<hr>
+			</div>
+		</div>
+		<input type="hidden" name="x" id="externalLinkXEdit" /> <input
+			type="hidden" name="y" id="externalLinkYEdit" /> <input
+			type="hidden" name="externalLinkDisplayId" id="externalLinkDisplayId" />
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Label:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <input class="form-control-xs externallink-targetEdit"
-                    type="text" name="externalLinkLabel"
-                    id="externalLinkLabelEdit"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Label:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<input class="form-control-xs externallink-targetEdit" type="text"
+					name="externalLinkLabel" id="externalLinkLabelEdit"><br>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-5" style="padding-right: 0px;">
-                <label><small>External Link</small> </label>
-            </div>
-            <div class="col-sm-7">
-                <input class="form-control-xs externallink-targetEdit"
-                    type="text" name="url" id="externalLinkURLEdit">
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-5" style="padding-right: 0px;">
+				<label><small>External Link</small> </label>
+			</div>
+			<div class="col-sm-7">
+				<input class="form-control-xs externallink-targetEdit" type="text"
+					name="url" id="externalLinkURLEdit">
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <label><small>Type:</small> </label>
-            </div>
-            <div class="col-sm-8">
-                <select id="extTypeEdit" name="type"
-                    class="form-control-xs externallink-targetEdit">
-                    <option value="IMAGE">Image</option>
-                    <option value="ARROW">Link</option>
-                </select>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-4">
+				<label><small>Type:</small> </label>
+			</div>
+			<div class="col-sm-8">
+				<select id="extTypeEdit" name="type"
+					class="form-control-xs externallink-targetEdit">
+					<option value="IMAGE">Image</option>
+					<option value="ARROW">Link</option>
+				</select>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-sm-3" style="padding-right: 0px;">
-                <label><small>Image:</small> </label>
-            </div>
-            <div class="col-sm-9">
-                <input type="file" class="form-control-xs" type="text"
-                    name="externalLinkImage" id="externalLinkImageEdit"><br>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-sm-3" style="padding-right: 0px;">
+				<label><small>Image:</small> </label>
+			</div>
+			<div class="col-sm-9">
+				<input type="file" class="form-control-xs" type="text"
+					name="externalLinkImage" id="externalLinkImageEdit"><br>
+			</div>
+		</div>
 
-        <HR>
-        <div class="row">
-            <div class="col-sm-4">
-                <button id="editExternalLinkBtn" type="reset"
-                    class="btn btn-primary btn-xs">Save</button>
-            </div>
-            <div class="col-sm-8">
-                <button id="deleteExternalLinkButton" type="reset"
-                    class="btn btn-primary btn-xs">Delete</button>
-            </div>
-        </div>
-    </div>
+		<HR>
+		<div class="row">
+			<div class="col-sm-4">
+				<button id="editExternalLinkBtn" type="reset"
+					class="btn btn-primary btn-xs">Save</button>
+			</div>
+			<div class="col-sm-8">
+				<button id="deleteExternalLinkButton" type="reset"
+					class="btn btn-primary btn-xs">Delete</button>
+			</div>
+		</div>
+	</div>
 </form>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-<button type="button" id="addSpaceLinkButton" class="btn btn-primary btn-sm">Add Space Link</button> &nbsp
-<button type="button" id="addModuleLinkButton" class="btn btn-primary btn-sm">Add Module Link</button> &nbsp
-<button type="button" id="addExternalLinkButton" class="btn btn-primary btn-sm">Add External Link</button> &nbsp
-<button type="button" id="changeBgImgButton" class="btn btn-primary btn-sm"> Change Image</button> &nbsp
-<button type="button" id="deleteSpace" class="btn btn-primary btn-sm">Delete Space</button>
+	<button type="button" id="addSpaceLinkButton"
+		class="btn btn-primary btn-sm">Add Space Link</button>
+	&nbsp
+	<button type="button" id="addModuleLinkButton"
+		class="btn btn-primary btn-sm">Add Module Link</button>
+	&nbsp
+	<button type="button" id="addExternalLinkButton"
+		class="btn btn-primary btn-sm">Add External Link</button>
+	&nbsp
+	<button type="button" id="changeBgImgButton"
+		class="btn btn-primary btn-sm">Change Image</button>
+	&nbsp
+	<button type="button" id="deleteSpace" class="btn btn-primary btn-sm">Delete
+		Space</button>
 </nav>
 <p></p>
 
-<div class="modal fade" id="confirm-space-delete" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalTitle">
-                    Confirm ${space.id} Deletion?
-                </h5>
-                <button type="button" class="close" data-dismiss="modal"
-                    aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Are you sure you want to delete ${space.id}?
-                </p>
-                <div id="warningMessage">
-                <div class="text-danger">
-                Other spaces have links to this space!
-                </div>
-                </div>
-                <div id="exhibitionMessage">
-                <div class="text-danger">
-                This space is the start of the exhibition. Deleting it will make your exhibition unavailable.
-                </div>
-                </div>
-                <div id="finalWarning">
-                <div class="text-danger">
-                Do you want to continue?
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="closeButton" class="btn btn-default"
-                    data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Yes, delete!</button>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="confirm-space-delete" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteModalTitle">Confirm
+					${space.id} Deletion?</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to delete ${space.id}?</p>
+				<div id="warningMessage">
+					<div class="text-danger">Other spaces have links to this
+						space!</div>
+				</div>
+				<div id="exhibitionMessage">
+					<div class="text-danger">This space is the start of the
+						exhibition. Deleting it will make your exhibition unavailable.</div>
+				</div>
+				<div id="finalWarning">
+					<div class="text-danger">Do you want to continue?</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="closeButton" class="btn btn-default"
+					data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-danger btn-ok">Yes,
+					delete!</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <c:if test="${not empty space.image}">
-	<div id="space" style ="float: left">
-		<img style="max-width:${display.width}px;" id="bgImage" src="<c:url value="/api/image/${space.image.id}" />"/>
+	<div id="space" style="float: left">
+		<img style="max-width:${display.width}px;" id="bgImage"
+			src="<c:url value="/api/image/${space.image.id}" />" />
 	</div>
 </c:if>
 
 <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
 
-<div id="outgoingLinks" class="list-group" style=" margin-left: auto; padding-right: 0.25em; text-align: right; width :20%">
-  	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;" class="list-group-item active">
-    	Space links on this space:
-  	</a>
+<div id="outgoingLinks" class="list-group"
+	style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
+	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;"
+		class="list-group-item active"> Space links on this space: </a>
 	<div id="noLinksOnSpace"
-	style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
-		There are no links on this space.
-	</div>
-    <c:forEach items="${linksOnThisSpace}" var="spaceLinks">
-    	<c:if test="${not empty spaceLinks.targetSpace}">
-    		<a href="<c:url value='/staff/space/${spaceLinks.targetSpace.id}'/>" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
-					&nbsp;${spaceLinks.targetSpace.name}</a>
+		style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
+		There are no links on this space.</div>
+	<c:forEach items="${linksOnThisSpace}" var="spaceLinks">
+		<c:if test="${not empty spaceLinks.targetSpace}">
+			<a href="<c:url value='/staff/space/${spaceLinks.targetSpace.id}'/>"
+				style='padding: .25rem .25rem;' class="list-group-item"
+				id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
+				&nbsp;${spaceLinks.targetSpace.name}</a>
 		</c:if>
 		<c:if test="${empty spaceLinks.targetSpace}">
-			<a href="#" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
-				&nbsp;&lt;No Space&gt;</a>
+			<a href="#" style='padding: .25rem .25rem;' class="list-group-item"
+				id="${spaceLinks.id}">${spaceLinks.name}&nbsp;-> &nbsp;&lt;No
+				Space&gt;</a>
 		</c:if>
-  	</c:forEach>
+	</c:forEach>
 </div>
 <p></p>
-<div id="incomingLinks" class="list-group" style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
-  	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;" class="list-group-item active">
-    	Space links to this space:
-  	</a>
+<div id="incomingLinks" class="list-group"
+	style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
+	<a href="#" style="padding-right: 0.25em; background-color: #c1bb88;"
+		class="list-group-item active"> Space links to this space: </a>
 	<div id="noLinksToSpace"
 		style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
-		There are no links to this space.
-	</div>
-    <c:forEach items="${linksToThisSpace}" var="spaceLinks">
-  	<a href="<c:url value='/staff/space/${spaceLinks.sourceSpace.id}'/>" style='padding: .25rem .25rem;' class="list-group-item" id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</a>
-  	</c:forEach>
+		There are no links to this space.</div>
+	<c:forEach items="${linksToThisSpace}" var="spaceLinks">
+		<a href="<c:url value='/staff/space/${spaceLinks.sourceSpace.id}'/>"
+			style='padding: .25rem .25rem;' class="list-group-item"
+			id="${spaceLinks.id}">${spaceLinks.sourceSpace.name}</a>
+	</c:forEach>
 </div>
