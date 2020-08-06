@@ -10,40 +10,23 @@
     });
 </script>
 
-<style>
-.startSpaceFlagClass .tooltiptext {
-    visibility: hidden;
-    width: 240px;
-    background: rgba(0, 0, 0, 0.5);
-    font-size: 15px;
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: -19px;
-    top: 33px;
-    background: rgba(0, 0, 0, 0.5);
-}
-.startSpaceFlagClass:hover .tooltiptext {
-    visibility: visible;
-}
-</style>
-
 <h1>Spaces</h1>
 
-<div style="padding-bottom: 20px;">This virtual exhibition
-    contains the following spaces.</div>
+<div style="padding-bottom: 20px;">
+    This virtual exhibition contains the following spaces. <i
+        class="fa fa-play-circle" aria-hidden="true"
+        style="color: #bfb168;"></i> indicates the start space.
+</div>
 <ul class="list-group list-group-flush">
     <c:forEach items="${spaces}" var="space">
         <li class="list-group-item"><c:if
                 test="${space.id == startSpace.id}">
-                <i class="fa fa-flag fa-sm startSpaceFlagClass"
-                    aria-hidden="true" style="color: #bfb168;"><span
-                    class="tooltiptext">This space is the start
-                        space of the exhibition.</span></i>
-            </c:if><a href="<c:url value="/staff/space/${space.id}" />"> <span
-                data-feather="box"></span> ${space.name}
+                <i class="fa fa-play-circle" aria-hidden="true"
+                    style="color: #bfb168;"></i>
+            </c:if> <a href="<c:url value="/staff/space/${space.id}" />"> <c:if
+                    test="${space.id != startSpace.id}">
+                    <span data-feather="box"></span>
+                </c:if> ${space.name}
         </a> (Created on <span class="date">${space.creationDate}</span> by
             ${space.createdBy}) <a
             href="javascript:checkSpaceLinkPresent('${space.id}', '<c:url value="/staff/" />', '?${_csrf.parameterName}=${_csrf.token}',$('#headerSpaceValue'))"
