@@ -39,7 +39,7 @@ $( document ).ready(function() {
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
            link = $('<img id="${link.image.id} class="spaceLink-${link.link.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="${link.link.id}" class="spaceLink-${link.link.id}"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i></span><p class="slabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span data-link-id="${link.link.id}" class="spaceLink-${link.link.id} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-${link.link.id}" data-link-id="${link.link.id}"><span class="tooltiptext">${link.link.name}</span></p></span>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -100,7 +100,7 @@ $( document ).ready(function() {
 		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
            link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" class="moduleLink-${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="${link.link.id}" class="moduleLink-${link.link.id}"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i></span><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}">${link.link.name}</p>');
+			link = $('<span data-link-id="${link.link.id}" class="moduleLink-${link.link.id} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}"><span class="tooltiptext">${link.link.name}</span></p></span>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -159,7 +159,7 @@ $( document ).ready(function() {
         if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
             link = $('<img id="${link.image.id}" class="externalLink-${link.externalLink.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
         }  else {
-            link = $('<span data-link-id="${link.externalLink.id}" class="externalLink-${link.externalLink.id}"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i></span><p class="elabel-${link.externalLink.id}" data-link-id="${link.externalLink.id}">${link.externalLink.name}</p>');
+            link = $('<span data-link-id="${link.externalLink.id}" class="externalLink-${link.externalLink.id} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-${link.externalLink.id}" data-link-id="${link.externalLink.id}"><span class="tooltiptext">${link.externalLink.name}</span></p></span>');
         }
         link.css('position', 'absolute');
         link.css('left', ${link.positionX} + posX);
@@ -685,11 +685,12 @@ $( document ).ready(function() {
 
 	// --------- show links functions --------------
 	function showSpaceLink(spaceLink, show) {
+	    console.log("In Show Space Link");
 		$("#space_label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var space_label = $("<p id='space_label'></p>");
+		var space_label = $("<p id='space_label' class='tooltiptext'></p>");
 		space_label.text(spaceLink["spaceLinkLabel"]);
 		
 		var link;
@@ -706,20 +707,21 @@ $( document ).ready(function() {
 				'top': spaceLink["y"] + posY + 35,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_c"></i></div></span>');
+			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
 		}
 		if(show) {
-			link.find("div").css('fill', 'rgba(128,128,128,1)');
+			//link.find("div").css('fill', 'rgba(128,128,128,1)');
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
 		link.css('top', spaceLink["y"] + posY);
 		link.css('color', 'rgba(128,128,128,1)');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-		link.css('font-size', "10px");
+		link.css('font-size', "12px");
 		
 		if (spaceLink["id"]) {
-			link.attr("data-link-id", spaceLink["id"]);
+			/* link.attr("data-link-id", "Info_cz_Class"); */
+			link.attr("class", spaceLink["id"]);
 			link.css('cursor', 'pointer');
 			link.css('color', 'rgba(128,128,128,1)');
 			link.click(function(e) {
@@ -727,7 +729,7 @@ $( document ).ready(function() {
 	        });
 			
 			space_label.attr("data-link-id", spaceLink["id"]);
-			space_label.attr("class", "slabel-"+spaceLink["id"]);
+			space_label.attr("class", "tooltiptext slabel-"+spaceLink["id"]);
             space_label.css('cursor', 'pointer');
             space_label.click(function(e) {
                 makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
@@ -735,7 +737,7 @@ $( document ).ready(function() {
 		}
 
 		$("#space").append(link);
-		$("#space").append(space_label);
+		$("#link").append(space_label);
 
 		feather.replace();
 	}			        
@@ -745,7 +747,7 @@ $( document ).ready(function() {
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var module_label = $("<p id='module_label'></p>");
+		var module_label = $("<p id='module_label' class='tooltiptext'></p>");
 		module_label.text(moduleLink["moduleLinkLabel"]);
 		
 		var link;
@@ -762,7 +764,7 @@ $( document ).ready(function() {
 				'top': moduleLink["y"] + posY + 35,
 				'color': 'red'
 			});
-			link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i></div></span>');
+			link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i></div></span>');
 		} 
 		if(show) {
 			link.find("div").css('fill', 'red');
@@ -772,7 +774,7 @@ $( document ).ready(function() {
 		link.css('top', moduleLink["y"] + posY);
 		link.css('color', 'red');
 		link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-		link.css('font-size', "10px");
+		link.css('font-size', "12px");
 		
 		if (moduleLink["id"]) {
 			link.attr("data-link-id", moduleLink["id"]);
@@ -782,14 +784,14 @@ $( document ).ready(function() {
 			});
 			module_label.attr("data-link-id", moduleLink["id"]);
 			module_label.css('cursor', 'pointer');
-			module_label.attr("class", "mlabel-"+moduleLink["id"]);
+			module_label.attr("class", "tooltiptext mlabel-"+moduleLink["id"]);
 			module_label.click(function(e) {
 				makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
 			});
 		}
 
 		$("#space").append(link);
-		$("#space").append(module_label);
+		$("#link").append(module_label);
 
 		feather.replace();
 	}
@@ -843,7 +845,7 @@ $( document ).ready(function() {
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		var ext_label = $("<p id='ext_label'></p>");
+		var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
 		ext_label.text(externalLink["externalLinkLabel"]);
 		
 		var link;
@@ -858,7 +860,7 @@ $( document ).ready(function() {
 				'top': externalLink["y"] + posY + 35,
 				'color': 'blue'
 			});
-			link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i></div></span>');
+			link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i></div></span>');
 		}
 		
 		link.css('position', 'absolute');
@@ -884,7 +886,7 @@ $( document ).ready(function() {
 		}
 
 		$("#space").append(link);
-		$("#space").append(ext_label);
+		$("#link").append(ext_label);
 		$("#external-link").remove();
 
 		
@@ -1120,6 +1122,25 @@ $( document ).ready(function() {
 });
 
 </script>
+<style>
+.Info_cz_Class .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 31px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.Info_cz_Class:hover .tooltiptext {
+    visibility: visible;
+}
+</style>
 
 <div id="errorAlert"
     class="alert alert-danger alert-dismissible fade show" role="alert"
