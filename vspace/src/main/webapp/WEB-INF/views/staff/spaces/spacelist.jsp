@@ -11,19 +11,15 @@
 </script>
 
 <style>
+.unpublishedSpaceClass {
+    position: absolute;
+    left: 64%;
+}
+
 .unpublishedSpaceClass .unpublishedtooltiptext {
     visibility: hidden;
-    width: 240px;
-    background: rgba(0, 0, 0, 0.5);
-    font-size: 15px;
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: 27%;
-    top: 33px;
-    background: rgba(0, 0, 0, 0.5);
+    font-size: 0.875rem;
+    font-family: 'Quicksand';
 }
 
 .unpublishedSpaceClass:hover .unpublishedtooltiptext {
