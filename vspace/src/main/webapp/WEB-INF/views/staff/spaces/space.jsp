@@ -933,7 +933,8 @@ $( document ).ready(function() {
         storeY = null;
         $("#link").remove();
         $("#space_label").remove();
-        $("#createSpaceLinkAlert").hide();  
+        $("#createSpaceLinkAlert").hide(); 
+        $('#errorAlert').hide();
     });
 	
 	$("#cancelModuleLinkBtn").click(function() {
@@ -942,6 +943,7 @@ $( document ).ready(function() {
         $("#link").remove();
         $("#module_label").remove();
         $("#createModuleLinkAlert").hide();  
+        $('#errorAlert').hide();
     }); 
     
     $("#cancelExternalLinkBtn").click(function() {
@@ -952,6 +954,7 @@ $( document ).ready(function() {
         $("#external-arrow").remove();
         $("#ext_label").remove();
         $("#createExternalLinkAlert").hide();
+        $('#errorAlert').hide();
     });
     
     $("#cancelBgImgBtn").click(function() {
@@ -1159,15 +1162,6 @@ $( document ).ready(function() {
 
 </script>
 
-<div id="errorAlert"
-	class="alert alert-danger alert-dismissible fade show" role="alert"
-	style="display: none; position: absolute; top: 10px; right: 50px;">
-	<strong>Error!</strong> <span id="errorMsg"></span>
-	<button type="button" class="close" id="closeAlert" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-</div>
-
 <h1>
 	Space: ${space.name} <small style="margin-left: 10px;"><a
 		href="<c:url value="/staff/space/${space.id}/edit" />"><span
@@ -1213,9 +1207,22 @@ $( document ).ready(function() {
 		</p>
 	</form:form>
 </div>
+
+
+
 <h5>Description:</h5>
 <p style="max-height: 100px; overflow-y: scroll;">
 	${space.description}</p>
+
+
+<div id="errorAlert"
+	class="alert alert-danger alert-dismissible fade show" role="alert"
+	style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+	<strong>Error!</strong> <span id="errorMsg"></span>
+	<button type="button" class="close" id="closeAlert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
 
 <c:url
 	value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}"
