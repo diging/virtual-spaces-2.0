@@ -29,13 +29,21 @@
 
 <h1>Spaces</h1>
 
-<div style="padding-bottom: 20px;">This virtual exhibition
-    contains the following spaces.</div>
+<div style="padding-bottom: 20px;">
+    This virtual exhibition contains the following spaces. <i
+        class="fa fa-play-circle" aria-hidden="true"
+        style="color: #bfb168;"></i> indicates the start space.
+</div>
 <ul class="list-group list-group-flush">
     <c:forEach items="${spaces}" var="space">
-        <li class="list-group-item"><a
-            href="<c:url value="/staff/space/${space.id}" />"> <span
-                data-feather="box"></span> ${space.name}
+        <li class="list-group-item"><c:if
+                test="${space.id == startSpace.id}">
+                <i class="fa fa-play-circle" aria-hidden="true"
+                    style="color: #bfb168;"></i>
+            </c:if> <a href="<c:url value="/staff/space/${space.id}" />"> <c:if
+                    test="${space.id != startSpace.id}">
+                    <span data-feather="box"></span>
+                </c:if> ${space.name}
         </a> (Created on <span class="date">${space.creationDate}</span> by
             ${space.createdBy}) <c:if
                 test="${space.spaceStatus=='UNPUBLISHED'}">
