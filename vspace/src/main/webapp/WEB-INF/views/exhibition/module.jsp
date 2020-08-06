@@ -23,7 +23,7 @@ body {
 </style>
 <script>
 $( document ).ready(function() {
-	$("#blocks a").css('color','blue');
+	$("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
 });
     function openLangNav() {
         document.getElementById("myLangSidenav").style.width = "240px";
