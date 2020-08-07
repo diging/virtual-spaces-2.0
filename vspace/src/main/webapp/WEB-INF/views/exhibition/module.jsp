@@ -38,10 +38,10 @@ body {
 </script>
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-        <div class="textDiv">
+        <div style="position: fixed; top:5%; left:21%; background-color: white; z-index: 50;" class="textDiv">
             <h3>${module.name}</h3>
         </div>
-        <div class="slideNumberClass">
+        <div style="position: fixed; z-index: 10;" class="slideNumberClass">
             <p>Slide ${currentNumOfSlide}/${numOfSlides}</p>
         </div>
         <div class="Group_7_Class">
@@ -87,8 +87,8 @@ body {
                 </a>
             </c:if>
         </div>
-        <a href="<c:url value="/exhibit/space/${spaceId}" />">
-            <div class="exit_to_space_Class">
+        <a  href="<c:url value="/exhibit/space/${spaceId}" />">
+            <div style="position: fixed; z-index: 10;" class="exit_to_space_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
 						class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
@@ -100,7 +100,7 @@ body {
         </a>
         <a
             href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?clearHistory=true" />">
-            <div class="exit_to_branchingPoint_Class">
+            <div style="position: fixed; z-index: 10;" class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_Class" rx="22" ry="22" cx="22"
@@ -125,7 +125,7 @@ body {
             </div>
         </a>
         </c:if>
-        <div class="Group_8_Class">
+        <div style="position: static; z-index:-10;" class="Group_8_Class">
             <h3>${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
                 var="contents">
