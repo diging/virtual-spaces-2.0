@@ -10,6 +10,20 @@
     });
 </script>
 
+<style>
+
+.unpublishedSpaceClass .unpublishedtooltiptext {
+    visibility: hidden;
+    font-size: 0.875rem;
+    font-family: 'Quicksand';
+    float: left;
+}
+
+.unpublishedSpaceClass:hover .unpublishedtooltiptext {
+    visibility: visible;
+}
+</style>
+
 <h1>Spaces</h1>
 
 <div style="padding-bottom: 20px;">
@@ -28,12 +42,19 @@
                     <span data-feather="box"></span>
                 </c:if> ${space.name}
         </a> (Created on <span class="date">${space.creationDate}</span> by
-            ${space.createdBy}) <a
+            ${space.createdBy}) <div class="float-right"><c:if
+                test="${space.spaceStatus=='UNPUBLISHED'}">
+                <i
+                    class="fa fa-exclamation-triangle fa-sm unpublishedSpaceClass"
+                    aria-hidden="true" style="color: #bfb168; padding-right: 8px;"><span
+                    class="unpublishedtooltiptext">This space is
+                        currently unpublished.</span></i>
+            </c:if> <a
             href="javascript:checkSpaceLinkPresent('${space.id}', '<c:url value="/staff/" />', '?${_csrf.parameterName}=${_csrf.token}',$('#headerSpaceValue'))"
             class="checkSpaceLinkPresent"> <span
-                class="float-right checkSpaceLinkPresent"
-                id="deleteSpace" data-feather="trash-2"></span>
-        </a></li>
+                class="checkSpaceLinkPresent"
+                id="deleteSpace" data-feather="trash-2" style="color: #666;"></span>
+        </a></div></li>
     </c:forEach>
 </ul>
 
