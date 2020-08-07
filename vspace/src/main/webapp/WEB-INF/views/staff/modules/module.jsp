@@ -48,6 +48,34 @@ function checkSlideInSequence(slideId) {
     });
 }
 
+function loadSlidesInSequences() {
+    $('.sequence').click(function(e) {
+	    $(".slide").css({ 'border' : ''});
+		$(".sequence").css({ 'border' : ''});
+		$(this).css("border", "solid #c1bb88");
+		var sequenceId = this.id;
+		console.log(sequenceId);
+		$('#selectedSequence').empty();
+		$.ajax({
+			type: "GET",
+			url: "<c:url value="/staff/module/${module.id}/sequence/"/>" +sequenceId+  "/slides",
+			async: false,
+			success: function(response) {
+				$.each(response, function (index, slide) {
+				    console.log(slide.id);
+					$('#selectedSequence').append(''+
+							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
+							'<div align="left" class="card-body">'+
+							'<a href="<c:url value="/staff/module/${module.id}/slide/"/>'+slide.id+'" >'+
+							'<h5 class="card-title">'+slide.name+'</h5>'+
+							'<p class="card-text">'+slide.description+'</p>'+'</a>'+
+							'</div></div>');
+					});
+				}
+		});
+	});
+}
+
 $(document).ready(function($) {
 	
 	$("#addSlideButton").on("click", function(e) {
@@ -66,26 +94,53 @@ $(document).ready(function($) {
 	
 	
 	$(".sequence").on("click", function(e) {
-		$(".sequence").css({ 'border' : ''});
+	    loadSlidesInSequences();
+	});
+	
+	$(".slide").on("click", function(e) {
+	    $(".slide").css({ 'border' : ''});
 		$(this).css("border", "solid #c1bb88");
-		var sequenceId = this.id;
-		$('#selectedSequence').empty();
+		var slideId = this.id;
+		console.log(slideId);
+		$('#allSequences').empty();
 		$.ajax({
 			type: "GET",
-			url: "<c:url value="/staff/module/${module.id}/sequence/"/>" +sequenceId+  "/slides",
+			url: "<c:url value="/staff/module/${module.id}/slide/"/>" +slideId+  "/sequences",
 			async: false,
 			success: function(response) {
-				$.each(response, function (index, slide) {
-					$('#selectedSequence').append(''+
-							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
+				$.each(response, function (index, sequence) {
+					$('#allSequences').append('<div id='+sequence.id+' class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
 							'<div align="left" class="card-body">'+
-							'<a href="<c:url value="/staff/module/${module.id}/slide/"/>'+slide.id+'" >'+
-							'<h5 class="card-title">'+slide.name+'</h5>'+
-							'<p class="card-text">'+slide.description+'</p>'+'</a>'+
+							'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+sequence.id+'" >'+
+							'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
+							'<font color="#796d05"><h5 class="card-title">'+sequence.name+'</h5>'+
+							'<p class="card-text">'+sequence.description+'</p></font>'+
 							'</div></div>');
 					});
+            
 				}
 		});
+		loadSlidesInSequences();
+	});
+	
+	$(".showAllSequences").on("click", function(e) {
+	    $(".slide").css({ 'border' : ''});
+	    $(".sequence").css({ 'border' : ''});
+		var slideId = this.id;
+		console.log(slideId);
+		$('#allSequences').empty();
+		<c:forEach items="${sequences}" var="sequence" varStatus="loop">
+		{
+		    $('#allSequences').append('<div id=${sequence.id} class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
+				'<div align="left" class="card-body">'+
+				'<a href="<c:url value="/staff/module/${module.id}/sequence/${sequence.id}"/>'+'">'+
+				'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
+				'<font color="#796d05"><h5 class="card-title">${sequence.name}</h5>'+
+				'<p class="card-text">${sequence.description}</p></font>'+
+				'</div></div>');
+		}
+		</c:forEach>
+		loadSlidesInSequences();
 	});
 
 	
@@ -145,9 +200,13 @@ $(document).ready(function($) {
 		<div class="col">
 			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
 				<span style="float: left; font-size: medium; padding-top: 3px;">SEQUENCES</span>
+                <div style="display: inline-flex;">
+                <a class="showAllSequences" href="#" style="padding-right: 9px;">
+                    show All</a>
 				<a class="d-flex align-items-center text-muted"
 					href="<c:url value="${module.id}/sequence/add" />"> <span
 					data-feather="plus-circle"></span></a>
+                </div>
 			</div>
 		</div>
 		<div class="col">
@@ -164,30 +223,31 @@ $(document).ready(function($) {
                 <c:forEach items="${slides}" var="slide">
                     <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
                         <div align="left" class="card-body d-flex align-items-center" style="position:relative;">
-                            <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />">
                             <c:if test="${slide['class'].simpleName ==  'BranchingPoint'}">
                                    <span id="branchingPoint" style="float: right;" data-feather="git-branch"></span> 
                                 </c:if>
-                            <h5 class="card-title">${slide.name}</h5><p class="card-text">${slide.description}</p></a>						
+                            <font color="#796d05"><h5 class="card-title">${slide.name}</h5>
+                            <p class="card-text">${slide.description}</p></font>					
                             <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
                             <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}" />"><span style="float: right; padding-right: 7px;"><i class="fa fa-eye"></i></span></a>
                             </div>
                         </div>
-                    </div>		
+                    </div>	
                 </c:forEach>
             </div>
-            <div class="col justify-content-center" style="padding-left: 65px;">
+            <div class="col justify-content-center" id="allSequences" style="padding-left: 65px;">
                 <c:forEach items="${sequences}" var="sequences">
-                    <div id=${sequences.id} var class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
+                    <div id=${sequences.id} class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
                     <div align="left" class="card-body">
-                        <a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right" data-feather="eye"></span></a>
+                        <a href="<c:url value="/staff/module/${module.id}/sequence/${sequences.id}" />"><span style="float: right"><i class="fa fa-eye"></i></span></a>
                         <font color="#796d05"><h5 class="card-title">${sequences.name}</h5>
                         <p class="card-text">${sequences.description}</p></font>	
                     </div>
                     </div>
                 </c:forEach>
-                </div>	
-             <div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
+            </div>
+            <div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
          </div>
     </div>
 </div>
