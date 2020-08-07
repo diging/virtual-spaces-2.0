@@ -16,7 +16,7 @@
     visibility: hidden;
     font-size: 0.875rem;
     font-family: 'Quicksand';
-    float: inline-start;
+    float: left;
 }
 
 .unpublishedSpaceClass:hover .unpublishedtooltiptext {
@@ -46,7 +46,7 @@
                 test="${space.spaceStatus=='UNPUBLISHED'}">
                 <i
                     class="fa fa-exclamation-triangle fa-sm unpublishedSpaceClass"
-                    aria-hidden="true" style="color: #bfb168;"><span
+                    aria-hidden="true" style="color: #bfb168; padding-right: 8px;"><span
                     class="unpublishedtooltiptext">This space is
                         currently unpublished.</span></i>
             </c:if> <a
