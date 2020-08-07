@@ -660,6 +660,20 @@ $(window).on('load', function () {
 	<h5 style="margin-bottom: 0px;">Description:</h5>
 	<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${slide.description}</p>
 </div>
+<!-- SlideSequences -->
+<div style="margin-left: .1%;" class="row align-items-center">
+    <h5 style="margin-bottom: 0px;">
+        This slide belongs to:<br>
+    </h5>
+</div>
+<c:forEach items="${slideSequences}" var="slideSequence">
+    <div style="margin-left: .1%;" class="row align-items-center">
+        <a style="margin-left: .5rem;"
+            href="<c:url value="/staff/module/${module.id}/sequence/${slideSequence.id}" />"
+            name="${slideSequence.name}">${slideSequence.name}</a><br>
+
+    </div>
+</c:forEach>
 <div style="margin-top: 1%; margin-bottom: 2%;">
 	<a class="btn btn-primary"
 		href="<c:url value="/staff/module/${module.id}" />">Go Back</a>

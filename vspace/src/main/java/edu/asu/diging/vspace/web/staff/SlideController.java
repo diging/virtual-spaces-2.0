@@ -43,6 +43,7 @@ public class SlideController {
         ISlide slide = slideManager.getSlide(id);
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
+        model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
         model.addAttribute("slideContents", slideContents);
         model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
