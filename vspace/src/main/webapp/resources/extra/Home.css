@@ -376,17 +376,54 @@
     width: 5.403px;
     height: 14.408px;
     left: 14.5px;
-    padding-top: 8px; transform : matrix( 1, 0, 0, 1, 0, 0);
+    padding-top: 8px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
     font-size: inherit;
     color: rgba(150, 45, 62, 1);
     transform: matrix(1, 0, 0, 1, 0, 0);
 }
+
 .imageStyle {
-    min-height: 500px; 
-    min-width:800px; 
-    border-radius:13px;
+    min-height: 500px;
+    min-width: 800px;
+    border-radius: 13px;
 }
 
 .spaceName {
     font-size: 25px;
+}
+
+.Icon_awesome_info_staff_c {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 7.793px;
+    top: 3.48px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: larger;
+}
+
+.Icon_awesome_info_staff_m {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 11.5px;
+    top: 5px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+}
+
+.Icon_awesome_info_staff_e {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 7px;
+    top: 5.4px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
 }
