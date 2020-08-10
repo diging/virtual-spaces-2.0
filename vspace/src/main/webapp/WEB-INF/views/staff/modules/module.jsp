@@ -224,7 +224,7 @@ $(document).ready(function($) {
                     <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
                         <div align="left" class="card-body d-flex align-items-center" style="position:relative;">
                             <c:if test="${slide['class'].simpleName ==  'BranchingPoint'}">
-                                   <span id="branchingPoint" style="float: right;" data-feather="git-branch"></span> 
+                                   <div style="padding-bottom: 32px; padding-right: 2px;"><span id="branchingPoint" style="float: right;" data-feather="git-branch"></span></div>
                                 </c:if>
                             <font color="#796d05"><h5 class="card-title">${slide.name}</h5>
                             <p class="card-text">${slide.description}</p></font>					
