@@ -26,7 +26,35 @@ $( document ).ready(function() {
 	if ($("div#incomingLinks a").length < 2) {
 		  $("#noLinksToSpace").show()
 	  }
-  });    
+	
+	$("#bgImage").on("click", function(e){
+		e.preventDefault();
+		$("#external-arrow").remove();
+		$("#space_label").remove();
+		$("#link").remove();
+		$("#text").remove();
+		var posX = $(this).position().left;
+		var posY = $(this).position().top;    
+		storeX = e.pageX - $(this).offset().left;
+		storeY = e.pageY - $(this).offset().top;
+	    showTextBox();
+	    getTextArea(storeX,storeY);
+	});
+  });
+
+function showTextBox() {
+    $("#addTextFormInfo").show();
+}
+
+function getTextArea(x,y) {
+    var posX = $("#bgImage").position().left;
+	var posY = $("#bgImage").position().top;
+    var text = $('<div id="text"><textarea></textarea></div>');
+    text.css('position', 'absolute');
+    text.css('left', x + posX);
+    text.css('top', y + posY);
+	$("#space").append(text);
+  }
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
 	{
@@ -1784,6 +1812,69 @@ $( document ).ready(function() {
 			</div>
 		</div>
 	</div>
+</form>
+
+<form id="addTextForm">
+    <div id="addTextFormInfo" class="alert alert-secondary" role="alert"
+        style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+        <p class="float-right">
+            <a href="#" id="closeaddTextFormInfo"><span
+                data-feather="x-square"></span></a>
+        </p>
+        <div class="row">
+            <div class="col">
+                <small>Please click on the image where you want to place the
+                    Text content. Then click "Save".</small>
+                </p>
+                <hr>
+            </div>
+        </div>
+
+        <input type="hidden" name="x" id="addTextX" /> <input
+            type="hidden" name="y" id="addTextY" />
+
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Width:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <input class="form-control-xs textBoxWidth" type="number"
+                    id="textBoxWidthID" name="width"><br>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Height:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <input class="form-control-xs textBoxHeight" type="number"
+                    id="textBoxHeightID" name="height"><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label><small>Text:</small> </label>
+            </div>
+            <div class="col-sm-8">
+                <input class="form-control-xs textContent" type="textarea"
+                    name="textContent" id="textContentID"><br>
+            </div>
+        </div>
+        <HR>
+        <div class="row">
+            <div class="col-sm-4">
+                <button id="addTextBlockBtn" type="reset"
+                    class="btn btn-primary btn-xs">Save</button>
+            </div>
+            <div class="col-sm-8">
+                <button id="deleteTextBlockBtn" type="reset"
+                    class="btn btn-primary btn-xs">Delete</button>
+            </div>
+        </div>
+    </div>
 </form>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
