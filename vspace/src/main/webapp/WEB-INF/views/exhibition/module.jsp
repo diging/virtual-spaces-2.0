@@ -41,7 +41,7 @@ $( document ).ready(function() {
 </script>
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-        <div style="position: fixed; top:5%; left:21%; background-color: white; z-index: 50;" class="textDiv">
+        <div style="position: fixed; top:3.5%; left:21%; background-color: white; z-index: 50;" class="textDiv">
             <h3>${module.name}</h3>
         </div>
         <div style="position: fixed; z-index: 10;" class="slideNumberClass">
@@ -51,8 +51,7 @@ $( document ).ready(function() {
             <c:if test="${prevSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div
-                        class="Slideshow_previous Slideshow_previous_Class">
+                    <div style="position: fixed; z-index: 10;" class="Slideshow_previous Slideshow_previous_Class">
                         <svg class="Ellipse_11">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_11_Class" rx="20" ry="20"
@@ -72,7 +71,7 @@ $( document ).ready(function() {
             <c:if test="${nextSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
-                    <div class="slideshow_next slideshow_next_Class">
+                    <div style="position: fixed; z-index: 10;" class="slideshow_next slideshow_next_Class">
                         <svg class="Ellipse_12">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_12_Class" rx="20" ry="20"
@@ -116,7 +115,7 @@ $( document ).ready(function() {
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
         <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPoint.id}?back=true" />">
-            <div class="exit_to_previousChoice_Class">
+            <div style="position: fixed; z-index: 10;" class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_be_Class" rx="22" ry="22"
@@ -128,7 +127,7 @@ $( document ).ready(function() {
             </div>
         </a>
         </c:if>
-        <div id="blocks" class="Group_8_Class">
+        <div id="blocks" style="position: relative" class="Group_8_Class">
             <h3>${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
                 var="contents">
