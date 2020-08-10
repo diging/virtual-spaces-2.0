@@ -51,7 +51,7 @@ $( document ).ready(function() {
             <c:if test="${prevSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div style="position: fixed; z-index: 10;" class="Slideshow_previous Slideshow_previous_Class">
+                    <div style="position: fixed; z-index: 10;  top: 20%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
                         <svg class="Ellipse_11">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_11_Class" rx="20" ry="20"
@@ -71,7 +71,7 @@ $( document ).ready(function() {
             <c:if test="${nextSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
-                    <div style="position: fixed; z-index: 10;" class="slideshow_next slideshow_next_Class">
+                    <div style="position: fixed; top: 30%; right: 16%; z-index: 10;" class="slideshow_next slideshow_next_Class">
                         <svg class="Ellipse_12">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_12_Class" rx="20" ry="20"
