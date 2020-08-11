@@ -385,6 +385,39 @@ function getTextArea(x,y) {
 		});
 	});
 	
+	$("#addTextBlockBtn").click(function(e) {
+	    e.preventDefault();
+		
+		if (storeX == undefined || storeY == undefined) {
+			$("#errorMsg").text("Please click on the image to specify where the new block should be located.")
+			$('#errorAlert').show();
+			return;
+		}
+		
+		$("#addTextX").val(storeX);
+		$("#addTextY").val(storeY);
+		
+		var form = $("#addTextForm");
+		var formData = new FormData(form[0]);
+		
+		var textBlockInfo = createTextBlockInfo();
+        
+	    $.ajax({
+			type: "POST",
+			url: "<c:url value="/staff/space/${space.id}/textBlock?${_csrf.parameterName}=${_csrf.token}" />",
+			cache       : false,
+	        contentType : false,
+	        processData : false,
+	        enctype: 'multipart/form-data',
+	        data: formData, 
+	        success: function(data) {
+	        	var blockData = JSON.parse(data);
+	        	console.log(blockData);
+	        	$("#addTextFormInfo").hide();
+	        }
+		});
+	});
+	
 	$("#createModuleLinkBtn").click(function(e) {
 		e.preventDefault();
 		
@@ -1050,6 +1083,18 @@ function getTextArea(x,y) {
 		info["type"] = $("#type").val();
 		return info;
 	}
+	
+	function createTextBlockInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		info["text"] = $("#textContentID").val();
+		info["heigth"] = $("#textBoxHeightID").val();
+		info["width"] = $("#textBoxWidthID").val();
+		return info;
+	}
+	
+	
 	
 	function editModuleLinkInfo() {
 		var info = {};
@@ -1814,6 +1859,9 @@ function getTextArea(x,y) {
 	</div>
 </form>
 
+<c:url
+    value="/staff/space/${space.id}/textBlock?${_csrf.parameterName}=${_csrf.token}"
+    var="postUrl" />
 <form id="addTextForm">
     <div id="addTextFormInfo" class="alert alert-secondary" role="alert"
         style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">

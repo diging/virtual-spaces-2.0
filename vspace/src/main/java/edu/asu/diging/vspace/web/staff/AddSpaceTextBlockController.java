@@ -19,18 +19,22 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @Controller
 public class AddSpaceTextBlockController {
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private ISpaceTextBlockManager spaceTextBlockManager;
 
 
-    @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/{id}/textBlock", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("textContent") String text,
-            @RequestParam("height") String height, @RequestParam("width") String widthe)
+            @RequestParam("height") String height, @RequestParam("width") String width)
                     throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace source = spaceManager.getSpace(id);
@@ -41,20 +45,20 @@ public class AddSpaceTextBlockController {
         if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "No link coordinates specified.");
+            node.put("errorMessage", "No block coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         
         ISpaceTextBlockDisplay display=null;
-//        try {
-//            display = spaceTExtBlockManager.createTextBlock(title, id, new Float(x), new Float(y),
-//                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, null, null);
-//        } catch (SpaceDoesNotExistException e) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            ObjectNode node = mapper.createObjectNode();
-//            node.put("errorMessage", "space could not be found.");
-//            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+        try {
+            display = spaceTextBlockManager.createTextBlock(id, new Float(x), new Float(y),
+                    text, new Float(height), new Float(width));
+        } catch (SpaceDoesNotExistException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "space could not be found.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode textNode = mapper.createObjectNode();
         textNode.put("id", display.getSpaceTextBlock().getId());
