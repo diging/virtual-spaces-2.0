@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
@@ -53,6 +54,9 @@ public class Space extends VSpaceElement implements ISpace {
     @OneToOne(targetEntity=VSImage.class)
     @NotFound(action=NotFoundAction.IGNORE)
     private IVSImage image;
+    
+    @Transient
+    private Boolean hasIncomingLinks;
 
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
@@ -155,4 +159,13 @@ public class Space extends VSpaceElement implements ISpace {
         }
         this.showUnpublishedLinks = showUnpublishedLinks;
     }
+
+    public Boolean getHasIncomingLinks() {
+        return hasIncomingLinks;
+    }
+
+    public void setHasIncomingLinks(Boolean hasIncomingLinks) {
+        this.hasIncomingLinks = hasIncomingLinks;
+    }
+    
 }
