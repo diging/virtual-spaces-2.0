@@ -12,30 +12,15 @@
 
 <style>
 
-.unpublishedtooltiptext {
-    display: none;
-    color: #bfb168; 
-    font-weight: bold;
+.unpublishedSpaceClass .unpublishedtooltiptext {
+    visibility: hidden;
     font-size: 0.875rem;
     font-family: 'Quicksand';
     float: left;
 }
 
-.unpublishedSpaceClass:hover + .unpublishedtooltiptext{
-    display: block;
-}
-
-.noIncomingLinkMessage {
-    display: none;
-    color: #bfb168; 
-    font-weight: bold;
-    font-size: 0.875rem;
-    font-family: 'Quicksand';
-    float: left;
-}
-
-.noIncomingLinks:hover + .noIncomingLinkMessage{
-    display: block;
+.unpublishedSpaceClass:hover .unpublishedtooltiptext {
+    visibility: visible;
 }
 </style>
 
@@ -60,16 +45,11 @@
             ${space.createdBy}) <div class="float-right"><c:if
                 test="${space.spaceStatus=='UNPUBLISHED'}">
                 <i
-                    class="fas fa-exclamation-triangle unpublishedSpaceClass"
-                    aria-hidden="true" style="color: #bfb168; padding-right: 8px;"></i><span
+                    class="fa fa-exclamation-triangle fa-sm unpublishedSpaceClass"
+                    aria-hidden="true" style="color: #bfb168; padding-right: 8px;"><span
                     class="unpublishedtooltiptext">This space is
-                        currently unpublished.</span>
-            </c:if>  <c:if
-                test="${space.hasIncomingLinks == 'true'}">
-                    <i class="fas fa-eye-slash noIncomingLinks" aria-hidden="true" 
-                    style="color: #bfb168; padding-right: 8px;"></i><span
-                    class="noIncomingLinkMessage">This space has no incoming links.</span>
-            </c:if><a
+                        currently unpublished.</span></i>
+            </c:if> <a
             href="javascript:checkSpaceLinkPresent('${space.id}', '<c:url value="/staff/" />', '?${_csrf.parameterName}=${_csrf.token}',$('#headerSpaceValue'))"
             class="checkSpaceLinkPresent"> <span
                 class="checkSpaceLinkPresent"
