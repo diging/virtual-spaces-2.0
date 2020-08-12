@@ -41,7 +41,7 @@ $( document ).ready(function() {
 </script>
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-        <div style="position: fixed; top:3.5%; left:21%; background-color: white; z-index: 50;" class="textDiv">
+        <div style="position: fixed; top:4%; left:21%; background-color: white; z-index: 50;" class="textDiv">
             <h3>${module.name}</h3>
         </div>
         <div style="position: fixed; z-index: 10;" class="slideNumberClass">
@@ -51,7 +51,7 @@ $( document ).ready(function() {
             <c:if test="${prevSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div style="position: fixed; z-index: 10;  top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
+                    <div style="position: fixed; z-index: 10; top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
                         <svg class="Ellipse_11">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_11_Class" rx="20" ry="20"
@@ -97,7 +97,7 @@ $( document ).ready(function() {
                     </ellipse>
                 </svg>
                 <i class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
-                <span class="tooltiptext">Go To Space</span>
+                <span style="z-index: 100;" class="tooltiptext">Go To Space</span>
             </div>
         </a>
         <a
@@ -110,7 +110,7 @@ $( document ).ready(function() {
                     </ellipse>
                 </svg>
                 <i class="fas fa-fast-backward fa-2x Icon_awesome_angle_double_left"></i>
-                <span class="tooltiptext">Go To Start Sequence of Module</span>
+                <span style="z-index: 100;" class="tooltiptext">Go To Start Sequence of Module</span>
             </div>
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
@@ -123,7 +123,7 @@ $( document ).ready(function() {
                     </ellipse>
                 </svg>
                 <i class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
-                <span class="tooltiptext">Go back to ${previousBranchingPoint.name}</span>
+                <span style="z-index: 100;" class="tooltiptext">Go back to ${previousBranchingPoint.name}</span>
             </div>
         </a>
         </c:if>
