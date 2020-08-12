@@ -65,7 +65,7 @@
                     class="unpublishedtooltiptext">This space is
                         currently unpublished.</span>
             </c:if>  <c:if
-                test="${space.hasIncomingLinks == 'true'}">
+                test="${space.hasIncomingLinks() == 'true'}">
                     <i class="fas fa-eye-slash noIncomingLinks" aria-hidden="true" 
                     style="color: #bfb168; padding-right: 8px;"></i><span
                     class="noIncomingLinkMessage">This space has no incoming links.</span>

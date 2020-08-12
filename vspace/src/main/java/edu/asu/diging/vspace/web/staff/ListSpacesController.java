@@ -12,6 +12,7 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
+import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 
 @Controller
 public class ListSpacesController {
@@ -24,17 +25,14 @@ public class ListSpacesController {
 
     @Autowired
     private ExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private SpaceManager spaceManager;
 
     @RequestMapping("/staff/space/list")
     public String listSpaces(Model model) {
-        
-        Iterable<Space> allSpaces = spaceRepo.findAll();
-        Iterator<Space> iterator = allSpaces.iterator();
-        while(iterator.hasNext()) {
-            Space space = iterator.next();
-            space.setHasIncomingLinks( (spaceLinkRepo.getLinkedFromSpaces(space.getId())).size() > 0 ? true : false );
-        }
-        model.addAttribute("spaces", allSpaces);
+
+        model.addAttribute("spaces", spaceManager.getAllSpaces(spaceRepo.findAll()));
         IExhibition startExhibition = exhibitionManager.getStartExhibition();
         if(startExhibition!=null) {
             model.addAttribute("startSpace", startExhibition.getStartSpace());

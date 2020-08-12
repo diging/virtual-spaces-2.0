@@ -56,7 +56,7 @@ public class Space extends VSpaceElement implements ISpace {
     private IVSImage image;
     
     @Transient
-    private Boolean hasIncomingLinks;
+    private Boolean incomingLinks;
 
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
@@ -160,12 +160,12 @@ public class Space extends VSpaceElement implements ISpace {
         this.showUnpublishedLinks = showUnpublishedLinks;
     }
 
-    public Boolean getHasIncomingLinks() {
-        return hasIncomingLinks;
+    public Boolean hasIncomingLinks() {
+        return incomingLinks;
     }
 
-    public void setHasIncomingLinks(Boolean hasIncomingLinks) {
-        this.hasIncomingLinks = hasIncomingLinks;
+    public void setIncomingLinks(Boolean incomingLinks) {
+        this.incomingLinks = incomingLinks;
     }
     
 }
