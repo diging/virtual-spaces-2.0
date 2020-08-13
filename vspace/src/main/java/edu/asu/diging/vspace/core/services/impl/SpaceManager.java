@@ -256,12 +256,12 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
-    public Iterable<Space> getAllSpacesWithIncomingLinkInfo(Iterable<Space> spaceList) {
-        Iterator<Space> iterator = spaceList.iterator();
+    public Iterable<Space> addIncomingLinkInfoToAllSpaces(Iterable<Space> allSpaces) {
+        Iterator<Space> iterator = allSpaces.iterator();
         while(iterator.hasNext()) {
             Space space = iterator.next();
             space.setIncomingLinks( (spaceLinkRepo.getLinkedFromSpaces(space.getId())).size() > 0 ? true : false );
         }
-        return spaceList;
+        return allSpaces;
     }
 }

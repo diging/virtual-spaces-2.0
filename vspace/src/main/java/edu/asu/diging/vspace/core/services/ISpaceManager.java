@@ -30,6 +30,6 @@ public interface ISpaceManager {
     
     List<SpaceLink> getIncomingLinks(String id);
     
-    Iterable<Space> getAllSpacesWithIncomingLinkInfo(Iterable<Space> spacesList);
+    Iterable<Space> addIncomingLinkInfoToAllSpaces(Iterable<Space> allSpaces);
 
 }
