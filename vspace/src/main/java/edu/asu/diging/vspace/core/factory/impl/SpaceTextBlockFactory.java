@@ -10,13 +10,6 @@ import edu.asu.diging.vspace.core.model.impl.SpaceTextBlock;
 @Service
 public class SpaceTextBlockFactory implements ISpaceTextBlockFactory {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.factory.impl.IModuleLinkFactory#createModuleLink(
-     * java.lang.String, edu.asu.diging.vspace.core.model.ISpace)
-     */
     @Override
     public ISpaceTextBlock createSpaceTextBlock(String text, ISpace space) {
         ISpaceTextBlock textBlock = new SpaceTextBlock();
@@ -24,5 +17,5 @@ public class SpaceTextBlockFactory implements ISpaceTextBlockFactory {
         textBlock.setSpace(space);
         return textBlock;
     }
-   
+
 }

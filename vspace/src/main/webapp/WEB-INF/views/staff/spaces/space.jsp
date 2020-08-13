@@ -49,11 +49,29 @@ function showTextBox() {
 function getTextArea(x,y) {
     var posX = $("#bgImage").position().left;
 	var posY = $("#bgImage").position().top;
-    var text = $('<div id="text"><textarea></textarea></div>');
+    var text = $('<div id="text"><textarea id="t"></textarea></div>');
     text.css('position', 'absolute');
     text.css('left', x + posX);
     text.css('top', y + posY);
 	$("#space").append(text);
+	
+	var t = document.getElementById('t'),
+    tHeight = t.clientHeight,
+    tWidth = t.clientWidth;
+	$("#textBoxWidthID").val(tWidth);
+    $("#textBoxHeightID").val(tHeight);
+	t.onmouseup = function (e) {
+    if (tHeight !== t.clientHeight || tWidth !== t.clientWidth ) { 
+        console.log('size change');
+        console.log(t.value);
+        tHeight = t.clientHeight;
+        tWidth = t.clientWidth;
+    }
+    $("#textBoxWidthID").val(tWidth);
+    $("#textBoxHeightID").val(tHeight);
+    $("#textContentID").val(t.value);
+};
+
   }
 
 	<c:forEach items="${spaceLinks}" var="link" varStatus="loop">
@@ -229,6 +247,22 @@ function getTextArea(x,y) {
         });
 	}
 	</c:forEach>
+	
+	 <c:forEach items="${spaceTextBlocks}" var="block" varStatus="loop">
+	{
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		
+		var block;
+		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea>"${block.spaceTextBlock.text}"</textarea></span>');
+		
+		block.css('position', 'absolute');
+		block.css('left', ${block.positionX} + posX);
+		block.css('top', ${block.positionY} + posY);
+		block.css('font-size', "12px");
+		$("#space").append(block);
+	}
+	</c:forEach> 
 	
 	// --------- draggable modals -----------
 	$("#createSpaceLinkAlert").draggable();
@@ -1009,7 +1043,15 @@ function getTextArea(x,y) {
         $("#module_label").remove();
         $("#createModuleLinkAlert").hide();  
         $('#errorAlert').hide();
-    }); 
+    });
+	
+	$("#cancelAddTextBlockBtn").click(function() {
+        storeX = null;
+        storeY = null;
+        $("#textContentID").val(""); 
+        $("#addTextFormInfo").hide();  
+        $('#errorAlert').hide();
+    });
     
     $("#cancelExternalLinkBtn").click(function() {
         storeX = null;
@@ -1865,10 +1907,7 @@ function getTextArea(x,y) {
 <form id="addTextForm">
     <div id="addTextFormInfo" class="alert alert-secondary" role="alert"
         style="cursor: move; width: 250px; height: 400px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-        <p class="float-right">
-            <a href="#" id="closeaddTextFormInfo"><span
-                data-feather="x-square"></span></a>
-        </p>
+
         <div class="row">
             <div class="col">
                 <small>Please click on the image where you want to place the
@@ -1917,10 +1956,8 @@ function getTextArea(x,y) {
                 <button id="addTextBlockBtn" type="reset"
                     class="btn btn-primary btn-xs">Save</button>
             </div>
-            <div class="col-sm-8">
-                <button id="deleteTextBlockBtn" type="reset"
-                    class="btn btn-primary btn-xs">Delete</button>
-            </div>
+            <button id="cancelAddTextBlockBtn" type="reset"
+				class="btn btn-light btn-xs">Cancel</button>
         </div>
     </div>
 </form>

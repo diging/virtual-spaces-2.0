@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,28 +26,33 @@ import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 public class SpaceTextBlockManager implements ISpaceTextBlockManager{
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ISpaceTextBlockFactory spaceTextBlockFactory;
 
     @Autowired
     private ISpaceTextBlockDisplayFactory spaceTextBlockDisplayFactory;
-    
+
     @Autowired
     private SpaceTextBlockRepository spaceTextBlockRepo;
-    
+
     @Autowired
     private SpaceTextBlockDisplayRepository spaceTextBlockDisplayRepo;
-    
+
     @Override
     public ISpaceTextBlockDisplay createTextBlock(String id, float positionX, float positionY, String text,
             float height, float width)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+                    throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
         ISpace source = spaceManager.getSpace(id);
         ISpaceTextBlock textBlock=spaceTextBlockFactory.createSpaceTextBlock(text, source);
-        ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock);
+        ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width);
         textBlock=spaceTextBlockRepo.save((SpaceTextBlock) textBlock);
         return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplay);
     }
-   
+
+    @Override
+    public List<ISpaceTextBlockDisplay> getSpaceTextBlockDisplays(String spaceId) {
+        return spaceTextBlockDisplayRepo.findSpaceTextBlockDisplaysForSpace(spaceId);
+    }
+
 }

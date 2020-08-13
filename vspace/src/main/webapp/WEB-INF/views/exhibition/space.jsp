@@ -163,6 +163,21 @@ function drawLinks() {
           });
     }
     </c:forEach>
+    <c:forEach items="${spaceTextBlocks}" var="block" varStatus="loop">
+	{
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		
+		var block;
+		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea style="height:${block.heigth}px; width:${block.width}px;">${block.spaceTextBlock.text}</textarea></span>');
+		
+		block.css('position', 'absolute');
+		block.css('left', ${block.positionX} + posX);
+		block.css('top', ${block.positionY} + posY);
+		block.css('font-size', "12px");
+		$("#space").append(block);
+	}
+	</c:forEach> 
     feather.replace();
 }
 </script>
