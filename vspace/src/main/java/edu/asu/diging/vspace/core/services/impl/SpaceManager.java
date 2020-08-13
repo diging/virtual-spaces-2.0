@@ -255,7 +255,8 @@ public class SpaceManager implements ISpaceManager {
         return spaceLinkRepo.getLinkedFromSpaces(id);
     }
     
-    public Iterable<Space> getAllSpaces(Iterable<Space> spaceList) {
+    @Override
+    public Iterable<Space> getAllSpacesWithIncomingLinkInfo(Iterable<Space> spaceList) {
         Iterator<Space> iterator = spaceList.iterator();
         while(iterator.hasNext()) {
             Space space = iterator.next();
