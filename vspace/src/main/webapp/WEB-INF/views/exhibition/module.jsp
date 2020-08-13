@@ -51,7 +51,7 @@ $( document ).ready(function() {
             <c:if test="${prevSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div style="position: fixed; z-index: 10; top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
+                    <div style="position: fixed; z-index: 90; top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
                         <svg class="Ellipse_11">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_11_Class" rx="20" ry="20"
@@ -71,7 +71,7 @@ $( document ).ready(function() {
             <c:if test="${nextSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
-                    <div style="position: fixed; top: 30%; right: 16%; z-index: 10;" class="slideshow_next slideshow_next_Class">
+                    <div style="position: fixed; top: 30%; right: 16%; z-index: 5;" class="slideshow_next slideshow_next_Class">
                         <svg class="Ellipse_12">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_12_Class" rx="20" ry="20"
@@ -90,19 +90,19 @@ $( document ).ready(function() {
             </c:if>
         </div>
         <a  href="<c:url value="/exhibit/space/${spaceId}" />">
-            <div style="position: fixed; z-index: 10;" class="exit_to_space_Class">
+            <div style="position: fixed; z-index: 100;" class="exit_to_space_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
 						class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
                     </ellipse>
                 </svg>
                 <i class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
-                <span style="z-index: 100;" class="tooltiptext">Go To Space</span>
+                <span style="position: absolute; z-index: 100;" class="tooltiptext">Go To Space</span>
             </div>
         </a>
         <a
             href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?clearHistory=true" />">
-            <div style="position: fixed; z-index: 10;" class="exit_to_branchingPoint_Class">
+            <div style="position: fixed; z-index: 80;" class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_Class" rx="22" ry="22" cx="22"
@@ -110,12 +110,12 @@ $( document ).ready(function() {
                     </ellipse>
                 </svg>
                 <i class="fas fa-fast-backward fa-2x Icon_awesome_angle_double_left"></i>
-                <span style="z-index: 100;" class="tooltiptext">Go To Start Sequence of Module</span>
+                <span style="z-index: 80;" class="tooltiptext">Go To Start Sequence of Module</span>
             </div>
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
         <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPoint.id}?back=true" />">
-            <div style="position: fixed; z-index: 10;" class="exit_to_previousChoice_Class">
+            <div style="position: fixed; z-index: 70;" class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_be_Class" rx="22" ry="22"
@@ -123,11 +123,11 @@ $( document ).ready(function() {
                     </ellipse>
                 </svg>
                 <i class="fas fa-step-backward fa-2x Icon_awesome_angle_double_left"></i>
-                <span style="z-index: 100;" class="tooltiptext">Go back to ${previousBranchingPoint.name}</span>
+                <span style="z-index: 70;" class="tooltiptext">Go back to ${previousBranchingPoint.name}</span>
             </div>
         </a>
         </c:if>
-        <div id="blocks" style="position: relative" class="Group_8_Class">
+        <div id="blocks" class="Group_8_Class">
             <h3>${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
                 var="contents">
