@@ -169,12 +169,15 @@ function drawLinks() {
 		var posY = $("#bgImage").position().top;
 		
 		var block;
-		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea style="height:${block.heigth}px; width:${block.width}px;">${block.spaceTextBlock.text}</textarea></span>');
+		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea class="textBlock" style="height:${block.heigth}px; width:${block.width}px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
 		
 		block.css('position', 'absolute');
-		block.css('left', ${block.positionX} + posX);
-		block.css('top', ${block.positionY} + posY);
-		block.css('font-size', "12px");
+		let height = parseInt($("#bgImage").css("height"));
+        let width = parseInt($("#bgImage").css("width"));
+        let	linkPosX=(width*${block.positionX})/${display.width};
+        let	linkPosY=(height*${block.positionY})/${display.height};
+		block.css('left', linkPosX + posX);
+		block.css('top', linkPosY + posY);
 		$("#space").append(block);
 	}
 	</c:forEach> 
@@ -193,6 +196,15 @@ function drawLinks() {
     z-index: 1;
     left: -38px;
     top: 27px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.Info_cz_Class .textBlock{
+    color: white;
+    font-size: 12px padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
     background: rgba(0, 0, 0, 0.6);
 }
 

@@ -26,7 +26,7 @@ public class AddSpaceTextBlockController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
 
@@ -48,7 +48,7 @@ public class AddSpaceTextBlockController {
             node.put("errorMessage", "No block coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
-        
+
         ISpaceTextBlockDisplay display=null;
         try {
             display = spaceTextBlockManager.createTextBlock(id, new Float(x), new Float(y),

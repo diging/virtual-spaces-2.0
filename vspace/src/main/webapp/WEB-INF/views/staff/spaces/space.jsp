@@ -49,28 +49,28 @@ function showTextBox() {
 function getTextArea(x,y) {
     var posX = $("#bgImage").position().left;
 	var posY = $("#bgImage").position().top;
-    var text = $('<div id="text"><textarea id="t"></textarea></div>');
+    var text = $('<div id="text" class="textDiv"><textarea id="textB" name="textBlock" type="textarea" class="textBlock"></textarea></div>');
     text.css('position', 'absolute');
     text.css('left', x + posX);
     text.css('top', y + posY);
 	$("#space").append(text);
 	
-	var t = document.getElementById('t'),
-    tHeight = t.clientHeight,
-    tWidth = t.clientWidth;
+	var textB = document.getElementById('textB'),
+    tHeight = textB.clientHeight,
+    tWidth = textB.clientWidth;
 	$("#textBoxWidthID").val(tWidth);
     $("#textBoxHeightID").val(tHeight);
-	t.onmouseup = function (e) {
-    if (tHeight !== t.clientHeight || tWidth !== t.clientWidth ) { 
+    textB.onmouseup = function (e) {
+    if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) { 
         console.log('size change');
-        console.log(t.value);
-        tHeight = t.clientHeight;
-        tWidth = t.clientWidth;
+        console.log(textB.value);
+        tHeight = textB.clientHeight;
+        tWidth = textB.clientWidth;
     }
     $("#textBoxWidthID").val(tWidth);
     $("#textBoxHeightID").val(tHeight);
-    $("#textContentID").val(t.value);
-};
+    $("#textContentID").val(textB.value);
+	};
 
   }
 
@@ -254,7 +254,7 @@ function getTextArea(x,y) {
 		var posY = $("#bgImage").position().top;
 		
 		var block;
-		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea>"${block.spaceTextBlock.text}"</textarea></span>');
+		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} textDiv"><textarea class="textBlock" style="height:${block.heigth}px; width:${block.width}px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
 		
 		block.css('position', 'absolute');
 		block.css('left', ${block.positionX} + posX);
@@ -1297,6 +1297,15 @@ function getTextArea(x,y) {
 
 .Info_cz_Class:hover .tooltiptext {
     visibility: visible;
+}
+
+.textDiv .textBlock{
+    color: white;
+    font-size: 12px padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.6);
 }
 </style>
 

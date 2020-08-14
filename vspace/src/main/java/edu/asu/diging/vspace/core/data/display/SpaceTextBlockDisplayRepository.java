@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceTextBlockDisplay;
 @Repository
 @JaversSpringDataAuditable
 public interface SpaceTextBlockDisplayRepository extends PagingAndSortingRepository<SpaceTextBlockDisplay, String> {
-    
+
     @Query("SELECT d FROM SpaceTextBlockDisplay d WHERE d.spaceTextBlock.space.id = ?1")
     public List<ISpaceTextBlockDisplay> findSpaceTextBlockDisplaysForSpace(String spaceId);
 

@@ -18,36 +18,24 @@ public class SpaceTextBlockDisplay extends VSpaceElement implements ISpaceTextBl
     @Id
     @GeneratedValue(generator = "spacetextblock_display_id_generator")
     @GenericGenerator(name = "spacetextblock_display_id_generator", 
-      parameters = @Parameter(name = "prefix", value = "STBD"),
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+        parameters = @Parameter(name = "prefix", value = "STBD"),
+        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = SpaceTextBlock.class)
     private ISpaceTextBlock spaceTextBlock;
-    
+
     private float positionX;
     private float positionY;
-    
+
     private float height;
     private float width;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.display.impl.IModuleLinkDisplay#getId()
-     */
     @Override
     public String getId() {
         return id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.display.impl.IModuleLinkDisplay#setId(java.
-     * lang.String)
-     */
     @Override
     public void setId(String id) {
         this.id = id;
