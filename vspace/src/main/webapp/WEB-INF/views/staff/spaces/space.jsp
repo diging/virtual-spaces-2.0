@@ -64,13 +64,22 @@ $( document ).ready(function() {
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-${link.link.id}");
 		inputLinkedSpace.setAttribute("value", "${link.link.targetSpace.id}");
-
+		
+		var unpublishedSpaceElement=$('<c:if test="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass" style="color: #bfb168;"></i></c:if>')
+		unpublishedSpaceElement.css('position', 'absolute');
+		unpublishedSpaceElement.css('left', ${link.positionX} + posX + 25);
+		unpublishedSpaceElement.css('top', ${link.positionY} + posY - 13);
+		unpublishedSpaceElement.css('transform', 'rotate(${link.rotation}deg)');
+		unpublishedSpaceElement.css('font-size', "12px");
+		
 		//append to form element that you want .
 		$("#space").append(inputRotation);
 		$("#space").append(inputLabel);
 		$("#space").append(inputType);
 		$("#space").append(inputLinkedSpace);
 		$("#space").append(link);
+		$("#space").append(unpublishedSpaceElement);
+		//$(".spaceLink-${link.link.id}").append(unpublishedSpaceElement);	
 		
 		$(".slabel-${link.link.id}").css({
 			'transform': 'rotate(0deg)',
@@ -1194,7 +1203,9 @@ $( document ).ready(function() {
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by
 	${space.createdBy}. <br> Modified on <span class="date">${space.modificationDate}</span>
-	by ${space.modifiedBy}.
+	by ${space.modifiedBy}.<br><br>
+    <i class="fa fa-exclamation-triangle fa-sm" aria-hidden="true"
+        style="color: #bfb168;"></i> indicates the links to unpublished spaces.
 </div>
 <div style="padding-bottom: 10px;">
 	<c:url value="/staff/space/${space.id}/status" var="postUrl" />
@@ -1316,7 +1327,7 @@ $( document ).ready(function() {
 					class="form-control-xs target">
 					<option selected value="">Choose...</option>
 					<c:forEach items="${spaces}" var="space">
-						<option value="${space.id}">${space.name}</option>
+						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}">(Unpublished)</c:if></option>
 					</c:forEach>
 				</select>
 			</div>
@@ -1581,7 +1592,7 @@ $( document ).ready(function() {
 				<select id="spaceLinkIdEdit" name="linkedSpace"
 					class="form-control-xs spacelink-targetEdit" style="width: 100%;">
 					<c:forEach items="${spaces}" var="space">
-						<option value="${space.id}">${space.name}</option>
+						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}">(Unpublished)</c:if></option>
 					</c:forEach>
 				</select>
 			</div>
