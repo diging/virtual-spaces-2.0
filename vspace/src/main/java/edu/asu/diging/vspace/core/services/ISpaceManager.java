@@ -12,7 +12,7 @@ import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 public interface ISpaceManager {
 
     CreationReturnValue storeSpace(ISpace space, byte[] image, String filename);
-    
+
     CreationReturnValue storeSpace(ISpace space, IVSImage image);
 
     ISpace getSpace(String id);
@@ -25,8 +25,10 @@ public interface ISpaceManager {
 
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
 
+    List<ISpace> getSpacesWithImageId(String imageId);
+
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
-    
+
     List<SpaceLink> getIncomingLinks(String id);
 
 }

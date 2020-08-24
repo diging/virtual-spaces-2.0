@@ -82,6 +82,7 @@ $( document ).ready(function() {
 				<tr>
 					<th scope="col" sort-prop="filename"><a href="#">Filename</a></th>
 					<th scope="col" sort-prop="name"><a href="#">Name</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Space</a></th>
 					<th scope="col" sort-prop="createdBy"><a href="#">Created
 							By</a></th>
 					<th scope="col" sort-prop="creationDate"><a href="#">Created
@@ -97,6 +98,11 @@ $( document ).ready(function() {
 								src="<c:url value="/api/image/${image.id}"/>"
 								class="img-thumbnail"> ${image.filename} </a></th>
 						<td>${image.name}</td>
+                        <td>
+                        <c:forEach items="${imageToSpaces[image.id]}" var="space">
+                            ${space.name}<br>
+                        </c:forEach>    
+                        </td>
 						<td>${image.createdBy}</td>
 						<td><span class="date">${image.creationDate}</span></td>
 						<td><span id="tags-${image.id}" class="tag"> <c:forEach

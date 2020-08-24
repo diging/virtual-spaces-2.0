@@ -247,10 +247,17 @@ public class SpaceManager implements ISpaceManager {
 
         return spaceLinkRepo.getLinkedSpaces(id);
     }
-    
+
     @Override
     public List<SpaceLink> getIncomingLinks(String id) {
 
         return spaceLinkRepo.getLinkedFromSpaces(id);
+    }
+
+    @Override
+    public List<ISpace> getSpacesWithImageId(String imageId) {
+        List<ISpace> spaces = new ArrayList<>();
+        spaceRepo.findAllByImage_Id(imageId).forEach(space -> spaces.add(space));
+        return spaces;
     }
 }
