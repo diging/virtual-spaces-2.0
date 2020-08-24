@@ -32,7 +32,7 @@ public class ListSpacesController {
     @RequestMapping("/staff/space/list")
     public String listSpaces(Model model) {
 
-        model.addAttribute("spaces", spaceManager.addIncomingLinkInfoToAllSpaces(spaceRepo.findAll()));
+        model.addAttribute("spaces", spaceManager.addIncomingLinkInfoToSpaces(spaceRepo.findAll()));
         IExhibition startExhibition = exhibitionManager.getStartExhibition();
         if(startExhibition!=null) {
             model.addAttribute("startSpace", startExhibition.getStartSpace());
