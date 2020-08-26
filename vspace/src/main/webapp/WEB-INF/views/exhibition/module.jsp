@@ -38,15 +38,13 @@ $( document ).ready(function() {
     function closeNav(){
         document.getElementById("mySidenav").style.width = "0px";
     }
-</script>
+</script> 
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-        <div style="position: fixed; top:4%; left:21%; background-color: white; z-index: 50;" class="textDiv">
-            <h3>${module.name}</h3>
-        </div>
-        <div style="position: fixed; z-index: 10;" class="slideNumberClass">
-            <p>Slide ${currentNumOfSlide}/${numOfSlides}</p>
-        </div>
+    	<div style="position: fixed; z-index: 100; top:6%; width: 100%">
+            <h3 class="textDiv" style="background-color: white;">${module.name}</h3>
+        	<p class="slideNumberClass" style="position: fixed; left:1%;">Slide ${currentNumOfSlide}/${numOfSlides}</p>
+    	</div>
         <div class="Group_7_Class">
             <c:if test="${prevSlide !=  ''}">
                 <a
@@ -90,14 +88,14 @@ $( document ).ready(function() {
             </c:if>
         </div>
         <a  href="<c:url value="/exhibit/space/${spaceId}" />">
-            <div style="position: fixed; z-index: 100;" class="exit_to_space_Class">
+            <div style="position: fixed; z-index: 100; top: 20%" class="exit_to_space_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
 						class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
                     </ellipse>
                 </svg>
                 <i class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
-                <span style="position: absolute; z-index: 100;" class="tooltiptext">Go To Space</span>
+                <span style="z-index: 100;" class="tooltiptext">Go To Space</span>
             </div>
         </a>
         <a
