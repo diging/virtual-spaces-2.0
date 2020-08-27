@@ -148,13 +148,19 @@
         <!-- Begin page content -->
         <main role="main" class="flex-shrink-0"
             style="padding-top: 20px;">
-            <div class="pushContent"></div>
-            <c:if
-            test="${showAlert eq true}">
+        <div class="pushContent"></div>
+        <c:if test="${showAlert eq true}">
             <div id="errorMsg"
                 class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
-        </c:if> <tiles:insertAttribute name="content" /> 
+            <c:if test="${isExhibition eq true}">
+                <div>
+                    <img
+                        src='<c:url value="/resources/images/404_Vspace-01.png"></c:url>'
+                        style="max-width: 1300px; width: 100%;">
+                </div>
+            </c:if>
+        </c:if> <tiles:insertAttribute name="content" />
         <div class="push"></div>
         </main>
     </div>

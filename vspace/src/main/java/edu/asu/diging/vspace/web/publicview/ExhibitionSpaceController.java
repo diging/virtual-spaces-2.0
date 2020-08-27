@@ -70,6 +70,7 @@ public class ExhibitionSpaceController {
             model.addAttribute("alertType", "danger");
             model.addAttribute("messageType","invalidSpace");
             model.addAttribute("message", "Access Denied.");
+            model.addAttribute("isExhibition", true);
         }
 
         if(sequenceHistory.hasHistory()) {
