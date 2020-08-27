@@ -79,7 +79,6 @@ $( document ).ready(function() {
 		$("#space").append(inputLinkedSpace);
 		$("#space").append(link);
 		$("#space").append(unpublishedSpaceElement);
-		//$(".spaceLink-${link.link.id}").append(unpublishedSpaceElement);	
 		
 		$(".slabel-${link.link.id}").css({
 			'transform': 'rotate(0deg)',
