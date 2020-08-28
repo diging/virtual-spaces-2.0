@@ -153,13 +153,6 @@
             <div id="errorMsg"
                 class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
-            <c:if test="${isExhibition eq true}">
-                <div>
-                    <img
-                        src='<c:url value="/resources/images/404_Vspace-01.png"></c:url>'
-                        style="max-width: 1300px; width: 100%;">
-                </div>
-            </c:if>
         </c:if> <tiles:insertAttribute name="content" />
         <div class="push"></div>
         </main>
