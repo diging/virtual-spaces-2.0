@@ -766,7 +766,15 @@ $( document ).ready(function() {
 		link.css('color', 'rgba(128,128,128,1)');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		link.css('font-size', "12px");
-		
+		// Added by Prashant to add icon for space link start
+		console.log(spaceLink);
+		var unpublishedSpaceElement=$('<c:if test="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass" style="color: #bfb168;"></i></c:if>')
+		unpublishedSpaceElement.css('position', 'absolute');
+		unpublishedSpaceElement.css('left', spaceLink["x"] + posX + 25);
+		unpublishedSpaceElement.css('top', spaceLink["y"] + posY - 13);
+		unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		unpublishedSpaceElement.css('font-size', "12px");
+		// Added by Prashant to add icon for space link end
 		if (spaceLink["id"]) {
 			/* link.attr("data-link-id", "Info_cz_Class"); */
 			link.attr("class", spaceLink["id"]);
