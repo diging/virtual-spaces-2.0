@@ -1308,7 +1308,7 @@ $( document ).ready(function() {
 				<label><small>Type:</small> </label>
 			</div>
 			<div class="col-sm-8">
-				<select id="type" name="type" class="form-control-xs target">
+				<select id="type" name="type" class="form-control-xs target"  style="width: inherit;">
 					<option selected value="">Choose...</option>
 					<option value="IMAGE">Image</option>
 					<option value="ARROW">Link</option>
@@ -1323,10 +1323,10 @@ $( document ).ready(function() {
 			</div>
 			<div class="col-sm-7">
 				<select id="linkedSpace" name="linkedSpace"
-					class="form-control-xs target">
+					class="form-control-xs target" style="width: inherit;">
 					<option selected value="">Choose...</option>
 					<c:forEach items="${spaces}" var="space">
-						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}">(Unpublished)</c:if></option>
+						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}"> (Unpublished)</c:if></option>
 					</c:forEach>
 				</select>
 			</div>
@@ -1575,7 +1575,7 @@ $( document ).ready(function() {
 			</div>
 			<div class="col-sm-8">
 				<select id="typeSpaceEdit" name="type"
-					class="form-control-xs spacelink-targetEdit">
+					class="form-control-xs spacelink-targetEdit" style="width: inherit;">
 					<option value="IMAGE">Image</option>
 					<option value="ARROW">Link</option>
 					<option value="ALERT">Alert</option>
@@ -1589,7 +1589,7 @@ $( document ).ready(function() {
 			</div>
 			<div class="col-sm-7">
 				<select id="spaceLinkIdEdit" name="linkedSpace"
-					class="form-control-xs spacelink-targetEdit" style="width: 100%;">
+					class="form-control-xs spacelink-targetEdit" style="width: inherit;">
 					<c:forEach items="${spaces}" var="space">
 						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}">(Unpublished)</c:if></option>
 					</c:forEach>
