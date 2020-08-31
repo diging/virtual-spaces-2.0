@@ -349,6 +349,7 @@ $( document ).ready(function() {
 	        	spaceLinkInfo["displayId"]=linkData["displayId"];
 	        	spaceLinkInfo["x"]=linkData["x"];
 	        	spaceLinkInfo["y"]=linkData["y"];
+	        	spaceLinkInfo["likedSpaceStatus"]=linkData["likedSpaceStatus"];
 	            showSpaceLink(spaceLinkInfo, true);
 	            $("#space_label").attr("id","");
 	            $("#link").attr("id","");
@@ -733,7 +734,6 @@ $( document ).ready(function() {
 
 	// --------- show links functions --------------
 	function showSpaceLink(spaceLink, show) {
-	    console.log("In Show Space Link");
 		$("#space_label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
@@ -758,7 +758,15 @@ $( document ).ready(function() {
 			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
 		}
 		if(show) {
-			//link.find("div").css('fill', 'rgba(128,128,128,1)');
+		    var unpublishedSpaceElement;
+			if(spaceLink["likedSpaceStatus"]=="UNPUBLISHED"){
+				unpublishedSpaceElement=$('<i class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass" style="color: #bfb168;"></i>')
+				unpublishedSpaceElement.css('position', 'absolute');
+				unpublishedSpaceElement.css('left', spaceLink["x"] + posX + 25);
+				unpublishedSpaceElement.css('top', spaceLink["y"] + posY - 13);
+				unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+				unpublishedSpaceElement.css('font-size', "12px");
+			}
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
@@ -766,15 +774,6 @@ $( document ).ready(function() {
 		link.css('color', 'rgba(128,128,128,1)');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		link.css('font-size', "12px");
-		// Added by Prashant to add icon for space link start
-		console.log(spaceLink);
-		var unpublishedSpaceElement=$('<c:if test="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass" style="color: #bfb168;"></i></c:if>')
-		unpublishedSpaceElement.css('position', 'absolute');
-		unpublishedSpaceElement.css('left', spaceLink["x"] + posX + 25);
-		unpublishedSpaceElement.css('top', spaceLink["y"] + posY - 13);
-		unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-		unpublishedSpaceElement.css('font-size', "12px");
-		// Added by Prashant to add icon for space link end
 		if (spaceLink["id"]) {
 			/* link.attr("data-link-id", "Info_cz_Class"); */
 			link.attr("class", spaceLink["id"]);
@@ -793,6 +792,7 @@ $( document ).ready(function() {
 		}
 
 		$("#space").append(link);
+		$("#space").append(unpublishedSpaceElement);
 		$("#link").append(space_label);
 
 		feather.replace();

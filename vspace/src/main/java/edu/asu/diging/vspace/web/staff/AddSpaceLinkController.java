@@ -77,6 +77,7 @@ public class AddSpaceLinkController {
         linkNode.put("displayId", display.getId());
         linkNode.put("x", display.getPositionX());
         linkNode.put("y", display.getPositionY());
+        linkNode.put("likedSpaceStatus", spaceManager.getSpace(linkedSpaceId).getSpaceStatus().toString());
 
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }
