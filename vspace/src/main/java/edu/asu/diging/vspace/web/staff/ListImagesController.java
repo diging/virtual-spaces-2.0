@@ -1,7 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -48,7 +49,7 @@ public class ListImagesController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
         List<IVSImage> images = imageService.getImages(pageNo, sortedBy, order);
-        LinkedHashMap<String, List<ISpace>> imageToSpaces = new LinkedHashMap<String, List<ISpace>>();
+        Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for(IVSImage image : images) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
             if(spaces.size()>0)

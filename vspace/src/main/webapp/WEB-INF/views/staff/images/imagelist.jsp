@@ -1,7 +1,7 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+    uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script src="<c:url value="/resources/bootpag/js/bootpag.min.js" />"></script>
@@ -56,90 +56,100 @@ $( document ).ready(function() {
 <h1>Images</h1>
 <style>
 .pagination>li>a {
-	border: 1px solid #009999;
-	padding: 5px;
-	color: #000;
-	font-size: 15px;
+    border: 1px solid #009999;
+    padding: 5px;
+    color: #000;
+    font-size: 15px;
 }
 
 .pagination>li.active>a {
-	background: #009999;
-	color: #fff;
-	font-size: 15px;
+    background: #009999;
+    color: #fff;
+    font-size: 15px;
 }
 
 .img-thumbnail {
-	height: 100px;
-	width: 140px;
+    height: 100px;
+    width: 140px;
 }
 </style>
 <c:choose>
-	<c:when test="${totalImageCount gt 0}">
-		<div style="padding-bottom: 20px;">This virtual exhibition
-			contains the following images.</div>
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col" sort-prop="filename"><a href="#">Filename</a></th>
-					<th scope="col" sort-prop="name"><a href="#">Name</a></th>
-                    <th scope="col" sort-prop="name"><a href="#">Space</a></th>
-					<th scope="col" sort-prop="createdBy"><a href="#">Created
-							By</a></th>
-					<th scope="col" sort-prop="creationDate"><a href="#">Created
-							Date</a></th>
-					<th scope="col" sort-prop="tag">Tag</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach items="${images}" var="image">
-					<tr>
-						<th scope="row"><a
-							href="<c:url value="/staff/display/image/${image.id}"/>"><img
-								src="<c:url value="/api/image/${image.id}"/>"
-								class="img-thumbnail"> ${image.filename} </a></th>
-						<td>${image.name}</td>
-                        <td>
-                        <c:forEach items="${imageToSpaces[image.id]}" var="space">
+    <c:when test="${totalImageCount gt 0}">
+        <div style="padding-bottom: 20px;">This virtual exhibition
+            contains the following images.</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a
+                        href="#">Filename</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Name</a></th>
+                    <th scope="col" sort-prop="space">Space</th>
+                    <th scope="col" sort-prop="createdBy"><a
+                        href="#">Created By</a></th>
+                    <th scope="col" sort-prop="creationDate"><a
+                        href="#">Created Date</a></th>
+                    <th scope="col" sort-prop="tag">Tag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${images}" var="image">
+                    <tr>
+                        <th scope="row"><a
+                            href="<c:url value="/staff/display/image/${image.id}"/>"><img
+                                src="<c:url value="/api/image/${image.id}"/>"
+                                class="img-thumbnail">
+                                ${image.filename} </a></th>
+                        <td>${image.name}</td>
+                        <td><c:forEach
+                                items="${imageToSpaces[image.id]}"
+                                var="space">
                             ${space.name}<br>
-                        </c:forEach>    
-                        </td>
-						<td>${image.createdBy}</td>
-						<td><span class="date">${image.creationDate}</span></td>
-						<td><span id="tags-${image.id}" class="tag"> <c:forEach
-									items="${image.categories}" var="cat">
-									<span id="category-badge-${image.id}-${cat}"
-										data-category="${cat}" class="badge badge-warning"> <spring:eval
-											expression="@configFile.getProperty('image_category_' + cat)" />
-										<i data-image-id="${image.id}" data-category="${cat}"
-										class="fas fa-times removeTag"></i>
-									</span>
-								</c:forEach>
-						</span>
-							<form id="changeTagForm"
-								action="<c:url value="/staff/images/" />${image.id}/tag?${_csrf.parameterName}=${_csrf.token}"
-								method="post">
-								<input type="hidden" name="imageID" value="${image.id}"
-									id="imageID" /> <select id="changeTag" name="tag"
-									onChange="toggleChange(this.form, '${image.id}')"
-									class="form-control form-control-sm" style="width: 68px;">
-									<option>Assign a tag</option>
-									<c:forEach items="${imageCategories}" var="catTag">
-										<option value="${catTag}"><spring:eval
-												expression="@configFile.getProperty('image_category_' + catTag)" /></option>
-									</c:forEach>
-								</select>
-							</form>
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		<div id="page-selection"></div>
-	</c:when>
-	<c:otherwise>
-		<div style="padding-bottom: 20px;">There are no images in
-			Virtual Space.</div>
-	</c:otherwise>
+                            </c:forEach></td>
+                        <td>${image.createdBy}</td>
+                        <td><span class="date">${image.creationDate}</span></td>
+                        <td><span id="tags-${image.id}" class="tag">
+                                <c:forEach items="${image.categories}"
+                                    var="cat">
+                                    <span
+                                        id="category-badge-${image.id}-${cat}"
+                                        data-category="${cat}"
+                                        class="badge badge-warning">
+                                        <spring:eval
+                                            expression="@configFile.getProperty('image_category_' + cat)" />
+                                        <i data-image-id="${image.id}"
+                                        data-category="${cat}"
+                                        class="fas fa-times removeTag"></i>
+                                    </span>
+                                </c:forEach>
+                        </span>
+                            <form id="changeTagForm"
+                                action="<c:url value="/staff/images/" />${image.id}/tag?${_csrf.parameterName}=${_csrf.token}"
+                                method="post">
+                                <input type="hidden" name="imageID"
+                                    value="${image.id}" id="imageID" />
+                                <select id="changeTag" name="tag"
+                                    onChange="toggleChange(this.form, '${image.id}')"
+                                    class="form-control form-control-sm"
+                                    style="width: 68px;">
+                                    <option>Assign a tag</option>
+                                    <c:forEach
+                                        items="${imageCategories}"
+                                        var="catTag">
+                                        <option value="${catTag}"><spring:eval
+                                                expression="@configFile.getProperty('image_category_' + catTag)" /></option>
+                                    </c:forEach>
+                                </select>
+                            </form></td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+        <div id="page-selection"></div>
+    </c:when>
+    <c:otherwise>
+        <div style="padding-bottom: 20px;">There are no images in
+            Virtual Space.</div>
+    </c:otherwise>
 </c:choose>
 
 <script>

@@ -17,6 +17,6 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
 
     List<Space> findAllBySpaceStatus(SpaceStatus spaceStatus);
 
-    List<Space> findAllByImage_Id(String imageId);
+    List<Space> findAllByImageId(String imageId);
 
 }

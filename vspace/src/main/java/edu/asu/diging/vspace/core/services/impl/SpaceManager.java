@@ -258,7 +258,7 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public List<ISpace> getSpacesWithImageId(String imageId) {
         List<ISpace> spaces = new ArrayList<>();
-        spaceRepo.findAllByImage_Id(imageId).forEach(space -> spaces.add(space));
+        spaceRepo.findAllByImageId(imageId).forEach(space -> spaces.add(space));
         return spaces;
     }
         
