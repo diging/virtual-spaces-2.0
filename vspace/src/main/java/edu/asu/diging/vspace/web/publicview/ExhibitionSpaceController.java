@@ -66,7 +66,7 @@ public class ExhibitionSpaceController {
             model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
         }
         else {
-            return "badrequest";
+            return "redirect:/exhibit/404";
         }
 
         if(sequenceHistory.hasHistory()) {
