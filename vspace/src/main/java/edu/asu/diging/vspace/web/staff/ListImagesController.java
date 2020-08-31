@@ -52,7 +52,7 @@ public class ListImagesController {
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for(IVSImage image : images) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
-            if(spaces.size()>0)
+            if(spaces!=null && spaces.size()>0)
                 imageToSpaces.put(image.getId(), spaces);
         }
         model.addAttribute("imageToSpaces",imageToSpaces);
