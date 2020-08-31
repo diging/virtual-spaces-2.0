@@ -1228,6 +1228,7 @@ $( document ).ready(function() {
 		<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
 			<input class="btn btn-primary" type="submit" value="Submit" />
 		</p>
+        <input type="checkbox" name="showUnpublished" value="yes">Show Unpublished links?
 	</form:form>
 </div>
 
