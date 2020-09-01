@@ -102,8 +102,8 @@ $( document ).ready(function() {
                         <td>${image.name}</td>
                         <td><c:forEach
                                 items="${imageToSpaces[image.id]}"
-                                var="space">
-                            ${space.name}<br>
+                                var="space"><a href="<c:url value="/staff/space/${space.id}" />">
+                            ${space.name}</a>,<br>
                             </c:forEach></td>
                         <td>${image.createdBy}</td>
                         <td><span class="date">${image.creationDate}</span></td>
