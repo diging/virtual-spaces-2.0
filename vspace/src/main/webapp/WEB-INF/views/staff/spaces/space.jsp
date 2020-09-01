@@ -64,8 +64,7 @@ $( document ).ready(function() {
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-${link.link.id}");
 		inputLinkedSpace.setAttribute("value", "${link.link.targetSpace.id}");
-		
-		var unpublishedSpaceElement=$('<c:if test="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass" style="color: #bfb168;"></i></c:if>')
+		var unpublishedSpaceElement=$('<c:if test="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i data-link-id="unpublished-${link.link.id}" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-${link.link.id}" style="color: #bfb168;"></i></c:if>')
 		unpublishedSpaceElement.css('position', 'absolute');
 		unpublishedSpaceElement.css('left', ${link.positionX} + posX + 25);
 		unpublishedSpaceElement.css('top', ${link.positionY} + posY - 13);
@@ -349,7 +348,7 @@ $( document ).ready(function() {
 	        	spaceLinkInfo["displayId"]=linkData["displayId"];
 	        	spaceLinkInfo["x"]=linkData["x"];
 	        	spaceLinkInfo["y"]=linkData["y"];
-	        	spaceLinkInfo["likedSpaceStatus"]=linkData["likedSpaceStatus"];
+	        	spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
 	            showSpaceLink(spaceLinkInfo, true);
 	            $("#space_label").attr("id","");
 	            $("#link").attr("id","");
@@ -491,6 +490,7 @@ $( document ).ready(function() {
 	            spaceLinkInfo["displayId"]=linkData["displayId"];
 	            spaceLinkInfo["x"]=linkData["x"];
 	            spaceLinkInfo["y"]=linkData["y"];
+	            spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
 	            showSpaceLinkEdit(spaceLinkInfo, true);
 	            $('#spaceLinkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
 	            $('#spaceLinkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
@@ -605,6 +605,7 @@ $( document ).ready(function() {
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
+			  $('[data-link-id="unpublished-' + linkId + '"]').remove();
 			  hideLinkInfoTabs();
 			  $('a#'+linkId).remove();
 			  if ($("div#outgoingLinks a").length < 2) {
@@ -759,13 +760,15 @@ $( document ).ready(function() {
 		}
 		if(show) {
 		    var unpublishedSpaceElement;
-			if(spaceLink["likedSpaceStatus"]=="UNPUBLISHED"){
-				unpublishedSpaceElement=$('<i class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass" style="color: #bfb168;"></i>')
+			if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+				unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
 				unpublishedSpaceElement.css('position', 'absolute');
-				unpublishedSpaceElement.css('left', spaceLink["x"] + posX + 25);
-				unpublishedSpaceElement.css('top', spaceLink["y"] + posY - 13);
+				unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
+				unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
 				unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 				unpublishedSpaceElement.css('font-size', "12px");
+			}else{
+			    $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
 			}
 		}
 		link.css('position', 'absolute');
@@ -865,6 +868,25 @@ $( document ).ready(function() {
 		spaceLink["y"]=storeY;
 		var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
 		var selectedLabelClass = '.slabel-'+selectedSpaceLinkId;
+		var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
+		if(show) {
+		    var unpublishedSpaceElement;
+			if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+			    unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+				unpublishedSpaceElement.css('position', 'absolute');
+				unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
+				unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
+				unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
+				unpublishedSpaceElement.css('font-size', "12px");
+				$("#space").append(unpublishedSpaceElement);
+			}else{
+			    $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+			}
+		}
+		$(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
+	    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
+	    $(selectedUnpublishedIconClass).css({ 'left': parseInt(spaceLink["x"]) + posX + 25});
+	    $(selectedUnpublishedIconClass).css({ 'top': parseInt(spaceLink["y"]) + posY - 13});
 		updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"]);
 	}
 	
@@ -880,11 +902,13 @@ $( document ).ready(function() {
 	    var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 	    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
+	    $(selectedLinkClass).css({ 'position': 'absolute'});
 	    $(selectedLinkClass).css({ 'left': x + posX});
 	    $(selectedLinkClass).css({ 'top': y + posY});
 	    $(selectedLabelClass).text(linkLabel);
+	    $(selectedLabelClass).css({ 'position': 'absolute'});
 	    $(selectedLabelClass).css({ 'left': x + posX - 10});
-	    $(selectedLabelClass).css({ 'top': y + posY + 16});
+	    $(selectedLabelClass).css({ 'top': y + posY + 30});
 	    feather.replace();    
 	}
 	
@@ -1091,6 +1115,7 @@ $( document ).ready(function() {
         $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
         $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
         $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+        $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "#c1bb88");
         
         $("#bgImage").on("click", function(e){
 			e.preventDefault();

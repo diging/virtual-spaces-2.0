@@ -27,7 +27,7 @@ public class EditSpaceLinksController {
         return null;
     }
 
-    protected ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url, String label, String displayType, String linkedId) throws IOException{
+    protected ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url, String label, String displayType, String linkedId, String linkedSpaceStatus) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", id);
@@ -38,6 +38,9 @@ public class EditSpaceLinksController {
         linkNode.put("label", label);
         linkNode.put("displayType", displayType);
         linkNode.put("linkedId", linkedId);
+        if(linkedSpaceStatus!=null) {
+            linkNode.put("linkedSpaceStatus", linkedSpaceStatus);
+        }
         if(url!=null) {
             linkNode.put("url", url);
         }
