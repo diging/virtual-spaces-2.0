@@ -41,35 +41,14 @@ $( document ).ready(function() {
 </script> 
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-    	<div style="position: fixed; z-index: 100; top:6%; width: 100%">
-            <h3 class="textDiv" style="background-color: white;">${module.name}</h3>
-        	<p class="slideNumberClass" style="position: fixed; left:1%;">Slide ${currentNumOfSlide}/${numOfSlides}</p>
-    	</div>
-        <div class="Group_7_Class">
-            <c:if test="${prevSlide !=  ''}">
-                <a
-                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div style="position: fixed; z-index: 90; top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
-                        <svg class="Ellipse_11">
-                                    <ellipse fill="rgba(255,255,255,1)"
-                                class="Ellipse_11_Class" rx="20" ry="20"
-                                cx="20" cy="20">
-                                    </ellipse>
-                                </svg>
-                        <svg class="Icon_ionic_ios_arrow_back"
-                            viewBox="11.251 6.194 20.021 35.021">
-                                    <path fill="rgba(101,101,101,1)"
-                                class="Icon_ionic_ios_arrow_back_Class"
-                                d="M 17.28610038757324 23.69940376281738 L 30.53693389892578 10.45899486541748 C 31.51693534851074 9.478996276855469 31.51693534851074 7.894316673278809 30.53693389892578 6.92474365234375 C 29.55693244934082 5.944746017456055 27.97225761413574 5.95517110824585 26.99225997924805 6.92474365234375 L 11.9795093536377 21.92706680297852 C 11.03078651428223 22.87578582763672 11.00993728637695 24.39791297912598 11.90652942657471 25.3779125213623 L 26.98183441162109 40.48448944091797 C 27.47183418273926 40.97449111938477 28.11821746826172 41.21427917480469 28.75417137145996 41.21427917480469 C 29.39012908935547 41.21427917480469 30.0365104675293 40.97449111938477 30.52651405334473 40.48448944091797 C 31.50650978088379 39.50448989868164 31.50650978088379 37.91981506347656 30.52651405334473 36.95023727416992 L 17.28610038757324 23.69940376281738 Z">
-                                    </path>
-                                </svg>
-                    </div>
-                </a>
-            </c:if>
-            <c:if test="${nextSlide !=  ''}">
+    	<div style="position: fixed; z-index: 100; top: 50px; width: 100%">
+			<h3 class="textDiv" style="background-color: white;">${module.name}</h3>
+			<p class="slideNumberClass" style="position: fixed; left: 1%;">Slide
+				${currentNumOfSlide}/${numOfSlides}</p>
+			<c:if test="${nextSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
-                    <div style="position: fixed; top: 30%; right: 16%; z-index: 5;" class="slideshow_next slideshow_next_Class">
+                    <div style="position: sticky; top: 30%; right: 106%; z-index: 5;" class="slideshow_next slideshow_next_Class">
                         <svg class="Ellipse_12">
                                     <ellipse fill="rgba(255,255,255,1)"
                                 class="Ellipse_12_Class" rx="20" ry="20"
@@ -85,10 +64,12 @@ $( document ).ready(function() {
                                 </svg>
                     </div>
                 </a>
-            </c:if>
-        </div>
+        </c:if>
+		</div>
+        
+        
         <a  href="<c:url value="/exhibit/space/${spaceId}" />">
-            <div style="position: fixed; z-index: 100; top: 20%" class="exit_to_space_Class">
+            <div style="position: sticky; z-index: 100;" class="exit_to_space_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
 						class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
@@ -98,9 +79,22 @@ $( document ).ready(function() {
                 <span style="z-index: 100;" class="tooltiptext">Go To Space</span>
             </div>
         </a>
+        <c:if test="${prevSlide !=  ''}">
+                <a
+                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
+                    <div style="position: sticky; z-index: 90; top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
+                        <svg class="Ellipse_11">
+                                    <ellipse fill="rgba(255,255,255,1)"
+                                class="Ellipse_11_Class" rx="20" ry="20" cx="20" cy="20">
+                                    </ellipse>
+                                </svg>
+                                <i class="fas fa-angle-left fa-2x Icon_awesome_angle_double_left"></i>
+                    </div>
+                </a>
+        </c:if>
         <a
             href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?clearHistory=true" />">
-            <div style="position: fixed; z-index: 80;" class="exit_to_branchingPoint_Class">
+            <div style="position: sticky; z-index: 80;" class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_Class" rx="22" ry="22" cx="22"
@@ -113,7 +107,7 @@ $( document ).ready(function() {
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
         <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPoint.id}?back=true" />">
-            <div style="position: fixed; z-index: 70;" class="exit_to_previousChoice_Class">
+            <div style="position: sticky; z-index: 70;" class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_be_Class" rx="22" ry="22"

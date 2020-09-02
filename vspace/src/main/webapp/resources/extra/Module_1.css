@@ -5,7 +5,7 @@
 }
 
 .Group_8_Class {
-	margin-top: 2%;
+	margin-top: 0%;
     text-align: -webkit-center;
     text-align: -moz-center;
 }
@@ -60,7 +60,7 @@
 
 .Ellipse_5 {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-    position: absolute;
+    position: sticky;
     overflow: visible;
     width: 104px;
     height: 104px;
@@ -134,18 +134,16 @@ a, a:hover, a:focus {
 
 .Ellipse_5_be {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-    position: absolute;
+    position: sticky;
     overflow: visible;
     width: 46px;
     height: 45px;
     left: 0px;
     top: 0px;
-    height: 45px;
 }
 
 .Icon_awesome_angle_double_left {
     overflow: visible;
-    position: absolute;
     width: 24px;
     height: 19.269px;
     left: 8px;
@@ -155,7 +153,6 @@ a, a:hover, a:focus {
 }
 
 .exit_to_space_Class {
-    position: absolute;
     width: 50px;
     height: 44px;
     left: 4%;
@@ -165,7 +162,7 @@ a, a:hover, a:focus {
 }
 
 .exit_to_branchingPoint_Class {
-    position: absolute;
+    position: relative;
     width: 50px;
     height: 44px;
     left: 4%;

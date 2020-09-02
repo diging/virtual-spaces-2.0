@@ -7,7 +7,7 @@
 }
 
 .Slideshow_previous_Class {
-    position: absolute;
+	position: sticky;
     width: 50px;
     height: 50px;
     left: 20px;
@@ -17,7 +17,6 @@
 
 .Ellipse_11 {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-    position: absolute;
     overflow: visible;
     width: 50px;
     height: 50px;
@@ -27,7 +26,7 @@
 
 .Icon_ionic_ios_arrow_back {
     overflow: visible;
-    position: absolute;
+    position: relative;
     width: 11.021px;
     height: 19.021px;
     left: 14.456px;
@@ -36,7 +35,6 @@
 }
 
 .slideshow_next_Class {
-    position: fixed;
     width: 50px;
     height: 50px;
     right: 12%;
@@ -46,7 +44,7 @@
 
 .Ellipse_12 {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-    position: absolute;
+    position: sticky;
     overflow: visible;
     width: 50px;
     height: 50px;
@@ -79,12 +77,9 @@
 
 .Ellipse_5 {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-    position: absolute;
     overflow: visible;
     width: 45px;
     height: 45px;
-    left: 0px;
-    top: 0px;
 }
 
 .Icon_material_first_page {
