@@ -1214,6 +1214,14 @@ $( document ).ready(function() {
 	</form:form>
 </div>
 <div style="padding-bottom: 10px;">
+    <c:url value="/staff/space/${space.id}/status" var="postUrl" />
+    <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+        <c:if test="${space.spaceStatus=='UNPUBLISHED'}">
+            <input type="checkbox" name="showUnpublished" value="yes"> Show Unpublished links?
+        </c:if>
+    </form:form>
+</div>
+<div style="padding-bottom: 10px;">
 	<c:url value="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
 	<form:form method="POST"
 		action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
@@ -1228,7 +1236,7 @@ $( document ).ready(function() {
 		<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
 			<input class="btn btn-primary" type="submit" value="Submit" />
 		</p>
-        <input type="checkbox" name="showUnpublished" value="yes">Show Unpublished links?
+       
 	</form:form>
 </div>
 
