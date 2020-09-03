@@ -18,7 +18,7 @@
 	<se:global-method-security
 		pre-post-annotations="enabled" />
 		
-	<beans:bean id="tilesViewResolver"
+	<!-- <beans:bean id="tilesViewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<beans:property name="viewClass"
 			value="org.springframework.web.servlet.view.tiles3.TilesView" />
@@ -30,6 +30,20 @@
 				<beans:value>/WEB-INF/tiles-defs.xml</beans:value>
 			</beans:list>
 		</beans:property>
-	</beans:bean>
+	</beans:bean> -->
+	
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<ref bean="sortResolver" />
+			<ref bean="pageableResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<bean id="sortResolver"
+		class="org.springframework.data.web.SortHandlerMethodArgumentResolver" />
+	<bean id="pageableResolver"
+		class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
+		<constructor-arg ref="sortResolver" />
+	</bean>
 
 </beans:beans>
