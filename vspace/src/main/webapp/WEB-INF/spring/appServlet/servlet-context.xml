@@ -18,6 +18,9 @@
 	<se:global-method-security
 		pre-post-annotations="enabled" />
 		
+	<context:component-scan
+		base-package="edu.asu.diging.vspace.web, edu.asu.diging.vspace.api, edu.asu.diging.vspace.config"></context:component-scan>
+		
 	<!-- <beans:bean id="tilesViewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<beans:property name="viewClass"
