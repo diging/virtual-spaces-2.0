@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec"
     uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script src="<c:url value="/resources/bootpag/js/bootpag.min.js" />"></script>
 <script>
@@ -102,8 +103,9 @@ $( document ).ready(function() {
                         <td>${image.name}</td>
                         <td><c:forEach
                                 items="${imageToSpaces[image.id]}"
-                                var="space"><a href="<c:url value="/staff/space/${space.id}" />">
-                            ${space.name}</a>,<br>
+                                var="space" varStatus="loop"><a href="<c:url value="/staff/space/${space.id}" />">
+                                <c:set var="size" value="${fn:length(imageToSpaces[image.id])}" />
+                            ${space.name}</a><c:if test="${loop.count<size}"> , </c:if><br>
                             </c:forEach></td>
                         <td>${image.createdBy}</td>
                         <td><span class="date">${image.creationDate}</span></td>

@@ -264,7 +264,7 @@ public class SpaceManagerTest {
     }
 
     @Test
-    public void test_getSpacesWithImageId_whenImageIdIsValid() throws SpaceDoesNotExistException{
+    public void test_getSpacesWithImageId_ImageIdIsValid() throws SpaceDoesNotExistException{
         Space space=new Space();
         space.setId(spaceId1);
         VSImage image = new VSImage();
@@ -278,6 +278,19 @@ public class SpaceManagerTest {
         List<ISpace> foundSpaceWithImageId= managerToTest.getSpacesWithImageId("IMG001");
         String actualSpaceIdWithGiveImageId = foundSpaceWithImageId.get(0).getId();
         Assert.assertEquals(spaceId1, actualSpaceIdWithGiveImageId);
+    }
+    
+    @Test
+    public void test_getSpacesWithImageId_ImageIdIsInValid() throws SpaceDoesNotExistException{
+        Space space=new Space();
+        space.setId(spaceId1);
+        VSImage image = new VSImage();
+        image.setId("IMG001");
+        space.setImage(image);
+        List<Space> spaceList=new ArrayList<>();
+        Mockito.when(spaceRepo.findAllByImageId("IMG002")).thenReturn(spaceList);
+        Mockito.when(imageRepo.findById(Mockito.anyString())).thenReturn(Optional.empty());
+        Assert.assertNull(managerToTest.getSpacesWithImageId(Mockito.anyString()));
     }
 
 }
