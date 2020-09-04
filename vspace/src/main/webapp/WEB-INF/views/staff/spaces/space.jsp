@@ -10,6 +10,15 @@
     href="<c:url value="/resources/extra/Home.css" />">
 <script>
 
+// Ashmi VSPC-89 Changes
+$(function(){
+    $("#hideLinks").on('change', function() {
+    	console.log("Hi")
+      
+    });
+})
+
+
 $(function(){
     $("#deleteSpace").click(function(){
         var spaceId = "${space.id}";
@@ -990,6 +999,8 @@ $( document ).ready(function() {
         $("#editExternalLinkInfo").hide();
     }); 
 	
+    
+    
 	// --------- Utility functions -------------
 	function createSpaceLinkInfo() {
 		var info = {};
@@ -1217,7 +1228,7 @@ $( document ).ready(function() {
     <c:url value="/staff/space/${space.id}/status" var="postUrl" />
     <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
         <c:if test="${space.spaceStatus=='UNPUBLISHED'}">
-            <input type="checkbox" name="showUnpublished" value="yes"> Show Unpublished links?
+            <input type="checkbox" name="hideLinks" id="hideLinks"> Do you want to hide all Space links linked to this space?
         </c:if>
     </form:form>
 </div>
