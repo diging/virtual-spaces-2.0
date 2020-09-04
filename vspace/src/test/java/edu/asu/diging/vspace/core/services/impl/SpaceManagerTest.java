@@ -279,7 +279,7 @@ public class SpaceManagerTest {
         String actualSpaceIdWithGiveImageId = foundSpaceWithImageId.get(0).getId();
         Assert.assertEquals(spaceId1, actualSpaceIdWithGiveImageId);
     }
-    
+
     @Test
     public void test_getSpacesWithImageId_ImageIdIsInValid() throws SpaceDoesNotExistException{
         Space space=new Space();
