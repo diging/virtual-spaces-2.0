@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,7 +37,16 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     @JoinColumn(name = "target_space_id")
     @NotFound(action=NotFoundAction.IGNORE)
     private ISpace targetSpace;
-
+    
+    
+    @Access(AccessType.PROPERTY)
+    private int hideLinks;
+    
+    @Override
+    @Access(AccessType.PROPERTY)
+    public void setHideLinks(int hideLinks) {
+        this.hideLinks = hideLinks;
+    }
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpaceLink#getId()
      */
