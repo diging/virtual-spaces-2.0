@@ -44,4 +44,9 @@ public class HomeController {
     public String error404(){
         return "badrequest";
     }
+
+    @RequestMapping(value="/404")
+    public String badRequest(){
+        return "badrequest";
+    }
 }
