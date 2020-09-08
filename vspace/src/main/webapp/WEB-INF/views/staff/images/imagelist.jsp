@@ -105,7 +105,7 @@ $( document ).ready(function() {
                                 items="${imageToSpaces[image.id]}"
                                 var="space" varStatus="loop"><a href="<c:url value="/staff/space/${space.id}" />">
                                 <c:set var="size" value="${fn:length(imageToSpaces[image.id])}" />
-                            ${space.name}</a><c:if test="${loop.count<size}"> , </c:if><br>
+                            ${space.name}</a><c:if test="${loop.count<size}">, </c:if><br>
                             </c:forEach></td>
                         <td>${image.createdBy}</td>
                         <td><span class="date">${image.creationDate}</span></td>
