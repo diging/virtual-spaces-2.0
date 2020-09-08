@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
@@ -50,7 +51,11 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId, type, linkImage, filename);
-        String linkedSpaceStatus = spaceManager.getSpace(linkedSpaceId).getSpaceStatus().toString();
+        ISpace targetSpace=spaceManager.getSpace(linkedSpaceId);
+        String linkedSpaceStatus = null;
+        if(targetSpace!=null) {
+            linkedSpaceStatus = targetSpace.getSpaceStatus().toString();
+        }
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), null, title,displayType,linkedSpaceId, linkedSpaceStatus);
     }
 
