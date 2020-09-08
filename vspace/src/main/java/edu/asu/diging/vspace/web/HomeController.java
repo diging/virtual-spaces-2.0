@@ -40,13 +40,8 @@ public class HomeController {
         return "accessDenied";
     }
 
-    @RequestMapping(value="/exhibit/404")
+    @RequestMapping(value= {"/404", "/exhibit/404"})
     public String error404(){
-        return "badrequest";
-    }
-
-    @RequestMapping(value="/404")
-    public String badRequest(){
         return "badrequest";
     }
 }
