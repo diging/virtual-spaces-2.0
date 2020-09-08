@@ -292,7 +292,7 @@ public class SpaceManagerTest {
         Mockito.when(imageRepo.findById("IMG002")).thenReturn(Optional.empty());
         Assert.assertNull(managerToTest.getSpacesWithImageId("IMG002"));
     }
-    
+
     @Test
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
