@@ -7,6 +7,7 @@
 <link
     href="<c:url value="/resources/bootstrap/css/bootstrap.min.css" />"
     rel="stylesheet">
+
 <script
     src="<c:url value="/resources/bootstrap-4.3.1-dist/js/bootstrap.min.js" />"></script>
 
@@ -17,8 +18,29 @@
     href="<c:url value="/resources/extra/Module_1___slideshow___1.css" />">
 
 <style type="text/css">
+
+.btn-floating {
+     box-shadow: 3px 3px 10px #ccc !important;
+     background-color: white;
+}
+​
+.btn-floating:hover {
+     box-shadow: 3px 3px 10px #aaa !important;
+     background-color: #eee;
+}
+​
+.fixed-action-btn {
+	 position: fixed;
+	 right: 1px;
+	 bottom: 0px;
+	 padding-top: 0px;
+	 margin-bottom: 0;
+	 z-index: 997;
+	 
 body {
     font-family: 'Montserrat', sans-serif;
+}
+
 }
 </style>
 <script>
@@ -45,31 +67,27 @@ $( document ).ready(function() {
 			<h3 class="textDiv" style="background-color: white;">${module.name}</h3>
 			<p class="slideNumberClass" style="position: fixed; left: 1%;">Slide
 				${currentNumOfSlide}/${numOfSlides}</p>
-			<c:if test="${nextSlide !=  ''}">
+    	</div>
+        <div class="Group_7_Class" style="position: sticky; top: 250px;">
+            <c:if test="${prevSlide !=  ''}">
+                <a class="btn-floating btn-large" href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
+                    <div class="fixed-action-btn">
+                    	<i class="fa fa-chevron-left" style="color: black; left: 4%; top: 30%; height: 30px; width: 30px; text-align: center" aria-hidden="true"></i>
+          			</div>
+          		</a>
+            </c:if>
+            <c:if test="${nextSlide !=  ''}">
                 <a
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
-                    <div style="position: sticky; top: 30%; right: 106%; z-index: 5;" class="slideshow_next slideshow_next_Class">
-                        <svg class="Ellipse_12">
-                                    <ellipse fill="rgba(255,255,255,1)"
-                                class="Ellipse_12_Class" rx="20" ry="20"
-                                cx="20" cy="20">
-                                    </ellipse>
-                                </svg>
-                        <svg class="Icon_ionic_ios_arrow_forward"
-                            viewBox="11.246 6.196 20.021 35.017">
-                                    <path fill="rgba(101,101,101,1)"
-                                class="Icon_ionic_ios_arrow_forward_Class"
-                                d="M 25.23231887817383 23.69813346862793 L 11.98148345947266 10.45771980285645 C 11.00148582458496 9.47772216796875 11.00148582458496 7.893041610717773 11.98148345947266 6.923468589782715 C 12.96148300170898 5.953895568847656 14.54616165161133 5.953895092010498 15.52616119384766 6.923468589782715 L 30.53891181945801 21.92579460144043 C 31.48763275146484 22.8745174407959 31.50848388671875 24.39664649963379 30.61189270019531 25.37664222717285 L 15.53658676147461 40.48322677612305 C 15.04658699035645 40.97322463989258 14.40020561218262 41.2130126953125 13.76424789428711 41.2130126953125 C 13.1282901763916 41.2130126953125 12.48190879821777 40.97322463989258 11.99190902709961 40.48322677612305 C 11.0119104385376 39.50322723388672 11.0119104385376 37.91854858398438 11.99190902709961 36.948974609375 L 25.23231887817383 23.69813346862793 Z">
-                                    </path>
-                                </svg>
-                    </div>
+                    <div class="fixed-action-btn">
+                    	<i class="fa fa-chevron-right" style="color: black; top: 30%; height: 30px; width: 30px;  text-align: center" aria-hidden="true"></i>
+          			</div>
                 </a>
-        </c:if>
-		</div>
-        
-        
+            </c:if>
+        </div>
+        <div>
         <a  href="<c:url value="/exhibit/space/${spaceId}" />">
-            <div style="position: sticky; z-index: 100;" class="exit_to_space_Class">
+            <div style="position: fixed; z-index: 100; top: 20%" class="exit_to_space_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
 						class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
@@ -79,22 +97,9 @@ $( document ).ready(function() {
                 <span style="z-index: 100;" class="tooltiptext">Go To Space</span>
             </div>
         </a>
-        <c:if test="${prevSlide !=  ''}">
-                <a
-                    href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div style="position: sticky; z-index: 90; top: 30%; left: 4%;" class="Slideshow_previous Slideshow_previous_Class">
-                        <svg class="Ellipse_11">
-                                    <ellipse fill="rgba(255,255,255,1)"
-                                class="Ellipse_11_Class" rx="20" ry="20" cx="20" cy="20">
-                                    </ellipse>
-                                </svg>
-                                <i class="fas fa-angle-left fa-2x Icon_awesome_angle_double_left"></i>
-                    </div>
-                </a>
-        </c:if>
         <a
             href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${startSequenceId}?clearHistory=true" />">
-            <div style="position: sticky; z-index: 80;" class="exit_to_branchingPoint_Class">
+            <div style="position: fixed; z-index: 80;" class="exit_to_branchingPoint_Class">
                 <svg class="Ellipse_5">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_Class" rx="22" ry="22" cx="22"
@@ -107,7 +112,7 @@ $( document ).ready(function() {
         </a>
         <c:if test="${showBackToPreviousChoice eq true}">
         <a href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${previousSequenceId}/slide/${previousBranchingPoint.id}?back=true" />">
-            <div style="position: sticky; z-index: 70;" class="exit_to_previousChoice_Class">
+            <div style="position: fixed; z-index: 70;" class="exit_to_previousChoice_Class">
                 <svg class="Ellipse_5_be">
                     <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_5_be_Class" rx="22" ry="22"
@@ -119,6 +124,7 @@ $( document ).ready(function() {
             </div>
         </a>
         </c:if>
+        </div>
         <div id="blocks" class="Group_8_Class">
             <h3>${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
