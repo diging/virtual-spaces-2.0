@@ -61,15 +61,13 @@ function getTextArea(x,y) {
 	$("#textBoxWidthID").val(tWidth);
     $("#textBoxHeightID").val(tHeight);
     textB.onmouseup = function (e) {
-    if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) { 
-        console.log('size change');
-        console.log(textB.value);
-        tHeight = textB.clientHeight;
-        tWidth = textB.clientWidth;
-    }
-    $("#textBoxWidthID").val(tWidth);
-    $("#textBoxHeightID").val(tHeight);
-    $("#textContentID").val(textB.value);
+    	if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
+        	tHeight = textB.clientHeight;
+        	tWidth = textB.clientWidth;
+    	}
+    	$("#textBoxWidthID").val(tWidth);
+        $("#textBoxHeightID").val(tHeight);
+        $("#textContentID").val(textB.value);
 	};
 
   }
@@ -253,8 +251,7 @@ function getTextArea(x,y) {
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		
-		var block;
-		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} textDiv"><textarea class="textBlock" style="height:${block.heigth}px; width:${block.width}px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
+		var block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} textDiv"><textarea class="textBlock" style="height:${block.heigth}px; width:${block.width}px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
 		
 		block.css('position', 'absolute');
 		block.css('left', ${block.positionX} + posX);
@@ -446,7 +443,6 @@ function getTextArea(x,y) {
 	        data: formData, 
 	        success: function(data) {
 	        	var blockData = JSON.parse(data);
-	        	console.log(blockData);
 	        	$("#addTextFormInfo").hide();
 	        }
 		});
@@ -820,7 +816,6 @@ function getTextArea(x,y) {
 
 	// --------- show links functions --------------
 	function showSpaceLink(spaceLink, show) {
-	    console.log("In Show Space Link");
 		$("#space_label").remove();
 		$("#link").remove();
 		var posX = $("#bgImage").position().left;
