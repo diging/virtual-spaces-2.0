@@ -222,7 +222,7 @@ $(document).ready(function($) {
             <div class="col justify-content-center" style="padding-left: 30px;">
                 <c:forEach items="${slides}" var="slide">
                     <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
-                        <div align="left" class="card-body d-flex" style="position: relative;<c:if test='${not empty slide.description}'>overflow: scroll; height: 300px;</c:if>">
+                        <div id="slideDesc" align="left" class="card-body d-flex" style="position: relative;<c:if test='${not empty slide.description}'>overflow: scroll; max-height: 300px</c:if>">
                             <c:if test="${slide['class'].simpleName ==  'BranchingPoint'}">
                                    <div style="padding-bottom: 32px; padding-right: 2px;"><span id="branchingPoint" style="float: right;" data-feather="git-branch"></span></div>
                                 </c:if>
