@@ -760,16 +760,17 @@ $( document ).ready(function() {
 		}
 		if(show) {
 		    var unpublishedSpaceElement;
-			if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-				unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+		    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+		        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
 				unpublishedSpaceElement.css('position', 'absolute');
 				unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 				unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
 				unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 				unpublishedSpaceElement.css('font-size', "12px");
-			}else{
-			    $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
-			}
+				
+		    }else{
+		        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+		    }    
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
@@ -871,17 +872,17 @@ $( document ).ready(function() {
 		var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
 		if(show) {
 		    var unpublishedSpaceElement;
-			if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-			    unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+		    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+		        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
 				unpublishedSpaceElement.css('position', 'absolute');
 				unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 				unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
 				unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
 				unpublishedSpaceElement.css('font-size', "12px");
 				$("#space").append(unpublishedSpaceElement);
-			}else{
-			    $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
-			}
+		    }else{
+		        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+		    }    
 		}
 		$(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
 	    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
