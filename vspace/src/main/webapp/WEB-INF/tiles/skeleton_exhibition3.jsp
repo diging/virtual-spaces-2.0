@@ -148,13 +148,12 @@
         <!-- Begin page content -->
         <main role="main" class="flex-shrink-0"
             style="padding-top: 20px;">
-            <div class="pushContent"></div>
-            <c:if
-            test="${showAlert eq true}">
+        <div class="pushContent"></div>
+        <c:if test="${showAlert eq true}">
             <div id="errorMsg"
                 class="alert alert-${alertType} custom-${messageType}">
                 ${message}</div>
-        </c:if> <tiles:insertAttribute name="content" /> 
+        </c:if> <tiles:insertAttribute name="content" />
         <div class="push"></div>
         </main>
     </div>

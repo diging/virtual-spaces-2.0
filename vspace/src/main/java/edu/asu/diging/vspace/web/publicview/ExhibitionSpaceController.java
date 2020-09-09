@@ -66,10 +66,7 @@ public class ExhibitionSpaceController {
             model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
         }
         else {
-            model.addAttribute("showAlert", true);
-            model.addAttribute("alertType", "danger");
-            model.addAttribute("messageType","invalidSpace");
-            model.addAttribute("message", "Access Denied.");
+            return "redirect:/exhibit/404";
         }
 
         if(sequenceHistory.hasHistory()) {
