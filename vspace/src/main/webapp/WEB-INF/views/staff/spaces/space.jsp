@@ -1981,6 +1981,9 @@ function getTextArea(x,y) {
 	&nbsp
 	<button type="button" id="deleteSpace" class="btn btn-primary btn-sm">Delete
 		Space</button>
+    &nbsp
+    <button type="button" id="addTextBlock" class="btn btn-primary btn-sm">Add Text
+        Block</button>
 </nav>
 <p></p>
 
