@@ -11,5 +11,7 @@ public interface ISpaceTextBlockManager {
             float height, float width) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
     List<ISpaceTextBlockDisplay> getSpaceTextBlockDisplays(String spaceId);
+    
+    void deleteTextBlock(String blockId);
 
 }

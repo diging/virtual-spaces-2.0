@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -53,6 +54,15 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
     @Override
     public List<ISpaceTextBlockDisplay> getSpaceTextBlockDisplays(String spaceId) {
         return spaceTextBlockDisplayRepo.findSpaceTextBlockDisplaysForSpace(spaceId);
+    }
+    
+    @Override
+    public void deleteTextBlock(String blockId) {
+        Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(blockId);
+        if(spaceTextBlock.isPresent()) {
+            spaceTextBlockDisplayRepo.deleteBySpaceTextBlock(spaceTextBlock.get());
+            spaceTextBlockRepo.delete(spaceTextBlock.get());
+        }
     }
 
 }
