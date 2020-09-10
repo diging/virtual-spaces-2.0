@@ -108,13 +108,20 @@ function getTextArea(x,y) {
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-${link.link.id}");
 		inputLinkedSpace.setAttribute("value", "${link.link.targetSpace.id}");
-
+		var unpublishedSpaceElement=$('<c:if test="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i data-link-id="unpublished-${link.link.id}" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-${link.link.id}" style="color: #bfb168;"></i></c:if>')
+		unpublishedSpaceElement.css('position', 'absolute');
+		unpublishedSpaceElement.css('left', ${link.positionX} + posX + 25);
+		unpublishedSpaceElement.css('top', ${link.positionY} + posY - 13);
+		unpublishedSpaceElement.css('transform', 'rotate(${link.rotation}deg)');
+		unpublishedSpaceElement.css('font-size', "12px");
+		
 		//append to form element that you want .
 		$("#space").append(inputRotation);
 		$("#space").append(inputLabel);
 		$("#space").append(inputType);
 		$("#space").append(inputLinkedSpace);
 		$("#space").append(link);
+		$("#space").append(unpublishedSpaceElement);
 		
 		$(".slabel-${link.link.id}").css({
 			'transform': 'rotate(0deg)',
@@ -400,6 +407,7 @@ function getTextArea(x,y) {
 	        	spaceLinkInfo["displayId"]=linkData["displayId"];
 	        	spaceLinkInfo["x"]=linkData["x"];
 	        	spaceLinkInfo["y"]=linkData["y"];
+	        	spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
 	            showSpaceLink(spaceLinkInfo, true);
 	            $("#space_label").attr("id","");
 	            $("#link").attr("id","");
@@ -573,6 +581,7 @@ function getTextArea(x,y) {
 	            spaceLinkInfo["displayId"]=linkData["displayId"];
 	            spaceLinkInfo["x"]=linkData["x"];
 	            spaceLinkInfo["y"]=linkData["y"];
+	            spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
 	            showSpaceLinkEdit(spaceLinkInfo, true);
 	            $('#spaceLinkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
 	            $('#spaceLinkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
@@ -687,6 +696,7 @@ function getTextArea(x,y) {
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
+			  $('[data-link-id="unpublished-' + linkId + '"]').remove();
 			  hideLinkInfoTabs();
 			  $('a#'+linkId).remove();
 			  if ($("div#outgoingLinks a").length < 2) {
@@ -840,7 +850,17 @@ function getTextArea(x,y) {
 			link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
 		}
 		if(show) {
-			//link.find("div").css('fill', 'rgba(128,128,128,1)');
+		    var unpublishedSpaceElement;
+		    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+		        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+		        unpublishedSpaceElement.css('position', 'absolute');
+		        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
+		        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
+		        unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+		        unpublishedSpaceElement.css('font-size', "12px");
+		    }else{
+		        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+		    }    
 		}
 		link.css('position', 'absolute');
 		link.css('left', spaceLink["x"] + posX);
@@ -848,7 +868,6 @@ function getTextArea(x,y) {
 		link.css('color', 'rgba(128,128,128,1)');
 		link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 		link.css('font-size', "12px");
-		
 		if (spaceLink["id"]) {
 			/* link.attr("data-link-id", "Info_cz_Class"); */
 			link.attr("class", spaceLink["id"]);
@@ -867,6 +886,7 @@ function getTextArea(x,y) {
 		}
 
 		$("#space").append(link);
+		$("#space").append(unpublishedSpaceElement);
 		$("#link").append(space_label);
 
 		feather.replace();
@@ -939,6 +959,25 @@ function getTextArea(x,y) {
 		spaceLink["y"]=storeY;
 		var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
 		var selectedLabelClass = '.slabel-'+selectedSpaceLinkId;
+		var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
+		if(show) {
+		    var unpublishedSpaceElement;
+		    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+		        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+		        unpublishedSpaceElement.css('position', 'absolute');
+		        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
+		        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
+		        unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
+		        unpublishedSpaceElement.css('font-size', "12px");
+		        $("#space").append(unpublishedSpaceElement);
+		    }else{
+		        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+		    }    
+		}
+		$(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
+	    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
+	    $(selectedUnpublishedIconClass).css({ 'left': parseInt(spaceLink["x"]) + posX + 25});
+	    $(selectedUnpublishedIconClass).css({ 'top': parseInt(spaceLink["y"]) + posY - 13});
 		updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"]);
 	}
 	
@@ -954,11 +993,13 @@ function getTextArea(x,y) {
 	    var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 	    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
+	    $(selectedLinkClass).css({ 'position': 'absolute'});
 	    $(selectedLinkClass).css({ 'left': x + posX});
 	    $(selectedLinkClass).css({ 'top': y + posY});
 	    $(selectedLabelClass).text(linkLabel);
+	    $(selectedLabelClass).css({ 'position': 'absolute'});
 	    $(selectedLabelClass).css({ 'left': x + posX - 10});
-	    $(selectedLabelClass).css({ 'top': y + posY + 16});
+	    $(selectedLabelClass).css({ 'top': y + posY + 30});
 	    feather.replace();    
 	}
 	
@@ -1185,6 +1226,7 @@ function getTextArea(x,y) {
         $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
         $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
         $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+        $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "#c1bb88");
         
         $("#bgImage").on("click", function(e){
 			e.preventDefault();
@@ -1313,7 +1355,9 @@ function getTextArea(x,y) {
 <div class="alert alert-light" role="alert">
 	Created on <span class="date">${space.creationDate}</span> by
 	${space.createdBy}. <br> Modified on <span class="date">${space.modificationDate}</span>
-	by ${space.modifiedBy}.
+	by ${space.modifiedBy}.<br><br>
+    <i class="fa fa-exclamation-triangle fa-sm" aria-hidden="true"
+        style="color: #bfb168;"></i> indicates the links to unpublished spaces.
 </div>
 <div style="padding-bottom: 10px;">
 	<c:url value="/staff/space/${space.id}/status" var="postUrl" />
@@ -1417,7 +1461,7 @@ function getTextArea(x,y) {
 				<label><small>Type:</small> </label>
 			</div>
 			<div class="col-sm-8">
-				<select id="type" name="type" class="form-control-xs target">
+				<select id="type" name="type" class="form-control-xs target"  style="width: inherit;">
 					<option selected value="">Choose...</option>
 					<option value="IMAGE">Image</option>
 					<option value="ARROW">Link</option>
@@ -1432,10 +1476,10 @@ function getTextArea(x,y) {
 			</div>
 			<div class="col-sm-7">
 				<select id="linkedSpace" name="linkedSpace"
-					class="form-control-xs target">
+					class="form-control-xs target" style="width: inherit;">
 					<option selected value="">Choose...</option>
 					<c:forEach items="${spaces}" var="space">
-						<option value="${space.id}">${space.name}</option>
+						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}"> (Unpublished)</c:if></option>
 					</c:forEach>
 				</select>
 			</div>
@@ -1684,7 +1728,7 @@ function getTextArea(x,y) {
 			</div>
 			<div class="col-sm-8">
 				<select id="typeSpaceEdit" name="type"
-					class="form-control-xs spacelink-targetEdit">
+					class="form-control-xs spacelink-targetEdit" style="width: inherit;">
 					<option value="IMAGE">Image</option>
 					<option value="ARROW">Link</option>
 					<option value="ALERT">Alert</option>
@@ -1698,9 +1742,9 @@ function getTextArea(x,y) {
 			</div>
 			<div class="col-sm-7">
 				<select id="spaceLinkIdEdit" name="linkedSpace"
-					class="form-control-xs spacelink-targetEdit" style="width: 100%;">
+					class="form-control-xs spacelink-targetEdit" style="width: inherit;">
 					<c:forEach items="${spaces}" var="space">
-						<option value="${space.id}">${space.name}</option>
+						<option value="${space.id}">${space.name}<c:if test="${space.spaceStatus=='UNPUBLISHED'}">(Unpublished)</c:if></option>
 					</c:forEach>
 				</select>
 			</div>
