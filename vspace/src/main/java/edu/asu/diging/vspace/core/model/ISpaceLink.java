@@ -10,5 +10,5 @@ public interface ISpaceLink extends ILink<ISpace> {
 
 	void setTargetSpace(ISpace targetSpace);
 	
-	void setHideLinks(int hideLinks);
+	// void setHideLinks(int hideLinks);
 }

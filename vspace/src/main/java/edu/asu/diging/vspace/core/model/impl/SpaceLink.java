@@ -39,14 +39,14 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     private ISpace targetSpace;
     
     
-    @Access(AccessType.PROPERTY)
-    private int hideLinks;
-    
-    @Override
-    @Access(AccessType.PROPERTY)
-    public void setHideLinks(int hideLinks) {
-        this.hideLinks = hideLinks;
-    }
+    /*
+     * @Access(AccessType.PROPERTY) private int hideLinks;
+     * 
+     * @Override
+     * 
+     * @Access(AccessType.PROPERTY) public void setHideLinks(int hideLinks) {
+     * this.hideLinks = hideLinks; }
+     */
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpaceLink#getId()
      */
