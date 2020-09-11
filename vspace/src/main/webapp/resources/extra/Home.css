@@ -105,7 +105,6 @@
     word-break: break-all;
 }
 
-}
 .sidenav a {
     white-space: pre-wrap;
 }
@@ -190,9 +189,9 @@
     position: absolute;
     width: 29px;
     height: 29px;
-    overflow: visible; -
-    -web-animation: fadein 0.3s ease-out; -
-    -web-action-type: view; -
+    overflow: visible; 
+    -web-animation: fadein 0.3s ease-out; 
+    -web-action-type: view; 
     -web-action-target: Modal;
     cursor: pointer;
 }
