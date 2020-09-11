@@ -1,7 +1,7 @@
 .Group_7_Class {
-    position: relative;
-    width: 69%;
-    top: 80px;
+    position: fixed;
+    width: 68%;
+    top: 30%;
     display: flex;
     margin: auto;
     justify-content: space-between;
@@ -188,12 +188,6 @@ a, a:hover, a:focus {
 
 .slideNumberClass {
     position: absolute;
-    width: 84%;
-    padding-top: 1%;
-    display: flex;
-    justify-content: flex-end; } .Component_31___11_Class {
-    position: absolute;
-    width: 97%;
     display: flex;
     justify-content: flex-end;
 }
@@ -216,6 +210,5 @@ a, a:hover, a:focus {
 @media only screen and (max-width: 800px) {
     /* For mobile phones: */
     [class*="Group_7_Class"] {
-        width: 98%;
     }
 }

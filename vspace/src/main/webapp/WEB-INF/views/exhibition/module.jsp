@@ -35,7 +35,6 @@
 	 bottom: 0px;
 	 padding-top: 0px;
 	 margin-bottom: 0;
-	 z-index: 997;
 	 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -63,24 +62,25 @@ $( document ).ready(function() {
 </script> 
 <div id="Module_1" class="Module_1_Class">
     <c:if test="${showAlert != true}">
-    	<div style="position: fixed; z-index: 100; top: 50px; width: 100%">
+    	<div style="position: fixed; z-index: 100; top: 50px; width: 100%; display: flex;">
 			<h3 class="textDiv" style="background-color: white;">${module.name}</h3>
-			<p class="slideNumberClass" style="position: fixed; left: 1%;">Slide
+			<p class="slideNumberClass" style="position: fixed; left: 80%;">Slide
 				${currentNumOfSlide}/${numOfSlides}</p>
     	</div>
-        <div class="Group_7_Class" style="position: sticky; top: 250px;">
+        <div class="Group_7_Class" style="position: sticky;<c:if test="${currentNumOfSlide == '1'}">justify-content: flex-end;</c:if>">
             <c:if test="${prevSlide !=  ''}">
-                <a class="btn-floating btn-large" href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
-                    <div class="fixed-action-btn">
-                    	<i class="fa fa-chevron-left" style="color: black; left: 4%; top: 30%; height: 30px; width: 30px; text-align: center" aria-hidden="true"></i>
+                <a style="outline: none;"
+                	href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${prevSlide}" />">
+                    <div class="fixed-action-btn" style="background-color: white">
+                    	<i class="fa fa-chevron-left fa-lg" style="color: black; height: 30px; width: 30px; text-align: center"></i>
           			</div>
           		</a>
             </c:if>
             <c:if test="${nextSlide !=  ''}">
-                <a
+                <a style="outline: none;"
                     href="<c:url value="/exhibit/${spaceId}/module/${module.id}/sequence/${currentSequenceId}/slide/${nextSlide}" />">
-                    <div class="fixed-action-btn">
-                    	<i class="fa fa-chevron-right" style="color: black; top: 30%; height: 30px; width: 30px;  text-align: center" aria-hidden="true"></i>
+                    <div class="fixed-action-btn" style="">
+                    	<i class="fa fa-chevron-right fa-lg" style="color: black; height: 30px; width: 30px; text-align: center"></i>
           			</div>
                 </a>
             </c:if>
@@ -126,7 +126,7 @@ $( document ).ready(function() {
         </c:if>
         </div>
         <div id="blocks" class="Group_8_Class">
-            <h3>${currentSlideCon.name}</h3>
+            <h3 style="margin-top: unset;">${currentSlideCon.name}</h3>
             <c:forEach items="${currentSlideCon.contents}"
                 var="contents">
                 <c:if
