@@ -62,6 +62,10 @@
 		<put-attribute name="currentPage" value="space" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/space.jsp" />	
 	</definition>
+	<definition name="badrequest" extends="base.definition">	
+		<put-attribute name="currentPage" value="badrequest" />
+		<put-attribute name="content" value="/WEB-INF/views/exhibition/badrequest.jsp" />	
+	</definition>
 	<definition name="module" extends="base.definition">	
 		<put-attribute name="currentPage" value="module" />
 		<put-attribute name="content" value="/WEB-INF/views/exhibition/module.jsp" />	

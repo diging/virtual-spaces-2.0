@@ -12,9 +12,11 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 @Repository
 @JaversSpringDataAuditable
 public interface SpaceRepository extends PagingAndSortingRepository<Space, String> {
-    
+
     List<Space> findTop5ByOrderByCreationDateDesc();
-    
+
     List<Space> findAllBySpaceStatus(SpaceStatus spaceStatus);
+
+    List<Space> findAllByImageId(String imageId);
 
 }

@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -50,7 +51,9 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId, type, linkImage, filename);
-        return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), null, title,displayType,linkedSpaceId);
+        SpaceStatus targetSpaceStatus=spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
+        String linkedSpaceStatus = targetSpaceStatus!=null ? targetSpaceStatus.toString() : null;
+        return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), null, title,displayType,linkedSpaceId, linkedSpaceStatus);
     }
 
 }

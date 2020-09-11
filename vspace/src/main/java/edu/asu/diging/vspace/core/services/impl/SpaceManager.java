@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -247,10 +248,35 @@ public class SpaceManager implements ISpaceManager {
 
         return spaceLinkRepo.getLinkedSpaces(id);
     }
-    
+
     @Override
     public List<SpaceLink> getIncomingLinks(String id) {
 
         return spaceLinkRepo.getLinkedFromSpaces(id);
+    }
+
+    @Override
+    public List<ISpace> getSpacesWithImageId(String imageId) {
+        if(imageId == null) {
+            return null;
+        }
+        Optional<VSImage> vsImage = imageRepo.findById(imageId);
+        if(!vsImage.isPresent()) {
+            return null;
+        }
+        List<ISpace> spaces = new ArrayList<>();
+        spaceRepo.findAllByImageId(imageId).forEach(space -> spaces.add(space));
+        return spaces;
+    }
+
+
+    @Override
+    public Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces) {
+        Iterator<Space> iterator = spaces.iterator();
+        while(iterator.hasNext()) {
+            Space space = iterator.next();
+            space.setIncomingLinks( (spaceLinkRepo.getLinkedFromSpaces(space.getId())).size() > 0 ? true : false );
+        }
+        return spaces;
     }
 }
