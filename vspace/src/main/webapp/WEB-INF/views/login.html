@@ -3,7 +3,7 @@
 <link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet"/>
 </head>
 <body>
-<div layout:fragment="row justify-content-center">
+<div class="row justify-content-center" layout:fragment="content">
     <div class="col-4">
         <span th:if="${param.error != null}">
             <div class="alert alert-danger" role="alert">Invalid Username
@@ -11,7 +11,7 @@
         </span>
         <div class="jumbotron">
             <div sec:authorize="isAnonymous()">
-                <form action="#" th:action="@{}" method ="POST" name="f" class="form-horizontal">
+                <form action="#" th:action="@{/}" method ="POST" name="f" class="form-horizontal">
                     <h2 class="col-sm-12">Login</h2>
                     <input type="hidden" name="${_csrf.parameterName}"
                         value="${_csrf.token}" />
