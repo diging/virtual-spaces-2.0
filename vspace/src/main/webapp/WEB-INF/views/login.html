@@ -1,6 +1,6 @@
 <html layout:decorate="~{layouts/main}">
 <head>
-<script src="<c:url value="/resources/bootstrap-4.1.2/login.css" />"></script>
+<link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet"/>
 </head>
 <body>
 <div layout:fragment="row justify-content-center">
@@ -11,7 +11,7 @@
         </span>
         <div class="jumbotron">
             <div sec:authorize="isAnonymous()">
-                <form action="#" th:action="@{/}" method ="POST" name="f" class="form-horizontal">
+                <form action="#" th:action="@{}" method ="POST" name="f" class="form-horizontal">
                     <h2 class="col-sm-12">Login</h2>
                     <input type="hidden" name="${_csrf.parameterName}"
                         value="${_csrf.token}" />
@@ -34,11 +34,11 @@
                             <button type="submit" class="btn btn-primary bg-dark-blue">Submit</button>
                         </div>
                     </div>
-                </form>
+                </form> 
                 <div class="float-right">
                     <small> Don't have an account yet? <a
                         th:href="@{/register}" />">Sign up!</a><br> Forgot
-                        your password? <a th:href="@{/reset/password/request} />">Reset
+                        your password? <a th:href="@{/reset/password/request}" />">Reset
                             it!</a>
                     </small>
                 </div>
