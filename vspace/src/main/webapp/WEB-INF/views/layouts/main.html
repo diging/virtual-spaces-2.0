@@ -38,7 +38,14 @@
 <script th:src="@{/resources/bootstrap/js/main.js}"></script>
 </head>
 
-<body style="margin: 40px 0px">
+<body>
+	<div th:insert="layouts/navbar :: navbar"></div>
 	<div layout:fragment="content"></div>
+	<footer class="footer mt-auto">
+		<div class="d-flex justify-content-center">
+			<span class="text-muted">This web application was built with Virtual Spaces 2.0
+				(https://github.com/diging/virtual-spaces-2.0).</span>
+		</div>
+	</footer>
 </body>
 </html>
