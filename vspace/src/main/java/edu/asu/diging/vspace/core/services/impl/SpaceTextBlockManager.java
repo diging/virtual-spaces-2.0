@@ -17,7 +17,9 @@ import edu.asu.diging.vspace.core.factory.ISpaceTextBlockFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceTextBlock;
 import edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceTextBlockDisplay;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceTextBlock;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
@@ -64,5 +66,25 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
             spaceTextBlockRepo.delete(spaceTextBlock.get());
         }
     }
-
+    @Override
+    public ISpaceTextBlockDisplay updateTextBlock(String id, Float positionX, Float positionY, String textBlockIdValueEdit,
+            String textBlockDisplayId, String text, Float height, Float width) {
+        
+        Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(textBlockIdValueEdit);
+        if(spaceTextBlock.isPresent()) {
+            ISpaceTextBlock spaceTextBlockEdit = spaceTextBlock.get();
+            spaceTextBlockEdit.setText(text);
+            Optional<SpaceTextBlockDisplay> spaceTextBlockDisplay = spaceTextBlockDisplayRepo.findById(textBlockDisplayId);
+            if(spaceTextBlockDisplay.isPresent()) {
+                ISpaceTextBlockDisplay spaceTextBlockDisplayEdit = spaceTextBlockDisplay.get();
+                spaceTextBlockDisplayEdit.setHeight(height);
+                spaceTextBlockDisplayEdit.setWidth(width);
+                spaceTextBlockDisplayEdit.setPositionX(positionX);
+                spaceTextBlockDisplayEdit.setPositionY(positionY);
+                spaceTextBlockRepo.save((SpaceTextBlock)spaceTextBlockEdit);
+                return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplayEdit);
+            }
+        }
+        return null;
+    }
 }

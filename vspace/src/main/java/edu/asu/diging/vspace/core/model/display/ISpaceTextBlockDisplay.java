@@ -22,9 +22,9 @@ public interface ISpaceTextBlockDisplay extends IVSpaceElement{
 
     void setPositionY(float positionY);
     
-    float getHeigth();
+    float getHeight();
 
-    void setHeigth(float height);
+    void setHeight(float height);
 
     float getWidth();
 

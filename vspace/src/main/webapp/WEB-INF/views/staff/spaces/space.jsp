@@ -216,7 +216,7 @@ $( document ).ready(function() {
 		
 		var imageHeight = parseInt($("#bgImage").css("height"));
 		var imageWidth = parseInt($("#bgImage").css("width"));
-		var height = (${block.heigth}*imageHeight)/100;
+		var height = (${block.height}*imageHeight)/100;
 		var width = (${block.width}*imageWidth)/100;
 		
 		var block = $('<span data-link-id="${block.spaceTextBlock.id}" class="spaceLink-${block.spaceTextBlock.id} textDiv"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
@@ -228,7 +228,7 @@ $( document ).ready(function() {
 		$("#space").append(block);
 		
 		$('[data-link-id="${block.spaceTextBlock.id}"]').click(function(e) {
-			makeTextBlockEditable("${block.id}","${block.spaceTextBlock.id}","${block.spaceTextBlock.text}","${block.positionX}","${block.positionY}");
+			makeTextBlockEditable("${block.id}","${block.spaceTextBlock.id}","${block.spaceTextBlock.text}","${block.positionX}","${block.positionY}","${block.width}","${block.height}");
 		});
 	}
 	</c:forEach> 
@@ -653,6 +653,44 @@ $( document ).ready(function() {
 	 	});
 	});
 	
+	            $("#editTextBlockBtn").click(function(e) {
+	        	    e.preventDefault();
+	        	    var blockId = $("#textBlockIdValueEdit").val();
+	        	    if (storeX == undefined || storeY == undefined) {
+	        	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	        	        $('#errorAlert').show();
+	        	        return;
+	        	    }
+	        	    var linkedTextBlock = $("#textBlockIdValueEdit").val();
+	        	    $("#textBlockXEdit").val(storeX);
+	        	    $("#textBlockYEdit").val(storeY);
+	        	    var form = $("#editTextBlockForm");
+	        	    var formData = new FormData(form[0]);
+	        	    console.log(formData);
+	        	    $.ajax({
+	        	        type: "POST",
+	        	        url: "<c:url value="/staff/space/link/textBlock/${space.id}?${_csrf.parameterName}=${_csrf.token}" />",
+	        	        cache: false,
+	        	        contentType : false,
+	        	        processData : false,
+	        	        enctype: 'multipart/form-data',
+	        	        data: formData,
+	        	        success: function(data) {
+	        	            var linkData = JSON.parse(data);
+	        	            $("#bgImage").off("click");
+	        	            textBlockInfo["id"] = linkData["id"];
+	        	            textBlockInfo["text"]=linkData["text"];
+	        	            textBlockInfo["x"]=linkData["x"];
+	        	            textBlockInfo["y"]=linkData["y"];
+	        	            textBlockInfo["height"]=linkData["height"];
+	        	            textBlockInfo["width"]=linkData["width"];
+	        	            hideLinkInfoTabs();
+	        	       	}
+	        	 	});
+	        	});
+	
+	            
+	
 	$("#createExternalLinkBtn").click(function(e) {
 		e.preventDefault();
 		var payload = {};
@@ -1045,6 +1083,7 @@ $( document ).ready(function() {
 	    $("#editExternalLinkInfo").hide();
 	    $("#editSpaceLinkInfo").hide();
 	    $("#editModuleLinkInfo").hide();
+	    $("#editTextBlockInfo").hide();
         $("#errorMsg").text("");
         $('#errorAlert').hide();    
 	}
@@ -1341,14 +1380,27 @@ $( document ).ready(function() {
         $("#editExternalLinkInfo").show();
     }
 	
-	function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY){
-	    console.log(blockId);
-	    console.log(text);
-	    console.log(posX);
-	    console.log(posY);
-	    hideLinkInfoTabs();
+	function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height){
+	    selectedTextBlockId=blockId;
+	    storeX=posX;
+		storeY=posY;
 	    $("#textBlockIdValueEdit").val(blockId);
+	    $("#textBlockXEdit").val(posX);
+	    $("#textBlockYEdit").val(posY);
 	    $("#textBlockDisplayId").val(blockDisplayId);
+	    $("#textBoxWidthIDEdit").val(width);
+	    $("#textBoxHeightIDEdit").val(height);
+	    $("#textContentID").val(text);
+	    resetHighlighting();
+	    
+	    $("#bgImage").on("click", function(e){
+			e.preventDefault();
+			var posX = $(this).position().left;
+			var posY = $(this).position().top;    
+			storeX = e.pageX - $(this).offset().left;
+			storeY = e.pageY - $(this).offset().top;
+		});
+	    hideLinkInfoTabs();
 	    $("#editTextBlockInfo").show();
 	    
 	}

@@ -14,4 +14,7 @@ public interface ISpaceTextBlockManager {
     
     void deleteTextBlock(String blockId);
 
+    ISpaceTextBlockDisplay updateTextBlock(String id, Float float1, Float float2, String textBlockIdValueEdit,
+            String textBlockDisplayId, String text, Float height, Float width);
+
 }

@@ -72,12 +72,12 @@ public class SpaceTextBlockDisplay extends VSpaceElement implements ISpaceTextBl
     }
 
     @Override
-    public float getHeigth() {
+    public float getHeight() {
         return height;
     }
 
     @Override
-    public void setHeigth(float height) {
+    public void setHeight(float height) {
         this.height=height;
     }
 
