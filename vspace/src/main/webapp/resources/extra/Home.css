@@ -40,6 +40,16 @@
 	padding: 0 !important;
 }
 
+.nav {
+	display: flex !important;
+	align-items: center !important;
+}
+
+.nav-link {
+	color: #666 !important;
+	font-weight: 600;
+}
+
 .login-form {
 	padding: 48px;
     width: 30%;
