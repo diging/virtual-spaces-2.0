@@ -1,0 +1,65 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+</head>
+<body>
+    <div class="row justify-content-center" layout:fragment="content">
+        <div class="col-4">
+            <div class="register-form">
+                <form th:action="@{/register}" method="POST" name="f"
+                    class="form-horizontal">
+                    <h2 class="">Create new Account</h2>
+                    <input type="hidden" name="${_csrf.parameterName}"
+                        value="${_csrf.token}" />
+
+                    <div class="form-group">
+                        <label class="col-sm-12" for="username">Username:</label>
+                        <input placeholder="Username"
+                            class="form-control input-sm" type="text"
+                            id="username" name="username" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12" for="firstName">First
+                            Name:</label> <input placeholder="FirstName"
+                            class="form-control input-sm" type="text"
+                            id="firstName" name="firstName" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12" for="lastName">Last
+                            name:</label> <input placeholder="LastName"
+                            class="form-control input-sm" type="text"
+                            id="lastName" name="lastName" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12" for="email">Email:</label>
+                        <input placeholder="Email"
+                            class="form-control input-sm" type="text"
+                            id="email" name="email" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12" for="password">Password:</label>
+                        <input placeholder="Password"
+                            class="form-control input-sm"
+                            type="password" id="password"
+                            name="password" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12" for="confirmPassword">Confirm
+                            Password:</label> <input
+                            placeholder="ConfirmPassword"
+                            class="form-control input-sm"
+                            type="password" id="confirmPassword"
+                            name="confirmPassword" />
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align: center;">
+                            <button type="submit"
+                                class="btn primary-btn">Create
+                                Account</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

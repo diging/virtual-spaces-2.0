@@ -23,35 +23,35 @@
 }
 
 .nav-bar {
-	display: flex !important;
+    display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     width: 95% !important;
-    margin: 20px auto 40px auto !important;	
+    margin: 20px auto 40px auto !important;
 }
 
 .primary-btn {
-	background: rgba(150, 45, 62, 1);
+    background: rgba(150, 45, 62, 1);
     color: white;
     border-radius: 5px;
 }
 
 .navbar-brand {
-	padding: 0 !important;
+    padding: 0 !important;
 }
 
 .nav {
-	display: flex !important;
-	align-items: center !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
 .nav-link {
-	color: #666 !important;
-	font-weight: 600;
+    color: #666 !important;
+    font-weight: 600;
 }
 
 .login-form {
-	padding: 48px;
+    padding: 48px;
     width: 30%;
     margin: auto;
     border-radius: 10px;
@@ -225,9 +225,9 @@
     position: absolute;
     width: 29px;
     height: 29px;
-    overflow: visible; 
-    -web-animation: fadein 0.3s ease-out; 
-    -web-action-type: view; 
+    overflow: visible;
+    -web-animation: fadein 0.3s ease-out;
+    -web-action-type: view;
     -web-action-target: Modal;
     cursor: pointer;
 }
@@ -461,4 +461,12 @@
     transform: matrix(1, 0, 0, 1, 0, 0);
     font-size: inherit;
     color: rgba(150, 45, 62, 1);
+}
+
+.register-form {
+    padding: 48px;
+    width: 30%;
+    margin: auto;
+    border-radius: 10px;
+    background: #f2f2f2;
 }
