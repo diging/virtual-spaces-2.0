@@ -214,7 +214,7 @@
 		        $("#space").append(link);
 		        $(".externalLabel-${iStat}").css({
 		            'transform': 'rotate(0deg)',
-		            'left': ${link.positionX} + posX - 10,
+		            'left': [(${link.positionX})] + posX - 10,
 		            'padding-top': '30px',
 		            'color': 'rgba(150, 45, 62, 1)',
 		            'font-size': '12px'
@@ -247,12 +247,10 @@
                     <div id="mySideModulenav" class="sideModulenav">
                         <i class="far fa-times-circle fa-lg closebtn" th:onclick="closeModuleNav()"></i>
                         <div class="list-group spaceNav">
-                            <ul  style="list-style: none;" th:each="module: ${moduleList}">
-                               <li th:if="${module.link.name != ''}">
-                               <a class="dropdown-item" style="padding-left: 15px; height: 30px;" th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div> [[${module.link.name}]]</a></li>
-
-                               <li th:if="${module.link.name != ''}">
-                               <a class="dropdown-item" style="padding-left: 15px; height: 30px;" th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div> [[${module.link.module.name}]]</a></li>
+                        <h3>Hello</h3>
+                        <ul>
+                             <li  th:each="module: ${moduleList}">"hell"</li>
+                               
                             </ul>
                         </div>
                     </div>
@@ -285,7 +283,7 @@
 		                            style="font-size: 20px; color: rgba(150, 45, 62, 1);"
 		                            th:onclick="openSpaceDescription()"></i>
 		                </h3>
-		                <a sec:authorize="hasAnyRole('ADMIN','STAFF')" th:href="/staff/space/${space.id}"><span data-feather="edit" style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>			
+		                <a sec:authorize="isAuthenticated()" th:href="@{/staff/space/${space.id}}"><span data-feather="edit" style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>			
 		            </div>
 		            
 		            <div id="space">

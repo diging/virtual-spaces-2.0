@@ -42,7 +42,7 @@ public class EditModuleLinkController extends EditSpaceLinksController{
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type, null, null);
-        return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null,title,displayType,linkedModuleId);
+        return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null,title,displayType,linkedModuleId,null);
     }
 
 }
