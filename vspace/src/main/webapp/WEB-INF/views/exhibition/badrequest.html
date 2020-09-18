@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link th:href="@{/resources/extra/Home.css}" rel="stylesheet"  type="text/css" id="applicationStylesheet"/>
+</head>
+<body>
+
+<script>
+    $(document).ready(function() {
+
+    });
+</script>
+<div layout:fragment="content">
+    <div class="container-fluid">
+    
+        <div style="text-align: center;">
+            <h1
+                style="color: rgba(0, 0, 0, .9); font-size: 24px; margin-top: 70px;">The
+                page you were looking for could not be found.</h1>
+            <img th:src="@{/resources/images/404_Vspace-01.png}"
+                style="max-width: 900px; width: 100%; text-align: center; object-fit: cover; height: auto; max-height: 800px; margin-top: 30px;" />
+        </div>
+    </div>
+</div>
+</body>
+</html>
