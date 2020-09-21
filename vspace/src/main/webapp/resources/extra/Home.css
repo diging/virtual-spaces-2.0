@@ -205,12 +205,11 @@
     padding-left: 1%;
 }
 
-.textDiv {
+.text-Div {
     position: relative;
     top: 0px;
     overflow: visible;
     text-align: justify;
-    margin: auto;
 }
 
 .moduleBarPosition {
@@ -298,10 +297,7 @@
 .Group_3_Class {
     position: absolute;
     width: 37px;
-    /* height: 39px; */
-    /* left: 1px; */
-    right: 0%;
-    top: 95px;
+    top: 70px;
     right: 1%;
     overflow: visible;
 }
