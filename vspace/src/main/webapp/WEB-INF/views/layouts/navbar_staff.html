@@ -1,0 +1,84 @@
+<html layout:decorate="~{layouts/main}">
+	<head>
+	
+	</head>
+	
+	<body>
+		<div th:fragment="navbar">
+			<nav class="navbar navbar-dark fixed-top bg-purple flex-md-nowrap p-0 shadow">
+		      <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="@{/}">Virtual Spaces 2.0</a>
+		      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+		      <ul class="navbar-nav px-3">
+		        <li class="nav-item text-nowrap">
+		          <form th:action="@{/logout}" method="POST">
+		          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+		          <button class="btn btn-link" type="submit" title="Logout"><span data-feather="log-out"></span> Logout</button>
+		          </form>
+		        </li>
+		      </ul>
+		    </nav>
+		    
+		    <div class="container-fluid">
+		      <div class="row">
+		        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+		          <div class="sidebar-sticky">
+		            <ul class="nav flex-column">
+		              	<li class="nav-link alert alert-warning" sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
+		              	  style="text-align: center;" th:style="${exhibition.mode == 'ACTIVE'? 'display: none': 'display: block'}">
+		              		<span data-feather="alert-triangle"></span>
+		              		<span th:if="${exhibition.mode == 'MAINTENANCE'}">Exhibition under maintenance</span>
+		              		<span th:if="${exhibition.mode == 'OFFLINE'}">Exhibition is offline</span>
+		              	</li>     
+			            <li class="nav-item">
+			              <a class="nav-link ${currentPage == 'home' ? 'active' : '' }" th:href="@{/staff/dashboard}">
+			              <span data-feather="home"></span>
+			              Dashboard <span class="sr-only">(current)</span>
+			              </a>
+			            </li>
+		                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+		                  <a class="nav-link ${currentPage == 'space' ? 'active' : '' }" th:href="@{/staff/space/list}">
+		                  <span data-feather="box"></span>
+		                  Spaces
+		                  </a>
+		                </li>
+		                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+		                  <a class="nav-link ${currentPage == 'module' ? 'active' : '' }" th:href="@{/staff/module/list}">
+		                  <span data-feather="share-2"></span>
+		                  Modules
+		                  </a>
+		                </li>
+		
+		                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+		                  <a class="nav-link ${currentPage = 'images' ? 'active' : '' }" th:href="@{/staff/images/list/1}">
+		                  <span data-feather="image"></span>
+		                  Images
+		                  </a>
+		                </li>
+		                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+		                  <a class="nav-link ${currentPage == 'users' ? 'active' : '' }" th:href="@{/staff/user/list}">
+		                  <span data-feather="users"></span>
+		                  Users
+		                  </a>
+		                </li>
+		            </ul>
+		
+		            <!-- <tiles:insertAttribute name="sidemenu" /> -->
+		          </div>
+		        </nav>
+		
+		        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+		
+		          <div class="row">
+		            <div class="col-sm" style="padding-top: 20px;">
+		                <div th:if="${param.showAlert == true}" id="errorMsg" class="alert alert-${param.alertType}">
+		                  [[${param.message}]]
+		                </div>
+		              <!-- <tiles:insertAttribute name="content" /> -->
+		            </div>
+		          </div>
+		        </main>
+		      </div>
+		    </div>
+	    </div>
+	</body>
+</html>
