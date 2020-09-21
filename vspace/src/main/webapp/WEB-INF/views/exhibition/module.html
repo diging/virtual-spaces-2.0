@@ -35,7 +35,7 @@
             <p>Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
          </div>
          <div class="Group_7_Class">
-            <a th:if="${prevSlide !=  null}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
+            <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
                <div class="Slideshow_previous Slideshow_previous_Class">
                   <svg class="Ellipse_11">
                      <ellipse fill="rgba(255,255,255,1)"
@@ -50,7 +50,7 @@
                   </svg>
                </div>
             </a>
-            <a th:if="${nextSlide !=  null}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
+            <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
                <div class="slideshow_next slideshow_next_Class">
                   <svg class="Ellipse_12">
                      <ellipse fill="rgba(255,255,255,1)"
@@ -100,8 +100,8 @@
                <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
             </div>
          </a>
+         <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
          <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-            <h3>[[${currentSlideCon.name}]]</h3>
             <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
             <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[[${contents.htmlRenderedText()}]]</div>
             <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">

@@ -1,6 +1,6 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html layout:decorate="~{layouts/main}">
 <head>
-<link type="text/css" th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet">
+<link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet">
 <script th:inline="javascript">
 $(document).ready(function () {
     "use strict";
@@ -24,30 +24,31 @@ $(document).ready(function () {
 </script>
 </head>
 <body>
-<div class="row justify-content-center">
-	<div class="col-8">
-		<div class="jumbotron">
-            <h2>Setup Virtual Spaces</h2>
-			<p>It looks like this instance of Virtual Spaces has not been set up yet.</p>
-            
-            <p>Please choose an admin password:</p> 
-            <th:url value="/setup/admin" var="postUrl" />
-            <form action="#" th:action="${postUrl}" method="POST">
-                <input type="hidden" name="${_csrf.parameterName}"
-                            value="${_csrf.token}" />
-                        
-                <input type="password" class="form-control" name="adminpw" required />
-                <div style="padding-top: 10px;">
-                <div class="pwstrength_viewport_progress"></div>
-                </div>
-                <div class="text-right">
-                <button type="submit" class="btn btn-md btn-primary">Set Password</button>
-                </div>
-            </form>
+	<div class="justify-content-center" layout:fragment="content">
+		<div class="col-8">
+			<div>
+				<h2>Setup Virtual Spaces</h2>
+				<p>It looks like this instance of Virtual Spaces has not been
+					set up yet.</p>
+
+				<p>Please choose an admin password:</p>
+				<form th:action="@{/setup/admin}" method="POST">
+					<input type="hidden" name=[[${_csrf.parameterName}]]
+						value=[[${_csrf.token}]]/> <input type="password"
+						class="form-control" name="adminpw" required />
+					<div style="padding-top: 10px;">
+						<div class="pwstrength_viewport_progress"></div>
+					</div>
+					<div class="text-right">
+						<button type="submit" class="btn btn-md btn-primary">Set
+							Password</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
-</div>
-<script type="text/javascript" th:src="@{https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.2.1/pwstrength-bootstrap.min.js}"></script>
+	<script type="text/javascript"
+		th:src="@{https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.2.1/pwstrength-bootstrap.min.js}"></script>
 </body>
 </html>
 
