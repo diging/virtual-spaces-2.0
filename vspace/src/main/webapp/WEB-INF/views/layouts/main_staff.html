@@ -8,7 +8,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" type="text/css" />
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
 <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Virtual Spaces</title>
@@ -63,20 +63,26 @@
    <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script>window.jQuery || document.write('<script th:src="@{../../assets/js/vendor/jquery-slim.min.js}"><\/script>')</script>
+<!--  <script>window.jQuery || document.write('<script th:src="@{../../assets/js/vendor/jquery-slim.min.js}"><\/script>')</script> -->
 <script th:src="@{/resources/bootstrap-4.1.2/assets/js/popper.min.js}"></script>
 <script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
 
     <!-- Icons -->
-<script th:src="@{https://unpkg.com/feather-icons/dist/feather.min.js}"></script>
+<script src="//unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script>
   feather.replace()
 </script>
 </head>
-
 <body>
-	<div th:insert="layouts/navbar_staff :: navbar"></div>
-	<div th:insert="staff/dashboard/menu/dashboard_menu :: dashboard_menu"></div>
-    <div layout:fragment="content"></div>
+    <div th:insert="layouts/navbar_staff :: navbar"></div>
+    <div class="sidebar">
+        <div class="sidebarHeader"></div>
+        <div
+            th:insert="staff/dashboard/menu/dashboard_menu :: dashboard_menu"></div>
+    </div>
+    <div class="container"
+        style="position: absolute; right: 0px; top: 100px; width: 85%;">
+        <div layout:fragment="content"></div>
+    </div>
 </body>
 </html>

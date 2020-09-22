@@ -1,23 +1,66 @@
 <html layout:decorate="~{staff/dashboard}">
 <head>
-
-
 </head>
 <body>
     <div th:fragment="dashboard_menu">
-    <h6
-        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span>Spaces</span> <a
-            class="d-flex align-items-center text-muted"
-            th:href="@{/staff/space/add}"> <span><i class="fas fa-plus-circle"></i></span>
-        </a>
-    </h6>
-
-    <h6
-        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span>Modules</span> <a
-            class="d-flex align-items-center text-muted"
-            th:href="@{/staff/module/add}"> <span><i class="fas fa-plus-circle"></i></span>
-        </a>
-    </h6>
+        <ul>
+            <li class="nav-link alert alert-warning"
+                sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
+                style="text-align: center;"
+                th:style="${#strings.equals(exhibition.mode,'ACTIVE') ? 'display: none' : 'display: block'}">
+                <span><i class="fa fa-exclamation-triangle"></i></span>
+                <span th:if="${exhibition.mode == 'MAINTENANCE'}">Exhibition
+                    under maintenance</span> <span
+                th:if="${exhibition.mode == 'OFFLINE'}">Exhibition
+                    is offline</span>
+            </li>
+            <li class="nav-item"><a
+                class="nav-link ${currentPage == 'home' ? 'active' : '' }"
+                th:href="@{/staff/dashboard}"> <span><i
+                        class="fas fa-home"></i></span> Dashboard <span
+                    class="sr-only">(current)</span>
+            </a></li>
+            <li class="nav-item"
+                sec:authorize="hasAnyRole('ADMIN', 'STAFF')"><a
+                class="nav-link ${currentPage == 'space' ? 'active' : '' }"
+                th:href="@{/staff/space/list}"> <span><i
+                        class="fas fa-th-large"></i></span> Spaces
+            </a></li>
+            <li class="nav-item"
+                sec:authorize="hasAnyRole('ADMIN', 'STAFF')"><a
+                class="nav-link ${currentPage == 'module' ? 'active' : '' }"
+                th:href="@{/staff/module/list}"> <span><i
+                        class="fas fa-share-alt"></i></span> Modules
+            </a></li>
+            <li class="nav-item"
+                sec:authorize="hasAnyRole('ADMIN', 'STAFF')"><a
+                class="nav-link ${currentPage = 'images' ? 'active' : '' }"
+                th:href="@{/staff/images/list/1}"> <span><i
+                        class="fas fa-file-image-o"></i></span> Images
+            </a></li>
+            <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a
+                class="nav-link ${currentPage == 'users' ? 'active' : '' }"
+                th:href="@{/staff/user/list}"> <span><i
+                        class="fas fa-user" aria-hidden="true"></i></span>
+                    Users
+            </a></li>
+        </ul>
+        <ul>
+            <li><h6
+                    class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Spaces</span> <a
+                        class="d-flex align-items-center text-muted"
+                        th:href="@{/staff/space/add}"> <span><i
+                            class="fas fa-plus-circle"></i></span>
+                    </a>
+                </h6></li>
+            <li><h6
+                    class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Modules</span> <a
+                        class="d-flex align-items-center text-muted"
+                        th:href="@{/staff/module/add}"> <span><i
+                            class="fas fa-plus-circle"></i></span>
+                    </a>
+                </h6></li>
+        </ul>
 </body>
