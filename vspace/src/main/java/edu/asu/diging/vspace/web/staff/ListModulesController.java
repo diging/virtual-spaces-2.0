@@ -19,6 +19,6 @@ public class ListModulesController {
 		model.addAttribute("vspacMmodules", moduleRepo.findAll());
 		
 		
-		return "staff/module/list";
+		return "staff/modules/modulelist";
 	}
 }
