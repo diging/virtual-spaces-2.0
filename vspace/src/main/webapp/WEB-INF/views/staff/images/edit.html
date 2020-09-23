@@ -3,9 +3,10 @@
 <link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet" />
 </head>
 <body>
-    <h1>Edit Image: [[${imageForm.fileName}]]</h1>
+    
     <div layout:fragment="content">
-        <form method="POST" th:action="@{/staff/image/${imageId}/edit}"
+        <h1>Edit Image: [[${imageForm.fileName}]]</h1>
+        <form method="POST" th:action="@{'/staff/image/'+${imageId}+'/edit'}"
             modelAttribute="imageForm" enctype="multipart/form-data">
             <input type="hidden" name="${_csrf.parameterName}"
                 value="${_csrf.token}" />
@@ -23,7 +24,7 @@
 
             <button class="btn btn-primary btn-sm" type="submit"
                 value="submit">Save Image</button>
-            <a th:href="@{/staff/display/image/${imageId}}"
+            <a th:href="@{'/staff/display/image/'+${imageId}}"
                 class="btn btn-light btn-sm">Cancel</a>
         </form>
 
