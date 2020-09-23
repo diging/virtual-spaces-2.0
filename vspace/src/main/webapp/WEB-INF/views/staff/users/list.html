@@ -1,0 +1,45 @@
+<html layout:decorate="~{layouts:main_staff}">
+<head>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<h2>Users</h2>
+		<ul class="list-group" th:each="user: ${users}">
+		    <li class="list-group-item clearfix" th:style="'${!user.enabled}' ? 'list-group-item-secondary' : ''">
+		        <span th:if="${!user.enabled}" class="badge badge-light">Account Deactivated</span>
+		        <span th:if="${user.admin}" class="badge badge-warning">Admin User</span>
+		        <span th:if="${user.enabled}" class="badge badge-info">Active</span>
+		        <span th:if="${fn:contains(user.roles, 'STAFF')}" class="badge badge-primary">Staff</span>
+		        [[${user.username}]] ([[${user.firstName}]] [[${user.lastName}]])
+		        <div class="pull-right text-right">
+		        
+	            <form th:if="${!user.enabled}" th:action="@{'/staff/user/'+${user.username}+'/approve'}"  th:object="${approveUrl}" method="POST">
+	            	<button style="padding:0px" class="btn btn-link"><span data-feather="user-check"></span> Activate</button>
+	            </form>
+		        
+		        <div th:if="${user.enabled}">
+		            <form th:if="!user.admin" th:action="@{'/staff/user/'+${user.username}+'/admin'}" th:object="${postUrl}" method="POST">
+		            	<button style="padding:0px" class="btn btn-link"><span data-feather="key"></span> Make Admin</button>
+		            </form>
+		            <form th:if="${user.admin}" th:action="@{'/staff/user/'+${user.username}+'/admin/remove'}" th:obejct="${removeUrl}" method="POST">
+		            <button style="padding:0px" class="btn btn-link"><span data-feather="user"></span> Remove Admin Role</button>
+		            </form>
+		            
+		            <form th:if="${!fn:contains(user.roles, 'STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/add?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
+		            	<button style="padding:0px" class="btn btn-link"><span data-feather="user"></span> Make Staff</button>
+		            </form>
+		            
+			        <form th:if="${fn:contains(user.roles, 'STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/remove?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
+		            	<button style="padding:0px" class="btn btn-link"><span data-feather="user"></span> Remove Staff Role</button>
+		            </form> 
+		        
+		            <form th:action="@{'/staff/user/'+${user.username}+'/disable'}" th:object="${disableUrl}" method="POST">
+		            	<button style="padding:0px" class="btn btn-link"><span data-feather="user-x"></span> Deactivate User</button>
+		            </form>
+		        </div>
+		        </div>
+		    </li>
+		</ul>
+	</div>
+</body>
