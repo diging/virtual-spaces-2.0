@@ -5,7 +5,7 @@
 //------------Deleting Slides-------------------
 function deleteSlide(slideId) {
     $.ajax({
-        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId +'?${_csrf.parameterName}=${_csrf.token}',
+        url: "th:href='/staff/module/'+${module.id}+'/slide/'+ slideId}",
         type: 'DELETE',
         cache       : false,
         contentType : false,
@@ -21,7 +21,7 @@ function deleteSlide(slideId) {
 
 function checkSlideInSequence(slideId) {
 	$.ajax({
-        url: "<c:url value="/staff/module/${module.id}/slide/" />" + slideId + "/sequences" + '?${_csrf.parameterName}=${_csrf.token}',
+        url: "th:href='/staff/module/'+${module.id}+'/slide/'+ slideId + '/sequences' + '?${_csrf.parameterName}=${_csrf.token}'",
         type: 'GET',
         cache       : false,
         contentType : false,
@@ -51,7 +51,7 @@ function loadSlidesInSequences() {
 		$('#selectedSequence').empty();
 		$.ajax({
 			type: "GET",
-			url: "<c:url value="/staff/module/${module.id}/sequence/"/>" +sequenceId+  "/slides",
+			url: "th:href='/staff/module/'+${module.id}+'/sequence/'+sequenceId+'/slides'",
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, slide) {
@@ -98,7 +98,7 @@ $(document).ready(function($) {
 		$('#allSequences').empty();
 		$.ajax({
 			type: "GET",
-			url: "<c:url value="/staff/module/${module.id}/slide/"/>" +slideId+  "/sequences",
+			url: "th:href='/staff/module/'+${module.id}+'/slide/'+slideId+'/sequences'",
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, sequence) {
@@ -122,17 +122,7 @@ $(document).ready(function($) {
 		var slideId = this.id;
 		console.log(slideId);
 		$('#allSequences').empty();
-		<c:forEach items="${sequences}" var="sequence" varStatus="loop">
-		{
-		    $('#allSequences').append('<div id=${sequence.id} class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-				'<div align="left" class="card-body">'+
-				'<a href="<c:url value="/staff/module/${module.id}/sequence/${sequence.id}"/>'+'">'+
-				'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
-				'<font color="#796d05"><h5 class="card-title">${sequence.name}</h5>'+
-				'<p class="card-text">${sequence.description}</p></font>'+
-				'</div></div>');
-		}
-		</c:forEach>
+		
 		loadSlidesInSequences();
 	});
 
@@ -213,10 +203,10 @@ $(document).ready(function($) {
                 <div th:each="slide: ${slides}">
                     <div id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
                         <div id="slideDesc" align="left" class="card-body d-flex" style="position: relative;">
-                        <!-- Need to fix this Prashant -->
-                         <!-- th:style="${!#strings.isEmpty(slide.description) ? 'overflow: scroll; max-height: 300px'}">
-                                   <div style="padding-bottom: 32px; padding-right: 2px;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"><span id="branchingPoint" style="float: right;"><i class="fa fa-code-fork"></i></span></div>
-                             --><font color="#796d05"><h5 class="card-title">[[${slide.name}]]</h5>
+                        <!-- th:style="${!#strings.isEmpty(slide.description) ? 'overflow: scroll; max-height: 300px'}"> -->
+                                   <div style="padding-bottom: 32px; padding-right: 2px;" 
+                                   th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"><span id="branchingPoint" style="float: right;"><i class="fa fa-code-fork"></i></span></div>
+                             <font color="#796d05"><h5 class="card-title">[[${slide.name}]]</h5>
                             <p class="card-text">[[${slide.description}]]</p></font>					
                             <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
                             <a id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
