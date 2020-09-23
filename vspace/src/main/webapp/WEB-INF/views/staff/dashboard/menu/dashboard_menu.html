@@ -1,4 +1,4 @@
-<html layout:decorate="~{layouts:main_staff}">
+<html layout:decorate="~{layouts/main_staff}">
 <head>
 </head>
 <body>
@@ -23,7 +23,7 @@
             <li class="nav-item"
                 sec:authorize="hasAnyRole('ADMIN', 'STAFF')"><a
                 class="nav-link ${currentPage == 'space' ? 'active' : '' }"
-                th:href="@{/staff/space/list}"> <span><i
+                th:href="@{/staff/spaces/spacelist}"> <span><i
                         class="fas fa-th-large"></i></span> Spaces
             </a></li>
             <li class="nav-item"
@@ -39,9 +39,8 @@
                         class="fas fa-file-image-o"></i></span> Images
             </a></li>
             <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a
-                class="nav-link ${currentPage == 'users' ? 'active' : '' }"
-                th:href="@{/staff/user/list}"> <span><i
-                        class="fas fa-user" aria-hidden="true"></i></span>
+                class="nav-link" th:style="${currentPage == 'users' ? 'active' : '' }"
+                th:href="@{/staff/user/list}"> <span><i class="fas fa-user" aria-hidden="true"></i></span>
                     Users
             </a></li>
         </ul>
