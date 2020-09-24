@@ -21,17 +21,19 @@ function deleteSlide(slideId) {
 
 function checkSlideInSequence(slideId) {
 	$.ajax({
-        url: "th:href='/staff/module/'+${module.id}+'/slide/'+ slideId + '/sequences' + '?${_csrf.parameterName}=${_csrf.token}'",
+        url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+slideId+'/sequences?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'GET',
         cache       : false,
         contentType : false,
         success: function(data) {
+            console.log(data);
             if(data.length > 0){
+                
                 $("ol").empty();
                 $.each(data, function (index, sequenceData) {
                     $('ol').append("<li>"+sequenceData.name+"</li>");
                     });
-                $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
+                $('#deleteSlideAlert').modal('open'); // popup #myModal id modal
                 $("#deleteSlideAlert").data('value', slideId); // setter
             }
             else{
@@ -51,7 +53,7 @@ function loadSlidesInSequences() {
 		$('#selectedSequence').empty();
 		$.ajax({
 			type: "GET",
-			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides',
+			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			async: false,
 			success: function(response) {
 			    console.log(response);
@@ -60,7 +62,7 @@ function loadSlidesInSequences() {
 					$('#selectedSequence').append(''+
 							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
 							'<div align="left" class="card-body">'+
-							'<a href="<c:url value="/staff/module/${module.id}/slide/"/>'+slide.id+'" >'+
+							'<a th:href=[(@{/staff/module/${module.id}/slide/})]'+slide.id+'>'+
 							'<h5 class="card-title">'+slide.name+'</h5>'+
 							'<p class="card-text">'+slide.description+'</p>'+'</a>'+
 							'</div></div>');
@@ -99,13 +101,13 @@ $(document).ready(function($) {
 		$('#allSequences').empty();
 		$.ajax({
 			type: "GET",
-			url: "th:href='/staff/module/'+${module.id}+'/slide/'+slideId+'/sequences'",
+			url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+slideId+'/sequences',
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, sequence) {
 					$('#allSequences').append('<div id='+sequence.id+' class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
 							'<div align="left" class="card-body">'+
-							'<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+sequence.id+'" >'+
+							'<a th:href=[(@{/staff/module/${module.id}/sequence/})]'+sequence.id+'>'+
 							'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
 							'<font color="#796d05"><h5 class="card-title">'+sequence.name+'</h5>'+
 							'<p class="card-text">'+sequence.description+'</p></font>'+
@@ -121,9 +123,19 @@ $(document).ready(function($) {
 	    $(".slide").css({ 'border' : ''});
 	    $(".sequence").css({ 'border' : ''});
 		var slideId = this.id;
-		console.log(slideId);
 		$('#allSequences').empty();
+		$(function() {
+		    [# th:each="sequence, status : ${sequences}"]
+		    $('#allSequences').append('<div id="[(${sequence.id})]" class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
+				'<div align="left" class="card-body">'+
+				'<a href="/vspace/staff/module/[(${module.id})]/sequence/[(${sequence.id})]}">'+
+				'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
+				'<font color="#796d05"><h5 class="card-title">[(${sequence.name})]</h5>'+
+				'<p class="card-text">[(${sequence.description})]</p></font>'+
+				'</div></div></th:block>');
+		    [/]
 		
+		});
 		loadSlidesInSequences();
 	});
 
@@ -203,14 +215,14 @@ $(document).ready(function($) {
             <div class="col justify-content-center" style="padding-left: 30px;">
                 <div th:each="slide: ${slides}">
                     <div th:id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
-                        <div id="slideDesc" align="left" class="card-body d-flex" style="position: relative;">
-                        <!-- th:style="${!#strings.isEmpty(slide.description) ? 'overflow: scroll; max-height: 300px'}"> -->
+                        <div id="slideDesc" align="left" class="card-body d-flex" style="position: relative;"
+                        th:style="${#strings.isEmpty(slide.description) ? '' : 'overflow: scroll;max-height: 300px'}">
                                    <div style="padding-bottom: 32px; padding-right: 2px;" 
-                                   th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"><span id="branchingPoint" style="float: right;"><i class="fa fa-code-fork"></i></span></div>
+                                   th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"><span id="branchingPoint" style="float: right;"><i class="fas fa-code-branch"></i></span></div>
                              <font color="#796d05"><h5 class="card-title">[[${slide.name}]]</h5>
                             <p class="card-text">[[${slide.description}]]</p></font>					
                             <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a th:id="${slide.id}" href="javascript:checkSlideInSequence('${slide.id}')" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;" data-feather="trash-2"></span></a>
+                            <a th:id="${slide.id}" th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;"><i class="fas fa-trash-alt"></i></span></a>
                             <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}"><span style="float: right; padding-right: 7px;"><i class="fa fa-eye"></i></span></a>
                             </div>
                         </div>
