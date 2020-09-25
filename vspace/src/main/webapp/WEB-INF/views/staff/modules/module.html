@@ -29,11 +29,11 @@ function checkSlideInSequence(slideId) {
             console.log(data);
             if(data.length > 0){
                 
-                $("ol").empty();
+                $("#orderedList").empty();
                 $.each(data, function (index, sequenceData) {
-                    $('ol').append("<li>"+sequenceData.name+"</li>");
-                    });
-                $('#deleteSlideAlert').modal('open'); // popup #myModal id modal
+                    $('#orderedList').append("<li>"+sequenceData.name+"</li>");
+                });
+                $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
                 $("#deleteSlideAlert").data('value', slideId); // setter
             }
             else{
@@ -49,7 +49,7 @@ function loadSlidesInSequences() {
 		$(".sequence").css({ 'border' : ''});
 		$(this).css("border", "solid #c1bb88");
 		var sequenceId = this.id;
-		console.log(sequenceId);
+		var moduleId=[[${module.id}]];
 		$('#selectedSequence').empty();
 		$.ajax({
 			type: "GET",
@@ -62,7 +62,7 @@ function loadSlidesInSequences() {
 					$('#selectedSequence').append(''+
 							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
 							'<div align="left" class="card-body">'+
-							'<a th:href=[(@{/staff/module/${module.id}/slide/})]'+slide.id+'>'+
+							'<a href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+
 							'<h5 class="card-title">'+slide.name+'</h5>'+
 							'<p class="card-text">'+slide.description+'</p>'+'</a>'+
 							'</div></div>');
@@ -97,7 +97,7 @@ $(document).ready(function($) {
 	    $(".slide").css({ 'border' : ''});
 		$(this).css("border", "solid #c1bb88");
 		var slideId = this.id;
-		console.log(slideId);
+		var moduleId=[[${module.id}]];
 		$('#allSequences').empty();
 		$.ajax({
 			type: "GET",
@@ -107,7 +107,7 @@ $(document).ready(function($) {
 				$.each(response, function (index, sequence) {
 					$('#allSequences').append('<div id='+sequence.id+' class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
 							'<div align="left" class="card-body">'+
-							'<a th:href=[(@{/staff/module/${module.id}/sequence/})]'+sequence.id+'>'+
+							'<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+
 							'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
 							'<font color="#796d05"><h5 class="card-title">'+sequence.name+'</h5>'+
 							'<p class="card-text">'+sequence.description+'</p></font>'+
@@ -222,7 +222,8 @@ $(document).ready(function($) {
                              <font color="#796d05"><h5 class="card-title">[[${slide.name}]]</h5>
                             <p class="card-text">[[${slide.description}]]</p></font>					
                             <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            <a th:id="${slide.id}" th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-target="#slide-modal" style="float: right;"><span style="float: right;"><i class="fas fa-trash-alt"></i></span></a>
+                            
+                            <a th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'" style="float: right;"><span style="float: right;"><i class="fas fa-trash-alt"></i></span></a>
                             <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}"><span style="float: right; padding-right: 7px;"><i class="fa fa-eye"></i></span></a>
                             </div>
                         </div>
@@ -246,7 +247,7 @@ $(document).ready(function($) {
 </div>
 </div>
 
-<div id="deleteSlideAlert" class="modal fade" role="dialog"
+<div id="deleteSlideAlert" th:id="slide-modal" class="modal fade" role="dialog"
     data-value="0">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -260,7 +261,7 @@ $(document).ready(function($) {
                 <p>
                     This Slide is a part of Sequences shown below. Are you sure you want to delete it?
                 </p>
-                <ol>
+                <ol id="orderedList">
                 </ol>
             </div>
             <div class="modal-footer">
