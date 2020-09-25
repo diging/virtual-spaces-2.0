@@ -38,6 +38,6 @@ public class ListSpacesController {
             model.addAttribute("startSpace", startExhibition.getStartSpace());
         }
 
-        return "staff/space/list";
+        return "staff/spaces/spacelist";
     }
 }

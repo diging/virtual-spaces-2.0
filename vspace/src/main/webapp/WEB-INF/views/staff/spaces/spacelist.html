@@ -1,4 +1,4 @@
-<html layout:decorate="~{layouts:main_staff}">
+<html layout:decorate="~{layouts/main_staff}">
 <head>
 	<script th:src="@{/resources/extra/space.js}"></script>
 	<script th:inline="javascript">
@@ -49,29 +49,29 @@
 		        class="fa fa-play-circle" aria-hidden="true"
 		        style="color: #bfb168;"></i> indicates the start space.
 		</div>
-		<ul class="list-group list-group-flush" th:each="spac: ${spaces}">
-		        <li class="list-group-item" th:if="${space.id == startSpace.id}">
-	                <i class="fa fa-play-circle" aria-hidden="true"
-		                    style="color: #bfb168;"></i>
-		            <a th:href="@{'/staff/space/'+${space.id}}">
-	                    <span data-feather="box" th:if="${space.id != startSpace.id"></span>
-		               	[[${space.name}]]
-		        	</a> (Created on <span class="date">[[${space.creationDate}]]</span> by
-		            [[${space.createdBy})]] 
-		            <div class="float-right" th:if="${space.spaceStatus=='UNPUBLISHED'}">
-		                <i class="fas fa-exclamation-triangle unpublishedSpaceClass"
-		                   aria-hidden="true" style="color: #bfb168; padding-right: 8px;"></i>
-		                <span class="unpublishedtooltiptext">This space is currently unpublished.</span>
-		           
-		                <i th:if="${space.hasIncomingLinks() == 'false'}" class="fas fa-eye-slash noIncomingLinks" aria-hidden="true" 
-		                   style="color: #bfb168; padding-right: 8px;"></i>
-		                <span th:if="${space.hasIncomingLinks() == 'false'}" class="noIncomingLinkMessage">This space has no incoming links.</span>
-		            
+		<ul class="list-group list-group-flush" th:each="space: ${spaces}">
+	        <li class="list-group-item" th:if="${space.id == startSpace.id}">
+                <i class="fa fa-play-circle" aria-hidden="true"
+	                    style="color: #bfb168;"></i>
+	            <a th:href="@{'/staff/space/'+${space.id}}">
+                    <span data-feather="box" th:if="${space.id != startSpace.id}"></span>
+	               	[[${space.name}]]
+	        	</a> (Created on <span class="date">[[${space.creationDate}]]</span> by
+	            [[${space.createdBy}]] 
+	            <div class="float-right" th:if="${space.spaceStatus=='UNPUBLISHED'}">
+	                <i class="fas fa-exclamation-triangle unpublishedSpaceClass" aria-hidden="true" style="color: #bfb168; padding-right: 8px;"></i>
+	                <span class="unpublishedtooltiptext">This space is currently unpublished.</span>
+	           
+	                <i th:if="${space.hasIncomingLinks() == 'false'}" class="fas fa-eye-slash noIncomingLinks" aria-hidden="true" 
+	                   style="color: #bfb168; padding-right: 8px;"></i>
+	                <span th:if="${space.hasIncomingLinks() == 'false'}" class="noIncomingLinkMessage">This space has no incoming links.</span>
+	            
 		            <a th:onclick="checkSpaceLinkPresent('${space.id}', '@{/staff/}', '?${_csrf.parameterName}=${_csrf.token}',$('#headerSpaceValue'))"
 		            class="checkSpaceLinkPresent"> 
 		            	<span class="checkSpaceLinkPresent" id="deleteSpace" data-feather="trash-2" style="color: #666;"></span>
 		        	</a>
-		        </div></li>
+		        </div>
+	       </li>
 		</ul>
 		
 		
