@@ -4,8 +4,9 @@
 //# sourceURL=click.js
 //------------Deleting Slides-------------------
 function deleteSlide(slideId) {
+    console.log("Delete slide",slideId);
     $.ajax({
-        url: "th:href='/staff/module/'+${module.id}+'/slide/'+ slideId}",
+        url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+ slideId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'DELETE',
         cache       : false,
         contentType : false,
@@ -33,8 +34,11 @@ function checkSlideInSequence(slideId) {
                 $.each(data, function (index, sequenceData) {
                     $('#orderedList').append("<li>"+sequenceData.name+"</li>");
                 });
+                console.log("Before showing alert");
                 $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
+                console.log("After showing alert");
                 $("#deleteSlideAlert").data('value', slideId); // setter
+                console.log("After setting slideId: ",slideId);
             }
             else{
               deleteSlide(slideId);
@@ -85,7 +89,7 @@ $(document).ready(function($) {
 	
     $("#cancelSlideDelButton").click(function () {
         $("#deleteSlideAlert").data('value', 0);
-        $("#deleteSlideAlert").hide();
+        $("#deleteSlideAlert").modal('hide');
 	});
 	
 	
@@ -245,9 +249,7 @@ $(document).ready(function($) {
          </div>
     </div>
 </div>
-</div>
-
-<div id="deleteSlideAlert" th:id="slide-modal" class="modal fade" role="dialog"
+<div id="deleteSlideAlert" class="modal fade" role="dialog"
     data-value="0">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -272,6 +274,7 @@ $(document).ready(function($) {
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>
