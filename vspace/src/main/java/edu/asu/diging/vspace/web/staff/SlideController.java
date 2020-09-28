@@ -50,7 +50,7 @@ public class SlideController {
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
         }           
-        return "staff/module/slide/contents";
+        return "staff/modules/slides/slide";
     }
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/contents", method = RequestMethod.GET)

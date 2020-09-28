@@ -1,10 +1,74 @@
-<!DOCTYPE html>
-<html>
+<html layout:decorate="~{layouts/main}">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
+<link th:href="@{/resources/bootpag/js/bootpag.min.js}" rel="stylesheet" />
+<style>
+.pagination>li>a {
+    border: 1px solid #009999;
+    padding: 5px;
+    color: #000;
+    font-size: 15px;
+}
 
+.pagination>li.active>a {
+    background: #009999;
+    color: #fff;
+    font-size: 15px;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+</style>
+</head>
+<h1>Images</h1>
+<body>
+    <div layout:fragment="content">
+    <script  th:inline="javascript">
+  		//# sourceURL=js.js
+  		$( document ).ready(function() {
+          $('#page-selection').bootpag({
+    	    total: [(${totalPages})],
+    	    page: [(${currentPageNumber})],
+    	    maxVisible: 10,
+    	    leaps: true,
+    	    firstLastUse: true,
+    	    first: '←',
+    	    last: '→',
+    	    wrapClass: 'pagination',
+    	    activeClass: 'active',
+    	    disabledClass: 'disabled',
+    	    nextClass: 'next',
+    	    prevClass: 'prev',
+    	    lastClass: 'last',
+    	    firstClass: 'first'
+    	}).on("page", function(event, num){
+            window.location.assign("./"+num+"?sort=${sortProperty}&order=${order}");
+    	});
+  
+      $("table.table thead th").each(function(){
+          var head = $(this);
+          if(head.attr('sort-prop')=='[(${sortProperty})]'){
+              head.append('${order}'=='desc'?'▾':'▴');
+          }
+          });
+    
+       //set click action, reload page on clicking with all query params
+       $("table.table thead th").click(function() {
+        var headerSortPropName = $(this).attr("sort-prop");
+        if(headerSortPropName != 'tag') {
+        	if(headerSortPropName=='[(${sortProperty})]'){
+            	window.location.href = window.location.pathname+
+            	'?sort='+ headerSortPropName+'&order='+
+            	('[(${order})]' == 'desc'?'asc':'desc');
+        	}else{
+             	window.location.href = window.location.pathname+
+           	 	'?sort='+ headerSortPropName+'&order=asc';
+        	}
+        }
+        });
+  });
+    </script>
+    </div>
 </body>
 </html>
