@@ -38,7 +38,7 @@ public class AddSlideController {
         model.addAttribute("slide", new SlideForm());
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
 
-        return "staff/modules/slide/add";
+        return "staff/modules/slides/add";
     }
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/add", method = RequestMethod.POST)
@@ -54,6 +54,6 @@ public class AddSlideController {
             slideManager.createSlide(module, slideForm, type);
         }
 
-        return "redirect:/staff/modules/{moduleId}";
+        return "redirect:/staff/module/{moduleId}";
     }
 }

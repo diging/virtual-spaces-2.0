@@ -74,7 +74,7 @@ public class EditSlideController {
         model.addAttribute("slideId", slideId);
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
-        return "staff/module/slide/edit";
+        return "staff/modules/slides/edit";
     }
 
     @RequestMapping(value="/staff/module/{moduleId}/slide/{slideId}/edit", method=RequestMethod.POST)

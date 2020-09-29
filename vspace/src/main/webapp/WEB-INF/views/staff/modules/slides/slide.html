@@ -157,10 +157,12 @@ function uploadImage() {
 }
 
 $(document).ready(function() {
-	/* if(${slide['class'].simpleName == 'BranchingPoint'}) {
+    
+    [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
-		$('#choiceSpace').show();	
-	}	 */		
+		$('#choiceSpace').show();
+	[/]
+	
 
     //-------- edit contentblock description --------
 
@@ -520,7 +522,7 @@ $(document).ready(function() {
                 var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="card card-body row" style="margin: 10px;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
-                        choiceblock.append('<a href="<c:url value="/staff/module/${module.id}/sequence/"/>'+sequence.id+'" >'+sequence.name+'</a>');
+                        choiceblock.append('<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
                 	$(function() {
@@ -716,7 +718,7 @@ $(window).on('load', function () {
 
         <!-- Delete Text Modal -->
         <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
-            role="dialog">
+            role="dialog" th:draggable="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -741,7 +743,7 @@ $(window).on('load', function () {
         </div>
         <!-- Delete Image Modal -->
         <div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
-            role="dialog">
+            role="dialog" th:draggable="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -767,7 +769,7 @@ $(window).on('load', function () {
 
         <!-- Delete ChoiceBlock Modal -->
         <div id="confirmDeleteChoiceBlockAlert" class="modal"
-            tabindex="-1" role="dialog">
+            tabindex="-1" role="dialog" th:draggable="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -794,7 +796,7 @@ $(window).on('load', function () {
 
 
         <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" th:draggable="true">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add new Text Block</h5>
@@ -824,7 +826,7 @@ $(window).on('load', function () {
         </div>
 
         <div id="editTextAlert" class="modal" tabindex="-1"
-            role="dialog">
+            role="dialog" th:draggable="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -856,7 +858,7 @@ $(window).on('load', function () {
 
 
         <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" th:draggable="true">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add new Image Block</h5>
@@ -927,16 +929,15 @@ $(window).on('load', function () {
                                 checked="true" /> <label for="showAll">Always
                                 show all choices</label><br />
                             <div id="selectChoices">
-                                <c:forEach items="${choices}"
-                                    var="choice">
+                                <div th:each="choice: ${choices}">
                                     <input class="choiceOptions"
-                                        id="${choice.id}"
+                                        th:id="${choice.id}"
                                         type="checkbox"
-                                        name="${choice.sequence.name}"
-                                        value="${choice.sequence.name}" />
-                                    <label for="${choice.id}">${choice.sequence.name}</label>
+                                        th:name="${choice.sequence.name}"
+                                        th:value="${choice.sequence.name}" />
+                                    <label th:for="${choice.id}">[[${choice.sequence.name}]]</label>
                                     <br />
-                                </c:forEach>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -954,7 +955,7 @@ $(window).on('load', function () {
 
         <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
-                <div style="margin: 1%;" class="valueDiv card-body"
+                <div style="margin: 1%; text-align: justify;" class="valueDiv card-body"
                     th:id="${contents.id}"
                     th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
                     <img th:id="${contents.id}" class="imgDiv"
@@ -967,8 +968,8 @@ $(window).on('load', function () {
                     </a>
                 </div>
                 <div th:id="${contents.id}"
-                    class="textDiv card card-body row"
-                    style="margin: 1%;"
+                    class="card card-body row"
+                    style="margin: 1%; text-align: justify;"
                     th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
                     <p>
                         [[${contents.text}]] <input type="hidden"
@@ -981,8 +982,8 @@ $(window).on('load', function () {
                     </p>
                 </div>
                 <div th:id="${contents.id}"
-                    class="textDiv card card-body row"
-                    style="margin: 1%;"
+                    class="card card-body row"
+                    style="margin: 1%; text-align: justify;"
                     th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}">
                     <a th:if="${contents.showsAll}"
                         th:each="choice: ${choices}"
