@@ -22,22 +22,22 @@ $( document ).ready(function() {
 	  }
   });    
 	
-	<th:block th:each="link : ${spaceLinks}">
+	<th:block th:each="link : [[${spaceLinks}]]">
 	{
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		
 		var link;
-		if ("[[${link.type}]]" == "ALERT") {
-			link = $('<div class="alert alert-primary spaceLink-[[${link.link.id}]]" role="alert" data-link-id="[[${link.link.id}]]"><p class="slabel-[[${link.link.id}]]">[[${link.link.name}]]</p></div>');
-		} else if ("[[${link.type}]]" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="[[${link.image.id}]]" class="spaceLink-[[${link.link.id}]]" data-link-id="[[${link.link.id}]]" src="<th:block th:href="/api/image/[[${link.image.id}]]"/>");
+		if ("${link.type}" == "ALERT") {
+			link = $('<div class="alert alert-primary spaceLink-${link.link.id}" role="alert" data-link-id="${link.link.id}"><p class="slabel-${link.link.id}">${link.link.name}</p></div>');
+		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
+           link = $('<img id="${link.image.id}" class="spaceLink-${link.link.id}" data-link-id="${link.link.id}" src="<th:block th:href="/api/image/${link.image.id}"/>");
 		}  else {
-			link = $('<span data-link-id="[[${link.link.id}]]" class="spaceLink-[[${link.link.id}]] Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-[[${link.link.id}]]" data-link-id="[[${link.link.id}]]"><span class="tooltiptext">[[${link.link.name}]]</span></p></span>');
+			link = $('<span data-link-id="${link.link.id}" class="spaceLink-${link.link.id} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-${link.link.id}" data-link-id="${link.link.id}"><span class="tooltiptext">${link.link.name}</span></p></span>');
 		}
 		link.css('position', 'absolute');
-		link.css('left', [[${link.positionX}]] + posX);
-		link.css('top', [[${link.positionY}]] + posY);
+		link.css('left', ${link.positionX} + posX);
+		link.css('top', ${link.positionY} + posY);
 		link.css('transform', 'rotate(${link.rotation}deg)');
 		link.find("span").css('fill', 'red');
 		link.css('color', 'rgba(128,128,128,1)');
@@ -45,7 +45,7 @@ $( document ).ready(function() {
 		var inputRotation = document.createElement("input");
 		inputRotation.setAttribute("type", "hidden");
 		inputRotation.setAttribute("id", "spaceLinkRotation-${link.link.id}");
-		inputRotation.setAttribute("value", "[[${link.rotation}]]");
+		inputRotation.setAttribute("value", "${link.rotation}");
 		var inputLabel = document.createElement("input");
 		inputLabel.setAttribute("type", "hidden");
 		inputLabel.setAttribute("id", "spaceLinkLabel-${link.link.id}");
@@ -60,8 +60,8 @@ $( document ).ready(function() {
 		inputLinkedSpace.setAttribute("value", "${link.link.targetSpace.id}");
 		var unpublishedSpaceElement=$('<th:block th:if="${link.link.targetSpace.spaceStatus=='UNPUBLISHED'}"><i data-link-id="unpublished-${link.link.id}" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-${link.link.id}" style="color: #bfb168;"></i></th:block>')
 		unpublishedSpaceElement.css('position', 'absolute');
-		unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
-		unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
+		unpublishedSpaceElement.css('left', ${link.positionX} + posX + 25);
+		unpublishedSpaceElement.css('top', ${link.positionY} + posY - 13);
 		unpublishedSpaceElement.css('transform', 'rotate(${link.rotation}deg)');
 		unpublishedSpaceElement.css('font-size', "12px");
 		
@@ -91,17 +91,17 @@ $( document ).ready(function() {
 	}
 	</th:block>
 	
-	<th:block th:each="link : ${moduleLinks}">
+	<th:block th:each="link : [[${moduleLinks}]]">
 	{
 		var link;
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
-		if ("[[${link.type}]]" == "ALERT") {
-			link = $('<div class="alert alert-primary moduleLink-[[${link.link.id}]]" role="alert" data-link-id="[[${link.link.id}]]"><p class="mlabel-[[${link.link.id}]]">[[${link.link.name}]]</p></div>');
-		} else if ("$[[{link.type}]]" == "IMAGE" && "[[${link.image.id}]]" != "") {
-           link = $('<img id="[[${link.image.id}]]" data-link-id="[[${link.link.id}]]" class="moduleLink-${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
+		if ("${link.type}" == "ALERT") {
+			link = $('<div class="alert alert-primary moduleLink-${link.link.id}" role="alert" data-link-id="${link.link.id}"><p class="mlabel-${link.link.id}">${link.link.name}</p></div>');
+		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
+           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" class="moduleLink-${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
 		}  else {
-			link = $('<span data-link-id="[[${link.link.id}]]" class="moduleLink-[[${link.link.id}]] Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}"><span class="tooltiptext">${link.link.name}</span></p></span>');
+			link = $('<span data-link-id="${link.link.id}" class="moduleLink-${link.link.id} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-${link.link.id}" data-link-id="${link.link.id}"><span class="tooltiptext">${link.link.name}</span></p></span>');
 		}
 		link.css('position', 'absolute');
 		link.css('left', ${link.positionX} + posX);
@@ -150,9 +150,9 @@ $( document ).ready(function() {
 			makeModuleLinksEditable(label, "${link.link.id}",rotation,targetModule,"${link.positionX}","${link.positionY}","${link.id}", type);
 		});
 	}
-	</c:forEach> 	
+	</th:block> 	
 	
-	<c:forEach items="${externalLinks}" var="link" varStatus="loop">
+	<th:block th:each="link : [[${externalLinks}]]">
 	{
         var posX = $("#bgImage").position().left;
         var posY = $("#bgImage").position().top;
@@ -201,7 +201,7 @@ $( document ).ready(function() {
             makeExternalLinksEditable(label,"${link.externalLink.id}",targetLink,"${link.positionX}","${link.positionY}","${link.id}",type);
         });
 	}
-	</c:forEach>
+	</th:block>
 	
 	// --------- draggable modals -----------
 	$("#createSpaceLinkAlert").draggable();
@@ -329,7 +329,7 @@ $( document ).ready(function() {
         
 	    $.ajax({
 			type: "POST",
-			url: "<c:url value="/staff/space/${space.id}/spacelink?${_csrf.parameterName}=${_csrf.token}" />",
+			url: "th:href='@{/staff/space/[[${space.id}]]/spacelink?[[${_csrf.parameterName}]]=[[${_csrf.token}]]'",
 			cache       : false,
 	        contentType : false,
 	        processData : false,
@@ -393,7 +393,7 @@ $( document ).ready(function() {
         
 	    $.ajax({
 			type: "POST",
-			url: "<th:href='@{/staff/space/[[${space.id}]]/modulelink}'"+"'?[[${_csrf.parameterName}]]=[[${_csrf.token}]]' />",
+			url: "th:href='@{/staff/space/[[${space.id}]]/modulelink}'"+"'?[[${_csrf.parameterName}]]=[[${_csrf.token}]]'",
 			cache       : false,
 	        contentType : false,
 	        processData : false,
@@ -511,7 +511,7 @@ $( document ).ready(function() {
 	    var externalLinkInfo = editExternalLinkInfo();
 	    $.ajax({
 	        type: "POST",
-	        url: "th:href="@{/staff/space/link/external/${space.id}?${_csrf.parameterName}=${_csrf.token}}",
+	        url: "th:href='@{/staff/space/link/external/${space.id}?${_csrf.parameterName}=${_csrf.token}}'",
 	        cache: false,
 	        contentType : false,
 	        processData : false,
@@ -567,7 +567,7 @@ $( document ).ready(function() {
         
 	    $.ajax({
 			type: "POST",
-			url: "th:href="@{/staff/space/[[${space.id}]]/externallink?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}",
+			url: "th:href='@{/staff/space/[[${space.id}]]/externallink?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}'",
 			cache       : false,
 	        contentType : false,
 	        processData : false,
@@ -595,7 +595,7 @@ $( document ).ready(function() {
 	$("#deleteSpaceLinkButton").click(function() {
 		var linkId = $("#spaceLinkIdValueEdit").val();
 		$.ajax({
-		  url: "@{th:href="/staff/space/[[${space.id}]]/spacelink/" + linkId + "?[[${_csrf.parameterName}]]=[[${_csrf.token}]]",
+		  url: "th:href='@{/staff/space/[[${space.id}]]/spacelink/" + linkId + "?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}'",
 		  method: "DELETE",
 		  success:function(data) {
 			  $('[data-link-id="' + linkId + '"]').remove();
@@ -1221,30 +1221,30 @@ $( document ).ready(function() {
 </style>
 </head>
 <body>
-<div class="row justify-content-center" layout:fragment="content">
+<div class="justify-content-center" layout:fragment="content">
 	<h1>
-		Space: ${space.name} <small style="margin-left: 10px;"><a
-			th:href="@{/staff/space/${space.id}/edit}"><span
+		Space: [[${space.name}]] <small style="margin-left: 10px;"><a
+			th:href="@{/staff/space/[[${space.id}]]/edit}"><span
 			data-feather="edit"></span></a></small>
 	</h1>
 
 	<div class="alert alert-light" role="alert">
-		Created on <span class="date">${space.creationDate}</span> by
-		${space.createdBy}. <br> Modified on <span class="date">${space.modificationDate}</span>
-		by ${space.modifiedBy}.<br>
+		Created on <span class="date">[[${space.creationDate}]]</span> by
+		[[${space.createdBy}]]. <br> Modified on <span class="date">[[${space.modificationDate}]]</span>
+		by [[${space.modifiedBy}]].<br>
 		<br> <i class="fa fa-exclamation-triangle fa-sm"
 			aria-hidden="true" style="color: #bfb168;"></i> indicates the links
 		to unpublished spaces.
 	</div>
 	<div style="padding-bottom: 10px;">
 		<form method="POST"
-			th:action="@{/staff/space/[[${space.id}/status}]]?[[${_csrf.parameterName}]]=[[${_csrf.token}]]">
+			action= ${space.id}+"/status?"+${_csrf.parameterName}+"="+${csrf.token}>
 			<label><h5>Space Status:</h5></label>
 			<select class="form-control" name="statusParam"
 				style="width: 200px; display: inline;">
-				<option id="Published" value="PUBLISHED"<th:block th:if="${space.spaceStatus=='PUBLISHED'}">selected</th:block>>Published
+				<option th:id="Published" th:value="PUBLISHED" 'th:if="${space.spaceStatus=='PUBLISHED'}" th:selected'>Published
 				</option>
-				<option id="Unpublished" value="UNPUBLISHED"<th:block th:if="${space.spaceStatus=='UNPUBLISHED'}">selected</th:block> >Unpublished
+				<option th:id="Unpublished" th:value="UNPUBLISHED" 'th:if="${space.spaceStatus=='UNPUBLISHED'}"th:selected'>Unpublished
 				</option>
 			</select>
 			<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
@@ -1253,15 +1253,13 @@ $( document ).ready(function() {
 		</form>
 	</div>
 	<div style="padding-bottom: 10px;">
-		<th:block th:href="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
 		<form method="POST"
-			th:action="@{/staff/space/${space.id}/showSpaceLinks}?[[${_csrf.parameterName}]]=[[${_csrf.token}]]">
+			action="@{/staff/space/[[${space.id}]]/showSpaceLinks}?[[${_csrf.parameterName}]]=[[${_csrf.token}]]">
 			<label><h5>Show Links to Unpublished Spaces:</h5></label>
 			<select class="form-control" name="showSpaceLinksParam"
 				style="width: 200px; display: inline;">
-				<option id="No" value=false <th:block th:if="[[${space.showUnpublishedLinks eq false}]]">selected</th:block>>No
-				</option>
-				<option id="Yes" value=true <th:block th:if="${space.showUnpublishedLinks eq true}"> selected</th:block>>Yes
+				<option th:id="No" th:value=false 'th:if="${space.showUnpublishedLinks == false}"th:selected'>No</option>
+				<option th:id="Yes" th:value=true 'th:if="${space.showUnpublishedLinks == true}" th:selected'>Yes
 				</option>
 			</select>
 			<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
@@ -1274,7 +1272,7 @@ $( document ).ready(function() {
 
 	<h5>Description:</h5>
 	<p style="max-height: 100px; overflow-y: scroll;">
-		${space.description}</p>
+		[[${space.description}]]</p>
 
 
 	<div id="errorAlert"
@@ -1287,7 +1285,7 @@ $( document ).ready(function() {
 	</div>
 
 	<th:block
-		th:href="@{/staff/space/${space.id}/spacelink?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}"
+		th:href="@{/staff/space/[[${space.id}]]/spacelink?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}"
 		var="postUrl" />
 	<form id="createSpaceLinkForm">
 		<div id="createSpaceLinkAlert" class="alert alert-secondary"
@@ -1339,10 +1337,10 @@ $( document ).ready(function() {
 				<div class="col-sm-8">
 					<select id="type" name="type" class="form-control-xs target"
 						style="width: inherit;">
-						<option selected value="">Choose...</option>
-						<option value="IMAGE">Image</option>
-						<option value="ARROW">Link</option>
-						<option value="ALERT">Alert</option>
+						<option th:selected >Choose...</option>
+						<option th:value="IMAGE">Image</option>
+						<option th:value="ARROW">Link</option>
+						<option th:value="ALERT">Alert</option>
 					</select>
 				</div>
 			</div>
@@ -1354,10 +1352,10 @@ $( document ).ready(function() {
 				<div class="col-sm-7">
 					<select id="linkedSpace" name="linkedSpace"
 						class="form-control-xs target" style="width: inherit;">
-						<option selected value="">Choose...</option>
+						<option th:selected >Choose...</option>
 						<th:block th:each="space : ${spaces}">
-							<option value="${space.id}">${space.name}
-								<th:block th:if="${space.spaceStatus=='UNPUBLISHED'}"> (Unpublished)</th:block></option>
+							<option th:value="${space.id}">[[${space.name}]]
+								<th:block th:if="${space.spaceStatus =='UNPUBLISHED'}"> (Unpublished)</th:block></option>
 						</th:block>
 					</select>
 				</div>
@@ -1386,7 +1384,7 @@ $( document ).ready(function() {
 	</form>
 
 	<th:block
-		th:href="@{/staff/space/${space.id}/modulelink?${_csrf.parameterName}=${_csrf.token}}"
+		th:href="@{/staff/space/[[${space.id}]]/modulelink?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}"
 		var="postUrl" />
 	<form id="createModuleLinkForm">
 		<div id="createModuleLinkAlert" class="alert alert-secondary"
@@ -1438,8 +1436,8 @@ $( document ).ready(function() {
 				<div class="col-sm-8">
 					<select id="type" name="type"
 						class="form-control-xs modulelink-target">
-						<option selected value="">Choose...</option>
-						<option value="MODULE">Module</option>
+						<option th:selected >Choose...</option>
+						<option th:value="MODULE">Module</option>
 					</select>
 				</div>
 			</div>
@@ -1451,9 +1449,9 @@ $( document ).ready(function() {
 				<div class="col-sm-7">
 					<select id="linkedModule" name="linkedModule"
 						class="form-control-xs modulelink-target">
-						<option selected value="">Choose...</option>
-						<th:block th:if="module : ${moduleList}">
-							<option value="${module.id}">${module.name}</option>
+						<option th:selected >Choose...</option>
+						<th:block th:each="module : ${moduleList}">
+							<option th:value="${module.id}">${module.name}</option>
 						</th:block>
 					</select>
 				</div>
@@ -1470,9 +1468,8 @@ $( document ).ready(function() {
 		</div>
 	</form>
 
-	<th:block th:href="@{/staff/space/update/${space.id}" var="postUrl" />
 	<form method="post"
-		action="@{/staff/space/update/[[${space.id}]]}?[[${_csrf.parameterName}]]=[[${_csrf.token}]]"
+		action="@{/staff/space/update/[[${space.id}]]?[[${_csrf.parameterName}]]=[[${_csrf.token}]]}"
 		enctype="multipart/form-data">
 
 		<div id="changeBgImgAlert" class="alert alert-secondary" role="alert"
@@ -1521,9 +1518,9 @@ $( document ).ready(function() {
 				<div class="col-sm-8">
 					<select id="extType" name="type"
 						class="form-control-xs extlink-target">
-						<option selected value="">Choose...</option>
-						<option value="IMAGE">Image</option>
-						<option value="ARROW">Link</option>
+						<option th:selected>Choose...</option>
+						<option th:value="IMAGE">Image</option>
+						<option th:value="ARROW">Link</option>
 					</select>
 				</div>
 			</div>
@@ -1609,9 +1606,9 @@ $( document ).ready(function() {
 					<select id="typeSpaceEdit" name="type"
 						class="form-control-xs spacelink-targetEdit"
 						style="width: inherit;">
-						<option value="IMAGE">Image</option>
-						<option value="ARROW">Link</option>
-						<option value="ALERT">Alert</option>
+						<option th:value="IMAGE">Image</option>
+						<option th:value="ARROW">Link</option>
+						<option th:value="ALERT">Alert</option>
 					</select>
 				</div>
 			</div>
@@ -1625,7 +1622,7 @@ $( document ).ready(function() {
 						class="form-control-xs spacelink-targetEdit"
 						style="width: inherit;">
 						<th:block th:each=" space : ${spaces}">
-							<option value="${space.id}">${space.name}
+							<option th:value="${space.id}">[[${space.name}]]
 								<th:block th:if="${space.spaceStatus=='UNPUBLISHED'}">(Unpublished)</th:block></option>
 						</th:block>
 					</select>
@@ -1712,7 +1709,7 @@ $( document ).ready(function() {
 				<div class="col-sm-8">
 					<select id="typeEdit" name="type"
 						class="form-control-xs modulelink-targetEdit">
-						<option value="MODULE">Module</option>
+						<option th:value="MODULE">Module</option>
 					</select>
 				</div>
 			</div>
@@ -1724,7 +1721,7 @@ $( document ).ready(function() {
 					<select id="moduleLinkIdEdit" name="linkedModule"
 						class="form-control-xs modulelink-targetEdit" style="width: 100%;">
 						<th:block th:each=" module : ${moduleList}">
-							<option value="${module.id}">${module.name}</option>
+							<option th:value="${module.id}">[[${module.name}]]</option>
 						</th:block>
 					</select>
 				</div>
@@ -1802,8 +1799,8 @@ $( document ).ready(function() {
 				<div class="col-sm-8">
 					<select id="extTypeEdit" name="type"
 						class="form-control-xs externallink-targetEdit">
-						<option value="IMAGE">Image</option>
-						<option value="ARROW">Link</option>
+						<option th:value="IMAGE">Image</option>
+						<option th:value="ARROW">Link</option>
 					</select>
 				</div>
 			</div>
@@ -1856,12 +1853,12 @@ $( document ).ready(function() {
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="deleteModalTitle">Confirm
-						${space.id} Deletion?</h5>
+						[[${space.id}]] Deletion?</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">×</button>
 				</div>
 				<div class="modal-body">
-					<p>Are you sure you want to delete ${space.id}?</p>
+					<p>Are you sure you want to delete [[${space.id}]]?</p>
 					<div id="warningMessage">
 						<div class="text-danger">Other spaces have links to this
 							space!</div>
@@ -1884,10 +1881,10 @@ $( document ).ready(function() {
 		</div>
 	</div>
 
-	<th:block th:if="${not empty space.image}">
+	<th:block th:if="${space.image != null}">
 		<div id="space" style="float: left">
-			<img style="max-width: ${display.width" id="bgImage"
-				th:src="@{/api/image/${space.image.id}}" />
+			<img style="max-width: [[${display.width}]]" id="bgImage"
+				th:src="@{/api/image/[[${space.image.id}]]}" />
 		</div>
 	</th:block>
 
@@ -1901,15 +1898,15 @@ $( document ).ready(function() {
 			style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
 			There are no links on this space.</div>
 		<th:block th:each="spaceLinks : ${linksOnThisSpace}">
-			<th:block th:if="${not empty spaceLinks.targetSpace}">
+			<th:block th:if="${spaceLinks.targetSpace != null}">
 				<a th:href="@{/staff/space/[[${spaceLinks.targetSpace.id}]]}"
 					style='padding: .25rem .25rem;' class="list-group-item"
-					id="${spaceLinks.id}">${spaceLinks.name}&nbsp;->
-					&nbsp;${spaceLinks.targetSpace.name}</a>
+					id="[[${spaceLinks.id}]]">[[${spaceLinks.name}]]&nbsp;->
+					&nbsp;[[${spaceLinks.targetSpace.name}]]</a>
 			</th:block>
-			<th:block th:if="${empty spaceLinks.targetSpace}">
+			<th:block th:if="${spaceLinks.targetSpace == null}">
 				<a href="#" style='padding: .25rem .25rem;' class="list-group-item"
-					id="${spaceLinks.id}">${spaceLinks.name}&nbsp;-> &nbsp;&lt;No
+					id="[[${spaceLinks.id}]]">[[${spaceLinks.name}]]&nbsp;-> &nbsp;&lt;No
 					Space&gt;</a>
 			</th:block>
 		</th:block>
