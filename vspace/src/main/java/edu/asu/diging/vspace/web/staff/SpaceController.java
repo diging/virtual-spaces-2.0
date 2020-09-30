@@ -54,7 +54,7 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
-        return "staff/space";
+        return "staff/spaces/space";
     }
 
     @RequestMapping(value = "/staff/spaceLink/{spaceId}/spaces", method = RequestMethod.GET)
