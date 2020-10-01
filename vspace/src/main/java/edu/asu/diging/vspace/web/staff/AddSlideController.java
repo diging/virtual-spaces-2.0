@@ -1,3 +1,4 @@
+
 package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
@@ -37,7 +38,7 @@ public class AddSlideController {
         model.addAttribute("slide", new SlideForm());
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
 
-        return "staff/module/slide/add";
+        return "staff/modules/slides/add";
     }
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/add", method = RequestMethod.POST)

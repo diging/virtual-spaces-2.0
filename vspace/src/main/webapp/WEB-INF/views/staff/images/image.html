@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
+<html layout:decorate="~{layouts/main}">
 <body>
-
+<div layout:fragment="content">
+    <h1>Image: ${image.filename} <small style="margin-left: 10px;"><a th:href="@{'/staff/image/'+${image.id}+'/edit'}"><span data-feather="edit"></span></a></small></h1>
+    <div class="alert alert-light" role="alert">
+      Created on <span class="date">${image.creationDate}</span> by ${image.createdBy}.
+      <br>
+      Modified on <span class="date">[[${image.modificationDate}]]</span> by [[${image.modifiedBy}]].     
+    </div>
+    
+    <p style="max-height: 100px; overflow-y: scroll;">
+     <b>Name:</b>
+    [[${image.name}]]]
+    </p>
+    <p style="max-height: 100px; overflow-y: scroll;">
+    <b>Description:</b>
+    [[${image.description}]]
+    </p>
+    <p></p>
+    
+    <span th:if="${not empty image}">
+    <div id="image">
+    <img id="bgImage" width="800px" th:src="@{'/api/image/'+${image.id}}" />
+    </div>
+    </span>
+</div>
 </body>
 </html>
