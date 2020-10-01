@@ -1,25 +1,23 @@
-<html layout:decorate="~{layouts/main}">
+<html layout:decorate="~{layouts/main_staff}">
 <head>
 <link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet" />
 </head>
 <body>
-    
     <div layout:fragment="content">
         <h1>Edit Image: [[${imageForm.fileName}]]</h1>
-        <form method="POST" th:action="@{'/staff/image/'+${imageId}+'/edit'}"
-            modelAttribute="imageForm" enctype="multipart/form-data">
+        <form th:action="@{'/staff/image/'+${imageId}+'/edit'}"
+            method="POST" name="f">
             <input type="hidden" name="${_csrf.parameterName}"
                 value="${_csrf.token}" />
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">Name:</label>
-                <form:input type="text" class="form-control col-md-10"
-                    id="name" path="name" />
+                <input type="text" class="form-control col-md-10"
+                    id="name" name="name" />
             </div>
-
             <div class="form-group row">
                 <label for="description" class="col-md-2 col-form-label">Description:</label>
-                <form:textarea class="form-control col-md-10" rows="5"
-                    cols="30" id="description" path="description" />
+                <textarea class="form-control col-md-10" rows="5"
+                    cols="30" id="description" name="description"></textarea>
             </div>
 
             <button class="btn btn-primary btn-sm" type="submit"
@@ -27,7 +25,6 @@
             <a th:href="@{'/staff/display/image/'+${imageId}}"
                 class="btn btn-light btn-sm">Cancel</a>
         </form>
-
     </div>
 </body>
 </html>
