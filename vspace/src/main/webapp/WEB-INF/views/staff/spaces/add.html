@@ -2,16 +2,19 @@
 <head>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <script th:inline="javascript">
+
 $(document).ready(function(){
 	$("#imageId").select2({
 		ajax: {
 		    url: function (params) {
-		      return "/staff/images/search";
+		      return "/vspace/staff/images/search";
 		    },
 		    dataType: 'json',
 		    processResults: function (data) {
+		        console.log(data);
 		        return {
 		          results: data,
 		        };
@@ -25,7 +28,7 @@ $(document).ready(function(){
     	if (!image.id) {
     		return image.text;
     	}
-    	var tbaseUrl = "/api/image/";
+    	var tbaseUrl = "/vspace/api/image/";
     	var $image = $(
     			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
     	);
@@ -36,7 +39,7 @@ $(document).ready(function(){
     	if (!image.id) {
             return image.text;
         }
-        var tbaseUrl = "/api/image/";
+        var tbaseUrl = "/vspace/api/image/";
         var $image = $(
                 '<span>' + image.text + '</span>'
         );
@@ -56,17 +59,17 @@ $(document).ready(function(){
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 		<div class="form-group row">
 			<label for="name" class="col-md-2 col-form-label">Space Name:</label>
-			<input type="text" class="form-control col-md-10" id="name" />
+			<input type="text" class="form-control col-md-10" name="name" id="name" />
 		</div>
 	
 		<div class="form-group row">
 			<label for="description" class="col-md-2 col-form-label">Description:</label>
-			<textarea class="form-control col-md-10" rows="5" cols="30" id="description" path="description"></textarea>
+			<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description"></textarea>
 		</div>
 	
 		<div class="form-group row">
 			<label for="image" class="col-md-2 col-form-label">Background image:</label>
-			<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file" />
+			<input type="file" name="file" class="form-control col-md-10" rows="5" cols="30" id="file"/>
 			
 		</div>
 	    
@@ -86,6 +89,5 @@ $(document).ready(function(){
 			Space</button>
 	</form>
 </div>
-<script th:src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 </body>
 </html>
