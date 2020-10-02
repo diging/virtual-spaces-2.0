@@ -77,7 +77,7 @@ public class AddSpaceController {
         }
 
         if (creationValue != null) {
-            return "redirect:/staff/spaces/" + creationValue.getElement().getId();
+            return "redirect:/staff/space/" + creationValue.getElement().getId();
         }
 
         redirectAttrs.addAttribute("showAlert", true);

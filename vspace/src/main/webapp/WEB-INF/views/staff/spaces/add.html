@@ -52,7 +52,7 @@ $(document).ready(function(){
 <div class="justify-content-left" layout:fragment="content">
 	<h1>Add new Space</h1>
 	
-	<form method="POST" th:action="@{/staff/space/add}" th:object="${space}" enctype="multipart/form-data">
+	<form method="POST" th:action="@{|/staff/space/add?${_csrf.parameterName}=${_csrf.token}|}" th:object="${space}" enctype="multipart/form-data">
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 		<div class="form-group row">
 			<label for="name" class="col-md-2 col-form-label">Space Name:</label>
