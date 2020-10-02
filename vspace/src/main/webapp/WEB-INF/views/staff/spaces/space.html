@@ -29,13 +29,17 @@ $(function(){
 		var posY = $("#bgImage").position().top;
 		
 		var link;
-		if ("${link.type}" == "ALERT") {
-			link = $('<div class="alert alert-primary spaceLink-${link.link.id}" role="alert" data-link-id="${link.link.id}"><p class="slabel-${link.link.id}">${link.link.name}</p></div>');
-		} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-           link = $('<img id="${link.image.id} class="spaceLink-${link.link.id}" data-link-id="${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
-		}  else {
+		[# th:if="${#strings.equals(link.type,'ALERT')}"]
+		console.log("In Alert");
+			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
+		[/]
+		[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
+		console.log([[${link.image.id}]]);
+           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+		[/]
+		[# th:if="${#strings.equals(link.type,'ARROW')}"]
 			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
-		}
+		[/]
 		link.css('position', 'absolute');
 		link.css('left', [[${link.positionX}]] + posX);
 		link.css('top', [[${link.positionY}]] + posY);
@@ -97,13 +101,16 @@ $(function(){
 			var link;
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
-			if ("${link.type}" == "ALERT") {
-				link = $('<div class="alert alert-primary moduleLink-${link.link.id}" role="alert" data-link-id="${link.link.id}"><p class="mlabel-${link.link.id}">${link.link.name}</p></div>');
-			} else if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-	           link = $('<img id="${link.image.id}" data-link-id="${link.link.id}" class="moduleLink-${link.link.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
-			}  else {
+			console.log([[${link.type}]]);
+			[# th:if="${#strings.equals(link.type,'ALERT')}"]
+				link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
+			[/]
+			[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
+	           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+	        [/]
+			[# th:if="${#strings.equals(link.type,'MODULE')}"]
 				link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
-			}
+			[/]
 			link.css('position', 'absolute');
 			link.css('left', [[${link.positionX}]] + posX);
 			link.css('top', [[${link.positionY}]] + posY);
@@ -156,11 +163,12 @@ $(function(){
 	        var posX = $("#bgImage").position().left;
 	        var posY = $("#bgImage").position().top;
 	        var link ;
-	        if ("${link.type}" == "IMAGE" && "${link.image.id}" != "") {
-	            link = $('<img id="${link.image.id}" class="externalLink-${link.externalLink.id}" data-link-id="${link.externalLink.id}" src="<c:url value="/api/image/${link.image.id}" />" />');
-	        }  else {
-	            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-'+[[${link.externalLink.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
-	        }
+	        [# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
+	            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+	        [/]
+	            [# th:if="${#strings.equals(link.type,'ARROW')}"]
+	            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
+	        [/]
 	        link.css('position', 'absolute');
 	        link.css('left', [[${link.positionX}]] + posX);
 	        link.css('top', [[${link.positionY}]] + posY);
@@ -1143,15 +1151,6 @@ $(function(){
 			}
 			
 			function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
-			    
-			    console.log(linkName);
-			    console.log(linkId);
-			    console.log(externalLinkURL);
-			    console.log(posXEdit);
-			    console.log(posYEdit);
-			    console.log(displayLinkId);
-			    console.log(linkType);
-			    
 			    selectedExternalLinkId=linkId;
 			    storeX=posXEdit;
 				storeY=posYEdit;
@@ -1483,10 +1482,9 @@ $(function(){
         </form>
 
         <form method="post"
-            th:action="@{'/staff/space/update/'+${space.id}}"
+            th:action="@{|/staff/space/update/${space.id}?${_csrf.parameterName}=${_csrf.token}|}"
             enctype="multipart/form-data">
-            <input type="hidden" th:name="${_csrf.parameterName}"
-                th:value="${_csrf.token}" />
+            <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <div id="changeBgImgAlert" class="alert alert-secondary"
                 role="alert"
                 style="cursor: move; width: 340px; height: 130px; display: none; position: absolute; top: 100px; right: 50px; z-index: 999">
@@ -1574,7 +1572,7 @@ $(function(){
                 style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
                 <p class="float-right">
                     <a href="#" id="closeEditSpaceLinkInfo"><span
-                        data-feather="x-square"></span></a>
+                        ><i class="fas fa-window-close"></i></span></a>
                 </p>
                 <h6 class="alert-heading">
                     Space Link: <span id="spaceLinkInfoLabelEdit"></span>
@@ -1612,7 +1610,7 @@ $(function(){
                         <input
                             class="form-control-xs spacelink-targetEdit"
                             type="number" id="spaceLinkRotationEdit"
-                            name="rotation"><br>
+                            name="rotation" style="width: inherit;"><br>
                     </div>
                 </div>
 
@@ -1624,7 +1622,7 @@ $(function(){
                         <input
                             class="form-control-xs spacelink-targetEdit"
                             type="text" name="spaceLinkLabel"
-                            id="spaceLinkLabelEdit"><br>
+                            id="spaceLinkLabelEdit" style="width: inherit;"><br>
                     </div>
                 </div>
 
@@ -1689,7 +1687,7 @@ $(function(){
                 style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
                 <p class="float-right">
                     <a href="#" id="closeEditModuleLinkInfo"><span
-                        data-feather="x-square"></span></a>
+                        ><i class="fas fa-window-close"></i></span></a>
                 </p>
                 <h6 class="alert-heading">
                     Module Link: <span id="moduleLinkInfoLabelEdit"></span>
@@ -1725,7 +1723,7 @@ $(function(){
                         <input
                             class="form-control-xs modulelink-targetEdit"
                             type="number" id="moduleLinkRotationEdit"
-                            name="rotation"><br>
+                            name="rotation" style="width: inherit;"><br>
                     </div>
                 </div>
                 <div class="row">
@@ -1736,7 +1734,7 @@ $(function(){
                         <input
                             class="form-control-xs modulelink-targetEdit"
                             type="text" name="moduleLinkLabel"
-                            id="moduleLinkLabelEdit"><br>
+                            id="moduleLinkLabelEdit" style="width: inherit;"><br>
                     </div>
                 </div>
                 <div class="row">
@@ -1784,7 +1782,7 @@ $(function(){
                 style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
                 <p class="float-right">
                     <a href="#" id="closeEditExternalLinkInfo"><span
-                        data-feather="x-square"></span></a>
+                        ><i class="fas fa-window-close"></i></span></a>
                 </p>
                 <h6 class="alert-heading">
                     External Link: <span id="externalLinkInfoLabelEdit"></span>
@@ -1819,7 +1817,7 @@ $(function(){
                         <input
                             class="form-control-xs externallink-targetEdit"
                             type="text" name="externalLinkLabel"
-                            id="externalLinkLabelEdit"><br>
+                            id="externalLinkLabelEdit" style="width: inherit;"><br>
                     </div>
                 </div>
 
@@ -1831,7 +1829,7 @@ $(function(){
                         <input
                             class="form-control-xs externallink-targetEdit"
                             type="text" name="url"
-                            id="externalLinkURLEdit">
+                            id="externalLinkURLEdit" style="width: inherit;">
                     </div>
                 </div>
 
@@ -1952,16 +1950,16 @@ $(function(){
             <th:block th:each="spaceLinks : ${linksOnThisSpace}">
                 <th:block th:if="${spaceLinks.targetSpace != null}">
                     <a
-                        th:href="@{/staff/space/[[${spaceLinks.targetSpace.id}]]}"
+                        th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
                         style='padding: .25rem .25rem;'
                         class="list-group-item"
-                        id="[[${spaceLinks.id}]]">[[${spaceLinks.name}]]&nbsp;->
+                        th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
                         &nbsp;[[${spaceLinks.targetSpace.name}]]</a>
                 </th:block>
                 <th:block th:if="${spaceLinks.targetSpace == null}">
                     <a href="#" style='padding: .25rem .25rem;'
                         class="list-group-item"
-                        id="[[${spaceLinks.id}]]">[[${spaceLinks.name}]]&nbsp;->
+                        th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
                         &nbsp;&lt;No Space&gt;</a>
                 </th:block>
             </th:block>
@@ -1978,14 +1976,11 @@ $(function(){
                 There are no links to this space.</div>
             <th:block th:each="spaceLinks : ${linksToThisSpace}">
                 <a
-                    href="@{/staff/space/[[${spaceLinks.sourceSpace.id}]]}"
+                    th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}"
                     style='padding: .25rem .25rem;'
-                    class="list-group-item" id="[[${spaceLinks.id}]]">[[${spaceLinks.sourceSpace.name}]]</a>
+                    class="list-group-item" th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
             </th:block>
         </div>
-        <script
-            th:src="@{https://use.fontawesome.com/releases/v5.8.1/js/all.js}"
-            data-auto-replace-svg="nest" />
-        <script th:src="@{/resources/extra/space.js}" />
+        
 </body>
-</div>
+</html>
