@@ -50,7 +50,7 @@
 	<div layout:fragment="content">
 		<h1>Edit Slide: ${slideForm.name}</h1>
 
-		<form th:action="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}+'/edit'}" method="POST" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:object="slideForm" enctype="multipart/form-data">
+		<form th:action="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}+'/edit'}" method="POST" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:object="${slideForm}" enctype="multipart/form-data">
 		
 			<div class="form-group row">
 				<label for="name" class="col-md-2 col-form-label">Slide Name:</label>
@@ -63,13 +63,13 @@
 		             <option  id="slide" value="SLIDE" label="Slide" th:if="${slideForm.type=='SLIDE'}">selected Slide</option>
 		             <option id="branchingPoint" value="BRANCHING_POINT" label="BranchingPoint" th:if="${slideForm.type=='BRANCHING_POINT'}">selected Branching Point</option>
 		         </select>
-		         <input type="hidden" id="type" name="type" value="${slideForm.type}" />
+		         <input type="hidden" id="type" name="type" th:value="${slideForm.type}" />
 		    </div>
 		 
 		    <div class="form-group row" id="sequences" style="display:none;">
 		    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>   
 		            <select th:each="sequence: ${sequences}" multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
-		                    <option value='${sequence.id}' id="${sequence.id}">${sequence.name}</option>
+		                    <option th:value='${sequence.id}' th:id="${sequence.id}">${sequence.name}</option>
 		           </select>
 		    <input type="hidden" id="choices" />
 		    </div> 

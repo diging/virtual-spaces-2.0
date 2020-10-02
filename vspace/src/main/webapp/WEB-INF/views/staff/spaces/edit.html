@@ -1,27 +1,29 @@
-<html layout:decorate="~{layouts/main}">
+<html layout:decorate="~{layouts/main_staff}">
 
 <body>
 	<div class="justify-content-center" layout:fragment="content">
-	<h1>Edit Space: ${spaceForm.name}</h1>
+		<h1>Edit Space: [(${spaceForm.name})]</h1>
 
-<form method="POST" action="@{/staff/space/[[${spaceId}]]/edit}?[[${_csrf.parameterName}]]=[[${_csrf.token}]]" modelAttribute="spaceForm" enctype="multipart/form-data">
+		<form method="POST"
+			th:action='@{|/staff/space/${spaceId}/edit?${_csrf.parameterName}=${_csrf.token}|}' th:object="${spaceForm}"
+			enctype="multipart/form-data">
 
-	<div class="form-group row">
-		<label for="name" class="col-md-2 col-form-label">Space Name:</label>
-		<input type="text" class="form-control col-md-10" id="name"
-			path="name" />
-	</div>
+			<div class="form-group row">
+				<label for="name" class="col-md-2 col-form-label">Space
+					Name:</label> <textarea type="text" class="form-control col-md-10" id="name" rows="1" cols="30"
+					 th:text="${spaceForm.name}" name="name"></textarea>
+			</div>
 
-	<div class="form-group row">
-		<label for="description" class="col-md-2 col-form-label">Description:</label>
-		<textarea class="form-control col-md-10" rows="5" cols="30"
-			id="description" path="description" />
-	</div>
-	
-	<button class="btn btn-primary btn-sm" type="submit" value="submit">Save
-		Space</button>
-	<a th:href="@{/staff/space/[[${spaceId}]]}" class="btn btn-light btn-sm">Cancel</a>
-</form>
+			<div class="form-group row">
+				<label for="description" class="col-md-2 col-form-label">Description:</label>
+				<textarea class="form-control col-md-10" rows="5" cols="30"
+					id="description" name="description" th:text=${spaceForm.description} ></textarea>
+			</div>
+
+			<button class="btn btn-primary btn-sm" type="submit" value="submit">Save
+				Space</button>
+			<a th:href="@{|/staff/space/${spaceId}|}" class="btn btn-light btn-sm">Cancel</a>
+		</form>
 	</div>
 </body>
 </html>
