@@ -73,15 +73,14 @@
   feather.replace()
 </script>
 </head>
-<body>
+<body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    <div class="sidebar">
+    <!-- <div class="sidebar">
         <div class="sidebarHeader"></div>
         <div
             th:insert="staff/dashboard/menu/dashboard_menu :: dashboard_menu"></div>
-    </div>
-    <div class="container"
-        style="position: absolute; right: 0px; top: 100px; width: 85%;">
+    </div> -->
+    <div style="width: 80%; margin-left: auto">
         <div layout:fragment="content"></div>
     </div>
     <footer class="footer mt-auto">
