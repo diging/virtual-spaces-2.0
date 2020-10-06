@@ -1,33 +1,26 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.Iterator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
-import edu.asu.diging.vspace.core.services.impl.SpaceManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ListSpacesController {
 
     @Autowired
     private SpaceRepository spaceRepo;
-    
-    @Autowired
-    private SpaceLinkRepository spaceLinkRepo;
 
     @Autowired
-    private ExhibitionManager exhibitionManager;
-    
+    private IExhibitionManager exhibitionManager;
+
     @Autowired
-    private SpaceManager spaceManager;
+    private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/space/list")
     public String listSpaces(Model model) {

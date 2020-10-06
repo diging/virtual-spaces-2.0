@@ -16,8 +16,8 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.impl.ModuleManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Controller
@@ -27,7 +27,7 @@ public class AddSlideController {
     private ISlideManager slideManager;
 
     @Autowired
-    private ModuleManager moduleManager;
+    private IModuleManager moduleManager;
 
     @Autowired
     private IContentBlockManager contentBlockManager;

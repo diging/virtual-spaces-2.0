@@ -34,11 +34,6 @@ public class HomeController {
     public String login() {
         return "login";
     }
-    
-    @RequestMapping(value ="/register")
-    public String register() {
-        return "register";
-    }
 
     @RequestMapping(value = "/403") 
     public String accessDenied() {
