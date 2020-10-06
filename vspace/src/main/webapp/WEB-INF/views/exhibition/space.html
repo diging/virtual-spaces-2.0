@@ -22,6 +22,11 @@
     visibility: visible;
 }
 
+.sidenav {
+    width: 0px;
+    background: white;
+}
+
 @media only screen and (max-width: 800px) {
     /* For mobile phones: */
     [class*="barPosition"] {
@@ -44,9 +49,6 @@
     [class*="sideModulenav"] {
         top: 34px;
         height: 260px;
-    }
-    [class*="container-fluid"] {
-        padding-right: 0px;
     }
     [class*="spaceName"] {
         font-size: 20px;
@@ -223,8 +225,7 @@
             </div>
             <div id="Module_1" class="Home_Class">
                 <div class="dropdown">
-                    <div id="mySidenav" class="sidenav"
-                        style="width: 0px; background: white;">
+                    <div id="mySidenav" class="sidenav">
                         <i class="far fa-times-circle fa-lg closebtn"
                             th:onclick="closeNav()"></i>
                         <div class="list-group spaceNav">
