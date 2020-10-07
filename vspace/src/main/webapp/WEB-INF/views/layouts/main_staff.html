@@ -75,19 +75,11 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    <!-- <div class="sidebar">
-        <div class="sidebarHeader"></div>
-        <div
-            th:insert="staff/dashboard/menu/dashboard_menu :: dashboard_menu"></div>
-    </div> -->
     <div style="width: 80%; margin-left: auto">
         <div layout:fragment="content"></div>
     </div>
     <footer class="footer mt-auto">
-        <div class="d-flex justify-content-center">
-            <span class="text-muted">This web application was built with Virtual Spaces 2.0
-                (https://github.com/diging/virtual-spaces-2.0).</span>
-        </div>
+        <span>Virtual Spaces | DigInG 2020</span>
     </footer>
 </body>
 </html>

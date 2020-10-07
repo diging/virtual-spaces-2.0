@@ -182,6 +182,25 @@ i {
     padding: 0px;
 }
 
+.main-content {
+	width: 90%;
+	margin: auto;
+}
+
+.grid {
+	display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 15px;
+    margin-top: 25px;
+}
+
+.tab {
+    margin-top: 40px;
+    background: white;
+    padding: 25px;
+    border-radius: 5px;
+}
+
 .sideModulenav {
     width: 0;
     position: absolute;

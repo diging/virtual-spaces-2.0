@@ -1,0 +1,44 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+</head>
+<body>
+<div class="justify-content-left" layout:fragment="content">
+    <div class="main-content">
+    	<h2>Welcome back!</h2>
+    	<span>View your most recent edits, or create new items.</span>
+
+		<div class="tab">
+			<h4>Spaces</h4>	
+			<div class="grid">
+				<div th:each="space: ${recentSpaces}" class="card" style="width: 18rem;">
+				  <img class="card-img-top" src="..." alt="Card image cap">
+				  <div class="card-body">
+				    <h6 class="card-title">[[${space.name}]]</h6>
+				    <div>
+				    	<i class="fas fa-pen"></i>
+				    	<i class="fas fa-ellipsis-v"></i>
+				    </div>
+				  </div>
+				</div>
+			</div>
+	        <ul class="list-group list-group-flush" th:each="space: ${recentSpaces}">
+	                <li class="list-group-item"><a th:href="@{'/staff/space/'+${space.id}}">
+	                    <span data-feather="box"></span> [[${space.name}]] </a>
+	                    (Created on <span class="date">[[${space.creationDate}]]</span>
+	                    by [[${space.createdBy}]])</li>
+	        </ul>
+		</div>
+        
+		<div class="tab">
+			<h4>Modules</h4>	
+	        <ul class="list-group list-group-flush" th:each="module: ${recentModules}">
+	                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
+	                    <span data-feather="grid"></span>[[${module.name}]]</a>
+	                    (Created on <span class="date">[[${module.creationDate}]]</span>
+	                    by [[${module.createdBy}]])</li>
+	        </ul>
+		</div>
+    </div>
+</div>
+</body>
+</html>
