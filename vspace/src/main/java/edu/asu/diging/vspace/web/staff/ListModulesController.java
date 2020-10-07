@@ -10,15 +10,12 @@ import edu.asu.diging.vspace.core.data.ModuleRepository;
 @Controller
 public class ListModulesController {
 
-	@Autowired
-	private ModuleRepository moduleRepo;
-	
-	@RequestMapping("/staff/module/list")
-	public String listSpaces(Model model) {
-		
-		model.addAttribute("vspacMmodules", moduleRepo.findAll());
-		
-		
-		return "staff/module/list";
-	}
+    @Autowired
+    private ModuleRepository moduleRepo;
+
+    @RequestMapping("/staff/module/list")
+    public String listSpaces(Model model) {
+        model.addAttribute("vspacMmodules", moduleRepo.findAll());
+        return "staff/modules/modulelist";
+    }
 }

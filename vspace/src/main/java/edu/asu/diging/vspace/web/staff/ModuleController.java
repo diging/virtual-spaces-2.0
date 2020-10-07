@@ -20,6 +20,6 @@ public class ModuleController {
         model.addAttribute("module", moduleManager.getModule(id));
         model.addAttribute("slides", moduleManager.getModuleSlides(id));
         model.addAttribute("sequences", moduleManager.getModuleSequences(id));
-        return "staff/module";
+        return "staff/modules/module";
     }
 }

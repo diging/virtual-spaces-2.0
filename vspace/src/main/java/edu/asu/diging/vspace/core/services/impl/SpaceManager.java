@@ -34,6 +34,7 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
@@ -68,7 +69,7 @@ public class SpaceManager implements ISpaceManager {
     private SpaceLinkRepository spaceLinkRepo;
 
     @Autowired
-    private ExhibitionManager exhibitionManager;
+    private IExhibitionManager exhibitionManager;
 
     @Autowired
     private ExhibitionRepository exhibitRepo;
