@@ -22,7 +22,7 @@ public class SpaceTextBlockDisplayFactory implements ISpaceTextBlockDisplayFacto
         display.setSpaceTextBlock(textBlock);
         display.setPositionX(positionX);
         display.setPositionY(positionY);
-        display.setHeigth(height);
+        display.setHeight(height);
         display.setWidth(width);
         return display;
     }

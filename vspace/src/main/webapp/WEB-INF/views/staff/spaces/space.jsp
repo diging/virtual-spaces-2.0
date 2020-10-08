@@ -666,6 +666,7 @@ $( document ).ready(function() {
 	        	    $("#textBlockYEdit").val(storeY);
 	        	    var form = $("#editTextBlockForm");
 	        	    var formData = new FormData(form[0]);
+	        	    var textBlockInfo = editTextBlockInfo();
 	        	    console.log(formData);
 	        	    $.ajax({
 	        	        type: "POST",
@@ -1080,6 +1081,7 @@ $( document ).ready(function() {
 	}
 	
 	function hideLinkInfoTabs(){
+	    console.log("In hide info tabs");
 	    $("#editExternalLinkInfo").hide();
 	    $("#editSpaceLinkInfo").hide();
 	    $("#editModuleLinkInfo").hide();
@@ -1246,6 +1248,16 @@ $( document ).ready(function() {
 		info["text"] = $("#textContentID").val();
 		info["heigth"] = $("#textBoxHeightID").val();
 		info["width"] = $("#textBoxWidthID").val();
+		return info;
+	}
+	
+	function editTextBlockInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		info["text"] = $("#textContentID").val();
+		info["heigth"] = $("#textBoxHeightIDEdit").val();
+		info["width"] = $("#textBoxWidthIDEdit").val();
 		return info;
 	}
 	

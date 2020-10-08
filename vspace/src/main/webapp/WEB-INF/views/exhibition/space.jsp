@@ -169,7 +169,7 @@ function drawLinks() {
 		var posY = $("#bgImage").position().top;
 		
 		var block;
-		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea class="textBlock" style="height:${block.heigth}px; width:${block.width}px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
+		block = $('<span data-link-id="${block.id}" class="spaceLink-${block.id} Info_cz_Class"><textarea class="textBlock" readonly="true" style="height:${block.height}px; width:${block.width}px;" readonly>${block.spaceTextBlock.text}</textarea></span>');
 		
 		block.css('position', 'absolute');
 		let height = parseInt($("#bgImage").css("height"));
