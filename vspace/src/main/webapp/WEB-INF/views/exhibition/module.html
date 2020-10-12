@@ -5,13 +5,11 @@
          font-family: 'Montserrat', sans-serif;
          }
       </style>
-      
-   </head>
-   <body>
-   	<div layout:fragment="content">
-   		<script>
+      <script th:inline="javascript">
          $( document ).ready(function() {
          	$("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
+        	$(".nav-bar").css('position','fixed').css('width','100%');
+
          });
              function openLangNav() {
                  $("#myLangSidenav").css("width","240px");
@@ -27,16 +25,17 @@
                  $("#mySidenav").css("width", "0px");
              }
       	</script>
+   </head>
+   <body>
+   	<div layout:fragment="content">
       <div id="Module_1" class="Module_1_Class">
-         <div class="textDiv" th:if="${showAlert != true}">
-            <h3>[[${module.name}]]</h3>
-         </div>
-         <div class="slideNumberClass">
-            <p>Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
-         </div>
-         <div class="Group_7_Class">
+      	<div th:if="${showAlert != true}" style="position: fixed; z-index: 100; top: 70px; width: 100%; display: flex;">
+			<h3 class="textDiv" style="margin-top: 20px; background-color: white;">[[${module.name}]]</h3>
+			<p class="slideNumberClass" style="position: fixed;">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
+    	</div>
+         <div class="Group_7_Class" >
             <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
-               <div class="Slideshow_previous Slideshow_previous_Class">
+               <div class="Slideshow_previous Slideshow_previous_Class" style="position: fixed; top: 180px; left: 15%;">
                   <svg class="Ellipse_11">
                      <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_11_Class" rx="20" ry="20" cx="20" cy="20">
@@ -100,6 +99,7 @@
                <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
             </div>
          </a>
+         <div style="position: relative; top: 100px">
          <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
          <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
             <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
@@ -114,6 +114,7 @@
                      class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                </div>
             </div>
+         </div>
          </div>
       </div>
      </div>
