@@ -19,7 +19,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'home' ? 'active' : '' }"
 			               th:href="@{/staff/dashboard}">
-			               <span><i class="fas fa-home"></i>Dashboard</span> 
+			               <i class="fa fa-home"></i>&nbsp;Dashboard
 			               <span class="sr-only">(current)</span>
 			            </a>
 			        </li>
@@ -27,56 +27,39 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'space' ? 'active' : '' }"
 			               th:href="@{/staff/space/list}"> 
-			               <span><i class="fas fa-layer-group"></i></span>Spaces
+			               <i class="fa fa-layer-group"></i>&nbsp;Spaces
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'module' ? 'active' : '' }"
 			               th:href="@{/staff/module/list}"> 
-			               <span><i class="fas fa-th-large"></i></span>Modules
+			               <i class="fa fa-th-large"></i>&nbsp;Modules
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list/1}"> 
-			               <span><i class="fas fa-file-image"></i></span>Images
+			               <i class="fa fa-file-image"></i>&nbsp;Images
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
-			               <span><i class="fas fa-user"></i></span>Users
+			               <i class="fa fa-user"></i>&nbsp;Users
 			            </a>
 			        </li>
 		        </ul>
-		        <ul>
-		            <li><h6
-		                    class="sidebar-heading d-flex align-items-center px-3 mt-4 mb-1 text-muted">
-		                    <span>Spaces</span> <a
-		                        class="d-flex align-items-center text-muted"
-		                        th:href="@{/staff/space/add}"> <span>&nbsp;<i
-		                            class="fas fa-plus-circle"></i></span>
-		                    </a>
-		                </h6></li>
-		            <li><h6
-		                    class="sidebar-heading d-flex align-items-center px-3 mt-4 mb-1 text-muted">
-		                    <span>Modules</span> <a
-		                        class="d-flex align-items-center text-muted"
-		                        th:href="@{/staff/module/add}"> <span>&nbsp;<i
-		                            class="fas fa-plus-circle"></i></span>
-		                    </a>
-		                </h6></li>
-		        </ul>
+		        <div class="footer"><a href="https://github.com/diging/virtual-spaces-2.0">Virtual Spaces 2.0</a> © DigInG 2020</div>
 			</div>  
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
 		      <form th:action="@{'/search'}" method="GET" class="form" style="position: relative">
 	             <button class="btn form_icon" type="submit" id="submit"><i class="fa fa-search" style="color: var(--dark-grey)"></i></button>
-	             <input class="form-control form_input" type="search" placeholder="Search" id="search" th:name="search">
+	             <input class="form-control form_input" type="search" placeholder="Search" id="search" th:name="search" style="background: var(--base-grey)">
 	          </form>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">

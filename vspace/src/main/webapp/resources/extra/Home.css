@@ -7,9 +7,26 @@
 	--base-grey: #F2F2F2;
 }
 
+a {
+	color: var(--secondary);
+}
+
 i {
 	font-size: 20px;
 	color: var(--secondary);	
+}
+
+i:hover {
+	color: var(--secondary);
+	cursor: pointer;
+}
+
+.white {
+	color: white;
+}
+
+.black {
+	color: #121212;
 }
 
 .Home_Class {
@@ -48,10 +65,41 @@ i {
     z-index: 1;
 }
 
+.footer {
+	position: absolute;
+	bottom: 0;
+	font-size: 12px;
+	color: var(--dark-grey);
+}
+
 .primary-btn {
     background: var(--primary);
     color: white;
     border-radius: 5px;
+}
+
+.delete-btn {
+    background: var(--error);
+    color: white;
+    border-radius: 5px;
+}
+
+.add {
+	border: 1.5px solid var(--med-grey);
+    border-radius: 5px;
+    display: flex;
+    max-width: 18em;
+}
+
+.add:hover {
+	border: 1.5px solid var(--secondary);
+	color: var(--secondary) !important;
+}
+
+.spaceImage {
+	height: 120px;
+    overflow: hidden;
+    background-size: cover;
 }
 
 .navbar-brand {
@@ -192,6 +240,17 @@ i {
     grid-template-columns: auto auto auto;
     grid-gap: 15px;
     margin-top: 25px;
+}
+
+.card-body {
+	display: flex !important;
+	justify-content: space-between !important;
+	align-items: center !important;
+	padding: 1rem !important;
+}
+
+.card-title {
+	margin: 0 !important;
 }
 
 .tab {
@@ -509,7 +568,6 @@ i {
 }
 
 .form-control {
-	background: var(--base-grey);
 	color: var(--dark-grey);
 	border: none;
 }
