@@ -1,24 +1,18 @@
 :root {
 	--primary: #A55941;
 	--secondary: #F2A950;
-	--error: #B00020;
+	--error: #dc3545;
 	--med-grey: #C7C7C7;
 	--dark-grey: #8E8E8E;
 	--base-grey: #F2F2F2;
 }
 
-a {
-	color: var(--secondary);
-}
-
 i {
 	font-size: 20px;
-	color: var(--secondary);	
 }
 
-i:hover {
+.secondary {
 	color: var(--secondary);
-	cursor: pointer;
 }
 
 .white {
@@ -67,15 +61,34 @@ i:hover {
 
 .footer {
 	position: absolute;
+	text-align: center;
 	bottom: 0;
 	font-size: 12px;
 	color: var(--dark-grey);
+}
+
+.status {
+	position: absolute;
+    color: var(--secondary);
+    padding: 10px;
+    display: flex;
 }
 
 .primary-btn {
     background: var(--primary);
     color: white;
     border-radius: 5px;
+}
+
+.outline {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 5px;
+}
+
+.outline:hover {
+    background: var(--primary);
+    color: white;
 }
 
 .delete-btn {

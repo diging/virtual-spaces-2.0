@@ -4,7 +4,24 @@
 <script th:inline="javascript">
     $(document).ready(function() {
         onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
+        $("#list").hide();
+        $("#grid-btn").hide();
     });
+    
+    function list() {
+    	$("#list").show();
+    	$("#grid").hide();
+    	$("#list-btn").hide();
+    	$("#grid-btn").show();
+    }
+    
+    function grid() {
+    	$("#list").hide();
+    	$("#list-btn").show();
+    	$("#grid-btn").hide();
+    	$("#grid").show();
+    }
+    
 </script>
 <style>
 .unpublishedtooltiptext {
@@ -36,48 +53,81 @@
 </head>
 
 <body>
-    <div layout:fragment="content">
-        <h1>Spaces</h1>
+    <div layout:fragment="content" class="main-content">
+        <button class="btn outline" style="float: right">+ New Space</button>
+        <h2>Spaces</h2>
         <div style="padding-bottom: 20px;">
-            This virtual exhibition contains the following spaces. <i
-                class="fa fa-play-circle" aria-hidden="true"
-                style="color: #bfb168;"></i> indicates the start space.
+            This virtual exhibition contains the following spaces. 
+            <i class="fa fa-play-circle secondary"></i> indicates the start space.
+        </div>            
+        
+        <div style="text-align: right">
+        	<button class="btn" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
+        		<i class="fas fa-list-ul black"></i></button>
+        	<button class="btn" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
+        		<i class="fas fa-th"></i></button>
+        	<button class="btn" style="background: white"><i class="fas fa-filter black"></i></button>
+        </div>  
+        
+        <div class="grid" id="grid">
+			<div th:each="space: ${spaces}" class="card" style="width: 18rem;">
+				<div class="status">
+					<i class="fa fa-play-circle" th:if="${space.id == startSpace.id}" aria-hidden="true"></i>
+					<i class="fas fa-exclamation-triangle" th:if="${space.spaceStatus=='UNPUBLISHED'}" aria-hidden="true"></i>
+				</div>		
+				<div class="spaceImage">
+					<img class="card-img-top" th:src="@{'/api/image/'+${space.image.id}}" alt="Space image">
+				</div>
+				<div class="card-body">
+					<a th:href="@{'/staff/space/'+${space.id}}" class="card-title">[[${space.name}]]</a>
+					<div>
+				    	<a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><i class="fa fa-pen black" style="margin-right: 15px"></i></a>
+				    	<a  th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
+	                        class="checkSpaceLinkPresent"
+	                        data-toggle="modal"> <span
+	                        class="checkSpaceLinkPresent" id="deleteSpace">
+	                        <i class="fas fa-trash-alt" style="color: var(--error)"></i></span>
+	                    </a>
+				    </div>
+				</div>
+			</div>
+		</div>
+        
+        <div id="list" style="margin-top: 40px">
+        	<ul class="list-group list-group-flush" th:each="space: ${spaces}">
+	            <li class="list-group-item"><i
+	                class="fa fa-play-circle secondary"
+	                th:if="${space.id == startSpace.id}" aria-hidden="true"></i>
+	                <a  th:href="@{'/staff/space/'+${space.id}}"> <span
+	                    data-feather="box"
+	                    th:if="${space.id != startSpace.id}"></span>
+	                    [[${space.name}]]
+	            	</a> (Created on <span class="date">[[${space.creationDate}]]</span>
+	                by [[${space.createdBy}]]}
+	                <div class="float-right">
+	                    <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
+	                        th:if="${space.spaceStatus=='UNPUBLISHED'}"
+	                        style="color: #bfb168; padding-right: 8px;"></i>
+	                    <span class="unpublishedtooltiptext">This
+	                        space is currently unpublished.</span> <i
+	                        th:if="${space.hasIncomingLinks() == 'false'}"
+	                        class="fas fa-eye-slash noIncomingLinks"
+	                        aria-hidden="true"
+	                        style="color: #bfb168; padding-right: 8px;"></i>
+	                    <span th:if="${space.hasIncomingLinks() == 'false'}"
+	                        class="noIncomingLinkMessage">This space
+	                        has no incoming links.</span> <a
+	                        th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
+	                        class="checkSpaceLinkPresent"
+	                        data-toggle="modal"> <span
+	                        class="checkSpaceLinkPresent" id="deleteSpace"
+	                        style="color: #666;"><i class="fas fa-trash-alt" style="color: var(--error)"></i></span>
+	                    </a>
+	                </div>
+	            </li>
+	        </ul>
         </div>
-        <ul class="list-group list-group-flush"
-            th:each="space: ${spaces}">
-            <li class="list-group-item"><i
-                class="fa fa-play-circle"
-                th:if="${space.id == startSpace.id}" aria-hidden="true"
-                style="color: #bfb168;"></i> <a
-                th:href="@{'/staff/space/'+${space.id}}"> <span
-                    data-feather="box"
-                    th:if="${space.id != startSpace.id}"></span>
-                    [[${space.name}]]
-            </a> (Created on <span class="date">[[${space.creationDate}]]</span>
-                by [[${space.createdBy}]]
-                <div class="float-right">
-                    <i
-                        class="fas fa-exclamation-triangle unpublishedSpaceClass"
-                        th:if="${space.spaceStatus=='UNPUBLISHED'}"
-                        style="color: #bfb168; padding-right: 8px;"></i>
-                    <span class="unpublishedtooltiptext">This
-                        space is currently unpublished.</span> <i
-                        th:if="${space.hasIncomingLinks() == 'false'}"
-                        class="fas fa-eye-slash noIncomingLinks"
-                        aria-hidden="true"
-                        style="color: #bfb168; padding-right: 8px;"></i>
-                    <span th:if="${space.hasIncomingLinks() == 'false'}"
-                        class="noIncomingLinkMessage">This space
-                        has no incoming links.</span> <a
-                        th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
-                        class="checkSpaceLinkPresent"
-                        data-toggle="modal"> <span
-                        class="checkSpaceLinkPresent" id="deleteSpace"
-                        style="color: #666;"><i
-                            class="fas fa-trash-alt"></i></span>
-                    </a>
-                </div></li>
-        </ul>
+        
         <div class="modal fade" id="confirm-space-delete" tabindex="-1"
             role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">

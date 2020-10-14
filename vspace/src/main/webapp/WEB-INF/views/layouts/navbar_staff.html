@@ -19,7 +19,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'home' ? 'active' : '' }"
 			               th:href="@{/staff/dashboard}">
-			               <i class="fa fa-home"></i>&nbsp;Dashboard
+			               <i class="fa fa-home secondary"></i>&nbsp;Dashboard
 			               <span class="sr-only">(current)</span>
 			            </a>
 			        </li>
@@ -27,32 +27,35 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'space' ? 'active' : '' }"
 			               th:href="@{/staff/space/list}"> 
-			               <i class="fa fa-layer-group"></i>&nbsp;Spaces
+			               <i class="fa fa-layer-group secondary"></i>&nbsp;Spaces
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'module' ? 'active' : '' }"
 			               th:href="@{/staff/module/list}"> 
-			               <i class="fa fa-th-large"></i>&nbsp;Modules
+			               <i class="fa fa-th-large secondary"></i>&nbsp;Modules
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list/1}"> 
-			               <i class="fa fa-file-image"></i>&nbsp;Images
+			               <i class="fa fa-file-image secondary"></i>&nbsp;Images
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
-			               <i class="fa fa-user"></i>&nbsp;Users
+			               <i class="fa fa-user secondary"></i>&nbsp;Users
 			            </a>
 			        </li>
 		        </ul>
-		        <div class="footer"><a href="https://github.com/diging/virtual-spaces-2.0">Virtual Spaces 2.0</a> © DigInG 2020</div>
+		        <div class="footer">
+		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
+		        		Virtual Spaces 2.0</a> © DigInG 2020
+		        </div>
 			</div>  
 			
 			<nav class="nav-bar">
@@ -64,10 +67,10 @@
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 15px;">
-		            <a class="nav-link" th:href="@{/}"><i class="far fa-play-circle"></i></a>
+		            <a class="nav-link" th:href="@{/}"><i class="far fa-play-circle secondary"></i></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><i class="fa fa-cog"></i></a>
+		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><i class="fa fa-cog secondary"></i></a>
 		          </li> 				  
 		        </ul>		        
 		        <div class="form-inline mt-2 mt-md-0">
