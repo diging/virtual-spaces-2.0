@@ -58,15 +58,15 @@
                 <div class="float-right">
                     <i
                         class="fas fa-exclamation-triangle unpublishedSpaceClass"
-                        th:if="${space.spaceStatus=='UNPUBLISHED'}"
+                        th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}"
                         style="color: #bfb168; padding-right: 8px;"></i>
                     <span class="unpublishedtooltiptext">This
                         space is currently unpublished.</span> <i
-                        th:if="${space.hasIncomingLinks() == 'false'}"
+                        th:if="${!space.hasIncomingLinks()}"
                         class="fas fa-eye-slash noIncomingLinks"
                         aria-hidden="true"
                         style="color: #bfb168; padding-right: 8px;"></i>
-                    <span th:if="${space.hasIncomingLinks() == 'false'}"
+                    <span th:if="${!space.hasIncomingLinks()}"
                         class="noIncomingLinkMessage">This space
                         has no incoming links.</span> <a
                         th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
