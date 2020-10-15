@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <groupId>edu.asu.diging</groupId>
-   <artifactId>vspace</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
-   <packaging>war</packaging>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>edu.asu.diging</groupId>
+    <artifactId>vspace</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
         <org.slf4j-version>1.7.5</org.slf4j-version>
         <spring.version>5.0.7.RELEASE</spring.version>
         <spring-data.version>Kay-SR8</spring-data.version>
         <spring-security-version>5.3.3.RELEASE</spring-security-version>
-        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <javers.version>5.11.1</javers.version>
         <simple-users-version>0.5</simple-users-version>
         <admin.username>admin</admin.username>
@@ -193,27 +192,6 @@
             <artifactId>commonmark</artifactId>
             <version>0.15.0</version>
         </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5 -->
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf-spring5</artifactId>
-			<version>${thymeleaf.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
-		<dependency>
-			<groupId>nz.net.ultraq.thymeleaf</groupId>
-			<artifactId>thymeleaf-layout-dialect</artifactId>
-			<version>2.4.0</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-			<version>3.0.3.RELEASE</version>
-		</dependency>
 		
         <!-- Testing -->
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -394,4 +372,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
