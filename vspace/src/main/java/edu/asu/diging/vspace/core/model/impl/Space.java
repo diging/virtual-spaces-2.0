@@ -35,10 +35,13 @@ public class Space extends VSpaceElement implements ISpace {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    private SpaceStatus spaceStatus;
+    private SpaceStatus spaceStatus; //-> PUBLISHED / UNPUBLISHED
     @Access(AccessType.PROPERTY)
-    private boolean showUnpublishedLinks;
-
+    private boolean showUnpublishedLinks; // -> true/false
+    
+    @Access(AccessType.PROPERTY)
+    private boolean showLinksToUnpublishedSpaces;
+    
     @JsonIgnore
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
     private List<ISpaceLink> spaceLinks;
@@ -167,5 +170,20 @@ public class Space extends VSpaceElement implements ISpace {
     public void setIncomingLinks(Boolean incomingLinks) {
         this.incomingLinks = incomingLinks;
     }
+
+	@Override
+	public boolean isShowLinksToUnpublishedSpaces() {
+		return showLinksToUnpublishedSpaces;
+	}
+
+	@Override
+	@Access(AccessType.PROPERTY)
+	public void setShowLinksToUnpublishedSpaces(Boolean showLinksToUnpublishedSpaces) {
+		if(showLinksToUnpublishedSpaces == null) {
+			this.showLinksToUnpublishedSpaces=false;
+			return;
+		}
+		this.showLinksToUnpublishedSpaces = showLinksToUnpublishedSpaces;
+	}
     
 }
