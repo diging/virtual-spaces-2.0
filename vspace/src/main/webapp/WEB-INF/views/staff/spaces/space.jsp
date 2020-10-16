@@ -1224,13 +1224,31 @@ $( document ).ready(function() {
 		</p>
 	</form:form>
 </div>
-<div style="padding-bottom: 10px;">
-    <c:url value="/staff/space/${space.id}/status" var="postUrl" />
-    <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+<div style="padding-bottom: 20px;">
+    <%-- <c:url value="/staff/space/${space.id}/status" var="postUrl" />
+    <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"> --%>
         <c:if test="${space.spaceStatus=='UNPUBLISHED'}">
-            <input type="checkbox" name="hideLinks" id="hideLinks"> Do you want to hide all Space links linked to this space?
+        	<div style="padding-bottom: 10px;">
+				<c:url value="/staff/space/${space.id}/showSpaceLinksFromPublishedSpace" var="postUrl" />
+				<form:form method="POST"
+					action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
+					<label><h6>Hide all space links to this space:</h6></label>
+					<select class="form-control" name="showSpaceLinksPublishedSpaceParam"
+						style="width: 200px; display: inline;">
+						<option id="No" value=false
+							<c:if test="${space.showLinksToUnpublishedSpaces eq false}">selected</c:if>>No</option>
+						<option id="Yes" value=true
+							<c:if test="${space.showLinksToUnpublishedSpaces eq true}">selected</c:if>>Yes</option>
+					</select>
+					<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
+						<input class="btn btn-primary" type="submit" value="Submit" />
+					</p>
+			       
+				</form:form>
+			</div>
+            <!-- <input type="checkbox" name="hideLinks" id="hideLinks"> Do you want to hide all Space links linked to this space? -->
         </c:if>
-    </form:form>
+    <%-- </form:form> --%>
 </div>
 <div style="padding-bottom: 10px;">
 	<c:url value="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
