@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 
@@ -27,6 +30,15 @@ public class UpdateShowUnpublishedLinksController {
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Show Links to Unpublished Spaces successfully updated!");
         attributes.addAttribute("showAlert", "true");
+        return "redirect:/staff/space/{spaceId}";
+    }
+    
+    @RequestMapping(value="/staff/space/{spaceId}/showSpaceLinksFromPublishedSpace", method=RequestMethod.POST)
+    public String updateStatusForPublishedSpace(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
+    		@RequestParam("showSpaceLinksPublishedSpaceParam") Boolean showSpaceLinksPublishedSpaceParam) {
+    	System.out.println("Inside updateStatusForPublishedSpace ---> ");
+		List<SpaceLink> spaceLinksOnThisSpace = spaceManager.getOutgoingLinks(spaceId);
+		System.out.println("SpaceLink size: "+spaceLinksOnThisSpace.size());
         return "redirect:/staff/space/{spaceId}";
     }
 }
