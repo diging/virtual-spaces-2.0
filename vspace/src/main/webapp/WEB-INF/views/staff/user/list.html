@@ -3,22 +3,23 @@
 </head>
 
 <body>
-	<div layout:fragment="content">
+	<div layout:fragment="content" class="main-content">
 		<h2>Users</h2>
-        <div  th:each="user: ${users}">
-		<ul class="list-group">
-		    <li class="list-group-item clearfix" th:style="'${!user.enabled}' ? 'list-group-item-secondary' : ''">
-		        <span th:if="${!user.enabled}" class="badge badge-light">Account Deactivated</span>
-		        <span th:if="${user.admin}" class="badge badge-warning">Admin User</span>
-		        <span th:if="${user.enabled}" class="badge badge-info">Active</span>
-		        <span th:if="${#lists.contains(user.roles, 'STAFF')}" class="badge badge-primary">Staff</span>
+        <div  th:each="user: ${users}" class="tab" style="display: flex; justify-content: space-between">
+		    	<h5 th:if="${#lists.contains(user.roles, 'STAFF')}" class="badge badge-primary">Staff</h5>
 		        [[${user.username}]] ([[${user.firstName}]] [[${user.lastName}]])
-		        <div class="pull-right text-right">
+		        <div>
+		        	<span th:if="${!user.enabled}" class="badge badge-light">Account Deactivated</span>
+			        <span th:if="${user.admin}" class="badge badge-info" style="background: var(--primary)">Admin User</span>
+			        <span th:if="${user.enabled}" class="badge badge-success">Active</span>
+		        </div>
+		        
+		        <div>
 		        
 	            <form th:if="${!user.enabled}" th:action="@{'/staff/user/'+${user.username}+'/approve'}"  th:object="${approveUrl}" method="POST">
 	            	<button style="padding:0px" class="btn btn-link"><span><i class="fas fa-user-check"></i></span> Activate</button>
 	            </form>
-		        <div th:if="${user.enabled}">
+		        <div th:if="${user.enabled}" style="display: flex">
                     <form th:if="${!user.admin}" th:action="@{'/staff/user/'+${user.username}+'/admin'}" th:object="${postUrl}" method="POST">
                         <button style="padding:0px" class="btn btn-link"><span><i class="fas fa-key"></i></span> Make Admin</button>
                     </form>
@@ -35,14 +36,12 @@
                     </form> 
                 
                     <form th:action="@{'/staff/user/'+${user.username}+'/disable'}" th:object="${disableUrl}" method="POST">
-                        <button style="padding:0px" class="btn btn-link"><span><i class="fas fa-user-lock"></i></span> Deactivate User</button>
+                        <button style="padding:0px" class="btn btn-link"><span><i class="fas fa-user-slash"></i></span> Deactivate User</button>
                     </form>
                 </div>
 		        
 		        </div>
-		    </li>
-		</ul>
-        </div>
+		    </div>
 	</div>
 </body>
 </html>
