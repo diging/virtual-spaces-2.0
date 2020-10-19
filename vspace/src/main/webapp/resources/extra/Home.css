@@ -333,6 +333,18 @@ i {
     padding-top: 12px;
 }
 
+.pill-btn {
+	border: 2px solid var(--dark-grey);
+    border-radius: 25px;
+    padding: 5px 15px;
+    color: var(--primary);
+}
+
+.pill-btn:hover {
+	background: var(--primary);
+	color: white;
+}
+
 .Info_cz_Class {
     position: absolute;
     width: 29px;
