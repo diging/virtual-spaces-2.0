@@ -241,6 +241,65 @@ $(function(){
 			var selectedExternalLinkId;
 
 			// -------- buttons that open modals (e.g. to create space links) ------
+			
+		$("#addTextBlock").click(function(e){
+		    hideLinkInfoTabs();
+			$("#changeBgImgAlert").hide();
+			$("#bgImage").off("click");
+		    $("#bgImage").on("click", function(e){
+		        e.preventDefault();
+		    	$("#external-arrow").remove();
+		    	$("#space_label").remove();
+		    	$("#link").remove();
+		    	$("#text").remove();
+		    	var posX = $(this).position().left;
+		    	var posY = $(this).position().top;    
+		    	storeX = e.pageX - $(this).offset().left;
+		    	storeY = e.pageY - $(this).offset().top;
+		    	getTextArea(storeX,storeY);
+		    });
+	    	$("#addTextFormInfo").show();
+		});
+
+		function getTextArea(x,y) {
+		    var posX = $("#bgImage").position().left;
+			var posY = $("#bgImage").position().top;
+		    var text = $('<div id="text" class="textDiv"><textarea id="textB" name="textBlock" type="textarea" class="textBlock"></textarea></div>');
+		    text.css('position', 'absolute');
+		    text.css('left', x + posX);
+		    text.css('top', y + posY);
+			$("#space").append(text);
+			
+			var textB = document.getElementById('textB'),
+		    tHeight = textB.clientHeight,
+		    tWidth = textB.clientWidth;
+			
+			let height = parseInt($("#bgImage").css("height"));
+	        let width = parseInt($("#bgImage").css("width"));
+	        
+	        
+	        
+			$("#textBoxWidthID").val(tWidth);
+		    $("#textBoxHeightID").val(tHeight);
+		    textB.onmouseup = function (e) {
+		    	if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
+		        	tHeight = textB.clientHeight;
+		        	tWidth = textB.clientWidth;
+		        	let percentileHeight = (tHeight*100)/height;
+		            let percentileWidth = (tWidth*100)/width;
+		        	$("#textBoxWidthID").val(percentileWidth);
+		            $("#textBoxHeightID").val(percentileHeight);
+		            $("#textContentID").val(textB.value);
+		    	}
+			};
+			let percentileHeight = (tHeight*100)/height;
+	        let percentileWidth = (tWidth*100)/width;
+	    	$("#textBoxWidthID").val(percentileWidth);
+	        $("#textBoxHeightID").val(percentileHeight);
+	        $("#textContentID").val(textB.value);
+		}
+	
+	
 			$("#addSpaceLinkButton").click(function(e) {
 				$("#createExternalLinkAlert").hide();
 				$("#changeBgImgAlert").hide();
@@ -374,6 +433,38 @@ $(function(){
 			    			$("#noLinksToSpace").hide();
 			    			$("div#incomingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
 			    		}
+			        }
+				});
+			});
+			
+			$("#addTextBlockBtn").click(function(e) {
+			    e.preventDefault();
+				
+				if (storeX == undefined || storeY == undefined) {
+					$("#errorMsg").text("Please click on the image to specify where the new block should be located.")
+					$('#errorAlert').show();
+					return;
+				}
+				
+				$("#addTextX").val(storeX);
+				$("#addTextY").val(storeY);
+				
+				var form = $("#addTextForm");
+				var formData = new FormData(form[0]);
+				
+				var textBlockInfo = createTextBlockInfo();
+		        
+			    $.ajax({
+					type: "POST",
+					url: "[(@{'/staff/space/'+${space.id}+'/textBlock?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+					cache       : false,
+			        contentType : false,
+			        processData : false,
+			        enctype: 'multipart/form-data',
+			        data: formData, 
+			        success: function(data) {
+			        	var blockData = JSON.parse(data);
+			        	$("#addTextFormInfo").hide();
 			        }
 				});
 			});
@@ -553,6 +644,43 @@ $(function(){
 			 	});
 			});
 			
+			$("#editTextBlockBtn").click(function(e) {
+        	    e.preventDefault();
+        	    var blockId = $("#textBlockIdValueEdit").val();
+        	    if (storeX == undefined || storeY == undefined) {
+        	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+        	        $('#errorAlert').show();
+        	        return;
+        	    }
+        	    var linkedTextBlock = $("#textBlockIdValueEdit").val();
+        	    $("#textBlockXEdit").val(storeX);
+        	    $("#textBlockYEdit").val(storeY);
+        	    var form = $("#editTextBlockForm");
+        	    var formData = new FormData(form[0]);
+        	    var textBlockInfo = editTextBlockInfo();
+        	    console.log(formData);
+        	    $.ajax({
+        	        type: "POST",
+        	        url: "[(@{'/staff/space/link/textBlock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+        	        cache: false,
+        	        contentType : false,
+        	        processData : false,
+        	        enctype: 'multipart/form-data',
+        	        data: formData,
+        	        success: function(data) {
+        	            var linkData = JSON.parse(data);
+        	            $("#bgImage").off("click");
+        	            textBlockInfo["id"] = linkData["id"];
+        	            textBlockInfo["text"]=linkData["text"];
+        	            textBlockInfo["x"]=linkData["x"];
+        	            textBlockInfo["y"]=linkData["y"];
+        	            textBlockInfo["height"]=linkData["height"];
+        	            textBlockInfo["width"]=linkData["width"];
+        	            hideLinkInfoTabs();
+        	       	}
+        	 	});
+        	});
+			
 			$("#createExternalLinkBtn").click(function(e) {
 				e.preventDefault();
 				var payload = {};
@@ -653,6 +781,19 @@ $(function(){
 		            method: "DELETE",
 		                success:function(data) {
 		                    $('[data-link-id="' + linkId + '"]').remove();
+		                    hideLinkInfoTabs();
+		                }
+		            });
+		    });
+			
+			$("#deleteTextBlockButton").click(function() {
+			    var blockId = $("#textBlockIdValueEdit").val();
+			    console.log(blockId);
+		        $.ajax({
+		            url: "[(@{'/staff/space/'+${space.id}+'/textBlock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+		            method: "DELETE",
+		                success:function(data) {
+		                    $('[data-link-id="' + blockId + '"]').remove();
 		                    hideLinkInfoTabs();
 		                }
 		            });
@@ -931,7 +1072,8 @@ $(function(){
 			    $("#editSpaceLinkInfo").hide();
 			    $("#editModuleLinkInfo").hide();
 		        $("#errorMsg").text("");
-		        $('#errorAlert').hide();    
+		        $('#errorAlert').hide();
+		        $("#editTextBlockInfo").hide();
 			}
 			
 			function showExternalLinks(externalLink) {
@@ -1002,7 +1144,15 @@ $(function(){
 		        $("#module_label").remove();
 		        $("#createModuleLinkAlert").hide();  
 		        $('#errorAlert').hide();
-		    }); 
+		    });
+			
+			$("#cancelAddTextBlockBtn").click(function() {
+		        storeX = null;
+		        storeY = null;
+		        $("#textContentID").val(""); 
+		        $("#addTextFormInfo").hide();  
+		        $('#errorAlert').hide();
+		    });
 		    
 		    $("#cancelExternalLinkBtn").click(function() {
 		        storeX = null;
@@ -1074,6 +1224,26 @@ $(function(){
 				info["linkedModule"] = $("#linkedModule").val();
 				info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
 				info["type"] = $("#type").val();
+				return info;
+			}
+			
+			function createTextBlockInfo() {
+				var info = {};
+				info["x"] = storeX;
+				info["y"] = storeY;
+				info["text"] = $("#textContentID").val();
+				info["heigth"] = $("#textBoxHeightID").val();
+				info["width"] = $("#textBoxWidthID").val();
+				return info;
+			}
+			
+			function editTextBlockInfo() {
+				var info = {};
+				info["x"] = storeX;
+				info["y"] = storeY;
+				info["text"] = $("#textContentID").val();
+				info["heigth"] = $("#textBoxHeightIDEdit").val();
+				info["width"] = $("#textBoxWidthIDEdit").val();
 				return info;
 			}
 			
@@ -1206,6 +1376,31 @@ $(function(){
 		        $("#externalLinkInfo").show();
 		        $("#editExternalLinkInfo").show();
 		    }
+			
+			function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height){
+			    selectedTextBlockId=blockId;
+			    storeX=posX;
+				storeY=posY;
+			    $("#textBlockIdValueEdit").val(blockId);
+			    $("#textBlockXEdit").val(posX);
+			    $("#textBlockYEdit").val(posY);
+			    $("#textBlockDisplayId").val(blockDisplayId);
+			    $("#textBoxWidthIDEdit").val(width);
+			    $("#textBoxHeightIDEdit").val(height);
+			    $("#textContentID").val(text);
+			    resetHighlighting();
+			    
+			    $("#bgImage").on("click", function(e){
+					e.preventDefault();
+					var posX = $(this).position().left;
+					var posY = $(this).position().top;    
+					storeX = e.pageX - $(this).offset().left;
+					storeY = e.pageY - $(this).offset().top;
+				});
+			    hideLinkInfoTabs();
+			    $("#editTextBlockInfo").show();
+			    
+			}
 			
 			function resetHighlighting() {
 		        // reset icon links
