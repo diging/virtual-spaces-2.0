@@ -2091,6 +2091,148 @@ $(function(){
             </div>
         </form>
 
+        <form id="addTextForm">
+            <div id="addTextFormInfo" class="alert alert-secondary"
+                role="alert"
+                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+
+                <div class="row">
+                    <div class="col">
+                        <small>Please click on the image where
+                            you want to place the Text content. Then
+                            click "Save".</small>
+                        </p>
+                        <hr>
+                    </div>
+                </div>
+
+                <input type="hidden" name="x" id="addTextX" /> <input
+                    type="hidden" name="y" id="addTextY" />
+
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Width:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxWidth"
+                            type="number" id="textBoxWidthID"
+                            name="width" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Height:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxHeight"
+                            type="number" id="textBoxHeightID"
+                            name="height" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Text:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="form-control-xs textContent"
+                             name="textContent"
+                            id="textContentID" style="width: inherit;"></textarea><br>
+                    </div>
+                </div>
+                <HR>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button id="addTextBlockBtn" type="reset"
+                            class="btn btn-primary btn-xs">Save</button>
+                    </div>
+                    <button id="cancelAddTextBlockBtn" type="reset"
+                        class="btn btn-light btn-xs">Cancel</button>
+                </div>
+            </div>
+        </form>
+
+        <form id="editTextBlockForm">
+            <div id="editTextBlockInfo" class="alert alert-secondary"
+                role="alert"
+                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+                <p class="float-right">
+                    <a href="#" id="closeEditTextBlockInfo"><span
+                        data-feather="x-square"></span></a>
+                </p>
+                <input type="hidden" name="textBlockIdValueEdit"
+                    id="textBlockIdValueEdit" />
+                <div class="row">
+                    <div class="col">
+                        <h6 class="alert-heading">
+                            <small>Modify Text Block</small>
+                        </h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <small>Please click on the image where
+                            you want to place the existing external
+                            link. Then click "Edit External Link".</small>
+                        </p>
+                        <hr>
+                    </div>
+                </div>
+                <input type="hidden" name="x" id="textBlockXEdit" /> <input
+                    type="hidden" name="y" id="textBlockYEdit" /> <input
+                    type="hidden" name="textBlockDisplayId"
+                    id="textBlockDisplayId" />
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Width:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxWidth"
+                            type="number" id="textBoxWidthIDEdit"
+                            name="width" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Height:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxHeight"
+                            type="number" id="textBoxHeightIDEdit"
+                            name="height" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Text:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="form-control-xs textContent"
+                            name="textContentEdit"
+                            id="textContentID" style="width: inherit;"></textarea><br>
+                    </div>
+                </div>
+                <HR>
+
+                <HR>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button id="editTextBlockBtn" type="reset"
+                            class="btn btn-primary btn-xs">Save</button>
+                    </div>
+                    <div class="col-sm-8">
+                        <button id="deleteTextBlockButton" type="reset"
+                            class="btn btn-primary btn-xs">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <button type="button" id="addSpaceLinkButton"
                 class="btn btn-primary btn-sm">Add Space Link</button>
@@ -2107,6 +2249,9 @@ $(function(){
             &nbsp;
             <button type="button" id="deleteSpace"
                 class="btn btn-primary btn-sm">Delete Space</button>
+            &nbsp;
+            <button type="button" id="addTextBlock"
+                class="btn btn-primary btn-sm">Add Text Block</button>
         </nav>
         <p></p>
 
