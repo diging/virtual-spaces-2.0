@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <link rel="stylesheet"
-	href="https://unpkg.com/easymde/dist/easymde.min.css">
+    href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <script>
@@ -635,30 +635,32 @@ $(window).on('load', function () {
 
 </script>
 <ol class="breadcrumb">
-	<li class="breadcrumb-item"><a
-		href="<c:url value="/staff/dashboard" />">Dashboard</a></li>
-	<li class="breadcrumb-item"><a
-		href="<c:url value="/staff/module/list" />">Modules</a></li>
-	<li class="breadcrumb-item"><a
-		href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
-	<li class="breadcrumb-item active">${slide.name}</li>
+    <li class="breadcrumb-item"><a
+        href="<c:url value="/staff/dashboard" />">Dashboard</a></li>
+    <li class="breadcrumb-item"><a
+        href="<c:url value="/staff/module/list" />">Modules</a></li>
+    <li class="breadcrumb-item"><a
+        href="<c:url value="/staff/module/${module.id}" />">${module.name}</a></li>
+    <li class="breadcrumb-item active">${slide.name}</li>
 </ol>
 <div class="error"></div>
 <!-- title -->
 <div class="row align-items-center">
-	<h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
-		${slide.name}</h1>
-        <a href="<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit" />"><span data-feather="edit"></span></a>
+    <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
+        ${slide.name}</h1>
+    <a
+        href="<c:url value="/staff/module/${module.id}/slide/${slide.id}/edit" />"><span
+        data-feather="edit"></span></a>
 </div>
 <div class="alert alert-light" role="alert">
-	Created on <span class="date">${slide.creationDate}</span> by
-	${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
-	by ${slide.modifiedBy}.
+    Created on <span class="date">${slide.creationDate}</span> by
+    ${slide.createdBy}.<br> Modified on <span class="date">${slide.modificationDate}</span>
+    by ${slide.modifiedBy}.
 </div>
 <!-- description -->
 <div style="margin-left: .1%;" class="row align-items-center">
-	<h5 style="margin-bottom: 0px;">Description:</h5>
-	<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${slide.description}</p>
+    <h5 style="margin-bottom: 0px;">Description:</h5>
+    <p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">${slide.description}</p>
 </div>
 <!-- SlideSequences -->
 <div style="margin-left: .1%;" class="row align-items-center">
@@ -675,75 +677,87 @@ $(window).on('load', function () {
     </div>
 </c:forEach>
 <div style="margin-top: 1%; margin-bottom: 2%;">
-	<a class="btn btn-primary"
-		href="<c:url value="/staff/module/${module.id}" />">Go Back</a>
+    <a class="btn btn-primary"
+        href="<c:url value="/staff/module/${module.id}" />">Go Back</a>
 </div>
 <!-- choices -->
-<div id="choiceSpace" style="margin-left: .1%;display:none;" class="row align-items-center">
-	<h5 style="margin-bottom: 0px;">Choices: </h5>
-	<c:forEach items="${choices}" var="choice">
-		<a style="margin-left: .5rem;" href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />" name="${choice.sequence.name}">${choice.sequence.name}</a>
-	</c:forEach>
+<div id="choiceSpace" style="margin-left: .1%; display: none;"
+    class="row align-items-center">
+    <h5 style="margin-bottom: 0px;">Choices:</h5>
+    <c:forEach items="${choices}" var="choice">
+        <a style="margin-left: .5rem;"
+            href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />"
+            name="${choice.sequence.name}">${choice.sequence.name}</a>
+    </c:forEach>
 </div>
 
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button"
             id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false" style="float:left;"
-        >Add content</button>
-         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            aria-haspopup="true" aria-expanded="false"
+            style="float: left;">Add content</button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a id="addText" class="dropdown-item" href="#">Add Text</a>
-            <a id="addImage" class="dropdown-item" href="#">Add Image</a>          
-            <a id="addChoice" class="dropdown-item" href="#" style="display:none;">Add Choices (Links to other sequences)</a>    
+            <a id="addImage" class="dropdown-item" href="#">Add
+                Image</a> <a id="addChoice" class="dropdown-item" href="#"
+                style="display: none;">Add Choices (Links to other
+                sequences)</a>
         </div>
-        <p style="float:right; margin-left: 1rem; margin-top:.5rem;">Double Click on a Block to Edit it<p>
+        <p style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
+            Click on a Block to Edit it
+        <p>
     </div>
 </nav>
 
 <!-- Delete Text Modal -->
 <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
-	role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Confirm Delete</h5>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<h6>Are you sure you want to delete this text block?</h6>
-			</div>
-			<div class="modal-footer">
-				<button id="cancelDeleteText" type="reset" class="btn light">Cancel</button>
-				<button type="submit" id="deleteText" class="btn btn-primary">Submit</button>
-			</div>
-		</div>
-	</div>
+    role="dialog" th:draggable="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure you want to delete this text
+                    block?</h6>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDeleteText" type="reset"
+                    class="btn light">Cancel</button>
+                <button type="submit" id="deleteText"
+                    class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Delete Image Modal -->
 <div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
-	role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Confirm Delete</h5>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<h6>Are you sure you want to delete this image block?</h6>
-			</div>
-			<div class="modal-footer">
-				<button id="cancelDelete" type="reset" class="btn light">Cancel</button>
-				<button type="submit" id="deleteImage" class="btn btn-primary">Submit</button>
-			</div>
-		</div>
-	</div>
+    role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure you want to delete this image
+                    block?</h6>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDelete" type="reset" class="btn light">Cancel</button>
+                <button type="submit" id="deleteImage"
+                    class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Delete ChoiceBlock Modal -->
@@ -759,11 +773,14 @@ $(window).on('load', function () {
                 </button>
             </div>
             <div class="modal-body">
-                <h6>Are you sure you want to delete this choices Block?</h6>
+                <h6>Are you sure you want to delete this choices
+                    Block?</h6>
             </div>
             <div class="modal-footer">
-                <button id="cancelDeleteChoiceBlock" type="reset" class="btn light">Cancel</button>
-                <button type="submit" id="deleteChoiceBlock" class="btn btn-primary">Submit</button>
+                <button id="cancelDeleteChoiceBlock" type="reset"
+                    class="btn light">Cancel</button>
+                <button type="submit" id="deleteChoiceBlock"
+                    class="btn btn-primary">Submit</button>
             </div>
         </div>
     </div>
@@ -772,106 +789,114 @@ $(window).on('load', function () {
 
 
 <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Add new Text Block</h5>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form name="textForm" id="textUploadForm"
-				enctype="multipart/form-data" method="post">
-				<div class="modal-body">
-					<h6>
-						<small>Enter Text: </small>
-					</h6>
-					<textarea class="form-control" id="textBlockText" rows="3"></textarea>
-				</div>
-				<div class="modal-footer">
-					<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
-					<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new Text Block</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="textForm" id="textUploadForm"
+                enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <h6>
+                        <small>Enter Text: </small>
+                    </h6>
+                    <textarea class="form-control" id="textBlockText"
+                        rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelSubmitText" type="reset"
+                        class="btn light">Cancel</button>
+                    <button type="submit" id="submitText"
+                        class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div id="editTextAlert" class="modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Edit Text Block</h5>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form name="textForm" id="textEditUploadForm"
-				enctype="multipart/form-data" method="post">
-				<div class="modal-body">
-					<h6>
-						<small>Edit Text: </small>
-					</h6>
-					<textarea class="form-control" id="editTextBlock" rows="3"></textarea>
-				</div>
-				<div class="modal-footer">
-					<button id="cancelTextBlock" type="reset" class="btn light">Cancel</button>
-					<button type="submit" id="submitTextBlock" class="btn btn-primary">Submit</button>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Text Block</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="textForm" id="textEditUploadForm"
+                enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <h6>
+                        <small>Edit Text: </small>
+                    </h6>
+                    <textarea class="form-control" id="editTextBlock"
+                        rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelTextBlock" type="reset"
+                        class="btn light">Cancel</button>
+                    <button type="submit" id="submitTextBlock"
+                        class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 
 <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Add new Image Block</h5>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form name="photoForm" id="imageUploadForm"
-				enctype="multipart/form-data" method="post">
-				<div class="modal-body">
-					<h6>
-						<small>Upload Image: </small>
-					</h6>
-					<input class="form-control" type="file" name="file" rows="5"
-						cols="500" id="file" />
-				</div>
-				<div class="modal-footer">
-					<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
-					<button type="submit" id="uploadImage" class="btn btn-primary"
-						data-value="">Upload Image</button>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new Image Block</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form name="photoForm" id="imageUploadForm"
+                enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <h6>
+                        <small>Upload Image: </small>
+                    </h6>
+                    <input class="form-control" type="file" name="file"
+                        rows="5" cols="500" id="file" />
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelImageBtn" type="reset"
+                        class="btn light">Cancel</button>
+                    <button type="submit" id="uploadImage"
+                        class="btn btn-primary" data-value="">Upload
+                        Image</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div id="loginAlert" class="modal" tabindex="-1" role="dialog"
-	backdrop="static"
-	style="display: none; background-color: rgba(0, 0, 0, 0.5);">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Login</h5>
-			</div>
-			<div class="modal-body">
-				<h6>You are not logged in, please login.</h6>
-			</div>
-			<div class="modal-footer">
-				<a class="btn btn-primary" style="color: white;"
-					onClick="window.location.reload();">Login</a>
-			</div>
-		</div>
-	</div>
+    backdrop="static"
+    style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login</h5>
+            </div>
+            <div class="modal-body">
+                <h6>You are not logged in, please login.</h6>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" style="color: white;"
+                    onClick="window.location.reload();">Login</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
@@ -886,19 +911,27 @@ $(window).on('load', function () {
             </div>
             <form name="choiceForm" id="choiceForm"
                 enctype="multipart/form-data" method="post">
-                <div id = "choiceDiv" class="modal-body">
-                    <input class="choiceOptions" id="showAllChoices" type="checkbox" name="showAll" value="showAll" checked="true"/>
-                    <label for="showAll">Always show all choices</label><br/>
-                    <div id = "selectChoices">
+                <div id="choiceDiv" class="modal-body">
+                    <input class="choiceOptions" id="showAllChoices"
+                        type="checkbox" name="showAll" value="showAll"
+                        checked="true" /> <label for="showAll">Always
+                        show all choices</label><br />
+                    <div id="selectChoices">
                         <c:forEach items="${choices}" var="choice">
-                            <input class="choiceOptions" id="${choice.id}" type="checkbox" name="${choice.sequence.name}" value="${choice.sequence.name}" />
-                            <label for="${choice.id}">${choice.sequence.name}</label><br/>
+                            <input class="choiceOptions"
+                                id="${choice.id}" type="checkbox"
+                                name="${choice.sequence.name}"
+                                value="${choice.sequence.name}" />
+                            <label for="${choice.id}">${choice.sequence.name}</label>
+                            <br />
                         </c:forEach>
-                    </div>                   
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
-                    <button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
+                    <button id="cancelSubmitChoice" type="reset"
+                        class="btn light">Cancel</button>
+                    <button type="submit" id="submitChoices"
+                        class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
@@ -906,40 +939,46 @@ $(window).on('load', function () {
 </div>
 
 <div id="slideSpace">
-	<c:forEach items="${slideContents}" var="contents">
-		<c:if test="${contents['class'].simpleName == 'ImageBlock'}">
-			<div style="margin: 1%;" class="valueDiv card-body"
-				id="${contents.id}">
-				<img id="${contents.id}" class="imgDiv"
-					src="<c:url value="/api/image/${contents.image.id}" />" /> <input
-					type="hidden" id="deleteImageId" value="${contents.id}"> <a
-					class="btn deleteImage" href="javascript:;" style="float: right;">
-					<i style="color: black;" class="fas fa-trash-alt"></i>
-				</a>
-			</div>
-		</c:if>
-		<c:if test="${contents['class'].simpleName ==  'TextBlock'}">
-			<div id="${contents.id}" class="textDiv card card-body row"
-				style="margin: 1%;">
-				<p>${contents.text}
-					<input type="hidden" id="deleteTextId" value="${contents.id}" /> <a
-						class="btn deleteText" href="javascript:;" style="float: right;">
-						<i style="color: black;" class="fas fa-trash-alt"></i>
-					</a>
-				</p>
-			</div>
-		</c:if>
+    <c:forEach items="${slideContents}" var="contents">
+        <c:if test="${contents['class'].simpleName == 'ImageBlock'}">
+            <div style="margin: 1%;" class="valueDiv card-body"
+                id="${contents.id}">
+                <img id="${contents.id}" class="imgDiv"
+                    src="<c:url value="/api/image/${contents.image.id}" />" />
+                <input type="hidden" id="deleteImageId"
+                    value="${contents.id}"> <a
+                    class="btn deleteImage" href="javascript:;"
+                    style="float: right;"> <i style="color: black;"
+                    class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+        </c:if>
+        <c:if test="${contents['class'].simpleName ==  'TextBlock'}">
+            <div id="${contents.id}" class="textDiv card card-body row"
+                style="margin: 1%;">
+                <p>${contents.text}
+                    <input type="hidden" id="deleteTextId"
+                        value="${contents.id}" /> <a
+                        class="btn deleteText" href="javascript:;"
+                        style="float: right;"> <i
+                        style="color: black;" class="fas fa-trash-alt"></i>
+                    </a>
+                </p>
+            </div>
+        </c:if>
         <c:if test="${contents['class'].simpleName ==  'ChoiceBlock'}">
             <div id="${contents.id}" class="textDiv card card-body row"
                 style="margin: 1%;">
                 <c:if test="${contents.showsAll eq true}">
                     <c:forEach items="${choices}" var="choice">
-                        <a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+                        <a
+                            href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
                     </c:forEach>
                 </c:if>
                 <c:if test="${contents.showsAll eq false}">
                     <c:forEach items="${contents.choices}" var="choice">
-                        <a href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
+                        <a
+                            href="<c:url value="/staff/module/${module.id}/sequence/${choice.sequence.id}" />">${choice.sequence.name}</a>
                     </c:forEach>
                 </c:if>
                 <input type="hidden" id="deleteChoiceBlockId"
@@ -955,6 +994,6 @@ $(window).on('load', function () {
 
 <style type="text/css">
 .hova {
-	background-color: #bfb168;
+    background-color: #bfb168;
 }
 </style>

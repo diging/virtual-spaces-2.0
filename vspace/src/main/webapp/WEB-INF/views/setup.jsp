@@ -8,7 +8,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.2.1/pwstrength-bootstrap.min.js"></script>
 <script>
-jQuery(document).ready(function () {
+$(document).ready(function () {
     "use strict";
     var options = {};
     options.ui = {

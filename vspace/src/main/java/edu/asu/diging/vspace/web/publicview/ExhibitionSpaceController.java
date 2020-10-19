@@ -77,6 +77,6 @@ public class ExhibitionSpaceController {
         if(sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
         }
-        return "space";
+        return "exhibition/space";
     }
 }

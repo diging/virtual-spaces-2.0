@@ -19,6 +19,6 @@ public class ImageController {
     public String showImage(@PathVariable String id, Model model) {
         IVSImage image = imageRepo.findById(id).get();
         model.addAttribute("image", image);
-        return "staff/image";
+        return "staff/images/image";
     }
 }
