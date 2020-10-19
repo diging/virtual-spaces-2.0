@@ -156,6 +156,10 @@ function uploadImage() {
    	$('#file').val('');
 }
 
+function embedVideo() {
+
+}
+
 $(document).ready(function() {
     
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
@@ -275,10 +279,21 @@ $(document).ready(function() {
         $("#addImgAlert").show();
     });
     
+    $("#addVideo").click(function() {
+        $("#addVideoAlert").show();
+    });
+    
     $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
             uploadImage();
+    });
+    
+    $("#embedVideo").click(function(e) {
+        e.preventDefault();
+            $("#addVideoAlert").hide();
+            alert("he he");
+            embedVideo();
     });
     
     $("#addChoice").click(function() {
@@ -441,6 +456,13 @@ $(document).ready(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '');
         $("#addImgAlert").hide();
+        $(".open").removeClass("open");
+    });
+    
+    $("#cancelVideoBtn").click(function() {
+    	// Initialize selected image ID to blank, on clicking cancel button
+    	$("#embedVideo").data('value', '');
+        $("#addVideoAlert").hide();
         $(".open").removeClass("open");
     });
     
@@ -704,7 +726,8 @@ $(window).on('load', function () {
                     aria-labelledby="dropdownMenuButton">
                     <a id="addText" class="dropdown-item" href="#">Add
                         Text</a> <a id="addImage" class="dropdown-item"
-                        href="#">Add Image</a> <a id="addChoice"
+                        href="#">Add Image</a> <a id="addVideo" class="dropdown-item"
+                        href="#">Add Video</a><a id="addChoice"
                         class="dropdown-item" href="#"
                         style="display: none;">Add Choices (Links to
                         other sequences)</a>
@@ -861,7 +884,7 @@ $(window).on('load', function () {
             <div class="modal-dialog" role="document" th:draggable="true">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add new Image Block</h5>
+                        <h5 class="modal-title">Add New Image Block</h5>
                         <button type="button" class="close"
                             data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -883,6 +906,38 @@ $(window).on('load', function () {
                             <button type="submit" id="uploadImage"
                                 class="btn btn-primary" data-value="">Upload
                                 Image</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document" th:draggable="true">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New Video Block</h5>
+                        <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form name="videoForm" id="videoUploadForm"
+                        enctype="multipart/form-data" method="post">
+                        <div class="modal-body">
+                            <h6>
+                                <small>IFrame Link: </small>
+                            </h6>
+                            <input class="form-control" type="text"
+                                name="videoLink" rows="5" cols="500"
+                                id="videoLink" />
+                        </div>
+                        <div class="modal-footer">
+                            <button id="cancelVideoBtn" type="reset"
+                                class="btn light">Cancel</button>
+                            <button type="submit" id="embedVideo"
+                                class="btn btn-primary" data-value="">Embed
+                                Video</button>
                         </div>
                     </form>
                 </div>

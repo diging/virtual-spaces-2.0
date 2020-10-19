@@ -15,7 +15,7 @@
 		          <li class="nav-item active" style="padding: 25px;">
 		            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 		          </li> 
-				  <li sec:authorize="hasRole('ROLE_STAFF')" class="nav-item active" style="padding: 25px;">
+				  <li sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="nav-item active" style="padding: 25px;">
 					<a class="nav-link" th:href="@{/staff/dashboard}">Dashboard
 						<span class="sr-only">(current)</span>
 					</a>
