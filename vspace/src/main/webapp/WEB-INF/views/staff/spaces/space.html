@@ -205,6 +205,34 @@ $(function(){
 	            makeExternalLinksEditable(label,[[${link.externalLink.id}]],targetLink,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
 	        });
 		[/]
+		    [# th:each="block,loop : ${spaceTextBlocks}"]
+				var posX = $("#bgImage").position().left;
+				var posY = $("#bgImage").position().top;
+				
+				var imageHeight = parseInt($("#bgImage").css("height"));
+				var imageWidth = parseInt($("#bgImage").css("width"));
+				var height = ([[${block.height}]]*imageHeight)/100;
+				var width = ([[${block.width}]]*imageWidth)/100;
+				console.log(imageHeight);
+				console.log(imageWidth);
+				console.log(height);
+				console.log(width);
+				
+				var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-"'+[[${block.spaceTextBlock.id}]]+'" textDiv"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>"'+[[${block.spaceTextBlock.text}]]+'"</textarea></span>');
+				
+				block.css('position', 'absolute');
+				block.css('left', [[${block.positionX}]] + posX);
+				block.css('top', [[${block.positionY}]] + posY);
+				block.css('font-size', "12px");
+				$("#space").append(block);
+				
+				$('[data-link-id="${block.spaceTextBlock.id}"]').click(function(e) {
+					makeTextBlockEditable([[${block.id}]],[[${block.spaceTextBlock.id}]],[[${block.spaceTextBlock.text}]],[[${block.positionX}]],[[${block.positionY}]],[[${block.width}]],[[${block.height}]]);
+				});
+			[/]
+			
+			
+			
 		 // store where a user clicked on an image
 			var storeX;
 			var storeY;
