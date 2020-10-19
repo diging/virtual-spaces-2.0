@@ -1,0 +1,98 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+
+<script>
+//# sourceURL=click.js
+$(document).ready(function(){
+	var vals = []
+	var choices = []
+		
+	$('select[id="type"]').change(function(){
+	    if ($(this).val() == "BRANCHING_POINT"){
+	    	$('#sequences').show();
+	    	$('#selectSequence').multiSelect({		    		
+	    		dblClick : true,
+	    		afterInit : function(container) {
+	    			$("#selectSequence").find("option").each(function() {
+	    				vals.push($(this).val());
+	    			});
+	    			$(".ms-selection ul").find("li").each(function(index) {
+	    				$(this).attr('value', vals[index]);
+	    			});
+	    		},
+	    		afterSelect : function(value) {
+	    			choices = [];
+	    			$('.ms-selection ul li.ms-selected').each(function(index, value) {
+	    				choices.push($(this).attr('value'));					
+	    			});
+	    			$("#choices").val(choices);
+	    		},
+	    		afterDeselect : function(value, text) {
+	    			for (var i=choices.length-1; i>=0; i--) {
+	    				if (String(choices[i]) === String(value)) {
+	    					choices.splice(i, 1);
+	    					break;
+	    	    		}
+	    			}
+	    			$("#choices").val(choices);
+	    		}
+	        });	    				
+	     } else {
+	    	 $('#sequences').hide();
+	     }        
+	});
+});
+</script>
+</head>
+
+<body>
+    <div class="justify-content-left" layout:fragment="content">
+        <h1>Add new Slide</h1>
+        <form th:action="@{'/staff/module/'+${moduleId}+'/slide/add'}"
+            method="POST" name="f" class="form-horizontal">
+            <div class="form-group">
+                <label for="name" class="col-md-2 col-form-label">Slide
+                    Name:</label> <input type="text"
+                    class="form-control col-md-10" id="name" name="name" />
+            </div>
+            <div class="form-group">
+                <label for="type" class="col-md-2 col-form-label">Type:</label>
+                <select name="type" id="type"
+                    class="form-control-xs target"
+                    style="height: 50px; width: 300px;">
+                    <option id="slide" selected value="SLIDE"
+                        label="Slide">Slide</option>
+                    <option id="branchingPoint" value="BRANCHING_POINT"
+                        label="BranchingPoint">Branching Point</option>
+                </select>
+            </div>
+            <div class="form-group" id="sequences"
+                style="display: none;">
+                <label for="choices" class="col-md-2 col-form-label">Add
+                    Choices:</label> <select multiple="multiple"
+                    id="selectSequence" name="selectSequence"
+                    class="form-control form-control-sm"
+                    style="width: 68px;">
+
+                    <option th:each="sequence: ${sequences}"
+                        th:value=${sequence.id} th:id=${sequence.id}>[[${sequence.name}]]</option>
+
+                </select> <input type="hidden" id="choices" name="choices"></input>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-md-2 col-form-label">Description:</label>
+                <textarea class="form-control col-md-10" rows="5"
+                    cols="30" id="description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn primary-btn">Create
+                        Slide</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>

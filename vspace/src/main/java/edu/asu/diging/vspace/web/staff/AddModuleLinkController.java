@@ -19,8 +19,8 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.ModuleLinkManager;
 
 @Controller
 public class AddModuleLinkController {
@@ -29,7 +29,7 @@ public class AddModuleLinkController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ModuleLinkManager moduleLinkManager;
+    private IModuleLinkManager moduleLinkManager;
 
 
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)

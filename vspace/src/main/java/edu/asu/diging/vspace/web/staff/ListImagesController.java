@@ -63,6 +63,6 @@ public class ListImagesController {
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
         model.addAttribute("order",
                 (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
-        return "staff/images/list";
+        return "staff/images/imagelist";
     }
 }
