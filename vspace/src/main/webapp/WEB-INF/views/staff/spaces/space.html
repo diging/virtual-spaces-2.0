@@ -218,7 +218,7 @@ $(function(){
 				console.log(height);
 				console.log(width);
 				
-				var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-"'+[[${block.spaceTextBlock.id}]]+'" textDiv"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>"'+[[${block.spaceTextBlock.text}]]+'"</textarea></span>');
+				var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-'+[[${block.spaceTextBlock.id}]]+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
 				
 				block.css('position', 'absolute');
 				block.css('left', [[${block.positionX}]] + posX);
@@ -264,7 +264,7 @@ $(function(){
 		function getTextArea(x,y) {
 		    var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
-		    var text = $('<div id="text" class="textDiv"><textarea id="textB" name="textBlock" type="textarea" class="textBlock"></textarea></div>');
+		    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both;"></textarea></span>');
 		    text.css('position', 'absolute');
 		    text.css('left', x + posX);
 		    text.css('top', y + posY);
@@ -274,8 +274,9 @@ $(function(){
 		    tHeight = textB.clientHeight,
 		    tWidth = textB.clientWidth;
 			
-			let height = parseInt($("#bgImage").css("height"));
-	        let width = parseInt($("#bgImage").css("width"));
+			
+			var height = parseInt($("#bgImage").css("height"));
+	        var width = parseInt($("#bgImage").css("width"));
 	        
 	        
 	        
@@ -292,8 +293,8 @@ $(function(){
 		            $("#textContentID").val(textB.value);
 		    	}
 			};
-			let percentileHeight = (tHeight*100)/height;
-	        let percentileWidth = (tWidth*100)/width;
+			var percentileHeight = (tHeight*100)/height;
+	        var percentileWidth = (tWidth*100)/width;
 	    	$("#textBoxWidthID").val(percentileWidth);
 	        $("#textBoxHeightID").val(percentileHeight);
 	        $("#textContentID").val(textB.value);

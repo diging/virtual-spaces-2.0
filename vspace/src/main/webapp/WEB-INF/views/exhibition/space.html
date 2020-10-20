@@ -219,7 +219,7 @@
     			var block;
     			var heightText = [[${block.height}]]*10;
     			var widthText = [[${block.width}]]*10;
-    			block = $('<span data-link-id="'+[[${block.id}]]+'" class="spaceLink-'+[[${block.id}]]+' Info_cz_Class"><textarea class="textBlock" readonly="true" style="height:'+heightText+'px; width:'+widthText+'px;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
+    			block = $('<span data-link-id="'+[[${block.id}]]+'" class="spaceLink-'+[[${block.id}]]+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
     			block.css('position', 'absolute');
     			var height = parseInt($("#bgImage").css("height"));
             	var width = parseInt($("#bgImage").css("width"));
