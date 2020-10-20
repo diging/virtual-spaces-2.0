@@ -211,6 +211,25 @@
 		    }
 		    [/]
 		    [/]
+		    
+		    [# th:each="block, loop : ${spaceTextBlocks}" ]
+			[# th:if="${block != null}" ]
+		    	var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
+		    	var posY = $("#bgImage").position().top;
+    			var block;
+    			var heightText = [[${block.height}]]*10;
+    			var widthText = [[${block.width}]]*10;
+    			block = $('<span data-link-id="'+[[${block.id}]]+'" class="spaceLink-'+[[${block.id}]]+' Info_cz_Class"><textarea class="textBlock" readonly="true" style="height:'+heightText+'px; width:'+widthText+'px;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
+    			block.css('position', 'absolute');
+    			var height = parseInt($("#bgImage").css("height"));
+            	var width = parseInt($("#bgImage").css("width"));
+            	var	linkPosX=(width*[[${block.positionX}]])/[[${display.width}]];
+            	var	linkPosY=(height*[[${block.positionY}]])/[[${display.height}]];
+    			block.css('left', linkPosX + posX);
+    			block.css('top', linkPosY + posY);
+    			$("#space").append(block);
+		    [/]
+		    [/]
 		}
 	</script>
         <div class="container-fluid"
