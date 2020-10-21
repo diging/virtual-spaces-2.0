@@ -206,13 +206,19 @@ i {
     }
 }
 
+.flex-spacing {
+	display:flex;
+	justify-content: space-between;
+	margin: 40px 0
+}
+
 .sidenav {
     width: 20%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: -1px;
     left: 0px;
-    overflow-x: hidden;
+    overflow: hidden;
     background: #fff;
     transition: 0.5s;
     padding-top: 70px;

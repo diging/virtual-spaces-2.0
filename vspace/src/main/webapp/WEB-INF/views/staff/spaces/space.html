@@ -22,6 +22,9 @@ $(function(){
     	if ($("div#incomingLinks a").length < 2) {
     		  $("#noLinksToSpace").show()
     	  }
+    	
+    	$("#createSpaceLink").css("display","none");
+    	
       });
     
     [# th:each="link,loop : ${spaceLinks}"]
@@ -1194,6 +1197,15 @@ $(function(){
 		        $('img[data-link-id]').css("border-width", "0px"); 
 		    }
 		});
+		
+        function linkToggler() {
+        	  if ($("#createSpaceLink").css("display","none")) {
+        		  $("#createSpaceLink").css("display","block");
+        	  } else {
+        		  $("#createSpaceLink").css("display","none");
+        	  }
+        }
+		
 </script>
 <style>
 .Info_cz_Class .tooltiptext {
@@ -1264,61 +1276,44 @@ $(function(){
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        
+        <div style="margin: 20px 0">
+            <button type="button" id="addSpaceLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top" onclick="linkToggler()">
+            	<i class="fas fa-plus"></i>&emsp;<i class="fas fa-layer-group"></i></button>
+            &nbsp;
+            <button type="button" id="addModuleLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to Module" data-placement="top" onclick="linkToggler()">
+            	<i class="fas fa-plus"></i>&emsp;<i class="fas fa-th-large"></i></button>
+            &nbsp;
+            <button type="button" id="addExternalLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to External" data-placement="top" onclick="linkToggler()">
+            	<i class="fas fa-plus"></i>&emsp;<i class="fas fa-external-link-alt"></i></button>
+            &nbsp;
+            <button type="button" id="changeBgImgButton" class="btn pill-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top" onclick="linkToggler()">
+            	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
+            &nbsp;
+            <button type="button" id="deleteSpace" class="btn pill-btn">Delete Space</button>
+        </div>
 
 
         <form id="createSpaceLinkForm">
-            <div id="createSpaceLinkAlert" class="alert alert-secondary" role="alert"
-                style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Create new Space Link</small>
-                        </h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the new space link. Then
-                            click "Create Space Link".</small>
-                        <hr>
-                    </div>
-                </div>
+            <div id="createSpaceLink" class="tab" role="alert">
+                <h5>Create new Space Link</h5>
+                <p>Please click on the image where you want to place the new space link. Then click "Create Space Link".</p>
 
-                <input type="hidden" name="x" id="spaceLinkX" /> <input
-                    type="hidden" name="y" id="spaceLinkY" />
+                <input type="hidden" name="x" id="spaceLinkX" />
+                <input type="hidden" name="y" id="spaceLinkY" />
 
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <label><small>Rotation:</small> </label>
                     </div>
-                    <div class="col-sm-8">
-                        <input class="form-control-xs"
-                            style="width: inherit;" type="number"
-                            id="spaceLinkRotation" name="rotation"
-                            value="0"><br>
+                    <div class="col-sm-2">
+                        <input class="form-control-xs" style="width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0"><br>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input class="form-control-xs target"
-                            style="width: inherit;" type="text"
-                            name="spaceLinkLabel" id="spaceLinkLabel"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <label><small>Type:</small> </label>
                     </div>
-                    <div class="col-sm-8">
-                        <select id="type" name="type"
-                            class="form-control-xs target"
-                            style="width: inherit;">
+                    <div class="col-sm-6">
+                        <select id="type" name="type" class="form-control-xs target" style="width: inherit;">
                             <option th:selected>Choose...</option>
                             <option th:value="IMAGE">Image</option>
                             <option th:value="ARROW">Link</option>
@@ -1328,40 +1323,37 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0px;">
-                        <label><small>Linked Space:</small> </label>
+                    <div class="col-sm-2">
+                        <label><small>Label:</small> </label>
                     </div>
-                    <div class="col-sm-7">
-                        <select id="linkedSpace" name="linkedSpace"
-                            class="form-control-xs target"
-                            style="width: inherit;">
-                            <option th:selected>Choose...</option>
-                            <option th:each="space : ${spaces}"
-                                th:value="${space.id}">[[${space.name}]]
-                                <span
-                                    th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
-                        </select>
+                    <div class="col-sm-10">
+                        <input class="form-control-xs target" style="width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel"><br>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-8" style="padding-right: 0px;">
+                    <div class="col-sm-2">
+                        <label><small>Linked Space:</small> </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="linkedSpace" name="linkedSpace" class="form-control-xs target" style="width: inherit;">
+                            <option th:selected>Choose...</option>
+                            <option th:each="space : ${spaces}" th:value="${space.id}">[[${space.name}]]
+                                <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
                         <label><small>Image:</small> </label>
                     </div>
-                    <div class="col-sm-9">
-
-                        <input type="file" class="form-control-xs"
-                            name="spaceLinkImage" id="spaceLinkImage"><br>
+                    <div class="col-sm-4">
+                        <input type="file" class="form-control-xs" name="spaceLinkImage" id="spaceLinkImage"><br>
                     </div>
                 </div>
 
                 <HR>
                 <p class="mb-0 text-right">
-                    <button id="cancelSpaceLinkBtn" type="reset"
-                        class="btn btn-light btn-xs">Cancel</button>
-                    <button id="createSpaceLinkBtn" type="reset"
-                        class="btn btn-primary btn-xs">Create
-                        Space Link</button>
+                    <button id="cancelSpaceLinkBtn" type="reset" class="btn btn-light btn-xs">Cancel</button>
+                    <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn">Create Space Link</button>
                 </p>
 
             </div>
@@ -1842,22 +1834,6 @@ $(function(){
                 </div>
             </div>
         </form>
-
-        <div style="margin: 20px 0">
-            <button type="button" id="addSpaceLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top">
-            	<i class="fas fa-plus"></i>&emsp;<i class="fas fa-layer-group"></i></button>
-            &nbsp;
-            <button type="button" id="addModuleLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to Module" data-placement="top">
-            	<i class="fas fa-plus"></i>&emsp;<i class="fas fa-th-large"></i></button>
-            &nbsp;
-            <button type="button" id="addExternalLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to External" data-placement="top">
-            	<i class="fas fa-plus"></i>&emsp;<i class="fas fa-external-link-alt"></i></button>
-            &nbsp;
-            <button type="button" id="changeBgImgButton" class="btn pill-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top">
-            	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
-            &nbsp;
-            <button type="button" id="deleteSpace" class="btn pill-btn">Delete Space</button>
-        </div>
         
         <div class="modal fade" id="confirm-space-delete" tabindex="-1"
             role="dialog" aria-labelledby="myModalLabel"
@@ -1904,45 +1880,30 @@ $(function(){
 
         <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
 
-        <div id="outgoingLinks" class="list-group">
-            <a href="#" style="padding-right: 0.25em; background-color: #c1bb88;"
-                class="list-group-item active"> Space links on this
-                space: </a>
-            <div id="noLinksOnSpace"> There are no links on this space.</div>
-            <th:block th:each="spaceLinks : ${linksOnThisSpace}">
-                <th:block th:if="${spaceLinks.targetSpace != null}">
-                    <a
-                        th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
-                        style='padding: .25rem .25rem;'
+        <div class="flex-spacing">
+        	<div id="incomingLinks" class="list-group">
+	            <p style="font-weight: 600">Incoming space links</p>
+	            <div th:each="spaceLinks : ${linksToThisSpace}">
+	            	<span th:if="${linksToThisSpace == null}">There are no links to this space.</span>
+	                <a 	th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}"
+	                    style="padding: .25rem"
+	                    class="list-group-item"
+	                    th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
+	            </div>
+	        </div>
+        	<div id="outgoingLinks" class="list-group">
+	            <p style="font-weight: 600">Outgoing Space Links</p>
+	            <div th:each="spaceLinks : ${linksOnThisSpace}">
+	            	<span th:if="${spaceLinks.targetSpace == null}">There are no links from this space.</span>
+                    <a  th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
+                        style="padding: .25rem"
                         class="list-group-item"
-                        th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
-                        &nbsp;[[${spaceLinks.targetSpace.name}]]</a>
-                </th:block>
-                <th:block th:if="${spaceLinks.targetSpace == null}">
-                    <a href="#" style='padding: .25rem .25rem;'
-                        class="list-group-item"
-                        th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
-                        &nbsp;&lt;No Space&gt;</a>
-                </th:block>
-            </th:block>
+                        th:if="${spaceLinks.targetSpace != null}"
+                        th:id="${spaceLinks.id}">[[${spaceLinks.targetSpace.name}]]</a>
+				</div>
+	        </div>
         </div>
-        <p></p>
-        <div id="incomingLinks" class="list-group"
-            style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
-            <a href="#"
-                style="padding-right: 0.25em; background-color: #c1bb88;"
-                class="list-group-item active"> Space links to this
-                space: </a>
-            <div id="noLinksToSpace"
-                style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
-                There are no links to this space.</div>
-            <th:block th:each="spaceLinks : ${linksToThisSpace}">
-                <a
-                    th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}"
-                    style='padding: .25rem .25rem;'
-                    class="list-group-item" th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
-            </th:block>
-        </div>
+        
      </div>
 </body>
 </html>
