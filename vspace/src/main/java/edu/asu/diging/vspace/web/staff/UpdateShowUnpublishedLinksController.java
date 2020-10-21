@@ -36,8 +36,11 @@ public class UpdateShowUnpublishedLinksController {
     @RequestMapping(value="/staff/space/{spaceId}/showSpaceLinksFromPublishedSpace", method=RequestMethod.POST)
     public String updateStatusForPublishedSpace(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
     		@RequestParam("showSpaceLinksPublishedSpaceParam") Boolean showSpaceLinksPublishedSpaceParam) {
-    	System.out.println("Inside updateStatusForPublishedSpace ---> ");
+    	System.out.println("Inside updateStatusForPublishedSpace ---> "+showSpaceLinksPublishedSpaceParam);
 		List<SpaceLink> spaceLinksOnThisSpace = spaceManager.getOutgoingLinks(spaceId);
+		attributes.addAttribute("alertType","success");
+		attributes.addAttribute("message", "Hide all space links to this Space successfully updated!");
+		attributes.addAttribute("showAlert", "true");
 		System.out.println("SpaceLink size: "+spaceLinksOnThisSpace.size());
         return "redirect:/staff/space/{spaceId}";
     }
