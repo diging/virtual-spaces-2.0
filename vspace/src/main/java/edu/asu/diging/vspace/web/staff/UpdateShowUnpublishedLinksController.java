@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 
@@ -33,15 +30,16 @@ public class UpdateShowUnpublishedLinksController {
         return "redirect:/staff/space/{spaceId}";
     }
     
-    @RequestMapping(value="/staff/space/{spaceId}/showSpaceLinksFromPublishedSpace", method=RequestMethod.POST)
+    @RequestMapping(value="/staff/space/{spaceId}/hideSpaceLinksFromPublishedSpace", method=RequestMethod.POST)
     public String updateStatusForPublishedSpace(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
-    		@RequestParam("showSpaceLinksPublishedSpaceParam") Boolean showSpaceLinksPublishedSpaceParam) {
-    	System.out.println("Inside updateStatusForPublishedSpace ---> "+showSpaceLinksPublishedSpaceParam);
-		List<SpaceLink> spaceLinksOnThisSpace = spaceManager.getOutgoingLinks(spaceId);
-		attributes.addAttribute("alertType","success");
+    		@RequestParam("hideSpaceLinksPublishedSpaceParam") Boolean hideLinksToUnpublishedSpaces) {
+	
+		ISpace space = spaceManager.getSpace(spaceId);
+		space.setHideLinksToUnpublishedSpaces(hideLinksToUnpublishedSpaces);
+		spaceManager.storeSpace(space, null, null);
+		attributes.addAttribute("alertType", "success");
 		attributes.addAttribute("message", "Hide all space links to this Space successfully updated!");
 		attributes.addAttribute("showAlert", "true");
-		System.out.println("SpaceLink size: "+spaceLinksOnThisSpace.size());
-        return "redirect:/staff/space/{spaceId}";
+		return "redirect:/staff/space/{spaceId}";
     }
 }
