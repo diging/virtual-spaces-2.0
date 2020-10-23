@@ -1225,8 +1225,6 @@ $( document ).ready(function() {
 	</form:form>
 </div>
 <div style="padding-bottom: 20px;">
-    <%-- <c:url value="/staff/space/${space.id}/status" var="postUrl" />
-    <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"> --%>
         <c:if test="${space.spaceStatus=='UNPUBLISHED'}">
         	<div style="padding-bottom: 10px;">
 				<c:url value="/staff/space/${space.id}/hideSpaceLinksFromPublishedSpace" var="postUrl" />
@@ -1246,9 +1244,7 @@ $( document ).ready(function() {
 			       
 				</form:form>
 			</div>
-            <!-- <input type="checkbox" name="hideLinks" id="hideLinks"> Do you want to hide all Space links linked to this space? -->
-        </c:if>
-    <%-- </form:form> --%>
+		</c:if>
 </div>
 <div style="padding-bottom: 10px;">
 	<c:url value="/staff/space/${space.id}/showSpaceLinks" var="postUrl" />
