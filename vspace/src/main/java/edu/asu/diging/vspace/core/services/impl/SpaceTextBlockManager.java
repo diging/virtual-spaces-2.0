@@ -10,16 +10,12 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.SpaceTextBlockRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceTextBlockDisplayRepository;
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceTextBlockDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceTextBlockFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceTextBlock;
 import edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceTextBlockDisplay;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceTextBlock;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
@@ -44,8 +40,7 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
 
     @Override
     public ISpaceTextBlockDisplay createTextBlock(String id, float positionX, float positionY, String text,
-            float height, float width)
-                    throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+            float height, float width){
         ISpace source = spaceManager.getSpace(id);
         ISpaceTextBlock textBlock=spaceTextBlockFactory.createSpaceTextBlock(text, source);
         ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width);
@@ -67,23 +62,21 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
         }
     }
     @Override
-    public ISpaceTextBlockDisplay updateTextBlock(String id, Float positionX, Float positionY, String textBlockIdValueEdit,
+    public ISpaceTextBlockDisplay updateTextBlock(String id, Float positionX, Float positionY, String textBlockId,
             String textBlockDisplayId, String text, Float height, Float width) {
-        
-        Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(textBlockIdValueEdit);
-        if(spaceTextBlock.isPresent()) {
+
+        Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(textBlockId);
+        Optional<SpaceTextBlockDisplay> spaceTextBlockDisplay = spaceTextBlockDisplayRepo.findById(textBlockDisplayId);
+        if(spaceTextBlock.isPresent() && spaceTextBlockDisplay.isPresent()) {
             ISpaceTextBlock spaceTextBlockEdit = spaceTextBlock.get();
             spaceTextBlockEdit.setText(text);
-            Optional<SpaceTextBlockDisplay> spaceTextBlockDisplay = spaceTextBlockDisplayRepo.findById(textBlockDisplayId);
-            if(spaceTextBlockDisplay.isPresent()) {
-                ISpaceTextBlockDisplay spaceTextBlockDisplayEdit = spaceTextBlockDisplay.get();
-                spaceTextBlockDisplayEdit.setHeight(height);
-                spaceTextBlockDisplayEdit.setWidth(width);
-                spaceTextBlockDisplayEdit.setPositionX(positionX);
-                spaceTextBlockDisplayEdit.setPositionY(positionY);
-                spaceTextBlockRepo.save((SpaceTextBlock)spaceTextBlockEdit);
-                return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplayEdit);
-            }
+            ISpaceTextBlockDisplay spaceTextBlockDisplayEdit = spaceTextBlockDisplay.get();
+            spaceTextBlockDisplayEdit.setHeight(height);
+            spaceTextBlockDisplayEdit.setWidth(width);
+            spaceTextBlockDisplayEdit.setPositionX(positionX);
+            spaceTextBlockDisplayEdit.setPositionY(positionY);
+            spaceTextBlockRepo.save((SpaceTextBlock)spaceTextBlockEdit);
+            return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplayEdit);
         }
         return null;
     }

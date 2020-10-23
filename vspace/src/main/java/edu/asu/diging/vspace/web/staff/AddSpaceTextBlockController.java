@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay;
@@ -35,7 +34,7 @@ public class AddSpaceTextBlockController {
     public ResponseEntity<String> createSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("textContent") String text,
             @RequestParam("height") String height, @RequestParam("width") String width)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+                    throws IOException{
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {

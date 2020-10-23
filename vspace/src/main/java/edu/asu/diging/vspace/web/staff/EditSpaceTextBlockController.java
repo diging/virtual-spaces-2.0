@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -33,24 +30,18 @@ public class EditSpaceTextBlockController{
 
     @RequestMapping(value = "/staff/space/link/textBlock/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("textBlockIdValueEdit") String textBlockIdValueEdit, @RequestParam("textBlockDisplayId") String textBlockDisplayId, 
+            @RequestParam("y") String y, @RequestParam("textBlockId") String textBlockId, @RequestParam("textBlockDisplayId") String textBlockDisplayId, 
             @RequestParam("textContentEdit") String text,
             @RequestParam("height") String height, @RequestParam("width") String width)
-                    throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException {
+                    throws IOException{
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-//        if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            ObjectNode node = mapper.createObjectNode();
-//            node.put("errorMessage", "No link coordinates specified.");
-//            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
-//        }
         
         ISpaceTextBlockDisplay display = (ISpaceTextBlockDisplay) spaceTextBlockManager.updateTextBlock(id, new Float(x), new Float(y),
-                textBlockIdValueEdit, textBlockDisplayId, text, new Float(height), new Float(width));
+                textBlockId, textBlockDisplayId, text, new Float(height), new Float(width));
         
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
@@ -61,8 +52,6 @@ public class EditSpaceTextBlockController{
         linkNode.put("height", height);
         linkNode.put("textContent", text);
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
-        
-        //return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null,title,displayType,linkedModuleId,null);
     }
 
 }

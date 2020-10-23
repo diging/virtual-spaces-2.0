@@ -226,7 +226,8 @@ $(function(){
 				block.css('font-size', "12px");
 				$("#space").append(block);
 				
-				$('[data-link-id="${block.spaceTextBlock.id}"]').click(function(e) {
+				$('[data-link-id="[(${block.spaceTextBlock.id})]"]').click(function(e) {
+				    console.log("In click function")
 					makeTextBlockEditable([[${block.id}]],[[${block.spaceTextBlock.id}]],[[${block.spaceTextBlock.text}]],[[${block.positionX}]],[[${block.positionY}]],[[${block.width}]],[[${block.height}]]);
 				});
 			[/]
@@ -647,13 +648,13 @@ $(function(){
 			
 			$("#editTextBlockBtn").click(function(e) {
         	    e.preventDefault();
-        	    var blockId = $("#textBlockIdValueEdit").val();
+        	    var blockId = $("#textBlockId").val();
         	    if (storeX == undefined || storeY == undefined) {
         	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
         	        $('#errorAlert').show();
         	        return;
         	    }
-        	    var linkedTextBlock = $("#textBlockIdValueEdit").val();
+        	    var linkedTextBlock = $("#textBlockId").val();
         	    $("#textBlockXEdit").val(storeX);
         	    $("#textBlockYEdit").val(storeY);
         	    var form = $("#editTextBlockForm");
@@ -788,7 +789,7 @@ $(function(){
 		    });
 			
 			$("#deleteTextBlockButton").click(function() {
-			    var blockId = $("#textBlockIdValueEdit").val();
+			    var blockId = $("#textBlockId").val();
 			    console.log(blockId);
 		        $.ajax({
 		            url: "[(@{'/staff/space/'+${space.id}+'/textBlock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
@@ -1379,17 +1380,26 @@ $(function(){
 		    }
 			
 			function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height){
+			    console.log(blockDisplayId);
+			    console.log(blockId);
+			    console.log(text);
+			    console.log(posX);
+			    console.log(posY);
+			    console.log(width);
+			    console.log(height);
+			    
 			    selectedTextBlockId=blockId;
 			    storeX=posX;
 				storeY=posY;
-			    $("#textBlockIdValueEdit").val(blockId);
+			    $("#textBlockId").val(blockId);
 			    $("#textBlockXEdit").val(posX);
 			    $("#textBlockYEdit").val(posY);
 			    $("#textBlockDisplayId").val(blockDisplayId);
 			    $("#textBoxWidthIDEdit").val(width);
 			    $("#textBoxHeightIDEdit").val(height);
 			    $("#textContentID").val(text);
-			    resetHighlighting();
+			    console.log("After setting values")
+			    //resetHighlighting();
 			    
 			    $("#bgImage").on("click", function(e){
 					e.preventDefault();
@@ -2163,8 +2173,8 @@ $(function(){
                     <a href="#" id="closeEditTextBlockInfo"><span
                         data-feather="x-square"></span></a>
                 </p>
-                <input type="hidden" name="textBlockIdValueEdit"
-                    id="textBlockIdValueEdit" />
+                <input type="hidden" name="textBlockId"
+                    id="textBlockId" />
                 <div class="row">
                     <div class="col">
                         <h6 class="alert-heading">
