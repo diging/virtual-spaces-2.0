@@ -40,7 +40,7 @@ public class Space extends VSpaceElement implements ISpace {
     private boolean showUnpublishedLinks; // -> true/false
     
     @Access(AccessType.PROPERTY)
-    private boolean showLinksToUnpublishedSpaces;
+    private boolean hideLinksToUnpublishedSpaces;
     
     @JsonIgnore
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
@@ -172,18 +172,18 @@ public class Space extends VSpaceElement implements ISpace {
     }
 
 	@Override
-	public boolean isShowLinksToUnpublishedSpaces() {
-		return showLinksToUnpublishedSpaces;
+	public boolean isHideLinksToUnpublishedSpaces() {
+		return hideLinksToUnpublishedSpaces;
 	}
 
 	@Override
 	@Access(AccessType.PROPERTY)
-	public void setShowLinksToUnpublishedSpaces(Boolean showLinksToUnpublishedSpaces) {
-		if(showLinksToUnpublishedSpaces == null) {
-			this.showLinksToUnpublishedSpaces=false;
+	public void setHideLinksToUnpublishedSpaces(Boolean hideLinksToUnpublishedSpaces) {
+		if(hideLinksToUnpublishedSpaces == null) {
+			this.hideLinksToUnpublishedSpaces=false;
 			return;
 		}
-		this.showLinksToUnpublishedSpaces = showLinksToUnpublishedSpaces;
+		this.hideLinksToUnpublishedSpaces = hideLinksToUnpublishedSpaces;
 	}
     
 }

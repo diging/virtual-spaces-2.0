@@ -1229,16 +1229,16 @@ $( document ).ready(function() {
     <form:form method="POST" action="${postUrl}?${_csrf.parameterName}=${_csrf.token}"> --%>
         <c:if test="${space.spaceStatus=='UNPUBLISHED'}">
         	<div style="padding-bottom: 10px;">
-				<c:url value="/staff/space/${space.id}/showSpaceLinksFromPublishedSpace" var="postUrl" />
+				<c:url value="/staff/space/${space.id}/hideSpaceLinksFromPublishedSpace" var="postUrl" />
 				<form:form method="POST"
 					action="${postUrl}?${_csrf.parameterName}=${_csrf.token}">
 					<label><h6>Hide all space links to this space:</h6></label>
-					<select class="form-control" name="showSpaceLinksPublishedSpaceParam"
+					<select class="form-control" name="hideSpaceLinksPublishedSpaceParam"
 						style="width: 200px; display: inline;">
 						<option id="No" value=false
-							<c:if test="${space.showLinksToUnpublishedSpaces eq false}">selected</c:if>>No</option>
+							<c:if test="${space.hideLinksToUnpublishedSpaces eq false}">selected</c:if>>No</option>
 						<option id="Yes" value=true
-							<c:if test="${space.showLinksToUnpublishedSpaces eq true}">selected</c:if>>Yes</option>
+							<c:if test="${space.hideLinksToUnpublishedSpaces eq true}">selected</c:if>>Yes</option>
 					</select>
 					<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
 						<input class="btn btn-primary" type="submit" value="Submit" />
