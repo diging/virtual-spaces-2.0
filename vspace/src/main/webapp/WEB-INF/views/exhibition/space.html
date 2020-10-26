@@ -240,8 +240,8 @@
                 </div>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; margin: auto; display: flex; justify-content: center;">
-                    <div th:if="${moduleList}!=null">
-                        <div class=dropdown>
+                    <div>
+                        <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
                                 class="sideModulenav">
                                 <i

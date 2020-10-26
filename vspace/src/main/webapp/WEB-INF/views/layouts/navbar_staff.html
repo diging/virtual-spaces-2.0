@@ -72,10 +72,10 @@
 		        </ul>
 			</div>  
 			
-			<nav class="nav-bar">
+			<nav class="nav-bar"  style="height:48px">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
 		      <form th:action="@{'/search'}" method="GET" class="form" style="position: relative">
-	             <button class="btn form_icon" type="submit" id="submit"><i class="fa fa-search" style="color: var(--dark-grey)"></i></button>
+	             <button class="btn searchBar" type="submit" id="submit"><i class="fa fa-search" style="color: var(--dark-grey)"></i></button>
 	             <input class="form-control form_input" type="search" placeholder="Search" id="search" th:name="search">
 	          </form>
 		      <div class="nav" id="navbarCollapse">

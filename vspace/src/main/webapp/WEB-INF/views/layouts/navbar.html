@@ -5,7 +5,7 @@
 	
 	<body>
 		<div th:fragment="navbar">
-			<nav class="nav-bar">
+			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" href="#"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
 		      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		        <span class="navbar-toggler-icon"></span>
@@ -26,7 +26,7 @@
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		  				<button class="btn primary-btn" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button>
 		         	</form>
-		         	<a class="btn primary-btn" sec:authorize="isAnonymous()" th:href="@{/login}"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</a>
+		         	<a class="btn nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</a>
 		        </div>
 		      </div>
 		    </nav>
