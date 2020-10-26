@@ -115,6 +115,12 @@ i {
     background-size: cover;
 }
 
+.card-head {
+	font-size: 16px;
+	margin-bottom: 20px;
+	font-weight: 600;
+}
+
 .navbar-brand {
     padding: 0 !important;
 }
