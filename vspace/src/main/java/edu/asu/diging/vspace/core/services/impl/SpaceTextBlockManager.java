@@ -62,8 +62,8 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
         }
     }
     @Override
-    public ISpaceTextBlockDisplay updateTextBlock(String id, Float positionX, Float positionY, String textBlockId,
-            String textBlockDisplayId, String text, Float height, Float width) {
+    public ISpaceTextBlockDisplay updateTextBlock(String id, float positionX, float positionY, String textBlockId,
+            String textBlockDisplayId, String text, float height, float width) {
 
         Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(textBlockId);
         Optional<SpaceTextBlockDisplay> spaceTextBlockDisplay = spaceTextBlockDisplayRepo.findById(textBlockDisplayId);

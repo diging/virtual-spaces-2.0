@@ -13,7 +13,7 @@ public interface ISpaceTextBlockManager {
     
     void deleteTextBlock(String blockId);
 
-    ISpaceTextBlockDisplay updateTextBlock(String id, Float float1, Float float2, String textBlockIdValueEdit,
-            String textBlockDisplayId, String text, Float height, Float width);
+    ISpaceTextBlockDisplay updateTextBlock(String id, float positionX, float positionY, String textBlockIdValueEdit,
+            String textBlockDisplayId, String text, float height, float width);
 
 }
