@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -118,5 +120,57 @@ public class SpaceTextBlockManagerTest {
         Assert.assertEquals(new Float(spaceTextBlockDisplay.getHeight()), new Float(updatedSpaceTextBlockDisplay.getHeight()));
         Assert.assertEquals(spaceTextBlockDisplay.getSpaceTextBlock(), updatedSpaceTextBlockDisplay.getSpaceTextBlock());
     }
+    
+    @Test
+    public void test_getSpaceTextBlockDisplays_success() {
+        
+        ISpace space = new Space();
+        space.setId(spaceId1);
+        
+        SpaceTextBlock spaceTextBlock = new SpaceTextBlock();
+        spaceTextBlock.setId("SPB001");
+        
+        SpaceTextBlockDisplay spaceTextBlockDisplay = new SpaceTextBlockDisplay();
+        spaceTextBlockDisplay.setId("STBD001");
+        spaceTextBlockDisplay.setPositionX(10);
+        spaceTextBlockDisplay.setPositionY(30);
+        spaceTextBlockDisplay.setWidth(40);
+        spaceTextBlockDisplay.setHeight(50);
+        spaceTextBlockDisplay.setSpaceTextBlock(spaceTextBlock);
+        
+        List<ISpaceTextBlockDisplay> spaceTextBlockDisplayList = new ArrayList<ISpaceTextBlockDisplay>();
+        spaceTextBlockDisplayList.add(spaceTextBlockDisplay);
+        
+        Mockito.when(spaceTextBlockDisplayRepo.findSpaceTextBlockDisplaysForSpace(spaceId1)).thenReturn(spaceTextBlockDisplayList);
+
+        List<ISpaceTextBlockDisplay> spaceTextBlockDisplayListActual = managerToTest.getSpaceTextBlockDisplays(spaceId1);
+        Assert.assertEquals(spaceTextBlockDisplayListActual.get(0).getId(), spaceTextBlockDisplayList.get(0).getId());
+        Assert.assertEquals(spaceTextBlockDisplayListActual.get(0).getSpaceTextBlock(), spaceTextBlockDisplayList.get(0).getSpaceTextBlock());
+    }
+    
+    @Test
+    public void test_deleteTextBlock_success() {
+        
+        SpaceTextBlock spaceTextBlock = new SpaceTextBlock();
+        spaceTextBlock.setId("SPB001");
+        
+        SpaceTextBlockDisplay spaceTextBlockDisplay = new SpaceTextBlockDisplay();
+        spaceTextBlockDisplay.setId("STBD001");
+        spaceTextBlockDisplay.setPositionX(10);
+        spaceTextBlockDisplay.setPositionY(30);
+        spaceTextBlockDisplay.setWidth(40);
+        spaceTextBlockDisplay.setHeight(50);
+        spaceTextBlockDisplay.setSpaceTextBlock(spaceTextBlock);
+        
+        Optional<SpaceTextBlock> mockSpaceTextBlock = Optional.of(spaceTextBlock);
+        
+        Mockito.when(spaceTextBlockRepo.findById("SPB001")).thenReturn(mockSpaceTextBlock);
+        
+        managerToTest.deleteTextBlock("SPB001");
+        
+        Mockito.verify(spaceTextBlockDisplayRepo).deleteBySpaceTextBlock(mockSpaceTextBlock.get());
+        Mockito.verify(spaceTextBlockRepo).delete(mockSpaceTextBlock.get());
+    }
+    
 
 }
