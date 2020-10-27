@@ -295,11 +295,12 @@
                                     class="fas fa-info-circle fa-lg"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></i>
+                                <a sec:authorize="isAuthenticated()"
+                                    th:href="@{|/staff/space/${space.id}|}"><span
+                                    style="display: inline-block; color: rgba(150, 45, 62, 1);"><i
+                                        class="fas fa-edit"
+                                        style="display: inline-block;"></i></span></a>
                             </h3>
-                            <a sec:authorize="isAuthenticated()"
-                                th:href="@{/staff/space/${space.id}}"><span
-                                data-feather="edit"
-                                style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>
                         </div>
 
                         <div id="space">
