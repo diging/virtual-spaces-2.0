@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -27,6 +28,7 @@ public class SpaceTextBlock extends VSpaceElement implements ISpaceTextBlock {
     private ISpace space;
 
 
+    @Lob
     private String text;
 
     @Override
