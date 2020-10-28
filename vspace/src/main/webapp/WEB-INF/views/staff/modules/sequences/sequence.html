@@ -36,6 +36,7 @@
 				$("#orderedSlides").val(slides); 
 			}
 		})
+		
 		$('.ms-selection ul').sortable({
 			distance : 5,
 			stop : function(event, ui) {
@@ -185,11 +186,13 @@
 	        $("#title").text("Sequence: "+sequenceTitle)
 	  
 	    });
+	   
+	});
 	</script>
 </head>
 
 <body>
-	<div layout:fragment="content">
+	<div layout:fragment="content" class="main-content">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a th:href="@{/staff/dashboard}">Dashboard</a></li>
 			<li class="breadcrumb-item"><a th:href="@{/staff/module/list}">Modules</a></li>
@@ -197,56 +200,48 @@
 			<li class="breadcrumb-item active">[[${sequence.name}]]</li>
 		</ol>
 		
-		<div class ="blur">
-			<div class="row align-items-center">
-				<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;"
-					data-value="${sequence.name}">Sequence: [[${sequence.name}]]</h2>
-				<a id="editTitle" class="btn" href="#"
-					style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
-				<button id="submitTitle" type="button" class="btn btn-primary"
-					style="float: left; margin-right: 1%;">Save</button>
-				<button id="cancelEditTitle" type="button" class="btn btn-primary"
-					style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
-			</div>
-			<div class="alert alert-light" role="alert">
-				Created on <span class="date">${sequence.creationDate}</span> by
-				${sequence.createdBy}.<br> Modified on <span class="date">[[${sequence.modificationDate}]]</span>
-				by [[${sequence.modifiedBy}]].
-			</div>
-		</div>
+		<h2>
+			<span style="color: var(--dark-grey)">Sequence:</span> [[${sequence.name}]]
+			<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
+					    		title="Created on <span class='date'>[[${sequence.creationDate}]]</span> by [[${sequence.createdBy}]]"></i>
+		</h2>		
+		<p id="description" data-value="${sequence.description}">[[${sequence.description}]]</p>
+		
 		
 		<div id="spinner" class="loaderAjax">
 			 <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
 		</div>
 		
-		<!-- description -->
-		<div style="margin-left: .1%;" class="blur row align-items-center">
-			<h4 style="margin-bottom: 0;">Description:</h4>
-			<a id="editDescription" class="btn" href="#"
-				style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
-				class="fas fa-edit"></i></a>
-			<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"
-				data-value="${sequence.description}">[[${sequence.description}]]</p>
-			<button id="submitDescription" type="button"
-				class="btn btn-primary btn-sm"
-				style="margin-top: 1%; margin-bottom: 1%;">Save</button>
-			<button id="cancelEditDescription" type="button"
-				class="btn btn-primary btn-sm"
-				style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
+		<div class="flex-spacing">
+			<h4>Slides</h4>
+			<a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>				
+		</div>
+		
+		<div class="grid" multiple="multiple" id="ordered-slides">
+			<div th:each="slide: ${allSlides}" class="card" style="width: 18rem;">
+				  <div class="card-body">
+				    <div class="card-title">
+				    	<a class="card-head" th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}">[[${slide.name}]]</a>				    	
+				    	<p class="card-text">[[${slide.description}]]</p>
+				    </div>
+				    <div>
+				    	<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-right: 15px"></i>
+				    </div>
+				  </div>
+			</div>
 		</div>
 		
 		<div id="slideSpace" class="blur">
 			<form th:action="@{'/staff/module/'+${moduleId}+'/sequence/'+${sequence.id}+'/edit/slides'}" method="POST" th:object="${sequenceForm}">
 				<div class="form-group row">
 					<label for="Slides" class="col-md-2 col-form-label">Select
-						Slides: <br> <small>(Double click to select and drag to reorder)</small>
+						Slides: (Double click to select and drag to reorder)
 					</label> 
 					<select multiple="multiple" id="ordered-slides">
-						<option th:if="${!selectedSlides.contains(slide)}" th:each="slide: ${allSLides}" th:value='${slide.id}' id="${slide.id}">[[${slide.name}]]</option>
-
+						<option  th:each="slide: ${allSLides}" th:if="${!selectedSlides.contains(slide)}" th:value='${slide.id}' id="${slide.id}">[[${slide.name}]]</option>
 						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
 					</select>
-					<input type="hidden" id="orderedSlides" />
+					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
 				</div>
 				<button class="btn btn-primary btn-sm" type="submit" value="submit">Save Changes</button>
 			</form>
