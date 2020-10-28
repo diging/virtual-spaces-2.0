@@ -240,8 +240,8 @@
                 </div>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; margin: auto; display: flex; justify-content: center;">
-                    <div th:if="${moduleList}!=null">
-                        <div class=dropdown>
+                    <div>
+                        <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
                                 class="sideModulenav">
                                 <i
@@ -253,11 +253,11 @@
                                         <li
                                             th:if="${!#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}">[[${module.link.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}">[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -295,11 +295,12 @@
                                     class="fas fa-info-circle fa-lg"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></i>
+                                <a sec:authorize="isAuthenticated()"
+                                    th:href="@{|/staff/space/${space.id}|}"><span
+                                    style="display: inline-block; color: rgba(150, 45, 62, 1);"><i
+                                        class="fas fa-edit"
+                                        style="display: inline-block;"></i></span></a>
                             </h3>
-                            <a sec:authorize="isAuthenticated()"
-                                th:href="@{/staff/space/${space.id}}"><span
-                                data-feather="edit"
-                                style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>
                         </div>
 
                         <div id="space">
