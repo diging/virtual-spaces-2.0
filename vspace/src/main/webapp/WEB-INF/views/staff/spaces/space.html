@@ -1761,8 +1761,9 @@ $(function(){
         <div class="flex-spacing">
         	<div id="incomingLinks" class="list-group">
 	            <p style="font-weight: 600">Incoming space links</p>
+	            <span th:if="${#lists.isEmpty(linksToThisSpace)}">There are no links to this space.</span>
 	            <div th:each="spaceLinks : ${linksToThisSpace}">
-	            	<span th:if="${linksToThisSpace == null}">There are no links to this space.</span>
+	            	
 	                <a 	th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}"
 	                    style="padding: .25rem"
 	                    class="list-group-item"
@@ -1771,8 +1772,8 @@ $(function(){
 	        </div>
         	<div id="outgoingLinks" class="list-group">
 	            <p style="font-weight: 600">Outgoing Space Links</p>
-	            <div th:each="spaceLinks : ${linksOnThisSpace}">
-	            	<span th:if="${spaceLinks.targetSpace == null}">There are no links from this space.</span>
+	            <span th:if="${#lists.isEmpty(linksOnThisSpace)}">There are no links from this space.</span>
+	            <div th:each="spaceLinks : ${linksOnThisSpace}">	            	
                     <a  th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
                         style="padding: .25rem"
                         class="list-group-item"

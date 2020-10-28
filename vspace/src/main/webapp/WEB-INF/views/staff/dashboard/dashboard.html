@@ -25,7 +25,7 @@
 					    <div>
 					    	<a th:href="@{'/staff/space/'+${spaceId}+'/edit'}"><i class="fa fa-pen black" style="margin-right: 15px"></i></a>
 					    	<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
-					    		title="Created on <span class='date'>[[${space.creationDate}]]</span> by [[${space.createdBy}]]"></i>
+					    		th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
 					    </div>
 					  </div>
 					</a>

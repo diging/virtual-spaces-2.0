@@ -36,6 +36,7 @@
 				$("#orderedSlides").val(slides); 
 			}
 		})
+		
 		$('.ms-selection ul').sortable({
 			distance : 5,
 			stop : function(event, ui) {
@@ -185,6 +186,8 @@
 	        $("#title").text("Sequence: "+sequenceTitle)
 	  
 	    });
+	   
+	});
 	</script>
 </head>
 
@@ -214,8 +217,8 @@
 			<a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>				
 		</div>
 		
-		<div class="grid" id="grid">
-			<div th:each="slide: ${slides}" class="card" style="width: 18rem;">
+		<div class="grid" multiple="multiple" id="ordered-slides">
+			<div th:each="slide: ${allSlides}" class="card" style="width: 18rem;">
 				  <div class="card-body">
 				    <div class="card-title">
 				    	<a class="card-head" th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}">[[${slide.name}]]</a>				    	
@@ -223,8 +226,6 @@
 				    </div>
 				    <div>
 				    	<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-right: 15px"></i>
-				    	<a th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'">
-				    		<i class="fas fa-trash-alt" style="color: var(--error)"></i></a>
 				    </div>
 				  </div>
 			</div>
@@ -234,14 +235,13 @@
 			<form th:action="@{'/staff/module/'+${moduleId}+'/sequence/'+${sequence.id}+'/edit/slides'}" method="POST" th:object="${sequenceForm}">
 				<div class="form-group row">
 					<label for="Slides" class="col-md-2 col-form-label">Select
-						Slides: <br> <small>(Double click to select and drag to reorder)</small>
+						Slides: (Double click to select and drag to reorder)
 					</label> 
 					<select multiple="multiple" id="ordered-slides">
-						<option th:if="${!selectedSlides.contains(slide)}" th:each="slide: ${allSLides}" th:value='${slide.id}' id="${slide.id}">[[${slide.name}]]</option>
-
+						<option  th:each="slide: ${allSLides}" th:if="${!selectedSlides.contains(slide)}" th:value='${slide.id}' id="${slide.id}">[[${slide.name}]]</option>
 						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
 					</select>
-					<input type="hidden" id="orderedSlides" />
+					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
 				</div>
 				<button class="btn btn-primary btn-sm" type="submit" value="submit">Save Changes</button>
 			</form>
