@@ -4,7 +4,6 @@
 //# sourceURL=click.js
 //------------Deleting Slides-------------------
 function deleteSlide(slideId) {
-    console.log("Delete slide",slideId);
     $.ajax({
         url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+ slideId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'DELETE',
@@ -27,18 +26,14 @@ function checkSlideInSequence(slideId) {
         cache       : false,
         contentType : false,
         success: function(data) {
-            console.log(data);
             if(data.length > 0){
                 
                 $("#orderedList").empty();
                 $.each(data, function (index, sequenceData) {
                     $('#orderedList').append("<li>"+sequenceData.name+"</li>");
                 });
-                console.log("Before showing alert");
                 $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
-                console.log("After showing alert");
                 $("#deleteSlideAlert").data('value', slideId); // setter
-                console.log("After setting slideId: ",slideId);
             }
             else{
               deleteSlide(slideId);
@@ -60,9 +55,7 @@ function loadSlidesInSequences() {
 			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			async: false,
 			success: function(response) {
-			    console.log(response);
 				$.each(response, function (index, slide) {
-				    console.log(slide.id);
 					$('#selectedSequence').append(''+
 							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
 							'<div align="left" class="card-body">'+

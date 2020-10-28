@@ -316,7 +316,7 @@ i {
 }
 
 .sideModulenav .dropdown-item {
-    padding: 0px;
+    padding: 15px;
     text-align: justify;
 }
 
@@ -596,6 +596,7 @@ i {
     color: rgba(150, 45, 62, 1);
 }
 
+<<<<<<< HEAD
 .register-form {
     padding: 48px;
     width: 30%;
@@ -618,9 +619,22 @@ i {
 	background: none;
 	color: white;
 }
+=======
+>>>>>>> refs/remotes/origin/story/VSPC-120
 .form_input {
 	position: relative;
 	z-index: 3;
+}
+
+.searchBar {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 5;
+    right: 0;
+    background: none;
+}
+
 }
 .form_input:placeholder-shown {
 	z-index: 1;

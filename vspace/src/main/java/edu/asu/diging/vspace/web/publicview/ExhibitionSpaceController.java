@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.web.publicview;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -60,9 +57,6 @@ public class ExhibitionSpaceController {
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
-            List<IModuleLinkDisplay> moduleList =  moduleLinkManager.getLinkDisplays(id);
-            
-            
             if(space.isShowUnpublishedLinks()) {
                 model.addAttribute("spaceLinks",spaceLinkManager.getLinkDisplays(id));
             }else {

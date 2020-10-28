@@ -19,9 +19,9 @@ import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
-import edu.asu.diging.vspace.core.services.impl.ContentBlockManager;
-import edu.asu.diging.vspace.core.services.impl.ModuleManager;
-import edu.asu.diging.vspace.core.services.impl.SlideManager;
+import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 @Transactional
@@ -29,13 +29,13 @@ import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 public class SlideController {
 
     @Autowired
-    private SlideManager slideManager;
+    private ISlideManager slideManager;
 
     @Autowired
-    private ModuleManager moduleManager;
+    private IModuleManager moduleManager;
 
     @Autowired
-    private ContentBlockManager contentBlockManager;
+    private IContentBlockManager contentBlockManager;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {

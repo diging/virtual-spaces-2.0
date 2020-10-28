@@ -33,11 +33,9 @@ $(function(){
 		
 		var link;
 		[# th:if="${#strings.equals(link.type,'ALERT')}"]
-		console.log("In Alert");
 			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 		[/]
 		[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-		console.log([[${link.image.id}]]);
            link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
@@ -104,7 +102,6 @@ $(function(){
 			var link;
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
-			console.log([[${link.type}]]);
 			[# th:if="${#strings.equals(link.type,'ALERT')}"]
 				link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 			[/]
@@ -1263,8 +1260,15 @@ $(function(){
                     <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
                     <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
                 </select>
+<<<<<<< HEAD
                 <p style="display: inline; padding-left: 10px; padding-top: 1000px;">
                     <input class="btn btn-primary" type="submit" value="Submit" />
+=======
+                <p
+                    style="display: inline; padding-left: 10px;">
+                    <input class="btn btn-primary" type="submit"
+                        value="Submit" />
+>>>>>>> refs/remotes/origin/story/VSPC-120
                 </p>
             </form>
         </div>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
@@ -175,4 +176,183 @@ $( document ).ready(function() {
         <div id="page-selection"></div>
     </div>
 </body>
+=======
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
+<script th:inline="javascript">
+//# sourceURL=js.js
+function removeTag(event) {
+    var imageId = $(event.target).data("image-id");
+    var category = $(event.target).data("category");
+    $.ajax({
+          url: "[(@{'/staff/images/'})]" + imageId + '/tag?' + [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]]+'&tag=' + category,
+          method: "DELETE",
+       }).done(function() {
+            $("#category-badge-" + imageId + "-" + category).remove();
+       });
+}
+
+function toggleChange(form, imageId) {
+	var catValue = $(form).find("option:selected").val();
+    $.post($(form).attr('action') + "&tag=" + catValue, function( data ) {
+        var category = $('<span class="badge badge-warning"></span>');
+        category.attr('id', 'category-badge-' + imageId + "-" + catValue);
+        category.attr("data-category", catValue);
+        var catText = $(form).find("option:selected").text();
+        category.append(catText + " ");
+        var removeTagButton = $('<i data-image-id="' + imageId + '" data-category="' + catValue + '" class="fas fa-times removeTag"></i>');
+        removeTagButton.click(removeTag);
+        removeTagButton.css('cursor', 'pointer');
+        category.append(removeTagButton);
+        var isDuplicate = false;
+        $("#tags-" + imageId).children().each(function(idx,elem) {
+            if ($(elem).data('category') == catValue) {
+                isDuplicate = true;
+            }
+        });
+        if (!isDuplicate) {
+            $("#tags-" + imageId).append(category);
+        }
+        
+        $(form)[0].reset();
+    });
+}
+$( document ).ready(function() {
+    $(".removeTag").click(function(e) {
+    	removeTag(e);
+    });
+
+    $(".removeTag").css('cursor', 'pointer');
+    $('#page-selection').bootpag({
+        total: [(${totalPages})],
+        page: [(${currentPageNumber})],
+        maxVisible: 10,
+        leaps: true,
+        firstLastUse: true,
+        first: '|<',
+        last: '>|',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+        window.location.assign("./"+num+"?sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+    });
+
+  $("table.table thead th").each(function(){
+      var head = $(this);
+      if(head.attr('sort-prop')=='[(${sortProperty})]'){
+          head.append([[${order}]]=='desc'?'<i class="fas fa-sort-down"></i>':'<i class="fas fa-sort-up"></i>')
+      }
+      });
+
+   //set click action, reload page on clicking with all query params
+   $("table.table thead th").click(function() {
+    var headerSortPropName = $(this).attr("sort-prop");
+    if(headerSortPropName != 'tag') {
+        if(headerSortPropName=='[(${sortProperty})]'){
+            window.location.href = window.location.pathname+
+            '?sort='+ headerSortPropName+'&order='+
+            ('[(${order})]' == 'desc'?'asc':'desc');
+        }else{
+            window.location.href = window.location.pathname+
+            '?sort='+ headerSortPropName+'&order=asc';
+        }
+    }
+    });
+});
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid #009999;
+    padding: 5px;
+    color: #000;
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: #009999;
+    color: #fff;
+    font-size: 15px;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+</style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h1>Images</h1>
+        <div style="padding-bottom: 20px;">This virtual exhibition
+            contains the following images.</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a
+                        href="#">Filename</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Name</a></th>
+                    <th scope="col" sort-prop="space">Space</th>
+                    <th scope="col" sort-prop="createdBy"><a
+                        href="#">Created By</a></th>
+                    <th scope="col" sort-prop="creationDate"><a
+                        href="#">Created Date</a></th>
+                    <th scope="col" sort-prop="tag">Tag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="image: ${images}">
+                    <th scope="row"><a
+                        th:href="@{'/staff/display/image/'+${image.id}}"><img
+                            th:src="@{'/api/image/'+${image.id}}"
+                            class="img-thumbnail">
+                            [[${image.filename}]]</a></th>
+                    <td>[[${image.name}]]</td>
+                    <td><a
+                        th:each="space,stat:${imageToSpaces[image.id]}"
+                        th:href="@{'/staff/space/'+${space.id}}">[[${space.name}]]<span
+                            th:if="${stat.count < #lists.size(imageToSpaces[image.id])}">,<br></span></a>
+                    </td>
+                    <td>[[${image.createdBy}]]</td>
+                    <td><span class="date">[[${image.creationDate}]]</span></td>
+                    <td><span th:id="'tags-'+${image.id}"
+                        class="tag"> <span
+                            th:each="cat:${image.categories}"
+                            th:id="'category-badge-'+${image.id}+'-'+${cat}"
+                            th:data-category="${cat}"
+                            class="badge badge-warning">[[${@environment.getProperty('image_category_'
+                                + cat)}]] <i
+                                th:data-image-id="${image.id}"
+                                th:data-category="${cat}"
+                                class="fas fa-times removeTag"></i>
+                        </span>
+                    </span>
+                        <form id="changeTagForm"
+                            th:action="@{'/staff/images/'+${image.id}+'/tag?'+${_csrf.parameterName}+'='+${_csrf.token}}"
+                            method="post">
+                            <input type="hidden" name="imageID"
+                                th:value="${image.id}" id="imageID" />
+                            <select id="changeTag" name="tag"
+                                th:onChange="toggleChange(this.form, '[(${image.id})]')"
+                                class="form-control form-control-sm"
+                                style="width: 68px;">
+                                <option>Assign a tag</option>
+                                <option
+                                    th:each="catTag:${imageCategories}"
+                                    th:value="${catTag}">[[${@environment.getProperty('image_category_'
+                                    + catTag)}]]</option>
+                            </select>
+                        </form></td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="page-selection"></div>
+    </div>
+</body>
+>>>>>>> refs/remotes/origin/story/VSPC-120
 </html>
