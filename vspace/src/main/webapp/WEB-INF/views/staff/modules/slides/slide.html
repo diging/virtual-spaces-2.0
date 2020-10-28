@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <style type="text/css">
@@ -157,7 +158,66 @@ function uploadImage() {
 }
 
 function embedVideo() {
-
+	var url = $("videoLink").data("value");
+	console.log(url);
+	var iFrameString = "<iframe width='560' height='315' src='"+url+"https://www.youtube.com/embed/u_riHHyAIvk' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
+	alert(iFrameString);
+    var file = $('#videoFile')[0].files[0];
+	var fileName = file.name;
+    var reader  = new FileReader();
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('content', file.name);
+    
+    
+    
+    var ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+    reader.onload = function (theFile) {        	
+    	var video = new Video();
+        video.src = theFile.target.result;
+        video.onload = function() {
+        /* 	videoblock = createVideoBlock(reader, this.width);  
+        	$('#slideSpace').append(videoblock); 
+            $(videoblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick); */
+        };          
+    }
+    
+    //formData.append('contentOrder', contentCount);
+    reader.readAsDataURL(file);
+    $.ajax({
+        enctype: 'multipart/form-data',
+        // ------------- creating image content blocks ------------
+        url: ajaxUrl,
+        type: 'POST',
+        cache       : false,
+        contentType : false,
+        processData : false,
+        data: formData,
+        
+        success: function(data) {
+            $(".open").removeClass("open");
+           	var vid = videoblock.find('iframe');
+           	if(data != ''){
+           		
+           	}
+           	else{
+           		
+           	}
+        },
+        error: function(data) {
+        	if (imgID == '') {
+        		$("#current").remove();
+        	}
+        	else {
+        		$("#current").replaceWith(oldImageBlock);
+        	}
+        	if (data.status == 403) {
+        		$("#loginAlert").show();
+        	}
+        }
+    });
+    // Reset the image file name 
+   	$('#file').val('');
 }
 
 $(document).ready(function() {
@@ -290,10 +350,11 @@ $(document).ready(function() {
     });
     
     $("#embedVideo").click(function(e) {
-        e.preventDefault();
-            $("#addVideoAlert").hide();
-            alert("he he");
-            embedVideo();
+    	e.preventDefault();
+    	alert("data loaded");
+        $("#addVideoAlert").hide();
+        alert("he he");
+        embedVideo(e);
     });
     
     $("#addChoice").click(function() {
@@ -570,7 +631,16 @@ $(document).ready(function() {
         });
         $('#choiceForm')[0].reset();
     });
-
+    
+    $("#urlLink").on("click", function(e) {
+    	$("#uploadVideo").html("Embed Video");
+    	$("#uploadVideo").prop("id", "embedVideo")
+    });
+    
+    $("#uploadLink").on("click", function(e) {
+    	$("#embedVideo").html("Upload Video");
+    	$("#embedVideo").prop("id", "uploadVideo")
+    });    
     
     function updateTextBox(blockId, text) {
         // clear text box and buttons
@@ -880,90 +950,108 @@ $(window).on('load', function () {
         </div>
 
 
-        <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" th:draggable="true">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add New Image Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="photoForm" id="imageUploadForm"
+		<div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add New Image Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="photoForm" id="imageUploadForm"
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<h6>
+								<small>Upload Image: </small>
+							</h6>
+							<input class="form-control" type="file" name="file" rows="5"
+								cols="500" id="file" />
+						</div>
+						<div class="modal-footer">
+							<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="uploadImage" class="btn btn-primary"
+								data-value="">Upload Image</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="addVideoAlert" class="modal" tabindex="-1" role="dialog"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document" draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add New Video Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="videoForm" id="videoUploadForm"
                         enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>Upload Image: </small>
-                            </h6>
-                            <input class="form-control" type="file"
-                                name="file" rows="5" cols="500"
-                                id="file" />
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelImageBtn" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="uploadImage"
-                                class="btn btn-primary" data-value="">Upload
-                                Image</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" th:draggable="true">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add New Video Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="videoForm" id="videoUploadForm"
-                        enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>IFrame Link: </small>
-                            </h6>
-                            <input class="form-control" type="text"
-                                name="videoLink" rows="5" cols="500"
-                                id="videoLink" />
+					<div class="modal-body">
+						<div role="tabpanel">
+							<ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a href="#uploadTab" id="uploadLink"
+									aria-controls="uploadTab" role="tab" data-toggle="tab">Upload</a>
+								</li>
+								<li role="presentation"><a href="#urlTab" id="urlLink"
+									aria-controls="urlTab" role="tab" data-toggle="tab">Link</a></li>
+							</ul>
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active" id="uploadTab">
+									Upload Video:
+									<input id="videoFile" class="form-control" type="file" name="videoFile" rows="5"
+									cols="500"/>
+								</div>
+								<div role="tabpanel" class="tab-pane" id="urlTab">
+									Enter URL:
+									<input class="form-control" type="text"
+                                	name="videoLink" rows="5" cols="500"
+                                	id="videoLink" />
+								</div>
+							</div>
+						</div>
                         </div>
                         <div class="modal-footer">
                             <button id="cancelVideoBtn" type="reset"
                                 class="btn light">Cancel</button>
-                            <button type="submit" id="embedVideo"
-                                class="btn btn-primary" data-value="">Embed
+                            <button type="submit" id="uploadVideo"
+                                class="btn btn-primary" data-value="">Upload
                                 Video</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div id="loginAlert" class="modal" tabindex="-1" role="dialog"
-            backdrop="static"
-            style="display: none; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Login</h5>
-                    </div>
-                    <div class="modal-body">
-                        <h6>You are not logged in, please login.</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-primary" style="color: white;"
-                            onClick="window.location.reload();">Login</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div id="loginAlert" class="modal" tabindex="-1" role="dialog"
+			backdrop="static"
+			style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Login</h5>
+					</div>
+					<div class="modal-body">
+						<h6>You are not logged in, please login.</h6>
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-primary" style="color: white;"
+							onClick="window.location.reload();">Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div id="addChoiceAlert" class="modal" tabindex="-1"
+		<div id="addChoiceAlert" class="modal" tabindex="-1"
             role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
