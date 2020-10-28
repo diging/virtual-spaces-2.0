@@ -40,7 +40,7 @@ public class EditImageController {
             attributes.addAttribute("message", "Image doesnt exist with given image id.");
             return "redirect:/staff/images/list/";  
         }
-        return "staff/image/edit";
+        return "staff/images/edit";
     }
 
     @RequestMapping(value = "/staff/image/{imageId}/edit", method = RequestMethod.POST)

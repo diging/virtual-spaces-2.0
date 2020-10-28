@@ -1,0 +1,22 @@
+<html  layout:decorate="~{layouts/main}">
+<head>
+<link type="text/css" th:href="@{/resourcess/bootstrap-4.1.2/login.css}" rel="stylesheet">
+</head>
+<body>
+<div class="justify-content-center" layout:fragment="content">
+    <div class="col-8">
+		<div  class="login-form">
+            <h2>Setup Complete</h2>
+			<p>You've successfully setup an admin user for Virtual Spaces. You can now 
+            login as [[${adminUsername}]].</p>
+            
+            <p>It is recommend to use the admin user only for administrative purposes, 
+            and create separate user accounts for every user working on the Virtual Space.</p>
+            <div style="text-align:center;">
+                <a th:href="@{/login}" style="color:blue;">Login to Virtual Spaces</a>
+            </div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

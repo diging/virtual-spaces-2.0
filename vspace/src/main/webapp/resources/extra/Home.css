@@ -1,3 +1,17 @@
+:root {
+	--primary: #A55941;
+	--secondary: #F2A950;
+	--error: #B00020;
+	--med-grey: #C7C7C7;
+	--dark-grey: #8E8E8E;
+	--base-grey: #F2F2F2;
+}
+
+i {
+	font-size: 20px;
+	color: var(--secondary);	
+}
+
 .Home_Class {
     margin: 0 auto 0 auto;
     width: 100%;
@@ -20,6 +34,46 @@
     margin: auto;
     background-size: cover;
     border-radius: 13px; */
+}
+
+.nav-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin: 0px auto 40px auto !important;
+    padding: 0 20px;
+    background: white;
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 1;
+}
+
+.primary-btn {
+    background: var(--primary);
+    color: white;
+    border-radius: 5px;
+}
+
+.navbar-brand {
+    padding: 0 !important;
+}
+
+.nav {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.nav-link {
+    color: #666 !important;
+    font-weight: 600;
+}
+
+.login-form {
+    padding: 48px;
+    width: 30%;
+    margin: auto;
+    border-radius: 10px;
+    background: #f2f2f2;
 }
 
 #wrapper_module {
@@ -92,22 +146,25 @@
 }
 
 .sidenav {
-    width: 0;
+    width: 20%;
+    height: 100%;
     position: absolute;
-    z-index: 1;
     top: -1px;
     left: 0px;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
-    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
-    padding-top: 26px;
+    padding-top: 70px;
     word-break: break-all;
 }
 
+.side-list {
+	list-style: none;
+	margin-top: 40px;
 }
+
 .sidenav a {
-    white-space: pre-wrap;
+    padding: 15px;
 }
 
 .sidenav a:hover {
@@ -170,12 +227,11 @@
     padding-left: 1%;
 }
 
-.textDiv {
+.text-Div {
     position: relative;
     top: 0px;
     overflow: visible;
     text-align: justify;
-    margin: auto;
 }
 
 .moduleBarPosition {
@@ -190,9 +246,9 @@
     position: absolute;
     width: 29px;
     height: 29px;
-    overflow: visible; -
-    -web-animation: fadein 0.3s ease-out; -
-    -web-action-type: view; -
+    overflow: visible;
+    -web-animation: fadein 0.3s ease-out;
+    -web-action-type: view;
     -web-action-target: Modal;
     cursor: pointer;
 }
@@ -263,10 +319,7 @@
 .Group_3_Class {
     position: absolute;
     width: 37px;
-    /* height: 39px; */
-    /* left: 1px; */
-    right: 0%;
-    top: 48px;
+    top: 70px;
     right: 1%;
     overflow: visible;
 }
@@ -427,3 +480,24 @@
     font-size: inherit;
     color: rgba(150, 45, 62, 1);
 }
+
+.form_input {
+	position: relative;
+	z-index: 3;
+}
+
+.searchBar {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 5;
+    right: 0;
+    background: none;
+}
+
+}
+.form_input:placeholder-shown {
+	z-index: 1;
+}
+
+
