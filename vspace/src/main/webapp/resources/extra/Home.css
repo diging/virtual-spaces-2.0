@@ -218,6 +218,29 @@ i {
 	margin: 40px 0
 }
 
+.register-form {	
+    padding: 48px;	
+    width: 30%;	
+    margin: auto;	
+    border-radius: 10px;	
+    background: #f2f2f2;	
+}	
+
+.form-control {	
+	color: var(--dark-grey);	
+	border: none;	
+}	
+
+.form_icon {	
+  	position: absolute;	
+  	pointer-events: auto;	
+	cursor: pointer;	
+	z-index: 5;	
+	right: 0;	
+	background: none;	
+	color: white;	
+}
+
 .sidenav {
     width: 20%;
     height: 100%;
@@ -229,6 +252,12 @@ i {
     transition: 0.5s;
     padding-top: 70px;
     word-break: break-all;
+}
+
+.btn-light {
+	color: #121212 !important;
+	background: white !important;
+	border-color: var(--med-grey) !important;
 }
 
 .side-list {

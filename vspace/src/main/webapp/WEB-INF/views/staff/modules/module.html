@@ -44,25 +44,18 @@ function checkSlideInSequence(slideId) {
 
 function loadSlidesInSequences() {
     $('.sequence').click(function(e) {
-	    $(".slide").css({ 'border' : ''});
-		$(".sequence").css({ 'border' : ''});
-		$(this).css("border", "solid #c1bb88");
 		var sequenceId = this.id;
 		var moduleId=[[${module.id}]];
-		$('#selectedSequence').empty();
+		$('#slidesInSeq').empty();
 		$.ajax({
 			type: "GET",
 			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, slide) {
-					$('#selectedSequence').append(''+
-							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-							'<div align="left" class="card-body">'+
-							'<a href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+
-							'<h5 class="card-title">'+slide.name+'</h5>'+
-							'<p class="card-text">'+slide.description+'</p>'+'</a>'+
-							'</div></div>');
+					$('#slidesInSeq').append(
+							'<a class="dropdown-item" href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+slide.name+'</a>'
+						);
 					});
 				}
 		});
@@ -89,53 +82,6 @@ $(document).ready(function($) {
 	$(".sequence").on("click", function(e) {
 	    loadSlidesInSequences();
 	});
-	
-	$(".slide").on("click", function(e) {
-	    $(".slide").css({ 'border' : ''});
-		$(this).css("border", "solid #c1bb88");
-		var slideId = this.id;
-		var moduleId=[[${module.id}]];
-		$('#allSequences').empty();
-		$.ajax({
-			type: "GET",
-			url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+slideId+'/sequences',
-			async: false,
-			success: function(response) {
-				$.each(response, function (index, sequence) {
-					$('#allSequences').append('<div id='+sequence.id+' class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-							'<div align="left" class="card-body">'+
-							'<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+
-							'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
-							'<font color="#796d05"><h5 class="card-title">'+sequence.name+'</h5>'+
-							'<p class="card-text">'+sequence.description+'</p></font>'+
-							'</div></div>');
-					});
-            
-				}
-		});
-		loadSlidesInSequences();
-	});
-	
-	$(".showAllSequences").on("click", function(e) {
-	    $(".slide").css({ 'border' : ''});
-	    $(".sequence").css({ 'border' : ''});
-		var slideId = this.id;
-		$('#allSequences').empty();
-		$(function() {
-		    [# th:each="sequence, status : ${sequences}"]
-		    $('#allSequences').append('<div id="[(${sequence.id})]" class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-				'<div align="left" class="card-body">'+
-				'<a href="/vspace/staff/module/[(${module.id})]/sequence/[(${sequence.id})]}">'+
-				'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
-				'<font color="#796d05"><h5 class="card-title">[(${sequence.name})]</h5>'+
-				'<p class="card-text">[(${sequence.description})]</p></font>'+
-				'</div></div></th:block>');
-		    [/]
-		
-		});
-		loadSlidesInSequences();
-	});
-
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$('#deleteSlideAlert').modal('hide');
@@ -199,65 +145,23 @@ $(document).ready(function($) {
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
 				<a th:href="@{${module.id}+'/sequence/add'}" class="btn outline" >+ New Sequence</a>				
-			</div>
-			<div class="grid" id="grid">
-				<div th:each="sequence: ${sequences}" class="card" style="width: 18rem;">
-					  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}">
-					  <div class="card-body">
-					    <h6 class="card-title">[[${sequence.name}]]</h6>
-					    <div>
-					    	<i class="fas fa-pen black" style="margin-right: 15px"></i>
-					    </div>
-					  </div>
-					</a>
-				</div>
 			</div>	
+			
+			<div class="grid">
+				<div th:each="sequence: ${sequences}" class="btn-group dropdown" style="width: 18rem;">
+				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light">[[${sequence.name}]]</a>
+				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
+				  	aria-haspopup="true" aria-expanded="false" th:onclick="loadSlidesInSequences()">
+				    	<i class="fa fa-folder-open"></i>
+				  </button>
+				  <div id="slidesInSeq" class="dropdown-menu">
+				    
+				  </div>
+				</div>
+			</div>
+			
     	</div>
 			
-		
-		<div id="result"></div>
-		<div class="container" id="header" style="margin-bottom:10px;">
-			<div class="row">
-				<div class="col justify-content-center">
-					<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
-						<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES</span>
-						<a class="d-flex align-items-center text-muted"
-							th:href="@{${module.id}+'/slide/add'}"> <span><i
-		                            class="fas fa-plus-circle"></i></span></a>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card-header sidebar-heading d-flex align-items-center px-3 mt-4 mb-1">
-						<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES IN
-							SEQUENCE</span> <span id="startSequence"
-							style="float: right; padding-top: 3px;"></span>
-					</div>
-				</div>
-			</div>
-			<div class="container" id="table">
-		        <div class="row">
-		            <div class="col justify-content-center" style="padding-left: 30px;">
-		                <div th:each="slide: ${slides}">
-		                    <div th:id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
-		                        <div id="slideDesc" align="left" class="card-body d-flex" style="position: relative;"
-		                        th:style="${#strings.isEmpty(slide.description) ? '' : 'overflow: scroll;max-height: 300px'}">
-		                                   <div style="padding-bottom: 32px; padding-right: 2px;" 
-		                                   th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"><span id="branchingPoint" style="float: right;"><i class="fas fa-code-branch"></i></span></div>
-		                             <font color="#796d05"><h5 class="card-title">[[${slide.name}]]</h5>
-		                            <p class="card-text">[[${slide.description}]]</p></font>					
-		                            <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-		                            
-		                            <a th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'" style="float: right;"><span style="float: right;"><i class="fas fa-trash-alt"></i></span></a>
-		                            <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}"><span style="float: right; padding-right: 7px;"><i class="fa fa-eye"></i></span></a>
-		                            </div>
-		                        </div>
-		                    </div>
-		                    </div>
-		            </div>
-		            <div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
-		         </div>
-		    </div>
-		</div>
 		<div id="deleteSlideAlert" class="modal fade" role="dialog"
 		    data-value="0">
 		    <div class="modal-dialog">
