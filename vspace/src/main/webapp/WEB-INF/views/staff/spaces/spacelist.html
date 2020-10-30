@@ -9,7 +9,7 @@
 <style>
 .unpublishedtooltiptext {
     display: none;
-    color: #bfb168;
+    color: var(--secondary);
     font-weight: bold;
     font-size: 0.875rem;
     font-family: 'Quicksand';
@@ -22,7 +22,7 @@
 
 .noIncomingLinkMessage {
     display: none;
-    color: #bfb168;
+    color: var(--secondary);
     font-weight: bold;
     font-size: 0.875rem;
     font-family: 'Quicksand';
@@ -41,14 +41,14 @@
         <div style="padding-bottom: 20px;">
             This virtual exhibition contains the following spaces. <i
                 class="fa fa-play-circle" aria-hidden="true"
-                style="color: #bfb168;"></i> indicates the start space.
+                ></i> indicates the start space.
         </div>
         <ul class="list-group list-group-flush"
             th:each="space: ${spaces}">
             <li class="list-group-item"><i
                 class="fa fa-play-circle"
                 th:if="${space.id == startSpace.id}" aria-hidden="true"
-                style="color: #bfb168;"></i> <a
+                ></i> <a style="color: var(--secondary);"
                 th:href="@{'/staff/space/'+${space.id}}"> <span
                     data-feather="box"
                     th:if="${space.id != startSpace.id}"></span>
@@ -59,13 +59,13 @@
                     <i
                         class="fas fa-exclamation-triangle unpublishedSpaceClass"
                         th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}"
-                        style="color: #bfb168; padding-right: 8px;"></i>
+                        style="padding-right: 8px;"></i>
                     <span class="unpublishedtooltiptext">This
                         space is currently unpublished.</span> <i
                         th:if="${!space.hasIncomingLinks()}"
                         class="fas fa-eye-slash noIncomingLinks"
                         aria-hidden="true"
-                        style="color: #bfb168; padding-right: 8px;"></i>
+                        style="padding-right: 8px;"></i>
                     <span th:if="${!space.hasIncomingLinks()}"
                         class="noIncomingLinkMessage">This space
                         has no incoming links.</span> <a
@@ -73,7 +73,7 @@
                         class="checkSpaceLinkPresent"
                         data-toggle="modal"> <span
                         class="checkSpaceLinkPresent" id="deleteSpace"
-                        style="color: #666;"><i
+                        ><i
                             class="fas fa-trash-alt"></i></span>
                     </a>
                 </div></li>

@@ -15,10 +15,10 @@
             spaces:</div>
 
         <ul class="list-group list-group-flush" th:each="space: ${recentSpaces}">
-                <a th:href="@{'/staff/space/'+${space.id}}"><li class="list-group-item">
-                    <span data-feather="box"></span> [[${space.name}]]
+                <li class="list-group-item">
+                    <span data-feather="box"></span><a th:href="@{'/staff/space/'+${space.id}}" style="color: var(--secondary);">[[${space.name}]] </a>
                     (Created on <span class="date">[[${space.creationDate}]]</span>
-                    by [[${space.createdBy}]])</li> </a>
+                    by [[${space.createdBy}]])</li>
         </ul>
         <br/>
 
@@ -28,10 +28,10 @@
             modules:</div>
 
         <ul class="list-group list-group-flush" th:each="module: ${recentModules}">
-                <a th:href="@{'/staff/module/'+${module.id}}"><li class="list-group-item">
-                    <span data-feather="grid"></span>[[${module.name}]]
+                <li class="list-group-item">
+                    <span data-feather="grid"></span><a th:href="@{'/staff/module/'+${module.id}}" style="color: var(--secondary);">[[${module.name}]]</a>
                     (Created on <span class="date">[[${module.creationDate}]]</span>
-                    by [[${module.createdBy}]])</li></a>
+                    by [[${module.createdBy}]])</li>
         </ul>
     </div>
 </div>
