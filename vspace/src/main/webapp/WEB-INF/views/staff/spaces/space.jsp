@@ -10,14 +10,6 @@
     href="<c:url value="/resources/extra/Home.css" />">
 <script>
 
-// Ashmi VSPC-89 Changes
-$(function(){
-    $("#hideLinks").on('change', function() {
-    	console.log("Hi")
-      
-    });
-})
-
 
 $(function(){
     $("#deleteSpace").click(function(){
