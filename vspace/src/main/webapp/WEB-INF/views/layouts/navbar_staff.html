@@ -19,7 +19,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'home' ? 'active' : '' }"
 			               th:href="@{/staff/dashboard}">
-			               <span><i class="fas fa-home"></i>Dashboard</span> 
+			               <span><i class="fas fa-home"></i> &nbsp;Dashboard</span> 
 			               <span class="sr-only">(current)</span>
 			            </a>
 			        </li>
@@ -27,28 +27,28 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'space' ? 'active' : '' }"
 			               th:href="@{/staff/space/list}"> 
-			               <span><i class="fas fa-layer-group"></i></span>Spaces
+			               <span><i class="fas fa-layer-group"></i></span> &nbsp;Spaces
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'module' ? 'active' : '' }"
 			               th:href="@{/staff/module/list}"> 
-			               <span><i class="fas fa-th-large"></i></span>Modules
+			               <span><i class="fas fa-th-large"></i></span> &nbsp;Modules
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list/1}"> 
-			               <span><i class="fas fa-file-image"></i></span>Images
+			               <span><i class="fas fa-file-image"></i></span> &nbsp;Images
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
-			               <span><i class="fas fa-user"></i></span>Users
+			               <span><i class="fas fa-user"></i></span> &nbsp;Users
 			            </a>
 			        </li>
 		        </ul>
