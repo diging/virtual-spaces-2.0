@@ -25,6 +25,7 @@ $(function(){
       });
     
     [# th:each="link,loop : ${spaceLinks}"]
+    [# th:if="${link != null}" ]
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		
@@ -96,7 +97,9 @@ $(function(){
 			makeSpaceLinksEditable(label, [[${link.link.id}]], rotation ,targetSpace,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
 		});
 	[/]
+	[/]
 	    [# th:each="link,loop : ${moduleLinks}"]
+	    [# th:if="${link != null}" ]
 			var link;
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
@@ -156,9 +159,11 @@ $(function(){
 			    var targetModule = document.getElementById("moduleLinkTarget-[(${link.link.id})]").value;
 				makeModuleLinksEditable(label, [[${link.link.id}]],rotation,targetModule,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]], type);
 			});
-		[/] 	
+		[/]
+		[/]
 		
 		[# th:each="link,loop : ${externalLinks}"]
+		[# th:if="${link != null}" ]
 	        var posX = $("#bgImage").position().left;
 	        var posY = $("#bgImage").position().top;
 	        var link ;
@@ -207,6 +212,7 @@ $(function(){
 			    var targetLink = document.getElementById("externalLinkTarget-[(${link.externalLink.id})]").value;
 	            makeExternalLinksEditable(label,[[${link.externalLink.id}]],targetLink,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
 	        });
+		[/]
 		[/]
 		 // store where a user clicked on an image
 			var storeX;
