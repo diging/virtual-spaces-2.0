@@ -71,7 +71,7 @@
         </div>  
         
         <div class="grid" id="grid">
-			<div th:each="space: ${spaces}" class="card" style="width: 18rem;">
+			<div th:each="space: ${spaces}" style="width: 11.75rem;">
 				<div class="status">
 					<i class="fa fa-play-circle" th:if="${space.id == startSpace.id}" aria-hidden="true"></i>
 					<i class="fas fa-exclamation-triangle" th:if="${space.spaceStatus=='UNPUBLISHED'}" aria-hidden="true"></i>
@@ -79,17 +79,23 @@
 				<div class="spaceImage">
 					<img class="card-img-top" th:src="@{'/api/image/'+${space.image.id}}" alt="Space image">
 				</div>
-				<div class="card-body">
-					<a th:href="@{'/staff/space/'+${space.id}}" class="card-title">[[${space.name}]]</a>
-					<div>
-				    	<a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><i class="fa fa-pen black" style="margin-right: 15px"></i></a>
-				    	<a  th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
-	                        class="checkSpaceLinkPresent"
-	                        data-toggle="modal"> <span
-	                        class="checkSpaceLinkPresent" id="deleteSpace">
-	                        <i class="fas fa-trash-alt" style="color: var(--error)"></i></span>
+				<div class="btn-group dropdown">
+					<a th:href="@{'/staff/space/'+${space.id}}" class="btn btn-light skew" style="width: 10rem;">
+						<span class="card-head">[[${space.name}]]</span>
+					</a>
+					<button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" 
+						aria-haspopup="true" aria-expanded="false">
+					    <span class="sr-only">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu">
+					    <a class="dropdown-item" th:href="@{'/staff/space/'+${space.id}+'/edit'}"><i class="fa fa-pen black"></i>&emsp;Edit Space</a>
+					    <div class="dropdown-divider"></div>
+					    <a  th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
+	                        class="checkSpaceLinkPresent dropdown-item" data-toggle="modal">
+	                        <span class="checkSpaceLinkPresent" id="deleteSpace">
+	                        <i class="fas fa-trash-alt" style="color: var(--error)"></i></span>&emsp;Delete
 	                    </a>
-				    </div>
+					</div>					
 				</div>
 			</div>
 		</div>

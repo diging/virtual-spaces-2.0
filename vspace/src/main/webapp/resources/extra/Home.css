@@ -110,7 +110,7 @@ i {
 }
 
 .spaceImage {
-	height: 120px;
+	height: 100px;
     overflow: hidden;
     background-size: cover;
 }
@@ -258,6 +258,11 @@ i {
 	color: #121212 !important;
 	background: white !important;
 	border-color: var(--med-grey) !important;
+	text-align: left;
+}
+
+.skew {
+	border-radius: 0 0 .25rem .25rem !important;
 }
 
 .side-list {

@@ -218,7 +218,7 @@
 		</div>
 		
 		<div class="grid" multiple="multiple" id="ordered-slides">
-			<div th:each="slide: ${allSlides}" class="card" style="width: 18rem;">
+			<div th:each="slide: ${allSlides}" class="card">
 				  <div class="card-body">
 				    <div class="card-title">
 				    	<a class="card-head" th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}">[[${slide.name}]]</a>				    	

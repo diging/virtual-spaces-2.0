@@ -110,7 +110,7 @@ $(document).ready(function($) {
 		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f">
 		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
-					<select class="form-control" name="sequenceParam" style="display: inline">
+					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important">
 						<option th:value="Select" th:text="Select"></option>
 		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
 		            </select>
@@ -125,18 +125,16 @@ $(document).ready(function($) {
     			<button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button>
     		</div>
     		<div class="grid" id="grid">
-				<div th:each="slide: ${slides}" class="card" style="width: 18rem;">
-					  <div class="card-body">
-					    <div class="card-title">
-					    	<a class="card-head" th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}">[[${slide.name}]]</a>				    	
-					    	<p class="card-text">[[${slide.description}]]</p>
-					    </div>
-					    <div>
-					    	<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-right: 15px"></i>
-					    	<a th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'">
-					    		<i class="fas fa-trash-alt" style="color: var(--error)"></i></a>
-					    </div>
-					  </div>
+				<div th:each="slide: ${slides}" class="btn-group dropdown">
+					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
+						<span class="card-head">[[${slide.name}]]</span>
+						<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>	
+						<span class="card-text">[[${slide.description}]]</span>
+					</a>
+					<button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
+				  		th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
+				    	<i class="fas fa-trash-alt" style="color: var(--error)"></i>
+				  	</button>
 				</div>
 			</div>	    		
     	</div>
@@ -148,8 +146,8 @@ $(document).ready(function($) {
 			</div>	
 			
 			<div class="grid">
-				<div th:each="sequence: ${sequences}" class="btn-group dropdown" style="width: 18rem;">
-				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light">[[${sequence.name}]]</a>
+				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
+				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;">[[${sequence.name}]]</a>
 				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
 				  	aria-haspopup="true" aria-expanded="false" th:onclick="loadSlidesInSequences()">
 				    	<i class="fa fa-folder-open"></i>
@@ -170,7 +168,7 @@ $(document).ready(function($) {
 		                <h4 class="modal-title" id="deleteModalTitle">Confirm
 		                    Deletion?</h4>
 		                <button type="button" id="closeSlide" class="close"
-		                    data-dismiss="modal" aria-hidden="true">×</button>
+		                    data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
 		            </div>
 		            <div class="modal-body">
 		                <p>

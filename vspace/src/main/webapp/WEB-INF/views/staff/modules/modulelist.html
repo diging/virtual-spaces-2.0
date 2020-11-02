@@ -41,16 +41,11 @@
         </div>
         
         <div class="grid" id="grid">
-			<div th:each="module: ${vspacMmodules}" class="card" style="width: 18rem;">
-				  <a th:href="@{'/staff/module/'+${module.id}}">
-				  <div class="card-body">
-				    <h6 class="card-title">[[${module.name}]]</h6>
-				    <div>
-				    	<i class="fas fa-pen black" style="margin-right: 15px"></i>
-				    	<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
-				    		title="Created on <span class='date'>[[${module.creationDate}]]</span> by [[${module.createdBy}]]"></i>
-				    </div>
-				  </div>
+			<div th:each="module: ${vspacMmodules}" class="btn-group dropdown"  style="width: 10rem;">
+				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light">
+					<span class="card-title">[[${module.name}]]</span>
+					<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" style="margin-left:20px" 
+				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
 				</a>
 			</div>
 		</div>
