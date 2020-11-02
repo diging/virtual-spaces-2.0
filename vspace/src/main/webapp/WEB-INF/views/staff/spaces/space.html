@@ -62,6 +62,7 @@ $(function(){
 		var inputLinkedSpace = document.createElement("input");
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-[(${link.link.id})]");
+		[# th:if="${link.link.targetSpace != null}" ]
 		inputLinkedSpace.setAttribute("value", "[(${link.link.targetSpace.id})]");
 		var unpublishedSpaceElement;
 		    [# th:if="${#strings.equals(link.link.targetSpace.spaceStatus,'UNPUBLISHED')}"]
@@ -72,7 +73,7 @@ $(function(){
 			unpublishedSpaceElement.css('transform', 'rotate([(${link.rotation})]deg)');
 			unpublishedSpaceElement.css('font-size', "12px");
 			[/]
-		
+		[/]
 		//append to form element that you want .
 		$("#space").append(inputRotation);
 		$("#space").append(inputLabel);
