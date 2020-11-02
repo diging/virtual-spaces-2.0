@@ -62,7 +62,6 @@ $(function(){
 		var inputLinkedSpace = document.createElement("input");
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-[(${link.link.id})]");
-		inputLinkedSpace.setAttribute("value", "[(${link.link.targetSpace.id})]");
 		var unpublishedSpaceElement;
 		    [# th:if="${#strings.equals(link.link.targetSpace.spaceStatus,'UNPUBLISHED')}"]
 			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: #bfb168;"></i>')
