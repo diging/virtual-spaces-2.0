@@ -33,7 +33,8 @@ $(function(){
 			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 		[/]
 		[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+		var imageURL = [[@{|/api/image/${link.image.id}|}]];
+           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
 			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -103,7 +104,8 @@ $(function(){
 				link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 			[/]
 			[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-	           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+				var imageURL = [[@{|/api/image/${link.image.id}|}]];
+	           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 	        [/]
 			[# th:if="${#strings.equals(link.type,'MODULE')}"]
 				link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -161,7 +163,8 @@ $(function(){
 	        var posY = $("#bgImage").position().top;
 	        var link ;
 	        [# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-	            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+	        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
+	            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
 	        [/]
 	            [# th:if="${#strings.equals(link.type,'ARROW')}"]
 	            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
