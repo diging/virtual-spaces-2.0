@@ -661,13 +661,13 @@ $(window).on('load', function () {
         </div>
         <!-- description -->
         <div style="margin-left: .1%;" class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">Description:</h5>
+            <h5 style="margin-bottom: 0;">Description:</h5>
             <p id="description"
                 style="margin-top: .5rem; margin-bottom: .5rem;">[[${slide.description}]]</p>
         </div>
         <!-- SlideSequences -->
         <div style="margin-left: .1%;" class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">
+            <h5 style="margin-bottom: 0;">
                 This slide belongs to:<br>
             </h5>
         </div>
@@ -685,7 +685,7 @@ $(window).on('load', function () {
         <!-- choices -->
         <div id="choiceSpace" style="margin-left: .1%; display: none;"
             class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">Choices:</h5>
+            <h5 style="margin-bottom: 0;">Choices:</h5>
             <div th:each="choice: ${choices}">
                 <a style="margin-left: .5rem;"
                     th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
