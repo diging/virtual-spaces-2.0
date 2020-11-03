@@ -33,7 +33,7 @@ $(function(){
 		[# th:if="${#strings.equals(link.type,'ALERT')}"]
 			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 		[/]
-		[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
+		[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
 		var imageURL = [[@{|/api/image/${link.image.id}|}]];
            link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 		[/]
@@ -105,7 +105,7 @@ $(function(){
 			[# th:if="${#strings.equals(link.type,'ALERT')}"]
 				link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 			[/]
-			[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
+			[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
 				var imageURL = [[@{|/api/image/${link.image.id}|}]];
 	           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 	        [/]
@@ -166,7 +166,7 @@ $(function(){
 	        var posX = $("#bgImage").position().left;
 	        var posY = $("#bgImage").position().top;
 	        var link ;
-	        [# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
+	        [# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
 	        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
 	            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
 	        [/]
