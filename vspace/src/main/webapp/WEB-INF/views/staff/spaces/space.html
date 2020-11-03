@@ -62,10 +62,9 @@ $(function(){
 		var inputLinkedSpace = document.createElement("input");
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-[(${link.link.id})]");
-		[# th:if="${link.link.targetSpace != null}" ]
-		inputLinkedSpace.setAttribute("value", "[(${link.link.targetSpace.id})]");
+		inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
 		var unpublishedSpaceElement;
-		    [# th:if="${#strings.equals(link.link.targetSpace.spaceStatus,'UNPUBLISHED')}"]
+		    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
 			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: #bfb168;"></i>')
 			unpublishedSpaceElement.css('position', 'absolute');
 			unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
@@ -73,7 +72,6 @@ $(function(){
 			unpublishedSpaceElement.css('transform', 'rotate([(${link.rotation})]deg)');
 			unpublishedSpaceElement.css('font-size', "12px");
 			[/]
-		[/]
 		//append to form element that you want .
 		$("#space").append(inputRotation);
 		$("#space").append(inputLabel);
