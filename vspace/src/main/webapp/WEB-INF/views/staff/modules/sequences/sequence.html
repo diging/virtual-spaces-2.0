@@ -1,8 +1,15 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-	<script th:inline="javascript">
-	$(document).ready(function() { 
-		var vals = []
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<link th:href="@{/resources/extra/Sequence.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<script th:inline="javascript">
+	$(document).ready(function() {
+	    var vals = []
 		var slides = []
 		$('#ordered-slides').multiSelect({
 			keepOrder : true,
@@ -185,6 +192,7 @@
 	        $("#title").text("Sequence: "+sequenceTitle)
 	  
 	    });
+	});
 	</script>
 </head>
 
@@ -209,8 +217,8 @@
 					style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
 			</div>
 			<div class="alert alert-light" role="alert">
-				Created on <span class="date">${sequence.creationDate}</span> by
-				${sequence.createdBy}.<br> Modified on <span class="date">[[${sequence.modificationDate}]]</span>
+				Created on <span class="date">[[${sequence.creationDate}]]</span> by
+				[[${sequence.createdBy}]].<br> Modified on <span class="date">[[${sequence.modificationDate}]]</span>
 				by [[${sequence.modifiedBy}]].
 			</div>
 		</div>
@@ -226,7 +234,7 @@
 				style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
 				class="fas fa-edit"></i></a>
 			<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"
-				data-value="${sequence.description}">[[${sequence.description}]]</p>
+				data-value=${sequence.description}>[[${sequence.description}]]</p>
 			<button id="submitDescription" type="button"
 				class="btn primary-btn btn-sm"
 				style="margin-top: 1%; margin-bottom: 1%;">Save</button>
@@ -242,9 +250,9 @@
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
 					<select multiple="multiple" id="ordered-slides">
-						<option th:if="${!selectedSlides.contains(slide)}" th:each="slide: ${allSLides}" th:value='${slide.id}' id="${slide.id}">[[${slide.name}]]</option>
+						<option th:each="slide: ${allSLides}" th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
 
-						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
+						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
 					</select>
 					<input type="hidden" id="orderedSlides" />
 				</div>
