@@ -97,6 +97,12 @@ i {
     border-radius: 5px;
 }
 
+.branchbtn {
+    background: var(--med-grey);
+    border-radius: 25px;
+    color: #121212;
+}
+
 .add {
 	border: 1.5px solid var(--med-grey);
     border-radius: 5px;
