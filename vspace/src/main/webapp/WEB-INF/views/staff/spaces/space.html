@@ -65,7 +65,7 @@ $(function(){
 		inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
 		var unpublishedSpaceElement;
 		    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
-			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: #bfb168;"></i>')
+			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
 			unpublishedSpaceElement.css('position', 'absolute');
 			unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
 			unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
@@ -755,7 +755,7 @@ $(function(){
 				if(show) {
 				    var unpublishedSpaceElement;
 				    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
 				        unpublishedSpaceElement.css('position', 'absolute');
 				        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 				        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
@@ -866,7 +866,7 @@ $(function(){
 				if(show) {
 				    var unpublishedSpaceElement;
 				    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
 				        unpublishedSpaceElement.css('position', 'absolute');
 				        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 				        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
@@ -1234,7 +1234,7 @@ $(function(){
                 class="date">[[${space.modificationDate}]]</span> by
             [[${space.modifiedBy}]].<br> <br> <i
                 class="fa fa-exclamation-triangle fa-sm"
-                aria-hidden="true" style="color: #bfb168;"></i>
+                aria-hidden="true" style="color: var(--secondary);"></i>
             indicates the links to unpublished spaces.
         </div>
         <div style="padding-bottom: 10px;">
@@ -1254,7 +1254,7 @@ $(function(){
                 </select>
                 <p
                     style="display: inline; padding-left: 10px;">
-                    <input class="btn btn-primary" type="submit"
+                    <input class="btn primary-btn btn-sm" type="submit"
                         value="Submit" />
                 </p>
             </form>
@@ -1276,7 +1276,7 @@ $(function(){
                 </select>
                 <p
                     style="display: inline; padding-left: 10px;">
-                    <input class="btn btn-primary" type="submit"
+                    <input class="btn primary-btn btn-sm" type="submit"
                         value="Submit" />
                 </p>
             </form>
@@ -1393,7 +1393,7 @@ $(function(){
                     <button id="cancelSpaceLinkBtn" type="reset"
                         class="btn btn-light btn-xs">Cancel</button>
                     <button id="createSpaceLinkBtn" type="reset"
-                        class="btn btn-primary btn-xs">Create
+                        class="btn primary-btn btn-xs">Create
                         Space Link</button>
                 </p>
 
@@ -1479,7 +1479,7 @@ $(function(){
                     <button id="cancelModuleLinkBtn" type="reset"
                         class="btn btn-light btn-xs">Cancel</button>
                     <button id="createModuleLinkBtn" type="reset"
-                        class="btn btn-primary btn-xs">Create
+                        class="btn primary-btn btn-xs">Create
                         Module Link</button>
                 </p>
 
@@ -1500,11 +1500,11 @@ $(function(){
                     id="file" /><br> <br>
                 <p class="mb-0 text-right">
                     <button type="submit" id="changeBgImgBtn"
-                        class="btn btn-primary btn-xs">Upload
+                        class="btn primary-btn btn-sm">Upload
                         Image</button>
                     &nbsp;
                     <button id="cancelBgImgBtn" type="button"
-                        class="btn light btn-xs">Cancel</button>
+                        class="btn light btn-sm">Cancel</button>
                 </p>
             </div>
 
@@ -1565,7 +1565,7 @@ $(function(){
                     <button id="cancelExternalLinkBtn" type="reset"
                         class="btn btn-light btn-xs">Cancel</button>
                     <button id="createExternalLinkBtn" type="submit"
-                        class="btn btn-primary btn-xs">Create
+                        class="btn primary-btn btn-xs">Create
                         External Link</button>
                 </p>
             </div>
@@ -1676,11 +1676,11 @@ $(function(){
                 <div class="row">
                     <div class="col-sm-4">
                         <button id="editSpaceLinkBtn" type="reset"
-                            class="btn btn-primary btn-xs">Save</button>
+                            class="btn primary-btn btn-xs">Save</button>
                     </div>
                     <div class="col-sm-8">
                         <button id="deleteSpaceLinkButton" type="reset"
-                            class="btn btn-primary btn-xs">Delete</button>
+                            class="btn primary-btn btn-xs">Delete</button>
                     </div>
                 </div>
             </div>
@@ -1771,11 +1771,11 @@ $(function(){
                 <div class="row">
                     <div class="col-sm-4">
                         <button id="editModuleLinkBtn" type="reset"
-                            class="btn btn-primary btn-xs">Save</button>
+                            class="btn primary-btn btn-xs">Save</button>
                     </div>
                     <div class="col-sm-8">
                         <button id="deleteModuleLinkButton" type="reset"
-                            class="btn btn-primary btn-xs">Delete</button>
+                            class="btn primary-btn btn-xs">Delete</button>
                     </div>
                 </div>
             </div>
@@ -1866,11 +1866,11 @@ $(function(){
                 <div class="row">
                     <div class="col-sm-4">
                         <button id="editExternalLinkBtn" type="reset"
-                            class="btn btn-primary btn-xs">Save</button>
+                            class="btn primary-btn btn-xs">Save</button>
                     </div>
                     <div class="col-sm-8">
                         <button id="deleteExternalLinkButton"
-                            type="reset" class="btn btn-primary btn-xs">Delete</button>
+                            type="reset" class="btn primary-btn btn-xs">Delete</button>
                     </div>
                 </div>
             </div>
@@ -1878,20 +1878,20 @@ $(function(){
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <button type="button" id="addSpaceLinkButton"
-                class="btn btn-primary btn-sm">Add Space Link</button>
+                class="btn primary-btn btn-sm">Add Space Link</button>
             &nbsp;
             <button type="button" id="addModuleLinkButton"
-                class="btn btn-primary btn-sm">Add Module Link</button>
+                class="btn primary-btn btn-sm">Add Module Link</button>
             &nbsp;
             <button type="button" id="addExternalLinkButton"
-                class="btn btn-primary btn-sm">Add External
+                class="btn primary-btn btn-sm">Add External
                 Link</button>
             &nbsp;
             <button type="button" id="changeBgImgButton"
-                class="btn btn-primary btn-sm">Change Image</button>
+                class="btn primary-btn btn-sm">Change Image</button>
             &nbsp;
             <button type="button" id="deleteSpace"
-                class="btn btn-primary btn-sm">Delete Space</button>
+                class="btn primary-btn btn-sm">Delete Space</button>
         </nav>
         <p></p>
 
@@ -1946,7 +1946,7 @@ $(function(){
         <div id="outgoingLinks" class="list-group"
             style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
             <a href="#"
-                style="padding-right: 0.25em; background-color: #c1bb88;"
+                style="padding-right: 0.25em; background-color: var(--secondary);"
                 class="list-group-item active"> Space links on this
                 space: </a>
             <div id="noLinksOnSpace"
@@ -1973,7 +1973,7 @@ $(function(){
         <div id="incomingLinks" class="list-group"
             style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
             <a href="#"
-                style="padding-right: 0.25em; background-color: #c1bb88;"
+                style="padding-right: 0.25em; background-color: var(--secondary);"
                 class="list-group-item active"> Space links to this
                 space: </a>
             <div id="noLinksToSpace"
