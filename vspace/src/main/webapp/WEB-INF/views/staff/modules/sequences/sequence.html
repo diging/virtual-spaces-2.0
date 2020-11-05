@@ -61,11 +61,10 @@
 	    $("#editDescription").click(function() {
 	    	
 	    	// using data-attributes
-	    	var description = $("#description").data('value')  // gets value
+	    	var description = $("#description").text()  // gets value
 	        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
 	        $("#description").hide()
 	        $("#newDescription").val(description)
-	        $("#newDescription").data('value',description);
 	        $("#editDescription").hide()
 	        $("#submitDescription").show()
 	        $("#cancelEditDescription").show()
@@ -130,10 +129,10 @@
 	    
 	    $("#editTitle").click(function() {
 	    	// Using data attribute
-	    	var sequenceTitle = $("#title").data('value')  // gets value without using trim function
+	    	var sequenceTitle = $("#title").text()  // gets value without using trim function
 	        $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-	    	$('#title').text('Sequence: ')
-	        $("#newTitle").val(sequenceTitle)
+	    	$('#title').text()
+	        $("#newTitle").val(sequenceTitle.split(": ")[1])
 	        $("#editTitle").hide()
 	        $("#submitTitle").show()
 	        $("#cancelEditTitle").show()
@@ -187,9 +186,9 @@
 	        $("#submitTitle").hide()
 	        $("#editTitle").show()
 	        $("#cancelEditTitle").hide()
-	        var sequenceTitle = $("#title").data('value')  // gets value
+	        var sequenceTitle = $("#title").text()  // gets value
 	        $("#editSequenceTitle").remove()
-	        $("#title").text("Sequence: "+sequenceTitle)
+	        $("#title").text(sequenceTitle)
 	  
 	    });
 	});
@@ -208,7 +207,7 @@
 		<div class ="blur">
 			<div class="row align-items-center">
 				<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;"
-					data-value="${sequence.name}">Sequence: [[${sequence.name}]]</h2>
+					>Sequence: [[${sequence.name}]]</h2>
 				<a id="editTitle" class="btn" href="#"
 					style="float: left; margin-right: 1%;"><i class="fas fa-edit"></i></a>
 				<button id="submitTitle" type="button" class="btn primary-btn"
@@ -234,7 +233,7 @@
 				style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><i
 				class="fas fa-edit"></i></a>
 			<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"
-				data-value=${sequence.description}>[[${sequence.description}]]</p>
+				>[[${sequence.description}]]</p>
 			<button id="submitDescription" type="button"
 				class="btn primary-btn btn-sm"
 				style="margin-top: 1%; margin-bottom: 1%;">Save</button>
@@ -244,17 +243,17 @@
 		</div>
 		
 		<div id="slideSpace" class="blur">
-			<form th:action="@{'/staff/module/'+${moduleId}+'/sequence/'+${sequence.id}+'/edit/slides'}" method="POST" th:object="${sequenceForm}">
+			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
 				<div class="form-group row">
 					<label for="Slides" class="col-md-2 col-form-label">Select
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
-					<select multiple="multiple" id="ordered-slides">
-						<option th:each="slide: ${allSLides}" th:if="${!#lists.contains(selectedSlides,slide)}"  th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
+					<select multiple="multiple" id="ordered-slides" name="selectSequence">
+						<option th:each="slide: ${allSlides}" th:if="${!#lists.contains(selectedSlides,slide)}"  th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
 
 						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
 					</select>
-					<input type="hidden" id="orderedSlides" />
+					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
 				</div>
 				<button class="btn primary-btn btn-sm" type="submit" value="submit">Save Changes</button>
 			</form>
