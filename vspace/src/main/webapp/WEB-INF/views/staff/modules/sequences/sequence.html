@@ -250,7 +250,7 @@
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
 					<select multiple="multiple" id="ordered-slides">
-						<option th:each="slide: ${allSLides}" th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
+						<option th:each="slide: ${allSLides}" th:if="${!#lists.contains(selectedSlides,slide)}"  th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
 
 						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
 					</select>
