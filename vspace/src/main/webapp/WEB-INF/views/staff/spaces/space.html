@@ -1422,6 +1422,8 @@ $(function(){
 
                 <input type="hidden" name="x" id="moduleLinkX" /> <input
                     type="hidden" name="y" id="moduleLinkY" />
+                <input
+                    type="hidden" name="type" value="MODULE" />
 
                 <div class="row">
                     <div class="col-sm-4">
@@ -1446,7 +1448,7 @@ $(function(){
                     </div>
                 </div>
 
-                <div class="row">
+               <!--  <div class="row">
                     <div class="col-sm-4">
                         <label><small>Type:</small> </label>
                     </div>
@@ -1457,7 +1459,7 @@ $(function(){
                             <option th:value="MODULE">Module</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row">
                     <div class="col-sm-5" style="padding-right: 0;">
@@ -1699,6 +1701,8 @@ $(function(){
                 </h6>
                 <input type="hidden" name="moduleLinkIdValueEdit"
                     id="moduleLinkIdValueEdit" />
+                <input
+                    type="hidden" name="type" value="MODULE" />
                 <div class="row">
                     <div class="col">
                         <h6 class="alert-heading">
@@ -1740,17 +1744,6 @@ $(function(){
                             class="form-control-xs modulelink-targetEdit"
                             type="text" name="moduleLinkLabel"
                             id="moduleLinkLabelEdit" style="width: inherit;"><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="typeEdit" name="type"
-                            class="form-control-xs modulelink-targetEdit">
-                            <option th:value="MODULE">Module</option>
-                        </select>
                     </div>
                 </div>
                 <div class="row">
