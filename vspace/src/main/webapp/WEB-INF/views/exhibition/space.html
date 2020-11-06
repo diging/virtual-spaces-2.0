@@ -64,8 +64,6 @@
 		//# sourceURL=click.js
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
-		    $(".barPosition").css("opacity",0);
-		    $(".barPosition").css("transition","opacity 0.5s");
 		    if (window.matchMedia(maxWidth).matches){
 		        $("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
@@ -77,7 +75,6 @@
 		}
 		function closeNav(){
 		    $("#mySidenav").css("width", "0px");
-		    $(".barPosition").css("opacity",1);
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -156,8 +153,8 @@
 			[# th:if="${link != null}" ]	
 		        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
 		        var posY = $("#space").position().top;
-		        var hyperlink = [[@{|/exhibit/${space.id}/module/${link.link.module.id}|}]];
-		        var link = $('<a href="' + hyperlink + '"></a>');
+		        var link = $('<a></a>');
+		        link.attr("href", "/vspace/exhibit/[(${space.id})]/module/[(${link.link.module.id})]");
 		        var linkDisplay = $('<div class="InfoModule_${iStat} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">[(${link.link.name})]</span></div>');
 		        linkDisplay.css('position', 'absolute');
 		        linkDisplay.css('transform', 'rotate([(${link.rotation})]deg)');
@@ -186,8 +183,8 @@
 		    {
 		        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
 		        var posY = $("#space").position().top;
-		        var hyperlink = [[${link.externalLink.externalLink}]];
-		        var link = $('<a href="' + hyperlink + '"></a>');
+		        var link = $('<a></a>');
+		        link.attr('href', "[(${link.externalLink.externalLink})]");
 		        link.attr('target', "_blank");
 		        var linkDisplay = $('<span class="fas fa-globe"></span>');
 		            var linkDisplay = $('<div class="InfoExt_${iStat} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_e"></i><span class="tooltiptext">[(${link.name})]</span></div>');
@@ -256,11 +253,11 @@
                                         <li
                                             th:if="${!#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div><span>[[${module.link.name}]]</span></a></li>
+                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div><span>[[${module.link.module.name}]]</span></a></li>
+                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m"></i></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -294,7 +291,7 @@
                         <div class="text-Div">
                             <h3 class="spaceName">
                                 [[${space.name}]] <i
-                                    th:if="${!#strings.isEmpty(space.description)}"
+                                    th:if="${space.description}!=null"
                                     class="fas fa-info-circle fa-lg"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></i>

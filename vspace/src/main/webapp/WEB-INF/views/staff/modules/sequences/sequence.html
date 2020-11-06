@@ -1,15 +1,8 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-<link th:href="@{/resources/multiselect/css/multiselect.css}"
-    type="text/css" rel="stylesheet">
-<link th:href="@{/resources/extra/Sequence.css}"
-    type="text/css" rel="stylesheet">
-<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-
-<script th:inline="javascript">
-	$(document).ready(function() {
-	    var vals = []
+	<script th:inline="javascript">
+	$(document).ready(function() { 
+		var vals = []
 		var slides = []
 		$('#ordered-slides').multiSelect({
 			keepOrder : true,
@@ -62,10 +55,11 @@
 	    $("#editDescription").click(function() {
 	    	
 	    	// using data-attributes
-	    	var description = $("#description").text()  // gets value
+	    	var description = $("#description").data('value')  // gets value
 	        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
 	        $("#description").hide()
 	        $("#newDescription").val(description)
+	        $("#newDescription").data('value',description);
 	        $("#editDescription").hide()
 	        $("#submitDescription").show()
 	        $("#cancelEditDescription").show()
@@ -130,10 +124,10 @@
 	    
 	    $("#editTitle").click(function() {
 	    	// Using data attribute
-	    	var sequenceTitle = $("#title").text()  // gets value without using trim function
+	    	var sequenceTitle = $("#title").data('value')  // gets value without using trim function
 	        $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-	    	$('#title').text()
-	        $("#newTitle").val(sequenceTitle.split(": ")[1])
+	    	$('#title').text('Sequence: ')
+	        $("#newTitle").val(sequenceTitle)
 	        $("#editTitle").hide()
 	        $("#submitTitle").show()
 	        $("#cancelEditTitle").show()
@@ -187,9 +181,9 @@
 	        $("#submitTitle").hide()
 	        $("#editTitle").show()
 	        $("#cancelEditTitle").hide()
-	        var sequenceTitle = $("#title").text()  // gets value
+	        var sequenceTitle = $("#title").data('value')  // gets value
 	        $("#editSequenceTitle").remove()
-	        $("#title").text(sequenceTitle)
+	        $("#title").text("Sequence: "+sequenceTitle)
 	  
 	    });
 	   
@@ -238,7 +232,7 @@
 		</div>
 		
 		<div id="slideSpace" class="blur">
-			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
+			<form th:action="@{'/staff/module/'+${moduleId}+'/sequence/'+${sequence.id}+'/edit/slides'}" method="POST" th:object="${sequenceForm}">
 				<div class="form-group row">
 					<label for="Slides" class="col-md-2 col-form-label">Select
 						Slides: (Double click to select and drag to reorder)
@@ -249,7 +243,7 @@
 					</select>
 					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
 				</div>
-				<button class="btn primary-btn btn-sm" type="submit" value="submit">Save Changes</button>
+				<button class="btn btn-primary btn-sm" type="submit" value="submit">Save Changes</button>
 			</form>
 		</div>
 	</div>

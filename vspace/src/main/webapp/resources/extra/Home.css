@@ -143,6 +143,7 @@ i {
 
 .login-form {
     padding: 48px;
+    width: 30%;
     margin: auto;
     border-radius: 10px;
     background: #f2f2f2;
@@ -355,7 +356,7 @@ i {
 }
 
 .sideModulenav .dropdown-item {
-    padding-left: 15px;
+    padding: 15px;
     text-align: justify;
 }
 
@@ -370,6 +371,7 @@ i {
 }
 
 .text-Div {
+    position: relative;
     top: 0px;
     overflow: visible;
     text-align: justify;
