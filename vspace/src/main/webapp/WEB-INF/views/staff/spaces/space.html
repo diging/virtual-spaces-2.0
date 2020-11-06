@@ -1251,29 +1251,21 @@ $(function(){
                 </p>
             </form>
         </div>
-        <div style="padding-bottom: 20px;">
-        <option th:id="Yes" th:value=true th:selected="${space.showUnpublishedLinks}">Yes
-        	<div style="padding-bottom: 10px;">
-				<form method="POST"
-					th:action="@{'/staff/space/'+${space.id}+'/hideSpaceLinksFromPublishedSpace'}">
-					<input type="hidden" th:name="${_csrf.parameterName}"
-                    th:value="${_csrf.token}" />
-					<label><h6>Hide all space links to this space:</h6></label>
-					<select class="form-control" name="hideSpaceLinksPublishedSpaceParam"
-						style="width: 200px; display: inline;">
-						<option th:id="No" th:value=false
-							th:selected="${!space.showUnpublishedLinks}">No</option>
-						<option th:id="Yes" th:value=true
-							th:selected="${space.showUnpublishedLinks}">Yes</option>
-					</select>
-					<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
-						<input class="btn btn-primary" type="submit" value="Submit" />
-					</p>
-			       
-				</form>
-			</div>
-		</option>
-</div>
+        <div style="padding-bottom: 20px;" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">
+                 <div style="padding-bottom: 10px;">
+                    <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/hideSpaceLinksFromPublishedSpace'}">
+                      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                      <label><h6>Hide all space links to this space:</h6></label>
+                      <select class="form-control" name="hideSpaceLinksPublishedSpaceParam" style="width: 200px; display: inline;">
+                         <option th:id="No" th:value=false th:selected="${!space.hideLinksToUnpublishedSpaces}">No</option>
+                         <option th:id="Yes" th:value=true th:selected="${space.hideLinksToUnpublishedSpaces}">Yes</option>
+                      </select>
+                      <p style="display: inline; padding-left: 10px; padding-top: 100px;">
+                        <input class="btn btn-primary" type="submit" value="Submit" />
+                      </p>
+                    </form>
+                </div>
+        </div>
         
         
         
