@@ -1,5 +1,8 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
 	<script th:inline="javascript">
 		$(window).on("load", function() {
 		    var vals = [];
@@ -69,10 +72,10 @@
 		 
 		    <div class="form-group row" id="sequences" style="display:none;">
 		    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>   
-		            <select th:each="sequence: ${sequences}" multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
-		                    <option th:value='${sequence.id}' th:id="${sequence.id}">${sequence.name}</option>
+		            <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
+		                    <option th:each="sequence: ${sequences}"  th:value='${sequence.id}' th:id="${sequence.id}">[[${sequence.name}]]</option>
 		           </select>
-		    <input type="hidden" id="choices" />
+		    <input type="hidden" id="choices" name="choices"/>
 		    </div> 
 		 
 			<div class="form-group row">

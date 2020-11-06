@@ -1,0 +1,39 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+</head>
+<body>
+<div class="justify-content-left" layout:fragment="content">
+    <div style="padding-left:20px;">
+        <div style="text-align: right">
+            <a th:href="@{/staff/exhibit/config}"><span><i class="fas fa-cog"></i>
+            </span> Configure Exhibition</a>
+        </div>
+
+        <h3>Spaces</h3>
+
+        <div style="padding-bottom: 20px;">Recently created
+            spaces:</div>
+
+        <ul class="list-group list-group-flush" th:each="space: ${recentSpaces}">
+                <li class="list-group-item">
+                    <span data-feather="box"></span><a th:href="@{'/staff/space/'+${space.id}}" style="color: var(--secondary);">[[${space.name}]] </a>
+                    (Created on <span class="date">[[${space.creationDate}]]</span>
+                    by [[${space.createdBy}]])</li>
+        </ul>
+        <br/>
+
+        <h3>Modules</h3>
+
+        <div style="padding-bottom: 20px;">Recently created
+            modules:</div>
+
+        <ul class="list-group list-group-flush" th:each="module: ${recentModules}">
+                <li class="list-group-item">
+                    <span data-feather="grid"></span><a th:href="@{'/staff/module/'+${module.id}}" style="color: var(--secondary);">[[${module.name}]]</a>
+                    (Created on <span class="date">[[${module.creationDate}]]</span>
+                    by [[${module.createdBy}]])</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
