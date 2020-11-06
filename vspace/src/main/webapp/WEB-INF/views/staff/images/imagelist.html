@@ -89,14 +89,14 @@ $( document ).ready(function() {
 </script>
 <style>
 .pagination>li>a {
-    border: 1px solid #009999;
+    border: 1px solid var(--primary);
     padding: 5px;
-    color: #000;
+    color: var(--primary);
     font-size: 15px;
 }
 
 .pagination>li.active>a {
-    background: #009999;
+    background: var(--primary);
     color: #fff;
     font-size: 15px;
 }
@@ -108,8 +108,8 @@ $( document ).ready(function() {
 </style>
 </head>
 <body>
-    <div layout:fragment="content">
-        <h1>Images</h1>
+    <div layout:fragment="content" class="main-content">
+        <h2>Images</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following images.</div>
         <table class="table">
