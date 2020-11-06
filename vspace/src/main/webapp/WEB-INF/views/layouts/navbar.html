@@ -24,7 +24,7 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn primary-btn" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button>
+		  				<button class="btn outline" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
 		         	</form>
 		         	<a class="btn nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"><i class="fas fa-sign-in-alt"></i></a>
 		        </div>

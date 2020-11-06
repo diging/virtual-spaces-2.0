@@ -84,6 +84,7 @@ i {
     border: 2px solid var(--primary);
     color: var(--primary);
     border-radius: 5px;
+    background: none;
 }
 
 .outline:hover {
@@ -650,7 +651,6 @@ i {
     background: none;
 }
 
-}
 .form_input:placeholder-shown {
 	z-index: 1;
 }
