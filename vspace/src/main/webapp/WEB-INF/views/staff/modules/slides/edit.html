@@ -1,5 +1,8 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
 	<script th:inline="javascript">
 		$(window).on("load", function() {
 		    var vals = [];
@@ -50,12 +53,12 @@
 	<div layout:fragment="content" class="main-content">
 		<h2>Edit Slide: [[${slideForm.name}]]</h2>
 
-		<form th:action="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}+'/edit'}" method="POST" style="margin-top: 40px"
-			th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:object="${slideForm}" enctype="multipart/form-data">
+		<form th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" method="POST" style="margin-top: 40px"
+			th:object="${slideForm}" enctype="multipart/form-data">
 		
 			<div class="form-group row">
 				<label for="name" class="col-md-2 col-form-label">Slide Name</label>
-				<input type="text" class="form-control col-md-10" id="name" />
+				<input type="text" class="form-control col-md-10" id="name" name="name"/>
 			</div>
 		
 		     <div class="form-group row">
@@ -69,15 +72,15 @@
 		 
 		    <div class="form-group row" id="sequences" style="display:none;">
 		    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>   
-		            <select th:each="sequence: ${sequences}" multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
-		                    <option th:value='${sequence.id}' th:id="${sequence.id}">${sequence.name}</option>
+		            <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
+		                    <option th:value='${sequence.id}' th:each="sequence: ${sequences}"  th:id="${sequence.id}">[[${sequence.name}]]</option>
 		           </select>
-		    <input type="hidden" id="choices" />
+		    <input type="hidden" id="choices" name="choices"/>
 		    </div> 
 		 
 			<div class="form-group row">
 				<label for="description" class="col-md-2 col-form-label">Description</label>
-				<textarea class="form-control col-md-10" rows="5" cols="30" id="description"></textarea>
+				<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description"></textarea>
 			</div>
 			
 			<button class="btn primary-btn" type="submit" value="submit" style="margin-right: 20px">Save Slide</button>
