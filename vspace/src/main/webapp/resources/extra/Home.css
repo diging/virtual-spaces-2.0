@@ -655,4 +655,18 @@ i {
 	z-index: 1;
 }
 
+.link-modal {
+	display: none;
+	position: fixed;
+	top: 5%;
+	right: 5%;
+	left: 5%;
+	bottom: 0;
+	z-index: 9999;
+	overflow-y: scroll;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+}
+
 
