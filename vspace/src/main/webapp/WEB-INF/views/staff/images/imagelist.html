@@ -39,6 +39,10 @@ function toggleChange(form, imageId) {
         $(form)[0].reset();
     });
 }
+
+function filterByTag(){
+    console.log("FilterByTag invoked");
+}
 $( document ).ready(function() {
     $(".removeTag").click(function(e) {
     	removeTag(e);
@@ -85,6 +89,13 @@ $( document ).ready(function() {
         }
     }
     });
+   
+   $("#filterTag").on("change", function(e){
+   	e.preventDefault();
+       // ------------- editting text content blocks ------------
+       console.log("In FilterTag");
+       var formData = new FormData();
+   }); 
 });
 </script>
 <style>
@@ -123,7 +134,14 @@ $( document ).ready(function() {
                         href="#">Created By</a></th>
                     <th scope="col" sort-prop="creationDate"><a
                         href="#">Created Date</a></th>
-                    <th scope="col" sort-prop="tag">Tag</th>
+                    <th scope="col" sort-prop="tag">Tag<select id="filterTag" name="tagFilter"
+                                th:onChange="filterByTag(this.form)"
+                                class="form-control form-control-sm">
+                    <option>Select</option>
+                    <option th:each="catTag:${imageCategories}"
+                                    th:value="${catTag}">[[${@environment.getProperty('image_category_'
+                                    + catTag)}]]</option>
+                </select></th>
                 </tr>
             </thead>
             <tbody>
