@@ -75,46 +75,12 @@ a, a:hover, a:focus {
 
 .navbar-nav>li>a {
     padding-top: 0px;
-    padding-bottom: 15px;
 }
 
 .navbar-nav>li button {
     padding-top: 0px;
     padding-bottom: 5px;
     line-height: 18px;
-}
-
-.sidenav {
-    width: 0;
-    position: absolute;
-    z-index: 1;
-    top: -4px;
-    left: 0px;
-    overflow-x: hidden;
-    background: #fff;
-    transition: 0.5s;
-    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
-    padding-top: 26px;
-    word-break: break-all;
-}
-
-.sidenav a {
-    white-space: pre-wrap;
-}
-
-.sidenav a:hover {
-    color: #818181;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 8px;
-    right: 3px;
-    margin-left: 50px;
-}
-
-.sidenav .dropdown-item {
-    padding: 0px;
 }
 
 .barPosition {
@@ -234,7 +200,8 @@ a, a:hover, a:focus {
     width: 120px;
     color: white;
     text-align: center;
-    font-size: 12px padding: 3px 0;
+    font-size: 12px;
+    padding: 3px 0;
     border-radius: 6px;
     position: absolute;
     z-index: 1;
