@@ -55,16 +55,12 @@
 		        </ul>
 		        <div class="footer">
 		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
-		        		Virtual Spaces 2.0</a> © DigInG 2020
+		        		Virtual Spaces 2.0</a> ï¿½ DigInG 2020
 		        </div>
 			</div>  
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
-		      <form th:action="@{'/search'}" method="GET" class="form" style="position: relative">
-	             <button class="btn form_icon" type="submit" id="submit"><i class="fa fa-search" style="color: var(--dark-grey)"></i></button>
-	             <input class="form-control form_input" type="search" placeholder="Search" id="search" th:name="search" style="background: var(--base-grey)">
-	          </form>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 15px;">
@@ -77,7 +73,7 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn primary-btn" type="submit" title="Logout"><i class="fas fa-sign-out-alt" style="color:white"></i>&nbsp;Logout</button>
+		  				<button class="btn nav-link" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
 		         	</form>
 		        </div>
 		      </div>

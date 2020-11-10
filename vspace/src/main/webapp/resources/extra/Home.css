@@ -235,8 +235,7 @@ i {
     background: #f2f2f2;	
 }	
 
-.form-control {	
-	color: var(--dark-grey);	
+.form-control {
 	border: none;	
 }	
 

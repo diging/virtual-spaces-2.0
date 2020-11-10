@@ -42,24 +42,24 @@ function checkSlideInSequence(slideId) {
     });
 }
 
-function loadSlidesInSequences() {
-    $('.sequence').click(function(e) {
-		var sequenceId = this.id;
+function loadSlidesInSequences(sequenceId) {
+		console.log(sequenceId);
 		var moduleId=[[${module.id}]];
-		$('#slidesInSeq').empty();
+		$('.slidesInSeq').empty();
 		$.ajax({
 			type: "GET",
 			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, slide) {
-					$('#slidesInSeq').append(
+				    console.log(slide.id);
+				    console.log(slide.name);
+					$('.slidesInSeq').append(
 							'<a class="dropdown-item" href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+slide.name+'</a>'
 						);
 					});
 				}
 		});
-	});
 }
 
 $(document).ready(function($) {
@@ -80,7 +80,8 @@ $(document).ready(function($) {
 	
 	
 	$(".sequence").on("click", function(e) {
-	    loadSlidesInSequences();
+	    var sequenceId = this.id;
+	    loadSlidesInSequences(sequenceId);
 	});
 	
 	$("#deleteSlideFromSequence").on("click", function() {
@@ -149,13 +150,13 @@ $(document).ready(function($) {
 				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
 				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;">[[${sequence.name}]]</a>
 				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
-				  	aria-haspopup="true" aria-expanded="false" th:onclick="loadSlidesInSequences()">
+				  	aria-haspopup="true" aria-expanded="false">
 				    	<i class="fa fa-folder-open"></i>
 				  </button>
-				  <div id="slidesInSeq" class="dropdown-menu">
-				    
-				  </div>
+                  <div class="dropdown-menu slidesInSeq">
+                  </div>
 				</div>
+                
 			</div>
 			
     	</div>
