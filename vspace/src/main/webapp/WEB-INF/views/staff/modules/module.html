@@ -89,6 +89,10 @@ $(document).ready(function($) {
 		var slideId = $("#deleteSlideAlert").data('value'); // getter
 		deleteSlide(slideId);
 	});
+	
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	});
 				
 });
 
@@ -101,8 +105,8 @@ $(document).ready(function($) {
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
-				<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
-							title="Created on <span class='date'>[[${module.creationDate}]]</span> by [[${module.createdBy}]]"></i>
+				<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
+				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
 				</h2>
 				<p>[[${module.description}]]</p>
     		</div>
@@ -148,7 +152,8 @@ $(document).ready(function($) {
 			
 			<div class="grid">
 				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
-				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;">[[${sequence.name}]]</a>
+                <div>
+				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;"><span>[[${sequence.name}]]</span></a></div>
 				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
 				  	aria-haspopup="true" aria-expanded="false">
 				    	<i class="fa fa-folder-open"></i>

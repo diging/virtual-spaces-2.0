@@ -2,11 +2,15 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:src="@{/resources/extra/space.js}"></script>
-<script th:inline="javascript">
+<script>
     $(document).ready(function() {
         onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
         $("#list").hide();
         $("#grid-btn").hide();
+        
+        $(function () {
+	  		  $('[data-toggle="tooltip"]').tooltip()
+	  	});
     });
     
     function list() {
@@ -67,17 +71,19 @@
         		<i class="fas fa-list-ul black"></i></button>
         	<button class="btn" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
         		<i class="fas fa-th"></i></button>
-        	<button class="btn" style="background: white"><i class="fas fa-filter black"></i></button>
-        </div>  
+            <!-- Added for future development -->
+        	<!-- <button class="btn" style="background: white"><i class="fas fa-filter black"></i></button> -->
+        </div>
         
         <div class="grid" id="grid">
 			<div th:each="space: ${spaces}" style="width: 11.75rem;">
 				<div class="status">
 					<i class="fa fa-play-circle" th:if="${space.id == startSpace.id}" aria-hidden="true"></i>
-					<i class="fas fa-exclamation-triangle" th:if="${space.spaceStatus=='UNPUBLISHED'}" aria-hidden="true"></i>
+					<i class="fas fa-exclamation-triangle" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></i>
+                    <i class="fas fa-eye-slash noIncomingLinks" th:if="${!space.hasIncomingLinks()}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has no incoming links"></i>
 				</div>		
 				<div class="spaceImage">
-					<img class="card-img-top" th:src="@{'/api/image/'+${space.image.id}}" alt="Space image">
+					<img class="card-img-top" th:src="@{'/api/image/'+${space?.image?.id}}" alt="Space image">
 				</div>
 				<div class="btn-group dropdown">
 					<a th:href="@{'/staff/space/'+${space.id}}" class="btn btn-light skew" style="width: 10rem;">
@@ -110,7 +116,7 @@
 	                    th:if="${space.id != startSpace.id}"></span>
 	                    &emsp;[[${space.name}]]
 	            	</a> (Created on <span class="date">[[${space.creationDate}]]</span>
-	                by [[${space.createdBy}]]}
+	                by [[${space.createdBy}]])
 	                <div class="float-right">
 	                    <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
 	                        th:if="${space.spaceStatus=='UNPUBLISHED'}"
