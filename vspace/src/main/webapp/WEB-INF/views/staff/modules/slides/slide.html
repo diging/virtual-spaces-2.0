@@ -2,7 +2,8 @@
 <head>
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" 
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <style type="text/css">
@@ -158,32 +159,28 @@ function uploadImage() {
 }
 
 function embedVideo() {
-	var url = $("videoLink").data("value");
-	console.log(url);
-	var iFrameString = "<iframe width='560' height='315' src='"+url+"https://www.youtube.com/embed/u_riHHyAIvk' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
-	alert(iFrameString);
-    var file = $('#videoFile')[0].files[0];
-	var fileName = file.name;
-    var reader  = new FileReader();
+	var url = $("#videoLink").val();
+	var vidFile = $("#videoFile")[0].files[0];
+
+	console.log(vidFile);
+
+	var iFrameString = "<iframe width='560' height='315' src='"+url+"' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
     var formData = new FormData();
-    formData.append('file', file);
-    formData.append('content', file.name);
-    
-    
-    
-    var ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-    reader.onload = function (theFile) {        	
-    	var video = new Video();
-        video.src = theFile.target.result;
-        video.onload = function() {
-        /* 	videoblock = createVideoBlock(reader, this.width);  
-        	$('#slideSpace').append(videoblock); 
-            $(videoblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick); */
-        };          
+    if(url) {
+    	alert("lmao you thought");
+    	formData.append('iFrameTag', iFrameString);
     }
-    
-    //formData.append('contentOrder', contentCount);
-    reader.readAsDataURL(file);
+	if(vidFile != null) {
+		alert("yep");
+		console.log(vidFile);
+		formData.append('videoFile', vidFile);
+		
+	}
+    var ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+    alert(ajaxUrl);
+    formData.append('contentOrder', contentCount);
+    //reader.readAsDataURL(file);
+    ++contentCount;
     $.ajax({
         enctype: 'multipart/form-data',
         // ------------- creating image content blocks ------------
@@ -195,29 +192,12 @@ function embedVideo() {
         data: formData,
         
         success: function(data) {
-            $(".open").removeClass("open");
-           	var vid = videoblock.find('iframe');
-           	if(data != ''){
-           		
-           	}
-           	else{
-           		
-           	}
+        	
         },
         error: function(data) {
-        	if (imgID == '') {
-        		$("#current").remove();
-        	}
-        	else {
-        		$("#current").replaceWith(oldImageBlock);
-        	}
-        	if (data.status == 403) {
-        		$("#loginAlert").show();
-        	}
+        	console.log(data);
         }
     });
-    // Reset the image file name 
-   	$('#file').val('');
 }
 
 $(document).ready(function() {
@@ -349,12 +329,19 @@ $(document).ready(function() {
             uploadImage();
     });
     
+    $("#saveVideo").click(function(e) {
+    	e.preventDefault();
+
+    	alert("Hello");
+    	embedVideo();
+    })
+    
     $("#embedVideo").click(function(e) {
     	e.preventDefault();
     	alert("data loaded");
         $("#addVideoAlert").hide();
         alert("he he");
-        embedVideo(e);
+        //embedVideo(e);
     });
     
     $("#addChoice").click(function() {
@@ -633,13 +620,11 @@ $(document).ready(function() {
     });
     
     $("#urlLink").on("click", function(e) {
-    	$("#uploadVideo").html("Embed Video");
-    	$("#uploadVideo").prop("id", "embedVideo")
-    });
+    	$("#saveVideo").html("Embed Video");
+    }); 
     
     $("#uploadLink").on("click", function(e) {
-    	$("#embedVideo").html("Upload Video");
-    	$("#embedVideo").prop("id", "uploadVideo")
+    	$("#saveVideo").html("Upload Video");
     });    
     
     function updateTextBox(blockId, text) {
@@ -971,7 +956,7 @@ $(window).on('load', function () {
 						</div>
 						<div class="modal-footer">
 							<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
-							<button type="submit" id="uploadImage" class="btn btn-primary"
+							<button type="submit" id="" class="btn btn-primary"
 								data-value="">Upload Image</button>
 						</div>
 					</form>
@@ -1020,16 +1005,13 @@ $(window).on('load', function () {
                         <div class="modal-footer">
                             <button id="cancelVideoBtn" type="reset"
                                 class="btn light">Cancel</button>
-                            <button type="submit" id="uploadVideo"
-                                class="btn btn-primary" data-value="">Upload
+                            <button type="submit" id="saveVideo"
+                                class="btn btn-primary" >Upload
                                 Video</button>
                         </div>
                     </form>
                 </div>
             </div>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<div id="loginAlert" class="modal" tabindex="-1" role="dialog"

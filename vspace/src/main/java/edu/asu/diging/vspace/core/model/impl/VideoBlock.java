@@ -14,6 +14,15 @@ public class VideoBlock extends ContentBlock implements IVideoBlock {
     @OneToOne(targetEntity = VSVideo.class)
     private IVSVideo video;
 
+    
+    public VideoBlock(String url) {
+        this.url = url;
+    }
+    
+    // Default constructor.
+    public VideoBlock() {
+    }
+
     public String getUrl() {
         return url;
     }

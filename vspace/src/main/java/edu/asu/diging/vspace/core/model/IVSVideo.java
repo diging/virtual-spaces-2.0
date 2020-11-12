@@ -10,6 +10,10 @@ public interface IVSVideo extends IVSpaceElement {
 
     String getFileType();
 
+    String getParentPath();
+
+    void setParentPath(String parentPath);
+    
     void setWidth(int width);
 
     int getWidth();

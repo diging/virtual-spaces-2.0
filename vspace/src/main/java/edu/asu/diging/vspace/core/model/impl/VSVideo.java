@@ -20,6 +20,8 @@ public class VSVideo extends VSpaceElement implements IVSVideo{
 
     @Lob
     private String filename;
+    @Lob
+    private String parentPath;
 
     private String fileType;
 
@@ -51,6 +53,15 @@ public class VSVideo extends VSpaceElement implements IVSVideo{
      * 
      * @see edu.asu.diging.vspace.core.model.impl.IImage#getFilename()
      */
+    
+    public String getParentPath() {
+        return parentPath;
+    }
+
+    public void setParentPath(String parentPath) {
+        this.parentPath = parentPath;
+    }
+    
     @Override
     public String getFilename() {
         return filename;

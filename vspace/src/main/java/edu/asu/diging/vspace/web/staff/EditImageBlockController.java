@@ -31,7 +31,7 @@ public class EditImageBlockController {
             @PathVariable("imageBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("file") MultipartFile file, @RequestParam("contentOrder") Integer contentOrder,
             Principal principal, RedirectAttributes attributes) throws IOException {
-
+        System.out.println("Edit image block");
         IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
         byte[] image = null;
         String filename = null;

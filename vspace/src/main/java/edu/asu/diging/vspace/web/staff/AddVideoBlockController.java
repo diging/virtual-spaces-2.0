@@ -30,30 +30,32 @@ public class AddVideoBlockController {
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video", method = RequestMethod.POST)
     public ResponseEntity<String> addVideoBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
-            @RequestParam("content") String fileName, Principal principal, RedirectAttributes attributes)
+            @PathVariable("moduleId") String moduleId, @RequestParam(required = false) MultipartFile videoFile, 
+            @RequestParam(required = false) String iFrameTag, @RequestParam Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
-
-        byte[] video = null;
-        //String filename = null;
-        if (file != null) {
-            video = file.getBytes();
-            //filename = file.getOriginalFilename();
+        System.out.println(videoFile);
+        
+        byte[] video = null; 
+        String fileName = null;
+        if (videoFile != null) {
+            video = videoFile.getBytes();
+            fileName = videoFile.getOriginalFilename();
         }
-        System.out.println("In the video block");
-        //String videoId;
-//        try {
-//           // CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, video, fileName);
-//           // IVSpaceElement videoBlock = imageBlockReturnValue.getElement();
-//           // videoId = videoBlock.getId();
-//        } catch (ImageCouldNotBeStoredException e) {
-//          //  ObjectMapper mapper = new ObjectMapper();
-//            ObjectNode node = mapper.createObjectNode();
-//            node.put("errorMessage", "Video Content block cannot be stored.");
-//            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+        String videoId;
+        try {
+            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video, fileName, iFrameTag, contentOrder); 
+            IVSpaceElement videoBlock = videoBlockValue.getElement();
+            videoId = videoBlock.getId(); 
+        }
+        
+        catch (ImageCouldNotBeStoredException e) { 
+            ObjectMapper mapper = new
+            ObjectMapper(); ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "Video Content block cannot be stored."); 
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR); 
+        }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(videoId, HttpStatus.OK);
     }
     
     

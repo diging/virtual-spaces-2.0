@@ -10,4 +10,7 @@ public interface IVideoBlock extends IContentBlock {
 
     String getId();
     
+    void setUrl(String url);
+
+    String getUrl();
 }

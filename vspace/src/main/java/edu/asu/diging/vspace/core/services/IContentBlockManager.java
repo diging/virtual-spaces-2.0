@@ -17,6 +17,9 @@ public interface IContentBlockManager {
 
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
+    
+    public CreationReturnValue createVideoBlock(String slideId, byte[] video, String fileName, String url, Integer contentOrder)
+            throws ImageCouldNotBeStoredException;
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 

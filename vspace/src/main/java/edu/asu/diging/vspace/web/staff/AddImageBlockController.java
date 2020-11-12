@@ -33,7 +33,6 @@ public class AddImageBlockController {
             @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
             @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
-
         byte[] image = null;
         String filename = null;
         if (file != null) {
@@ -52,7 +51,6 @@ public class AddImageBlockController {
             node.put("errorMessage", "Image Content block cannot be stored.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 }
