@@ -30,9 +30,8 @@ public interface ISpace extends IVSpaceElement {
 
     void setShowUnpublishedLinks(Boolean showUnpublishedLinks);
     
-    // VSPC-89 Ashmi changes
     boolean isHideLinksToUnpublishedSpaces();
     
-    void setHideLinksToUnpublishedSpaces(Boolean hideLinksToUnpublishedSpaces);
+    void setHideLinksToUnpublishedSpaces(Boolean hideAllLinksToGivenSpace);
 
 }
