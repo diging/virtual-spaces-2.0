@@ -132,9 +132,9 @@ $(document).ready(function($) {
     		<div class="grid" id="grid">
 				<div th:each="slide: ${slides}" class="btn-group dropdown">
 					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
-						<span class="card-head">[[${slide.name}]]</span>
+						<span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
 						<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>	
-						<span class="card-text">[[${slide.description}]]</span>
+						<span class="card-text" style="white-space: pre-wrap;">[[${slide.description}]]</span>
 					</a>
 					<button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
 				  		th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
@@ -152,8 +152,7 @@ $(document).ready(function($) {
 			
 			<div class="grid">
 				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
-                <div>
-				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;"><span>[[${sequence.name}]]</span></a></div>
+				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;"><span  style="white-space: pre-wrap;">[[${sequence.name}]]</span></a>
 				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
 				  	aria-haspopup="true" aria-expanded="false">
 				    	<i class="fa fa-folder-open"></i>

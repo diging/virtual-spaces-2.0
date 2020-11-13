@@ -15,7 +15,7 @@
 		<div class="tab">
 			<h4>Spaces</h4>	
 			<div class="grid">
-				<div th:each="space,iterStat: ${recentSpaces}" th:if="${iterStat.index}<2" style="width: 12rem;">
+				<div th:each="space,iterStat: ${recentSpaces}" th:if="${iterStat.index}<3" style="width: 12rem;">
 					<div class="spaceImage">
 						<img class="card-img-top" th:src="@{'/api/image/'+${space.image.id}}" alt="Space image">
 					</div>
@@ -45,7 +45,7 @@
 		<div class="tab">
 			<h4>Modules</h4>
 			<div class="grid">
-				<div th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<2" >
+				<div th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<3" >
 					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 12rem;">
 						<span class="card-title">[[${module.name}]]</span>
 						<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" style="float: right" 

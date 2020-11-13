@@ -110,6 +110,7 @@ i {
 	border: 1.5px solid var(--med-grey);
     border-radius: 5px;
     display: flex;
+    width: 12rem; 
     max-width: 18em;
 }
 
@@ -304,7 +305,7 @@ i {
 
 .grid {
 	display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
     grid-gap: 15px;
     margin-top: 25px;
 }
