@@ -235,7 +235,7 @@ i {
 
 .form-control {	
 	color: var(--dark-grey);	
-	border: none;	
+	border: none;
 }	
 
 .form_icon {	
@@ -658,15 +658,22 @@ i {
 .link-modal {
 	display: none;
 	position: fixed;
-	top: 5%;
-	right: 5%;
-	left: 5%;
+	top: 2.5%;
+	right: 2.5%;
+	left: 2.5%;
 	bottom: 0;
 	z-index: 9999;
 	overflow-y: scroll;
 	background: white;
-	padding: 20px;
+	padding: 25px;
 	border-radius: 10px;
+}
+
+.divider {
+    height: 100%;
+    width: 1px;
+    background: var(--med-grey);
+    margin: 0px 20px;
 }
 
 
