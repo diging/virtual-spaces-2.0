@@ -31,10 +31,9 @@
     
     [# th:each="link,loop : ${spaceLinks}"]
     [# th:if="${link != null}" ]
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		console.log(posX);
-		console.log(posY);
+		var posX = $(".bgImage").position().left;
+		var posY = $(".bgImage").position().top;
+		
 		var link;
 		[# th:if="${#strings.equals(link.type,'ALERT')}"]
 			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
@@ -80,20 +79,12 @@
 			unpublishedSpaceElement.css('font-size', "12px");
 			[/]
 		//append to form element that you want .
-		$("#space").append(inputRotation);
-		$("#space").append(inputLabel);
-		$("#space").append(inputType);
-		$("#space").append(inputLinkedSpace);
-		$("#space").append(link);
-		$("#space").append(unpublishedSpaceElement);
-		
-		$("#spaceMain").append(inputRotation);
-		$("#spaceMain").append(inputLabel);
-		$("#spaceMain").append(inputType);
-		$("#spaceMain").append(inputLinkedSpace);
-		$("#spaceMain").append(link);
-		$("#spaceMain").append(unpublishedSpaceElement);
-		
+		$(".space").append(inputRotation);
+		$(".space").append(inputLabel);
+		$(".space").append(inputType);
+		$(".space").append(inputLinkedSpace);
+		$(".space").append(link);
+		$(".space").append(unpublishedSpaceElement);
 		
 		
 		$(".slabel-[(${link.link.id})]").css({
@@ -113,11 +104,89 @@
 		});
 	[/]
 	[/]
+	
+		[# th:each="link,loop : ${spaceLinks}"]
+	    [# th:if="${link != null}" ]
+			var posX = $("#main-bgImage").position().left;
+			var posY = $("#main-bgImage").position().top;
+			
+			var link;
+			[# th:if="${#strings.equals(link.type,'ALERT')}"]
+				link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="main-'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
+			[/]
+			[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+			var imageURL = [[@{|/api/image/${link.image.id}|}]];
+	           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="main-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+			[/]
+			[# th:if="${#strings.equals(link.type,'ARROW')}"]
+			console.log("creating data link id",[[${link.link.id}]]);
+				link = $('<span data-link-id="main-'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="main-'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+			[/]
+			link.css('position', 'absolute');
+			link.css('left', [[${link.positionX}]] + posX);
+			link.css('top', [[${link.positionY}]] + posY);
+			link.css('transform', 'rotate([(${link.rotation})]deg)');
+			link.find("span").css('fill', 'red');
+			link.css('color', 'rgba(128,128,128,1)');
+			link.css('font-size', "12px");
+			var inputRotation = document.createElement("input");
+			inputRotation.setAttribute("type", "hidden");
+			inputRotation.setAttribute("id", "spaceLinkRotation-[(${link.link.id})]");
+			inputRotation.setAttribute("value", "[(${link.rotation})]");
+			var inputLabel = document.createElement("input");
+			inputLabel.setAttribute("type", "hidden");
+			inputLabel.setAttribute("id", "spaceLinkLabel-[(${link.link.id})]");
+			inputLabel.setAttribute("value", "[(${link.link.name})]");
+			var inputType = document.createElement("input");
+			inputType.setAttribute("type", "hidden");
+			inputType.setAttribute("id", "spaceLinkType-[(${link.link.id})]");
+			inputType.setAttribute("value", "[(${link.type})]");
+			var inputLinkedSpace = document.createElement("input");
+			inputLinkedSpace.setAttribute("type", "hidden");
+			inputLinkedSpace.setAttribute("id", "spaceLinkTarget-[(${link.link.id})]");
+			inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
+			var unpublishedSpaceElement;
+			    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
+				unpublishedSpaceElement=$('<i data-link-id="main-unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
+				unpublishedSpaceElement.css('position', 'absolute');
+				unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
+				unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
+				unpublishedSpaceElement.css('transform', 'rotate([(${link.rotation})]deg)');
+				unpublishedSpaceElement.css('font-size', "12px");
+				[/]
+			//append to form element that you want .
+			
+			$("#main-space").append(inputRotation);
+			$("#main-space").append(inputLabel);
+			$("#main-space").append(inputType);
+			$("#main-space").append(inputLinkedSpace);
+			$("#main-space").append(link);
+			$("#main-space").append(unpublishedSpaceElement);
+			
+			
+			$(".slabel-[(${link.link.id})]").css({
+				'transform': 'rotate(0deg)',
+				'left': [[${link.positionX}]] + posX - 10,
+				'top': [[${link.positionY}]] + posY + 35,
+				'color': 'red'
+			});		
+			
+			$('[data-link-id="main-[(${link.link.id})]"]').css('cursor', 'pointer');
+			$('[data-link-id="main-[(${link.link.id})]"]').click(function(e) {
+			    var rotation = document.getElementById("spaceLinkRotation-[(${link.link.id})]").value;
+			    var label = document.getElementById("spaceLinkLabel-[(${link.link.id})]").value;
+			    var type = document.getElementById("spaceLinkType-[(${link.link.id})]").value;
+			    var targetSpace = document.getElementById("spaceLinkTarget-[(${link.link.id})]").value;
+				makeSpaceLinksEditable(label, [[${link.link.id}]], rotation ,targetSpace,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
+			});
+		[/]
+		[/]
+	
 	    [# th:each="link,loop : ${moduleLinks}"]
 	    [# th:if="${link != null}" ]
 			var link;
-			var posX = $("#bgImage").position().left;
-			var posY = $("#bgImage").position().top;
+			var posX = $(".bgImage").position().left;
+			var posY = $(".bgImage").position().top;
 			[# th:if="${#strings.equals(link.type,'ALERT')}"]
 				link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 			[/]
@@ -153,11 +222,11 @@
 			inputLinkedSpace.setAttribute("id", "moduleLinkTarget-[(${link.link.id})]");
 			inputLinkedSpace.setAttribute("value", "[(${link.link.module.id})]");
 			
-			$("#space").append(inputRotation);
-			$("#space").append(inputLabel);
-			$("#space").append(inputType);
-			$("#space").append(inputLinkedSpace);
-			$("#space").append(link);
+			$(".space").append(inputRotation);
+			$(".space").append(inputLabel);
+			$(".space").append(inputType);
+			$(".space").append(inputLinkedSpace);
+			$(".space").append(link);
 			
 			$(".mlabel-[(${link.link.id})]").css({
 				'transform': 'rotate(0deg)',
@@ -179,8 +248,8 @@
 		
 		[# th:each="link,loop : ${externalLinks}"]
 		[# th:if="${link != null}" ]
-	        var posX = $("#bgImage").position().left;
-	        var posY = $("#bgImage").position().top;
+	        var posX = $(".bgImage").position().left;
+	        var posY = $(".bgImage").position().top;
 	        var link ;
 	        [# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
 	        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
@@ -208,10 +277,10 @@
 			inputExternalLinkURL.setAttribute("id", "externalLinkTarget-[(${link.externalLink.id})]");
 			inputExternalLinkURL.setAttribute("value", "[(${link.externalLink.externalLink})]");
 			
-			$("#space").append(inputLabel);
-			$("#space").append(inputType);
-			$("#space").append(inputExternalLinkURL);
-	        $("#space").append(link);
+			$(".space").append(inputLabel);
+			$(".space").append(inputType);
+			$(".space").append(inputExternalLinkURL);
+	        $(".space").append(link);
 	        
 	        $(".elabel-[(${link.externalLink.id})]").css({
 	            'transform': 'rotate(0deg)',
@@ -240,8 +309,8 @@
 			$("#addSpaceLinkButton").click(function(e) {
 				$("#createExternalLinkAlert").hide();
 				$("#changeBgImgAlert").hide();
-				$("#bgImage").off("click");
-				$("#bgImage").on("click", function(e){
+				$(".bgImage").off("click");
+				$(".bgImage").on("click", function(e){
 					e.preventDefault();
 					$("#external-arrow").remove();
 					$("#space_label").remove();
@@ -260,8 +329,8 @@
 			
 			 $("#addModuleLinkButton").click(function(e) {
 				$("#createModuleLinkAlert").hide();
-				$("#bgImage").off("click");
-				$("#bgImage").on("click", function(e){
+				$(".bgImage").off("click");
+				$(".bgImage").on("click", function(e){
 					e.preventDefault();
 					$("#external-arrow").remove();
 					$("#module_label").remove();
@@ -281,8 +350,8 @@
 			$("#addExternalLinkButton").click(function(e) {
 				$("#createSpaceLinkAlert").hide();
 				$("#changeBgImgAlert").hide();
-				$("#bgImage").off("click");
-				$("#bgImage").on("click", function(e){
+				$(".bgImage").off("click");
+				$(".bgImage").on("click", function(e){
 				    e.preventDefault();
 				    $("#link").remove();
 				   	$("#external-arrow").remove();
@@ -309,7 +378,6 @@
 			
 			// ----------- submit buttons (e.g. to create space links) ------------------
 			$("#createSpaceLinkBtn").click(function(e) {
-				console.log("After clicking spacde button");
 				e.preventDefault();
 				$('#errorAlert').hide();
 				var label = $("#spaceLinkLabel").val();
@@ -340,9 +408,7 @@
 				var spaceName = $("#linkedSpace option:selected").text();
 				var spaceId = $("#linkedSpace option:selected").val(); 
 				var formData = new FormData(form[0]);
-				console.log(formData);
 				var spaceLinkInfo = createSpaceLinkInfo();
-		        console.log(spaceLinkInfo);
 			    $.ajax({
 					type: "POST",
 					url: "[(@{'/staff/space/'+${space.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -354,7 +420,7 @@
 			        success: function(data) {
 			        	var linkData = JSON.parse(data);
 			        	console.log(linkData);
-			        	$("#bgImage").off("click");
+			        	$(".bgImage").off("click");
 			        	spaceLinkInfo["id"] = linkData["id"];
 			        	spaceLinkInfo["displayId"]=linkData["displayId"];
 			        	spaceLinkInfo["x"]=linkData["x"];
@@ -419,7 +485,7 @@
 			        data: formData, 
 			        success: function(data) {
 			        	var linkData = JSON.parse(data);
-			        	$("#bgImage").off("click");
+			        	$(".bgImage").off("click");
 			        	moduleLinkInfo["id"] = linkData["id"];
 			        	moduleLinkInfo["displayId"]=linkData["displayId"];
 			        	moduleLinkInfo["x"]=linkData["x"];
@@ -457,7 +523,7 @@
 			        data: formData,
 			        success: function(data){
 			            var linkData = JSON.parse(data);
-			            $("#bgImage").off("click");
+			            $(".bgImage").off("click");
 			            moduleLinkInfo["id"] = linkData["id"];
 			            moduleLinkInfo["displayId"]=linkData["displayId"];
 			            moduleLinkInfo["x"]=linkData["x"];
@@ -497,7 +563,7 @@
 			        data: formData,
 			        success: function(data) {
 			            var linkData = JSON.parse(data);
-			            $("#bgImage").off("click");
+			            $(".bgImage").off("click");
 			            spaceLinkInfo["id"] = linkData["id"];
 			            spaceLinkInfo["displayId"]=linkData["displayId"];
 			            spaceLinkInfo["x"]=linkData["x"];
@@ -537,7 +603,7 @@
 			        data: formData,
 			        success: function(data) {
 			            var linkData = JSON.parse(data);
-			            $("#bgImage").off("click");
+			            $(".bgImage").off("click");
 			            externalLinkInfo["id"] = linkData["id"];
 			            externalLinkInfo["displayId"]=linkData["displayId"];
 			            externalLinkInfo["x"]=linkData["x"];
@@ -593,7 +659,7 @@
 			        data: formData, 
 			        success: function(data) {
 			        	var linkData = JSON.parse(data);
-			        	$("#bgImage").off("click");
+			        	$(".bgImage").off("click");
 			        	externalLinkInfo["id"] = linkData["id"];
 			        	externalLinkInfo["displayId"]=linkData["displayId"];
 			        	externalLinkInfo["x"]=linkData["x"];
@@ -749,8 +815,8 @@
 			function showSpaceLink(spaceLink, show) {
 				$("#space_label").remove();
 				$("#link").remove();
-				var posX = $("#bgImage").position().left;
-				var posY = $("#bgImage").position().top;
+				var posX = $(".bgImage").position().left;
+				var posY = $(".bgImage").position().top;
 				var space_label = $("<p id='space_label' class='tooltiptext'></p>");
 				space_label.text(spaceLink["spaceLinkLabel"]);
 				
@@ -806,8 +872,8 @@
 		            });
 				}
 
-				$("#space").append(link);
-				$("#space").append(unpublishedSpaceElement);
+				$(".space").append(link);
+				$(".space").append(unpublishedSpaceElement);
 				$("#link").append(space_label);
 
 				feather.replace();
@@ -816,8 +882,8 @@
 			function showModuleLink(moduleLink, show) {
 				$("#module_label").remove();
 				$("#link").remove();
-				var posX = $("#bgImage").position().left;
-				var posY = $("#bgImage").position().top;
+				var posX = $(".bgImage").position().left;
+				var posY = $(".bgImage").position().top;
 				var module_label = $("<p id='module_label' class='tooltiptext'></p>");
 				module_label.text(moduleLink["moduleLinkLabel"]);
 				
@@ -861,7 +927,7 @@
 					});
 				}
 
-				$("#space").append(link);
+				$(".space").append(link);
 				$("#link").append(module_label);
 
 				feather.replace();
@@ -890,7 +956,7 @@
 				        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
 				        unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
 				        unpublishedSpaceElement.css('font-size', "12px");
-				        $("#space").append(unpublishedSpaceElement);
+				        $(".space").append(unpublishedSpaceElement);
 				    }else{
 				        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
 				    }    
@@ -911,8 +977,8 @@
 			}
 			
 			function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel){
-			    var posX = $("#bgImage").position().left;
-				var posY = $("#bgImage").position().top;
+			    var posX = $(".bgImage").position().left;
+				var posY = $(".bgImage").position().top;
 			    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
 			    $(selectedLinkClass).css({ 'position': 'absolute'});
 			    $(selectedLinkClass).css({ 'left': x + posX});
@@ -935,8 +1001,8 @@
 			function showExternalLinks(externalLink) {
 				$("#ext_label").remove();
 				$("#link").remove();
-				var posX = $("#bgImage").position().left;
-				var posY = $("#bgImage").position().top;
+				var posX = $(".bgImage").position().left;
+				var posY = $(".bgImage").position().top;
 				var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
 				ext_label.text(externalLink["externalLinkLabel"]);
 				
@@ -977,7 +1043,7 @@
 		            });
 				}
 
-				$("#space").append(link);
+				$(".space").append(link);
 				$("#link").append(ext_label);
 				$("#external-link").remove();
 				
@@ -1129,7 +1195,7 @@
 		        $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
 		        $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "#c1bb88");
 		        
-		        $("#bgImage").on("click", function(e){
+		        $(".bgImage").on("click", function(e){
 					e.preventDefault();
 					var posX = $(this).position().left;
 					var posY = $(this).position().top;    
@@ -1161,7 +1227,7 @@
 				$('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
 				$('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
 				
-				$("#bgImage").on("click", function(e){
+				$(".bgImage").on("click", function(e){
 					e.preventDefault();
 					var posX = $(this).position().left;
 					var posY = $(this).position().top;    
@@ -1192,7 +1258,7 @@
 		        $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
 		        $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
 		        
-		        $("#bgImage").on("click", function(e){
+		        $(".bgImage").on("click", function(e){
 					e.preventDefault();
 					var posX = $(this).position().left;
 					var posY = $(this).position().top;    
@@ -1307,9 +1373,9 @@
             &nbsp;
         </div>
 		
-		<div id="createSpaceLinkAlert" class="link-modal flex-spacing">
-			<div id="space" th:if="${space.image != null}">
-	            <img id="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+		<div id="createSpaceLinkAlert" class="link-modal flex-spacing">			
+			<div class="space" th:if="${space.image != null}">
+	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 			<form id="createSpaceLinkForm">
@@ -1389,8 +1455,8 @@
 		</div>
         
 		<div id="createModuleLinkAlert" class="link-modal flex-spacing">
-			<div id="space" th:if="${space.image != null}">
-	            <img id="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+			<div class="space" th:if="${space.image != null}">
+	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 	        <form id="createModuleLinkForm">
@@ -1470,8 +1536,8 @@
         </form>
 		
 		<div id="createExternalLinkAlert" class="link-modal flex-spacing">
-			<div id="space" th:if="${space.image != null}">
-	            <img id="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+			<div class="space" th:if="${space.image != null}">
+	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 	        <form id="createExternalLinkForm">
@@ -1539,8 +1605,8 @@
 		</div>
 		
 		<div id="editSpaceLinkInfo" class="link-modal flex-spacing">
-			<div id="space" th:if="${space.image != null}">
-	            <img id="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+			<div class="space" th:if="${space.image != null}">
+	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 	        <form id="editSpaceLinkForm">
@@ -1851,8 +1917,8 @@
             </div>
         </div>
 
-        <div id="spaceMain" th:if="${space.image != null}">
-            <img id="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+        <div id="main-space" th:if="${space.image != null}">
+            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
         </div>
 
         <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
@@ -1861,22 +1927,17 @@
         	<div id="incomingLinks" class="list-group">
 	            <p style="font-weight: 600">Incoming space links</p>
 	            <span th:if="${#lists.isEmpty(linksToThisSpace)}">There are no links to this space.</span>
-	            <div th:each="spaceLinks : ${linksToThisSpace}">
-	            	
-	                <a 	th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}"
-	                    style="padding: .25rem"
-	                    class="list-group-item"
-	                    th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
+	            <div th:each="spaceLinks : ${linksToThisSpace}">	            	
+	                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem"
+	                    class="list-group-item" th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
 	            </div>
 	        </div>
         	<div id="outgoingLinks" class="list-group">
 	            <p style="font-weight: 600">Outgoing Space Links</p>
 	            <span th:if="${#lists.isEmpty(linksOnThisSpace)}">There are no links from this space.</span>
 	            <div th:each="spaceLinks : ${linksOnThisSpace}">	            	
-                    <a  th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
-                        style="padding: .25rem"
-                        class="list-group-item"
-                        th:if="${spaceLinks.targetSpace != null}"
+                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem"
+                        class="list-group-item" th:if="${spaceLinks.targetSpace != null}"
                         th:id="${spaceLinks.id}">[[${spaceLinks.targetSpace.name}]]</a>
 				</div>
 	        </div>
