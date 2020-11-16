@@ -20,7 +20,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'home' ? 'active' : '' }"
 			               th:href="@{/staff/dashboard}">
-			               <i class="fa fa-home secondary"></i>&nbsp;Dashboard
+			               <i class="fa fa-home secondary"></i><span class="custom_Text">&nbsp;Dashboard</span>
 			               <span class="sr-only">(current)</span>
 			            </a>
 			        </li>
@@ -28,28 +28,28 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'space' ? 'active' : '' }"
 			               th:href="@{/staff/space/list}"> 
-			               <i class="fa fa-layer-group secondary"></i>&nbsp;Spaces
+			               <i class="fa fa-layer-group secondary"></i><span class="custom_Text">&nbsp;Spaces</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'module' ? 'active' : '' }"
 			               th:href="@{/staff/module/list}"> 
-			               <i class="fa fa-th-large secondary"></i>&nbsp;Modules
+			               <i class="fa fa-th-large secondary"></i><span class="custom_Text">&nbsp;Modules</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list/1}"> 
-			               <i class="fa fa-file-image secondary"></i>&nbsp;Images
+			               <i class="fa fa-file-image secondary"></i><span class="custom_Text">&nbsp;Images</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
-			               <i class="fa fa-user secondary"></i>&nbsp;Users
+			               <i class="fa fa-user secondary"></i><span class="custom_Text">&nbsp;Users</span>
 			            </a>
 			        </li>
 		        </ul>
