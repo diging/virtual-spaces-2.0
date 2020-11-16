@@ -35,12 +35,12 @@ public class Space extends VSpaceElement implements ISpace {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    private SpaceStatus spaceStatus; //-> PUBLISHED / UNPUBLISHED
+    private SpaceStatus spaceStatus;
     @Access(AccessType.PROPERTY)
-    private boolean showUnpublishedLinks; // -> true/false
+    private boolean showUnpublishedLinks;
     
-    @Access(AccessType.PROPERTY)
-    private boolean hideLinksToUnpublishedSpaces;
+   // @Access(AccessType.PROPERTY)
+    private boolean hideAllIncomingLinksToGivenSpace;
     
     @JsonIgnore
     @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
@@ -171,19 +171,17 @@ public class Space extends VSpaceElement implements ISpace {
         this.incomingLinks = incomingLinks;
     }
 
-	@Override
-	public boolean isHideLinksToUnpublishedSpaces() {
-		return hideLinksToUnpublishedSpaces;
-	}
+    @Override
+    public boolean getHideAllIncomingLinksToGivenSpace() {
+        return hideAllIncomingLinksToGivenSpace;
+    }
 
-	@Override
-	@Access(AccessType.PROPERTY)
-	public void setHideLinksToUnpublishedSpaces(Boolean hideLinksToUnpublishedSpaces) {
-		if(hideLinksToUnpublishedSpaces == null) {
-			this.hideLinksToUnpublishedSpaces=false;
-			return;
+    @Override
+    public void setHideAllIncomingLinksToGivenSpace(Boolean hideAllIncomingLinksToGivenSpace) {
+		if(hideAllIncomingLinksToGivenSpace == null) {
+			this.hideAllIncomingLinksToGivenSpace = false;
 		}
-		this.hideLinksToUnpublishedSpaces = hideLinksToUnpublishedSpaces;
+		this.hideAllIncomingLinksToGivenSpace = hideAllIncomingLinksToGivenSpace;
 	}
     
 }

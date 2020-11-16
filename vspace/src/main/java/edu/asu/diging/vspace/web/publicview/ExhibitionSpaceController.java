@@ -84,11 +84,13 @@ public class ExhibitionSpaceController {
     }
 
 	private List<ISpaceLinkDisplay> filterLinks(List<ISpaceLinkDisplay> spaceLinks) {
-		// Logic to filter the space links with hide links status to true
+		/* (non-Javadoc)
+		 * Logic to filter the space links with hide links status to true
+		 */
 		
 		List<ISpaceLinkDisplay> linksToDisplay = new ArrayList<ISpaceLinkDisplay>();
 		for (ISpaceLinkDisplay spaceLinkDisplayObj : spaceLinks) {
-			if(!spaceLinkDisplayObj.getLink().getTargetSpace().isHideLinksToUnpublishedSpaces()) {
+			if(!spaceLinkDisplayObj.getLink().getTargetSpace().getHideAllIncomingLinksToGivenSpace()) {
 				linksToDisplay.add(spaceLinkDisplayObj);
 			}	
 		}
