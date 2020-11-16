@@ -51,44 +51,25 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-    <div class="justify-content-left" layout:fragment="content">
-        <h1>Add New Sequence</h1>
-        <form th:action="@{'/staff/module/'+${moduleId}+'/sequence/add'}"
-            method="POST" name="f" class="form-horizontal">
-
-            <div class="form-group">
-                <label class="col-sm-12" for="name">Sequence
-                    Name:</label>
-                <div class="col-sm-12">
-                    <input placeholder="Name"
-                        class="form-control input-sm" type="text"
-                        id="name" name="name" />
-                </div>
+    <div class="main-content" layout:fragment="content">
+        <h2>Add New Sequence</h2>
+        <form th:action="@{'/staff/module/'+${moduleId}+'/sequence/add'}" method="POST" name="f" style="margin-top:40px">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="name">Sequence Name</label>
+                <input placeholder="Name" class="form-control col-md-10" type="text" id="name" name="name" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="description">Description</label>
+                <textarea placeholder="Description" rows="5" class="form-control col-md-10" id="description" name="description"></textarea>
             </div>
             <div class="form-group">
-                <label class="col-sm-12" for="description">Description:</label>
-                <div class="col-sm-12">
-                    <textarea placeholder="Description" rows="5"
-                        class="form-control input-sm" id="description"
-                        name="description"></textarea>
-                </div>
+                <label for="Slides">Select Slides<br>(Double click to select and drag to reorder)</label> 
+                <select multiple="multiple" id="ordered-slides">
+                    <option th:each="slide: ${slides}" th:value=${slide.id} th:id=${slide.id}>[[${slide.name}]]</option>
+                </select> 
+                <input type="hidden" id="orderedSlides" name="orderedSlides"></input>
             </div>
-            <div class="form-group">
-                <label for="Slides" class="col-md-2 col-form-label">Select
-                    Slides: <br> <small>(Double click to
-                        select and drag to reorder)</small>
-                </label> <select multiple="multiple" id="ordered-slides">
-                    <option th:each="slide: ${slides}"
-                        th:value=${slide.id} th:id=${slide.id}>[[${slide.name}]]</option>
-                </select> <input type="hidden" id="orderedSlides"
-                    name="orderedSlides"></input>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <button type="submit" class="btn primary-btn">Create
-                        Sequence</button>
-                </div>
-            </div>
+            <button type="submit" class="btn primary-btn">Create Sequence</button>
         </form>
     </div>
 </body>

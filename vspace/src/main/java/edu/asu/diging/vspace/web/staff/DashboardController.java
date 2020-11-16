@@ -27,7 +27,7 @@ public class DashboardController {
         List<Module> recentModules = moduleRepo.findTop5ByOrderByCreationDateDesc();
         model.addAttribute("recentSpaces", recentSpaces);
         model.addAttribute("recentModules", recentModules);
-        return "staff/dashboard";
+        return "staff/dashboard/dashboard";
     }
 
 }
