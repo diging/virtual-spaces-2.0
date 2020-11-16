@@ -29,17 +29,4 @@ public class UpdateShowUnpublishedLinksController {
         attributes.addAttribute("showAlert", "true");
         return "redirect:/staff/space/{spaceId}";
     }
-    
-    @RequestMapping(value="/staff/space/{spaceId}/hideSpaceLinksFromPublishedSpace", method=RequestMethod.POST)
-    public String updateStatusForPublishedSpace(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
-    		@RequestParam("hideSpaceLinksPublishedSpaceParam") Boolean hideLinksToUnpublishedSpaces) {
-	
-		ISpace space = spaceManager.getSpace(spaceId);
-		space.setHideLinksToUnpublishedSpaces(hideLinksToUnpublishedSpaces);
-		spaceManager.storeSpace(space, null, null);
-		attributes.addAttribute("alertType", "success");
-		attributes.addAttribute("message", "Hide all space links to this Space successfully updated!");
-		attributes.addAttribute("showAlert", "true");
-		return "redirect:/staff/space/{spaceId}";
-    }
 }
