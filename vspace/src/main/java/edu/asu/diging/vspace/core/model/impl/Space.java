@@ -39,7 +39,6 @@ public class Space extends VSpaceElement implements ISpace {
     @Access(AccessType.PROPERTY)
     private boolean showUnpublishedLinks;
     
-   // @Access(AccessType.PROPERTY)
     private boolean hideAllIncomingLinksToGivenSpace;
     
     @JsonIgnore

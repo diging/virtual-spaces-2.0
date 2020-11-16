@@ -16,15 +16,14 @@ public class UpdateHideIncomingLinksToSpaceController {
 	@Autowired
     private ISpaceManager spaceManager;
 	
-	@RequestMapping(value="/staff/space/links/edit/{spaceId}/hideSpaceLinksFromPublishedSpace", method=RequestMethod.POST)
+	@RequestMapping(value="/staff/space/links/edit/{spaceId}/hideSpaceLinksFromSpace", method=RequestMethod.POST)
     public String updateStatusForPublishedSpace(RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
-    		@RequestParam("hideSpaceLinksPublishedSpaceParam") Boolean hideAllIncomingLinksToGivenSpace) {
-	    System.out.println("Inside UpdateHideIncomingLinksToSpaceController --->");
+    		@RequestParam("hideSpaceLinksParam") Boolean hideAllIncomingLinksToGivenSpace) {
 		ISpace space = spaceManager.getSpace(spaceId);
 		space.setHideAllIncomingLinksToGivenSpace(hideAllIncomingLinksToGivenSpace);
 		spaceManager.storeSpace(space, null, null);
 		attributes.addAttribute("alertType", "success");
-		attributes.addAttribute("message", "Hide all space links to this Space successfully updated!");
+		attributes.addAttribute("message", "All links to this space are now hidden.");
 		attributes.addAttribute("showAlert", "true");
 		return "redirect:/staff/space/{spaceId}";
     }
