@@ -246,6 +246,70 @@
 		[/]
 		[/]
 		
+		    [# th:each="link,loop : ${moduleLinks}"]
+		    [# th:if="${link != null}" ]
+				var link;
+				var posX = $("#main-bgImage").position().left;
+				var posY = $("#main-bgImage").position().top;
+				[# th:if="${#strings.equals(link.type,'ALERT')}"]
+					link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
+				[/]
+				[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+					var imageURL = [[@{|/api/image/${link.image.id}|}]];
+		           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+		        [/]
+				[# th:if="${#strings.equals(link.type,'MODULE')}"]
+					link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+				[/]
+				link.css('position', 'absolute');
+				link.css('left', [[${link.positionX}]] + posX);
+				link.css('top', [[${link.positionY}]] + posY);
+				link.css('transform', 'rotate([(${link.rotation})]deg)');
+				link.find("span").css('fill', 'red');
+				link.css('color', 'red');
+				link.css('font-size', "12px");
+				
+				var inputRotation = document.createElement("input");
+				inputRotation.setAttribute("type", "hidden");
+				inputRotation.setAttribute("id", "moduleLinkRotation-[(${link.link.id})]");
+				inputRotation.setAttribute("value", "[(${link.rotation})]");
+				var inputLabel = document.createElement("input");
+				inputLabel.setAttribute("type", "hidden");
+				inputLabel.setAttribute("id", "moduleLinkLabel-[(${link.link.id})]");
+				inputLabel.setAttribute("value", "[(${link.link.name})]");
+				var inputType = document.createElement("input");
+				inputType.setAttribute("type", "hidden");
+				inputType.setAttribute("id", "moduleLinkType-[(${link.link.id})]");
+				inputType.setAttribute("value", "[(${link.type})]");
+				var inputLinkedSpace = document.createElement("input");
+				inputLinkedSpace.setAttribute("type", "hidden");
+				inputLinkedSpace.setAttribute("id", "moduleLinkTarget-[(${link.link.id})]");
+				inputLinkedSpace.setAttribute("value", "[(${link.link.module.id})]");
+				
+				$("#main-space").append(inputRotation);
+				$("#main-space").append(inputLabel);
+				$("#main-space").append(inputType);
+				$("#main-space").append(inputLinkedSpace);
+				$("#main-space").append(link);
+				
+				$(".mlabel-[(${link.link.id})]").css({
+					'transform': 'rotate(0deg)',
+					'left': [[${link.positionX}]] + posX - 10,
+					'top': [[${link.positionY}]] + posY + 35,
+					'color': 'red'
+				});		
+				
+				$('[data-link-id="[(${link.link.id})]"]').css('cursor', 'pointer');
+				$('[data-link-id="[(${link.link.id})]"]').click(function(e) {
+				    var rotation = document.getElementById("moduleLinkRotation-[(${link.link.id})]").value;
+				    var label = document.getElementById("moduleLinkLabel-[(${link.link.id})]").value;
+				    var type = document.getElementById("moduleLinkType-[(${link.link.id})]").value;
+				    var targetModule = document.getElementById("moduleLinkTarget-[(${link.link.id})]").value;
+					makeModuleLinksEditable(label, [[${link.link.id}]],rotation,targetModule,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]], type);
+				});
+			[/]
+			[/]
+		
 		[# th:each="link,loop : ${externalLinks}"]
 		[# th:if="${link != null}" ]
 	        var posX = $(".bgImage").position().left;
@@ -298,6 +362,59 @@
 	        });
 		[/]
 		[/]
+		
+		    [# th:each="link,loop : ${externalLinks}"]
+			[# th:if="${link != null}" ]
+		        var posX = $("#main-bgImage").position().left;
+		        var posY = $("#main-bgImage").position().top;
+		        var link ;
+		        [# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+		        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
+		            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
+		        [/]
+		            [# th:if="${#strings.equals(link.type,'ARROW')}"]
+		            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
+		        [/]
+		        link.css('position', 'absolute');
+		        link.css('left', [[${link.positionX}]] + posX);
+		        link.css('top', [[${link.positionY}]] + posY);
+		        link.css('color', 'blue');
+		        link.css('font-size', "12px");
+		        
+				var inputLabel = document.createElement("input");
+				inputLabel.setAttribute("type", "hidden");
+				inputLabel.setAttribute("id", "externalLinkLabel-[(${link.externalLink.id})]");
+				inputLabel.setAttribute("value", "[(${link.externalLink.name})]");
+				var inputType = document.createElement("input");
+				inputType.setAttribute("type", "hidden");
+				inputType.setAttribute("id", "externalLinkType-[(${link.externalLink.id})]");
+				inputType.setAttribute("value", "[(${link.type})]");
+				var inputExternalLinkURL = document.createElement("input");
+				inputExternalLinkURL.setAttribute("type", "hidden");
+				inputExternalLinkURL.setAttribute("id", "externalLinkTarget-[(${link.externalLink.id})]");
+				inputExternalLinkURL.setAttribute("value", "[(${link.externalLink.externalLink})]");
+				
+				$("#main-space").append(inputLabel);
+				$("#main-space").append(inputType);
+				$("#main-space").append(inputExternalLinkURL);
+		        $("#main-space").append(link);
+		        
+		        $(".elabel-[(${link.externalLink.id})]").css({
+		            'transform': 'rotate(0deg)',
+		            'left': [[${link.positionX}]] + posX - 10,
+		            'top': [[${link.positionY}]] + posY + 35,
+		            'text-color': 'blue'
+		        });
+		        
+		        $('[data-link-id="[(${link.externalLink.id})]"]').css('cursor', 'pointer');
+		        $('[data-link-id="[(${link.externalLink.id})]"]').click(function(e) {
+				    var label = document.getElementById("externalLinkLabel-[(${link.externalLink.id})]").value;
+				    var type = document.getElementById("externalLinkType-[(${link.externalLink.id})]").value;
+				    var targetLink = document.getElementById("externalLinkTarget-[(${link.externalLink.id})]").value;
+		            makeExternalLinksEditable(label,[[${link.externalLink.id}]],targetLink,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
+		        });
+			[/]
+			[/]
 		 // store where a user clicked on an image
 			var storeX;
 			var storeY;
@@ -1236,7 +1353,7 @@
 					showModuleLinkEdit(editModuleLinkInfo());
 				});
 				hideLinkInfoTabs();
-		        $("#editModuleLinkInfo").show();
+		        $("#editModuleLinkInfo").css("display", "flex");
 			}
 			
 			function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
@@ -1268,7 +1385,7 @@
 				});
 		        hideLinkInfoTabs();
 		        $("#externalLinkInfo").show();
-		        $("#editExternalLinkInfo").show();
+		        $("#editExternalLinkInfo").css("display", "flex");
 		    }
 			
 			function resetHighlighting() {
@@ -1690,193 +1807,198 @@
 	                
 	                <p class="mt-5 text-center">
 	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
-	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn">Create Space Link</button>
+	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn">Save Space Link</button>
 	                </p>
 	                
 	            </div>
 	        </form>
 		</div>
 
-        <form id="editModuleLinkForm">
-            <div id="editModuleLinkInfo" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <p class="float-right">
-                    <a href="#" id="closeEditModuleLinkInfo"><span
-                        ><i class="fas fa-window-close"></i></span></a>
-                </p>
-                <h6 class="alert-heading">
-                    Module Link: <span id="moduleLinkInfoLabelEdit"></span>
-                </h6>
-                <input type="hidden" name="moduleLinkIdValueEdit"
-                    id="moduleLinkIdValueEdit" />
-                <input
-                    type="hidden" name="type" value="MODULE" />
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Modify Module Link</small>
-                        </h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the existing module link.
-                            Then click "Edit Module".</small>
-                        </p>
-                        <hr>
-                    </div>
-                </div>
-                <input type="hidden" name="x" id="moduleLinkXEdit" /> <input
-                    type="hidden" name="y" id="moduleLinkYEdit" /> <input
-                    type="hidden" name="moduleLinkDisplayId"
-                    id="moduleLinkDisplayId" />
 
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Rotation:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs modulelink-targetEdit"
-                            type="number" id="moduleLinkRotationEdit"
-                            name="rotation" style="width: inherit;"><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs modulelink-targetEdit"
-                            type="text" name="moduleLinkLabel"
-                            id="moduleLinkLabelEdit" style="width: inherit;"><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>Linked Modules:</small> </label>
-                    </div>
-                    <div class="col-sm-7">
-                        <select id="moduleLinkIdEdit"
-                            name="linkedModule"
-                            class="form-control-xs modulelink-targetEdit"
-                            style="width: 100%;">
-                            <option th:each=" module : ${moduleList}"
-                                th:value="${module.id}">[[${module.name}]]</option>
-                        </select>
-                    </div>
-                </div>
-                <HR>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button id="editModuleLinkBtn" type="reset"
-                            class="btn primary-btn btn-xs">Save</button>
-                    </div>
-                    <div class="col-sm-8">
-                        <button id="deleteModuleLinkButton" type="reset"
-                            class="btn primary-btn btn-xs">Delete</button>
-                    </div>
-                </div>
+        <div id="editModuleLinkInfo" class="link-modal flex-spacing">
+            <div class="space" th:if="${space.image != null}">
+                <img class="bgImage" th:style="|max-width: ${display.width}px;|"
+                    th:src="@{'/api/image/'+${space.image.id}}" />
             </div>
-        </form>
+            <div class="divider"></div>
+            <form id="editModuleLinkForm">
+            <i id="closeEditModuleLinkInfo" class="far fa-times-circle" style="cursor: pointer; float: right"></i>
+                <div role="alert" style="margin-top: 30px">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">
+                                    Module Link:</span> <span
+                                    id="moduleLinkInfoLabelEdit"></span>
+                            </h6>
+                            <p>Please click on the image
+                                where you want to place the existing
+                                module link. Then click "Edit Module".
+                            </p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
+                    <input type="hidden" name="type" value="MODULE" />
+                    <input type="hidden" name="x" id="moduleLinkXEdit" />
+                    <input type="hidden" name="y" id="moduleLinkYEdit" />
+                    <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
 
-        <form id="editExternalLinkForm">
-            <div id="editExternalLinkInfo" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <p class="float-right">
-                    <a href="#" id="closeEditExternalLinkInfo"><span
-                        ><i class="fas fa-window-close"></i></span></a>
-                </p>
-                <h6 class="alert-heading">
-                    External Link: <span id="externalLinkInfoLabelEdit"></span>
-                </h6>
-                <input type="hidden" name="externalLinkIdValueEdit"
-                    id="externalLinkIdValueEdit" />
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Modify External Link</small>
-                        </h6>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Rotation: </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control modulelink-targetEdit"
+                                type="number"
+                                id="moduleLinkRotationEdit"
+                                name="rotation" style="width: inherit;  background: var(--base-grey)"><br>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the existing external
-                            link. Then click "Edit External Link".</small>
-                        <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Label:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control modulelink-targetEdit"
+                                type="text" name="moduleLinkLabel"
+                                id="moduleLinkLabelEdit"
+                                style="width: inherit;  background: var(--base-grey)"><br>
+                        </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="padding-right: 0;">
+                            <label>Linked
+                                    Modules:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="moduleLinkIdEdit"
+                                name="linkedModule"
+                                class="form-control modulelink-targetEdit"
+                                style="width: inherit; background: var(--base-grey)">
+                                <option
+                                    th:each=" module : ${moduleList}"
+                                    th:value="${module.id}">[[${module.name}]]</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editModuleLinkBtn" type="reset" class="btn primary-btn">Save Module Link</button>
+                    </p>
                 </div>
-                <input type="hidden" name="x" id="externalLinkXEdit" />
-                <input type="hidden" name="y" id="externalLinkYEdit" />
-                <input type="hidden" name="externalLinkDisplayId"
-                    id="externalLinkDisplayId" />
+            </form>
+        </div>
 
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs externallink-targetEdit"
-                            type="text" name="externalLinkLabel"
-                            id="externalLinkLabelEdit" style="width: inherit;"><br>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>External Link</small> </label>
-                    </div>
-                    <div class="col-sm-7">
-                        <input
-                            class="form-control-xs externallink-targetEdit"
-                            type="text" name="url"
-                            id="externalLinkURLEdit" style="width: inherit;">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="extTypeEdit" name="type"
-                            class="form-control-xs externallink-targetEdit">
-                            <option th:value="IMAGE">Image</option>
-                            <option th:value="ARROW">Link</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0;">
-                        <label><small>Image:</small> </label>
-                    </div>
-                    <div class="col-sm-9">
-                        <input type="file" class="form-control-xs"
-                            name="externalLinkImage"
-                            id="externalLinkImageEdit"><br>
-                    </div>
-                </div>
-
-                <HR>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button id="editExternalLinkBtn" type="reset"
-                            class="btn primary-btn btn-xs">Save</button>
-                    </div>
-                    <div class="col-sm-8">
-                        <button id="deleteExternalLinkButton"
-                            type="reset" class="btn primary-btn btn-xs">Delete</button>
-                    </div>
-                </div>
+        <div id="editExternalLinkInfo" class="link-modal flex-spacing">
+            <div class="space" th:if="${space.image != null}">
+                <img class="bgImage"
+                    th:style="|max-width: ${display.width}px;|"
+                    th:src="@{'/api/image/'+${space.image.id}}" />
             </div>
-        </form>
+            <div class="divider"></div>
+            <form id="editExternalLinkForm">
+                <i id="closeEditExternalLinkInfo"
+                    class="far fa-times-circle"
+                    style="cursor: pointer; float: right"></i>
+                <div role="alert" style="margin-top: 30px">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">External
+                                    Link: </span><span
+                                    id="externalLinkInfoLabelEdit"></span>
+                            </h6>
+                            <p>Please click on the image where you
+                                want to place the existing external
+                                link. Then click "Edit External Link".</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="externalLinkIdValueEdit"
+                        id="externalLinkIdValueEdit" />
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <small>Modify External Link</small>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <small>Please click on the image
+                                where you want to place the existing
+                                external link. Then click "Edit External
+                                Link".</small>
+                            <hr>
+                        </div>
+                    </div>
+                    <input type="hidden" name="x" id="externalLinkXEdit" />
+                    <input type="hidden" name="y" id="externalLinkYEdit" />
+                    <input type="hidden" name="externalLinkDisplayId"
+                        id="externalLinkDisplayId" />
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Label:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control externallink-targetEdit"
+                                type="text" name="externalLinkLabel"
+                                id="externalLinkLabelEdit"
+                                style="width: inherit; background: var(--base-grey)"><br>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4" style="padding-right: 0;">
+                            <label>External Link
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control externallink-targetEdit"
+                                type="text" name="url"
+                                id="externalLinkURLEdit"
+                                style="width: inherit; background: var(--base-grey)">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Type:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="extTypeEdit" name="type"
+                                class="form-control externallink-targetEdit">
+                                <option th:value="IMAGE">Image</option>
+                                <option th:value="ARROW">Link</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3" style="padding-right: 0;">
+                            <label>Image:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control"
+                                name="externalLinkImage"
+                                id="externalLinkImageEdit"><br>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn">Save External Link</button>
+                    </p>
+                    
+                </div>
+            </form>
+        </div>
 
         <div class="modal fade" id="confirm-space-delete" tabindex="-1"
             role="dialog" aria-labelledby="myModalLabel"
@@ -1887,7 +2009,7 @@
                         <h5 class="modal-title" id="deleteModalTitle">Confirm
                             [[${space.id}]] Deletion?</h5>
                         <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">×</button>
+                            data-dismiss="modal" aria-hidden="true">ï¿½</button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete
