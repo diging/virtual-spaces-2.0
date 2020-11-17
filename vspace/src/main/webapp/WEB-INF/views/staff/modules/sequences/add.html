@@ -62,8 +62,8 @@ $(document).ready(function() {
                 <label class="col-md-2 col-form-label" for="description">Description</label>
                 <textarea placeholder="Description" rows="5" class="form-control col-md-10" id="description" name="description"></textarea>
             </div>
-            <div class="form-group">
-                <label for="Slides">Select Slides<br>(Double click to select and drag to reorder)</label> 
+            <div class="form-group row">
+                <label for="Slides">Select Slides<br>(Double click to select &nbsp; <br>and drag to reorder)</label> 
                 <select multiple="multiple" id="ordered-slides">
                     <option th:each="slide: ${slides}" th:value=${slide.id} th:id=${slide.id}>[[${slide.name}]]</option>
                 </select> 

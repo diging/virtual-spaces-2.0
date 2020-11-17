@@ -127,7 +127,9 @@ $(document).ready(function($) {
     	<div class="tab">
     		<div style="display: flex; justify-content: space-between">
     			<h4>All Slides</h4>
-    			<button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button>
+                <!-- Commenting as this is planned for future development -->
+    			<!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>
     		</div>
     		<div class="grid" id="grid">
 				<div th:each="slide: ${slides}" class="btn-group dropdown">
