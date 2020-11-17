@@ -2,13 +2,13 @@
 <head>
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
-<link rel="stylesheet" 
+<link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <style type="text/css">
 .hova {
-    background-color: #bfb168;
+	background-color: #bfb168;
 }
 </style>
 <script th:inline="javascript">
@@ -23,6 +23,13 @@ function createImageBlock(reader, width) {
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
     return imageblock;
+}
+
+function createVideoBlock(reader, videoSrc) {
+	//var videoBlock = $('<div id="currentVideo" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><video width="800" height="530" style="margin: 1%;" controls ><source  width="600" height="400" src="#" type="video/mp4"></video><input type="hidden" id="deleteVideoId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+	var videoBlock = $('<div id="currentVideo" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+	videoBlock.find('iframe').attr('src', videoSrc);
+	return videoBlock;
 }
 
 function onMouseEnter(e){
@@ -45,6 +52,7 @@ function onDoubleClick(e){
     // get to the nearest divs class attribute
     $(".EasyMDEContainer").remove();
     var divName = $(e.target).closest('div').attr('class');
+    console.log(divName);
     //if the div is a text content block 
     if(divName.includes("textDiv")){
 
@@ -57,7 +65,7 @@ function onDoubleClick(e){
         markDown.value(description.trim());
         //remove card border
         $(".open").css('display', 'none');
-    } else {
+    } else if(divName.includes("imgDiv")) {
     	
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
@@ -65,7 +73,13 @@ function onDoubleClick(e){
         	$("#uploadImage").data('value', imgID); // sets image ID value
         	$("#addImgAlert").show();
     	}
-	
+    }
+    else {
+    	var vidId = $(e.target).attr('id');
+    	if(vidId != '') {
+    		$("#saveVideo").data('value', vidId); // sets image ID value
+        	$("#addVideoAlert").show();
+    	}
     }
 }
     
@@ -161,25 +175,34 @@ function uploadImage() {
 function embedVideo() {
 	var url = $("#videoLink").val();
 	var vidFile = $("#videoFile")[0].files[0];
+	var reader = new FileReader();
+	var videoBlock = "";
 
-	console.log(vidFile);
-
-	var iFrameString = "<iframe width='560' height='315' src='"+url+"' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
+	//var iFrameString = "<iframe width='560' height='315' src='"+url+"' frameborder='0' allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
     var formData = new FormData();
     if(url) {
-    	alert("lmao you thought");
-    	formData.append('iFrameTag', iFrameString);
+    	//alert("lmao you thought");
+    	formData.append('url', url);
+    	videoBlock = createVideoBlock(reader, url);
+        $('#slideSpace').append(videoBlock); 
     }
-	if(vidFile != null) {
-		alert("yep");
-		console.log(vidFile);
+	if(vidFile) {
+		//alert("yep");
 		formData.append('videoFile', vidFile);
-		
+	    reader.onload = function (theFile) { 
+	    	//console.log(theFile);
+			videoBlock = createVideoBlock(reader, theFile.target.result);
+	        $('#slideSpace').append(videoBlock);
+
+		}
 	}
     var ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-    alert(ajaxUrl);
+
+    $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);       
+	if(vidFile) {
+    	reader.readAsDataURL(vidFile);
+	}
     formData.append('contentOrder', contentCount);
-    //reader.readAsDataURL(file);
     ++contentCount;
     $.ajax({
         enctype: 'multipart/form-data',
@@ -192,9 +215,15 @@ function embedVideo() {
         data: formData,
         
         success: function(data) {
-        	
+           	var videoBlk = videoBlock.find('iframe');
+           	if(data != ''){
+           		videoBlk.attr('id', data);
+           		$("#currentVideo").find('#deleteVideoId').val(data);
+           		$("#currentVideo").attr('id', data);
+           	}
         },
         error: function(data) {
+        	alert("Something failed!");
         	console.log(data);
         }
     });
@@ -331,8 +360,7 @@ $(document).ready(function() {
     
     $("#saveVideo").click(function(e) {
     	e.preventDefault();
-
-    	alert("Hello");
+    	$("#addVideoAlert").hide();
     	embedVideo();
     })
     
@@ -711,228 +739,206 @@ $(window).on('load', function () {
 </script>
 </head>
 <body>
-    <div class="justify-content-left" layout:fragment="content">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a
-                th:href="@{/staff/dashboard}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a
-                th:href="@{/staff/module/list}">Modules</a></li>
-            <li class="breadcrumb-item"><a
-                th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
-            <li class="breadcrumb-item active">[[${slide.name}]]</li>
-        </ol>
-        <div class="error"></div>
-        <div class="row align-items-center">
-            <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
-                [[${slide.name}]]</h1>
-            <a
-                th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}"><span>
-                    &nbsp;<i class="fas fa-edit"></i>
-            </span></a>
-        </div>
-        <div class="alert alert-light" role="alert">
-            Created on <span class="date">[[${slide.creationDate}]]</span>
-            by [[${slide.createdBy}]].<br> Modified on <span
-                class="date">[[${slide.modificationDate}]]</span> by
-            [[${slide.modifiedBy}]].
-        </div>
-        <!-- description -->
-        <div style="margin-left: .1%;" class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">Description:</h5>
-            <p id="description"
-                style="margin-top: .5rem; margin-bottom: .5rem;">[[${slide.description}]]</p>
-        </div>
-        <!-- SlideSequences -->
-        <div style="margin-left: .1%;" class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">
-                This slide belongs to:<br>
-            </h5>
-        </div>
-        <div style="margin-left: .1%;" class="row align-items-center"
-            th:each="slideSequence: ${slideSequences}">
-            <a style="margin-left: .5rem;"
-                th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}"
-                th:name="${slideSequence.name}">[[${slideSequence.name}]]</a><br>
+	<div class="justify-content-left" layout:fragment="content">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a th:href="@{/staff/dashboard}">Dashboard</a></li>
+			<li class="breadcrumb-item"><a th:href="@{/staff/module/list}">Modules</a></li>
+			<li class="breadcrumb-item"><a
+				th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
+			<li class="breadcrumb-item active">[[${slide.name}]]</li>
+		</ol>
+		<div class="error"></div>
+		<div class="row align-items-center">
+			<h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
+				[[${slide.name}]]</h1>
+			<a
+				th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}"><span>
+					&nbsp;<i class="fas fa-edit"></i>
+			</span></a>
+		</div>
+		<div class="alert alert-light" role="alert">
+			Created on <span class="date">[[${slide.creationDate}]]</span> by
+			[[${slide.createdBy}]].<br> Modified on <span class="date">[[${slide.modificationDate}]]</span>
+			by [[${slide.modifiedBy}]].
+		</div>
+		<!-- description -->
+		<div style="margin-left: .1%;" class="row align-items-center">
+			<h5 style="margin-bottom: 0px;">Description:</h5>
+			<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;">[[${slide.description}]]</p>
+		</div>
+		<!-- SlideSequences -->
+		<div style="margin-left: .1%;" class="row align-items-center">
+			<h5 style="margin-bottom: 0px;">
+				This slide belongs to:<br>
+			</h5>
+		</div>
+		<div style="margin-left: .1%;" class="row align-items-center"
+			th:each="slideSequence: ${slideSequences}">
+			<a style="margin-left: .5rem;"
+				th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}"
+				th:name="${slideSequence.name}">[[${slideSequence.name}]]</a><br>
 
-        </div>
-        <div style="margin-top: 1%; margin-bottom: 2%;">
-            <a class="btn btn-primary"
-                th:href="@{'/staff/module/'+${module.id}}">Go Back</a>
-        </div>
-        <!-- choices -->
-        <div id="choiceSpace" style="margin-left: .1%; display: none;"
-            class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">Choices:</h5>
-            <div th:each="choice: ${choices}">
-                <a style="margin-left: .5rem;"
-                    th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
-                    th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
-            </div>
-        </div>
+		</div>
+		<div style="margin-top: 1%; margin-bottom: 2%;">
+			<a class="btn btn-primary" th:href="@{'/staff/module/'+${module.id}}">Go
+				Back</a>
+		</div>
+		<!-- choices -->
+		<div id="choiceSpace" style="margin-left: .1%; display: none;"
+			class="row align-items-center">
+			<h5 style="margin-bottom: 0px;">Choices:</h5>
+			<div th:each="choice: ${choices}">
+				<a style="margin-left: .5rem;"
+					th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
+					th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
+			</div>
+		</div>
 
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle"
-                    type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" style="float: left;">Add
-                    content</button>
-                <div class="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton">
-                    <a id="addText" class="dropdown-item" href="#">Add
-                        Text</a> <a id="addImage" class="dropdown-item"
-                        href="#">Add Image</a> <a id="addVideo" class="dropdown-item"
-                        href="#">Add Video</a><a id="addChoice"
-                        class="dropdown-item" href="#"
-                        style="display: none;">Add Choices (Links to
-                        other sequences)</a>
-                </div>
-                <p
-                    style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
-                    Click on a Block to Edit it
-                <p>
-            </div>
-        </nav>
+		<nav class="navbar navbar-expand-sm navbar-light bg-light">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button"
+					id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false" style="float: left;">Add content</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a id="addText" class="dropdown-item" href="#">Add Text</a> <a
+						id="addImage" class="dropdown-item" href="#">Add Image</a> <a
+						id="addVideo" class="dropdown-item" href="#">Add Video</a><a
+						id="addChoice" class="dropdown-item" href="#"
+						style="display: none;">Add Choices (Links to other sequences)</a>
+				</div>
+				<p style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
+					Click on a Block to Edit it
+				<p>
+			</div>
+		</nav>
 
-        <!-- Delete Text Modal -->
-        <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
-            role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Are you sure you want to delete this
-                            text block?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="cancelDeleteText" type="reset"
-                            class="btn light">Cancel</button>
-                        <button type="submit" id="deleteText"
-                            class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Delete Image Modal -->
-        <div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
-            role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Are you sure you want to delete this
-                            image block?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="cancelDelete" type="reset"
-                            class="btn light">Cancel</button>
-                        <button type="submit" id="deleteImage"
-                            class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<!-- Delete Text Modal -->
+		<div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this text block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDeleteText" type="reset" class="btn light">Cancel</button>
+						<button type="submit" id="deleteText" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Delete Image Modal -->
+		<div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this image block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDelete" type="reset" class="btn light">Cancel</button>
+						<button type="submit" id="deleteImage" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- Delete ChoiceBlock Modal -->
-        <div id="confirmDeleteChoiceBlockAlert" class="modal"
-            tabindex="-1" role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Are you sure you want to delete this
-                            choices Block?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="cancelDeleteChoiceBlock"
-                            type="reset" class="btn light">Cancel</button>
-                        <button type="submit" id="deleteChoiceBlock"
-                            class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<!-- Delete ChoiceBlock Modal -->
+		<div id="confirmDeleteChoiceBlockAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this choices Block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDeleteChoiceBlock" type="reset"
+							class="btn light">Cancel</button>
+						<button type="submit" id="deleteChoiceBlock"
+							class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 
-        <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" th:draggable="true">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add new Text Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="textForm" id="textUploadForm"
-                        enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>Enter Text: </small>
-                            </h6>
-                            <textarea class="form-control"
-                                id="textBlockText" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelSubmitText" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitText"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add new Text Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="textForm" id="textUploadForm"
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<h6>
+								<small>Enter Text: </small>
+							</h6>
+							<textarea class="form-control" id="textBlockText" rows="3"></textarea>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
-        <div id="editTextAlert" class="modal" tabindex="-1"
-            role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Text Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="textForm" id="textEditUploadForm"
-                        enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>Edit Text: </small>
-                            </h6>
-                            <textarea class="form-control"
-                                id="editTextBlock" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelTextBlock" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitTextBlock"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<div id="editTextAlert" class="modal" tabindex="-1" role="dialog"
+			th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Text Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="textForm" id="textEditUploadForm"
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<h6>
+								<small>Edit Text: </small>
+							</h6>
+							<textarea class="form-control" id="editTextBlock" rows="3"></textarea>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelTextBlock" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitTextBlock"
+								class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
 
 		<div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
@@ -956,8 +962,8 @@ $(window).on('load', function () {
 						</div>
 						<div class="modal-footer">
 							<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
-							<button type="submit" id="" class="btn btn-primary"
-								data-value="">Upload Image</button>
+							<button type="submit" id="uploadImage" class="btn btn-primary" data-value="">Upload
+								Image</button>
 						</div>
 					</form>
 				</div>
@@ -976,42 +982,37 @@ $(window).on('load', function () {
 						</button>
 					</div>
 					<form name="videoForm" id="videoUploadForm"
-                        enctype="multipart/form-data" method="post">
-					<div class="modal-body">
-						<div role="tabpanel">
-							<ul class="nav nav-tabs" role="tablist">
-								<li role="presentation" class="active"><a href="#uploadTab" id="uploadLink"
-									aria-controls="uploadTab" role="tab" data-toggle="tab">Upload</a>
-								</li>
-								<li role="presentation"><a href="#urlTab" id="urlLink"
-									aria-controls="urlTab" role="tab" data-toggle="tab">Link</a></li>
-							</ul>
-							<!-- Tab panes -->
-							<div class="tab-content">
-								<div role="tabpanel" class="tab-pane active" id="uploadTab">
-									Upload Video:
-									<input id="videoFile" class="form-control" type="file" name="videoFile" rows="5"
-									cols="500"/>
-								</div>
-								<div role="tabpanel" class="tab-pane" id="urlTab">
-									Enter URL:
-									<input class="form-control" type="text"
-                                	name="videoLink" rows="5" cols="500"
-                                	id="videoLink" />
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<div role="tabpanel">
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" class="active"><a
+										href="#uploadTab" id="uploadLink" aria-controls="uploadTab"
+										role="tab" data-toggle="tab">Upload</a></li>
+									<li role="presentation"><a href="#urlTab" id="urlLink"
+										aria-controls="urlTab" role="tab" data-toggle="tab">Link</a></li>
+								</ul>
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane active" id="uploadTab">
+										Upload Video: <input id="videoFile" class="form-control"
+											type="file" name="videoFile" rows="5" cols="500" />
+									</div>
+									<div role="tabpanel" class="tab-pane" id="urlTab">
+										Enter URL: <input class="form-control" type="text"
+											name="videoLink" rows="5" cols="500" id="videoLink" />
+									</div>
 								</div>
 							</div>
 						</div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelVideoBtn" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="saveVideo"
-                                class="btn btn-primary" >Upload
-                                Video</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+						<div class="modal-footer">
+							<button id="cancelVideoBtn" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="saveVideo" class="btn btn-primary">Upload
+								Video</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 
 		<div id="loginAlert" class="modal" tabindex="-1" role="dialog"
@@ -1033,99 +1034,102 @@ $(window).on('load', function () {
 			</div>
 		</div>
 
-		<div id="addChoiceAlert" class="modal" tabindex="-1"
-            role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Select from the
-                            Choices</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="choiceForm" id="choiceForm"
-                        enctype="multipart/form-data" method="post">
-                        <div id="choiceDiv" class="modal-body">
-                            <input class="choiceOptions"
-                                id="showAllChoices" type="checkbox"
-                                name="showAll" value="showAll"
-                                checked="true" /> <label for="showAll">Always
-                                show all choices</label><br />
-                            <div id="selectChoices">
-                                <div th:each="choice: ${choices}">
-                                    <input class="choiceOptions"
-                                        th:id="${choice.id}"
-                                        type="checkbox"
-                                        th:name="${choice.sequence.name}"
-                                        th:value="${choice.sequence.name}" />
-                                    <label th:for="${choice.id}">[[${choice.sequence.name}]]</label>
-                                    <br />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelSubmitChoice" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitChoices"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Select from the Choices</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="choiceForm" id="choiceForm"
+						enctype="multipart/form-data" method="post">
+						<div id="choiceDiv" class="modal-body">
+							<input class="choiceOptions" id="showAllChoices" type="checkbox"
+								name="showAll" value="showAll" checked="true" /> <label
+								for="showAll">Always show all choices</label><br />
+							<div id="selectChoices">
+								<div th:each="choice: ${choices}">
+									<input class="choiceOptions" th:id="${choice.id}"
+										type="checkbox" th:name="${choice.sequence.name}"
+										th:value="${choice.sequence.name}" /> <label
+										th:for="${choice.id}">[[${choice.sequence.name}]]</label> <br />
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
 
 
-        <div id="slideSpace">
-            <div th:each="contents: ${slideContents}">
-                <div style="margin: 1%; text-align: justify;" class="valueDiv card-body"
-                    th:id="${contents.id}"
-                    th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                    <img th:id="${contents.id}" class="imgDiv"
-                        th:src="@{'/api/image/'+${contents.image.id}}" />
-                    <input type="hidden" id="deleteImageId"
-                        th:value="${contents.id}"> <a
-                        class="btn deleteImage" href="javascript:;"
-                        style="float: right;"> <i
-                        style="color: black;" class="fas fa-trash-alt"></i>
-                    </a>
-                </div>
-                <div th:id="${contents.id}"
-                    class="card card-body row"
-                    style="margin: 1%; text-align: justify;"
-                    th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
-                    <p>
-                        [[${contents.text}]] <input type="hidden"
-                            id="deleteTextId" th:value="${contents.id}" />
-                        <a class="btn deleteText" href="javascript:;"
-                            style="float: right;"> <i
-                            style="color: black;"
-                            class="fas fa-trash-alt"></i>
-                        </a>
-                    </p>
-                </div>
-                <div th:id="${contents.id}"
-                    class="card card-body row"
-                    style="margin: 1%; text-align: justify;"
-                    th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}">
-                    <a th:if="${contents.showsAll}"
-                        th:each="choice: ${choices}"
-                        th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <a th:if="!${contents.showsAll}"
-                        th:each="choice: ${contents.choices}"
-                        th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <input type="hidden" id="deleteChoiceBlockId"
-                        th:value="${contents.id}"> <a
-                        class="btn deleteChoiceBlock"
-                        href="javascript:;"
-                        style="float: right; position: absolute; right: 20px; top: 0;">
-                        <i style="color: black;"
-                        class="fas fa-trash-alt"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+		<div id="slideSpace">
+			<div th:each="contents: ${slideContents}">
+				<div style="margin: 1%; text-align: justify;"
+					class="valueDiv card-body" th:id="${contents.id}"
+					th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+					<img th:id="${contents.id}" class="imgDiv"
+						th:src="@{'/api/image/'+${contents.image.id}}" /> <input
+						type="hidden" id="deleteImageId" th:value="${contents.id}">
+					<a class="btn deleteImage" href="javascript:;"
+						style="float: right;"> <i style="color: black;"
+						class="fas fa-trash-alt"></i>
+					</a>
+				</div>
+				<div style="margin: 1%; text-align: justify;"
+					class="valueDiv card-body" th:id="${contents.id}"
+					th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+					<iframe th:id="${contents.id}" width="800" height="530"
+						th:if="${contents.video.id}"
+						th:src="@{'/api/video/'+${contents.video.id}}" frameborder="0"
+						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen />
+						
+					<iframe th:id="${contents.id}" width="800" height="530"
+						th:src="${contents.url}" th:if="${contents.url}" frameborder="0"
+						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen />
+
+					<input type="hidden" id="deleteVideoId" th:value="${contents.id}">
+					<a class="btn deleteVideo" href="javascript:;"
+						style="float: right;"> <i style="color: black;"
+						class="fas fa-trash-alt"></i>
+					</a>
+				</div>
+				<div th:id="${contents.id}" class="textDiv card card-body row"
+					style="margin: 1%; text-align: justify;"
+					th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+					<p>
+						[[${contents.text}]] <input type="hidden" id="deleteTextId"
+							th:value="${contents.id}" /> <a class="btn deleteText"
+							href="javascript:;" style="float: right;"> <i
+							style="color: black;" class="fas fa-trash-alt"></i>
+						</a>
+					</p>
+				</div>
+				<div th:id="${contents.id}" class="card card-body row"
+					style="margin: 1%; text-align: justify;"
+					th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}">
+					<a th:if="${contents.showsAll}" th:each="choice: ${choices}"
+						th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+					<a th:if="!${contents.showsAll}"
+						th:each="choice: ${contents.choices}"
+						th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+					<input type="hidden" id="deleteChoiceBlockId"
+						th:value="${contents.id}"> <a
+						class="btn deleteChoiceBlock" href="javascript:;"
+						style="float: right; position: absolute; right: 20px; top: 0;">
+						<i style="color: black;" class="fas fa-trash-alt"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>

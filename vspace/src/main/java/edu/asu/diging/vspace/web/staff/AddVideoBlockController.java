@@ -31,7 +31,7 @@ public class AddVideoBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video", method = RequestMethod.POST)
     public ResponseEntity<String> addVideoBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam(required = false) MultipartFile videoFile, 
-            @RequestParam(required = false) String iFrameTag, @RequestParam Integer contentOrder, Principal principal, RedirectAttributes attributes)
+            @RequestParam(required = false) String url, @RequestParam Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
         System.out.println(videoFile);
         
@@ -43,7 +43,7 @@ public class AddVideoBlockController {
         }
         String videoId;
         try {
-            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video, fileName, iFrameTag, contentOrder); 
+            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video, fileName, url, contentOrder); 
             IVSpaceElement videoBlock = videoBlockValue.getElement();
             videoId = videoBlock.getId(); 
         }

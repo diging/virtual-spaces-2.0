@@ -10,6 +10,8 @@ public interface IStorageEngine {
 	String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
 
 	byte[] getImageContent(String directory, String filename) throws IOException;
+	
+	byte[] getVideoContent(String directory, String filename) throws IOException;
 
 	boolean renameImage(IVSImage image, String newFileName);
 }
