@@ -25,6 +25,7 @@ $(function(){
       });
     
     [# th:each="link,loop : ${spaceLinks}"]
+    [# th:if="${link != null}" ]
 		var posX = $("#bgImage").position().left;
 		var posY = $("#bgImage").position().top;
 		
@@ -32,8 +33,9 @@ $(function(){
 		[# th:if="${#strings.equals(link.type,'ALERT')}"]
 			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 		[/]
-		[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+		[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+		var imageURL = [[@{|/api/image/${link.image.id}|}]];
+           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
 			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -60,17 +62,16 @@ $(function(){
 		var inputLinkedSpace = document.createElement("input");
 		inputLinkedSpace.setAttribute("type", "hidden");
 		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-[(${link.link.id})]");
-		inputLinkedSpace.setAttribute("value", "[(${link.link.targetSpace.id})]");
+		inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
 		var unpublishedSpaceElement;
-		    [# th:if="${#strings.equals(link.link.targetSpace.spaceStatus,'UNPUBLISHED')}"]
-			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: #bfb168;"></i>')
+		    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
+			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
 			unpublishedSpaceElement.css('position', 'absolute');
 			unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
 			unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
 			unpublishedSpaceElement.css('transform', 'rotate([(${link.rotation})]deg)');
 			unpublishedSpaceElement.css('font-size', "12px");
 			[/]
-		
 		//append to form element that you want .
 		$("#space").append(inputRotation);
 		$("#space").append(inputLabel);
@@ -95,15 +96,18 @@ $(function(){
 			makeSpaceLinksEditable(label, [[${link.link.id}]], rotation ,targetSpace,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
 		});
 	[/]
+	[/]
 	    [# th:each="link,loop : ${moduleLinks}"]
+	    [# th:if="${link != null}" ]
 			var link;
 			var posX = $("#bgImage").position().left;
 			var posY = $("#bgImage").position().top;
 			[# th:if="${#strings.equals(link.type,'ALERT')}"]
 				link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 			[/]
-			[# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-	           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+			[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+				var imageURL = [[@{|/api/image/${link.image.id}|}]];
+	           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 	        [/]
 			[# th:if="${#strings.equals(link.type,'MODULE')}"]
 				link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -154,14 +158,17 @@ $(function(){
 			    var targetModule = document.getElementById("moduleLinkTarget-[(${link.link.id})]").value;
 				makeModuleLinksEditable(label, [[${link.link.id}]],rotation,targetModule,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]], type);
 			});
-		[/] 	
+		[/]
+		[/]
 		
 		[# th:each="link,loop : ${externalLinks}"]
+		[# th:if="${link != null}" ]
 	        var posX = $("#bgImage").position().left;
 	        var posY = $("#bgImage").position().top;
 	        var link ;
-	        [# th:if="${#strings.equals(link.type,'IMAGE') and link.image.id != null}"]
-	            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="/vspace/api/image/'+[[${link.image.id}]]+'" />');
+	        [# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+	        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
+	            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
 	        [/]
 	            [# th:if="${#strings.equals(link.type,'ARROW')}"]
 	            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
@@ -204,6 +211,7 @@ $(function(){
 			    var targetLink = document.getElementById("externalLinkTarget-[(${link.externalLink.id})]").value;
 	            makeExternalLinksEditable(label,[[${link.externalLink.id}]],targetLink,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
 	        });
+		[/]
 		[/]
 		 // store where a user clicked on an image
 			var storeX;
@@ -747,7 +755,7 @@ $(function(){
 				if(show) {
 				    var unpublishedSpaceElement;
 				    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
 				        unpublishedSpaceElement.css('position', 'absolute');
 				        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 				        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
@@ -858,7 +866,7 @@ $(function(){
 				if(show) {
 				    var unpublishedSpaceElement;
 				    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: #bfb168;"></i>')
+				        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
 				        unpublishedSpaceElement.css('position', 'absolute');
 				        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 				        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
@@ -1188,7 +1196,7 @@ $(function(){
 		        $('div[data-link-id]').addClass("alert-primary");
 		        
 		        // reset image links
-		        $('img[data-link-id]').css("border-width", "0px"); 
+		        $('img[data-link-id]').css("border-width", "0"); 
 		    }
 });
 </script>
@@ -1213,7 +1221,7 @@ $(function(){
 </style>
 </head>
 <body>
-    <div layout:fragment="content">
+    <div layout:fragment="content" class="main-content">
         <h1>
             Space: [[${space.name}]]<small style="margin-left: 10px;"><a
                 th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span>&nbsp;<i
@@ -1226,7 +1234,7 @@ $(function(){
                 class="date">[[${space.modificationDate}]]</span> by
             [[${space.modifiedBy}]].<br> <br> <i
                 class="fa fa-exclamation-triangle fa-sm"
-                aria-hidden="true" style="color: #bfb168;"></i>
+                aria-hidden="true" style="color: var(--secondary);"></i>
             indicates the links to unpublished spaces.
         </div>
         <div style="padding-bottom: 10px;">
@@ -1246,7 +1254,7 @@ $(function(){
                 </select>
                 <p
                     style="display: inline; padding-left: 10px;">
-                    <input class="btn btn-primary" type="submit"
+                    <input class="btn primary-btn btn-sm" type="submit"
                         value="Submit" />
                 </p>
             </form>
@@ -1268,7 +1276,7 @@ $(function(){
                 </select>
                 <p
                     style="display: inline; padding-left: 10px;">
-                    <input class="btn btn-primary" type="submit"
+                    <input class="btn primary-btn btn-sm" type="submit"
                         value="Submit" />
                 </p>
             </form>
@@ -1353,7 +1361,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0px;">
+                    <div class="col-sm-5" style="padding-right: 0;">
                         <label><small>Linked Space:</small> </label>
                     </div>
                     <div class="col-sm-7">
@@ -1370,7 +1378,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-8" style="padding-right: 0px;">
+                    <div class="col-sm-8" style="padding-right: 0;">
                         <label><small>Image:</small> </label>
                     </div>
                     <div class="col-sm-9">
@@ -1385,7 +1393,7 @@ $(function(){
                     <button id="cancelSpaceLinkBtn" type="reset"
                         class="btn btn-light btn-xs">Cancel</button>
                     <button id="createSpaceLinkBtn" type="reset"
-                        class="btn btn-primary btn-xs">Create
+                        class="btn primary-btn btn-xs">Create
                         Space Link</button>
                 </p>
 
@@ -1414,6 +1422,8 @@ $(function(){
 
                 <input type="hidden" name="x" id="moduleLinkX" /> <input
                     type="hidden" name="y" id="moduleLinkY" />
+                <input
+                    type="hidden" name="type" value="MODULE" />
 
                 <div class="row">
                     <div class="col-sm-4">
@@ -1438,7 +1448,7 @@ $(function(){
                     </div>
                 </div>
 
-                <div class="row">
+               <!--  <div class="row">
                     <div class="col-sm-4">
                         <label><small>Type:</small> </label>
                     </div>
@@ -1449,10 +1459,10 @@ $(function(){
                             <option th:value="MODULE">Module</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0px;">
+                    <div class="col-sm-5" style="padding-right: 0;">
                         <label><small>Linked Modules:</small> </label>
                     </div>
                     <div class="col-sm-6">
@@ -1471,7 +1481,7 @@ $(function(){
                     <button id="cancelModuleLinkBtn" type="reset"
                         class="btn btn-light btn-xs">Cancel</button>
                     <button id="createModuleLinkBtn" type="reset"
-                        class="btn btn-primary btn-xs">Create
+                        class="btn primary-btn btn-xs">Create
                         Module Link</button>
                 </p>
 
@@ -1492,11 +1502,11 @@ $(function(){
                     id="file" /><br> <br>
                 <p class="mb-0 text-right">
                     <button type="submit" id="changeBgImgBtn"
-                        class="btn btn-primary btn-xs">Upload
+                        class="btn primary-btn btn-sm">Upload
                         Image</button>
                     &nbsp;
                     <button id="cancelBgImgBtn" type="button"
-                        class="btn light btn-xs">Cancel</button>
+                        class="btn light btn-sm">Cancel</button>
                 </p>
             </div>
 
@@ -1542,7 +1552,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0px;">
+                    <div class="col-sm-3" style="padding-right: 0;">
                         <label><small>Image:</small> </label>
                     </div>
                     <div class="col-sm-6">
@@ -1557,7 +1567,7 @@ $(function(){
                     <button id="cancelExternalLinkBtn" type="reset"
                         class="btn btn-light btn-xs">Cancel</button>
                     <button id="createExternalLinkBtn" type="submit"
-                        class="btn btn-primary btn-xs">Create
+                        class="btn primary-btn btn-xs">Create
                         External Link</button>
                 </p>
             </div>
@@ -1639,7 +1649,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0px;">
+                    <div class="col-sm-5" style="padding-right: 0;">
                         <label><small>Linked Space:</small> </label>
                     </div>
                     <div class="col-sm-7">
@@ -1655,7 +1665,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0px;">
+                    <div class="col-sm-3" style="padding-right: 0;">
                         <label><small>Image:</small> </label>
                     </div>
                     <div class="col-sm-9">
@@ -1668,11 +1678,11 @@ $(function(){
                 <div class="row">
                     <div class="col-sm-4">
                         <button id="editSpaceLinkBtn" type="reset"
-                            class="btn btn-primary btn-xs">Save</button>
+                            class="btn primary-btn btn-xs">Save</button>
                     </div>
                     <div class="col-sm-8">
                         <button id="deleteSpaceLinkButton" type="reset"
-                            class="btn btn-primary btn-xs">Delete</button>
+                            class="btn primary-btn btn-xs">Delete</button>
                     </div>
                 </div>
             </div>
@@ -1691,6 +1701,8 @@ $(function(){
                 </h6>
                 <input type="hidden" name="moduleLinkIdValueEdit"
                     id="moduleLinkIdValueEdit" />
+                <input
+                    type="hidden" name="type" value="MODULE" />
                 <div class="row">
                     <div class="col">
                         <h6 class="alert-heading">
@@ -1735,18 +1747,7 @@ $(function(){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="typeEdit" name="type"
-                            class="form-control-xs modulelink-targetEdit">
-                            <option th:value="MODULE">Module</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0px;">
+                    <div class="col-sm-5" style="padding-right: 0;">
                         <label><small>Linked Modules:</small> </label>
                     </div>
                     <div class="col-sm-7">
@@ -1763,11 +1764,11 @@ $(function(){
                 <div class="row">
                     <div class="col-sm-4">
                         <button id="editModuleLinkBtn" type="reset"
-                            class="btn btn-primary btn-xs">Save</button>
+                            class="btn primary-btn btn-xs">Save</button>
                     </div>
                     <div class="col-sm-8">
                         <button id="deleteModuleLinkButton" type="reset"
-                            class="btn btn-primary btn-xs">Delete</button>
+                            class="btn primary-btn btn-xs">Delete</button>
                     </div>
                 </div>
             </div>
@@ -1819,7 +1820,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0px;">
+                    <div class="col-sm-5" style="padding-right: 0;">
                         <label><small>External Link</small> </label>
                     </div>
                     <div class="col-sm-7">
@@ -1844,7 +1845,7 @@ $(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0px;">
+                    <div class="col-sm-3" style="padding-right: 0;">
                         <label><small>Image:</small> </label>
                     </div>
                     <div class="col-sm-9">
@@ -1858,11 +1859,11 @@ $(function(){
                 <div class="row">
                     <div class="col-sm-4">
                         <button id="editExternalLinkBtn" type="reset"
-                            class="btn btn-primary btn-xs">Save</button>
+                            class="btn primary-btn btn-xs">Save</button>
                     </div>
                     <div class="col-sm-8">
                         <button id="deleteExternalLinkButton"
-                            type="reset" class="btn btn-primary btn-xs">Delete</button>
+                            type="reset" class="btn primary-btn btn-xs">Delete</button>
                     </div>
                 </div>
             </div>
@@ -1870,20 +1871,20 @@ $(function(){
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <button type="button" id="addSpaceLinkButton"
-                class="btn btn-primary btn-sm">Add Space Link</button>
+                class="btn primary-btn btn-sm">Add Space Link</button>
             &nbsp;
             <button type="button" id="addModuleLinkButton"
-                class="btn btn-primary btn-sm">Add Module Link</button>
+                class="btn primary-btn btn-sm">Add Module Link</button>
             &nbsp;
             <button type="button" id="addExternalLinkButton"
-                class="btn btn-primary btn-sm">Add External
+                class="btn primary-btn btn-sm">Add External
                 Link</button>
             &nbsp;
             <button type="button" id="changeBgImgButton"
-                class="btn btn-primary btn-sm">Change Image</button>
+                class="btn primary-btn btn-sm">Change Image</button>
             &nbsp;
             <button type="button" id="deleteSpace"
-                class="btn btn-primary btn-sm">Delete Space</button>
+                class="btn primary-btn btn-sm">Delete Space</button>
         </nav>
         <p></p>
 
@@ -1896,7 +1897,7 @@ $(function(){
                         <h5 class="modal-title" id="deleteModalTitle">Confirm
                             [[${space.id}]] Deletion?</h5>
                         <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">Ã—</button>
+                            data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete
@@ -1938,34 +1939,33 @@ $(function(){
         <div id="outgoingLinks" class="list-group"
             style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
             <a href="#"
-                style="padding-right: 0.25em; background-color: #c1bb88;"
+                style="padding-right: 0.25em; background-color: var(--secondary);"
                 class="list-group-item active"> Space links on this
                 space: </a>
             <div id="noLinksOnSpace"
                 style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
                 There are no links on this space.</div>
-            <th:block th:each="spaceLinks : ${linksOnThisSpace}">
-                <th:block th:if="${spaceLinks.targetSpace != null}">
-                    <a
-                        th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
+            <div th:each="spaceLinks : ${linksOnThisSpace}">
+                <div th:if="${spaceLinks.targetSpace != null}">
+                    <a  th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
                         style='padding: .25rem .25rem;'
                         class="list-group-item"
                         th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
                         &nbsp;[[${spaceLinks.targetSpace.name}]]</a>
-                </th:block>
-                <th:block th:if="${spaceLinks.targetSpace == null}">
+                </div>
+                <div th:if="${spaceLinks.targetSpace == null}">
                     <a href="#" style='padding: .25rem .25rem;'
                         class="list-group-item"
                         th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
                         &nbsp;&lt;No Space&gt;</a>
-                </th:block>
-            </th:block>
+                </div>
+            </div>
         </div>
         <p></p>
         <div id="incomingLinks" class="list-group"
             style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
             <a href="#"
-                style="padding-right: 0.25em; background-color: #c1bb88;"
+                style="padding-right: 0.25em; background-color: var(--secondary);"
                 class="list-group-item active"> Space links to this
                 space: </a>
             <div id="noLinksToSpace"
@@ -1978,6 +1978,6 @@ $(function(){
                     class="list-group-item" th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
             </th:block>
         </div>
-        
+   </div> 
 </body>
 </html>

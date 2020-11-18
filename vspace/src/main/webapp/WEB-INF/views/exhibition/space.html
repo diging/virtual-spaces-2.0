@@ -24,7 +24,21 @@
 
 .sidenav {
     width: 0;
-    background: white;
+    height: 799px;
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    left: 0px;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
+    padding-top: 26px;
+    word-break: break-all;
+}
+
+.barPosition {
+    top: 25px;
 }
 
 @media only screen and (max-width: 800px) {
@@ -291,7 +305,7 @@
                         <div class="text-Div">
                             <h3 class="spaceName">
                                 [[${space.name}]] <i
-                                    th:if="${space.description}!=null"
+                                    th:if="${!#strings.isEmpty(space.description)}"
                                     class="fas fa-info-circle fa-lg"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></i>

@@ -2,25 +2,16 @@
 <head>
 </head>
 <body>
-    <div class="justify-content-left" layout:fragment="content">
-        <h1>Add new Module</h1>
-        <form th:action="@{/staff/module/add}" method="POST" name="f"
-            class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-12" for="name">Module Name:</label>
-                <div class="col-sm-12">
-                    <input placeholder="Name"
-                        class="form-control input-sm" type="text"
-                        id="name" name="name" />
-                </div>
+    <div class="main-content" layout:fragment="content">
+        <h2>Add new Module</h2>
+        <form th:action="@{/staff/module/add}" method="POST" name="f" style="margin-top: 40px">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="name">Module Name:</label>
+               	<input placeholder="Type here..." class="form-control col-md-10" type="text" id="name" name="name" />
             </div>
-            <div class="form-group">
-                <label class="col-sm-12" for="description">Description:</label>
-                <div class="col-sm-12">
-                    <textarea placeholder="Description" rows="5"
-                        class="form-control input-sm" id="description"
-                        name="description"></textarea>
-                </div>
+            <div class="form-group row" style="margin-top: 20px">
+                <label class="col-md-2 col-form-label" for="description">Description:</label>
+                <textarea placeholder="Description" rows="5" class="form-control col-md-10" id="description" name="description"></textarea>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
