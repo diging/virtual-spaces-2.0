@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.publicview;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,9 @@ public class ExhibitionSpaceController {
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
+        List<ISpaceLinkDisplay> spaceLinks;
+        List<ISpaceLinkDisplay> filteredSpacelinks;
+        
         /* (non-Javadoc)
          * Below null check is added to accommodate already existing spaces with null space status
          */
@@ -62,14 +66,13 @@ public class ExhibitionSpaceController {
             model.addAttribute("space", space);
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
             if(space.isShowUnpublishedLinks()) {
-                List<ISpaceLinkDisplay> spaceLinks = spaceLinkManager.getLinkDisplays(id);
-                List<ISpaceLinkDisplay> filteredSpacelinks = filterLinks(spaceLinks);
-                model.addAttribute("spaceLinks",filteredSpacelinks);
+                spaceLinks = spaceLinkManager.getLinkDisplays(id);
+                
             }else {
-            	List<ISpaceLinkDisplay> spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
-                List<ISpaceLinkDisplay> filteredSpacelinks = filterLinks(spaceLinks);
-                model.addAttribute("spaceLinks",filteredSpacelinks);
+            	spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);                
             }
+            filteredSpacelinks = filterLinks(spaceLinks);
+            model.addAttribute("spaceLinks",filteredSpacelinks);
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
             model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
         }
@@ -85,15 +88,13 @@ public class ExhibitionSpaceController {
 
 	private List<ISpaceLinkDisplay> filterLinks(List<ISpaceLinkDisplay> spaceLinks) {
 		/* (non-Javadoc)
-		 * Logic to filter the space links with hide links status to true
+		 * Logic to filter the space links with hide links status to true and also checks if space status Unpublished
+		 * sets default all links hidden
 		 */
-		
-		List<ISpaceLinkDisplay> linksToDisplay = new ArrayList<ISpaceLinkDisplay>();
-		for (ISpaceLinkDisplay spaceLinkDisplayObj : spaceLinks) {
-			if(!spaceLinkDisplayObj.getLink().getTargetSpace().getHideAllIncomingLinksToGivenSpace()) {
-				linksToDisplay.add(spaceLinkDisplayObj);
-			}	
-		}
+		List<ISpaceLinkDisplay> linksToDisplay = spaceLinks.stream()
+				  .filter(spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideAllIncomingLinksToGivenSpace() || spaceLinkDisplayObj.getLink().getSourceSpace().getSpaceStatus().equals(SpaceStatus.UNPUBLISHED))
+				  .collect(Collectors.toList());
+        
 		return linksToDisplay;
 	}
 }
