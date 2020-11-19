@@ -147,7 +147,6 @@ i {
 
 .login-form {
     padding: 48px;
-    width: 30%;
     margin: auto;
     border-radius: 10px;
     background: #f2f2f2;
@@ -374,7 +373,6 @@ i {
 }
 
 .sideModulenav .dropdown-item {
-    padding: 15px;
     text-align: justify;
 }
 
@@ -673,3 +671,53 @@ i {
 }
 
 
+
+
+.Icon_awesome_info_module_m_sidenav {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 14.5px;
+    padding-top: 5px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+    transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Ellipse_9_module_c_sidenav {
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+    position: absolute;
+    overflow: visible;
+    width: 21px;
+    height: 21px;
+    left: 6px;
+    padding-top: 0px;
+}
+
+.Ellipse_10_module_c_sidenav {
+    position: absolute;
+    overflow: visible;
+    width: 25px;
+    height: 25px;
+    left: 4px;
+    padding-top: 0px;
+    margin-top: -2px;
+}
+
+.Ellipse_8_module_c_sidenav {
+    position: absolute;
+    overflow: visible;
+    width: 29px;
+    height: 29px;
+    left: 2px;
+    margin-top: -3px;
+}
+
+.choiceDiv {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
