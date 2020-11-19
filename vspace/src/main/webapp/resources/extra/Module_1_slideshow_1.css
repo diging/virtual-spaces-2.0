@@ -175,6 +175,7 @@ a, a:hover, a:focus {
 
 .textDiv {
     position: relative;
+    width: 57%;
     top: 0px;
     overflow: visible;
     text-align: justify;

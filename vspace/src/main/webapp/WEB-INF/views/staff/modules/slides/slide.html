@@ -48,9 +48,9 @@ function onDoubleClick(e){
     $(".EasyMDEContainer").remove();
     var divName = $(e.target).closest('div').attr('class');
     //if the div is a text content block 
-    if(divName.includes("textDiv")){
+    if(divName.includes("textDivStaff")){
 
-    	$(e.target).closest('.textDiv').addClass("open");
+    	$(e.target).closest('.textDivStaff').addClass("open");
         var description = $("div.open p:eq(0)").text();
     	defaultValue = description;
 
@@ -470,7 +470,7 @@ $(document).ready(function() {
             enctype: 'multipart/form-data',
             success: function(data) {
 
-                var textblock = $('<div id="'+ data +'" class="textDiv tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -524,7 +524,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="textDiv tab row" style="margin: 10px;">');
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="textDivStaff tab row" style="margin: 10px;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
                         choiceblock.append('<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
@@ -562,7 +562,7 @@ $(document).ready(function() {
         // reset border of the card
         //rebind event handlers
         
-        $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         $(".open").css('display', 'flex');
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
@@ -576,7 +576,7 @@ $(document).ready(function() {
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-    $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $("#submitTextBlock").on("click", function(e){
     	e.preventDefault();
@@ -932,7 +932,7 @@ $(window).on('load', function () {
                         <i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>
-                <div th:id="${contents.id}" class="textDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                <div th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
                 	<!-- <a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a> -->

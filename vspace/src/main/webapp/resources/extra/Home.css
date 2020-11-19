@@ -715,6 +715,13 @@ i {
     margin-top: -3px;
 }
 
+.textDivStaff {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
+
 .choiceDiv {
     position: relative;
     top: 0px;
