@@ -947,9 +947,9 @@ $(window).on('load', function () {
                 	<!-- <a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a> -->
-                    <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block;"
+                    <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block;"
+                    <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
                     <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
                     <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
