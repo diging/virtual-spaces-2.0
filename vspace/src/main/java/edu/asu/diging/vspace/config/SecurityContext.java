@@ -47,7 +47,12 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/**", "/admin/**", "/staff/user/**").hasRole("ADMIN")
                 .antMatchers("/staff/**").hasAnyRole("STAFF", "ADMIN")
                 .antMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE)
-                .anyRequest().hasRole("USER");
+                .anyRequest().hasRole("USER")
+                .and().headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions
+                                .sameOrigin()
+                            )
+                        );
     }
 
     @Bean

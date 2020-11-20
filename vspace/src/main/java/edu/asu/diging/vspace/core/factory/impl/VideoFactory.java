@@ -17,9 +17,10 @@ public class VideoFactory implements IVideoFactory {
      * String, java.lang.String)
      */
     @Override
-    public IVSVideo createVideo(String filename, String fileType) {
+    public IVSVideo createVideo(String filename, Long size, String fileType) {
         IVSVideo video = new VSVideo();
         video.setFilename(filename);
+        video.setFileSize(size);
         video.setFileType(fileType);
         return video;
     }

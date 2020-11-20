@@ -4,6 +4,6 @@ import edu.asu.diging.vspace.core.model.IVSVideo;
 
 public interface IVideoFactory {
 
-    IVSVideo createVideo(String filename, String fileType);
+    IVSVideo createVideo(String filename, Long size, String fileType);
 
 }

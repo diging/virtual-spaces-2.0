@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.data.VideoRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -128,14 +129,13 @@ public class ContentBlockManager implements IContentBlockManager {
             return slideContentImage;
         }
         return null;
-    }
+    }    
     
-    
-    private IVSVideo saveVideo(byte[] video, String filename) { 
+    private IVSVideo saveVideo(byte[] video, Long size, String filename) { 
         if (video != null && video.length > 0) { 
             Tika tika = new Tika();
             String contentType = tika.detect(video);
-            IVSVideo slideContentVideo = videoFactory.createVideo(filename, contentType);
+            IVSVideo slideContentVideo = videoFactory.createVideo(filename, size, contentType);
             slideContentVideo = videoRepo.save((VSVideo) slideContentVideo);
             return slideContentVideo;
         }
@@ -159,13 +159,13 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename)
-            throws ImageCouldNotBeStoredException {
+            throws VideoCouldNotBeStoredException {
         if (slideContentVideo != null) {
             String relativePath = null;
             try {
                 relativePath = storage.storeFile(video, filename, slideContentVideo.getId());
             } catch (FileStorageException e) {
-                throw new ImageCouldNotBeStoredException(e);
+                throw new VideoCouldNotBeStoredException(e);
             }
             slideContentVideo.setParentPath(relativePath);
             videoRepo.save((VSVideo) slideContentVideo);
@@ -202,13 +202,13 @@ public class ContentBlockManager implements IContentBlockManager {
      * createVideoBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createVideoBlock(String slideId, byte[] video, String fileName, String url, Integer contentOrder)
-            throws ImageCouldNotBeStoredException {
+    public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder)
+            throws VideoCouldNotBeStoredException {
 
           
             ISlide slide = slideManager.getSlide(slideId);
             System.out.println("Slide -----"+slide.getId());
-            IVSVideo slideContentVideo = saveVideo(video, fileName);
+            IVSVideo slideContentVideo = saveVideo(video, size, fileName);
             CreationReturnValue returnValue = new CreationReturnValue();
             returnValue.setErrorMsgs(new ArrayList<>());
             IVideoBlock vidBlock = null;
@@ -304,12 +304,36 @@ public class ContentBlockManager implements IContentBlockManager {
         imageBlock.setImage(slideContentImage);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
+    
+    @Override
+    public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, Integer contentOrder)
+            throws VideoCouldNotBeStoredException {
+        
+        if(video != null ) {
+            IVSVideo slideContentVideo = saveVideo(video, fileSize, filename);
+            storeVideoFile(video, slideContentVideo, filename);
+            videoBlock.setVideo(slideContentVideo);
+        }
+        else {
+            videoBlock.setUrl(url);
+        }
+        videoBlockRepo.save((VideoBlock) videoBlock);
+    }
 
     @Override
     public IImageBlock getImageBlock(String imgBlockId) {
         Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
         if (imgBlock.isPresent()) {
             return imgBlock.get();
+        }
+        return null;
+    }
+    
+    @Override
+    public IVideoBlock getVideoBlock(String videoBlockId) {
+        Optional<VideoBlock> videoBlock = videoBlockRepo.findById(videoBlockId);
+        if (videoBlock.isPresent()) {
+            return videoBlock.get();
         }
         return null;
     }

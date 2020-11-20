@@ -23,6 +23,8 @@ public class VSVideo extends VSpaceElement implements IVSVideo{
     @Lob
     private String parentPath;
 
+    private Long fileSize; 
+    
     private String fileType;
 
     private int height;
@@ -106,6 +108,16 @@ public class VSVideo extends VSpaceElement implements IVSVideo{
     @Override
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    @Override
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    @Override
+    public Long getFileSize() {
+        return fileSize;
     }
 
 }

@@ -81,10 +81,19 @@ function onDoubleClick(e){
     }
     else {
     	var vidId = $(e.target).attr('id');
+    	alert(vidId);
     	if(vidId != '') {
     		var url = $(e.target).find('iframe').attr('src');
     		console.log(url);
-    		$("#saveVideo").data('value', vidId); // sets image ID value
+    		if(url.includes("www.")) {
+    			console.log("link");
+    			$("#videoLink").data('value', url);
+    		}
+    		else {
+    			console.log("upload");
+    			$("#videoFile").attr('value', url);
+    		}
+    		//$("#saveVideo").data('value', vidId); // sets video ID value
         	$("#addVideoAlert").show();
     	}
     }
@@ -180,6 +189,8 @@ function uploadImage() {
 }
 
 function embedVideo() {
+	var videoID = $("#saveVideo").data('value') // gets video ID
+	
 	var url = $("#videoLink").val();
 	var vidFile = $("#videoFile")[0].files[0];
 	var reader = new FileReader();
@@ -188,19 +199,16 @@ function embedVideo() {
 	//var iFrameString = "<iframe width='560' height='315' src='"+url+"' frameborder='0' allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
     var formData = new FormData();
     if(url) {
-    	//alert("lmao you thought");
     	formData.append('url', url);
     	videoBlock = createVideoBlock(reader, url);
         $('#slideSpace').append(videoBlock); 
     }
 	if(vidFile) {
-		//alert("yep");
 		formData.append('videoFile', vidFile);
+
 	    reader.onload = function (theFile) { 
-	    	//console.log(theFile);
 			videoBlock = createVideoBlock(reader, theFile.target.result);
 	        $('#slideSpace').append(videoBlock);
-
 		}
 	}
     var ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";

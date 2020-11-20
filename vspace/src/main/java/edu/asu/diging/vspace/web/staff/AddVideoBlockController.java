@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -30,25 +31,25 @@ public class AddVideoBlockController {
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video", method = RequestMethod.POST)
     public ResponseEntity<String> addVideoBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam(required = false) MultipartFile videoFile, 
+            @PathVariable("moduleId") String moduleId, @RequestParam(required = false) MultipartFile videoFile,
             @RequestParam(required = false) String url, @RequestParam Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
-        System.out.println(videoFile);
         
         byte[] video = null; 
         String fileName = null;
         if (videoFile != null) {
             video = videoFile.getBytes();
             fileName = videoFile.getOriginalFilename();
+           // System.out.println(videoFile.getContentType()+"----"+videoFile.getSize());
         }
         String videoId;
         try {
-            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video, fileName, url, contentOrder); 
+            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video, videoFile.getSize(), fileName, url, contentOrder); 
             IVSpaceElement videoBlock = videoBlockValue.getElement();
             videoId = videoBlock.getId(); 
         }
         
-        catch (ImageCouldNotBeStoredException e) { 
+        catch (VideoCouldNotBeStoredException e) { 
             ObjectMapper mapper = new
             ObjectMapper(); ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Video Content block cannot be stored."); 

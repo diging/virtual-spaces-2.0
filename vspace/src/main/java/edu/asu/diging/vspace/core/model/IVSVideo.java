@@ -5,6 +5,10 @@ public interface IVSVideo extends IVSpaceElement {
     String getFilename();
 
     void setFilename(String filename);
+    
+    void setFileSize(Long fileSize);
+    
+    Long getFileSize();
 
     void setFileType(String fileType);
 
