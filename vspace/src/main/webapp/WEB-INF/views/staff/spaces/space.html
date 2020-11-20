@@ -1060,19 +1060,19 @@
 			}
 			
 			function showSpaceLinkEdit(spaceLink, show) {
-				spaceLink["x"]=storeX;
-				spaceLink["y"]=storeY;
-				
-			
-				var posX;
-			    var posY;
-				if(show==true) {
-					posX = $("#main-bgImage").position().left;
+				var posX, posY;
+				if(show) {
+					posx = $("#main-bgImage").position().left;
 					posY = $("#main-bgImage").position().top;
-			    }else{
+			    }
+				else{
 			    	posX = $(".bgImage").position().left;
 					posY = $(".bgImage").position().top;
 			    }
+				
+				spaceLink["x"]=storeX;
+				spaceLink["y"]=storeY;					
+				
 				var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
 				var selectedLabelClass = '.slabel-'+selectedSpaceLinkId;
 				var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
@@ -1094,7 +1094,7 @@
 			    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
 			    $(selectedUnpublishedIconClass).css({ 'left': parseInt(spaceLink["x"]) + posX + 25});
 			    $(selectedUnpublishedIconClass).css({ 'top': parseInt(spaceLink["y"]) + posY - 13});
-				updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"], show);
+				updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"], true);
 			}
 			
 			function showExternalLinkEdit(externalLink, show) {
@@ -1106,12 +1106,12 @@
 			}
 			
 			function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
-			    var posX;
-			    var posY;
-				if(show==true) {
-					posX = $("#main-bgImage").position().left;
+				var posX, posY;
+				if(show) {
+					posx = $("#main-bgImage").position().left;
 					posY = $("#main-bgImage").position().top;
-			    }else{
+			    }
+				else{
 			    	posX = $(".bgImage").position().left;
 					posY = $(".bgImage").position().top;
 			    }
