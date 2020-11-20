@@ -37,9 +37,13 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script th:src="@{/resources/bootstrap-4.1.2/assets/js/popper.min.js}"></script>
+<script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
 <script th:src="@{/resources/bootstrap/js/main.js}"></script>
+<script th:src="@{/resources/extra/dateFormat.min.js}"></script>
+<script th:src="@{/resources/extra/bootbox.min.js}"></script>
 
 <script th:inline="javascript">
       //# sourceURL=date.js
@@ -58,15 +62,10 @@
   });
 </script>
 
-<script th:src="@{/resources/extra/dateFormat.min.js}"></script>
-<script th:src="@{/resources/extra/bootbox.min.js}"></script>
-
    <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!--  <script>window.jQuery || document.write('<script th:src="@{../../assets/js/vendor/jquery-slim.min.js}"><\/script>')</script> -->
-<script th:src="@{/resources/bootstrap-4.1.2/assets/js/popper.min.js}"></script>
-<script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
 
     <!-- Icons -->
 <script src="//unpkg.com/feather-icons/dist/feather.min.js"></script>
@@ -76,7 +75,7 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    <div style="width: 80%; margin: 0 0 60px auto">
+    <div style="width: 80%; margin: 120px 0 60px auto">
         <div layout:fragment="content"></div>
     </div>
 </body>
