@@ -680,7 +680,7 @@
 			        data: formData,
 			        success: function(data) {
 			            var linkData = JSON.parse(data);
-			            $(".bgImage").off("click");
+			            $("#main-bgImage").off("click");
 			            spaceLinkInfo["id"] = linkData["id"];
 			            spaceLinkInfo["displayId"]=linkData["displayId"];
 			            spaceLinkInfo["x"]=linkData["x"];
@@ -934,8 +934,6 @@
 				$("#link").remove();
 				var posX = $(".bgImage").position().left;
 				var posY = $(".bgImage").position().top;
-				var mainposX = $("#main-bgImage").position().left;
-				var mainposY = $("#main-bgImage").position().top;
 				var space_label = $("<p id='space_label' class='tooltiptext'></p>");
 				space_label.text(spaceLink["spaceLinkLabel"]);
 				
@@ -968,12 +966,10 @@
 				        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
 				    }    
 				}
-				
-				console.log(posX, posY, mainposX, mainposY);
-				
+								
 				link.css('position', 'absolute');
-				link.css('left', mainposX + spaceLink["x"] + posX);
-				link.css('top', mainposY + spaceLink["y"] + posY);
+				link.css('left', spaceLink["x"] + posX);
+				link.css('top', spaceLink["y"] + posY);
 				link.css('color', 'rgba(128,128,128,1)');
 				link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
 				link.css('font-size', "12px");
@@ -1066,6 +1062,17 @@
 			function showSpaceLinkEdit(spaceLink, show) {
 				spaceLink["x"]=storeX;
 				spaceLink["y"]=storeY;
+				
+			
+				var posX;
+			    var posY;
+				if(show==true) {
+					posX = $("#main-bgImage").position().left;
+					posY = $("#main-bgImage").position().top;
+			    }else{
+			    	posX = $(".bgImage").position().left;
+					posY = $(".bgImage").position().top;
+			    }
 				var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
 				var selectedLabelClass = '.slabel-'+selectedSpaceLinkId;
 				var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
@@ -1087,7 +1094,7 @@
 			    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
 			    $(selectedUnpublishedIconClass).css({ 'left': parseInt(spaceLink["x"]) + posX + 25});
 			    $(selectedUnpublishedIconClass).css({ 'top': parseInt(spaceLink["y"]) + posY - 13});
-				updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"]);
+				updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"], show);
 			}
 			
 			function showExternalLinkEdit(externalLink, show) {
@@ -1098,9 +1105,18 @@
 				updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],externalLink["x"],externalLink["y"],externalLink["externalLinkLabel"]);
 			}
 			
-			function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel){
-			    var posX = $(".bgImage").position().left;
-				var posY = $(".bgImage").position().top;
+			function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
+			    var posX;
+			    var posY;
+				if(show==true) {
+					posX = $("#main-bgImage").position().left;
+					posY = $("#main-bgImage").position().top;
+			    }else{
+			    	posX = $(".bgImage").position().left;
+					posY = $(".bgImage").position().top;
+			    }
+				
+				
 			    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
 			    $(selectedLinkClass).css({ 'position': 'absolute'});
 			    $(selectedLinkClass).css({ 'left': x + posX});
@@ -1319,8 +1335,8 @@
 		        
 		        $(".bgImage").mousedown(function(e) {
 					e.preventDefault();
-					var posX = $(".bgImage").position().left;
-					var posY = $(".bgImage").position().top;    
+					/* var posX = $(".bgImage").position().left;
+					var posY = $(".bgImage").position().top; */    
 					storeX = e.clientX- $(this).offset().left;
 					storeY = e.clientY- $(this).offset().top;
 					showSpaceLinkEdit(editSpaceLinkInfo());
