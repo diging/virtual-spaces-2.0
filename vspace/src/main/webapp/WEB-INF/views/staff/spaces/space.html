@@ -50,7 +50,7 @@
 		link.css('left', [[${link.positionX}]] + posX);
 		link.css('top', [[${link.positionY}]] + posY);
 		link.css('transform', 'rotate([(${link.rotation})]deg)');
-		link.find("span").css('fill', 'red');
+		link.find("span").css('fill', 'grey');
 		link.css('color', 'rgba(128,128,128,1)');
 		link.css('font-size', "12px");
 		var inputRotation = document.createElement("input");
@@ -964,7 +964,7 @@
 						'transform': 'rotate(0deg)',
 						'left': spaceLink["x"] + posX - 10,
 						'top': spaceLink["y"] + posY + 35,
-						'color': 'red'
+						'color': 'grey'
 					});
 					link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
 				}
@@ -1332,11 +1332,11 @@
 				$('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
 				$('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
 		        resetHighlighting(); 
-		        $('[data-link-id="' + spaceLinkId + '"]').css("color", "#c1bb88");
+		        $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
 		        $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
 		        $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
 		        $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
-		        $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "#c1bb88");
+		        $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
 		        
 		        $(".bgImage").on("click", function(e){
 					e.preventDefault();
