@@ -555,6 +555,7 @@
 			    			$("#noLinksToSpace").hide();
 			    			$("div#incomingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
 			    		}
+			    		window.location.reload();
 			        }
 				});
 			});
@@ -613,6 +614,7 @@
 			        	$("#createModuleLinkAlert").hide();
 			        	$("#errorMsg").text("");
 			        	$('#errorAlert').hide();
+			        	window.location.reload();
 			        }
 				});
 			});
@@ -651,6 +653,7 @@
 			            $('#moduleLinkTarget-'+selectedModuleLinkId).val(linkData["linkedId"]);
 			            showModuleLinkEdit(moduleLinkInfo, true);
 			            hideLinkInfoTabs();
+			            window.location.reload();
 			        }
 			    });
 			});
@@ -692,6 +695,7 @@
 			            $('#spaceLinkType-'+selectedSpaceLinkId).val(linkData["dislpayType"]);
 			            $('#spaceLinkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
 			            hideLinkInfoTabs();
+			            window.location.reload();
 			       	}
 			 	});
 			});
@@ -730,6 +734,7 @@
 			            $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
 			            showExternalLinkEdit(editExternalLinkInfo, true);
 			            hideLinkInfoTabs();
+			            window.location.reload();
 			       	}
 			 	});
 			});
@@ -788,6 +793,7 @@
 			        	$("#errorMsg").text("");
 			        	$('#errorAlert').hide();
 			        	$("#external-arrow").attr("id","");
+			        	window.location.reload();
 			        }
 				});
 			});
@@ -810,6 +816,7 @@
 						  $("#noLinksToSpace").show();
 					  }
 			          $("#spaceLinkInfo").hide();
+			          window.location.reload();
 				    }
 				});
 			});
@@ -823,6 +830,7 @@
 						success:function(data) {
 							$('[data-link-id="' + linkId + '"]').remove();
 							hideLinkInfoTabs();
+							window.location.reload();
 						}
 					});
 			});
@@ -835,6 +843,7 @@
 		                success:function(data) {
 		                    $('[data-link-id="' + linkId + '"]').remove();
 		                    hideLinkInfoTabs();
+		                    window.location.reload();
 		                }
 		            });
 		    });
@@ -1059,17 +1068,7 @@
 				updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],moduleLink["x"],moduleLink["y"],moduleLink["moduleLinkLabel"]);
 			}
 			
-			function showSpaceLinkEdit(spaceLink, show) {
-				var posX, posY;
-				if(show) {
-					posx = $("#main-bgImage").position().left;
-					posY = $("#main-bgImage").position().top;
-			    }
-				else{
-			    	posX = $(".bgImage").position().left;
-					posY = $(".bgImage").position().top;
-			    }
-				
+			function showSpaceLinkEdit(spaceLink, show) {				
 				spaceLink["x"]=storeX;
 				spaceLink["y"]=storeY;					
 				
@@ -1094,7 +1093,7 @@
 			    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
 			    $(selectedUnpublishedIconClass).css({ 'left': parseInt(spaceLink["x"]) + posX + 25});
 			    $(selectedUnpublishedIconClass).css({ 'top': parseInt(spaceLink["y"]) + posY - 13});
-				updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"], true);
+				updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"]);
 			}
 			
 			function showExternalLinkEdit(externalLink, show) {
@@ -1333,12 +1332,12 @@
 		        $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
 		        $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "#c1bb88");
 		        
-		        $(".bgImage").mousedown(function(e) {
+		        $(".bgImage").on("click", function(e){
 					e.preventDefault();
-					/* var posX = $(".bgImage").position().left;
-					var posY = $(".bgImage").position().top; */    
-					storeX = e.clientX- $(this).offset().left;
-					storeY = e.clientY- $(this).offset().top;
+					var posX = $(this).position().left;
+					var posY = $(this).position().top;    
+					storeX = e.pageX- $(this).offset().left;
+					storeY = e.pageY- $(this).offset().top;
 					showSpaceLinkEdit(editSpaceLinkInfo());
 				});
 		        hideLinkInfoTabs();
@@ -1828,7 +1827,7 @@
 	                
 	                <p class="mt-5 text-center">
 	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
-	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn">Save Space Link</button>
+	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn">Save Changes</button>
 	                </p>
 	                
 	            </div>
