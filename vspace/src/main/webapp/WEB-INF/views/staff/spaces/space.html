@@ -1460,29 +1460,60 @@
 		            <a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span>&nbsp;<i class="fas fa-edit"></i></span></a>
 		        </h2>
 		        <p>[[${space.description}]]</p>
+		        
+		        <div class="flex-spacing">
+		        	<div class="dropdown">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Incoming space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="incominglinks">
+					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
+			            <div th:each="spaceLinks : ${linksToThisSpace}">	            	
+			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem"
+			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small></a>
+			            </div>
+					  </div>
+					</div>
+					
+					<div class="dropdown">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Outgoing space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
+					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
+			            <div th:each="spaceLinks : ${linksOnThisSpace}">	            	
+		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem"
+		                        th:if="${spaceLinks.targetSpace != null}"
+		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small></a>
+						</div>
+					  </div>
+					</div>
+		        </div>
+		        
+		        
 	    	</div>
 	    	
  			<div>
 	    		<label>Space Status</label> 
 	            <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/status'}">
 	                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
-	                <select class="form-control" name="statusParam" style="width: 200px; display: inline;">
+	                <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
 	                    <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
 	                    <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
 	                </select>
 	                <p style="display: inline; padding-left: 10px;">
-	                    <input class="btn primary-btn" type="submit" value="Submit" />
+	                    <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
 	                </p>
 	            </form>
-	            <label style="margin-top: 30px">Show Links to Unpublished Spaces</label>
+	            <label style="margin-top: 10px">Show Links to Unpublished Spaces</label>
 	            <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/showSpaceLinks'}" name="f">
 	                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
-	                <select class="form-control" name="showSpaceLinksParam" style="width: 200px; display: inline;">
+	                <select class="form-control-sm" name="showSpaceLinksParam" style="width: 200px; display: inline;">
 	                    <option th:id="No" th:value=false th:selected="${!space.showUnpublishedLinks}">No</option>
 	                    <option th:id="Yes" th:value=true th:selected="${space.showUnpublishedLinks}">Yes</option>
 	                </select>
 	                <p style="display: inline; padding-left: 10px;">
-	                    <input class="btn primary-btn" type="submit" value="Submit" />
+	                    <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
 	                </p>
 	            </form>
 	        </div> 
@@ -1540,7 +1571,7 @@
 	                        <label>Rotation</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input class="form-control" style="background: var(--base-grey); width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0">
+	                        <input class="form-control-sm" style="background: var(--base-grey); width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0">
 	                    </div>
 	                </div>
 	
@@ -1549,7 +1580,7 @@
 	                        <label>Label</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input class="form-control target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
+	                        <input class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
 	                    </div>
 	                </div>
 	
@@ -1558,7 +1589,7 @@
 	                        <label>Type</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <select id="type" name="type"  class="form-control target" style="background: var(--base-grey); width: inherit;">
+	                        <select id="type" name="type"  class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
 	                            <option th:selected>Choose...</option>
 	                            <option th:value="IMAGE">Image</option>
 	                            <option th:value="ARROW">Link</option>
@@ -1572,7 +1603,7 @@
 	                        <label>Linked Space</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <select id="linkedSpace" name="linkedSpace" class="form-control target" style="background: var(--base-grey); width: inherit;">
+	                        <select id="linkedSpace" name="linkedSpace" class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
 	                            <option th:selected>Choose...</option>
 	                            <option th:each="space : ${spaces}" th:value="${space.id}">[[${space.name}]]
 	                                <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
@@ -1585,12 +1616,12 @@
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-xs" name="spaceLinkImage" id="spaceLinkImage">
+	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
-	                    <button type="reset" class="btn btn-light cancelSpaceLinkBtn">Cancel</button>
-	                    <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn">Create Space Link</button>
+	                    <button type="reset" class="btn btn-light cancelSpaceLinkBtn btn-sm">Cancel</button>
+	                    <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Space Link</button>
 	                </p>
 	            </div>
 	        </form>
@@ -1622,7 +1653,7 @@
 	                        <label>Rotation</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input class="form-control modulelink-target" style="width: inherit; background: var(--base-grey)" type="number"
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="number"
 	                            id="moduleLinkRotation" name="rotation"
 	                            value="0">
 	                    </div>
@@ -1633,7 +1664,7 @@
 	                        <label>Label</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input class="form-control modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
 	                            name="moduleLinkLabel" id="moduleLinkLabel">
 	                    </div>
 	                </div>
@@ -1643,7 +1674,7 @@
 	                        <label>Linked Modules</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <select id="linkedModule" name="linkedModule" class="form-control modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                        <select id="linkedModule" name="linkedModule" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
 	                            <option th:selected>Choose...</option>
 	                            <option th:value="${module.id}"
 	                                th:each="module : ${moduleList}">[[${module.name}]]</option>
@@ -1651,8 +1682,8 @@
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
-	                    <button type="reset" class="btn btn-light cancelModuleLinkBtn">Cancel</button>
-	                    <button id="createModuleLinkBtn" type="reset" class="btn primary-btn">Create Module Link</button>
+	                    <button type="reset" class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
+	                    <button id="createModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Module Link</button>
 	                </p>
 	
 	            </div>
@@ -1669,9 +1700,9 @@
                 <h5>Change Background Image</h5>
                 <input type="file" name="file" rows="5" cols="500" id="file" />
                 <p class="mb-0 text-right">
-                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm">Upload Image</button>
+                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
                     &nbsp;
-                    <button id="cancelBgImgBtn" type="button" class="btn light btn-sm">Cancel</button>
+                    <button id="cancelBgImgBtn" type="button" class="btn light btn-sm btn-sm">Cancel</button>
                 </p>
             </div>
 
@@ -1702,7 +1733,7 @@
 	                		<label>Label</label>
 	                	</div>
 	                	<div class="col-sm-8">
-	                		<input class="form-control extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
 	                			 name="externalLinkLabel" id="externalLinkLabel">	
 	                	</div>
 	                </div>
@@ -1712,7 +1743,7 @@
 	                		<label>External Link</label>
 	                	</div>
 	                	<div class="col-sm-8">
-	                		<input class="form-control extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
 	                    		size="15" name="url" id="externalLink">	
 	                	</div>
 	                </div>               
@@ -1722,7 +1753,7 @@
 	                        <label>Type</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <select id="extType" name="type" class="form-control extlink-target" style="width: inherit; background: var(--base-grey)">
+	                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
 	                            <option th:selected>Choose...</option>
 	                            <option th:value="IMAGE">Image</option>
 	                            <option th:value="ARROW">Link</option>
@@ -1735,12 +1766,12 @@
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control" name="externalLinkImage" id="externalLinkImage">
+	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
-	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn">Cancel</button>
-	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn">Create External Link</button>
+	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
+	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
 	                </p>
 	            </div>
 	        </form>
@@ -1775,7 +1806,7 @@
 	                        <label>Rotation</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input class="form-control spacelink-targetEdit"
+	                        <input class="form-control-sm spacelink-targetEdit"
 	                            type="number" id="spaceLinkRotationEdit"
 	                            name="rotation" style="width: inherit; background: var(--base-grey)" />
 	                    </div>
@@ -1786,7 +1817,7 @@
 	                        <label>Label</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input class="form-control spacelink-targetEdit"
+	                        <input class="form-control-sm spacelink-targetEdit"
 	                            type="text" name="spaceLinkLabel"
 	                            id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
 	                    </div>
@@ -1797,7 +1828,7 @@
 	                        <label>Type</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <select id="typeSpaceEdit" name="type" class="form-control spacelink-targetEdit"
+	                        <select id="typeSpaceEdit" name="type" class="form-control-sm spacelink-targetEdit"
 	                            style="width: inherit; background: var(--base-grey)">
 	                            <option th:value="IMAGE">Image</option>
 	                            <option th:value="ARROW">Link</option>
@@ -1811,7 +1842,7 @@
 	                        <label>Linked Space</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control spacelink-targetEdit"
+	                        <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control-sm spacelink-targetEdit"
 	                            style="width: inherit; background: var(--base-grey)">
 	                            <option th:each=" space : ${spaces}" th:value="${space.id}">[[${space.name}]]
 	                            	<span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
@@ -1826,13 +1857,13 @@
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control" name="spaceLinkImage" id="spaceLinkImageEdit" />
+	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
 	                    </div>
 	                </div>
 	                
 	                <p class="mt-5 text-center">
-	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
-	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn">Save Changes</button>
+	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Changes</button>
 	                </p>
 	                
 	            </div>
@@ -1874,7 +1905,7 @@
                         </div>
                         <div class="col-sm-8">
                             <input
-                                class="form-control modulelink-targetEdit"
+                                class="form-control-sm modulelink-targetEdit"
                                 type="number"
                                 id="moduleLinkRotationEdit"
                                 name="rotation" style="width: inherit;  background: var(--base-grey)"><br>
@@ -1886,7 +1917,7 @@
                         </div>
                         <div class="col-sm-8">
                             <input
-                                class="form-control modulelink-targetEdit"
+                                class="form-control-sm modulelink-targetEdit"
                                 type="text" name="moduleLinkLabel"
                                 id="moduleLinkLabelEdit"
                                 style="width: inherit;  background: var(--base-grey)"><br>
@@ -1900,7 +1931,7 @@
                         <div class="col-sm-8">
                             <select id="moduleLinkIdEdit"
                                 name="linkedModule"
-                                class="form-control modulelink-targetEdit"
+                                class="form-control-sm modulelink-targetEdit"
                                 style="width: inherit; background: var(--base-grey)">
                                 <option
                                     th:each=" module : ${moduleList}"
@@ -1910,8 +1941,8 @@
                     </div>
                     
                     <p class="mt-5 text-center">
-                        <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
-                        <button id="editModuleLinkBtn" type="reset" class="btn primary-btn">Save Module Link</button>
+                        <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Module Link</button>
                     </p>
                 </div>
             </form>
@@ -1971,7 +2002,7 @@
                         </div>
                         <div class="col-sm-8">
                             <input
-                                class="form-control externallink-targetEdit"
+                                class="form-control-sm externallink-targetEdit"
                                 type="text" name="externalLinkLabel"
                                 id="externalLinkLabelEdit"
                                 style="width: inherit; background: var(--base-grey)"><br>
@@ -1985,7 +2016,7 @@
                         </div>
                         <div class="col-sm-8">
                             <input
-                                class="form-control externallink-targetEdit"
+                                class="form-control-sm externallink-targetEdit"
                                 type="text" name="url"
                                 id="externalLinkURLEdit"
                                 style="width: inherit; background: var(--base-grey)">
@@ -1998,7 +2029,7 @@
                         </div>
                         <div class="col-sm-8">
                             <select id="extTypeEdit" name="type"
-                                class="form-control externallink-targetEdit">
+                                class="form-control-sm externallink-targetEdit">
                                 <option th:value="IMAGE">Image</option>
                                 <option th:value="ARROW">Link</option>
                             </select>
@@ -2010,15 +2041,15 @@
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="file" class="form-control"
+                            <input type="file" class="form-control-sm"
                                 name="externalLinkImage"
-                                id="externalLinkImageEdit"><br>
+                                id="externalLinkImageEdit" style="width: inherit" />
                         </div>
                     </div>
                     
                     <p class="mt-5 text-center">
-                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn"><i class="fa fa-trash"></i>Delete</button>
-                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn">Save External Link</button>
+                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn btn-sm">Save External Link</button>
                     </p>
                     
                 </div>
@@ -2031,10 +2062,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalTitle">Confirm
-                            [[${space.id}]] Deletion?</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">�</button>
+                        <h5 class="modal-title" id="deleteModalTitle">Confirm [[${space.id}]] Deletion?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete
@@ -2067,31 +2096,9 @@
         <div id="main-space" th:if="${space.image != null}">
             <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
         </div>
-
-        <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
-
-        <div class="flex-spacing">
-        	<div id="incomingLinks" class="list-group">
-	            <p style="font-weight: 600">Incoming space links</p>
-	            <span th:if="${#lists.isEmpty(linksToThisSpace)}">There are no links to this space.</span>
-	            <div th:each="spaceLinks : ${linksToThisSpace}">	            	
-	                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem"
-	                    class="list-group-item" th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
-	            </div>
-	        </div>
-        	<div id="outgoingLinks" class="list-group">
-	            <p style="font-weight: 600">Outgoing Space Links</p>
-	            <span th:if="${#lists.isEmpty(linksOnThisSpace)}">There are no links from this space.</span>
-	            <div th:each="spaceLinks : ${linksOnThisSpace}">	            	
-                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem"
-                        class="list-group-item" th:if="${spaceLinks.targetSpace != null}"
-                        th:id="${spaceLinks.id}">[[${spaceLinks.targetSpace.name}]]</a>
-				</div>
-	        </div>
-        </div>
-        
-        <button type="button" id="deleteSpace"  class="btn delete-btn"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
-        
+        <p class="text-right" style="margin-top: 50px">
+            <button type="button" id="deleteSpace"  class="btn delete-btn"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
+        </p>
    </div> 
 </body>
 </html>
