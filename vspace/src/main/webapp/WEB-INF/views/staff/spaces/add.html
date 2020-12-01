@@ -10,7 +10,9 @@ $(document).ready(function(){
 	$("#imageId").select2({
 		ajax: {
 		    url: function (params) {
-		      return "/vspace/staff/images/search";
+		  		var imageURL = [[@{|/staff/images/search|}]];
+		  		console.log(imageURL);
+		  		return imageURL;
 		    },
 		    dataType: 'json',
 		    processResults: function (data) {
@@ -28,7 +30,7 @@ $(document).ready(function(){
     	if (!image.id) {
     		return image.text;
     	}
-    	var tbaseUrl = "/vspace/api/image/";
+    	var tbaseUrl = [[@{|/api/image/|}]];
     	var $image = $(
     			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
     	);
@@ -39,7 +41,7 @@ $(document).ready(function(){
     	if (!image.id) {
             return image.text;
         }
-        var tbaseUrl = "/vspace/api/image/";
+    	var tbaseUrl = [[@{|/api/image/|}]];
         var $image = $(
                 '<span>' + image.text + '</span>'
         );
