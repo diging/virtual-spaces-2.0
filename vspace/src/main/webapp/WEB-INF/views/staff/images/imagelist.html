@@ -40,9 +40,6 @@ function toggleChange(form, imageId) {
     });
 }
 
-function filterByTag(){
-    console.log("FilterByTag invoked");
-}
 $( document ).ready(function() {
     $(".removeTag").click(function(e) {
     	removeTag(e);
@@ -92,9 +89,22 @@ $( document ).ready(function() {
    
    $("#filterTag").on("change", function(e){
    	e.preventDefault();
-       // ------------- editting text content blocks ------------
-       console.log("In FilterTag");
+   	var slectedId=e.target.value;
+       console.log("In FilterTag :- ",slectedId);
+       $(".tableBody").children().remove();
        var formData = new FormData();
+       $.ajax({
+			type: "POST",
+			url: "[(@{'/staff/images/list/'})]"+slectedId+'/1/?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			cache       : false,
+	        contentType : false,
+	        processData : false,
+	        enctype: 'multipart/form-data',
+	        data: formData, 
+	        success: function(data) {
+	        	var data = JSON.parse(data);
+	        }
+		});
    }); 
 });
 </script>
@@ -135,7 +145,6 @@ $( document ).ready(function() {
                     <th scope="col" sort-prop="creationDate"><a
                         href="#">Created Date</a></th>
                     <th scope="col" sort-prop="tag">Tag<select id="filterTag" name="tagFilter"
-                                th:onChange="filterByTag(this.form)"
                                 class="form-control form-control-sm">
                     <option>Select</option>
                     <option th:each="catTag:${imageCategories}"
@@ -144,7 +153,7 @@ $( document ).ready(function() {
                 </select></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tableBody">
                 <tr th:each="image: ${images}">
                     <th scope="row"><a
                         th:href="@{'/staff/display/image/'+${image.id}}"><img
