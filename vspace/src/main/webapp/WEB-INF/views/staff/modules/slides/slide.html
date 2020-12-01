@@ -653,7 +653,7 @@ $(window).on('load', function () {
         
         <div class="error"></div>
         
-		<div class="dropdown" style="float: right">
+		<div class="dropdown" style="float: right" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		    	<i class="fa fa-code-branch"></i> Branching point
 			</button>
@@ -923,10 +923,7 @@ $(window).on('load', function () {
         <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
                 <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                	<!-- <a class="btn col-md-1" href="#"> 
-                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
-                    </a> -->
-                    <img th:id="${contents.id}" class="imgDiv col-md-10" th:src="@{'/api/image/'+${contents.image.id}}" />
+                    <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
                     <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
                     <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <i style="color: var(--error)" class="fas fa-trash-alt"></i>
