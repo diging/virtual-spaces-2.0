@@ -3,6 +3,7 @@
 <link th:href="@{/resources/multiselect/css/multiselect.css}"
     type="text/css" rel="stylesheet">
 <script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -62,8 +63,8 @@ $(document).ready(function() {
                 <label class="col-md-2 col-form-label" for="description">Description</label>
                 <textarea placeholder="Description" rows="5" class="form-control col-md-10" id="description" name="description"></textarea>
             </div>
-            <div class="form-group">
-                <label for="Slides">Select Slides<br>(Double click to select and drag to reorder)</label> 
+            <div class="form-group row">
+                <label for="Slides">Select Slides<br>(Double click to select &nbsp; <br>and drag to reorder)</label> 
                 <select multiple="multiple" id="ordered-slides">
                     <option th:each="slide: ${slides}" th:value=${slide.id} th:id=${slide.id}>[[${slide.name}]]</option>
                 </select> 
