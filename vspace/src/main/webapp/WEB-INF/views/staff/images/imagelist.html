@@ -86,26 +86,16 @@ $( document ).ready(function() {
         }
     }
     });
-   
-   $("#filterTag").on("change", function(e){
-   	e.preventDefault();
-   	var slectedId=e.target.value;
-       console.log("In FilterTag :- ",slectedId);
-       $(".tableBody").children().remove();
-       var formData = new FormData();
-       $.ajax({
-			type: "POST",
-			url: "[(@{'/staff/images/list/'})]"+slectedId+'/1/?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-			cache       : false,
-	        contentType : false,
-	        processData : false,
-	        enctype: 'multipart/form-data',
-	        data: formData, 
-	        success: function(data) {
-	        	var data = JSON.parse(data);
-	        }
-		});
-   }); 
+      
+   $("#filterTag").on("change", function(e) {
+       console.log($(this).val());
+       if($(this).val()==="Show All"){
+           $(".tableBody td").parent().show();
+       }else{
+           $(".tableBody td.filteredData:contains('" + $(this).val() + "')").parent().show();
+           $(".tableBody td.filteredData:not(:contains('" + $(this).val() + "'))").parent().hide();
+       }
+   });
 });
 </script>
 <style>
@@ -146,7 +136,7 @@ $( document ).ready(function() {
                         href="#">Created Date</a></th>
                     <th scope="col" sort-prop="tag">Tag<select id="filterTag" name="tagFilter"
                                 class="form-control form-control-sm">
-                    <option>Select</option>
+                    <option>Show All</option>
                     <option th:each="catTag:${imageCategories}"
                                     th:value="${catTag}">[[${@environment.getProperty('image_category_'
                                     + catTag)}]]</option>
@@ -154,7 +144,7 @@ $( document ).ready(function() {
                 </tr>
             </thead>
             <tbody class="tableBody">
-                <tr th:each="image: ${images}">
+                <tr th:each="image: ${images}" th:class="${catTag}">
                     <th scope="row"><a
                         th:href="@{'/staff/display/image/'+${image.id}}"><img
                             th:src="@{'/api/image/'+${image.id}}"
@@ -168,8 +158,7 @@ $( document ).ready(function() {
                     </td>
                     <td>[[${image.createdBy}]]</td>
                     <td><span class="date">[[${image.creationDate}]]</span></td>
-                    <td><span th:id="'tags-'+${image.id}"
-                        class="tag"> <span
+                    <td><span th:id="'tags-'+${image.id}"><span
                             th:each="cat:${image.categories}"
                             th:id="'category-badge-'+${image.id}+'-'+${cat}"
                             th:data-category="${cat}"
@@ -196,6 +185,9 @@ $( document ).ready(function() {
                                     + catTag)}]]</option>
                             </select>
                         </form></td>
+                        <td style="display:none;" class="filteredData"><span
+                            th:each="cat:${image.categories}">[[${cat}]]
+                        </span></td>
                 </tr>
             </tbody>
         </table>
