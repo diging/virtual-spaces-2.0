@@ -524,25 +524,27 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="textDivStaff tab row" style="margin: 10px;">');
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="choiceDiv tab row" style="display:block;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
-                        choiceblock.append('<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
+                        choiceblock.append('<a style="color:var(--primary);  display:block;" href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
+                    console.log("In else block");
                 	$(function() {
                         var links = $("#choiceSpace a").map(function(e) {
-                            text = '<a href='+this.href+'>'+this.name+'</a>';
+                            text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
                             return text;
                         }).get();
                         $(links).each(function(index, choice) {
+                            console.log(choice);
                             choiceblock.append(choice);
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="position: absolute; right: 0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
-                    'margin': "10px"
+                    'display': "block"
                 });
                 $('#slideSpace').append(choiceblock);
             },
@@ -653,16 +655,16 @@ $(window).on('load', function () {
         
         <div class="error"></div>
         
-		<div class="dropdown" style="float: right" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
+		<div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    	<i class="fa fa-code-branch"></i> Branching point
+		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
 			</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenu2" th:each="choice: ${choices}">
-			    <a  class="dropdown-item" 
+			<div id="choiceSpace" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+			    <a  th:each="choice: ${choices}" class="dropdown-item" 
 			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
 	                th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
 			</div>
-        </div>       
+        </div>
         
         <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
         	<i class="fa fa-info-circle var(--error)" data-toggle="tooltip" data-html="true" data-placement="top" 
@@ -671,7 +673,6 @@ $(window).on('load', function () {
         		<i class="fas fa-edit"></i></a>
         </h2>
         <p id="description">[[${slide.description}]]</p>
-                
         
         <div style="margin: 40px 0">
         	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
