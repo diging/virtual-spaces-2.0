@@ -44,7 +44,7 @@ public class AddVideoBlockController {
         }
         String videoId;
         try {
-            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video, videoFile.getSize(), fileName, url, contentOrder); 
+            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,(videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder); 
             IVSpaceElement videoBlock = videoBlockValue.getElement();
             videoId = videoBlock.getId(); 
         }

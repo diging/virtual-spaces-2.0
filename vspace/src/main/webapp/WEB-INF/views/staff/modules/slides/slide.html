@@ -70,7 +70,6 @@ function onDoubleClick(e){
         //remove card border
         $(".open").css('display', 'none');
     } else if(divName.includes("imgDiv")) {
-    	
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	alert(imgID);
@@ -87,13 +86,15 @@ function onDoubleClick(e){
     		console.log(url);
     		if(url.includes("www.")) {
     			console.log("link");
-    			$("#videoLink").data('value', url);
+    			$("#saveVideo").data('url', url);
+    			$("#videoLink").val(url);
+    			$("#urlTab").addClass("active");
+    			$("#urlLink").addClass("active");    			
+    			$("#uploadTab").removeClass("active");
+    			$("#uploadLink").removeClass("active");
+
     		}
-    		else {
-    			console.log("upload");
-    			$("#videoFile").attr('value', url);
-    		}
-    		//$("#saveVideo").data('value', vidId); // sets video ID value
+    		$("#saveVideo").data('value', vidId);
         	$("#addVideoAlert").show();
     	}
     }
@@ -189,31 +190,56 @@ function uploadImage() {
 }
 
 function embedVideo() {
-	var videoID = $("#saveVideo").data('value') // gets video ID
-	
+	var videoID = $("#saveVideo").data('value'); // gets video ID
+	var oldUrl = $("#saveVideo").data('url');
 	var url = $("#videoLink").val();
 	var vidFile = $("#videoFile")[0].files[0];
 	var reader = new FileReader();
 	var videoBlock = "";
-
+	var ajaxUrl = '';
+	var oldVideoBlock = '';
+	
 	//var iFrameString = "<iframe width='560' height='315' src='"+url+"' frameborder='0' allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
     var formData = new FormData();
-    if(url) {
-    	formData.append('url', url);
-    	videoBlock = createVideoBlock(reader, url);
-        $('#slideSpace').append(videoBlock); 
-    }
-	if(vidFile) {
-		formData.append('videoFile', vidFile);
-
-	    reader.onload = function (theFile) { 
-			videoBlock = createVideoBlock(reader, theFile.target.result);
-	        $('#slideSpace').append(videoBlock);
+	alert(videoID);
+    if(videoID) {
+    	oldVideoBlock = $("#" + videoID);
+    	var videoBlockId = videoID;
+    	ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+		formData.append('videoBlockId',videoBlockId);
+    	
+		if(url) {
+    		formData.append('url', url);
+    		videoBlock = createVideoBlock(reader, url);
+    		$("#" + videoBlockId).replaceWith(videoBlock); 
+    	}
+		if(vidFile) {
+			formData.append('videoFile', vidFile);
+    		reader.onload = function (theFile) {
+				videoBlock = createVideoBlock(reader, theFile.target.result);
+				$("#" + videoBlockId).replaceWith(videoBlock);	
+        	};
 		}
-	}
-    var ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-
-    $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);       
+    	// Reset data-attribute to get current selected image ID
+    	$("#uploadImage").data('value', '');
+    	$("#uploadImage").data('url', '');
+    }
+    else {
+		if(url) {
+    		formData.append('url', url);
+    		videoBlock = createVideoBlock(reader, url);
+        	$('#slideSpace').append(videoBlock); 
+    	}
+		if(vidFile) {
+			formData.append('videoFile', vidFile);
+	    	reader.onload = function (theFile) { 
+				videoBlock = createVideoBlock(reader, theFile.target.result);
+	        	$('#slideSpace').append(videoBlock);
+			}
+		}
+    	ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+    }
+    $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 	if(vidFile) {
     	reader.readAsDataURL(vidFile);
 	}
@@ -236,10 +262,24 @@ function embedVideo() {
            		$("#currentVideo").find('#deleteVideoId').val(data);
            		$("#currentVideo").attr('id', data);
            	}
+           	else {
+           		videoBlk.attr('id', videoID);
+           		$("#currentVideo").find('#deleteVideoId').val(videoID);
+           		$("#currentVideo").attr('id', videoID);
+           	}
         },
         error: function(data) {
         	alert("Something failed!");
         	console.log(data);
+        	if (videoID == '') {
+        		$("#current").remove();
+        	}
+        	else {
+        		$("#current").replaceWith(oldVideoBlock);
+        	}
+        	if (data.status == 403) {
+        		$("#loginAlert").show();
+        	}
         }
     });
 }
@@ -381,10 +421,7 @@ $(document).ready(function() {
     
     $("#embedVideo").click(function(e) {
     	e.preventDefault();
-    	alert("data loaded");
         $("#addVideoAlert").hide();
-        alert("he he");
-        //embedVideo(e);
     });
     
     $("#addChoice").click(function() {
@@ -405,6 +442,12 @@ $(document).ready(function() {
 		$('.modal-footer').append(alert); 
   	});
 	
+	$(document).on("click", ".deleteVideo", function(e) {
+		$("#confirmDeleteVideoAlert").show();
+		var alert = $('<input type="hidden" id="deleteVideoId">');
+		$(alert).attr( 'value', $(this).siblings('input').val());
+		$('.modal-footer').append(alert); 
+  	});
 	$(document).on("click", ".deleteChoiceBlock", function(e) {
 		$("#confirmDeleteChoiceBlockAlert").show();
 		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
@@ -423,9 +466,13 @@ $(document).ready(function() {
 		$("#confirmDeleteTextAlert").hide();
 	});
 	
-	$("#cancelDeleteImage").click(function() {
+/* 	$("#cancelDeleteImage").click(function() {
 		$("#confirmDeleteImageAlert").hide();
 	});
+	
+	$("#cancelDeleteVideo").click(function() {
+		$("#confirmDeleteVideoAlert").hide();
+	}); */
 	
 	$("#cancelDeleteChoiceBlock").click(function() {
 	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
@@ -434,11 +481,16 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").hide();
 	});
 	
-	$("#cancelDelete").click(function() {
+	$("#cancelDeleteImage").click(function() {
 		$("#confirmDeleteTextAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").find('input').remove();
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteImageAlert").hide();	
+	});
+	
+	$("#cancelDeleteVideo").click(function() {
+		$("#confirmDeleteVideoAlert").find('input').remove();
+		$("#confirmDeleteVideoAlert").hide();	
 	});
 	
     	// ---------- Delete Text Block -------------
@@ -502,6 +554,41 @@ $(document).ready(function() {
 			});
 		}
 	});
+	
+	// ---------- Delete Video Block -----------
+	
+	$("#deleteVideo").on("click", function(e) {
+		e.preventDefault();
+		$("#confirmDeleteTextAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+		$("#confirmDeleteVideoAlert").hide();
+		var blockId = $('#deleteVideoId').attr('value');
+		if(blockId == null || blockId == ''){
+			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			$('.error').append(alert); 
+			$(".error").delay(4000).slideUp(500, function(){
+			    $(".error").empty();
+			});
+		} else{
+			$('#deleteVideoId').remove()
+			// ------------- delete video content blocks ------------
+			$.ajax({
+			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			    type: 'DELETE',
+			    success: function(result) {
+			    	$('#' + blockId).remove();
+			    },
+				error: function(data) {
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.error').append(alert); 
+					$(".error").delay(4000).slideUp(500, function(){
+					    $(".error").empty();
+					});
+				}
+			});
+		}
+	});
+
 	
 	$("#deleteChoiceBlock").on("click", function(e) {
 	    e.preventDefault();
@@ -663,6 +750,9 @@ $(document).ready(function() {
     });
     
     $("#urlLink").on("click", function(e) {
+    	$("#urlLink").addClass("active show");
+    	$("#uploadLink").removeClass("active show");
+
     	$("#saveVideo").html("Embed Video");
     }); 
     
@@ -841,8 +931,31 @@ $(window).on('load', function () {
 						<h6>Are you sure you want to delete this image block?</h6>
 					</div>
 					<div class="modal-footer">
-						<button id="cancelDelete" type="reset" class="btn light">Cancel</button>
+						<button id="cancelDeleteImage" type="reset" class="btn light">Cancel</button>
 						<button type="submit" id="deleteImage" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Delete Video Modal -->
+		<div id="confirmDeleteVideoAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this video block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDeleteVideo" type="reset" class="btn light">Cancel</button>
+						<button type="submit" id="deleteVideo" class="btn btn-primary">Submit</button>
 					</div>
 				</div>
 			</div>

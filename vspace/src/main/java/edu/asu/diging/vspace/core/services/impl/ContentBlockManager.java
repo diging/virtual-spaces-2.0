@@ -133,6 +133,7 @@ public class ContentBlockManager implements IContentBlockManager {
     
     private IVSVideo saveVideo(byte[] video, Long size, String filename) { 
         if (video != null && video.length > 0) { 
+            System.out.println("called for saving");
             Tika tika = new Tika();
             String contentType = tika.detect(video);
             IVSVideo slideContentVideo = videoFactory.createVideo(filename, size, contentType);
@@ -270,6 +271,28 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
     }
+    
+    
+    /**
+     * Delete an video block using an id
+     * 
+     * @param id - id of resource to be deleted. If the id is null then the
+     *           functions returns nothing.
+     *
+     */
+
+    @Override
+    public void deleteVideoBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
+        try {
+            videoBlockRepo.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
 
     /**
      * Delete a choices block using an id
@@ -310,12 +333,15 @@ public class ContentBlockManager implements IContentBlockManager {
             throws VideoCouldNotBeStoredException {
         
         if(video != null ) {
+            System.out.println("called for saving");
             IVSVideo slideContentVideo = saveVideo(video, fileSize, filename);
             storeVideoFile(video, slideContentVideo, filename);
             videoBlock.setVideo(slideContentVideo);
+            videoBlock.setUrl(null);
         }
         else {
             videoBlock.setUrl(url);
+            videoBlock.setVideo(null);
         }
         videoBlockRepo.save((VideoBlock) videoBlock);
     }
