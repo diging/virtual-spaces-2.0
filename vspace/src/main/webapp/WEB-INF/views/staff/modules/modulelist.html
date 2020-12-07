@@ -37,16 +37,19 @@
         		<i class="fas fa-list-ul black"></i></button>
         	<button class="btn" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
         		<i class="fas fa-th"></i></button>
-        	<button class="btn" style="background: white"><i class="fas fa-filter black"></i></button>
+            <!-- Added for future development -->
+        	<!-- <button class="btn" style="background: white"><i class="fas fa-filter black"></i></button> -->
         </div>
         
         <div class="grid" id="grid">
-			<div th:each="module: ${vspacMmodules}" class="btn-group dropdown"  style="width: 10rem;">
-				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light">
-					<span class="card-title">[[${module.name}]]</span>
-					<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" style="margin-left:20px" 
-				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
-				</a>
+			<div th:each="module: ${vspacMmodules}" class="btn-group">
+                <div class="btn-group">
+				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
+					<span class="card-title" style="white-space: pre-wrap; line-break: anywhere;">[[${module.name}]]</span></a>
+					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" style="margin-left:20px" 
+				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
+				
+                </div>
 			</div>
 		</div>
 		
