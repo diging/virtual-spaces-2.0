@@ -13,19 +13,19 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class UpdateHideIncomingLinksToSpaceController {
-	@Autowired
+    @Autowired
     private ISpaceManager spaceManager;
-	
-	@RequestMapping(value="/staff/space/links/edit/{spaceId}/hideSpaceLinksFromSpace", method=RequestMethod.POST)
+
+    @RequestMapping(value = "/staff/space/links/edit/{spaceId}/incoming", method = RequestMethod.POST)
     public String updateStatusForPublishedSpace(RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
-    		@RequestParam("hideSpaceLinksParam") Boolean hideAllIncomingLinksToGivenSpace) {
-		ISpace space = spaceManager.getSpace(spaceId);
-		space.setHideAllIncomingLinksToGivenSpace(hideAllIncomingLinksToGivenSpace);
-		spaceManager.storeSpace(space, null, null);
-		attributes.addAttribute("alertType", "success");
-		attributes.addAttribute("message", "All links to this space are now hidden.");
-		attributes.addAttribute("showAlert", "true");
-		return "redirect:/staff/space/{spaceId}";
+            @RequestParam("hideSpaceLinksParam") Boolean hideIncomingLinks) {
+        ISpace space = spaceManager.getSpace(spaceId);
+        space.setHideIncomingLinks(hideIncomingLinks);
+        spaceManager.storeSpace(space, null, null);
+        attributes.addAttribute("alertType", "success");
+        attributes.addAttribute("message", "All links to this space are now hidden.");
+        attributes.addAttribute("showAlert", "true");
+        return "redirect:/staff/space/{spaceId}";
     }
 
 }

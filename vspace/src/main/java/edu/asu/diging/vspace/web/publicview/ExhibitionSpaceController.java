@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.web.publicview;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +53,6 @@ public class ExhibitionSpaceController {
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
-        List<ISpaceLinkDisplay> filteredSpacelinks;
         
         /* (non-Javadoc)
          * Below null check is added to accommodate already existing spaces with null space status
@@ -71,8 +69,8 @@ public class ExhibitionSpaceController {
             }else {
             	spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);                
             }
-            filteredSpacelinks = filterLinks(spaceLinks);
-            model.addAttribute("spaceLinks",filteredSpacelinks);
+            List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideIncomingLinks() || spaceLinkDisplayObj.getLink().getSourceSpace().getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)).collect(Collectors.toList());
+            model.addAttribute("spaceLinks",filteredSpaceLinks);
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
             model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
         }
@@ -85,16 +83,4 @@ public class ExhibitionSpaceController {
         }
         return "exhibition/space";
     }
-
-	private List<ISpaceLinkDisplay> filterLinks(List<ISpaceLinkDisplay> spaceLinks) {
-		/* (non-Javadoc)
-		 * Logic to filter the space links with hide links status to true and also checks if space status Unpublished
-		 * sets default all links hidden
-		 */
-		List<ISpaceLinkDisplay> linksToDisplay = spaceLinks.stream()
-				  .filter(spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideAllIncomingLinksToGivenSpace() || spaceLinkDisplayObj.getLink().getSourceSpace().getSpaceStatus().equals(SpaceStatus.UNPUBLISHED))
-				  .collect(Collectors.toList());
-        
-		return linksToDisplay;
-	}
 }

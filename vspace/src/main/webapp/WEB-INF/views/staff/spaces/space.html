@@ -1252,12 +1252,12 @@ $(function(){
             </form>
         </div>
         <div style="padding-bottom: 10px;">
-           <form method="POST" th:action="@{'/staff/space/links/edit/'+${space.id}+'/hideSpaceLinksFromSpace'}">
+           <form method="POST" th:action="@{'/staff/space/links/edit/'+${space.id}+'/incoming'}">
              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
              <label><h6>Hide all space links to this space:</h6></label>
              <select class="form-control" name="hideSpaceLinksParam" style="width: 200px; display: inline;">
-                <option th:id="No" th:value=false th:selected="${!space.hideAllIncomingLinksToGivenSpace}">No</option>
-                <option th:id="Yes" th:value=true th:selected="${space.hideAllIncomingLinksToGivenSpace}">Yes</option>
+                <option th:id="No" th:value=false th:selected="${!space.hideIncomingLinks}">No</option>
+                <option th:id="Yes" th:value=true th:selected="${space.hideIncomingLinks}">Yes</option>
              </select>
              <p style="display: inline; padding-left: 10px; padding-top: 100px;">
                <input class="btn btn-primary" type="submit" value="Submit" />
