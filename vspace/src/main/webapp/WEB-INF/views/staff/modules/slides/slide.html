@@ -8,6 +8,10 @@
 .hova {
     background-color: #bfb168;
 }
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
 </style>
 <script th:inline="javascript">
 //# sourceURL=click.js
@@ -59,6 +63,8 @@ function onDoubleClick(e){
         markDown.value(description.trim());
         //remove card border
         $(".open").css('display', 'none');
+        $(".open").css('overflow-y', 'scroll');
+        $(".open").css('height', '400px');
     } else {
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
@@ -532,12 +538,11 @@ $(document).ready(function() {
                 }else{
                     console.log("In else block");
                 	$(function() {
-                        var links = $("#choiceSpace a").map(function(e) {
+                        var links = $("#choiceSpaceData a").map(function(e) {
                             text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
                             return text;
                         }).get();
                         $(links).each(function(index, choice) {
-                            console.log(choice);
                             choiceblock.append(choice);
                         });
                    });
@@ -659,8 +664,8 @@ $(window).on('load', function () {
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
 			</button>
-			<div id="choiceSpace" class="dropdown-menu" aria-labelledby="dropdownMenu2">
-			    <a  th:each="choice: ${choices}" class="dropdown-item" 
+			<div id="choiceSpaceData" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+			    <a  th:each="choice: ${choices}" class="dropdown-item"
 			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
 	                th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
 			</div>
