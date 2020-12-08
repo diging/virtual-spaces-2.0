@@ -22,7 +22,7 @@ $(function () {
 });
 
 function createImageBlock(reader, width) {
-    var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+    var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="position: absolute; right:64px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -58,9 +58,9 @@ function onDoubleClick(e){
     var divName = $(e.target).closest('div').attr('class');
     console.log(divName);
     //if the div is a text content block 
-    if(divName.includes("textDiv")){
+    if(divName.includes("textDivStaff")){
 
-    	$(e.target).closest('.textDiv').addClass("open");
+    	$(e.target).closest('.textDivStaff').addClass("open");
         var description = $("div.open p:eq(0)").text();
     	defaultValue = description;
 
@@ -121,7 +121,6 @@ function uploadImage() {
     	var imageBlockId = imgID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-        console.log(url);
         reader.onload = function (theFile) {
 	        var image = new Image();
 	        image.src = theFile.target.result;
@@ -384,7 +383,8 @@ $(document).ready(function() {
                 $('.error').append(alert);
             }
         });
-      });
+	});
+	  
    $("#cancelEditTitle").click(function(){
         $("#submitTitle").hide()
         $("#editTitle").show()
@@ -431,7 +431,9 @@ $(document).ready(function() {
     $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
 		var alert = $('<input type="hidden" id="deleteTextId">');
+		console.log(alert);
 		$(alert).attr( 'value', $(this).siblings('input').val());
+		console.log($(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
 	
@@ -447,7 +449,8 @@ $(document).ready(function() {
 		var alert = $('<input type="hidden" id="deleteVideoId">');
 		$(alert).attr( 'value', $(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
-  	});
+	  });
+	  
 	$(document).on("click", ".deleteChoiceBlock", function(e) {
 		$("#confirmDeleteChoiceBlockAlert").show();
 		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
@@ -465,14 +468,6 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 	});
-	
-/* 	$("#cancelDeleteImage").click(function() {
-		$("#confirmDeleteImageAlert").hide();
-	});
-	
-	$("#cancelDeleteVideo").click(function() {
-		$("#confirmDeleteVideoAlert").hide();
-	}); */
 	
 	$("#cancelDeleteChoiceBlock").click(function() {
 	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
@@ -501,6 +496,7 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 		var blockId = $('#deleteTextId').attr('value');
+		console.log(blockId);
 		$('#deleteTextId').remove()
 		
 		// ------------- delete text content blocks ------------
@@ -665,7 +661,7 @@ $(document).ready(function() {
             enctype: 'multipart/form-data',
             success: function(data) {
 
-                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></p></div>');
+                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -719,25 +715,27 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="card card-body row" style="margin: 10px;">');
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="choiceDiv tab row" style="display:block;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
-                        choiceblock.append('<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
+                        choiceblock.append('<a style="color:var(--primary);  display:block;" href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
+                    console.log("In else block");
                 	$(function() {
                         var links = $("#choiceSpace a").map(function(e) {
-                            text = '<a href='+this.href+'>'+this.name+'</a>';
+                            text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
                             return text;
                         }).get();
                         $(links).each(function(index, choice) {
+                            console.log(choice);
                             choiceblock.append(choice);
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
-                    'margin': "10px"
+                    'display': "block"
                 });
                 $('#slideSpace').append(choiceblock);
             },
@@ -763,13 +761,12 @@ $(document).ready(function() {
     function updateTextBox(blockId, text) {
         // clear text box and buttons
         $(".open").empty();
-        $(".open").append('<p>'+text+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
+        $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
         // reset border of the card
-        $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
         
-        $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-        $(".open").css('display', 'block');
+        $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $(".open").css('display', 'flex');
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
     }
@@ -826,12 +823,12 @@ $(document).ready(function() {
 
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
-	$(".deleteText").css('float', 'right');
+	$(".deleteText").css('position', 'absolute');
+	$(".deleteText").css('right', '0');
 	var images = $(".imgDiv");
 	resizeImage(images);
 	
 	function resizeImage(images) {
-		$(".valueDiv").css('border', '1px solid rgba(0,0,0,.125)');
 		for(var i =0; i < images.length; i++) {
 			if (images[i].width > divWindow.width() || images[i].width >= 800) {
 				$(".valueDiv").find("#"+images[i].id).css("width", 800);
@@ -861,25 +858,24 @@ $(window).on('load', function () {
         
         <div class="error"></div>
         
-		<div class="dropdown" style="float: right">
+		<div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    	<i class="fa fa-code-branch"></i> Branching point
+		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
 			</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenu2" th:each="choice: ${choices}">
-			    <a  class="dropdown-item" 
+			<div id="choiceSpace" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+			    <a  th:each="choice: ${choices}" class="dropdown-item" 
 			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
 	                th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
 			</div>
-        </div>       
+        </div>
         
         <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
-        	<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
+        	<i class="fa fa-info-circle var(--error)" data-toggle="tooltip" data-html="true" data-placement="top" 
 	   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></i>&emsp;
 	   		<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
         		<i class="fas fa-edit"></i></a>
         </h2>
         <p id="description">[[${slide.description}]]</p>
-                
         
         <div style="margin: 40px 0">
         	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
@@ -1180,7 +1176,7 @@ $(window).on('load', function () {
                     </a>
                     <img th:id="${contents.id}" class="imgDiv col-md-10" th:src="@{'/api/image/'+${contents.image.id}}" />
                     <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
-                    <a class="btn deleteImage col-md-1" href="javascript:;"> 
+                    <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>
@@ -1208,23 +1204,23 @@ $(window).on('load', function () {
                 	<a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a>
-                    <p class="col-md-10"> [[${contents.text}]] 
+                    <p class="col-md-10"> [[${contents.text}]]</p>
                     <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
-                    </p>
+                    
                     <a class="btn deleteText col-md-1" href="javascript:;"> 
                     	<i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>
-                <div th:id="${contents.id}" class="tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="align-items: center">
-                	<a class="btn col-md-1" href="#"> 
+                <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
+                	<!-- <a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
-                    </a>
-                    <a th:if="${contents.showsAll}" th:each="choice: ${choices}"
+                    </a> -->
+                    <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}"
+                    <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
                     <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
-                    <a class="btn deleteChoiceBlock col-md-1" href="javascript:;">
+                    <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
                         <i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>

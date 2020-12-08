@@ -31,7 +31,7 @@
 <style>
 .unpublishedtooltiptext {
     display: none;
-    color: #bfb168;
+    color: var(--secondary);
     font-weight: bold;
     font-size: 0.875rem;
     font-family: 'Quicksand';
@@ -44,7 +44,7 @@
 
 .noIncomingLinkMessage {
     display: none;
-    color: #bfb168;
+    color: var(--secondary);
     font-weight: bold;
     font-size: 0.875rem;
     font-family: 'Quicksand';
@@ -78,7 +78,7 @@
         <div class="grid" id="grid">
 			<div th:each="space: ${spaces}" style="width: 11.75rem;">
 				<div class="status">
-					<i class="fa fa-play-circle" th:if="${space.id == startSpace.id}" aria-hidden="true"></i>
+					<i class="fa fa-play-circle" th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></i>
 					<i class="fas fa-exclamation-triangle" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></i>
                     <i class="fas fa-eye-slash noIncomingLinks" th:if="${!space.hasIncomingLinks()}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has no incoming links"></i>
 				</div>		
@@ -110,24 +110,24 @@
         	<ul class="list-group list-group-flush" th:each="space: ${spaces}">
 	            <li class="list-group-item"><i
 	                class="fa fa-play-circle secondary"
-	                th:if="${space.id == startSpace.id}" aria-hidden="true"></i>
+	                th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></i>
 	                <a  th:href="@{'/staff/space/'+${space.id}}"> <span
 	                    data-feather="box"
-	                    th:if="${space.id != startSpace.id}"></span>
+	                    th:if="${startSpace != null and space.id != startSpace.id}"></span>
 	                    &emsp;[[${space.name}]]
 	            	</a> (Created on <span class="date">[[${space.creationDate}]]</span>
 	                by [[${space.createdBy}]])
 	                <div class="float-right">
 	                    <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
-	                        th:if="${space.spaceStatus=='UNPUBLISHED'}"
-	                        style="color: #bfb168; padding-right: 8px;"></i>
+	                        th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}"
+	                        style="color: var(--secondary); padding-right: 8px;"></i>
 	                    <span class="unpublishedtooltiptext">This
 	                        space is currently unpublished.</span> <i
-	                        th:if="${space.hasIncomingLinks() == 'false'}"
+	                        th:if="${!space.hasIncomingLinks()}"
 	                        class="fas fa-eye-slash noIncomingLinks"
 	                        aria-hidden="true"
-	                        style="color: #bfb168; padding-right: 8px;"></i>
-	                    <span th:if="${space.hasIncomingLinks() == 'false'}"
+	                        style="color: var(--secondary); padding-right: 8px;"></i>
+	                    <span th:if="${!space.hasIncomingLinks()}"
 	                        class="noIncomingLinkMessage">This space
 	                        has no incoming links.</span> <a
 	                        th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"

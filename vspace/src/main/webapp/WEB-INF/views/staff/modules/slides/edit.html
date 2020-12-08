@@ -58,7 +58,8 @@
 		
 			<div class="form-group row">
 				<label for="name" class="col-md-2 col-form-label">Slide Name</label>
-				<input type="text" class="form-control col-md-10" id="name" name="name"/>
+                <textarea type="text" class="form-control col-md-10" id="name" rows="1" cols="30"
+                     th:text="${slideForm.name}" name="name"></textarea>
 			</div>
 		
 		     <div class="form-group row">
@@ -80,7 +81,7 @@
 		 
 			<div class="form-group row">
 				<label for="description" class="col-md-2 col-form-label">Description</label>
-				<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description"></textarea>
+				<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:text=${slideForm.description}></textarea>
 			</div>
 			
 			<button class="btn primary-btn" type="submit" value="submit" style="margin-right: 20px">Save Slide</button>
