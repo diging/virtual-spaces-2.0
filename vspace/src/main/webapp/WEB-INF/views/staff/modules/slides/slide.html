@@ -296,9 +296,7 @@ $(document).ready(function() {
     $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
 		var alert = $('<input type="hidden" id="deleteTextId">');
-		console.log(alert);
 		$(alert).attr( 'value', $(this).siblings('input').val());
-		console.log($(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
 	
@@ -353,7 +351,6 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 		var blockId = $('#deleteTextId').attr('value');
-		console.log(blockId);
 		$('#deleteTextId').remove()
 		
 		// ------------- delete text content blocks ------------
@@ -536,7 +533,6 @@ $(document).ready(function() {
                         choiceblock.append('<a style="color:var(--primary);  display:block;" href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
-                    console.log("In else block");
                 	$(function() {
                         var links = $("#choiceSpaceData a").map(function(e) {
                             text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
@@ -665,9 +661,9 @@ $(window).on('load', function () {
 		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
 			</button>
 			<div id="choiceSpaceData" class="dropdown-menu" aria-labelledby="dropdownMenu2">
-			    <a  th:each="choice: ${choices}" class="dropdown-item"
+			    <a  th:each="choice: ${choices}" class="dropdown-item" 
 			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
-	                th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
+	                th:name="${choice.sequence.name}" style="color:var(--primary);">[[${choice.sequence.name}]]</a>
 			</div>
         </div>
         
