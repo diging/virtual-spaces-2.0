@@ -10,6 +10,7 @@ function deleteSlide(slideId) {
         cache       : false,
         contentType : false,
         success: function(data) {
+            console.log(slideId);
             $("#"+slideId).closest('.slide').remove();
         },
         error: function(data) {
@@ -132,7 +133,7 @@ $(document).ready(function($) {
                 <a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>
     		</div>
     		<div class="grid" id="grid">
-				<div th:each="slide: ${slides}" class="btn-group dropdown">
+				<div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
 					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
 						<span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
 						<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>	

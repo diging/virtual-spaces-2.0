@@ -556,10 +556,11 @@
 			            $("#errorMsg").text("");
 			            $('#errorAlert').hide();
 			            $("#noLinksOnSpace").hide();
-			    		$("#outgoingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
+			            var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
+			    		$("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
 			    		if (spaceName == "${space.name}") {
 			    			$("#noLinksToSpace").hide();
-			    			$("div#incomingLinks").append("<a href='<c:url value='/staff/space/"+spaceId+"'/>' style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
+			    			$("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
 			    		}
 			    		window.location.reload();
 			        }
@@ -1517,9 +1518,7 @@
 	                </p>
 	            </form>
 	        </div> 
- 		</div>       	       
-        
-
+ 		</div>
         <div id="errorAlert"
             class="alert alert-danger alert-dismissible fade show"
             role="alert"
@@ -2062,12 +2061,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalTitle">Confirm [[${space.id}]] Deletion?</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                        <h5 class="modal-title" id="deleteModalTitle">Confirm
+                            [[${space.name}]] Deletion?</h5>
+                        <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true"><i class="fas fa-window-close"></i></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete
-                            [[${space.id}]]?</p>
+                            [[${space.name}]]?</p>
                         <div id="warningMessage">
                             <div class="text-danger">Other spaces
                                 have links to this space!</div>

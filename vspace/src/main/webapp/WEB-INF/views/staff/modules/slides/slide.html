@@ -8,6 +8,10 @@
 .hova {
     background-color: #bfb168;
 }
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
 </style>
 <script th:inline="javascript">
 //# sourceURL=click.js
@@ -59,6 +63,8 @@ function onDoubleClick(e){
         markDown.value(description.trim());
         //remove card border
         $(".open").css('display', 'none');
+        $(".open").css('overflow-y', 'scroll');
+        $(".open").css('height', '400px');
     } else {
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
@@ -290,9 +296,7 @@ $(document).ready(function() {
     $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
 		var alert = $('<input type="hidden" id="deleteTextId">');
-		console.log(alert);
 		$(alert).attr( 'value', $(this).siblings('input').val());
-		console.log($(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
 	
@@ -347,7 +351,6 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 		var blockId = $('#deleteTextId').attr('value');
-		console.log(blockId);
 		$('#deleteTextId').remove()
 		
 		// ------------- delete text content blocks ------------
@@ -524,15 +527,15 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="textDivStaff tab row" style="margin: 10px;">');
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="choiceDiv tab row" style="display:block;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
-                        choiceblock.append('<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
+                        choiceblock.append('<a style="color:var(--primary);  display:block;" href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
                 	$(function() {
-                        var links = $("#choiceSpace a").map(function(e) {
-                            text = '<a href='+this.href+'>'+this.name+'</a>';
+                        var links = $("#choiceSpaceData a").map(function(e) {
+                            text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
                             return text;
                         }).get();
                         $(links).each(function(index, choice) {
@@ -540,9 +543,9 @@ $(document).ready(function() {
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="position: absolute; right: 0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
-                    'margin': "10px"
+                    'display': "block"
                 });
                 $('#slideSpace').append(choiceblock);
             },
@@ -653,16 +656,16 @@ $(window).on('load', function () {
         
         <div class="error"></div>
         
-		<div class="dropdown" style="float: right">
+		<div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    	<i class="fa fa-code-branch"></i> Branching point
+		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
 			</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenu2" th:each="choice: ${choices}">
-			    <a  class="dropdown-item" 
+			<div id="choiceSpaceData" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+			    <a  th:each="choice: ${choices}" class="dropdown-item" 
 			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
-	                th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
+	                th:name="${choice.sequence.name}" style="color:var(--primary);">[[${choice.sequence.name}]]</a>
 			</div>
-        </div>       
+        </div>
         
         <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
         	<i class="fa fa-info-circle var(--error)" data-toggle="tooltip" data-html="true" data-placement="top" 
@@ -671,7 +674,6 @@ $(window).on('load', function () {
         		<i class="fas fa-edit"></i></a>
         </h2>
         <p id="description">[[${slide.description}]]</p>
-                
         
         <div style="margin: 40px 0">
         	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
@@ -923,10 +925,7 @@ $(window).on('load', function () {
         <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
                 <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                	<!-- <a class="btn col-md-1" href="#"> 
-                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
-                    </a> -->
-                    <img th:id="${contents.id}" class="imgDiv col-md-10" th:src="@{'/api/image/'+${contents.image.id}}" />
+                    <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
                     <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
                     <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <i style="color: var(--error)" class="fas fa-trash-alt"></i>
