@@ -1460,7 +1460,34 @@
 						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
 		            <a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span>&nbsp;<i class="fas fa-edit"></i></span></a>
 		        </h2>
-		        <p>[[${space.description}]]</p>
+		        <p style="text-align: justify;">[[${space.description}]]</p>
+                
+                <div style="display: flex;">
+                <label style="margin-right: 10px;">Space Status</label> 
+                <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/status'}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
+                    <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
+                        <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
+                        <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+                </div>
+                <div  style="display: flex; padding-top: 15px;">
+                <label style="margin-right: 10px;">Show Links to Unpublished Spaces</label>
+                <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/showSpaceLinks'}" name="f">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
+                    <select class="form-control-sm" name="showSpaceLinksParam" style="width: 200px; display: inline;">
+                        <option th:id="No" th:value=false th:selected="${!space.showUnpublishedLinks}">No</option>
+                        <option th:id="Yes" th:value=true th:selected="${space.showUnpublishedLinks}">Yes</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+            </div>
 		        
 		        <div class="flex-spacing">
 		        	<div class="dropdown">
@@ -1494,30 +1521,7 @@
 		        
 	    	</div>
 	    	
- 			<div>
-	    		<label>Space Status</label> 
-	            <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/status'}">
-	                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
-	                <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
-	                    <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
-	                    <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
-	                </select>
-	                <p style="display: inline; padding-left: 10px;">
-	                    <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-	                </p>
-	            </form>
-	            <label style="margin-top: 10px">Show Links to Unpublished Spaces</label>
-	            <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/showSpaceLinks'}" name="f">
-	                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
-	                <select class="form-control-sm" name="showSpaceLinksParam" style="width: 200px; display: inline;">
-	                    <option th:id="No" th:value=false th:selected="${!space.showUnpublishedLinks}">No</option>
-	                    <option th:id="Yes" th:value=true th:selected="${space.showUnpublishedLinks}">Yes</option>
-	                </select>
-	                <p style="display: inline; padding-left: 10px;">
-	                    <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-	                </p>
-	            </form>
-	        </div> 
+ 			 
  		</div>
         <div id="errorAlert"
             class="alert alert-danger alert-dismissible fade show"
@@ -1547,7 +1551,7 @@
 		
 		<div id="createSpaceLinkAlert" class="link-modal flex-spacing">			
 			<div class="space" th:if="${space.image != null}">
-	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+	            <img class="bgImage"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 			<form id="createSpaceLinkForm">
@@ -1628,7 +1632,7 @@
         
 		<div id="createModuleLinkAlert" class="link-modal flex-spacing">
 			<div class="space" th:if="${space.image != null}">
-	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+	            <img class="bgImage"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 	        <form id="createModuleLinkForm">
@@ -1696,7 +1700,7 @@
             <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <div id="changeBgImgAlert" class="alert alert-secondary"
                 role="alert" style="background: white; display: none;">
-                <h5>Change Background Image</h5>
+                <h6>Change Background Image</h6>
                 <input type="file" name="file" rows="5" cols="500" id="file" />
                 <p class="mb-0 text-right">
                     <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
@@ -1709,7 +1713,7 @@
 		
 		<div id="createExternalLinkAlert" class="link-modal flex-spacing">
 			<div class="space" th:if="${space.image != null}">
-	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+	            <img class="bgImage"  th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 	        <form id="createExternalLinkForm">
@@ -1778,7 +1782,7 @@
 		
 		<div id="editSpaceLinkInfo" class="link-modal flex-spacing">
 			<div class="space" th:if="${space.image != null}">
-	            <img class="bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+	            <img class="bgImage" th:src="@{'/api/image/'+${space.image.id}}" />
 	        </div>
 	        <div class="divider"></div>
 	        <form id="editSpaceLinkForm">
@@ -1872,7 +1876,7 @@
 
         <div id="editModuleLinkInfo" class="link-modal flex-spacing">
             <div class="space" th:if="${space.image != null}">
-                <img class="bgImage" th:style="|max-width: ${display.width}px;|"
+                <img class="bgImage"
                     th:src="@{'/api/image/'+${space.image.id}}" />
             </div>
             <div class="divider"></div>
@@ -1951,7 +1955,6 @@
         <div id="editExternalLinkInfo" class="link-modal flex-spacing">
             <div class="space" th:if="${space.image != null}">
                 <img class="bgImage"
-                    th:style="|max-width: ${display.width}px;|"
                     th:src="@{'/api/image/'+${space.image.id}}" />
             </div>
             <div class="divider"></div>
@@ -2098,7 +2101,7 @@
             <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
         </div>
         <p class="text-right" style="margin-top: 50px">
-            <button type="button" id="deleteSpace"  class="btn delete-btn"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
+            <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
         </p>
    </div> 
 </body>
