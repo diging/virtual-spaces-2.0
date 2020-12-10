@@ -10,6 +10,10 @@
 .hova {
 	background-color: #bfb168;
 }
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
 </style>
 <script th:inline="javascript">
 //# sourceURL=click.js
@@ -56,7 +60,6 @@ function onDoubleClick(e){
     // get to the nearest divs class attribute
     $(".EasyMDEContainer").remove();
     var divName = $(e.target).closest('div').attr('class');
-    console.log(divName);
     //if the div is a text content block 
     if(divName.includes("textDivStaff")){
 
@@ -69,13 +72,14 @@ function onDoubleClick(e){
         markDown.value(description.trim());
         //remove card border
         $(".open").css('display', 'none');
+        $(".open").css('overflow-y', 'scroll');
+        $(".open").css('height', '400px');
     } else if(divName.includes("imgDiv")) {
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
         	$("#uploadImage").data('value', imgID); // sets image ID value
         	$("#addImgAlert").show();
-    	}
     }
     else {
     	var vidId = $(e.target).attr('id');
@@ -90,7 +94,6 @@ function onDoubleClick(e){
     			$("#urlLink").addClass("active");    			
     			$("#uploadTab").removeClass("active");
     			$("#uploadLink").removeClass("active");
-
     		}
     		$("#saveVideo").data('value', vidId);
         	$("#addVideoAlert").show();
@@ -427,9 +430,7 @@ $(document).ready(function() {
     $(document).on("click", ".deleteText", function(e) {
 		$("#confirmDeleteTextAlert").show();
 		var alert = $('<input type="hidden" id="deleteTextId">');
-		console.log(alert);
 		$(alert).attr( 'value', $(this).siblings('input').val());
-		console.log($(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
 	
@@ -492,7 +493,6 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteTextAlert").hide();
 		var blockId = $('#deleteTextId').attr('value');
-		console.log(blockId);
 		$('#deleteTextId').remove()
 		
 		// ------------- delete text content blocks ------------
@@ -717,14 +717,12 @@ $(document).ready(function() {
                         choiceblock.append('<a style="color:var(--primary);  display:block;" href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
-                    console.log("In else block");
                 	$(function() {
-                        var links = $("#choiceSpace a").map(function(e) {
+                        var links = $("#choiceSpaceData a").map(function(e) {
                             text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
                             return text;
                         }).get();
                         $(links).each(function(index, choice) {
-                            console.log(choice);
                             choiceblock.append(choice);
                         });
                    });
@@ -863,10 +861,10 @@ $(window).on('load', function () {
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
 			</button>
-			<div id="choiceSpace" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+			<div id="choiceSpaceData" class="dropdown-menu" aria-labelledby="dropdownMenu2">
 			    <a  th:each="choice: ${choices}" class="dropdown-item" 
 			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
-	                th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
+	                th:name="${choice.sequence.name}" style="color:var(--primary);">[[${choice.sequence.name}]]</a>
 			</div>
         </div>
         
