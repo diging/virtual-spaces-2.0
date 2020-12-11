@@ -53,32 +53,31 @@ public class ExhibitionSpaceController {
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
-        
-        /* (non-Javadoc)
-         * Below null check is added to accommodate already existing spaces with null space status
-         */
-        if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
+        if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {
             IExhibition exhibition = exhibitManager.getStartExhibition();
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
-            if(space.isShowUnpublishedLinks()) {
+            if (space.isShowUnpublishedLinks()) {
                 spaceLinks = spaceLinkManager.getLinkDisplays(id);
-                
-            }else {
-            	spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);                
+
+            } else {
+                spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
             }
-            List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideIncomingLinks() || spaceLinkDisplayObj.getLink().getSourceSpace().getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)).collect(Collectors.toList());
-            model.addAttribute("spaceLinks",filteredSpaceLinks);
+            List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
+                    spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideIncomingLinks()
+                            || spaceLinkDisplayObj.getLink().getSourceSpace().getSpaceStatus()
+                                    .equals(SpaceStatus.UNPUBLISHED))
+                    .collect(Collectors.toList());
+            model.addAttribute("spaceLinks", filteredSpaceLinks);
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
-            model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));  
-        }
-        else {
+            model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));
+        } else {
             return "redirect:/exhibit/404";
         }
 
-        if(sequenceHistory.hasHistory()) {
+        if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
         }
         return "exhibition/space";
