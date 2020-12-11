@@ -1496,9 +1496,10 @@
 					  </button>
 					  <div class="dropdown-menu" aria-labelledby="incominglinks">
 					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
-			            <div th:each="spaceLinks : ${linksToThisSpace}">	            	
-			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem"
-			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small></a>
+			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
+			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem; color: var(--secondary);"
+			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small> <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.sourceSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 80%; font-weight: 400;"></i></a>
 			            </div>
 					  </div>
 					</div>
@@ -1509,10 +1510,11 @@
 					  </button>
 					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
 					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
-			            <div th:each="spaceLinks : ${linksOnThisSpace}">	            	
-		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem"
+			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
+		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem; color: var(--secondary);"
 		                        th:if="${spaceLinks.targetSpace != null}"
-		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small></a>
+		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small> <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.targetSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 80%; font-weight: 400;"></i></a>
 						</div>
 					  </div>
 					</div>
