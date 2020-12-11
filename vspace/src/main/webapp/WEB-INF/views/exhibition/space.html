@@ -28,11 +28,11 @@
     position: absolute;
     z-index: 1;
     top: 20px;
-    left: 0px;
+    left: 0;
     overflow-x: hidden;
     background: #fff;
     transition: 0.5s;
-    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.19);
+    box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.19);
     padding-top: 26px;
     word-break: break-all;
 }
@@ -88,7 +88,7 @@
 		    }
 		}
 		function closeNav(){
-		    $("#mySidenav").css("width", "0px");
+		    $("#mySidenav").css("width", "0");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -101,12 +101,12 @@
 		    }
 		}
 		function closeModuleNav(){
-		    $("#mySideModulenav").css("width", "0px");
+		    $("#mySideModulenav").css("width", "0");
 		}
 		
 		function closeSpaceDescription(){
-		    $("#rightContent").css("width", "0px");
-		    $("#rightContent").css("height", "0px");
+		    $("#rightContent").css("width", "0");
+		    $("#rightContent").css("height", "0");
 		}
 		
 		function openSpaceDescription(){
