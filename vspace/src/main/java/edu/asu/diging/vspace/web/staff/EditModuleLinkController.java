@@ -15,7 +15,9 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -26,6 +28,9 @@ public class EditModuleLinkController extends EditSpaceLinksController{
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private ISpaceDisplayManager spaceDisplayManager;
 
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -40,7 +45,10 @@ public class EditModuleLinkController extends EditSpaceLinksController{
             return validation;
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x), new Float(y),
+        ISpaceDisplay displayAttributes = spaceDisplayManager.getBySpace(spaceManager.getSpace(id));
+        Float x_val = (displayAttributes.getWidth() * new Float(x))/spaceManager.getSpace(id).getImage().getWidth();
+        Float y_val = (displayAttributes.getHeight() * new Float(y))/spaceManager.getSpace(id).getImage().getHeight();
+        IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, x_val, y_val,
                 new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type, null, null);
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null,title,displayType,linkedModuleId,null);
     }
