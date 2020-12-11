@@ -23,7 +23,12 @@ public class UpdateHideIncomingLinksToSpaceController {
         space.setHideIncomingLinks(hideIncomingLinks);
         spaceManager.storeSpace(space, null, null);
         attributes.addAttribute("alertType", "success");
-        attributes.addAttribute("message", "All links to this space are now hidden.");
+        if(hideIncomingLinks) {
+            attributes.addAttribute("message", "All links to this space are now hidden.");
+        }
+        else {
+            attributes.addAttribute("message", "All links to this space are now visible.");
+        }
         attributes.addAttribute("showAlert", "true");
         return "redirect:/staff/space/{spaceId}";
     }
