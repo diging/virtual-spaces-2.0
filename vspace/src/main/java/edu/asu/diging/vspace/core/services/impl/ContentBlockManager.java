@@ -133,7 +133,6 @@ public class ContentBlockManager implements IContentBlockManager {
 
     private IVSVideo saveVideo(byte[] video, Long size, String filename) { 
         if (video != null && video.length > 0) { 
-            System.out.println("called for saving");
             Tika tika = new Tika();
             String contentType = tika.detect(video);
             IVSVideo slideContentVideo = videoFactory.createVideo(filename, size, contentType);
@@ -205,20 +204,15 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder)
             throws VideoCouldNotBeStoredException {
-
-
         ISlide slide = slideManager.getSlide(slideId);
-        System.out.println("Slide -----"+slide.getId());
         IVSVideo slideContentVideo = saveVideo(video, size, fileName);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         IVideoBlock vidBlock = null;
         if (url == null || url.equals("")) {
-            System.out.println("So you got it to work");
             storeVideoFile(video, slideContentVideo, fileName);
             vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
-        }
-        else {
+        } else {
             vidBlock = new VideoBlock(url);
             vidBlock.setSlide(slide);
         }
@@ -333,7 +327,6 @@ public class ContentBlockManager implements IContentBlockManager {
             throws VideoCouldNotBeStoredException {
 
         if(video != null ) {
-            System.out.println("called for saving");
             IVSVideo slideContentVideo = saveVideo(video, fileSize, filename);
             storeVideoFile(video, slideContentVideo, filename);
             videoBlock.setVideo(slideContentVideo);

@@ -79,7 +79,8 @@ function onDoubleClick(e){
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
         	$("#uploadImage").data('value', imgID); // sets image ID value
-        	$("#addImgAlert").show();
+			$("#addImgAlert").show();
+		}
     }
     else {
     	var vidId = $(e.target).attr('id');
@@ -133,7 +134,7 @@ function uploadImage() {
         }
         // Reset data-attribute to get current selected image ID
         $("#uploadImage").data('value', '');
-      }
+	}
   	else {
   	  var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
         reader.onload = function (theFile) {        	
@@ -742,6 +743,15 @@ $(document).ready(function() {
     });
     
     $("#urlLink").on("click", function(e) {
+	  if($("#videoFile").val()) {
+		$("#videoLink").prop('disabled', true);
+		$("#saveVideo").prop('disabled', true);
+	  }
+	  if($("#videoFile").val() == '') {
+		  $("#videoLink").prop('disabled', false);
+		  $("#saveVideo").prop('disabled', false);
+	  }
+
       $("#urlLink").addClass("active show");
       $("#uploadLink").removeClass("active show");
       $("#saveVideo").html("Embed Video");
@@ -749,8 +759,12 @@ $(document).ready(function() {
     
     $("#uploadLink").on("click", function(e) {
 	  if( $("#videoLink").val()) {
-		  alert("maybe");
 		  $("#videoFile").prop('disabled', true);
+		  $("#saveVideo").prop('disabled', true);
+	  }
+	  if($("#videoLink").val() == '') {
+		  $("#videoFile").prop('disabled', false);
+		  $("#saveVideo").prop('disabled', false);
 	  }
 	  $("#urlLink").removeClass("active show");
       $("#uploadLink").addClass("active show");

@@ -39,27 +39,13 @@ public class VideoApiController {
         byte[] videoContent = null;
 
         try {
-            videoContent = storage.getVideoContent(video.getId(), video.getFilename());
+            videoContent = storage.getImageContent(video.getId(), video.getFilename());
         } catch (IOException e) {
             logger.error("Could not retrieve video.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-//        try {
-//            if (videoContent != null) {
-//                response.setContentLength(videoContent.length);
-//                response.getOutputStream().write(videoContent);
-//                response.getOutputStream().close();
-//            }
-//        } catch (IOException e) {
-//            logger.error("Could not write to output stream.", e);
-//            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-        
-//        response.setContentType("video/mp4");
         return ResponseEntity.status(HttpStatus.OK)
-        .header("Content-Type", "video/mp4")
+        .header("Content-Type", video.getFileType())
         .header("Content-Length", String.valueOf(videoContent.length - 1)).body(videoContent);
-//        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    } 
 }

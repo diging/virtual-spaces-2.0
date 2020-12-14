@@ -40,7 +40,6 @@ public class AddVideoBlockController {
         if (videoFile != null) {
             video = videoFile.getBytes();
             fileName = videoFile.getOriginalFilename();
-           // System.out.println(videoFile.getContentType()+"----"+videoFile.getSize());
         }
         String videoId;
         try {
@@ -48,10 +47,9 @@ public class AddVideoBlockController {
             IVSpaceElement videoBlock = videoBlockValue.getElement();
             videoId = videoBlock.getId(); 
         }
-        
         catch (VideoCouldNotBeStoredException e) { 
-            ObjectMapper mapper = new
-            ObjectMapper(); ObjectNode node = mapper.createObjectNode();
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Video Content block cannot be stored."); 
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR); 
         }

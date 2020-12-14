@@ -26,7 +26,6 @@ public class DeleteVideoBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteVideoBlock(@PathVariable("blockId") String blockId) throws IOException {
         try {
-            System.out.println("in the video delete block");
             contentBlockManager.deleteVideoBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Video Id does not exist, bad request.", e);

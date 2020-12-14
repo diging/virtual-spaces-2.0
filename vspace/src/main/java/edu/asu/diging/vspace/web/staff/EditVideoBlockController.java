@@ -32,9 +32,7 @@ public class EditVideoBlockController {
             @PathVariable("videoBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam(value = "videoFile", required = false) MultipartFile file, @RequestParam(value = "url", required = false) String videoUrl, 
             @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes) throws IOException {
-        System.out.println("Edit video block");
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
-        System.out.println(videoBlock.getUrl());
         byte[] video = null;
         String filename = null;
         if (file != null) {
