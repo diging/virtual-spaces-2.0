@@ -1,11 +1,14 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -33,6 +36,11 @@ public class ListImagesController {
     public String listSpacesWithoutNum(Model model) {
         return "redirect:/staff/images/list/1";
     }
+    
+    @RequestMapping("/staff/images/list/tag/{filter}")
+    public String listSpacesWithoutNumTag(Model model, @PathVariable() String filter) {
+        return "redirect:/staff/images/list/tag/{filter}/1";
+    }
 
     @RequestMapping("/staff/images/list/{page}")
     public String listSpaces(@PathVariable(required = false) String page,
@@ -59,6 +67,47 @@ public class ListImagesController {
         model.addAttribute("imageToSpaces",imageToSpaces);
         model.addAttribute("images", images);
         model.addAttribute("imageCategories", ImageCategory.values());
+        model.addAttribute("sortProperty",
+                (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
+        model.addAttribute("order",
+                (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
+        return "staff/images/imagelist";
+    }
+    
+    @RequestMapping("/staff/images/list/tag/{filter}/{page}")
+    public String listSpacesByTag(@PathVariable(required = false) String page,
+            @PathVariable(required = false) String filter,
+            @RequestParam(value = "sort", required = false) String sortedBy,
+            @RequestParam(value = "order", required = false) String order, Model model) {
+        int pageNo;
+        page = StringUtils.isEmpty(page) ? "1" : page;
+        try {
+            pageNo = imageService.validatePageNumber(Integer.parseInt(page));
+        } catch (NumberFormatException numberFormatException){
+            pageNo = 1;
+        }
+        model.addAttribute("totalPages", imageService.getTotalPages());
+        model.addAttribute("currentPageNumber", pageNo);
+        model.addAttribute("totalImageCount", imageService.getTotalImageCount());
+        List<IVSImage> imagesList = imageService.getImages(pageNo, sortedBy, order);
+        List<IVSImage> images = new ArrayList<IVSImage>();
+        Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
+        for(IVSImage image : imagesList) {
+            List<ImageCategory> imageCategory = image.getCategories();
+            for(ImageCategory imageCat:imageCategory) {
+                if(imageCat.toString().equals(filter)) {
+                    images.add(image);
+                    List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
+                    if(spaces!=null && spaces.size()>0) {
+                        imageToSpaces.put(image.getId(), spaces);
+                    }
+                }
+            }
+        }
+        model.addAttribute("imageToSpaces",imageToSpaces);
+        model.addAttribute("images", images);
+        model.addAttribute("imageCategories", ImageCategory.values());
+        model.addAttribute("filterValue", filter);
         model.addAttribute("sortProperty",
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
         model.addAttribute("order",

@@ -86,16 +86,22 @@ $( document ).ready(function() {
         }
     }
     });
-      
+   
    $("#filterTag").on("change", function(e) {
-       console.log($(this).val());
-       if($(this).val()==="Show All"){
-           $(".tableBody td").parent().show();
+       e.preventDefault();
+       var slectedId=e.target.value;
+       $("#page-selection").children().remove();
+       var formData = new FormData();
+       if(slectedId === "Show All"){
+           var url = "[(@{'/staff/images/list/'})]";
+           window.location = url;
        }else{
-           $(".tableBody td.filteredData:contains('" + $(this).val() + "')").parent().show();
-           $(".tableBody td.filteredData:not(:contains('" + $(this).val() + "'))").parent().hide();
+           var url = "[(@{'/staff/images/list/tag/'})]"+slectedId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];
+           window.location = url;
        }
+       
    });
+   
 });
 </script>
 <style>
@@ -138,7 +144,7 @@ $( document ).ready(function() {
                                 class="form-control form-control-sm">
                     <option>Show All</option>
                     <option th:each="catTag:${imageCategories}"
-                                    th:value="${catTag}">[[${@environment.getProperty('image_category_'
+                                    th:value="${catTag}" th:selected="${#strings.equals(catTag,filterValue)}">[[${@environment.getProperty('image_category_'
                                     + catTag)}]]</option>
                 </select></th>
                 </tr>
