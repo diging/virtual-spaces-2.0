@@ -66,9 +66,7 @@ public class ExhibitionSpaceController {
                 spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
             }
             List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
-                    spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideIncomingLinks()
-                            || spaceLinkDisplayObj.getLink().getTargetSpace().getSpaceStatus()
-                                    .equals(SpaceStatus.UNPUBLISHED))
+                    spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideIncomingLinks())
                     .collect(Collectors.toList());
             model.addAttribute("spaceLinks", filteredSpaceLinks);
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
