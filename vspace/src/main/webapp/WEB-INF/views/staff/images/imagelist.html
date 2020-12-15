@@ -62,7 +62,7 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign("./"+num+"?sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+        window.location.assign("./"+num+"?imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
     });
 
   $("table.table thead th").each(function(){
@@ -78,7 +78,7 @@ $( document ).ready(function() {
     if(headerSortPropName != 'tag') {
         if(headerSortPropName=='[(${sortProperty})]'){
             window.location.href = window.location.pathname+
-            '?sort='+ headerSortPropName+'&order='+
+            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
             ('[(${order})]' == 'desc'?'asc':'desc');
         }else{
             window.location.href = window.location.pathname+
@@ -89,14 +89,14 @@ $( document ).ready(function() {
    
    $("#filterTag").on("change", function(e) {
        e.preventDefault();
-       var slectedId=e.target.value;
+       var selectedId=e.target.value;
        $("#page-selection").children().remove();
        var formData = new FormData();
-       if(slectedId === "Show All"){
+       if(selectedId === "Show All"){
            var url = "[(@{'/staff/images/list/'})]";
            window.location = url;
        }else{
-           var url = "[(@{'/staff/images/list/tag/'})]"+slectedId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];
+           var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId;
            window.location = url;
        }
        
@@ -144,7 +144,7 @@ $( document ).ready(function() {
                                 class="form-control form-control-sm">
                     <option>Show All</option>
                     <option th:each="catTag:${imageCategories}"
-                                    th:value="${catTag}" th:selected="${#strings.equals(catTag,filterValue)}">[[${@environment.getProperty('image_category_'
+                                    th:value="${catTag}" th:selected="${#strings.equals(catTag,imageCategory)}">[[${@environment.getProperty('image_category_'
                                     + catTag)}]]</option>
                 </select></th>
                 </tr>

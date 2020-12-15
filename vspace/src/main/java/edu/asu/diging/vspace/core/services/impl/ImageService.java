@@ -105,8 +105,19 @@ public class ImageService implements IImageService {
      */
     @Override
     public List<IVSImage> getImages(int pageNo, String sortedBy, String order) {
-        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo);
+        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
+        List<IVSImage> results = new ArrayList<>();
+        if(images != null) {
+            images.getContent().forEach(i -> results.add(i));
+        }
+        return results;
+    }
+
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
         if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
             sortingParameters = Sort.by(sortedBy);
         }
@@ -116,8 +127,15 @@ public class ImageService implements IImageService {
         else {
             sortingParameters = sortingParameters.descending();
         }
+        return sortingParameters;
+    }
+
+    @Override
+    public List<IVSImage> getImagesByCategory(int pageNo, ImageCategory category, String sortedBy, String order) {
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
+        pageNo = validatePageNumber(pageNo);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
+        Page<IVSImage> images = imageRepo.findByCategoriesLike(sortByRequestedField, category);
         List<IVSImage> results = new ArrayList<>();
         if(images != null) {
             images.getContent().forEach(i -> results.add(i));
@@ -133,6 +151,22 @@ public class ImageService implements IImageService {
     @Override
     public long getTotalPages() {
         return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
+    }
+
+    /**
+     * Method to return the total image count
+     * 
+     * @return total count of images in DB
+     */
+    @Override
+    public long getTotalImageCountForSelectedFilter(ImageCategory category) {
+        return imageRepo.findByCategoriesLike(category).size();
+    }
+
+    @Override
+    public long getTotalPagesForSelectedFilter(ImageCategory category) {
+        int count = imageRepo.findByCategoriesLike(category).size();
+        return (count % pageSize==0) ? count / pageSize:(count / pageSize) + 1;
     }
 
     /**

@@ -42,7 +42,7 @@
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
-			               th:href="@{/staff/images/list/1}"> 
+			               th:href="@{/staff/images/list}"> 
 			               <i class="fa fa-file-image secondary"></i><span class="custom_Text">&nbsp;Images</span>
 			            </a>
 			        </li>
