@@ -21,8 +21,8 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.SpaceLinkManager;
 
 @Controller
 public class AddSpaceLinkController {
@@ -31,7 +31,7 @@ public class AddSpaceLinkController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private SpaceLinkManager spaceLinkManager;
+    private ISpaceLinkManager spaceLinkManager;
 
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,

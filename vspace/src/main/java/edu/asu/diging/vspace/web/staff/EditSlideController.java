@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.impl.ModuleManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Controller
@@ -31,10 +30,7 @@ public class EditSlideController {
     private ISlideManager slideManager;
 
     @Autowired
-    private ModuleManager moduleManager;
-
-    @Autowired
-    private IChoiceFactory choiceFactory;
+    private IModuleManager moduleManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description,
@@ -74,7 +70,7 @@ public class EditSlideController {
         model.addAttribute("slideId", slideId);
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
-        return "staff/module/slide/edit";
+        return "staff/modules/slides/edit";
     }
 
     @RequestMapping(value="/staff/module/{moduleId}/slide/{slideId}/edit", method=RequestMethod.POST)
