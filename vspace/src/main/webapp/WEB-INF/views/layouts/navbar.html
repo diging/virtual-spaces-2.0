@@ -6,7 +6,8 @@
 	<body>
 		<div th:fragment="navbar">
 			<nav class="nav-bar" style="height:48px">
-		      <a class="navbar-brand" href="#"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
+		      <a class="navbar-brand" href="#"><img style=padding-right:12px; th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
+		      [[${space.name}]]</a>
 		      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		        <span class="navbar-toggler-icon"></span>
 		      </button> -->
