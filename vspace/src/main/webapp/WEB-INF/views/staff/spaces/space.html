@@ -50,9 +50,6 @@
         var imageWidth = img[0].width;
         var	linkPosX=(imageWidth*[(${link.positionX})])/[(${display.width})];
         var	linkPosY=(imageHeight*[(${link.positionY})])/[(${display.height})];
-        console.log(posX);
-        console.log(posY);
-        console.log($(".space").css('margin-left'));
         link.css('left',linkPosX + posX + 20);
         link.css('top', linkPosY + posY + 20);
         
@@ -116,17 +113,17 @@
 	[# th:if="${link != null}" ]
 		var posX = $("#main-bgImage").position().left;
     	var posY = $("#main-bgImage").position().top;
-    	
+    	console.log("Loop number :- ",[[${loop}]]);
     	var link;
     	[# th:if="${#strings.equals(link.type,'ALERT')}"]
-    		link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="main-'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
+    		link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
     	[/]
     	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
     	var imageURL = [[@{|/api/image/${link.image.id}|}]];
-           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="main-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
     	[/]
     	[# th:if="${#strings.equals(link.type,'ARROW')}"]
-    		link = $('<span data-link-id="main-'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="main-'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+    		link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
     	[/]
     	link.css('position', 'absolute');
     	link.css('left', [[${link.positionX}]] + posX);
@@ -153,7 +150,7 @@
     	inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
     	var unpublishedSpaceElement;
     	    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
-    		unpublishedSpaceElement=$('<i data-link-id="main-unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
+    		unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
     		unpublishedSpaceElement.css('position', 'absolute');
     		unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
     		unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
@@ -177,8 +174,8 @@
     		'color': 'red'
     	});		
     	
-    	$('[data-link-id="main-[(${link.link.id})]"]').css('cursor', 'pointer');
-    	$('[data-link-id="main-[(${link.link.id})]"]').click(function(e) {
+    	$('[data-link-id="[(${link.link.id})]"]').css('cursor', 'pointer');
+    	$('[data-link-id="[(${link.link.id})]"]').click(function(e) {
     	    var rotation = document.getElementById("spaceLinkRotation-[(${link.link.id})]").value;
     	    var label = document.getElementById("spaceLinkLabel-[(${link.link.id})]").value;
     	    var type = document.getElementById("spaceLinkType-[(${link.link.id})]").value;
