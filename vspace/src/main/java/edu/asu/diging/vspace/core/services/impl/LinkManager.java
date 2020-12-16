@@ -28,7 +28,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
 
     @Autowired
     private ISpaceManager spaceManager;
-    
+
     @Autowired
     private ISpaceDisplayManager spaceDisplayManager;
 

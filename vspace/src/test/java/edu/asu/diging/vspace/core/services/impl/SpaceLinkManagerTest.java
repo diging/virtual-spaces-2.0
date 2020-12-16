@@ -40,7 +40,7 @@ public class SpaceLinkManagerTest {
 
     @Mock
     private SpaceManager spaceManager;
-    
+
     @Mock
     private SpaceDisplayManager spaceDisplayManager;
 
@@ -93,11 +93,11 @@ public class SpaceLinkManagerTest {
         spaceDisplayLink.setType(DisplayType.ARROW);
         Mockito.when(spaceLinkFactory.createSpaceLink("New Space Link", space)).thenReturn(spaceLink);
         spaceDisplayLink.setLink(spaceLink);
-        
+
         ISpaceDisplay displayAttributes = new SpaceDisplay();
         displayAttributes.setHeight(700);
         displayAttributes.setWidth(1300);
-        
+
         Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
 
         Mockito.when(spaceLinkDisplayFactory.createSpaceLinkDisplay(spaceLink)).thenReturn(spaceDisplayLink);
@@ -167,7 +167,7 @@ public class SpaceLinkManagerTest {
         ISpaceLink spaceLink = new SpaceLink();
         spaceLink.setId("SPL002");
         spaceLink.setSourceSpace(space);
-        
+
 
         ISpace target = new Space();
         target.setId(spaceId2);
@@ -208,11 +208,11 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceManager.getSpace(spaceId3)).thenReturn(newTarget);
 
         spaceLinkDisplayUpdated.getLink().setTargetSpace(newTarget);
-        
+
         ISpaceDisplay displayAttributes = new SpaceDisplay();
         displayAttributes.setHeight(700);
         displayAttributes.setWidth(1300);
-        
+
         Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
 
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
