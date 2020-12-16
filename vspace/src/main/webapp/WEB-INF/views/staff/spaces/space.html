@@ -113,7 +113,6 @@
 	[# th:if="${link != null}" ]
 		var posX = $("#main-bgImage").position().left;
     	var posY = $("#main-bgImage").position().top;
-    	console.log("Loop number :- ",[[${loop}]]);
     	var link;
     	[# th:if="${#strings.equals(link.type,'ALERT')}"]
     		link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
