@@ -21,11 +21,15 @@ import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.factory.impl.SpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 public class SpaceLinkManagerTest {
     @Mock
@@ -36,6 +40,9 @@ public class SpaceLinkManagerTest {
 
     @Mock
     private SpaceManager spaceManager;
+    
+    @Mock
+    private SpaceDisplayManager spaceDisplayManager;
 
     @Mock
     private ISpaceLinkFactory spaceLinkFactory;
@@ -61,6 +68,10 @@ public class SpaceLinkManagerTest {
 
         ISpace space = new Space();
         space.setId(spaceId1);
+        IVSImage spaceImage = new VSImage();
+        spaceImage.setHeight(700);
+        spaceImage.setWidth(1300);
+        space.setImage(spaceImage);
         Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
         ISpaceLink spaceLink = new SpaceLink();
         spaceLink.setId("SPL001");
@@ -82,6 +93,12 @@ public class SpaceLinkManagerTest {
         spaceDisplayLink.setType(DisplayType.ARROW);
         Mockito.when(spaceLinkFactory.createSpaceLink("New Space Link", space)).thenReturn(spaceLink);
         spaceDisplayLink.setLink(spaceLink);
+        
+        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+        
+        Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
 
         Mockito.when(spaceLinkDisplayFactory.createSpaceLinkDisplay(spaceLink)).thenReturn(spaceDisplayLink);
 
@@ -142,10 +159,15 @@ public class SpaceLinkManagerTest {
     public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
         ISpace space = new Space();
         space.setId(spaceId1);
+        IVSImage spaceImage = new VSImage();
+        spaceImage.setHeight(700);
+        spaceImage.setWidth(1300);
+        space.setImage(spaceImage);
         SpaceLinkDisplay spaceLinkDisplay = new SpaceLinkDisplay();
         ISpaceLink spaceLink = new SpaceLink();
         spaceLink.setId("SPL002");
         spaceLink.setSourceSpace(space);
+        
 
         ISpace target = new Space();
         target.setId(spaceId2);
@@ -186,6 +208,12 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceManager.getSpace(spaceId3)).thenReturn(newTarget);
 
         spaceLinkDisplayUpdated.getLink().setTargetSpace(newTarget);
+        
+        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+        
+        Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
 
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceLinkDisplay)).thenReturn((SpaceLinkDisplay)spaceLinkDisplayUpdated);

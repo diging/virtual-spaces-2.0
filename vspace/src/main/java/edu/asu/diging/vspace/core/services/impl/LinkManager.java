@@ -106,9 +106,10 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
     }
 
     protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
-        ISpaceDisplay displayAttributes = spaceDisplayManager.getBySpace(spaceManager.getSpace(id));
-        positionX = (displayAttributes.getWidth() * new Float(positionX))/spaceManager.getSpace(id).getImage().getWidth();
-        positionY = (displayAttributes.getHeight() * new Float(positionY))/spaceManager.getSpace(id).getImage().getHeight();
+        ISpace space = spaceManager.getSpace(id);
+        ISpaceDisplay displayAttributes = spaceDisplayManager.getBySpace(space);
+        positionX = (displayAttributes.getWidth() * new Float(positionX))/space.getImage().getWidth();
+        positionY = (displayAttributes.getHeight() * new Float(positionY))/space.getImage().getHeight();
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);
