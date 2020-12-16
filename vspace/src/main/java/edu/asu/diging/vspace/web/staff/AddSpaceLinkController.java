@@ -19,10 +19,8 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -34,9 +32,6 @@ public class AddSpaceLinkController {
 
     @Autowired
     private ISpaceLinkManager spaceLinkManager;
-    
-    @Autowired
-    private ISpaceDisplayManager spaceDisplayManager;
 
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -66,11 +61,8 @@ public class AddSpaceLinkController {
 
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display;
-        ISpaceDisplay displayAttributes = spaceDisplayManager.getBySpace(spaceManager.getSpace(id));
-        Float x_val = (displayAttributes.getWidth() * new Float(x))/spaceManager.getSpace(id).getImage().getWidth();
-        Float y_val = (displayAttributes.getHeight() * new Float(y))/spaceManager.getSpace(id).getImage().getHeight();
         try {
-            display = spaceLinkManager.createLink(title, id, x_val, y_val,
+            display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();

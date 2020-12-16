@@ -16,9 +16,7 @@ import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
-import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -29,9 +27,6 @@ public class EditExternalLinkController extends EditSpaceLinksController{
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
-    @Autowired
-    private ISpaceDisplayManager spaceDisplayManager;
 
     @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -51,10 +46,7 @@ public class EditExternalLinkController extends EditSpaceLinksController{
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        ISpaceDisplay displayAttributes = spaceDisplayManager.getBySpace(spaceManager.getSpace(id));
-        Float x_val = (displayAttributes.getWidth() * new Float(x))/spaceManager.getSpace(id).getImage().getWidth();
-        Float y_val = (displayAttributes.getHeight() * new Float(y))/spaceManager.getSpace(id).getImage().getHeight();
-        IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, x_val, y_val, 0, externalLink, title, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename);        
+        IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x), new Float(y), 0, externalLink, title, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename);        
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,displayType,null,null);
 
     }
