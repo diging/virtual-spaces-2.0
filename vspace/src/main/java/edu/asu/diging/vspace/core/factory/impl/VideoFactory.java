@@ -25,4 +25,12 @@ public class VideoFactory implements IVideoFactory {
         return video;
     }
     
+    public IVSVideo createVideo(String url) {
+        IVSVideo video = new VSVideo();
+        video.setUrl(url);
+        return video;
+    }
+    
+    
+    
 }

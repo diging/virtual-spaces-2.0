@@ -131,6 +131,13 @@ public class ContentBlockManager implements IContentBlockManager {
         return null;
     }    
 
+    private IVSVideo saveVideoWithUrl(String url) {
+        IVSVideo vidContent = videoFactory.createVideo(url);
+        vidContent = videoRepo.save((VSVideo) vidContent);
+        
+        return vidContent;
+    }
+    
     private IVSVideo saveVideo(byte[] video, Long size, String filename) { 
         if (video != null && video.length > 0) { 
             Tika tika = new Tika();
@@ -205,16 +212,16 @@ public class ContentBlockManager implements IContentBlockManager {
     public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder)
             throws VideoCouldNotBeStoredException {
         ISlide slide = slideManager.getSlide(slideId);
-        IVSVideo slideContentVideo = saveVideo(video, size, fileName);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         IVideoBlock vidBlock = null;
         if (url == null || url.equals("")) {
+            IVSVideo slideContentVideo = saveVideo(video, size, fileName);
             storeVideoFile(video, slideContentVideo, fileName);
             vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
         } else {
-            vidBlock = new VideoBlock(url);
-            vidBlock.setSlide(slide);
+            IVSVideo vidContent = saveVideoWithUrl(url);
+            vidBlock = videoBlockFactory.createVideoBlock(slide, vidContent);
         }
         vidBlock.setContentOrder(contentOrder);
         VideoBlock videoBlock = videoBlockRepo.save((VideoBlock) vidBlock);
@@ -329,12 +336,18 @@ public class ContentBlockManager implements IContentBlockManager {
         if(video != null ) {
             IVSVideo slideContentVideo = saveVideo(video, fileSize, filename);
             storeVideoFile(video, slideContentVideo, filename);
+            slideContentVideo.setUrl(null);
             videoBlock.setVideo(slideContentVideo);
-            videoBlock.setUrl(null);
         }
         else {
-            videoBlock.setUrl(url);
-            videoBlock.setVideo(null);
+            
+            videoBlock.getVideo().setUrl(url);
+            videoBlock.getVideo().setFilename(null);
+            videoBlock.getVideo().setFileType(null);
+            videoBlock.getVideo().setFileSize(null);
+            videoBlock.getVideo().setHeight(0);
+            videoBlock.getVideo().setWidth(0);
+            videoBlock.getVideo().setParentPath(null);
         }
         videoBlockRepo.save((VideoBlock) videoBlock);
     }

@@ -1,12 +1,13 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
 
 import edu.asu.diging.vspace.core.model.IVSMedia;
 
-public class VSMedia extends VSpaceElement implements IVSMedia {
-    
-    private String id;
+@MappedSuperclass
+public abstract class VSMedia extends VSpaceElement implements IVSMedia {
+
     @Lob
     private String filename;
     @Lob
@@ -54,16 +55,6 @@ public class VSMedia extends VSpaceElement implements IVSMedia {
 
     public void setWidth(int width) {
         this.width = width;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
     }
 
 }

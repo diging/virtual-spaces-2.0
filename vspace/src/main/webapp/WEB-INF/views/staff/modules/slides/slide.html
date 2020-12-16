@@ -200,9 +200,9 @@ function embedVideo() {
 	var ajaxUrl = '';
 	var oldVideoBlock = '';
 	
-	//var iFrameString = "<iframe width='560' height='315' src='"+url+"' frameborder='0' allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>"
     var formData = new FormData();
     if(videoID) {
+		alert(videoID +"--old video ??");
     	oldVideoBlock = $("#" + videoID);
     	var videoBlockId = videoID;
     	ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
@@ -243,8 +243,7 @@ function embedVideo() {
 	if(vidFile) {
     	reader.readAsDataURL(vidFile);
 	}
-    formData.append('contentOrder', contentCount);
-    ++contentCount;
+    formData.append('contentOrder', ++contentCount);
     $.ajax({
         enctype: 'multipart/form-data',
         // ------------- creating image content blocks ------------
@@ -404,6 +403,8 @@ $(document).ready(function() {
     });
     
     $("#addVideo").click(function() {
+		videoID = null;
+		vidFile = null;
         $("#addVideoAlert").show();
     });
     
@@ -614,8 +615,6 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
-					
     
 
     
@@ -632,7 +631,7 @@ $(document).ready(function() {
     
     $("#cancelVideoBtn").click(function() {
     	// Initialize selected image ID to blank, on clicking cancel button
-    	$("#embedVideo").data('value', '');
+    	$("#saveVideo").data('value', '');
         $("#addVideoAlert").hide();
         $(".open").removeClass("open");
     });
@@ -1197,10 +1196,10 @@ $(window).on('load', function () {
 					<a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a>
-                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.url}" th:if="${contents.url}" frameborder="0"
+                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
 						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen ></iframe>
-					<iframe th:id="${contents.id}" width="800" height="530" th:if="${contents.video}"
+					<iframe th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}"
 						th:src="@{'/api/video/'+${contents.video.id}}" frameborder="0"
 						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen ></iframe>

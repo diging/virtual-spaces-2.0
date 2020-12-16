@@ -6,5 +6,5 @@ import edu.asu.diging.vspace.core.model.IVideoBlock;
 
 public interface IVideoBlockFactory {
 
-    IVideoBlock createVideoBlock(ISlide slide, IVSVideo image);
+    IVideoBlock createVideoBlock(ISlide slide, IVSVideo video);
 }
