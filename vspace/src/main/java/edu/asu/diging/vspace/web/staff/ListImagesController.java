@@ -32,7 +32,7 @@ public class ListImagesController {
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory) {
 
-        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory != null ? imageCategory : "Show All"));
+        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory != null ? imageCategory : Constants.ALL));
     }
 
     @RequestMapping("/staff/images/list/{page}")
@@ -51,17 +51,16 @@ public class ListImagesController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount());
         List<IVSImage> images;
-        if(imageCategory.equals("Show All")) {
+        if(imageCategory.equals(Constants.ALL)) {
             model.addAttribute("totalPages", imageService.getTotalPages());
             model.addAttribute("currentPageNumber", pageNo);
             model.addAttribute("totalImageCount", imageService.getTotalImageCount());
             images = imageService.getImages(pageNo, sortedBy, order);
-        }
-        else {
-            model.addAttribute("totalPages", imageService.getTotalPagesForSelectedFilter(ImageCategory.valueOf(imageCategory)));
+        } else {
+            model.addAttribute("totalPages", imageService.getTotalPages(ImageCategory.valueOf(imageCategory)));
             model.addAttribute("currentPageNumber", pageNo);
-            model.addAttribute("totalImageCount", imageService.getTotalImageCountForSelectedFilter(ImageCategory.valueOf(imageCategory)));
-            images = imageService.getImagesByCategory(pageNo, ImageCategory.valueOf(imageCategory), sortedBy, order);
+            model.addAttribute("totalImageCount", imageService.getTotalImageCount(ImageCategory.valueOf(imageCategory)));
+            images = imageService.getImages(pageNo, ImageCategory.valueOf(imageCategory), sortedBy, order);
         }
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for(IVSImage image : images) {

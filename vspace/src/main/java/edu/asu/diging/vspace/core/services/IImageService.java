@@ -21,13 +21,13 @@ public interface IImageService {
 
     List<IVSImage> getImages(int pageNo, String sortedBy, String order);
 
-    List<IVSImage> getImagesByCategory(int pageNo, ImageCategory filter, String sortedBy, String order);
+    List<IVSImage> getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
 
     long getTotalImageCount();
 
-    long getTotalImageCountForSelectedFilter(ImageCategory filter);
+    long getTotalImageCount(ImageCategory filter);
 
-    long getTotalPagesForSelectedFilter(ImageCategory filter);
+    long getTotalPages(ImageCategory filter);
 
     int validatePageNumber(int pageNo);
 

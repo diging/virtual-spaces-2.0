@@ -90,9 +90,8 @@ $( document ).ready(function() {
    $("#filterTag").on("change", function(e) {
        e.preventDefault();
        var selectedId=e.target.value;
-       $("#page-selection").children().remove();
        var formData = new FormData();
-       if(selectedId === "Show All"){
+       if(selectedId === "all"){
            var url = "[(@{'/staff/images/list/'})]";
            window.location = url;
        }else{
@@ -140,13 +139,16 @@ $( document ).ready(function() {
                         href="#">Created By</a></th>
                     <th scope="col" sort-prop="creationDate"><a
                         href="#">Created Date</a></th>
-                    <th scope="col" sort-prop="tag">Tag<select id="filterTag" name="tagFilter"
-                                class="form-control form-control-sm">
-                    <option>Show All</option>
-                    <option th:each="catTag:${imageCategories}"
-                                    th:value="${catTag}" th:selected="${#strings.equals(catTag,imageCategory)}">[[${@environment.getProperty('image_category_'
-                                    + catTag)}]]</option>
-                </select></th>
+                    <th scope="col" sort-prop="tag">Tag<select
+                        id="filterTag" name="tagFilter"
+                        class="form-control form-control-sm">
+                            <option th:value="all">Show All</option>
+                            <option th:each="catTag:${imageCategories}"
+                                th:value="${catTag}"
+                                th:selected="${#strings.equals(catTag,imageCategory)}">
+                                [[${@environment.getProperty('image_category_' + catTag)}]]
+                            </option>
+                    </select></th>
                 </tr>
             </thead>
             <tbody class="tableBody">

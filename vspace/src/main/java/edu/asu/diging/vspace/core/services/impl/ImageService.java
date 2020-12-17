@@ -131,11 +131,11 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public List<IVSImage> getImagesByCategory(int pageNo, ImageCategory category, String sortedBy, String order) {
+    public List<IVSImage> getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<IVSImage> images = imageRepo.findByCategoriesLike(sortByRequestedField, category);
+        Page<IVSImage> images = imageRepo.findByCategories(sortByRequestedField, category);
         List<IVSImage> results = new ArrayList<>();
         if(images != null) {
             images.getContent().forEach(i -> results.add(i));
@@ -159,14 +159,14 @@ public class ImageService implements IImageService {
      * @return total count of images in DB
      */
     @Override
-    public long getTotalImageCountForSelectedFilter(ImageCategory category) {
-        return imageRepo.findByCategoriesLike(category).size();
+    public long getTotalImageCount(ImageCategory category) {
+        return imageRepo.countByCategories(category);
     }
 
     @Override
-    public long getTotalPagesForSelectedFilter(ImageCategory category) {
-        int count = imageRepo.findByCategoriesLike(category).size();
-        return (count % pageSize==0) ? count / pageSize:(count / pageSize) + 1;
+    public long getTotalPages(ImageCategory category) {
+        long count = imageRepo.countByCategories(category);
+        return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
     }
 
     /**
