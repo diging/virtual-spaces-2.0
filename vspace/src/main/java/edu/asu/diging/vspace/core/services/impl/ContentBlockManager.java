@@ -133,9 +133,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     private IVSVideo saveVideoWithUrl(String url) {
         IVSVideo vidContent = videoFactory.createVideo(url);
-        vidContent = videoRepo.save((VSVideo) vidContent);
-        
-        return vidContent;
+        return videoRepo.save((VSVideo) vidContent);
     }
     
     private IVSVideo saveVideo(byte[] video, Long size, String filename) { 
@@ -332,23 +330,15 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, Integer contentOrder)
             throws VideoCouldNotBeStoredException {
-
+        IVSVideo slideContentVideo = null;
         if(video != null ) {
-            IVSVideo slideContentVideo = saveVideo(video, fileSize, filename);
+            slideContentVideo = saveVideo(video, fileSize, filename);
             storeVideoFile(video, slideContentVideo, filename);
             slideContentVideo.setUrl(null);
-            videoBlock.setVideo(slideContentVideo);
+        } else {
+            slideContentVideo = saveVideoWithUrl(url);
         }
-        else {
-            
-            videoBlock.getVideo().setUrl(url);
-            videoBlock.getVideo().setFilename(null);
-            videoBlock.getVideo().setFileType(null);
-            videoBlock.getVideo().setFileSize(null);
-            videoBlock.getVideo().setHeight(0);
-            videoBlock.getVideo().setWidth(0);
-            videoBlock.getVideo().setParentPath(null);
-        }
+        videoBlock.setVideo(slideContentVideo);
         videoBlockRepo.save((VideoBlock) videoBlock);
     }
 

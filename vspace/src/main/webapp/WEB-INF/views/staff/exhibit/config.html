@@ -32,23 +32,13 @@
 		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        <input type="hidden" th:value="${exhibition.id}" name="exhibitionParam"/>
-				<label for="space">Select the start space of the exhibition:</label>
-				<th:block th:if="${exhibition.startSpace}">
+		        <label for="space">Select the start space of the exhibition:</label>
 		        <select class="form-control" name="spaceParam">
-		             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}" 
-		              th:selected="${#strings.equals(space.id,exhibition.startSpace.id)}">
+		             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}"
+		             th:selected="${#strings.equals(space.id,exhibition.startSpace.id)}">
 		             	[[${space.name}]]
 		             </option>
-				</select>
-				</th:block>
-				<th:block th:if="${exhibition.startSpace == null}">
-		        	<select class="form-control" name="spaceParam">
-						<option th:id="choose">Choose...</option>
-		             	<option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}">
-		             	[[${space.name}]]
-		             	</option>
-					</select>
-				</th:block>
+		        </select>
 		        <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Title:</label> 
 		            <input type="text" class="form-control" name="title" th:value="${exhibition.title}" />

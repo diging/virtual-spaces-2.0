@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.asu.diging.vspace.core.data.VideoRepository;
+import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSVideo;
 
@@ -32,20 +33,20 @@ public class VideoApiController {
     @Autowired
     private IStorageEngine storage;
 
-    @RequestMapping(value="/api/video/{id}", produces="video/mp4")
+    @RequestMapping(value="/api/video/{id}")
     public ResponseEntity<byte[]> getVideo(@PathVariable String id, HttpServletResponse response,
             HttpServletRequest request) {
-        IVSVideo video = videoRepo.findById(id).get();
+        IVSVideo video = null;
         byte[] videoContent = null;
-
         try {
+            video = videoRepo.findById(id).get();
             videoContent = storage.getImageContent(video.getId(), video.getFilename());
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             logger.error("Could not retrieve video.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ResponseEntity.status(HttpStatus.OK)
-        .header("Content-Type", video.getFileType())
-        .header("Content-Length", String.valueOf(videoContent.length - 1)).body(videoContent);
+                .header("Content-Type", video.getFileType())
+                .header("Content-Length", String.valueOf(videoContent.length - 1)).body(videoContent);
     } 
 }

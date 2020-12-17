@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 @Controller
 public class AddVideoBlockController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IContentBlockManager contentBlockManager;
@@ -44,10 +48,10 @@ public class AddVideoBlockController {
         String videoId;
         try {
             CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,(videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder); 
-            IVSpaceElement videoBlock = videoBlockValue.getElement();
-            videoId = videoBlock.getId(); 
+            videoId = videoBlockValue.getElement().getId();
         }
         catch (VideoCouldNotBeStoredException e) { 
+            logger.warn("Video block could not be stored, bad request.", e);
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Video Content block cannot be stored."); 
