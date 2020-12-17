@@ -43,7 +43,7 @@
 		[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
 			console.log("In Image type");
 			var imageURL = [[@{|/api/image/${link.image.id}|}]];
-           link = $('<img id="spacelink-'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+           link = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
 			console.log("In arrow type");
@@ -128,9 +128,9 @@
     		link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
     	[/]
     	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-    	console.log("In image type");
-    	var imageURL = [[@{|/api/image/${link.image.id}|}]];
-           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+    		console.log("In image type");
+    		var imageURL = [[@{|/api/image/${link.image.id}|}]];
+    		link = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
     	[/]
     	[# th:if="${#strings.equals(link.type,'ARROW')}"]
     	console.log("In arrow type");
