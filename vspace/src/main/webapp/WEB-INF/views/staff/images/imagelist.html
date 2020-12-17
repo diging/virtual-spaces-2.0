@@ -82,7 +82,7 @@ $( document ).ready(function() {
             ('[(${order})]' == 'desc'?'asc':'desc');
         }else{
             window.location.href = window.location.pathname+
-            '?sort='+ headerSortPropName+'&order=asc';
+            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
         }
     }
     });
