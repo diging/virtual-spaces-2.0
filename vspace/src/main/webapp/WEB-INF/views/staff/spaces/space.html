@@ -33,14 +33,20 @@
         var posX = $(".bgImage").position().left;
     	var posY = $(".bgImage").position().top;
 		var link;
+		console.log("For modal image");
+		console.log([[${loop}]]);
+		console.log([[${link.type}]]);
 		[# th:if="${#strings.equals(link.type,'ALERT')}"]
+			console.log("In Alert Image");
 			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 		[/]
 		[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-		var imageURL = [[@{|/api/image/${link.image.id}|}]];
+			console.log("In Image type");
+			var imageURL = [[@{|/api/image/${link.image.id}|}]];
            link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
+			console.log("In arrow type");
 			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
 		[/]
 		link.css('position', 'absolute');
@@ -114,14 +120,20 @@
 		var posX = $("#main-bgImage").position().left;
     	var posY = $("#main-bgImage").position().top;
     	var link;
+    	console.log("For main image >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		console.log([[${loop}]]);
+		console.log([[${link.type}]]);
     	[# th:if="${#strings.equals(link.type,'ALERT')}"]
+    	console.log("In alert type");
     		link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
     	[/]
     	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
+    	console.log("In image type");
     	var imageURL = [[@{|/api/image/${link.image.id}|}]];
            link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
     	[/]
     	[# th:if="${#strings.equals(link.type,'ARROW')}"]
+    	console.log("In arrow type");
     		link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
     	[/]
     	link.css('position', 'absolute');
