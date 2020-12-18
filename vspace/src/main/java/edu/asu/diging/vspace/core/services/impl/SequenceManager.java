@@ -14,7 +14,9 @@ import edu.asu.diging.vspace.core.factory.ISequenceFactory;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 @Transactional
@@ -22,10 +24,10 @@ import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 public class SequenceManager implements ISequenceManager {
 
     @Autowired
-    private ModuleManager moduleManager;
+    private IModuleManager moduleManager;
 
     @Autowired
-    private SlideManager slideManager;
+    private ISlideManager slideManager;
 
     @Autowired
     private ISequenceFactory sequenceFactory;

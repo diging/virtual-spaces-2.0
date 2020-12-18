@@ -27,7 +27,7 @@ public class EditSpaceController {
         model.addAttribute("spaceForm", spaceForm);
         model.addAttribute("spaceId", spaceId);
         
-        return "staff/space/edit";
+        return "staff/spaces/edit";
     }
     
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.POST)

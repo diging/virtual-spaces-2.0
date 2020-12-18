@@ -1,0 +1,25 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+</head>
+<body>
+    <div class="main-content" layout:fragment="content">
+        <h2>Add new Module</h2>
+        <form th:action="@{/staff/module/add}" method="POST" name="f" style="margin-top: 40px">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="name">Module Name:</label>
+               	<input placeholder="Type here..." class="form-control col-md-10" type="text" id="name" name="name" />
+            </div>
+            <div class="form-group row" style="margin-top: 20px">
+                <label class="col-md-2 col-form-label" for="description">Description:</label>
+                <textarea placeholder="Description" rows="5" class="form-control col-md-10" id="description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn primary-btn">Create
+                        Module</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

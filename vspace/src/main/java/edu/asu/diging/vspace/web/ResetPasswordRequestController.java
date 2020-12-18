@@ -9,6 +9,6 @@ public class ResetPasswordRequestController {
 
     @RequestMapping(value="/reset/password/request")
     public String show(Model model) {
-        return "reset/password/request";
+        return "resetPassword";
     }
 }
