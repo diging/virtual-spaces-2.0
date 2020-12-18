@@ -64,7 +64,7 @@
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
-		          <li class="nav-item active" style="padding: 15px;">
+		          <li class="nav-item active">
 		            <a class="nav-link" th:href="@{/}" title="View Exhibition"><i class="far fa-play-circle secondary"></i></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 15px;">
@@ -74,7 +74,7 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+		  				<button class="btn nav-link" type="submit" title="Logout" style="color: #e39e44 !important;"><i class="fas fa-sign-out-alt"></i>Logout</button>
 		         	</form>
 		        </div>
 		      </div>
