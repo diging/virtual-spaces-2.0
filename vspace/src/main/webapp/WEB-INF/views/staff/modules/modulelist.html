@@ -28,7 +28,7 @@
 <body>
     <div class="main-content" layout:fragment="content">
     
-    	<a th:href="@{/staff/module/add}" class="btn outline" style="float: right">+ New Module</a>
+    	<a th:href="@{/staff/module/add}" class="btn primary-btn btn-sm" style="float: right">+ New Module</a>
         <h2>Modules</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition contains the following modules.</div>
         
@@ -45,7 +45,10 @@
 			<div th:each="module: ${vspacMmodules}" class="btn-group">
                 <div class="btn-group">
 				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
-					<span class="card-title" style="white-space: pre-wrap; line-break: anywhere;">[[${module.name}]]</span></a>
+					<span class="card-title" style="white-space: pre-wrap; line-break: anywhere; font-size: 1.25rem;">[[${module.name}]]</span>
+                    <br>
+                    <span style="white-space: pre-wrap; line-break: auto; max-height: 50px; overflow-y: scroll; display: inline-block;">[[${module.description}]]</span>
+                    </a>
 					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" style="margin-left:20px" 
 				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
 				
