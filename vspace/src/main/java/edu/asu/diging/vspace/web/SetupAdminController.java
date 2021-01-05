@@ -36,6 +36,6 @@ public class SetupAdminController {
             redirectAttrs.addFlashAttribute("message", "Looks like the admin user has already been configured.");
             return "redirect:/";
         }
-        return "setup/complete";
+        return "setupComplete";
     }
 }

@@ -29,7 +29,7 @@ public class AddSequenceController {
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequence", new SequenceForm());
         model.addAttribute("slides", moduleManager.getModuleSlides(moduleId));
-        return "staff/module/sequence/add";
+        return "staff/modules/sequences/add";
     }
     @RequestMapping(value = "/staff/module/{moduleId}/sequence/add", method = RequestMethod.POST)
     public String addSequence(Model model, @PathVariable("moduleId") String moduleId, @ModelAttribute SequenceForm sequenceForm,
