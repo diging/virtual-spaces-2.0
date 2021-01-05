@@ -12,10 +12,10 @@
     	<h2>Welcome back!</h2>
     	<span>View your most recent edits, or create new items.</span>
 
-		<div class="tab">
+		<div class="tab" style="margin-top: 10px; padding: 10px;">
 			<h4>Spaces</h4>	
-			<div class="grid">
-				<div th:each="space,iterStat: ${recentSpaces}" th:if="${iterStat.index}<4" style="width: 12rem;">
+			<div class="grid" style="margin-top: 10px;">
+				<div th:each="space,iterStat: ${recentSpaces}" th:if="${iterStat.index}<5" style="width: 12rem;">
 					<div class="spaceImage">
                         <a th:href="@{'/staff/space/'+${space.id}}">
 						  <img class="card-img-top" th:src="@{'/api/image/'+${space.image.id}}" alt="Space image">
@@ -44,10 +44,10 @@
 			</div>
 		</div>
         
-		<div class="tab">
+		<div class="tab" style="margin-top: 10px; padding: 10px;">
 			<h4>Modules</h4>
-			<div class="grid">
-				<div th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<4" >
+			<div class="grid" style="margin-top: 10px;">
+				<div th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<5" >
                     <div class="btn-group">
 					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
 						<span class="card-title">[[${module.name}]]</span>
