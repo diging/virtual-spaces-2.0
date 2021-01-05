@@ -102,7 +102,7 @@ $(document).ready(function($) {
 <body>
     <div class="main-content" layout:fragment="content">
     
-    	<div class="flex-spacing"> 
+    	<div class="flex-spacing" style="margin: -28px;"> 
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
@@ -128,32 +128,29 @@ $(document).ready(function($) {
     	<div class="tab">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
-				<a th:href="@{${module.id}+'/sequence/add'}" class="btn outline" >+ New Sequence</a>				
-			</div>	
-			
-			<div class="grid">
-				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
-				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;"><span  style="white-space: pre-wrap;">[[${sequence.name}]]</span></a>
-				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
-				  	aria-haspopup="true" aria-expanded="false">
-				    	<i class="fa fa-folder-open"></i>
-				  </button>
-                  <div class="dropdown-menu slidesInSeq">
-                  </div>
-				</div>
-                
+				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn btn-sm" >+ New Sequence</a>				
 			</div>
+            
+            <div id="list" style="margin-top: 0">
+            <ul class="list-group list-group-flush" th:each="sequence: ${sequences}">
+               <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}">
+                   <span><i class="fas fa-th-large" aria-hidden="true"></i></span>&emsp;[[${sequence.name}]]</a>
+                   (Created on <span class="date">[[${sequence.creationDate}]]</span>
+                   by [[${sequence.createdBy}]])
+               </li>
+            </ul>
+        </div>
 			
     	</div>
         
-        <div class="tab">
+        <div class="tab" style="margin-top: 10px">
             <div style="display: flex; justify-content: space-between">
                 <h4>All Slides</h4>
                 <!-- Commenting as this is planned for future development -->
                 <!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
-                <a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn btn-sm" >+ New Slide</a>
             </div>
-            <div class="grid" id="grid">
+            <div class="grid" id="grid" style="margin-top: 10px;">
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
                     <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
