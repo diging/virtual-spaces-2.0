@@ -3,9 +3,11 @@ package edu.asu.diging.vspace.core.data;
 import java.util.List;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Module;
 
 @Repository
@@ -13,5 +15,8 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 public interface ModuleRepository extends PagingAndSortingRepository<Module, String> {
 
     List<Module> findTop5ByOrderByCreationDateDesc();
+    
+    @Query("SELECT d FROM Module d WHERE d.name like %?1% or d.description like %?1%")
+    public List<IVSpaceElement> getContainingModules(String searchText);
 
 }

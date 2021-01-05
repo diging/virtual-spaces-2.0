@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
@@ -19,5 +20,8 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     
     @Query("SELECT d.sequence FROM Slide d WHERE d.id = ?1")
     public List<Sequence> getSequencesForSlide(String slideId);
+    
+    @Query("SELECT d from Slide d WHERE d.name like %?1% or d.description like %?1%")
+    public List<IVSpaceElement> getContainingSlides(String searchText);
 
 }

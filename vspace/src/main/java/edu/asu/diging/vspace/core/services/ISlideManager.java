@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import java.util.List;
 
@@ -28,5 +29,7 @@ public interface ISlideManager {
     void deleteSlideById(String slideId, String moduleId);
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
+    
+    List<IVSpaceElement> getSlidesContainingSearchedText(String searchText);
 
 }

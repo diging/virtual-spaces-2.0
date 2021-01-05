@@ -5,9 +5,11 @@ import java.util.List;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface ISpaceManager {
@@ -33,5 +35,7 @@ public interface ISpaceManager {
     List<SpaceLink> getIncomingLinks(String id);
     
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
+    
+    List<IVSpaceElement> getSpacesContainingSearchedText(String searchText);
 
 }
