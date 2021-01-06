@@ -79,10 +79,12 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		    if (window.matchMedia(maxWidth).matches){
+		    	console.log("Inside IF ----------------->")
 		        $("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
 		    }
 		    else{
+		    	console.log("Inside ELSE --------------------->")
 		        $("#mySidenav").css("width", "240px");
 		        $("#mySidenav").css("height", "[(${display.height})]px");
 		    }
