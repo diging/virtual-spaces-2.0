@@ -41,7 +41,7 @@
     top: 25px;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
     /* For mobile phones: */
     [class*="barPosition"] {
         font-size: 12px;
@@ -79,7 +79,6 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		    if (window.matchMedia(maxWidth).matches){
-		    	console.log("Inside IF ----------------->")
 		        $("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
 		    }
