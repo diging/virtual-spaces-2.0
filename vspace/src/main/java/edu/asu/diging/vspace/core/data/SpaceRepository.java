@@ -23,7 +23,7 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
 
     List<Space> findAllByImageId(String imageId);
     
-    @Query("SELECT d from Space d WHERE d.name like %?1% or d.description like %?1%")
+    @Query("SELECT d from Space d WHERE d.name LIKE %?1% OR d.description LIKE %?1%")
     public List<IVSpaceElement> getContainingSpaces(String searchText);
 
 }

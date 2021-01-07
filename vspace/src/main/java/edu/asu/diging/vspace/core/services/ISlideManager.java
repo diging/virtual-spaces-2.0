@@ -31,5 +31,7 @@ public interface ISlideManager {
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
     List<IVSpaceElement> getSlidesContainingSearchedText(String searchText);
+    
+    List<IVSpaceElement> getSlideTextsWithSearchedText(String searchText);
 
 }

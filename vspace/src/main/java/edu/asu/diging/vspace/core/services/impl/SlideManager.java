@@ -161,4 +161,9 @@ public class SlideManager implements ISlideManager {
         
         return slideRepo.getContainingSlides(searchText);
     }
+    
+    public List<IVSpaceElement> getSlideTextsWithSearchedText(String searchText) {
+        
+        return slideRepo.getContainingSlides(searchText);
+    }
 }

@@ -1,33 +1,42 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
+@Service
 public class StaffSearchManager implements IStaffSearchManager{
 
     @Autowired
-    private SpaceManager spaceManager;
+    private ISpaceManager spaceManager;
     
     @Autowired
-    private ModuleManager moduleManager;
+    private IModuleManager moduleManager;
     
     @Autowired
-    private SlideManager slideManager;
+    private ISlideManager slideManager;
+    
+    @Autowired
+    private TextContentBlockRepository textContentBlockRepo;
     
     @Override
-    public List<IVSpaceElement> getAllContainingElements(String searchString) {
+    public HashSet<IVSpaceElement> getAllContainingElements(String searchString) {
         
-        List<IVSpaceElement> resultElements = new ArrayList<>();
+        HashSet<IVSpaceElement> resultElements = new HashSet<>();
         
         resultElements.addAll(spaceManager.getSpacesContainingSearchedText(searchString));
         resultElements.addAll(moduleManager.getModulesContainingSearchedText(searchString));
-        //resultElements.addAll(moduleManager.get);
-        
+        resultElements.addAll(slideManager.getSlidesContainingSearchedText(searchString));
+        resultElements.addAll(textContentBlockRepo.getSearchedTextContainingSlides(searchString));
         return resultElements;
     }
     

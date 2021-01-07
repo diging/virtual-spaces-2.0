@@ -62,9 +62,12 @@
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
-		      <div>
-                <input type="text" placeholder="Search.."><button type="submit"><i class="fa fa-search"></i></button>
+		      <form name="textForm" id="searchForm"
+                method="post">
+              <div>
+                <input type="text" id="searchField" placeholder="Search Word here.."><button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
               </div>
+              </form>
               <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 15px;">
@@ -82,6 +85,38 @@
 		        </div>
 		      </div>
 		    </nav> 
+            <script >
+            
+    $(document).ready(function() {
+    $("#searchButton").on("click", function(e){
+        e.preventDefault();
+            console.log("button clicked");
+            var searchTxt = $("#searchField").val();
+            var formData = new FormData();
+            alert(searchTxt);
+            if (searchTxt != '') {
+                formData.append('searchString', searchTxt);
+                var url = "[(@{'/staff/search'})]"+'?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+                $.ajax({
+                    // ------------- creating image content blocks ------------
+                    url: url,
+                    type: 'POST',
+                    cache       : false,
+                    contentType : false,
+                    processData : false,
+                    data: formData,
+                    success: function(data) {
+                    },
+                    error: function(data) {
+                    }
+                });
+                // Reset the image file name 
+                $('#file').val('');
+                }
+            });
+    });
+  //# sourceURL=script.js
+    </script>
           </div>
 	</body>
 </html>

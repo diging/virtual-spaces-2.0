@@ -1,0 +1,62 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<script th:inline="javascript">
+	//# sourceURL=click.js
+	//------------Deleting Slides-------------------
+	$(document).ready(function($) {
+
+		
+
+		$(function() {
+			$('[data-toggle="tooltip"]').tooltip()
+		});
+
+	});
+</script>
+</head>
+<body>
+    <div class="main-content" layout:fragment="content">
+
+        <div class="flex-spacing">
+            <div>Displaying relevant results for the searched
+                keyword:</div>
+
+            <div id="resultDisplay">
+                <div th:each="contents: ${elementList}">
+                    <div th:id="${contents.id}" class="valueDiv tab row"
+                        th:if="${#strings.equals(contents['class'].simpleName,'Space')}">
+                        
+                        <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
+                        </a>
+                        
+                    </div>
+                    <div th:id="${contents.id}"
+                        class="textDivStaff tab row"
+                        th:if="${#strings.equals(contents['class'].simpleName,'Module')}">
+                        
+                        
+                        <a th:href="@{'/staff/module/'+${contents.id}}" class="btn btn-light" style="width: 10rem;">
+                        <span class="card-title" style="white-space: pre-wrap; line-break: anywhere;">[[${contents.name}]]</span></a>
+                        
+                        
+                    </div>
+                    <div th:id="${contents.id}"
+                        class="choiceDiv tab row"
+                        th:if="${#strings.equals(contents['class'].simpleName,'Slide')}"
+                        style="display: block;">
+                        
+                        A slide
+<!--                         <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${contents.id}}" class="btn btn-light" style="width: 10rem;"> -->
+<!--                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span> -->
+<!--                         <i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>  -->
+<!--                         <span class="card-text" style="white-space: pre-wrap;">[[${slide.description}]]</span> -->
+<!--                         </a> -->
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
