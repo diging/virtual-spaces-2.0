@@ -41,10 +41,15 @@
     top: 25px;
 }
 
-@media only screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+@media only screen (max-width: 800px) {
     /* For mobile phones: */
     [class*="barPosition"] {
+        top: 1px;
+        right: 50px;
         font-size: 12px;
+    }
+    [class*="dropdown"] {
+        left: 50px;
     }
     [class*="closebtn"] {
         font-size: 12px;
