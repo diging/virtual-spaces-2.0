@@ -1,7 +1,6 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 	<head>
-	
 	</head>
 	
 	<body>
@@ -62,12 +61,9 @@
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
-		      <form name="textForm" id="searchForm"
-                method="post">
               <div>
-                <input type="text" id="searchField" placeholder="Search Word here.."><button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                <input type="text" id="searchField" placeholder="Search..."><a th:href="@{/staff/search/}" id="searchLink"><button type="submit" id="searchButton"><i class="fa fa-search"></i></button></a>
               </div>
-              </form>
               <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 15px;">
@@ -87,33 +83,9 @@
 		    </nav> 
             <script >
             
-    $(document).ready(function() {
-    $("#searchButton").on("click", function(e){
-        e.preventDefault();
-            console.log("button clicked");
-            var searchTxt = $("#searchField").val();
-            var formData = new FormData();
-            alert(searchTxt);
-            if (searchTxt != '') {
-                formData.append('searchString', searchTxt);
-                var url = "[(@{'/staff/search'})]"+'?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-                $.ajax({
-                    // ------------- creating image content blocks ------------
-                    url: url,
-                    type: 'POST',
-                    cache       : false,
-                    contentType : false,
-                    processData : false,
-                    data: formData,
-                    success: function(data) {
-                    },
-                    error: function(data) {
-                    }
-                });
-                // Reset the image file name 
-                $('#file').val('');
-                }
-            });
+     $(document).on('input', '#searchField', function(e){
+    	    $("#searchLink").attr('href', '[[@{/staff/search/}]]' + $("#searchField").val());
+
     });
   //# sourceURL=script.js
     </script>

@@ -2,10 +2,7 @@
 <head>
 <script th:inline="javascript">
 	//# sourceURL=click.js
-	//------------Deleting Slides-------------------
 	$(document).ready(function($) {
-
-		
 
 		$(function() {
 			$('[data-toggle="tooltip"]').tooltip()
@@ -17,46 +14,45 @@
 <body>
     <div class="main-content" layout:fragment="content">
 
-        <div class="flex-spacing">
-            <div>Displaying relevant results for the searched
-                keyword:</div>
+        <div class="">
+            <div><h3>Search Results</h3>
+            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
 
             <div id="resultDisplay">
-                <div th:each="contents: ${elementList}">
-                    <div th:id="${contents.id}" class="valueDiv tab row"
+                <div th:each="contents: ${searchResult}">
+                    <div th:id="${contents.id}"
                         th:if="${#strings.equals(contents['class'].simpleName,'Space')}">
-                        
-                        <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
+                        <a th:href="@{'/staff/space/'+${contents.id}}"
+                            class="textDivStaff tab  btn btn-light"
+                            style="width: 100%"> <span
+                            class="card-title"
+                            style="white-space: pre-wrap; line-break: anywhere;"><img
+                            style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                            th:src="@{'/api/image/'+${contents?.image?.id}}" alt="Space image" /><span 
+                            style="color: var(--dark-grey)">  Space:</span> [[${contents.name}]]<br><span 
+                            style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-                        
                     </div>
+
                     <div th:id="${contents.id}"
-                        class="textDivStaff tab row"
                         th:if="${#strings.equals(contents['class'].simpleName,'Module')}">
-                        
-                        
-                        <a th:href="@{'/staff/module/'+${contents.id}}" class="btn btn-light" style="width: 10rem;">
-                        <span class="card-title" style="white-space: pre-wrap; line-break: anywhere;">[[${contents.name}]]</span></a>
-                        
-                        
+                        <a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
+                            class="textDivStaff tab  btn btn-light">
+                            <span class="card-title"
+                            style="white-space: pre-wrap; line-break: anywhere;"><span style="color: var(--dark-grey)">Module:</span> [[${contents.name}]]<br><span style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
+                        </a>
                     </div>
+                    
                     <div th:id="${contents.id}"
-                        class="choiceDiv tab row"
-                        th:if="${#strings.equals(contents['class'].simpleName,'Slide')}"
-                        style="display: block;">
-                        
-                        A slide
-<!--                         <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${contents.id}}" class="btn btn-light" style="width: 10rem;"> -->
-<!--                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span> -->
-<!--                         <i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>  -->
-<!--                         <span class="card-text" style="white-space: pre-wrap;">[[${slide.description}]]</span> -->
-<!--                         </a> -->
-                        
-                        
+                        th:if="${#strings.equals(contents['class'].simpleName,'Slide')}">
+                        <a class="textDivStaff tab  btn btn-light" style="width: 100%"
+                            th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
+                            <span class="card-title"
+                            style="white-space: pre-wrap; line-break: anywhere;"><span style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </body>
 </html>
