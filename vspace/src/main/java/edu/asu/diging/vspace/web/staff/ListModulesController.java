@@ -14,7 +14,7 @@ public class ListModulesController {
     private ModuleRepository moduleRepo;
 
     @RequestMapping("/staff/module/list")
-    public String listSpaces(Model model) {
+    public String listModules(Model model) {
         model.addAttribute("vspacMmodules", moduleRepo.findAllByOrderByCreationDateDesc());
         return "staff/modules/modulelist";
     }
