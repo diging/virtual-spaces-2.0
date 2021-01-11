@@ -23,10 +23,9 @@ public class UpdateHideIncomingLinksToSpaceController {
         space.setHideIncomingLinks(hideIncomingLinks);
         spaceManager.storeSpace(space, null, null);
         attributes.addAttribute("alertType", "success");
-        if(hideIncomingLinks) {
+        if (hideIncomingLinks) {
             attributes.addAttribute("message", "All links to this space are now hidden.");
-        }
-        else {
+        } else {
             attributes.addAttribute("message", "All links to this space are now visible.");
         }
         attributes.addAttribute("showAlert", "true");

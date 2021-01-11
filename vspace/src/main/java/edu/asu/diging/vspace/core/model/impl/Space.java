@@ -196,7 +196,7 @@ public class Space extends VSpaceElement implements ISpace {
     }
 
     @Override
-    public boolean getHideIncomingLinks() {
+    public boolean isHideIncomingLinks() {
         return hideIncomingLinks;
     }
 

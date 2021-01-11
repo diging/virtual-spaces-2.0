@@ -53,6 +53,9 @@ public class ExhibitionSpaceController {
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
+        /* (non-Javadoc)
+         * Below null check is added to accommodate already existing spaces with null space status
+         */
         if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {
             IExhibition exhibition = exhibitManager.getStartExhibition();
@@ -61,12 +64,11 @@ public class ExhibitionSpaceController {
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
             if (space.isShowUnpublishedLinks()) {
                 spaceLinks = spaceLinkManager.getLinkDisplays(id);
-
             } else {
                 spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
             }
             List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
-                    spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().getHideIncomingLinks())
+                    spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
                     .collect(Collectors.toList());
             model.addAttribute("spaceLinks", filteredSpaceLinks);
             model.addAttribute("display", spaceDisplayManager.getBySpace(space));
