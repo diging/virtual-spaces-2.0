@@ -113,10 +113,10 @@ $(document).ready(function($) {
     		</div>
 	
 			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">        
-		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f">
+		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right; margin-right: 40px;">
 		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
-					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important">
+					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important; width: 30%;">
 						<option th:value="Select" th:text="Select"></option>
 		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
 		            </select>
@@ -128,7 +128,7 @@ $(document).ready(function($) {
     	<div class="tab">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
-				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn btn-sm" >+ New Sequence</a>				
+				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn" >+ New Sequence</a>				
 			</div>
             
             <div id="list" style="margin-top: 0">
