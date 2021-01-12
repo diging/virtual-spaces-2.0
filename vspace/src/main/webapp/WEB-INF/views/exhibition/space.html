@@ -3,7 +3,7 @@
 
 
 <style>
- .Info_cz_Class .tooltiptext {
+ /* .Info_cz_Class .tooltiptext {
     visibility: hidden;
     width: 120px;
     color: white;
@@ -20,7 +20,7 @@
 
 .Info_cz_Class:hover .tooltiptext {
     visibility: visible;
-}
+} */
 
 .sidenav {
     width: 0;
@@ -80,22 +80,30 @@
     <div layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
-		let maxWidth='(max-width: 1200px)';
-		console.log("window width: "+window.innerWidth);
+		let maxWidth='(max-width: 1300px)';
+		let maxWidthSmallScreens ='(max-width: 400px)';
+		console.log("window width:: "+window.innerWidth);
 		function openNav(){
-		    if (window.matchMedia(maxWidth).matches){
-		    	console.log("Inside IF ------------->")
-		    	$("#mySidenav").css("width", "170px");
+			
+			if(window.matchMedia(maxWidthSmallScreens).matches){
+				console.log("SMALL SCREENS -->")
+				$("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
-		    	$("#mySidenav").css("left", "500px");
+		        $("#mySidenav").css("left", "500px");
 		    	$("#mySidenav").css("right", "500px");
-		    
+			}
+			else if (window.matchMedia(maxWidth).matches){
+		    	console.log("BIG SCREENS ---> ")
+		    	$("#mySidenav").css("width", "240px");
+		        $("#mySidenav").css("height", "[(${display.height})]px");
+		 
 		    }
 		    else{
 		    	console.log("Inside ELSE --------------------->")
-		    	$("#mySidenav").css("width", "240px");
-		        $("#mySidenav").css("height", "[(${display.height})]px");
-		    	
+		    	$("#mySidenav").css("width", "170px");
+		    	$("#mySidenav").css("height", "260px");
+		        $("#mySidenav").css("left", "500px");
+		    	$("#mySidenav").css("right", "500px");
 		    }
 		}
 		function closeNav(){
