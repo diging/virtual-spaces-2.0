@@ -3,7 +3,7 @@
 
 
 <style>
-.Info_cz_Class .tooltiptext {
+ .Info_cz_Class .tooltiptext {
     visibility: hidden;
     width: 120px;
     color: white;
@@ -41,11 +41,10 @@
     top: 25px;
 }
 
-@media only screen (max-width: 800px) {
+@media only screen (max-width: 1200px) {
     /* For mobile phones: */
     [class*="barPosition"] {
-        top: 1px;
-        right: 50px;
+        top: 10px;
         font-size: 12px;
     }
     [class*="dropdown"] {
@@ -82,15 +81,21 @@
         <script th:inline="javascript">
 		//# sourceURL=click.js
 		let maxWidth='(max-width: 1200px)';
+		console.log("window width: "+window.innerWidth);
 		function openNav(){
 		    if (window.matchMedia(maxWidth).matches){
-		        $("#mySidenav").css("width", "170px");
+		    	console.log("Inside IF ------------->")
+		    	$("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
+		    	$("#mySidenav").css("left", "500px");
+		    	$("#mySidenav").css("right", "500px");
+		    
 		    }
 		    else{
 		    	console.log("Inside ELSE --------------------->")
-		        $("#mySidenav").css("width", "240px");
+		    	$("#mySidenav").css("width", "240px");
 		        $("#mySidenav").css("height", "[(${display.height})]px");
+		    	
 		    }
 		}
 		function closeNav(){
@@ -246,7 +251,7 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class">
-                <div class="dropdown">
+                <div class="dropdown" id="myDropdown">
                     <div id="mySidenav" class="sidenav">
                         <i class="far fa-times-circle fa-lg closebtn"
                             th:onclick="closeNav()"></i>
