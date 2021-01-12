@@ -316,7 +316,7 @@ i {
 }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 1300px) {
 .grid {
     grid-template-columns: auto auto auto;
 }
@@ -329,8 +329,6 @@ i {
     }
     [class*="dropdown"] {
         left: 50px;
-        left: 500px;
-        right: 500px;
     }
     [class*="closebtn"] {
         font-size: 12px;

@@ -41,7 +41,7 @@
     top: 25px;
 }
 
-@media only screen (max-width: 1200px) {
+@media only screen (max-width: 1300px) {
     /* For mobile phones: */
     [class*="barPosition"] {
         top: 10px;
@@ -86,19 +86,19 @@
 		function openNav(){
 			
 			if(window.matchMedia(maxWidthSmallScreens).matches){
-				console.log("SMALL SCREENS -->")
+				console.log("SMALL SCREENS -->");
 				$("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
-		        $("#mySidenav").css("left", "500px");
-		    	$("#mySidenav").css("right", "500px");
+		        $("#mySidenav").css("left", "200px");
+		        $("#mySidenav").css("right", "200px");
 			}
 			else if (window.matchMedia(maxWidth).matches){
 		    	console.log("BIG SCREENS ---> ")
 		    	$("#mySidenav").css("width", "240px");
 		        $("#mySidenav").css("height", "[(${display.height})]px");
-		 
+		        
 		    }
-		    else{
+		  else{
 		    	console.log("Inside ELSE --------------------->")
 		    	$("#mySidenav").css("width", "170px");
 		    	$("#mySidenav").css("height", "260px");
@@ -270,7 +270,7 @@
                             </ul>
                         </div>
                     </div>
-                    <i class="fas fa-bars fa-lg barPosition"
+                    <i class="fas fa-bars fa-lg barPosition" id="myBarPosition"
                         th:onclick="openNav()"></i>
                 </div>
                 <div class="spaceClass" id="spaceDiv"
