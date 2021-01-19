@@ -78,15 +78,15 @@
 		//# sourceURL=click.js
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
-		    if (window.matchMedia(maxWidth).matches){
-		        $("#mySidenav").css("width", "170px");
-		    	$("#mySidenav").css("height", "260px");
-		    }
+            if (window.matchMedia(maxWidth).matches){
+                $("#mySidenav").css("width", "170px");
+                $("#mySidenav").css("height", "260px");
+            }
 		    else{
 		        $("#mySidenav").css("width", "240px");
 		        $("#mySidenav").css("height", "[(${display.height})]px");
-		    }
-		}
+            }
+        }
 		function closeNav(){
 		    $("#mySidenav").css("width", "0px");
 		}
