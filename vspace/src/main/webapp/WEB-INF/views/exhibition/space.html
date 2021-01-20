@@ -79,15 +79,13 @@
 	<div layout:fragment="content">
 		<script th:inline="javascript">
 		//# sourceURL=click.js
-		let maxWidth='(max-width: 1300px)';
-		let maxWidthSmallScreens ='(max-width: 400px)';
-		console.log("window width: "+window.innerWidth);
+        let maxWidth='(max-width: 1300px)';
+        let maxWidthSmallScreens ='(max-width: 400px)';
 		function openNav(){
 			/*
 			 Condition for small screens
 			*/
             if(window.matchMedia(maxWidthSmallScreens).matches){
-				console.log("SMALL SCREENS -->");
                 $("#mySidenav").css("width", "170px");
                 $("#mySidenav").css("height", "260px");
                 $("#mySidenav").css("left", "200px");
