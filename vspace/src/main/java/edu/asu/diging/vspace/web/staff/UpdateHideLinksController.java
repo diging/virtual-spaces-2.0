@@ -12,7 +12,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
-public class UpdateHideIncomingLinksToSpaceController {
+public class UpdateHideLinksController {
     @Autowired
     private ISpaceManager spaceManager;
 
