@@ -32,6 +32,6 @@ public interface ISpace extends IVSpaceElement {
 
     void setShowUnpublishedLinks(Boolean showUnpublishedLinks);
     
-    void setHideIncomingLinks(Boolean hideIncomingLinks);
+    void setHideIncomingLinks(boolean hideIncomingLinks);
 
 }
