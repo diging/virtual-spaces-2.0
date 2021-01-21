@@ -76,6 +76,9 @@
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
     <div style="width: 80%; margin: 120px 0 60px auto">
+        <h1>[[${showAlert}]]</h1>
+        <h1>[[${alertType}]]</h1>
+        <h1>[[${message}]]</h1>
         <div layout:fragment="content"></div>
     </div>
 </body>
