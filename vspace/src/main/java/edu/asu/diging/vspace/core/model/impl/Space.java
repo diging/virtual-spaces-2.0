@@ -200,6 +200,7 @@ public class Space extends VSpaceElement implements ISpace {
         return hideIncomingLinks;
     }
 
+
     @Override
     public void setHideIncomingLinks(Boolean hideIncomingLinks) {
         if (hideIncomingLinks == null) {

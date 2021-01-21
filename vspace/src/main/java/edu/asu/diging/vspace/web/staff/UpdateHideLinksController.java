@@ -17,7 +17,7 @@ public class UpdateHideLinksController {
     private ISpaceManager spaceManager;
 
     @RequestMapping(value = "/staff/space/links/edit/{spaceId}/incoming", method = RequestMethod.POST)
-    public String updateStatusForPublishedSpace(RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
+    public String update(RedirectAttributes attributes, @PathVariable("spaceId") String spaceId,
             @RequestParam("hideSpaceLinksParam") Boolean hideIncomingLinks) {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setHideIncomingLinks(hideIncomingLinks);
