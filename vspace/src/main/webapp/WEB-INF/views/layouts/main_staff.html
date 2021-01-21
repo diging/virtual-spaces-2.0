@@ -57,7 +57,6 @@
         jQuery(elem).text(DateFormat.format.date(jQuery(elem).text(), longDateFormat));
       }
     });
-
     $('#deleteAlert').delay(2000).fadeOut();
   });
 </script>
@@ -75,11 +74,11 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
+    <div style="top: 12.5%; position: fixed; width: 80%; margin-left: 20%;" th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
+         [[${#request.getParameter('message')}]]</div>
     <div style="width: 80%; margin: 120px 0 60px auto">
-        <h1>[[${showAlert}]]</h1>
-        <h1>[[${alertType}]]</h1>
-        <h1>[[${message}]]</h1>
-        <div layout:fragment="content"></div>
+        <div layout:fragment="content">
+        </div>
     </div>
 </body>
 </html>
