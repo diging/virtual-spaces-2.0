@@ -42,7 +42,7 @@
         </div>
         
         <div class="grid" id="grid">
-			<div th:each="module: ${vspacMmodules}" class="btn-group">
+			<div th:each="module: ${vspaceModules}" class="btn-group">
                 <div class="btn-group">
 				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
 					<span class="card-title" style="white-space: pre-wrap; line-break: anywhere; font-size: 1.25rem;">[[${module.name}]]</span>
@@ -57,7 +57,7 @@
 		</div>
 		
 		<div id="list" style="margin-top: 15px;">
-			<ul class="list-group list-group-flush" th:each="module: ${vspacMmodules}">
+			<ul class="list-group list-group-flush" th:each="module: ${vspaceModules}">
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
                    <span><i class="fas fa-th-large" aria-hidden="true"></i></span>&emsp;[[${module.name}]]</a>
                    (Created on <span class="date">[[${module.creationDate}]]</span>
