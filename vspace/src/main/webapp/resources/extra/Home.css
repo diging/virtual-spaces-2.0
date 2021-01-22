@@ -306,7 +306,7 @@ i {
 	display: grid;
     grid-template-columns: auto auto auto auto auto;
     grid-gap: 15px;
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
 @media only screen and (max-width: 1500px) {

@@ -33,10 +33,10 @@
         <div>This virtual exhibition contains the following modules.</div>
         
         <div style="text-align: right">
-        	<button class="btn" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
-        		<i class="fas fa-list-ul black" style="position: inherit; padding: 4px;"></i></button>
-        	<button class="btn" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
-        		<i class="fas fa-th" style="position: inherit; padding: 4px;"></i></button>
+        	<button class="btn btn-sm" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
+        		<i class="fas fa-list-ul black" style="position: relative; padding-top: 12%;"></i></button>
+        	<button class="btn btn-sm" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
+        		<i class="fas fa-th" style="position: relative; padding-top: 12%;"></i></button>
             <!-- Added for future development -->
         	<!-- <button class="btn" style="background: white"><i class="fas fa-filter black"></i></button> -->
         </div>
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 		
-		<div id="list" style="margin-top: 40px">
+		<div id="list" style="margin-top: 15px;">
 			<ul class="list-group list-group-flush" th:each="module: ${vspacMmodules}">
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
                    <span><i class="fas fa-th-large" aria-hidden="true"></i></span>&emsp;[[${module.name}]]</a>
