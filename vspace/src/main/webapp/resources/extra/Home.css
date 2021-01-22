@@ -304,27 +304,20 @@ i {
 
 .grid {
 	display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto auto;
     grid-gap: 15px;
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
-.customWindow {
-    top: 8%; 
-    position: fixed; 
-    width: 80%; 
-    margin-left: 20%;
+@media only screen and (max-width: 1500px) {
+.grid {
+    grid-template-columns: auto auto auto auto;
+}
 }
 
 @media only screen and (max-width: 1200px) {
 .grid {
     grid-template-columns: auto auto auto;
-}
-}
-
-@media only screen and (max-height: 650px) {
-.customWindow {
-    top: 9%;
 }
 }
 
