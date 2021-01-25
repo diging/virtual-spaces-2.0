@@ -10,6 +10,7 @@ function deleteSlide(slideId) {
         cache       : false,
         contentType : false,
         success: function(data) {
+            console.log(slideId);
             $("#"+slideId).closest('.slide').remove();
         },
         error: function(data) {
@@ -42,31 +43,24 @@ function checkSlideInSequence(slideId) {
     });
 }
 
-function loadSlidesInSequences() {
-    $('.sequence').click(function(e) {
-	    $(".slide").css({ 'border' : ''});
-		$(".sequence").css({ 'border' : ''});
-		$(this).css("border", "solid #c1bb88");
-		var sequenceId = this.id;
+function loadSlidesInSequences(sequenceId) {
+		console.log(sequenceId);
 		var moduleId=[[${module.id}]];
-		$('#selectedSequence').empty();
+		$('.slidesInSeq').empty();
 		$.ajax({
 			type: "GET",
 			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, slide) {
-					$('#selectedSequence').append(''+
-							'<div class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-							'<div align="left" class="card-body">'+
-							'<a href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+
-							'<h5 class="card-title">'+slide.name+'</h5>'+
-							'<p class="card-text">'+slide.description+'</p>'+'</a>'+
-							'</div></div>');
+				    console.log(slide.id);
+				    console.log(slide.name);
+					$('.slidesInSeq').append(
+							'<a class="dropdown-item" href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+slide.name+'</a>'
+						);
 					});
 				}
 		});
-	});
 }
 
 $(document).ready(function($) {
@@ -87,60 +81,18 @@ $(document).ready(function($) {
 	
 	
 	$(".sequence").on("click", function(e) {
-	    loadSlidesInSequences();
+	    var sequenceId = this.id;
+	    loadSlidesInSequences(sequenceId);
 	});
-	
-	$(".slide").on("click", function(e) {
-	    $(".slide").css({ 'border' : ''});
-		$(this).css("border", "solid #c1bb88");
-		var slideId = this.id;
-		var moduleId=[[${module.id}]];
-		$('#allSequences').empty();
-		$.ajax({
-			type: "GET",
-			url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+slideId+'/sequences',
-			async: false,
-			success: function(response) {
-				$.each(response, function (index, sequence) {
-					$('#allSequences').append('<div id='+sequence.id+' class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-							'<div align="left" class="card-body">'+
-							'<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+
-							'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
-							'<font color="#796d05"><h5 class="card-title">'+sequence.name+'</h5>'+
-							'<p class="card-text">'+sequence.description+'</p></font>'+
-							'</div></div>');
-					});
-            
-				}
-		});
-		loadSlidesInSequences();
-	});
-	
-	$(".showAllSequences").on("click", function(e) {
-	    $(".slide").css({ 'border' : ''});
-	    $(".sequence").css({ 'border' : ''});
-		var slideId = this.id;
-		$('#allSequences').empty();
-		$(function() {
-		    [# th:each="sequence, status : ${sequences}"]
-		    $('#allSequences').append('<div id="[(${sequence.id})]" class="card sequence" style="max-width: 18rem; margin-bottom:10px;">'+
-				'<div align="left" class="card-body">'+
-				'<a href="/vspace/staff/module/[(${module.id})]/sequence/[(${sequence.id})]}">'+
-				'<span style="float: right"><i class="fa fa-eye"></i></span></a>'+
-				'<font color="#796d05"><h5 class="card-title">[(${sequence.name})]</h5>'+
-				'<p class="card-text">[(${sequence.description})]</p></font>'+
-				'</div></div></th:block>');
-		    [/]
-		
-		});
-		loadSlidesInSequences();
-	});
-
 	
 	$("#deleteSlideFromSequence").on("click", function() {
 		$('#deleteSlideAlert').modal('hide');
 		var slideId = $("#deleteSlideAlert").data('value'); // getter
 		deleteSlide(slideId);
+	});
+	
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
 	});
 				
 });
@@ -148,126 +100,100 @@ $(document).ready(function($) {
 </script>
 </head>
 <body>
-    <div class="justify-content-left" layout:fragment="content">
-<h3>Module: [[${module.name}]]</h3>
-<h4>Description: [[${module.description}]]</h4>
-<div id="message" style="text-align:center; color:#008000"></div>
-<div class="alert alert-light" role="alert">
-	Created on <span class="date">[[${module.creationDate}]]</span> by
-	[[${module.createdBy}]]. <br> Modified on <span class="date">[[${module.modificationDate}]]</span>
-	by [[${module.modifiedBy}]].
-</div>
-
-	<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">
-        
-        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" class="form-horizontal">
-             <input type="hidden" name="${_csrf.parameterName}"
-                        value="${_csrf.token}" />
-			<label for="sequences" style="width: 200px">Select the start
-				sequence of the Module:</label>
-			<select class="form-control" name="sequenceParam"
-				style="width: 200px; display: inline;">
-				<option th:value="Select" th:text="Select"></option>
-                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
-            </select>
-			<p style="display: inline; padding-left: 10px; padding-top: 1000px;">
-                <button type="submit" class="btn primary-btn">Submit</button>
-			</p>
-		</form>
+    <div class="main-content" layout:fragment="content">
+    
+    	<div class="flex-spacing"> 
+    		<div>
+    			<h2>
+				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
+				<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
+				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
+				</h2>
+				<p>[[${module.description}]]</p>
+    		</div>
+	
+			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">        
+		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f">
+		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<p>Select the start sequence of the Module</p>
+					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important">
+						<option th:value="Select" th:text="Select"></option>
+		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
+		            </select>
+		            <button type="submit" class="btn primary-btn">Submit</button>
+				</form>
+			</div>
+    	</div>
+    	
+    	<div class="tab">
+    		<div style="display: flex; justify-content: space-between">
+    			<h4>All Slides</h4>
+                <!-- Commenting as this is planned for future development -->
+    			<!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>
+    		</div>
+    		<div class="grid" id="grid">
+				<div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
+					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
+						<span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
+						<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>	
+						<span class="card-text" style="white-space: pre-wrap;">[[${slide.description}]]</span>
+					</a>
+					<button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
+				  		th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
+				    	<i class="fas fa-trash-alt" style="color: var(--error)"></i>
+				  	</button>
+				</div>
+			</div>	    		
+    	</div>
+    	
+    	<div class="tab">
+    		<div style="display: flex; justify-content: space-between">
+				<h4>Sequences</h4>
+				<a th:href="@{${module.id}+'/sequence/add'}" class="btn outline" >+ New Sequence</a>				
+			</div>	
+			
+			<div class="grid">
+				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
+				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;"><span  style="white-space: pre-wrap;">[[${sequence.name}]]</span></a>
+				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
+				  	aria-haspopup="true" aria-expanded="false">
+				    	<i class="fa fa-folder-open"></i>
+				  </button>
+                  <div class="dropdown-menu slidesInSeq">
+                  </div>
+				</div>
+                
+			</div>
+			
+    	</div>
+			
+		<div id="deleteSlideAlert" class="modal fade" role="dialog"
+		    data-value="0">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h4 class="modal-title" id="deleteModalTitle">Confirm
+		                    Deletion?</h4>
+		                <button type="button" id="closeSlide" class="close"
+		                    data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
+		            </div>
+		            <div class="modal-body">
+		                <p>
+		                    This Slide is a part of Sequences shown below. Are you sure you want to delete it?
+		                </p>
+		                <ol id="orderedList">
+		                </ol>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" id="cancelSlideDelButton"
+		                    class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button id="deleteSlideFromSequence" type="submit"
+		                    class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 	</div>
-
-<div id="result"></div>
-<div class="container" id="header" style="margin-bottom:10px;">
-	<div class="row">
-		<div class="col justify-content-center">
-			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
-				<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES</span>
-				<a class="d-flex align-items-center text-muted"
-					th:href="@{${module.id}+'/slide/add'}"> <span><i
-                            class="fas fa-plus-circle"></i></span></a>
-			</div>
-		</div>
-		<div class="col">
-			<div class="card-header sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
-				<span style="float: left; font-size: medium; padding-top: 3px;">SEQUENCES</span>
-                <div style="display: inline-flex;">
-                <a class="showAllSequences" href="#" style="padding-right: 9px;">
-                    show All</a>
-				<a class="d-flex align-items-center text-muted"
-					th:href="@{${module.id}+'/sequence/add'}"> <span><i
-                            class="fas fa-plus-circle"></i></span></a>
-                </div>
-			</div>
-		</div>
-		<div class="col">
-			<div class="card-header sidebar-heading d-flex align-items-center px-3 mt-4 mb-1">
-				<span style="float: left; font-size: medium; padding-top: 3px;">SLIDES IN
-					SEQUENCE</span> <span id="startSequence"
-					style="float: right; padding-top: 3px;"></span>
-			</div>
-		</div>
-	</div>
-	<div class="container" id="table">
-        <div class="row">
-            <div class="col justify-content-center" style="padding-left: 30px;">
-                <div th:each="slide: ${slides}">
-                    <div th:id="${slide.id}" class="card slide" style="max-width: 18rem; margin-bottom:10px;">
-                        <div id="slideDesc" align="left" class="card-body d-flex" style="position: relative;"
-                        th:style="${#strings.isEmpty(slide.description) ? '' : 'overflow: scroll;max-height: 300px'}">
-                                   <div style="padding-bottom: 32px; padding-right: 2px;" 
-                                   th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"><span id="branchingPoint" style="float: right;"><i class="fas fa-code-branch"></i></span></div>
-                             <font color="#796d05"><h5 class="card-title">[[${slide.name}]]</h5>
-                            <p class="card-text">[[${slide.description}]]</p></font>					
-                            <div class='block2' style="width: 40px; position: absolute; top: 6px; right:6px;">
-                            
-                            <a th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);" class="checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'" style="float: right;"><span style="float: right;"><i class="fas fa-trash-alt"></i></span></a>
-                            <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}"><span style="float: right; padding-right: 7px;"><i class="fa fa-eye"></i></span></a>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-            </div>
-            <div class="col justify-content-center" id="allSequences" style="padding-left: 65px;">
-                <div th:each="sequence: ${sequences}">
-                    <div th:id="${sequence.id}" class="card sequence" style="max-width: 18rem; margin-bottom:10px;">
-                    <div align="left" class="card-body">
-                        <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}"><span style="float: right"><i class="fa fa-eye"></i></span></a>
-                        <font color="#796d05"><h5 class="card-title">[[${sequence.name}]]</h5>
-                        <p class="card-text">[[${sequence.description}]]</p></font>	
-                    </div>
-                    </div>
-                </div>
-            </div>
-            <div id="selectedSequence" class="col justify-content-center" style="padding-left: 60px; padding-right:20px;"></div>
-         </div>
-    </div>
-</div>
-<div id="deleteSlideAlert" class="modal fade" role="dialog"
-    data-value="0">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="deleteModalTitle">Confirm
-                    Deletion?</h4>
-                <button type="button" id="closeSlide" class="close"
-                    data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    This Slide is a part of Sequences shown below. Are you sure you want to delete it?
-                </p>
-                <ol id="orderedList">
-                </ol>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="cancelSlideDelButton"
-                    class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="deleteSlideFromSequence" type="submit"
-                    class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 </body>
 </html>

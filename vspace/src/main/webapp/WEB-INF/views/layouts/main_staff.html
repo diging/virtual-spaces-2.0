@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,15 +37,13 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
-<script th:src="@{/resources/bootstrap/js/main.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous">
-</script>
+<script th:src="@{/resources/bootstrap-4.1.2/assets/js/popper.min.js}"></script>
+<script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
+<script th:src="@{/resources/bootstrap/js/main.js}"></script>
+<script th:src="@{/resources/extra/dateFormat.min.js}"></script>
+<script th:src="@{/resources/extra/bootbox.min.js}"></script>
 
 <script th:inline="javascript">
       //# sourceURL=date.js
@@ -58,20 +57,18 @@
         jQuery(elem).text(DateFormat.format.date(jQuery(elem).text(), longDateFormat));
       }
     });
-
     $('#deleteAlert').delay(2000).fadeOut();
+    $("#closeAlert").click(function() {
+	  	$('#errorMsg').hide();
+	  });
+    //$('#errorMsg').delay(2000).fadeOut();
   });
 </script>
-
-<script th:src="@{/resources/extra/dateFormat.min.js}"></script>
-<script th:src="@{/resources/extra/bootbox.min.js}"></script>
 
    <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!--  <script>window.jQuery || document.write('<script th:src="@{../../assets/js/vendor/jquery-slim.min.js}"><\/script>')</script> -->
-<script th:src="@{/resources/bootstrap-4.1.2/assets/js/popper.min.js}"></script>
-<script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
 
     <!-- Icons -->
 <script src="//unpkg.com/feather-icons/dist/feather.min.js"></script>
@@ -81,19 +78,17 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    <!-- <div class="sidebar">
-        <div class="sidebarHeader"></div>
-        <div
-            th:insert="staff/dashboard/menu/dashboard_menu :: dashboard_menu"></div>
-    </div> -->
-    <div style="width: 80%; margin-left: auto">
-        <div layout:fragment="content" style="padding-right:20px; padding-left:10px;"></div>
+    
+    <div style="width: 80%; margin: 0 0 0 auto;">
+    <div th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert customWindow" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
+         [[${#request.getParameter('message')}]]
+         <button type="button" class="close" id="closeAlert"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+         </button>
     </div>
-    <footer class="footer mt-auto">
-        <div class="d-flex justify-content-center" style="text-align: center;">
-            <span class="text-muted" style="font-size: 12px;">This web application was built with Virtual Spaces 2.0
-                (https://github.com/diging/virtual-spaces-2.0).</span>
+        <div layout:fragment="content">
         </div>
-    </footer>
+    </div>
 </body>
 </html>
