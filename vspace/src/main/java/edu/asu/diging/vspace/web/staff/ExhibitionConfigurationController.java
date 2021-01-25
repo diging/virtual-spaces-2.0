@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.google.gson.JsonObject;
-
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
@@ -25,7 +21,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.impl.SpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -34,7 +30,7 @@ public class ExhibitionConfigurationController {
     private SpaceRepository spaceRepo;
 
     @Autowired
-    private SpaceManager spaceManager;
+    private ISpaceManager spaceManager;
 
     @Autowired
     private IExhibitionManager exhibitManager;
@@ -66,11 +62,11 @@ public class ExhibitionConfigurationController {
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
-        @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-        @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
-        @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
-        @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
-        RedirectAttributes attributes) throws IOException {
+            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
+            @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
+            @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+            RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
 

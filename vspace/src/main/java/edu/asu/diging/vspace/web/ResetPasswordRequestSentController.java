@@ -8,6 +8,6 @@ public class ResetPasswordRequestSentController {
 
     @RequestMapping("/reset/request/sent")
     public String show() {
-        return "reset/request/sent";
+        return "resetRequestSent";
     }
 }
