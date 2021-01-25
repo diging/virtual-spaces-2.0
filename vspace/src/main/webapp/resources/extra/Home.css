@@ -48,7 +48,7 @@ i {
 }
 
 .nav-bar {
-    position: fixed;
+    position: relative;
     width: 100%;
     display: flex !important;
     align-items: center !important;
