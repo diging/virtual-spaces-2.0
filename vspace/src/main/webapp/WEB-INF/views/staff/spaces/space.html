@@ -1280,9 +1280,11 @@ $(function(){
                 <option th:id="No" th:value=false th:selected="${!space.hideIncomingLinks}">No</option>
                 <option th:id="Yes" th:value=true th:selected="${space.hideIncomingLinks}">Yes</option>
              </select>
-             <p style="display: inline; padding-left: 10px; padding-top: 100px;">
-               <input class="btn btn-primary" type="submit" value="Submit" />
-             </p>
+             <p
+                    style="display: inline; padding-left: 10px;">
+                    <input class="btn primary-btn btn-sm" type="submit"
+                        value="Submit" />
+                </p>
            </form>
        </div>
         
