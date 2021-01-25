@@ -36,7 +36,9 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     @NotFound(action=NotFoundAction.IGNORE)
     private ISpace targetSpace;
     
-    /* (non-Javadoc)
+    /* 
+     * (non-Javadoc)
+     * 
      * @see edu.asu.diging.vspace.core.model.impl.ISpaceLink#getId()
      */
     @Override
