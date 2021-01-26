@@ -78,7 +78,6 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    
     <div style="width: 80%; margin: 0 0 0 auto;">
     <div th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert customWindow" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
          [[${#request.getParameter('message')}]]
