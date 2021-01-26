@@ -57,12 +57,12 @@ public class ExhibitionSlideController {
 
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
-            throw new SpaceNotFoundException(spaceId);
+            return "redirect:/exhibit/404";
         }
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
         if (module == null) {
-            throw new ModuleNotFoundException(moduleId);
+            return "redirect:/exhibit/404";
         }
         if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);
