@@ -47,6 +47,7 @@ i {
     border-radius: 13px; */
 }
 
+
 .nav-bar {
     position: relative;
     width: 100%;
@@ -311,7 +312,7 @@ i {
 
 @media only screen and (max-width: 1500px) {
 .grid {
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto;
 }
 }
 

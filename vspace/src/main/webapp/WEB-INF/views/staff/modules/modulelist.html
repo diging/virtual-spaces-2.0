@@ -41,6 +41,7 @@
         </div>
         
         <div class="grid" id="grid">
+
 			<div th:each="module: ${vspaceModules}" class="btn-group">
                 <div class="btn-group">
 				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
@@ -48,13 +49,12 @@
                     <br>
                     <span style="white-space: pre-wrap; line-break: auto; max-height: 50px; overflow-y: scroll; display: inline-block;">[[${module.description}]]</span>
                     </a>
-					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
+					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
 				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
 				
                 </div>
 			</div>
 		</div>
-		
 		<div id="list" style="margin-top: 15px;">
 			<ul class="list-group list-group-flush" th:each="module: ${vspaceModules}">
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
