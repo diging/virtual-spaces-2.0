@@ -150,7 +150,7 @@ $(document).ready(function($) {
                 <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn" >+ New Slide</a>
             </div>
             <div class="grid" id="grid" style="margin-top: 10px;">
-                <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
+                <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}" style="width: 11.20rem;">
                     <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
                         <i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br> 
