@@ -112,7 +112,7 @@ $(document).ready(function($) {
 				<p>[[${module.description}]]</p>
     		</div>
 	
-			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">        
+			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">
 		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right; margin-right: 40px;">
 		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
@@ -124,7 +124,6 @@ $(document).ready(function($) {
 				</form>
 			</div>
     	</div>
-    	
     	<div class="tab" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>

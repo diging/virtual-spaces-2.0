@@ -59,18 +59,18 @@
 
 <body>
     <div layout:fragment="content" class="main-content">
-        <a th:href="@{/staff/space/add}" class="btn outline" style="float: right">+ New Space</a>
+        <a th:href="@{/staff/space/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ New Space</a>
         <h2>Spaces</h2>
-        <div style="padding-bottom: 20px;">
+        <div>
             This virtual exhibition contains the following spaces. 
             <i class="fa fa-play-circle secondary"></i> indicates the start space.
         </div>            
         
         <div style="text-align: right">
         	<button class="btn" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
-        		<i class="fas fa-list-ul black"></i></button>
+        		<i class="fas fa-list-ul black" style="position: inherit; padding: 4px;"></i></button>
         	<button class="btn" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
-        		<i class="fas fa-th"></i></button>
+        		<i class="fas fa-th" style="position: inherit; padding: 4px;"></i></button>
             <!-- Added for future development -->
         	<!-- <button class="btn" style="background: white"><i class="fas fa-filter black"></i></button> -->
         </div>
@@ -81,9 +81,11 @@
 					<i class="fa fa-play-circle" th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></i>
 					<i class="fas fa-exclamation-triangle" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></i>
                     <i class="fas fa-eye-slash noIncomingLinks" th:if="${!space.hasIncomingLinks()}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has no incoming links"></i>
-				</div>		
+				</div>
 				<div class="spaceImage">
+                    <a th:href="@{'/staff/space/'+${space.id}}">
 					<img class="card-img-top" th:src="@{'/api/image/'+${space?.image?.id}}" alt="Space image">
+                    </a>
 				</div>
 				<div class="btn-group dropdown">
 					<a th:href="@{'/staff/space/'+${space.id}}" class="btn btn-light skew" style="width: 10rem; white-space: normal;">
