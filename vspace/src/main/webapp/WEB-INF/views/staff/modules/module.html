@@ -102,7 +102,7 @@ $(document).ready(function($) {
 <body>
     <div class="main-content" layout:fragment="content">
     
-    	<div class="flex-spacing" style="margin: -28px;"> 
+    	<div class="flex-spacing" style="margin-bottom: 0;"> 
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
@@ -116,7 +116,7 @@ $(document).ready(function($) {
 		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right; margin-right: 40px;">
 		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
-					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important; width: 30%;">
+					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important;">
 						<option th:value="Select" th:text="Select"></option>
 		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
 		            </select>
@@ -125,7 +125,7 @@ $(document).ready(function($) {
 			</div>
     	</div>
     	
-    	<div class="tab">
+    	<div class="tab" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
 				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn" >+ New Sequence</a>				
@@ -148,7 +148,7 @@ $(document).ready(function($) {
                 <h4>All Slides</h4>
                 <!-- Commenting as this is planned for future development -->
                 <!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
-                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn btn-sm" >+ New Slide</a>
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn" >+ New Slide</a>
             </div>
             <div class="grid" id="grid" style="margin-top: 10px;">
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">

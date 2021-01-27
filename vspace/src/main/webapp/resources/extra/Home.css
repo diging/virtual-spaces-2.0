@@ -311,13 +311,7 @@ i {
 
 @media only screen and (max-width: 1500px) {
 .grid {
-    grid-template-columns: auto auto auto auto;
-}
-}
-
-@media only screen and (max-width: 1500px) {
-.grid {
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto;
 }
 }
 
