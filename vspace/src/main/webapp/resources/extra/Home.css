@@ -48,7 +48,7 @@ i {
 }
 
 .nav-bar {
-    position: fixed;
+    position: relative;
     width: 100%;
     display: flex !important;
     align-items: center !important;
@@ -306,7 +306,13 @@ i {
 	display: grid;
     grid-template-columns: auto auto auto auto auto auto;
     grid-gap: 15px;
-    margin-top: 25px;
+    margin-top: 15px;
+}
+
+@media only screen and (max-width: 1500px) {
+.grid {
+    grid-template-columns: auto auto auto auto;
+}
 }
 
 @media only screen and (max-width: 1500px) {
