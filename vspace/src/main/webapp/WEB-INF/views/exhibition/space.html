@@ -258,7 +258,7 @@
 					<div id="mySidenav" class="sidenav">
 						<i class="far fa-times-circle fa-lg closebtn"
 							th:onclick="closeNav()"></i>
-						<div class="list-group spaceNav">
+						<div class="nav navbar-nav">
 							<ul th:each="space: ${publishedSpaces}">
 								<li><a class="dropdown-item"
 									th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
