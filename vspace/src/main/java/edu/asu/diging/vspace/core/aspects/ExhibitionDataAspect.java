@@ -119,7 +119,7 @@ public class ExhibitionDataAspect {
         }
         // If the space and module Id is not found, show message on screen.
         if(space==null && module==null) {
-            return "notFound";
+            return "redirect:/exhibit/404";
         }
         // If user is logged in and exhibition is not active, show exhibition with pop up message.
         if(authFacade.getAuthenticatedUser()!=null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
