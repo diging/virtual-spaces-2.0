@@ -47,6 +47,7 @@ i, .icon {
     border-radius: 13px; */
 }
 
+
 .nav-bar {
     position: relative;
     width: 100%;
@@ -228,7 +229,7 @@ i, .icon {
 .flex-spacing {
 	display:flex;
 	justify-content: space-between;
-	margin: 10px 0
+	margin: 40px 0
 }
 
 .register-form {	
@@ -315,7 +316,7 @@ i, .icon {
 
 @media only screen and (max-width: 1500px) {
 .grid {
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto;
 }
 }
 
@@ -701,9 +702,6 @@ i, .icon {
     background: var(--med-grey);
     margin: 0px 20px;
 }
-
-
-
 
 .Icon_awesome_info_module_m_sidenav {
     overflow: visible;

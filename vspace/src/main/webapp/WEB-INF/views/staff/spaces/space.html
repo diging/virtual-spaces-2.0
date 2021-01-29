@@ -98,7 +98,6 @@ function drawLinks(){
 		$(".space").append(link);
 		$(".space").append(unpublishedSpaceElement);
 		
-		
 		$(".slabel-[(${link.link.id})]").css({
 			'transform': 'rotate(0deg)',
 			'left': [[${link.positionX}]] + posX - 10,
@@ -1579,7 +1578,6 @@ function drawLinks(){
 .Info_cz_Class:hover .tooltiptext {
     visibility: visible;
 }
-
 .space {
     max-width: 1300px;
     width: 100%;
@@ -1829,7 +1827,6 @@ function drawLinks(){
 	            </div>
 	        </form>
 		</div>
-        
 
         <form method="post"
             th:action="@{|/staff/space/update/${space.id}?${_csrf.parameterName}=${_csrf.token}|}"
@@ -2233,7 +2230,6 @@ function drawLinks(){
                 </div>
             </div>
         </div>
-
         <div id="main-space" th:if="${space.image != null}">
             <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
         </div>

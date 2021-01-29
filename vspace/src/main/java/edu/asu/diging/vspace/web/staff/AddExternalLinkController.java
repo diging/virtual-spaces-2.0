@@ -31,7 +31,7 @@ public class AddExternalLinkController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
+
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title, @RequestParam("url") String externalLink,
