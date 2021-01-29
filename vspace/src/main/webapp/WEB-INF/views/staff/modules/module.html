@@ -1,5 +1,6 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<script src="https://unpkg.com/moment"></script>
 <script th:inline="javascript">
 //# sourceURL=click.js
 //------------Deleting Slides-------------------
@@ -64,6 +65,19 @@ function loadSlidesInSequences(sequenceId) {
 }
 
 $(document).ready(function($) {
+    
+    var dateFormat = 'YYYY-DD-MM HH:mm:ss';
+    var data = [[${module.creationDate}]];
+    var month = data.monthValue<10 ? "0"+data.monthValue : data.monthValue;
+    var day = data.dayOfMonth<10 ? "0"+data.dayOfMonth : data.dayOfMonth;
+    var hour = data.hour<10 ? "0"+data.hour : data.hour;
+    var minute = data.minute<10 ? "0"+data.minute : data.minute;
+    var second = data.second<10 ? "0"+data.second : data.second;
+    var date = data.year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+    var testDateUtc = moment.utc(date);
+    var localDate = moment(testDateUtc).local();
+    var infoElement = document.getElementById('dateInfo');
+    infoElement.title="Created on "+ localDate.format(dateFormat) +" by "+ [[${module.createdBy}]];
 	
 	$("#addSlideButton").on("click", function(e) {
 		$("#createSlideAlert").show();
@@ -93,6 +107,7 @@ $(document).ready(function($) {
 	
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip()
+		$('[data-toggle="tooltip"]').title="Prashant Hello"
 	});
 				
 });
@@ -106,28 +121,28 @@ $(document).ready(function($) {
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
-				<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
+				<i class="fa fa-info-circle black" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"
 				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
 				</h2>
 				<p>[[${module.description}]]</p>
     		</div>
 	
 			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">
-		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right; margin-right: 40px;">
+		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
 		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
-					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important;">
+					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important; height:auto;">
 						<option th:value="Select" th:text="Select"></option>
 		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
 		            </select>
-		            <button type="submit" class="btn primary-btn">Submit</button>
+		            <button type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 			</div>
     	</div>
     	<div class="tab" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
-				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn" >+ New Sequence</a>				
+				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Sequence</a>				
 			</div>
             
             <div id="list" style="margin-top: 0">
@@ -147,7 +162,7 @@ $(document).ready(function($) {
                 <h4>All Slides</h4>
                 <!-- Commenting as this is planned for future development -->
                 <!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
-                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn" >+ New Slide</a>
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Slide</a>
             </div>
             <div class="grid" id="grid" style="margin-top: 10px;">
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
