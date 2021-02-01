@@ -11,7 +11,6 @@ function deleteSlide(slideId) {
         cache       : false,
         contentType : false,
         success: function(data) {
-            console.log(slideId);
             $("#"+slideId).closest('.slide').remove();
         },
         error: function(data) {
@@ -45,7 +44,6 @@ function checkSlideInSequence(slideId) {
 }
 
 function loadSlidesInSequences(sequenceId) {
-		console.log(sequenceId);
 		var moduleId=[[${module.id}]];
 		$('.slidesInSeq').empty();
 		$.ajax({
@@ -54,8 +52,6 @@ function loadSlidesInSequences(sequenceId) {
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, slide) {
-				    console.log(slide.id);
-				    console.log(slide.name);
 					$('.slidesInSeq').append(
 							'<a class="dropdown-item" href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+slide.name+'</a>'
 						);
