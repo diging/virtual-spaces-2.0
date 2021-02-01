@@ -21,6 +21,6 @@ public interface IModuleManager {
 
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
     
-    List<IVSpaceElement> getModulesContainingSearchedText(String searchText);
+    List<IVSpaceElement> findInNameOrDescriptionOfModule(String searchText);
 
 }

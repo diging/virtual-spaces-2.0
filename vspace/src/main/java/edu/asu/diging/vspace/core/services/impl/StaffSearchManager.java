@@ -28,18 +28,18 @@ public class StaffSearchManager implements IStaffSearchManager{
     @Autowired
     private TextContentBlockRepository textContentBlockRepo;
     
+    
     @Override
-    public HashSet<IVSpaceElement> getAllContainingElements(String searchString) {
+    public HashSet<IVSpaceElement> getAllSearchedElements(String searchString) {
         
         HashSet<IVSpaceElement> resultElements = new HashSet<>();
         
-        resultElements.addAll(spaceManager.getSpacesContainingSearchedText(searchString));
-        resultElements.addAll(moduleManager.getModulesContainingSearchedText(searchString));
-        resultElements.addAll(slideManager.getSlidesContainingSearchedText(searchString));
-        resultElements.addAll(textContentBlockRepo.getSearchedTextContainingSlides(searchString));
+        resultElements.addAll(spaceManager.findInNameOrDescriptionOfSpaces(searchString));
+        resultElements.addAll(moduleManager.findInNameOrDescriptionOfModule(searchString));
+        resultElements.addAll(slideManager.findInNameOrDescriptionOfSlide(searchString));
+        resultElements.addAll(textContentBlockRepo.findInNameOrDescription(searchString));
         return resultElements;
     }
     
     
-
 }
