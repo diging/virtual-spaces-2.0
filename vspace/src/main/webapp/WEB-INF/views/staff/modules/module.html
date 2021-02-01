@@ -66,18 +66,11 @@ function loadSlidesInSequences(sequenceId) {
 
 $(document).ready(function($) {
     
-    var dateFormat = 'YYYY-DD-MM HH:mm:ss';
-    var data = [[${module.creationDate}]];
-    var month = data.monthValue<10 ? "0"+data.monthValue : data.monthValue;
-    var day = data.dayOfMonth<10 ? "0"+data.dayOfMonth : data.dayOfMonth;
-    var hour = data.hour<10 ? "0"+data.hour : data.hour;
-    var minute = data.minute<10 ? "0"+data.minute : data.minute;
-    var second = data.second<10 ? "0"+data.second : data.second;
-    var date = data.year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
-    var testDateUtc = moment.utc(date);
-    var localDate = moment(testDateUtc).local();
-    var infoElement = document.getElementById('dateInfo');
-    infoElement.title="Created on "+ localDate.format(dateFormat) +" by "+ [[${module.createdBy}]];
+    var dateFormat = 'MM-DD-YYYY hh:mm:ss A';
+    var date = document.getElementById('creationDate').value;
+    var localDate = moment(moment.utc(date)).local();
+    var dateInfo = document.getElementById('dateInfo');
+    dateInfo.title="Created on "+ localDate.format(dateFormat) +" by "+ [[${module.createdBy}]];
 	
 	$("#addSlideButton").on("click", function(e) {
 		$("#createSlideAlert").show();
@@ -106,8 +99,7 @@ $(document).ready(function($) {
 	});
 	
 	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
-		$('[data-toggle="tooltip"]').title="Prashant Hello"
+		$('[data-toggle="tooltip"]').tooltip();
 	});
 				
 });
@@ -121,8 +113,7 @@ $(document).ready(function($) {
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
-				<i class="fa fa-info-circle black" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"
-				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
+ 				<i class="fa fa-info-circle black" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"></i>
 				</h2>
 				<p>[[${module.description}]]</p>
     		</div>
@@ -205,6 +196,7 @@ $(document).ready(function($) {
 		        </div>
 		    </div>
 		</div>
+        <input type="hidden" th:id="creationDate" th:value=${module.creationDate}>
 	</div>
 </body>
 </html>
