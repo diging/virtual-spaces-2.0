@@ -78,14 +78,23 @@
 }
 #sidebar {
     min-width: 250px;
-    max-width: 250px;
-    
+    max-width: 250px;  
+}
+#dismiss {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    /* top right corner of the sidebar */
+    top: 10px;
+    right: 10px;
 }
 
 #sidebar.active {
     margin-left: -250px;
 }
-
+.btn {
+	padding: 10px;
+}
 @media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
@@ -103,10 +112,11 @@
 		<script th:inline="javascript">
 		//# sourceURL=click.js
 		
-		$(document).ready(function () {
-
+		$(document).ready(function () {			  
+			  
               $('#sidebarCollapse').on('click', function () {
-              $('#sidebar').toggleClass('active');
+            	  // open sidebar
+                  $('#sidebar').toggleClass('active');
             });
         });
 		
@@ -299,7 +309,7 @@
                     <div class="container-fluid">
                         <button type="button" id="sidebarCollapse" class="btn primary-btn btn-xs">
 	                        <i class="fas fa-align-left"></i>
-	                        <span>Linked Spaces</span>
+	                        <span style="cursor:pointer"></span>
 		                 </button>
                         
                     </div>
