@@ -97,10 +97,10 @@
 }
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: -250px;
+        margin-left: 0px;
     }
     #sidebar.active {
-        margin-left: 0;
+        margin-left: -250;
     }
 }
 </style>
@@ -298,7 +298,7 @@
 			
 			
 			<div class="wrapper">
-			    <nav id="sidebar">
+			    <nav id="sidebar" class="active">
 					<ul th:each="space: ${publishedSpaces}">
 					    <li><a class="dropdown-item"
 						    th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
