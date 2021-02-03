@@ -81,7 +81,7 @@
 					<i class="fa fa-play-circle" th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></i>
 					<i class="fas fa-exclamation-triangle" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></i>
                     <i class="fas fa-eye-slash noIncomingLinks" th:if="${!space.hasIncomingLinks()}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has no incoming links"></i>
-				</div>		
+				</div>
 				<div class="spaceImage">
                     <a th:href="@{'/staff/space/'+${space.id}}">
 					<img class="card-img-top" th:src="@{'/api/image/'+${space?.image?.id}}" alt="Space image">
