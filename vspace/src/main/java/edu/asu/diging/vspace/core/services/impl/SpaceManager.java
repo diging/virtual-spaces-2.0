@@ -286,6 +286,6 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public List<IVSpaceElement> findInNameOrDescriptionOfSpaces(String searchText) {
         
-        return spaceRepo.findByNameOrDescriptionContaining(searchText, searchText);
+        return spaceRepo.findInNameOrDescription(searchText);
     }
 }

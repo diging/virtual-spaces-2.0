@@ -24,10 +24,10 @@ public class StaffSearchController {
     @GetMapping
     public String getAllSearchedElements(Model model, @RequestParam(name = "searchText") String searchString) {
         HashSet<IVSpaceElement> elementList = staffSearchManager.getAllSearchedElements(searchString);
-        for(IVSpaceElement ele : elementList)
         model.addAttribute("searchWord", searchString);
         model.addAttribute("conIndex", new ExternalLinkValue("0"));
         model.addAttribute("searchResult", elementList);
+        model.addAttribute("resultCount", elementList.size());
         return "/staff/search/staffSearch";
     }
     

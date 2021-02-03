@@ -159,6 +159,6 @@ public class SlideManager implements ISlideManager {
     @Override
     public List<IVSpaceElement> findInNameOrDescriptionOfSlide(String searchText) {
         
-        return slideRepo.findByNameOrDescriptionContaining(searchText, searchText);
+        return slideRepo.findInNameOrDescription(searchText);
     }
 }

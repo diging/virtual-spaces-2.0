@@ -62,7 +62,7 @@
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
               <div>
-                <input type="text" id="searchField" placeholder="Search..."><a th:href="@{/staff/search}"  id="searchLink"><button type="submit" id="searchButton"><i class="fa fa-search"></i></button></a>
+                <input type="text" id="searchField" placeholder="Search..."><a th:href="@{/staff/search}" id="searchLink"><button type="submit" id="searchButton" disabled><i class="fa fa-search"></i></button></a>
               </div>
               <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
@@ -84,11 +84,18 @@
             <script >
             
      $(document).on('input', '#searchField', function(e){
+    	 if($("#searchField").val().trim()) {
+              $('#searchButton').removeAttr('disabled');
+    	 }
+    	 else {
+             $('#searchButton').attr('disabled','true');
+
+    	 }
     	 $("#searchLink").attr('href','[[@{/staff/search?searchText=}]]'+$("#searchField").val());
     });
      
      $(document).on('keydown', function(e) {
-         if(e.key  === 'Enter' || e.keyCode === 13) {
+         if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
              $("#searchButton").trigger('click');
          }
      })

@@ -1,10 +1,16 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:inline="javascript">
-	//# sourceURL=click.js
 	$(document).ready(function($) {
-
+		var modelAttributeValue = [[${searchResult}]];
+        if(modelAttributeValue.length != 0) {
+            $("#noResult").hide();
+        }
+        else {
+            $("#noResult").show();
+        }
 		$(function() {
+			
 			$('[data-toggle="tooltip"]').tooltip()
 		});
 
@@ -17,7 +23,9 @@
         <div class="">
             <div><h3>Search Results</h3>
             <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
-
+            <div id="noResult">
+            <h5><center>No result to display.</center></h5>
+            </div>
             <div id="resultDisplay">
                 <div th:each="contents: ${searchResult}">
                     <div th:id="${contents.id}"
