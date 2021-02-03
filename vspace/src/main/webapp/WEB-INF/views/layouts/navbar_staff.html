@@ -8,7 +8,8 @@
 		    <div id="mySidenav" class="sidenav">
 				<ul class="side-list">
 		            <li class="nav-link alert alert-warning"
-		                sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
+						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
+						th:if="${exhibition}"
 		                style="text-align: center;"
 		                th:style="${#strings.equals(exhibition.mode,'ACTIVE') ? 'display: none' : 'display: block'}">
 		                <span><i class="fa fa-exclamation-triangle"></i></span>
@@ -19,7 +20,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'home' ? 'active' : '' }"
 			               th:href="@{/staff/dashboard}">
-			               <span><i class="fas fa-home"></i>Dashboard</span> 
+			               <i class="fa fa-home secondary"></i><span class="custom_Text">&nbsp;Dashboard</span>
 			               <span class="sr-only">(current)</span>
 			            </a>
 			        </li>
@@ -27,70 +28,52 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'space' ? 'active' : '' }"
 			               th:href="@{/staff/space/list}"> 
-			               <span><i class="fas fa-layer-group"></i></span>Spaces
+			               <i class="fa fa-layer-group secondary"></i><span class="custom_Text">&nbsp;Spaces</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'module' ? 'active' : '' }"
 			               th:href="@{/staff/module/list}"> 
-			               <span><i class="fas fa-th-large"></i></span>Modules
+			               <i class="fa fa-th-large secondary"></i><span class="custom_Text">&nbsp;Modules</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list/1}"> 
-			               <span><i class="fas fa-file-image"></i></span>Images
+			               <i class="fa fa-file-image secondary"></i><span class="custom_Text">&nbsp;Images</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
-			               <span><i class="fas fa-user"></i></span>Users
+			               <i class="fa fa-user secondary"></i><span class="custom_Text">&nbsp;Users</span>
 			            </a>
 			        </li>
 		        </ul>
-		        <ul>
-		            <li><h6
-		                    class="sidebar-heading d-flex align-items-center px-3 mt-4 mb-1 text-muted">
-		                    <span>Spaces</span> <a
-		                        class="d-flex align-items-center text-muted"
-		                        th:href="@{/staff/space/add}"> <span>&nbsp;<i
-		                            class="fas fa-plus-circle"></i></span>
-		                    </a>
-		                </h6></li>
-		            <li><h6
-		                    class="sidebar-heading d-flex align-items-center px-3 mt-4 mb-1 text-muted">
-		                    <span>Modules</span> <a
-		                        class="d-flex align-items-center text-muted"
-		                        th:href="@{/staff/module/add}"> <span>&nbsp;<i
-		                            class="fas fa-plus-circle"></i></span>
-		                    </a>
-		                </h6></li>
-		        </ul>
+		        <div class="footer">
+		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
+		        		Virtual Spaces 2.0</a> � DigInG 2020
+		        </div>
 			</div>  
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
-		      <form th:action="@{'/search'}" method="GET" class="form" style="position: relative">
-	             <button class="btn form_icon" type="submit" id="submit"><i class="fa fa-search" style="color: var(--dark-grey)"></i></button>
-	             <input class="form-control form_input" type="search" placeholder="Search" id="search" th:name="search">
-	          </form>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 15px;">
-		            <a class="nav-link" th:href="@{/}"><i class="far fa-play-circle"></i></a>
+		            <a class="nav-link" th:href="@{/}"><i class="far fa-play-circle secondary"></i></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><i class="fa fa-cog"></i></a>
+		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><i class="fa fa-cog secondary"></i></a>
 		          </li> 				  
 		        </ul>		        
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn primary-btn" type="submit" title="Logout"><i class="fas fa-sign-out-alt" style="color:white"></i>&nbsp;Logout</button>
+		  				<button class="btn nav-link" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
 		         	</form>
 		        </div>
 		      </div>

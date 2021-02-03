@@ -14,7 +14,8 @@
 <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Virtual Spaces</title>
 
 <!-- Bootstrap core CSS -->
-<link th:href="@{/resources/bootstrap/css/bootstrap.min.css}" type="text/css" rel="stylesheet">
+
+<link th:href="@{/resources/bootstrap-4.1.2/css/bootstrap.min.css}" type="text/css" rel="stylesheet">
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <link th:href="@{/resources/bootstrap/assets/css/ie10-viewport-bug-workaround.css}" type="text/css" rel="stylesheet">
@@ -37,17 +38,16 @@
     <![endif]-->
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
 <script th:src="@{/resources/bootstrap/js/main.js}"></script>
 </head>
 
 <body>
 	<div th:insert="layouts/navbar :: navbar"></div>
-	<div layout:fragment="content"></div>
-	<footer class="footer mt-auto">
+	<div layout:fragment="content" style="margin: 60px 0 60px auto"></div>
+	<footer class="footer mt-auto" style="position: fixed">
 		<div class="d-flex justify-content-center">
-			<span class="text-muted">This web application was built with Virtual Spaces 2.0
-				(https://github.com/diging/virtual-spaces-2.0).</span>
+			<span class="text-muted">This web application was built with Virtual Spaces 2.0</span>
 		</div>
 	</footer>
 </body>

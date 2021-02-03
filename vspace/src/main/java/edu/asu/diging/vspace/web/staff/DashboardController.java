@@ -14,20 +14,20 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 
 @Controller
 public class DashboardController {
-  
+
     @Autowired
     private SpaceRepository spaceRepo;
-    
+
     @Autowired
     private ModuleRepository moduleRepo;
-    
+
     @RequestMapping("/staff/dashboard")
     public String displayDashboard(Model model) {
         List<Space> recentSpaces = spaceRepo.findTop5ByOrderByCreationDateDesc();
         List<Module> recentModules = moduleRepo.findTop5ByOrderByCreationDateDesc();
         model.addAttribute("recentSpaces", recentSpaces);
         model.addAttribute("recentModules", recentModules);
-        return "staff/dashboard";
+        return "staff/dashboard/dashboard";
     }
 
 }

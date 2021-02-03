@@ -1,7 +1,8 @@
+
 .Module_1_Class {
     margin: 0 auto 0 auto;
     width: 100%;
-    
+    min-height: 720px;
 }
 
 .Group_8_Class {
@@ -133,9 +134,12 @@ a, a:hover, a:focus {
 
 .Ellipse_5_be {
     filter: drop-shadow(3px 3px 20px rgba(0, 0, 0, 0.251));
-    position: fixed;
+    position: absolute;
     overflow: visible;
-    width: 45px;
+    width: 46px;
+    height: 45px;
+    left: 0px;
+    top: 0px;
     height: 45px;
 }
 
@@ -154,8 +158,8 @@ a, a:hover, a:focus {
     position: absolute;
     width: 50px;
     height: 44px;
-    left: 3%;
-    top: 25%;
+    left: 4%;
+    top: 30%;
     overflow: visible;
     cursor: pointer;
 }
@@ -164,7 +168,7 @@ a, a:hover, a:focus {
     position: absolute;
     width: 50px;
     height: 44px;
-    left: 3%;
+    left: 4%;
     top: 40%;
     overflow: visible;
     cursor: pointer;
@@ -174,8 +178,8 @@ a, a:hover, a:focus {
     position: absolute;
     width: 50px;
     height: 44px;
-    left: 3%;
-    top: 55%;
+    left: 4%;
+    top: 50%;
     overflow: visible;
     cursor: pointer;
 }
@@ -219,12 +223,20 @@ a, a:hover, a:focus {
     height: 700px;
 }
 
+@media only screen and (max-width: 800px) {
+    /* For mobile phones: */
+    [class*="exit_to_space_Class"] {
+        top: 45%;
+    }
+}
+
 .tooltiptext {
     visibility: hidden;
     width: 120px;
     color: white;
     text-align: center;
-    font-size: 12px padding: 3px 0;
+    font-size: 12px;
+    padding: 3px 0;
     border-radius: 6px;
     position: absolute;
     z-index: 1;

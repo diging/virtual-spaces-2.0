@@ -46,11 +46,11 @@ public class ExhibitionSequencesController {
                     throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
-            throw new SpaceNotFoundException(spaceId);
+            return "redirect:/exhibit/404";
         }
         IModule module = moduleManager.getModule(moduleId);
         if (module == null) {
-            throw new ModuleNotFoundException(moduleId);
+            return "redirect:/exhibit/404";
         }
         model.addAttribute("module", module);
         if (module.getStartSequence() == null) {

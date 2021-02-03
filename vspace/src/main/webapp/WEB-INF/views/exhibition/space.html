@@ -23,8 +23,23 @@
 }
 
 .sidenav {
-    width: 0px;
-    background: white;
+
+    width: 0;
+    height: 799px;
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    left: 0 px;
+    overflow-x: hidden;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 5px 5px 5px 0 px rgba(0 px, 0 px, 0 px, 0.19 px);
+    padding-top: 26px;
+    word-break: break-all;
+}
+
+.barPosition {
+    top: 25px;
 }
 
 @media only screen and (max-width: 800px) {
@@ -64,15 +79,15 @@
 		//# sourceURL=click.js
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
-		    if (window.matchMedia(maxWidth).matches){
-		        $("#mySidenav").css("width", "170px");
-		    	$("#mySidenav").css("height", "260px");
-		    }
+            if (window.matchMedia(maxWidth).matches){
+                $("#mySidenav").css("width", "170px");
+                $("#mySidenav").css("height", "260px");
+            }
 		    else{
 		        $("#mySidenav").css("width", "240px");
 		        $("#mySidenav").css("height", "[(${display.height})]px");
-		    }
-		}
+            }
+        }
 		function closeNav(){
 		    $("#mySidenav").css("width", "0px");
 		}
@@ -154,7 +169,9 @@
 		        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
 		        var posY = $("#space").position().top;
 		        var link = $('<a></a>');
-		        link.attr("href", "/vspace/exhibit/[(${space.id})]/module/[(${link.link.module.id})]");
+		        var moduleLinkURL = [[@{|/exhibit/${space.id}/module/${link.link.module.id}|}]];
+		        
+		        link.attr("href", moduleLinkURL);
 		        var linkDisplay = $('<div class="InfoModule_${iStat} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_m"></i><span class="tooltiptext">[(${link.link.name})]</span></div>');
 		        linkDisplay.css('position', 'absolute');
 		        linkDisplay.css('transform', 'rotate([(${link.rotation})]deg)');
@@ -239,9 +256,9 @@
                         th:onclick="openNav()"></i>
                 </div>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin: auto; display: flex; justify-content: center;">
-                    <div th:if="${moduleList}!=null">
-                        <div class=dropdown>
+                    style="width: 80%; margin: auto; display: flex; justify-content: center; padding-top: 22px;">
+                    <div>
+                        <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
                                 class="sideModulenav">
                                 <i
@@ -253,11 +270,11 @@
                                         <li
                                             th:if="${!#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}">[[${module.link.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m_sidenav"></i></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}">[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_module_m_sidenav"></i></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -291,15 +308,16 @@
                         <div class="text-Div">
                             <h3 class="spaceName">
                                 [[${space.name}]] <i
-                                    th:if="${space.description}!=null"
+                                    th:if="${!#strings.isEmpty(space.description)}"
                                     class="fas fa-info-circle fa-lg"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></i>
+                                <a sec:authorize="isAuthenticated()"
+                                    th:href="@{|/staff/space/${space.id}|}"><span
+                                    style="display: inline-block; color: rgba(150, 45, 62, 1);"><i
+                                        class="fas fa-edit"
+                                        style="display: inline-block;"></i></span></a>
                             </h3>
-                            <a sec:authorize="isAuthenticated()"
-                                th:href="@{/staff/space/${space.id}}"><span
-                                data-feather="edit"
-                                style="display: inline-block; color: rgba(150, 45, 62, 1);"></span></a>
                         </div>
 
                         <div id="space">

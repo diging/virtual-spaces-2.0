@@ -5,11 +5,13 @@
          font-family: 'Montserrat', sans-serif;
          }
       </style>
-      <script th:inline="javascript">
+      
+   </head>
+   <body>
+   	<div layout:fragment="content">
+   		<script>
          $( document ).ready(function() {
          	$("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
-        	$(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
-        	$(".nav-bar .navbar-nav").css('display','flex');
          });
              function openLangNav() {
                  $("#myLangSidenav").css("width","240px");
@@ -25,17 +27,16 @@
                  $("#mySidenav").css("width", "0px");
              }
       	</script>
-   </head>
-   <body>
-   	<div layout:fragment="content">
       <div id="Module_1" class="Module_1_Class">
-      	<div th:if="${showAlert != true}" style="padding-top: 3.5%; background-color: white; position: fixed; z-index: 100; top: 70px; width: 100%; display: flex;">
-			<h3 class="textDiv">[[${module.name}]]</h3>
-			<p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
-    	</div>
-         <div class="Group_7_Class" >
+         <div class="textDiv" th:if="${showAlert != true}">
+            <h3>[[${module.name}]]</h3>
+         </div>
+         <div class="slideNumberClass">
+            <p>Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
+         </div>
+         <div class="Group_7_Class">
             <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
-               <div class="Slideshow_previous" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
+               <div class="Slideshow_previous Slideshow_previous_Class">
                   <svg class="Ellipse_11">
                      <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_11_Class" rx="20" ry="20" cx="20" cy="20">
@@ -50,7 +51,7 @@
                </div>
             </a>
             <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+               <div class="slideshow_next slideshow_next_Class">
                   <svg class="Ellipse_12">
                      <ellipse fill="rgba(255,255,255,1)"
                         class="Ellipse_12_Class" rx="20" ry="20" cx="20" cy="20">
@@ -66,18 +67,18 @@
             </a>
          </div>
          <a th:href="@{'/exhibit/space/'+${spaceId}}">
-            <div class="exit_to_space_Class" style="position: fixed;  z-index:110;">
+            <div class="exit_to_space_Class">
                <svg class="Ellipse_5_be">
                   <ellipse fill="rgba(255,255,255,1)"
                      class="Ellipse_5_be_Class" rx="22" ry="22" cx="22" cy="22">
                   </ellipse>
                </svg>
                <i class="fas fa-angle-double-left fa-2x Icon_awesome_angle_double_left"></i>
-               <span class=" tooltiptext">Go To Space</span>
+               <span class="tooltiptext">Go To Space</span>
             </div>
          </a>
          <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
-            <div class="exit_to_branchingPoint_Class" style="position: fixed;  z-index:110;">
+            <div class="exit_to_branchingPoint_Class">
                <svg class="Ellipse_5">
                   <ellipse fill="rgba(255,255,255,1)"
                      class="Ellipse_5_Class" rx="22" ry="22" cx="22" cy="22">
@@ -88,7 +89,7 @@
             </div>
          </a>
          <a th:if="${showBackToPreviousChoice eq true}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
-            <div class="exit_to_previousChoice_Class" style="position: fixed; z-index:110;">
+            <div class="exit_to_previousChoice_Class">
                <svg class="Ellipse_5_be">
                   <ellipse fill="rgba(255,255,255,1)"
                      class="Ellipse_5_be_Class" rx="22" ry="22"
@@ -99,7 +100,6 @@
                <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
             </div>
          </a>
-         <div style="position: relative; top: 150px">
          <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
          <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
             <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
@@ -114,7 +114,6 @@
                      class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                </div>
             </div>
-         </div>
          </div>
       </div>
      </div>
