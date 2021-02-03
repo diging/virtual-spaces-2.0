@@ -83,24 +83,23 @@
 		    </nav> 
             <script >
             
-     $(document).on('input', '#searchField', function(e){
-    	 if($("#searchField").val().trim()) {
-              $('#searchButton').removeAttr('disabled');
-    	 }
-    	 else {
-             $('#searchButton').attr('disabled','true');
-
-    	 }
-    	 $("#searchLink").attr('href','[[@{/staff/search?searchText=}]]'+$("#searchField").val());
-    });
-     
-     $(document).on('keydown', function(e) {
-         if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
-             $("#searchButton").trigger('click');
-         }
-     })
-  //# sourceURL=script.js
-    </script>
+                 $(document).on('input', '#searchField', function(e){
+                	 if($("#searchField").val().trim()) {
+                          $('#searchButton').removeAttr('disabled');
+                	 }
+                	 else {
+                         $('#searchButton').attr('disabled','true');
+                	 }
+                	 $("#searchLink").attr('href','[[@{/staff/search?searchText=}]]'+$("#searchField").val());
+                });
+                 
+                 $(document).on('keydown', function(e) {
+                     if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
+                         $("#searchButton").trigger('click');
+                     }
+                 })
+              //# sourceURL=script.js
+            </script>
           </div>
 	</body>
 </html>

@@ -59,8 +59,9 @@
     });
 
     $('#deleteAlert').delay(2000).fadeOut();
-    
-
+    $("#closeAlert").click(function() {
+	  	$('#errorMsg').hide();
+	  });
   });
 </script>
 
@@ -77,8 +78,16 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    <div style="width: 80%; margin: 120px 0 60px auto">
-        <div layout:fragment="content"></div>
+    <div style="width: 80%; margin: 0 0 0 auto;">
+    <div th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert customWindow" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
+         [[${#request.getParameter('message')}]]
+         <button type="button" class="close" id="closeAlert"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+         </button>
+    </div>
+    <div layout:fragment="content">
+    </div>
     </div>
 </body>
 </html>

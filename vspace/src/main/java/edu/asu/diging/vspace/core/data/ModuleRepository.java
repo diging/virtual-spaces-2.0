@@ -19,4 +19,6 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     @Query("SELECT d FROM Module d WHERE d.name like %?1% OR d.description LIKE %?1%")
     public List<IVSpaceElement> findInNameOrDescription(String searchText);
 
+List<Module> findAllByOrderByCreationDateDesc();
+
 }
