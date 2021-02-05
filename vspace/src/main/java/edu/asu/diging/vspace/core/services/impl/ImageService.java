@@ -27,6 +27,7 @@ import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.Constants;
 import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 @Service
@@ -84,38 +85,6 @@ public class ImageService implements IImageService {
         return new ImageData(newHeight.intValue(), width);
     }
 
-    /**
-     * Method to return the requested images
-     * 
-     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
-     *                page is returned
-     * @return list of images in the requested pageNo
-     */
-    @Override
-    public List<IVSImage> getImages(int pageNo) {
-        return getImages(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
-    }
-
-    /**
-     * Method to return the requested images
-     * 
-     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
-     *                page is returned
-     * @return list of images in the requested pageNo and requested order.
-     */
-    @Override
-    public List<IVSImage> getImages(int pageNo, String sortedBy, String order) {
-        Sort sortingParameters = getSortingParameters(sortedBy, order);
-        pageNo = validatePageNumber(pageNo);
-        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
-        List<IVSImage> results = new ArrayList<>();
-        if(images != null) {
-            images.getContent().forEach(i -> results.add(i));
-        }
-        return results;
-    }
-
     private Sort getSortingParameters(String sortedBy, String order) {
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
         if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
@@ -129,13 +98,30 @@ public class ImageService implements IImageService {
         }
         return sortingParameters;
     }
+    
+    /**
+     * Method to return the requested images
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo
+     */
+    @Override
+    public List<IVSImage> getImages(int pageNo, String category) {
+        return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
 
     @Override
-    public List<IVSImage> getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
+    public List<IVSImage> getImages(int pageNo, String category, String sortedBy, String order) {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
-        pageNo = validatePageNumber(pageNo);
+        pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<IVSImage> images = imageRepo.findByCategories(sortByRequestedField, category);
+        Page<VSImage> images;
+        if(category.equals(Constants.ALL)) {
+            images = imageRepo.findAll(sortByRequestedField);
+        }else {
+            images = imageRepo.findByCategories(sortByRequestedField, ImageCategory.valueOf(category));
+        }
         List<IVSImage> results = new ArrayList<>();
         if(images != null) {
             images.getContent().forEach(i -> results.add(i));
@@ -143,52 +129,26 @@ public class ImageService implements IImageService {
         return results;
     }
 
-    /**
-     * Method to return the total pages sufficient to display all images
-     * 
-     * @return totalPages required to display all images in DB
-     */
     @Override
-    public long getTotalPages() {
-        return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
-    }
-
-    /**
-     * Method to return the total image count
-     * 
-     * @return total count of images in DB
-     */
-    @Override
-    public long getTotalImageCount(ImageCategory category) {
-        return imageRepo.countByCategories(category);
+    public long getTotalImageCount(String category) {
+        if(category.equals(Constants.ALL)) {
+            return imageRepo.count();
+        }
+        return imageRepo.countByCategories(ImageCategory.valueOf(category));
     }
 
     @Override
-    public long getTotalPages(ImageCategory category) {
-        long count = imageRepo.countByCategories(category);
+    public long getTotalPages(String category) {
+        if(category.equals(Constants.ALL)) {
+            return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
+        }
+        long count = imageRepo.countByCategories(ImageCategory.valueOf(category));
         return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
     }
 
-    /**
-     * Method to return the total image count
-     * 
-     * @return total count of images in DB
-     */
     @Override
-    public long getTotalImageCount() {
-        return imageRepo.count();
-    }
-
-    /**
-     * Method to return page number after validation
-     * 
-     * @param pageNo page provided by calling method
-     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
-     *         totalPages.
-     */
-    @Override
-    public int validatePageNumber(int pageNo) {
-        long totalPages = getTotalPages();
+    public int validatePageNumber(int pageNo, String category) {
+        long totalPages = getTotalPages(category);
         if(pageNo<1) {
             return 1;
         } else if(pageNo>totalPages) {

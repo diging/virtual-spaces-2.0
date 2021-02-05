@@ -43,25 +43,15 @@ public class ListImagesController {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
         try {
-            pageNo = imageService.validatePageNumber(Integer.parseInt(page));
+            pageNo = imageService.validatePageNumber(Integer.parseInt(page),imageCategory);
         } catch (NumberFormatException numberFormatException){
             pageNo = 1;
         }
-        model.addAttribute("totalPages", imageService.getTotalPages());
-        model.addAttribute("currentPageNumber", pageNo);
-        model.addAttribute("totalImageCount", imageService.getTotalImageCount());
         List<IVSImage> images;
-        if(imageCategory.equals(Constants.ALL)) {
-            model.addAttribute("totalPages", imageService.getTotalPages());
-            model.addAttribute("currentPageNumber", pageNo);
-            model.addAttribute("totalImageCount", imageService.getTotalImageCount());
-            images = imageService.getImages(pageNo, sortedBy, order);
-        } else {
-            model.addAttribute("totalPages", imageService.getTotalPages(ImageCategory.valueOf(imageCategory)));
-            model.addAttribute("currentPageNumber", pageNo);
-            model.addAttribute("totalImageCount", imageService.getTotalImageCount(ImageCategory.valueOf(imageCategory)));
-            images = imageService.getImages(pageNo, ImageCategory.valueOf(imageCategory), sortedBy, order);
-        }
+        model.addAttribute("totalPages", imageService.getTotalPages(imageCategory));
+        model.addAttribute("currentPageNumber", pageNo);
+        model.addAttribute("totalImageCount", imageService.getTotalImageCount(imageCategory));
+        images = imageService.getImages(pageNo, imageCategory, sortedBy, order);
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for(IVSImage image : images) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());

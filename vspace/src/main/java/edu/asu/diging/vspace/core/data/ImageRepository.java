@@ -20,7 +20,7 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
 
     List<VSImage> findByFilenameLike(String filename);
 
-    Page<IVSImage> findByCategories(Pageable pageable, ImageCategory category);
+    Page<VSImage> findByCategories(Pageable pageable, ImageCategory category);
 
     List<IVSImage> findByCategories(ImageCategory category);
     
