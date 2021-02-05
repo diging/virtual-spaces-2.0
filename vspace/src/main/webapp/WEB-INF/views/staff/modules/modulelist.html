@@ -43,7 +43,7 @@
         <div class="grid" id="grid">
 
 			<div th:each="module: ${vspaceModules}" class="btn-group">
-                <div class="btn-group">
+                <div class="btn-group" style="width: 11.75rem;">
 				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
 					<span class="card-title" style="white-space: pre-wrap; line-break: anywhere; font-size: 1.25rem;">[[${module.name}]]</span>
                     <br>
@@ -51,7 +51,6 @@
                     </a>
 					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
                         th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
-				
                 </div>
 			</div>
 		</div>
