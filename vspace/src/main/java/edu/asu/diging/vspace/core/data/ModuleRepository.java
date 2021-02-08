@@ -13,5 +13,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 public interface ModuleRepository extends PagingAndSortingRepository<Module, String> {
 
     List<Module> findTop5ByOrderByCreationDateDesc();
+    
+    List<Module> findAllByOrderByCreationDateDesc();
 
 }
