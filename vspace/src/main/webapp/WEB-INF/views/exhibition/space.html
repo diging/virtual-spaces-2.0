@@ -275,7 +275,7 @@
             </div>
             <div id="Module_1" class="Home_Class">
                 <div class="wrapper">
-			    <nav id="sidebar" class="active">
+                <nav id="sidebar" class="active">
 					<ul th:each="space: ${publishedSpaces}">
 					    <li><a class="dropdown-item"
 						    th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
@@ -294,20 +294,7 @@
                         </nav>
                     </div>
 			    </div>
-                <!-- <div class="dropdown">
-                    <div id="mySidenav" class="sidenav">
-                        <i class="far fa-times-circle fa-lg closebtn"
-                            th:onclick="closeNav()"></i>
-                        <div class="list-group spaceNav">
-                            <ul th:each="space: ${publishedSpaces}">
-                                <li><a class="dropdown-item"
-                                    th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
-                            </ul>
-                        </div>
-                    </div>
-                    <i class="fas fa-bars fa-lg barPosition"
-                        th:onclick="openNav()"></i>
-                </div> -->
+
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; margin: auto; display: flex; justify-content: center; padding-top: 22px;">
                     <div>
