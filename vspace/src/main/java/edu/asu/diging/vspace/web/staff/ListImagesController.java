@@ -32,7 +32,7 @@ public class ListImagesController {
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory) {
 
-        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory != null ? imageCategory : Constants.ALL));
+        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory));
     }
 
     @RequestMapping("/staff/images/list/{page}")

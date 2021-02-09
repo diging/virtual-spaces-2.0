@@ -27,7 +27,6 @@ import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import edu.asu.diging.vspace.web.staff.Constants;
 import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 @Service
@@ -92,8 +91,7 @@ public class ImageService implements IImageService {
         }
         if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
             sortingParameters = sortingParameters.ascending();
-        }
-        else {
+        } else {
             sortingParameters = sortingParameters.descending();
         }
         return sortingParameters;
@@ -110,6 +108,20 @@ public class ImageService implements IImageService {
     public List<IVSImage> getImages(int pageNo, String category) {
         return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
+    
+    
+    @Override
+    public List<IVSImage> getImages(int pageNo) {
+        return getImages(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
+    
+    /**
+     * Method to return the requested images
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
 
     @Override
     public List<IVSImage> getImages(int pageNo, String category, String sortedBy, String order) {
@@ -117,9 +129,9 @@ public class ImageService implements IImageService {
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<VSImage> images;
-        if(category.equals(Constants.ALL)) {
+        if(category==null || category.equals("null") || category.isEmpty()) {
             images = imageRepo.findAll(sortByRequestedField);
-        }else {
+        } else {
             images = imageRepo.findByCategories(sortByRequestedField, ImageCategory.valueOf(category));
         }
         List<IVSImage> results = new ArrayList<>();
@@ -128,23 +140,43 @@ public class ImageService implements IImageService {
         }
         return results;
     }
+    
+    /**
+     * Method to return the total image count
+     * 
+     * @return total count of images in DB
+     */
 
     @Override
     public long getTotalImageCount(String category) {
-        if(category.equals(Constants.ALL)) {
+        if(category==null || category.equals("null") || category.isEmpty()) {
             return imageRepo.count();
         }
         return imageRepo.countByCategories(ImageCategory.valueOf(category));
     }
+    
+    /**
+     * Method to return the total pages sufficient to display all images
+     * 
+     * @return totalPages required to display all images in DB
+     */
 
     @Override
     public long getTotalPages(String category) {
-        if(category.equals(Constants.ALL)) {
+        if(category==null || category.equals("null") || category.isEmpty()) {
             return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
         }
         long count = imageRepo.countByCategories(ImageCategory.valueOf(category));
         return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
     }
+    
+    /**
+     * Method to return page number after validation
+     * 
+     * @param pageNo page provided by calling method
+     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
+     *         totalPages.
+     */
 
     @Override
     public int validatePageNumber(int pageNo, String category) {

@@ -16,6 +16,8 @@ public interface IImageService {
     ImageData getImageDimensions(IVSImage image, int width, int height);
 
     List<IVSImage> getImages(int pageNo, String filter);
+    
+    List<IVSImage> getImages(int pageNo);
 
     List<IVSImage> getImages(int pageNo, String filter, String sortedBy, String order);
 

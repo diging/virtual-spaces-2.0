@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
-import edu.asu.diging.vspace.web.staff.Constants;
 
 @Controller
 public class ImageSearchApiController {
@@ -29,7 +28,7 @@ public class ImageSearchApiController {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             images = imageService.findByFilenameOrNameContains(searchTerm);
         } else {
-            images = imageService.getImages(1, Constants.ALL);
+            images = imageService.getImages(1);
         }
         
         ObjectMapper mapper = new ObjectMapper();

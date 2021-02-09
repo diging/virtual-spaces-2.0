@@ -43,7 +43,7 @@ public class AddSpaceController {
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
         model.addAttribute("space", new SpaceForm());
-        model.addAttribute("images", imageService.getImages(1, Constants.ALL));
+        model.addAttribute("images", imageService.getImages(1));
 
         return "staff/spaces/add";
     }
