@@ -42,15 +42,15 @@ public class Space extends VSpaceElement implements ISpace {
     private boolean hideIncomingLinks;
 
     @JsonIgnore
-    @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
+    @OneToMany(mappedBy="sourceSpace", targetEntity = SpaceLink.class)
     private List<ISpaceLink> spaceLinks;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
+    @OneToMany(mappedBy = "space", targetEntity = ModuleLink.class)
     private List<IModuleLink> moduleLinks;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "space", targetEntity=ExternalLink.class)
+    @OneToMany(mappedBy = "space", targetEntity = ExternalLink.class)
     private List<IExternalLink> externalLinks;
 
     @OneToOne(targetEntity=VSImage.class)
