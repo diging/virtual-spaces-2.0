@@ -85,8 +85,8 @@ function drawLinks(){
 		    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
 			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
 			unpublishedSpaceElement.css('position', 'absolute');
-			unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
-			unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
+			unpublishedSpaceElement.css('left', linkPosX + posX + 25);
+			unpublishedSpaceElement.css('top', linkPosY + posY - 13);
 			unpublishedSpaceElement.css('transform', 'rotate([(${link.rotation})]deg)');
 			unpublishedSpaceElement.css('font-size', "12px");
 			[/]
