@@ -68,6 +68,29 @@
         font-size: 20px;
     }
 }
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+}
+#sidebar.active {
+    margin-left: -250px;
+}
+.btn {
+	padding: 10px;
+}
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: 0px;
+    }
+    #sidebar.active {
+        margin-left: -250px;
+    }
+}
 </style>
 
 </head>
@@ -76,6 +99,13 @@
     <div layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
+		$(document).ready(function () {
+              $('#sidebarCollapse').on('click', function () {
+            	  // open sidebar
+                  $('#sidebar').toggleClass('active');
+            });
+        });
+
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
             if (window.matchMedia(maxWidth).matches){
@@ -240,10 +270,28 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class">
-                <div class="dropdown">
+				<div class="wrapper">
+					<nav id="sidebar" class="active">
+						<ul th:each="space: ${publishedSpaces}">
+							<li><a class="dropdown-item"
+								th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
+							</li>
+						</ul>
+					</nav>
+					<div id="content">
+						<nav class="navbar navbar-expand-lg navbar-light bg-light">
+							<div class="container-fluid">
+								<button type="button" id="sidebarCollapse"
+									class="btn primary-btn btn-xs">
+									<i class="fas fa-align-left"></i> <span style="cursor: pointer"></span>
+								</button>
+
+							</div>
+						</nav>
+					</div>
+				</div>
+				<div class="dropdown">
                     <div id="mySidenav" class="sidenav">
-                        <i class="far fa-times-circle fa-lg closebtn"
-                            th:onclick="closeNav()"></i>
                         <div class="list-group spaceNav">
                             <ul th:each="space: ${publishedSpaces}">
                                 <li><a class="dropdown-item"
@@ -251,8 +299,6 @@
                             </ul>
                         </div>
                     </div>
-                    <i class="fas fa-bars fa-lg barPosition"
-                        th:onclick="openNav()"></i>
                 </div>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; margin: auto; display: flex; justify-content: center; padding-top: 22px;">
