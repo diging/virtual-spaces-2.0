@@ -30,7 +30,9 @@ public class Space extends VSpaceElement implements ISpace {
 
     @Id
     @GeneratedValue(generator = "space_id_generator")
-    @GenericGenerator(name = "space_id_generator", parameters = @Parameter(name = "prefix", value = IPrefix.SPACE_PREFIX), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "space_id_generator", 
+    parameters = @Parameter(name = "prefix", value = IPrefix.SPACE_PREFIX), 
+    strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     private SpaceStatus spaceStatus;
@@ -40,27 +42,25 @@ public class Space extends VSpaceElement implements ISpace {
     private boolean hideIncomingLinks;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "sourceSpace", targetEntity = SpaceLink.class)
+    @OneToMany(mappedBy="sourceSpace", targetEntity=SpaceLink.class)
     private List<ISpaceLink> spaceLinks;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "space", targetEntity = ModuleLink.class)
+    @OneToMany(mappedBy = "space", targetEntity=ModuleLink.class)
     private List<IModuleLink> moduleLinks;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "space", targetEntity = ExternalLink.class)
+    @OneToMany(mappedBy = "space", targetEntity=ExternalLink.class)
     private List<IExternalLink> externalLinks;
 
-    @OneToOne(targetEntity = VSImage.class)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToOne(targetEntity=VSImage.class)
+    @NotFound(action=NotFoundAction.IGNORE)
     private IVSImage image;
 
     @Transient
     private Boolean incomingLinks;
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getId()
      */
     @Override
@@ -68,9 +68,7 @@ public class Space extends VSpaceElement implements ISpace {
         return id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setId(java.lang.String)
      */
     @Override
@@ -78,9 +76,7 @@ public class Space extends VSpaceElement implements ISpace {
         this.id = id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getSpaceLinks()
      */
     @Override
@@ -88,20 +84,15 @@ public class Space extends VSpaceElement implements ISpace {
         return spaceLinks;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISpacee#setSpaceLinks(java.util.List)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setSpaceLinks(java.util.List)
      */
     @Override
     public void setSpaceLinks(List<ISpaceLink> spaceLinks) {
         this.spaceLinks = spaceLinks;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getModuleLinks()
      */
     @Override
@@ -109,20 +100,15 @@ public class Space extends VSpaceElement implements ISpace {
         return moduleLinks;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISpacee#setModuleLinks(java.util.List)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setModuleLinks(java.util.List)
      */
     @Override
     public void setModuleLinks(List<IModuleLink> moduleLinks) {
         this.moduleLinks = moduleLinks;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.ISpacee#getExternalLinks()
      */
     @Override
@@ -130,12 +116,8 @@ public class Space extends VSpaceElement implements ISpace {
         return externalLinks;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISpacee#setExternalLinks(java.util.
-     * List)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISpacee#setExternalLinks(java.util.List)
      */
     @Override
     public void setExternalLinks(List<IExternalLink> externalLinks) {
@@ -150,22 +132,15 @@ public class Space extends VSpaceElement implements ISpace {
         this.image = image;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.model.impl.Space#getSpaceStatus()
      */
     @Override
     public SpaceStatus getSpaceStatus() {
         return spaceStatus;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.Space#setSpaceStatus(edu.asu.diging.
-     * vspace.core.model.impl.SpaceStatus)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.Space#setSpaceStatus(edu.asu.diging.vspace.core.model.impl.SpaceStatus)
      */
     @Override
     public void setSpaceStatus(SpaceStatus spaceStatus) {
@@ -180,8 +155,8 @@ public class Space extends VSpaceElement implements ISpace {
     @Override
     @Access(AccessType.PROPERTY)
     public void setShowUnpublishedLinks(Boolean showUnpublishedLinks) {
-        if (showUnpublishedLinks == null) {
-            this.showUnpublishedLinks = false;
+        if(showUnpublishedLinks==null) {
+            this.showUnpublishedLinks=false;
             return;
         }
         this.showUnpublishedLinks = showUnpublishedLinks;

@@ -1,4 +1,3 @@
-
 package edu.asu.diging.vspace.web.publicview;
 
 import java.util.List;

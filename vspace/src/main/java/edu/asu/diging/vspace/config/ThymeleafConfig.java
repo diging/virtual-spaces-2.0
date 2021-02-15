@@ -1,5 +1,4 @@
 package edu.asu.diging.vspace.config;
-
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.Charsets;

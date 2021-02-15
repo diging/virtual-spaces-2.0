@@ -4,7 +4,6 @@
 //# sourceURL=click.js
 //------------Deleting Slides-------------------
 function deleteSlide(slideId) {
-
     $.ajax({
         url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+ slideId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'DELETE',

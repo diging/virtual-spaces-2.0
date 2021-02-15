@@ -2,12 +2,11 @@ package edu.asu.diging.vspace.core.model;
 
 public interface ISpaceLink extends ILink<ISpace> {
 
-	ISpace getSourceSpace();
+    ISpace getSourceSpace();
 
-	void setSourceSpace(ISpace sourceSpace);
+    void setSourceSpace(ISpace sourceSpace);
 
-	ISpace getTargetSpace();
+    ISpace getTargetSpace();
 
-	void setTargetSpace(ISpace targetSpace);
-
+    void setTargetSpace(ISpace targetSpace);
 }
