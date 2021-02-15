@@ -576,7 +576,7 @@ function showModuleLinkEdit(moduleLink, show) {
 	updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],moduleLink["x"],moduleLink["y"],moduleLink["moduleLinkLabel"]);
 }
 
-function showSpaceLinkEdit(spaceLink, show) {				
+function showSpaceLinkEdit(spaceLink, show, posX, posY) {				
 	spaceLink["x"]=storeX;
 	spaceLink["y"]=storeY;					
 	
@@ -785,7 +785,7 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
 		var posY = $(this).position().top;    
 		storeX = e.pageX- $(this).offset().left;
 		storeY = e.pageY- $(this).offset().top;
-		showSpaceLinkEdit(editSpaceLinkInfo());
+		showSpaceLinkEdit(editSpaceLinkInfo(),posX,posY);
 	});
     hideLinkInfoTabs();
     $("#editSpaceLinkInfo").css("display", "flex");
