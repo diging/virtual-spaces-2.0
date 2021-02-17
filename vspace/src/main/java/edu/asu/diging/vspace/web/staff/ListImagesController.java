@@ -32,7 +32,7 @@ public class ListImagesController {
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory) {
 
-        return "redirect:/staff/images/list/1?imageCat="+imageCategory;
+        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory==null?"":imageCategory));
     }
 
     @RequestMapping("/staff/images/list/{page}")
@@ -42,19 +42,20 @@ public class ListImagesController {
             @RequestParam(value = "order", required = false) String order, Model model) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
-        if(imageCategory.equals("null")) {
-            imageCategory=null;
+        ImageCategory category = null;
+        if(!imageCategory.isEmpty()) {
+            category = ImageCategory.valueOf(imageCategory);
         }
         try {
-            pageNo = imageService.validatePageNumber(Integer.parseInt(page),imageCategory);
+            pageNo = imageService.validatePageNumber(Integer.parseInt(page),category);
         } catch (NumberFormatException numberFormatException){
             pageNo = 1;
         }
         List<IVSImage> images;
-        model.addAttribute("totalPages", imageService.getTotalPages(imageCategory));
+        model.addAttribute("totalPages", imageService.getTotalPages(category));
         model.addAttribute("currentPageNumber", pageNo);
-        model.addAttribute("totalImageCount", imageService.getTotalImageCount(imageCategory));
-        images = imageService.getImages(pageNo, imageCategory, sortedBy, order);
+        model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
+        images = imageService.getImages(pageNo, category, sortedBy, order);
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for(IVSImage image : images) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());

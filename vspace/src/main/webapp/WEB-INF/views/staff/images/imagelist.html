@@ -92,7 +92,7 @@ $( document ).ready(function() {
        var selectedId=e.target.value;
        var formData = new FormData();
        if(selectedId === "all"){
-           var url = "[(@{'/staff/images/list/'})]";
+           var url = "[(@{'/staff/images/list/'})]"+'?imageCat=';
            window.location = url;
        }else{
            var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId;
