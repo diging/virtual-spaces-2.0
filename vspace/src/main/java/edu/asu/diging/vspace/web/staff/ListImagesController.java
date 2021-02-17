@@ -32,7 +32,7 @@ public class ListImagesController {
     @RequestMapping("/staff/images/list")
     public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory) {
 
-        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory));
+        return "redirect:/staff/images/list/1?imageCat="+imageCategory;
     }
 
     @RequestMapping("/staff/images/list/{page}")
@@ -42,6 +42,9 @@ public class ListImagesController {
             @RequestParam(value = "order", required = false) String order, Model model) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
+        if(imageCategory.equals("null")) {
+            imageCategory=null;
+        }
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page),imageCategory);
         } catch (NumberFormatException numberFormatException){

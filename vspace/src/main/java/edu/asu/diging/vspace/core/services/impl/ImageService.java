@@ -102,7 +102,9 @@ public class ImageService implements IImageService {
      * 
      * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
      *                page is returned
-     * @return list of images in the requested pageNo
+     * @param category. if category value is not null image list is filtered using 
+     *                category value
+     * @return list of images for the requested pageNo and category
      */
     @Override
     public List<IVSImage> getImages(int pageNo, String category) {
@@ -129,7 +131,7 @@ public class ImageService implements IImageService {
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<VSImage> images;
-        if(category==null || category.equals("null") || category.isEmpty()) {
+        if(category==null || category.isEmpty()) {
             images = imageRepo.findAll(sortByRequestedField);
         } else {
             images = imageRepo.findByCategories(sortByRequestedField, ImageCategory.valueOf(category));
@@ -149,7 +151,7 @@ public class ImageService implements IImageService {
 
     @Override
     public long getTotalImageCount(String category) {
-        if(category==null || category.equals("null") || category.isEmpty()) {
+        if(category==null || category.isEmpty()) {
             return imageRepo.count();
         }
         return imageRepo.countByCategories(ImageCategory.valueOf(category));
@@ -163,7 +165,7 @@ public class ImageService implements IImageService {
 
     @Override
     public long getTotalPages(String category) {
-        if(category==null || category.equals("null") || category.isEmpty()) {
+        if(category==null || category.isEmpty()) {
             return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
         }
         long count = imageRepo.countByCategories(ImageCategory.valueOf(category));
