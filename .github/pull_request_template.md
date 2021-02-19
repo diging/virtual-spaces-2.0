@@ -14,3 +14,11 @@ Please confirm the following by adding an x for each item (turn `[ ]` into `[x]`
 - [ ] I have added test cases where appropriate
 - [ ] I have explained any part of my code/implementation decisions that is not be self-explanatory
 
+## Please provide a brief description of your ticket 
+(you can copy the ticket if it hasn't changed) 
+
+...Put description here...
+  
+## Anything else the reviewer needs to know?
+
+... describe here ...
