@@ -31,6 +31,30 @@ var selectedModuleLinkId;
 var selectedSpaceLinkId;
 var selectedExternalLinkId;
 
+//link icons for space links
+var linkIconReader = new FileReader();
+var linkIcon;
+linkIconReader.onload = function(e) {
+	linkIcon = e.target.result;
+	showSpaceLink(createSpaceLinkInfo());
+}
+
+//link icons for module links
+var moduleLinkIconReader = new FileReader();
+var moduleLinkIcon;
+moduleLinkIconReader.onload = function(e) {
+	moduleLinkIcon = e.target.result;
+    showModuleLink(createModuleLinkInfo());
+}
+
+//link icons for external links
+var externalLinkIconReader = new FileReader();
+var externalLinkIcon;
+externalLinkIconReader.onload = function(e) {
+	externalLinkIcon = e.target.result;
+    showExternalLinks(createExternalLinkInfo());
+}
+
 function drawLinks(){
     [# th:each="link,loop : ${spaceLinks}"]
     [# th:if="${link != null}" ]
@@ -41,8 +65,8 @@ function drawLinks(){
 		modalSpacelink = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="spaceLink'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
 		[/]
 		[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-			var imageURL = [[@{|/api/image/${link.image.id}|}]];
-			modalSpacelink = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="spaceLink'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+			var modalSpaceImageURL = [[@{|/api/image/${link.image.id}|}]];
+			modalSpacelink = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="spaceLink'+[[${link.link.id}]]+'" src="'+modalSpaceImageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
 			modalSpacelink = $('<span data-link-id="spaceLink'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -121,8 +145,8 @@ function drawLinks(){
     		spaceLink = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
     	[/]
     	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-    		var imageURL = [[@{|/api/image/${link.image.id}|}]];
-    		spaceLink = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+    		var spaceImageURL = [[@{|/api/image/${link.image.id}|}]];
+    		spaceLink = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+spaceImageURL+'" />');
     	[/]
     	[# th:if="${#strings.equals(link.type,'ARROW')}"]
     		spaceLink = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -196,8 +220,8 @@ function drawLinks(){
     		modalModuleLink = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
     	[/]
     	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-    		var imageURL = [[@{|/api/image/${link.image.id}|}]];
-    		modalModuleLink = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+    		var modalModuleImageURL = [[@{|/api/image/${link.image.id}|}]];
+    		modalModuleLink = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+modalModuleImageURL+'" />');
         [/]
     	[# th:if="${#strings.equals(link.type,'MODULE')}"]
     		modalModuleLink = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -267,8 +291,8 @@ function drawLinks(){
     		moduleLink = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
     	[/]
     	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-    		var imageURL = [[@{|/api/image/${link.image.id}|}]];
-    		moduleLink = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
+    		var moduleImageURL = [[@{|/api/image/${link.image.id}|}]];
+    		moduleLink = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+moduleImageURL+'" />');
         [/]
     	[# th:if="${#strings.equals(link.type,'MODULE')}"]
     		moduleLink = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
@@ -327,8 +351,8 @@ function drawLinks(){
         var posY = $("#bgImage").position().top
         var modalExternalLink ;
         [# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
-        	modalExternalLink = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
+        	var modalExternalImageURL = [[@{|/api/image/${link.image.id}|}]];
+        	modalExternalLink = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+modalExternalImageURL+'" />');
         [/]
             [# th:if="${#strings.equals(link.type,'ARROW')}"]
             modalExternalLink = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-'+[[${link.externalLink.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');	
@@ -1331,12 +1355,6 @@ $(function(){
     }); 
 	
 	// link icons for space links
-	var linkIconReader = new FileReader();
-	var linkIcon;
-	linkIconReader.onload = function(e) {
-		linkIcon = e.target.result;
-		showSpaceLink(createSpaceLinkInfo());
-	}
 	
 	$('#moduleLinkRotation').change(function() {
 		$('#link').css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
@@ -1365,32 +1383,17 @@ $(function(){
 		}
 	});
 	
-	// link icons for module links
-	var moduleLinkIconReader = new FileReader();
-    var moduleLinkIcon;
-    moduleLinkIconReader.onload = function(e) {
-    	moduleLinkIcon = e.target.result;
-        showModuleLink(createModuleLinkInfo());
-    }
 	$("#moduleLinkImage").change(function() {
 		if (this.files && this.files[0]) {
 			moduleLinkIconReader.readAsDataURL(this.files[0]);
 		}
 	});
-
-	var externalLinkIconReader = new FileReader();
-    var externalLinkIcon;
-    externalLinkIconReader.onload = function(e) {
-    	externalLinkIcon = e.target.result;
-        showExternalLinks(createExternalLinkInfo());
-    }
+	
 	$("#externalLinkImage").change(function() {
 		if (this.files && this.files[0]) {
 			externalLinkIconReader.readAsDataURL(this.files[0]);
 		}
 	});
-
-	
 	
 	// ------------ Cancel buttons -----------------
 	$(".cancelSpaceLinkBtn").click(function() {
