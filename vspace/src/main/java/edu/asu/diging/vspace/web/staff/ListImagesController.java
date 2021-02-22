@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -39,12 +40,17 @@ public class ListImagesController {
     public String listSpaces(@PathVariable(required = false) String page,
             @RequestParam(value = "imageCat", required = false) String imageCategory,
             @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order, Model model) {
+            @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
         ImageCategory category = null;
         if(!imageCategory.isEmpty()) {
-            category = ImageCategory.valueOf(imageCategory);
+            try {
+                category = ImageCategory.valueOf(imageCategory);
+            }catch(IllegalArgumentException e) {
+                category=null;
+            }
+            
         }
         try {
             pageNo = imageService.validatePageNumber(Integer.parseInt(page),category);
