@@ -757,3 +757,7 @@ i, .icon {
     overflow: visible;
     text-align: justify;
 }
+.custom_form_style {
+    display: none;
+    width: 25%;
+}
