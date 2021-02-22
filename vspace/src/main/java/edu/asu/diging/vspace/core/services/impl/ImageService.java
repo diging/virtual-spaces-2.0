@@ -163,6 +163,7 @@ public class ImageService implements IImageService {
      * @return totalPages required to display all images in DB
      */
 
+    
     @Override
     public long getTotalPages(ImageCategory category) {
         if(category==null) {
