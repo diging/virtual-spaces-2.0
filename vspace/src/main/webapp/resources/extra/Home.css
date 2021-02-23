@@ -7,12 +7,16 @@
 	--base-grey: #F2F2F2;
 }
 
-i, .icon {
-	font-size: 20px;
+.icon {
+	font-size: 28px;
 }
 
 .secondary {
 	color: var(--secondary);
+}
+
+.error {
+	color: var(--error);
 }
 
 .white {
@@ -143,6 +147,8 @@ i, .icon {
 .nav-link {
     color: #666 !important;
     font-weight: 600;
+    display: flex;
+    align-items: center;
 }
 
 .login-form {
