@@ -129,7 +129,7 @@ public class ContentBlockManager implements IContentBlockManager {
             return slideContentImage;
         }
         return null;
-    }    
+    }
 
     private IVSVideo saveVideoWithUrl(String url) {
         IVSVideo vidContent = videoFactory.createVideo(url);
@@ -146,8 +146,6 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-
-
 
     private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
             throws ImageCouldNotBeStoredException {
@@ -270,8 +268,6 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
     }
-
-
     /**
      * Delete an video block using an id
      * 
@@ -290,9 +286,7 @@ public class ContentBlockManager implements IContentBlockManager {
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
-
     }
-
     /**
      * Delete a choices block using an id
      * 

@@ -76,34 +76,6 @@ public class StorageEngine implements IStorageEngine {
         return bytes;
     }
 	
-	
-//    @Override
-//    public byte[] getVideoContent(String directory, String filename) throws IOException {
-//        File fileObject = new File(path + File.separator + directory + File.separator + filename);
-//        URLConnection con = fileObject.toURI().toURL().openConnection();
-//        
-//        InputStream input = con.getInputStream();
-//
-//        byte[] buffer = new byte[4096];
-//        
-//        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-//        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
-//       
-//        int n = -1;
-//        while ((n = input.read(buffer)) != -1) {
-//            output.write(buffer, 0, n);
-//        }
-//        input.close();
-//        output.flush();
-//        output.close();
-//        
-//        byteOutput.flush();
-//        byte[] bytes = byteOutput.toByteArray();
-//        byteOutput.close();
-//        return bytes;
-//    }
-    
-    
     /**
      * Method to rename image   
      * 

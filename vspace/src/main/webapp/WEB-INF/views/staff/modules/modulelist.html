@@ -57,7 +57,7 @@
 		</div>
 		<div id="list" style="margin-top: 15px;">
 			<ul class="list-group list-group-flush" th:each="module: ${vspaceModules}">
-                           <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
+               <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
                    <span><i class="fas fa-th-large" aria-hidden="true"></i></span>&emsp;[[${module.name}]]</a>
                    (Created on <span class="date">[[${module.creationDate}]]</span>
                    by [[${module.createdBy}]])
