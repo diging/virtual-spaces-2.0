@@ -33,6 +33,7 @@ public class AddImageBlockController {
             @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
             @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
             throws IOException {
+
         byte[] image = null;
         String filename = null;
         if (file != null) {
