@@ -2,7 +2,6 @@
 <head>
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
-<<<<<<< HEAD
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
@@ -35,8 +34,7 @@ function createImageBlock(reader, width) {
 }
 
 function createVideoBlock(reader, videoSrc) {
-	//var videoBlock = $('<div id="currentVideo" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><video width="800" height="530" style="margin: 1%;" controls ><source  width="600" height="400" src="#" type="video/mp4"></video><input type="hidden" id="deleteVideoId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
-	var videoBlock = $('<div id="currentVideo" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /><a class="btn deleteVideo" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+	var videoBlock = $('<div id="currentVideo" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /><a class="btn deleteVideo col-md-1" href="javascript:;" style="float: right;"><i style="color: red;" class="fas fa-trash-alt"></i></a></div>');
 	videoBlock.find('iframe').attr('src', videoSrc);
 	return videoBlock;
 }
@@ -220,9 +218,6 @@ function uploadImage() {
                     $("#" + videoBlockId).replaceWith(videoBlock);
                 };
             }
-            // Reset data-attribute to get current selected image ID
-            $("#uploadImage").data('value', '');
-            $("#uploadImage").data('url', '');
         }
         else {
             if (url) {
@@ -239,6 +234,9 @@ function uploadImage() {
             }
             ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
         }
+        // Reset data-attribute to get current selected image ID
+        $("#videoFile").val('');
+        $("#videoLink").val('');
         $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         if (vidFile) {
             reader.readAsDataURL(vidFile);
@@ -415,11 +413,8 @@ $(document).ready(function() {
     	e.preventDefault();
     	$("#addVideoAlert").hide();
     	embedVideo();
-    })
-    
-    $("#embedVideo").click(function(e) {
-    	e.preventDefault();
-        $("#addVideoAlert").hide();
+    	$("#saveVideo").data('value', '');
+    	$("#saveVideo").data('url', '');
     });
     
     $("#addChoice").click(function() {
@@ -629,8 +624,9 @@ $(document).ready(function() {
     });
     
     $("#cancelVideoBtn").click(function() {
-    	// Initialize selected image ID to blank, on clicking cancel button
-    	$("#embedVideo").data('value', '');
+    	// Initialize selected video ID to blank, on clicking cancel button
+    	$("#saveVideo").data('value', '');
+    	$("#saveVideo").data('url', '');
         $("#addVideoAlert").hide();
         $(".open").removeClass("open");
     });
@@ -1165,12 +1161,12 @@ $(window).on('load', function () {
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a>
                     <img th:id="${contents.id}" class="imgDiv col-md-10" th:src="@{'/api/image/'+${contents.image.id}}" />
-                    <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
+                    <input type="hidden" id="deleteImageId" th:value="${contents.id}" /> 
                     <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>
-                <div style="align-items: center" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+                <div class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
 					<a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a>
@@ -1181,12 +1177,9 @@ $(window).on('load', function () {
 						th:src="@{'/api/video/'+${contents.video.id}}" frameborder="0"
 						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen ></iframe>
-					
-
-
-                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}">
-                    <a class="btn deleteVideo" href="javascript:;" style="float: right;"> <i style="color: black;"
-                            class="fas fa-trash-alt"></i>
+                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
+                    <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
+                        <i style="color: red;" class="fas fa-trash-alt"></i>
                     </a>
                     </div>
                 <div th:id="${contents.id}" class="tab textDiv row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}" style="align-items: center">
