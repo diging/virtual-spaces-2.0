@@ -70,8 +70,6 @@
 }
 
 .wrapper {
-    display: flex;
-    width: 200px;
     float: left;
 }
 .spaceClass {
@@ -80,6 +78,7 @@
 #sidebar {
     min-width: 250px;
     max-width: 250px;
+    transition: all 0.6s;
 }
 #sidebar.active {
     margin-left: -250px;
@@ -89,10 +88,10 @@
 }
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: 0px;
+        margin-left: -250px;
     }
     #sidebar.active {
-        margin-left: -250px;
+        margin-left: 0px;
     }
 }
 </style>
@@ -301,7 +300,7 @@
                                 </div>
                             </nav>
                         </div>
-                    </div>
+                </div>
 
                     <div class="spaceClass" id="spaceDiv"
                         style="width: 80%; margin: auto; display: flex; justify-content: center; padding-top: 22px;">
