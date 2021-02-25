@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/diging-icon-pack.eot?zck2kh');
-  src:  url('fonts/diging-icon-pack.eot?zck2kh#iefix') format('embedded-opentype'),
-    url('fonts/diging-icon-pack.ttf?zck2kh') format('truetype'),
-    url('fonts/diging-icon-pack.woff?zck2kh') format('woff'),
-    url('fonts/diging-icon-pack.svg?zck2kh#icomoon') format('svg');
+  src:  url('fonts/diging-icon-pack.eot?3whofe');
+  src:  url('fonts/diging-icon-pack.eot?3whofe#iefix') format('embedded-opentype'),
+    url('fonts/diging-icon-pack.ttf?3whofe') format('truetype'),
+    url('fonts/diging-icon-pack.woff?3whofe') format('woff'),
+    url('fonts/diging-icon-pack.svg?3whofe#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-admin-slash:before {
+  content: "\e93c";
+}
+.icon-user-slash:before {
+  content: "\e952";
+}
+.icon-image:before {
+  content: "\e9b4";
+}
 .icon-play-circle:before {
   content: "\e9ab";
 }
@@ -238,9 +247,6 @@
 .icon-email:before {
   content: "\e93b";
 }
-.icon-email-alt:before {
-  content: "\e93c";
-}
 .icon-enter:before {
   content: "\e93d";
 }
@@ -303,9 +309,6 @@
 }
 .icon-image-delete:before {
   content: "\e951";
-}
-.icon-img:before {
-  content: "\e952";
 }
 .icon-info:before {
   content: "\e953";

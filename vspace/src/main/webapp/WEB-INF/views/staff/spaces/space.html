@@ -69,7 +69,7 @@ function drawLinks(){
 			modalSpacelink = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="spaceLink'+[[${link.link.id}]]+'" src="'+modalSpaceImageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
-			modalSpacelink = $('<span data-link-id="spaceLink'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+			modalSpacelink = $('<span data-link-id="spaceLink'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
 		[/]
 		modalSpacelink.css('position', 'absolute');
 		
@@ -149,7 +149,7 @@ function drawLinks(){
     		spaceLink = $('<img id="spacelink-'+[[${link.image.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+spaceImageURL+'" />');
     	[/]
     	[# th:if="${#strings.equals(link.type,'ARROW')}"]
-    		spaceLink = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+    		spaceLink = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
     	[/]
     	spaceLink.css('position', 'absolute');
     	spaceLink.css('left', [[${link.positionX}]] + posX);
@@ -482,7 +482,7 @@ function showSpaceLink(spaceLink, show, x, y) {
 			'top': y + posY + 35,
 			'color': 'grey'
 		});
-		link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
+		link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span></div></span>');
 	}
 	if(show) {
 	    var unpublishedSpaceElement;
@@ -1498,9 +1498,9 @@ $(function(){
  			<div>
 	    		<h2>
 		            <span style="color: var(--dark-grey)">Space:</span> [[${space.name}]]
-		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
-						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
-		            <a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span>&nbsp;<i class="fas fa-edit"></i></span></a>
+		            <span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
+						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></span>
+		            <a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span></a>
 		        </h2>
 		        <p>[[${space.description}]]</p>
 		        <div class="flex-spacing">
@@ -1512,8 +1512,8 @@ $(function(){
 					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
 			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
 			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem; color: var(--secondary);"
-			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small> <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
-                            th:if="${#strings.equals(spaceLinks.sourceSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 80%; font-weight: 400;"></i></a>
+			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small> <span  class="icon-warning unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.sourceSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 80%; font-weight: 400;"></span></a>
 			            </div>
 					  </div>
 					</div>
@@ -1527,8 +1527,8 @@ $(function(){
 			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
 		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem; color: var(--secondary);"
 		                        th:if="${spaceLinks.targetSpace != null}"
-		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small> <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
-                            th:if="${#strings.equals(spaceLinks.targetSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 80%; font-weight: 400;"></i></a>
+		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small> <span class="icon-warning unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.targetSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 80%; font-weight: 400;"></span></a>
 						</div>
 					  </div>
 					</div>
@@ -1575,23 +1575,23 @@ $(function(){
 		
 		 <div style="margin: 20px 0">
             <button type="button" id="addSpaceLinkButton"class="btn primary-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top">
-            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-layer-group"></i></button>
+            	+&nbsp;<span class="icon-layers"></span></button>
             &nbsp;
             <button type="button" id="addModuleLinkButton" class="btn primary-btn" data-toggle="tooltip" title="Add Link to Module" data-placement="top">
-            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-th-large"></i></button>
+            	+&nbsp;<span class="icon-2x2-grid"></span></button>
             &nbsp;
             <button type="button" id="addExternalLinkButton" class="btn primary-btn"  data-toggle="tooltip" title="Add Link to External" data-placement="top">
-            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-external-link-alt"></i></button>
+            	+&nbsp;<span class="icon-ext-link"></span></button>
             &nbsp;
             <button type="button" id="changeBgImgButton"  class="btn primary-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top">
-            	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
+            	<span class="icon-edit"></span>&emsp;<span class="icon-image"></span></button>
             &nbsp;
         </div>
         <div id="space" th:if="${space.image != null}" class="link-modal flex-spacing">
         <img id="bgImage"  th:src="@{'/api/image/'+${space.image.id}}" />
 		<div id="createSpaceLinkAlert" class="custom_form_style">
 			<form id="createSpaceLinkForm">
-				<i class="far fa-times-circle cancelSpaceLinkBtn" style="cursor: pointer; float: right"></i>
+				<span class="icon-circle-close cancelSpaceLinkBtn" style="cursor: pointer; float: right"></span>
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
 	                <div class="row">
 	                    <div class="col">
@@ -1669,7 +1669,7 @@ $(function(){
 		<div id="createModuleLinkAlert" class="custom_form_style">
 	        <div class="divider"></div>
 	        <form id="createModuleLinkForm">
-	        	<i class="far fa-times-circle cancelModuleLinkBtn" style="cursor: pointer; float: right"></i>
+	        	<span class="icon-circle-close cancelModuleLinkBtn" style="cursor: pointer; float: right"></span>
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
 	                <div class="row">
 	                    <div class="col">
@@ -1728,7 +1728,7 @@ $(function(){
 		<div id="createExternalLinkAlert" class="custom_form_style">
 	        <div class="divider"></div>
 	        <form id="createExternalLinkForm">
-	        	<i class="far fa-times-circle cancelExternalLinkBtn" style="cursor: pointer; float: right"></i>
+	        	<span class="icon-circle-close cancelExternalLinkBtn" style="cursor: pointer; float: right"></span>
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
 	            	<div class="row">	
 	            		<div class="col">
@@ -1794,7 +1794,7 @@ $(function(){
 		<div id="editSpaceLinkInfo" class="custom_form_style">
 	        <div class="divider"></div>
 	        <form id="editSpaceLinkForm">
-	        	<i id="closeEditSpaceLinkInfo" class="far fa-times-circle" style="cursor: pointer; float: right"></i>
+	        	<span id="closeEditSpaceLinkInfo" class="icon-circle-close" style="cursor: pointer; float: right"></span>
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
 					<div class="row">
 						<div class="col">
@@ -1885,7 +1885,7 @@ $(function(){
         <div id="editModuleLinkInfo" class="custom_form_style">
             <div class="divider"></div>
             <form id="editModuleLinkForm">
-            <i id="closeEditModuleLinkInfo" class="far fa-times-circle" style="cursor: pointer; float: right"></i>
+            <span id="closeEditModuleLinkInfo" class="icon-circle-close" style="cursor: pointer; float: right"></span>
                 <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
                     <div class="row">
                         <div class="col">
@@ -1959,9 +1959,9 @@ $(function(){
         <div id="editExternalLinkInfo" class="custom_form_style">
             <div class="divider"></div>
             <form id="editExternalLinkForm">
-                <i id="closeEditExternalLinkInfo"
-                    class="far fa-times-circle"
-                    style="cursor: pointer; float: right"></i>
+                <span id="closeEditExternalLinkInfo"
+                    class="icon-circle-close"
+                    style="cursor: pointer; float: right"></span>
                 <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
                     <div class="row">
                         <div class="col">
@@ -2083,7 +2083,7 @@ $(function(){
                         <h5 class="modal-title" id="deleteModalTitle">Confirm
                             [[${space.name}]] Deletion?</h5>
                         <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true"><i class="fas fa-window-close"></i></button>
+                            data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete
@@ -2116,7 +2116,7 @@ $(function(){
             <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
         </div>
         <p class="text-right" style="margin-top: 50px">
-            <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
+            <button type="button" id="deleteSpace"  class="btn delete-btn btn-sm"><span class="icon-trash"></span>&emsp;Delete Space</button>
         </p>
    </div> 
 </body>
