@@ -50,10 +50,6 @@
     font-family: 'Quicksand';
     float: left;
 }
-
-.noIncomingLinks:hover+.noIncomingLinkMessage {
-    display: block;
-}
 </style>
 </head>
 
@@ -63,14 +59,14 @@
         <h2>Spaces</h2>
         <div>
             This virtual exhibition contains the following spaces. 
-            <i class="fa fa-play-circle secondary"></i> indicates the start space.
+            <span class="icon secondary icon-play-circle"></span> indicates the start space.
         </div>            
         
         <div style="text-align: right">
         	<button class="btn" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
-        		<i class="fas fa-list-ul black" style="position: inherit; padding: 4px;"></i></button>
+        		<span class="icon icon-bulleted-list" style="position: inherit; padding: 4px;"></span></button>
         	<button class="btn" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
-        		<i class="fas fa-th" style="position: inherit; padding: 4px;"></i></button>
+        		<span class="icon icon-grid-block" style="position: inherit; padding: 4px;"></span></button>
             <!-- Added for future development -->
         	<!-- <button class="btn" style="background: white"><i class="fas fa-filter black"></i></button> -->
         </div>
@@ -78,9 +74,9 @@
         <div class="grid" id="grid">
 			<div th:each="space: ${spaces}" style="width: 11.75rem;">
 				<div class="status">
-					<i class="fa fa-play-circle" th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></i>
-					<i class="fas fa-exclamation-triangle" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></i>
-                    <i class="fas fa-eye-slash noIncomingLinks" th:if="${!space.hasIncomingLinks()}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has no incoming links"></i>
+					<span class="icon secondary icon-play-circle" th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></span>
+					<span class="secondary icon-warning" th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>
+                    <span class="secondary icon-warning" th:if="${!space.hasIncomingLinks()}" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has no incoming links"></span>
 				</div>
 				<div class="spaceImage">
                     <a th:href="@{'/staff/space/'+${space.id}}">
@@ -96,12 +92,12 @@
 					    <span class="sr-only">Toggle Dropdown</span>
 					</button>
 					<div class="dropdown-menu">
-					    <a class="dropdown-item" th:href="@{'/staff/space/'+${space.id}+'/edit'}"><i class="fa fa-pen black"></i>&emsp;Edit Space</a>
+					    <a class="dropdown-item" th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span>&emsp;Edit Space</a>
 					    <div class="dropdown-divider"></div>
 					    <a  th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
 	                        class="checkSpaceLinkPresent dropdown-item" data-toggle="modal">
 	                        <span class="checkSpaceLinkPresent" id="deleteSpace">
-	                        <i class="fas fa-trash-alt" style="color: var(--error)"></i></span>&emsp;Delete
+	                        <span class="error icon-trash"></span></span>&emsp;Delete
 	                    </a>
 					</div>					
 				</div>
@@ -110,9 +106,9 @@
         
         <div id="list" style="margin-top: 40px">
         	<ul class="list-group list-group-flush" th:each="space: ${spaces}">
-	            <li class="list-group-item"><i
-	                class="fa fa-play-circle secondary"
-	                th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></i>
+	            <li class="list-group-item"><span
+	                class="icon secondary icon-play-circle"
+	                th:if="${startSpace != null and space.id == startSpace.id}" aria-hidden="true"></span>
 	                <a  th:href="@{'/staff/space/'+${space.id}}"> <span
 	                    data-feather="box"
 	                    th:if="${startSpace != null and space.id != startSpace.id}"></span>
@@ -120,15 +116,15 @@
 	            	</a> (Created on <span class="date">[[${space.creationDate}]]</span>
 	                by [[${space.createdBy}]])
 	                <div class="float-right">
-	                    <i  class="fas fa-exclamation-triangle unpublishedSpaceClass"
+	                    <span  class="icon-warning secondary unpublishedSpaceClass"
 	                        th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}"
-	                        style="color: var(--secondary); padding-right: 8px;"></i>
+	                        style="padding-right: 8px;"></span>
 	                    <span class="unpublishedtooltiptext">This
-	                        space is currently unpublished.</span> <i
+	                        space is currently unpublished.</span> <span
 	                        th:if="${!space.hasIncomingLinks()}"
-	                        class="fas fa-eye-slash noIncomingLinks"
+	                        class="icon-warning secondary noIncomingLinks"
 	                        aria-hidden="true"
-	                        style="color: var(--secondary); padding-right: 8px;"></i>
+	                        style="padding-right: 8px;"></span>
 	                    <span th:if="${!space.hasIncomingLinks()}"
 	                        class="noIncomingLinkMessage">This space
 	                        has no incoming links.</span> <a
@@ -136,7 +132,7 @@
 	                        class="checkSpaceLinkPresent"
 	                        data-toggle="modal"> <span
 	                        class="checkSpaceLinkPresent" id="deleteSpace"
-	                        style="color: #666;"><i class="fas fa-trash-alt" style="color: var(--error)"></i></span>
+	                        style="color: #666;"><span class="icon error icon-trash"></span></span>
 	                    </a>
 	                </div>
 	            </li>
