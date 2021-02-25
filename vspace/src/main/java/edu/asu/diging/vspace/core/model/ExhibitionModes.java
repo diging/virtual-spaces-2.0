@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum ExhibitionModes {
 
     ACTIVE(""),

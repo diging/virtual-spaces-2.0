@@ -52,6 +52,7 @@ public class AddImageBlockController {
             node.put("errorMessage", "Image Content block cannot be stored.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 }

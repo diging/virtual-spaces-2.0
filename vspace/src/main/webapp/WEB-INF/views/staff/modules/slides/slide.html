@@ -85,9 +85,7 @@ function onDoubleClick(e){
         var vidId = $(e.target).attr('id');
         if (vidId != '') {
             var url = $(e.target).find('iframe').attr('src');
-            console.log(url);
             if (url.includes("www.")) {
-                console.log("link");
                 $("#saveVideo").data('url', url);
                 $("#videoLink").val(url);
                 $("#urlTab").addClass("active");
@@ -265,7 +263,6 @@ function uploadImage() {
                 }
             },
             error: function (data) {
-                console.log(data);
                 if (videoID == '') {
                     $("#current").remove();
                 }

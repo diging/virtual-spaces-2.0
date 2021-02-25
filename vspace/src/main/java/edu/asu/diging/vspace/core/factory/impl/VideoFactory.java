@@ -6,6 +6,10 @@ import edu.asu.diging.vspace.core.factory.IVideoFactory;
 import edu.asu.diging.vspace.core.model.IVSVideo;
 import edu.asu.diging.vspace.core.model.impl.VSVideo;
 
+/**
+ * @author skhar
+ *
+ */
 @Service
 public class VideoFactory implements IVideoFactory {
 
@@ -24,13 +28,11 @@ public class VideoFactory implements IVideoFactory {
         video.setFileType(fileType);
         return video;
     }
-    
+
     public IVSVideo createVideo(String url) {
         IVSVideo video = new VSVideo();
         video.setUrl(url);
         return video;
     }
-    
-    
-    
+
 }

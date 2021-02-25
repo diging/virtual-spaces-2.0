@@ -40,7 +40,7 @@ public class VideoApiController {
         byte[] videoContent = null;
         try {
             video = videoRepo.findById(id).get();
-            videoContent = storage.getImageContent(video.getId(), video.getFilename());
+            videoContent = storage.getMediaContent(video.getId(), video.getFilename());
         } catch (IOException | IllegalArgumentException e) {
             logger.error("Could not retrieve video.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

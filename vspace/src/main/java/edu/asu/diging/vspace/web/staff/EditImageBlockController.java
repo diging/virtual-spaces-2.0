@@ -32,7 +32,7 @@ public class EditImageBlockController {
             @RequestParam("file") MultipartFile file, @RequestParam("contentOrder") Integer contentOrder,
             Principal principal, RedirectAttributes attributes) throws IOException {
 
-    	IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
+        IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
         byte[] image = null;
         String filename = null;
         if (file != null) {
