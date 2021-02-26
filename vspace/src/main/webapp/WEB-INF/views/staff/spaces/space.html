@@ -111,7 +111,9 @@ function drawLinks(){
            link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
         [/]
     	[# th:if="${#strings.equals(link.type,'MODULE')}"]
-    		link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+
+    		link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+
     	[/]
     	link.css('position', 'absolute');
     	link.css('left', [[${link.positionX}]] + posX);
@@ -171,7 +173,8 @@ function drawLinks(){
             link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
         [/]
             [# th:if="${#strings.equals(link.type,'ARROW')}"]
-            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-'+[[${link.externalLink.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
+            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-'+[[${link.externalLink.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
+           
         [/]
         link.css('position', 'absolute');
         link.css('left', [[${link.positionX}]] + posX);
@@ -416,8 +419,8 @@ function showModuleLink(moduleLink, show) {
 			'top': moduleLink["y"] + posY + 35,
 			'color': 'red'
 		});
-		link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i></div></span>');
-	} 
+		link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
+	}
 	if(show) {
 		link.find("div").css('fill', 'red');
 	}
@@ -532,7 +535,7 @@ function showExternalLinks(externalLink) {
 			'top': externalLink["y"] + posY + 35,
 			'color': 'blue'
 		});
-		link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i></div></span>');
+		link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
 	}
 	
 	link.css('position', 'absolute');
