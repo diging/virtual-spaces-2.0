@@ -31,9 +31,10 @@ public class ListImagesController {
     private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/images/list")
-    public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory) {
-
-        return String.format("redirect:/staff/images/list/1?imageCat=%s",(imageCategory==null?"":imageCategory));
+    public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory,
+            @RequestParam(value = "sort", required = false) String sortedBy,
+            @RequestParam(value = "order", required = false) String order) {
+        return String.format("redirect:/staff/images/list/1?imageCat=%s&sort=%s&order=%s",(imageCategory==null?"":imageCategory),sortedBy,order);
     }
 
     @RequestMapping("/staff/images/list/{page}")
