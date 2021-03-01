@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ListImagesController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IImageService imageService;
@@ -49,6 +53,7 @@ public class ListImagesController {
             try {
                 category = ImageCategory.valueOf(imageCategory);
             }catch(IllegalArgumentException e) {
+                logger.error("Wrong argument for image category",e);
                 category=null;
             }
             

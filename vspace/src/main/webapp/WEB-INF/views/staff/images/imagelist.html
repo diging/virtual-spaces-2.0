@@ -88,7 +88,7 @@ $( document ).ready(function() {
     });
    
    $("#filterTag").on("change", function(e) {
-       //e.preventDefault();
+       e.preventDefault();
        var selectedId=e.target.value;
        var formData = new FormData();
        if(selectedId === "all"){
