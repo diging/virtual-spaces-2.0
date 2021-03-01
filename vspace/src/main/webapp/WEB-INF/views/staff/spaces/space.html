@@ -39,7 +39,7 @@ function drawLinks(){
            link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
 		[/]
 		[# th:if="${#strings.equals(link.type,'ARROW')}"]
-			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
 		[/]
 		link.css('position', 'absolute');
 		link.css('left', [[${link.positionX}]] + posX);
@@ -66,7 +66,7 @@ function drawLinks(){
 		inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
 		var unpublishedSpaceElement;
 		    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
-			unpublishedSpaceElement=$('<i data-link-id="unpublished-[(${link.link.id})]" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-[(${link.link.id})]" style="color: var(--secondary);"></i>')
+			unpublishedSpaceElement=$('<span data-link-id="unpublished-[(${link.link.id})]" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-[(${link.link.id})]"></span>')
 			unpublishedSpaceElement.css('position', 'absolute');
 			unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
 			unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
@@ -351,12 +351,12 @@ function showSpaceLink(spaceLink, show) {
 			'top': spaceLink["y"] + posY + 35,
 			'color': 'red'
 		});
-		link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
+		link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span></div></span>');
 	}
 	if(show) {
 	    var unpublishedSpaceElement;
 	    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-	        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
+	        unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></span>')
 	        unpublishedSpaceElement.css('position', 'absolute');
 	        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 	        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
@@ -468,7 +468,7 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
 	if(show) {
 	    var unpublishedSpaceElement;
 	    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-	        unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
+	        unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '></span>')
 	        unpublishedSpaceElement.css('position', 'absolute');
 	        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
 	        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
@@ -1240,17 +1240,14 @@ $(function(){
     <div layout:fragment="content" class="main-content">
         <h1>
             Space: [[${space.name}]]<small style="margin-left: 10px;"><a
-                th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span>&nbsp;<i
-                        class="fas fa-edit"></i></span></a></small>
+                th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span></a></small>
         </h1>
 
         <div class="alert alert-light" role="alert">
             Created on <span class="date">[[${space.creationDate}]]</span>
             by [[${space.createdBy}]]. <br> Modified on <span
                 class="date">[[${space.modificationDate}]]</span> by
-            [[${space.modifiedBy}]].<br> <br> <i
-                class="fa fa-exclamation-triangle fa-sm"
-                aria-hidden="true" style="color: var(--secondary);"></i>
+            [[${space.modifiedBy}]].<br> <br> <span class="icon-warning secondary"></span>
             indicates links to unpublished spaces.
         </div>
         <div style="padding-bottom: 10px;">
@@ -1610,8 +1607,7 @@ $(function(){
                 role="alert"
                 style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
                 <p class="float-right">
-                    <a href="#" id="closeEditSpaceLinkInfo"><span
-                        ><i class="fas fa-window-close"></i></span></a>
+                    <a href="#" id="closeEditSpaceLinkInfo"><span class="icon-circle-close"></span></a>
                 </p>
                 <h6 class="alert-heading">
                     Space Link: <span id="spaceLinkInfoLabelEdit"></span>
@@ -1725,8 +1721,7 @@ $(function(){
                 role="alert"
                 style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
                 <p class="float-right">
-                    <a href="#" id="closeEditModuleLinkInfo"><span
-                        ><i class="fas fa-window-close"></i></span></a>
+                    <a href="#" id="closeEditModuleLinkInfo"><span class="icon-circle-close"></span></a>
                 </p>
                 <h6 class="alert-heading">
                     Module Link: <span id="moduleLinkInfoLabelEdit"></span>
@@ -1811,8 +1806,7 @@ $(function(){
                 role="alert"
                 style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
                 <p class="float-right">
-                    <a href="#" id="closeEditExternalLinkInfo"><span
-                        ><i class="fas fa-window-close"></i></span></a>
+                    <a href="#" id="closeEditExternalLinkInfo"><span class="icon-circle-close"></span></a>
                 </p>
                 <h6 class="alert-heading">
                     External Link: <span id="externalLinkInfoLabelEdit"></span>
@@ -1929,7 +1923,7 @@ $(function(){
                         <h5 class="modal-title" id="deleteModalTitle">Confirm
                             [[${space.name}]] Deletion?</h5>
                         <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true"><i class="fas fa-window-close"></i></button>
+                            data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete

@@ -13,7 +13,7 @@
 						th:if="${exhibition}"
 		                style="text-align: center;"
 		                th:style="${#strings.equals(exhibition.mode,'ACTIVE') ? 'display: none' : 'display: block'}">
-		                <span><i class="fa fa-exclamation-triangle"></i></span>
+		                <span><span class="icon-warning secondary"></span></span>
 		                <span th:if="${exhibition.mode == 'MAINTENANCE'}">Exhibition under maintenance</span> 
 		                <span th:if="${exhibition.mode == 'OFFLINE'}">Exhibition is offline</span>
 		            </li>
@@ -21,7 +21,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'home' ? 'active' : '' }"
 			               th:href="@{/staff/dashboard}">
-			               <i class="fa fa-home secondary"></i><span class="custom_Text">&nbsp;Dashboard</span>
+			               <span class="icon-home secondary"></span><span class="custom_Text">&nbsp;Dashboard</span>
 			               <span class="sr-only">(current)</span>
 			            </a>
 			        </li>
@@ -29,28 +29,28 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'space' ? 'active' : '' }"
 			               th:href="@{/staff/space/list}"> 
-			               <i class="fa fa-layer-group secondary"></i><span class="custom_Text">&nbsp;Spaces</span>
+			               <span class="icon-layers secondary"></span><span class="custom_Text">&nbsp;Spaces</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'module' ? 'active' : '' }"
 			               th:href="@{/staff/module/list}"> 
-			               <i class="fa fa-th-large secondary"></i><span class="custom_Text">&nbsp;Modules</span>
+			               <span class="icon-2x2-grid secondary"></span><span class="custom_Text">&nbsp;Modules</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list/1}"> 
-			               <i class="fa fa-file-image secondary"></i><span class="custom_Text">&nbsp;Images</span>
+			               <span class="icon-image secondary"></span><span class="custom_Text">&nbsp;Images</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
-			               <i class="fa fa-user secondary"></i><span class="custom_Text">&nbsp;Users</span>
+			               <span class="icon-user secondary"></span><span class="custom_Text">&nbsp;Users</span>
 			            </a>
 			        </li>
 		        </ul>
@@ -64,17 +64,17 @@
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
-		          <li class="nav-item active" style="padding: 15px;">
-		            <a class="nav-link" th:href="@{/}"><i class="far fa-play-circle secondary"></i></a>
+		          <li class="nav-item active" style="padding: 5px 15px;">
+		            <a class="nav-link" th:href="@{/}"><span class="icon-play-circle secondary"></span></a>
 		          </li> 
-		          <li class="nav-item active" style="padding: 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><i class="fa fa-cog secondary"></i></a>
+		          <li class="nav-item active" style="padding: 5px 15px;">
+		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
 		          </li> 				  
 		        </ul>		        
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+		  				<button class="btn nav-link" type="submit" title="Logout"><span class="icon-sign-out"></span></button>
 		         	</form>
 		        </div>
 		      </div>

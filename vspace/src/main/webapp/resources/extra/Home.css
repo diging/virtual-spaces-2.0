@@ -21,6 +21,10 @@
 	color: white;
 }
 
+.error {
+	color: #dc3545;
+}
+
 .black {
 	color: #121212;
 }
