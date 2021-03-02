@@ -51,10 +51,10 @@
                     </a>
 					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
                         th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
-                
                 </div>
 			</div>
 		</div>
+
 		<div id="list" style="margin-top: 15px;">
 			<ul class="list-group list-group-flush" th:each="module: ${vspaceModules}">
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">

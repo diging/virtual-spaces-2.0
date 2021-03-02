@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -22,6 +25,8 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ListImagesController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IImageService imageService;
@@ -30,25 +35,39 @@ public class ListImagesController {
     private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/images/list")
-    public String listSpacesWithoutNum(Model model) {
-        return "redirect:/staff/images/list/1";
+    public String listSpacesWithoutNum(Model model, @RequestParam(value = "imageCat", required = false) String imageCategory,
+            @RequestParam(value = "sort", required = false) String sortedBy,
+            @RequestParam(value = "order", required = false) String order) {
+        return String.format("redirect:/staff/images/list/1?imageCat=%s&sort=%s&order=%s",(imageCategory==null?"":imageCategory),sortedBy,order);
     }
 
     @RequestMapping("/staff/images/list/{page}")
     public String listSpaces(@PathVariable(required = false) String page,
+            @RequestParam(value = "imageCat", required = false) String imageCategory,
             @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order, Model model) {
+            @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
+        ImageCategory category = null;
+        if(!imageCategory.isEmpty()) {
+            try {
+                category = ImageCategory.valueOf(imageCategory);
+            }catch(IllegalArgumentException e) {
+                logger.error("Wrong argument for image category",e);
+                category=null;
+            }
+            
+        }
         try {
-            pageNo = imageService.validatePageNumber(Integer.parseInt(page));
+            pageNo = imageService.validatePageNumber(Integer.parseInt(page),category);
         } catch (NumberFormatException numberFormatException){
             pageNo = 1;
         }
-        model.addAttribute("totalPages", imageService.getTotalPages());
+        List<IVSImage> images;
+        model.addAttribute("totalPages", imageService.getTotalPages(category));
         model.addAttribute("currentPageNumber", pageNo);
-        model.addAttribute("totalImageCount", imageService.getTotalImageCount());
-        List<IVSImage> images = imageService.getImages(pageNo, sortedBy, order);
+        model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
+        images = imageService.getImages(pageNo, category, sortedBy, order);
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for(IVSImage image : images) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
@@ -59,6 +78,7 @@ public class ListImagesController {
         model.addAttribute("imageToSpaces",imageToSpaces);
         model.addAttribute("images", images);
         model.addAttribute("imageCategories", ImageCategory.values());
+        model.addAttribute("imageCategory", imageCategory);
         model.addAttribute("sortProperty",
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
         model.addAttribute("order",
