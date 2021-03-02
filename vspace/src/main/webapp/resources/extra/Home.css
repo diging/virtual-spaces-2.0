@@ -9,8 +9,7 @@
 
 [class^="icon-"], [class*=" icon-"] {
 	font-size: 24px;
-	vertical-align: sub;	
-	cursor: pointer;
+	vertical-align: middle;	
 }
 
 .secondary {
@@ -408,8 +407,9 @@
 .moduleBarPosition {
     position: absolute;
     color: rgba(150, 45, 62, 1);
-	top: 7px;
-	left: 7px;
+	top: 9px;
+	left: 9px;
+	font-size: 20px;
 }
 
 .pill-btn {
@@ -483,9 +483,9 @@
 .Icon_awesome_info_e {
     overflow: visible;
     position: absolute;
-    font-size: 20px;
-    top: 4px;
-    left: 4px;
+    font-size: 16px;
+    top: 7px;
+    left: 7px;
     color: rgba(150, 45, 62, 1);
 }
 
