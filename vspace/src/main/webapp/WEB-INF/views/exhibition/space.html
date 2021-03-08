@@ -78,6 +78,11 @@
 #sidebar {
     min-width: 250px;
     max-width: 250px;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    /* top layer */
+    z-index: 9999;
     transition: all 0.6s;
 }
 #sidebar.active {
@@ -85,6 +90,14 @@
 }
 .btn {
 	padding: 10px;
+}
+#dismiss {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    /* top right corner of the sidebar */
+    top: 124px;
+    right: 1000px;
 }
 @media (max-width: 768px) {
     #sidebar {
@@ -109,6 +122,11 @@
             	  // open sidebar
                   $('#sidebar').toggleClass('active');
             });
+              $('#dismiss').on('click', function () {
+            	  console.log("Dismiss button clicked!!!!")
+            	  // hide side bar
+            	  $('#sidebar').removeClass('active')#
+              })
         });
 		
 		
@@ -280,6 +298,9 @@
                 <div id="Module_1" class="Home_Class">
                     <div class="wrapper" style="display: flex";>
                         <nav id="sidebar" class="active">
+                            <button type="button" id="dismiss">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
                             <ul th:each="space: ${publishedSpaces}">
                                 <li><a class="dropdown-item"
                                     th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
