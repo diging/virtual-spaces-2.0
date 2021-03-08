@@ -39,6 +39,7 @@ function toggleChange(form, imageId) {
         $(form)[0].reset();
     });
 }
+
 $( document ).ready(function() {
     $(".removeTag").click(function(e) {
     	removeTag(e);
@@ -61,7 +62,7 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign("./"+num+"?sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+        window.location.assign("./"+num+"?imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
     });
 
   $("table.table thead th").each(function(){
@@ -77,14 +78,28 @@ $( document ).ready(function() {
     if(headerSortPropName != 'tag') {
         if(headerSortPropName=='[(${sortProperty})]'){
             window.location.href = window.location.pathname+
-            '?sort='+ headerSortPropName+'&order='+
+            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
             ('[(${order})]' == 'desc'?'asc':'desc');
         }else{
             window.location.href = window.location.pathname+
-            '?sort='+ headerSortPropName+'&order=asc';
+            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
         }
     }
     });
+   
+   $("#filterTag").on("change", function(e) {
+       e.preventDefault();
+       var selectedId=e.target.value;
+       var formData = new FormData();
+       if(selectedId === "all"){
+           var url = "[(@{'/staff/images/list/'})]"+'?imageCat=&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
+           window.location = url;
+       }else{
+           var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
+           window.location = url;
+       }
+       
+   });
 });
 </script>
 <style>
@@ -123,11 +138,20 @@ $( document ).ready(function() {
                         href="#">Created By</a></th>
                     <th scope="col" sort-prop="creationDate"><a
                         href="#">Created Date</a></th>
-                    <th scope="col" sort-prop="tag">Tag</th>
+                    <th scope="col" sort-prop="tag">Tag<select
+                        id="filterTag" name="tagFilter"
+                        class="form-control form-control-sm">
+                            <option th:value="all">Show All</option>
+                            <option th:each="catTag:${imageCategories}"
+                                th:value="${catTag}"
+                                th:selected="${#strings.equals(catTag,imageCategory)}">
+                                [[${@environment.getProperty('image_category_' + catTag)}]]
+                            </option>
+                    </select></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr th:each="image: ${images}">
+            <tbody class="tableBody">
+                <tr th:each="image: ${images}" th:class="${catTag}">
                     <th scope="row"><a
                         th:href="@{'/staff/display/image/'+${image.id}}"><img
                             th:src="@{'/api/image/'+${image.id}}"
@@ -141,8 +165,7 @@ $( document ).ready(function() {
                     </td>
                     <td>[[${image.createdBy}]]</td>
                     <td><span class="date">[[${image.creationDate}]]</span></td>
-                    <td><span th:id="'tags-'+${image.id}"
-                        class="tag"> <span
+                    <td><span th:id="'tags-'+${image.id}"><span
                             th:each="cat:${image.categories}"
                             th:id="'category-badge-'+${image.id}+'-'+${cat}"
                             th:data-category="${cat}"
@@ -169,6 +192,9 @@ $( document ).ready(function() {
                                     + catTag)}]]</option>
                             </select>
                         </form></td>
+                        <td style="display:none;" class="filteredData"><span
+                            th:each="cat:${image.categories}">[[${cat}]]
+                        </span></td>
                 </tr>
             </tbody>
         </table>
