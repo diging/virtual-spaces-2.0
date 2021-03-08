@@ -1,12 +1,16 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <link rel="stylesheet"
-	href="https://unpkg.com/easymde/dist/easymde.min.css">
+    href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <style type="text/css">
 .hova {
     background-color: #bfb168;
+}
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
 }
 </style>
 <script th:inline="javascript">
@@ -15,8 +19,12 @@ var contentCount = [[${#lists.size(slideContents)}]];
 var markDown = null;
 var defaultValue;
 
+$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+});
+
 function createImageBlock(reader, width) {
-    var imageblock = $('<div id="current" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><img src="#" style="margin: 1%;"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>');
+    var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="position: absolute; right:64px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -44,9 +52,9 @@ function onDoubleClick(e){
     $(".EasyMDEContainer").remove();
     var divName = $(e.target).closest('div').attr('class');
     //if the div is a text content block 
-    if(divName.includes("textDiv")){
+    if(divName.includes("textDivStaff")){
 
-    	$(e.target).closest('.textDiv').addClass("open");
+    	$(e.target).closest('.textDivStaff').addClass("open");
         var description = $("div.open p:eq(0)").text();
     	defaultValue = description;
 
@@ -55,8 +63,9 @@ function onDoubleClick(e){
         markDown.value(description.trim());
         //remove card border
         $(".open").css('display', 'none');
+        $(".open").css('overflow-y', 'scroll');
+        $(".open").css('height', '400px');
     } else {
-    	
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
@@ -88,7 +97,6 @@ function uploadImage() {
     	var imageBlockId = imgID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-        console.log(url);
         reader.onload = function (theFile) {
 	        var image = new Image();
 	        image.src = theFile.target.result;
@@ -464,8 +472,7 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-
-                var textblock = $('<div id="'+ data +'" class="textDiv card card-body row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black;" class="fas fa-trash-alt"></i></a></p></div>');
+                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 $(textblock).css({
                     'margin': "10px"
                 });
@@ -519,15 +526,15 @@ $(document).ready(function() {
             data: formData,
             enctype: 'multipart/form-data',
             success: function(data) {
-                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="card card-body row" style="margin: 10px;">');
+                var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="choiceDiv tab row" style="display:block;">');
                 if (data['choiceBlock'].showsAll == false){
                     $.each(data['selectedSequences'], function(index, sequence) {
-                        choiceblock.append('<a href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
+                        choiceblock.append('<a style="color:var(--primary);  display:block;" href="/vspace/staff/module/[(${module.id})]/sequence/'+sequence.id+'">'+sequence.name+'</a>');
             	});
                 }else{
                 	$(function() {
-                        var links = $("#choiceSpace a").map(function(e) {
-                            text = '<a href='+this.href+'>'+this.name+'</a>';
+                        var links = $("#choiceSpaceData a").map(function(e) {
+                            text = '<a style="color:var(--primary); display:block;" href='+this.href+'>'+this.name+'</a>';
                             return text;
                         }).get();
                         $(links).each(function(index, choice) {
@@ -535,9 +542,9 @@ $(document).ready(function() {
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock" href="javascript:;" style="float: right; position: absolute; right: 20px; top: 0;"><i style="color: black;" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
             	$(choiceblock).css({
-                    'margin': "10px"
+                    'display': "block"
                 });
                 $('#slideSpace').append(choiceblock);
             },
@@ -553,13 +560,12 @@ $(document).ready(function() {
     function updateTextBox(blockId, text) {
         // clear text box and buttons
         $(".open").empty();
-        $(".open").append('<p>'+text+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText" href="javascript:;" style="float: right;"><i style="color: black; float: right;" class="fas fa-trash-alt"></i></a></p>');
+        $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
         // reset border of the card
-        $(".open").css('border', '1px solid rgba(0,0,0,.125)');
         //rebind event handlers
         
-        $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-        $(".open").css('display', 'block');
+        $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $(".open").css('display', 'flex');
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
     }
@@ -572,7 +578,7 @@ $(document).ready(function() {
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-    $('.textDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $("#submitTextBlock").on("click", function(e){
     	e.preventDefault();
@@ -614,12 +620,12 @@ $(document).ready(function() {
 
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
-	$(".deleteText").css('float', 'right');
+	$(".deleteText").css('position', 'absolute');
+	$(".deleteText").css('right', '0');
 	var images = $(".imgDiv");
 	resizeImage(images);
 	
 	function resizeImage(images) {
-		$(".valueDiv").css('border', '1px solid rgba(0,0,0,.125)');
 		for(var i =0; i < images.length; i++) {
 			if (images[i].width > divWindow.width() || images[i].width >= 800) {
 				$(".valueDiv").find("#"+images[i].id).css("width", 800);
@@ -634,87 +640,49 @@ $(window).on('load', function () {
 </script>
 </head>
 <body>
-    <div class="justify-content-left" layout:fragment="content">
+    <div class="main-content" layout:fragment="content">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a
-                th:href="@{/staff/dashboard}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a
-                th:href="@{/staff/module/list}">Modules</a></li>
-            <li class="breadcrumb-item"><a
-                th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
+            <li class="breadcrumb-item">
+            	<a th:href="@{/staff/dashboard}">Dashboard</a></li>
+            <li class="breadcrumb-item">
+            	<a th:href="@{/staff/module/list}">Modules</a></li>
+            <li class="breadcrumb-item">
+            	<a th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
+            <li class="breadcrumb-item" th:each="slideSequence: ${slideSequences}">
+            	<a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}" th:name="${slideSequence.name}">[[${slideSequence.name}]]</a></li>	
             <li class="breadcrumb-item active">[[${slide.name}]]</li>
         </ol>
+        
         <div class="error"></div>
-        <div class="row align-items-center">
-            <h1 id="title" style="margin-bottom: 0%; margin-left: 1%;">Slide:
-                [[${slide.name}]]</h1>
-            <a
-                th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}"><span>
-                    &nbsp;<i class="fas fa-edit"></i>
-            </span></a>
+        
+		<div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
+        	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    	<i class="fa fa-code-branch"></i> This Branching Point links to the following Sequences
+			</button>
+			<div id="choiceSpaceData" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+			    <a  th:each="choice: ${choices}" class="dropdown-item" 
+			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
+	                th:name="${choice.sequence.name}" style="color:var(--primary);">[[${choice.sequence.name}]]</a>
+			</div>
         </div>
-        <div class="alert alert-light" role="alert">
-            Created on <span class="date">[[${slide.creationDate}]]</span>
-            by [[${slide.createdBy}]].<br> Modified on <span
-                class="date">[[${slide.modificationDate}]]</span> by
-            [[${slide.modifiedBy}]].
+        
+        <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
+        	<i class="fa fa-info-circle var(--error)" data-toggle="tooltip" data-html="true" data-placement="top" 
+	   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></i>&emsp;
+	   		<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
+        		<i class="fas fa-edit"></i></a>
+        </h2>
+        <p id="description">[[${slide.description}]]</p>
+        
+        <div style="margin: 40px 0">
+        	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
+        		<i class="fa fa-plus"></i>&emsp;<i class="fa fa-font"></i></button>&nbsp;
+        	<button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
+        		<i class="fa fa-plus"></i>&emsp;<i class="fa fa-image"></i></button>&nbsp;
+        	<button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
+        		<i class="fa fa-plus"></i>&emsp;<i class="fa fa-square"></i></button>
+            <p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
         </div>
-        <!-- description -->
-        <div style="margin-left: .1%;" class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">Description:</h5>
-            <p id="description"
-                style="margin-top: .5rem; margin-bottom: .5rem;">[[${slide.description}]]</p>
-        </div>
-        <!-- SlideSequences -->
-        <div style="margin-left: .1%;" class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">
-                This slide belongs to:<br>
-            </h5>
-        </div>
-        <div style="margin-left: .1%;" class="row align-items-center"
-            th:each="slideSequence: ${slideSequences}">
-            <a style="margin-left: .5rem;"
-                th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}"
-                th:name="${slideSequence.name}">[[${slideSequence.name}]]</a><br>
-
-        </div>
-        <div style="margin-top: 1%; margin-bottom: 2%;">
-            <a class="btn btn-primary"
-                th:href="@{'/staff/module/'+${module.id}}">Go Back</a>
-        </div>
-        <!-- choices -->
-        <div id="choiceSpace" style="margin-left: .1%; display: none;"
-            class="row align-items-center">
-            <h5 style="margin-bottom: 0px;">Choices:</h5>
-            <div th:each="choice: ${choices}">
-                <a style="margin-left: .5rem;"
-                    th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
-                    th:name="${choice.sequence.name}">[[${choice.sequence.name}]]</a>
-            </div>
-        </div>
-
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle"
-                    type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" style="float: left;">Add
-                    content</button>
-                <div class="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton">
-                    <a id="addText" class="dropdown-item" href="#">Add
-                        Text</a> <a id="addImage" class="dropdown-item"
-                        href="#">Add Image</a> <a id="addChoice"
-                        class="dropdown-item" href="#"
-                        style="display: none;">Add Choices (Links to
-                        other sequences)</a>
-                </div>
-                <p
-                    style="float: right; margin-left: 1rem; margin-top: .5rem;">Double
-                    Click on a Block to Edit it
-                <p>
-            </div>
-        </nav>
 
         <!-- Delete Text Modal -->
         <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
@@ -792,7 +760,6 @@ $(window).on('load', function () {
                 </div>
             </div>
         </div>
-
 
 
         <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
@@ -955,49 +922,35 @@ $(window).on('load', function () {
 
         <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
-                <div style="margin: 1%; text-align: justify;" class="valueDiv card-body"
-                    th:id="${contents.id}"
-                    th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                    <img th:id="${contents.id}" class="imgDiv"
-                        th:src="@{'/api/image/'+${contents.image.id}}" />
-                    <input type="hidden" id="deleteImageId"
-                        th:value="${contents.id}"> <a
-                        class="btn deleteImage" href="javascript:;"
-                        style="float: right;"> <i
-                        style="color: black;" class="fas fa-trash-alt"></i>
+                <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+                    <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
+                    <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
+                    <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
+                        <i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>
-                <div th:id="${contents.id}"
-                    class="card card-body row"
-                    style="margin: 1%; text-align: justify;"
-                    th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
-                    <p>
-                        [[${contents.text}]] <input type="hidden"
-                            id="deleteTextId" th:value="${contents.id}" />
-                        <a class="btn deleteText" href="javascript:;"
-                            style="float: right;"> <i
-                            style="color: black;"
-                            class="fas fa-trash-alt"></i>
-                        </a>
-                    </p>
+                <div th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                	<!-- <a class="btn col-md-1" href="#"> 
+                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
+                    </a> -->
+                    <p class="col-md-10"> [[${contents.text}]]</p>
+                    <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
+                    
+                    <a class="btn deleteText col-md-1" href="javascript:;"> 
+                    	<i style="color: var(--error)" class="fas fa-trash-alt"></i>
+                    </a>
                 </div>
-                <div th:id="${contents.id}"
-                    class="card card-body row"
-                    style="margin: 1%; text-align: justify;"
-                    th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}">
-                    <a th:if="${contents.showsAll}"
-                        th:each="choice: ${choices}"
+                <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
+                	<!-- <a class="btn col-md-1" href="#"> 
+                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
+                    </a> -->
+                    <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <a th:if="!${contents.showsAll}"
-                        th:each="choice: ${contents.choices}"
+                    <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <input type="hidden" id="deleteChoiceBlockId"
-                        th:value="${contents.id}"> <a
-                        class="btn deleteChoiceBlock"
-                        href="javascript:;"
-                        style="float: right; position: absolute; right: 20px; top: 0;">
-                        <i style="color: black;"
-                        class="fas fa-trash-alt"></i>
+                    <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
+                    <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
+                        <i style="color: var(--error)" class="fas fa-trash-alt"></i>
                     </a>
                 </div>
             </div>

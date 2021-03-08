@@ -169,10 +169,7 @@ a, a:hover, a:focus {
 
 .imgDiv {
     position: relative;
-    max-width: 57%;
-    top: 0px;
     overflow: visible;
-    margin: 1%;
     display: block;
 }
 

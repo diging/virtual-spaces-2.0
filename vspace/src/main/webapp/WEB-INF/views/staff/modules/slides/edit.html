@@ -1,5 +1,8 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
 	<script th:inline="javascript">
 		$(window).on("load", function() {
 		    var vals = [];
@@ -47,19 +50,21 @@
 </head>
 
 <body>
-	<div layout:fragment="content">
-		<h1>Edit Slide: ${slideForm.name}</h1>
+	<div layout:fragment="content" class="main-content">
+		<h2>Edit Slide: [[${slideForm.name}]]</h2>
 
-		<form th:action="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}+'/edit'}" method="POST" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:object="${slideForm}" enctype="multipart/form-data">
+		<form th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" method="POST" style="margin-top: 40px"
+			th:object="${slideForm}" enctype="multipart/form-data">
 		
 			<div class="form-group row">
-				<label for="name" class="col-md-2 col-form-label">Slide Name:</label>
-				<input type="text" class="form-control col-md-10" id="name" />
+				<label for="name" class="col-md-2 col-form-label">Slide Name</label>
+                <textarea type="text" class="form-control col-md-10" id="name" rows="1" cols="30"
+                     th:text="${slideForm.name}" name="name"></textarea>
 			</div>
 		
 		     <div class="form-group row">
-		     <label for="type" class="col-md-2 col-form-label">Type:</label>
-		         <select id="type" class="form-control-xs target" style="height:50px;width:300px;" disabled="true">
+		     <label for="type" class="col-md-2 col-form-label">Type</label>
+		         <select id="type" class="form-control col-md-6" disabled="true">
 		             <option  id="slide" value="SLIDE" label="Slide" th:if="${slideForm.type=='SLIDE'}">selected Slide</option>
 		             <option id="branchingPoint" value="BRANCHING_POINT" label="BranchingPoint" th:if="${slideForm.type=='BRANCHING_POINT'}">selected Branching Point</option>
 		         </select>
@@ -68,19 +73,19 @@
 		 
 		    <div class="form-group row" id="sequences" style="display:none;">
 		    <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>   
-		            <select th:each="sequence: ${sequences}" multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
-		                    <option th:value='${sequence.id}' th:id="${sequence.id}">${sequence.name}</option>
+		            <select multiple="multiple" id="selectSequence" name="selectSequence" class="form-control form-control-sm" style="width: 68px;">
+		                    <option th:value='${sequence.id}' th:each="sequence: ${sequences}"  th:id="${sequence.id}">[[${sequence.name}]]</option>
 		           </select>
-		    <input type="hidden" id="choices" />
+		    <input type="hidden" id="choices" name="choices"/>
 		    </div> 
 		 
 			<div class="form-group row">
-				<label for="description" class="col-md-2 col-form-label">Description:</label>
-				<textarea class="form-control col-md-10" rows="5" cols="30" id="description"></textarea>
+				<label for="description" class="col-md-2 col-form-label">Description</label>
+				<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:text=${slideForm.description}></textarea>
 			</div>
 			
-			<button class="btn btn-primary btn-sm" type="submit" value="submit">Save Slide</button>
-			<a th:href="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}}" class="btn btn-light btn-sm">Cancel</a>
+			<button class="btn primary-btn" type="submit" value="submit" style="margin-right: 20px">Save Slide</button>
+			<a th:href="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}}" class="btn btn-light">Cancel</a>
 		</form>
 	</div>
 </body>

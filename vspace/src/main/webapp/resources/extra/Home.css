@@ -1,7 +1,7 @@
 :root {
 	--primary: #A55941;
 	--secondary: #F2A950;
-	--error: #B00020;
+	--error: #dc3545;
 	--med-grey: #C7C7C7;
 	--dark-grey: #8E8E8E;
 	--base-grey: #F2F2F2;
@@ -9,7 +9,18 @@
 
 i {
 	font-size: 20px;
-	color: var(--secondary);	
+}
+
+.secondary {
+	color: var(--secondary);
+}
+
+.white {
+	color: white;
+}
+
+.black {
+	color: #121212;
 }
 
 .Home_Class {
@@ -37,6 +48,8 @@ i {
 }
 
 .nav-bar {
+    position: relative;
+    width: 100%;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -44,14 +57,78 @@ i {
     padding: 0 20px;
     background: white;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.08);
-    position: relative;
     z-index: 1;
+    top: 0;
+}
+
+.footer {
+	position: absolute;
+	text-align: center;
+	bottom: 0;
+	font-size: 12px;
+	color: var(--dark-grey);
+}
+
+.status {
+	position: absolute;
+    color: var(--secondary);
+    padding: 10px;
+    display: flex;
 }
 
 .primary-btn {
     background: var(--primary);
     color: white;
     border-radius: 5px;
+}
+
+.outline {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 5px;
+    background: none;
+}
+
+.outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.delete-btn {
+    background: var(--error);
+    color: white;
+    border-radius: 5px;
+}
+
+.branchbtn {
+    background: var(--med-grey);
+    border-radius: 25px;
+    color: #121212;
+}
+
+.add {
+	border: 1.5px solid var(--med-grey);
+    border-radius: 5px;
+    display: flex;
+    width: 12rem; 
+    max-width: 18em;
+}
+
+.add:hover {
+	border: 1.5px solid var(--secondary);
+	color: var(--secondary) !important;
+}
+
+.spaceImage {
+	height: 100px;
+    overflow: hidden;
+    background-size: cover;
+}
+
+.card-head {
+	font-size: 16px;
+	margin-bottom: 20px;
+	font-weight: 600;
 }
 
 .navbar-brand {
@@ -70,7 +147,6 @@ i {
 
 .login-form {
     padding: 48px;
-    width: 30%;
     margin: auto;
     border-radius: 10px;
     background: #f2f2f2;
@@ -145,17 +221,56 @@ i {
     }
 }
 
+.flex-spacing {
+	display:flex;
+	justify-content: space-between;
+	margin: 40px 0
+}
+
+.register-form {	
+    padding: 48px;	
+    width: 30%;	
+    margin: auto;	
+    border-radius: 10px;	
+    background: #f2f2f2;	
+}	
+
+.form-control {
+	border: none;	
+}	
+
+.form_icon {	
+  	position: absolute;	
+  	pointer-events: auto;	
+	cursor: pointer;	
+	z-index: 5;	
+	right: 0;	
+	background: none;	
+	color: white;	
+}
+
 .sidenav {
     width: 20%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: -1px;
     left: 0px;
-    overflow-x: hidden;
+    overflow: hidden;
     background: #fff;
     transition: 0.5s;
     padding-top: 70px;
     word-break: break-all;
+}
+
+.btn-light {
+	color: #121212 !important;
+	background: white !important;
+	border-color: var(--med-grey) !important;
+	text-align: left;
+}
+
+.skew {
+	border-radius: 0 0 .25rem .25rem !important;
 }
 
 .side-list {
@@ -180,6 +295,57 @@ i {
 
 .sidenav .dropdown-item {
     padding: 0px;
+}
+
+.main-content {
+	width: 90%;
+	margin: auto;
+}
+
+.grid {
+	display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    grid-gap: 15px;
+    margin-top: 15px;
+}
+
+@media only screen and (max-width: 1500px) {
+.grid {
+    grid-template-columns: auto auto auto auto auto;
+}
+}
+
+@media only screen and (max-width: 1200px) {
+.grid {
+    grid-template-columns: auto auto auto;
+}
+}
+
+@media only screen and (max-width: 850px) {
+.grid {
+    grid-template-columns: auto auto;
+}
+.custom_Text{
+    display: none;
+}
+}
+
+.card-body {
+	display: flex !important;
+	justify-content: space-between !important;
+	align-items: center !important;
+	padding: 1rem !important;
+}
+
+.card-title {
+	margin: 0 !important;
+}
+
+.tab {
+    margin-top: 40px;
+    background: white;
+    padding: 25px;
+    border-radius: 5px;
 }
 
 .sideModulenav {
@@ -213,7 +379,6 @@ i {
 }
 
 .sideModulenav .dropdown-item {
-    padding: 0px;
     text-align: justify;
 }
 
@@ -240,6 +405,18 @@ i {
     right: 30%;
     /* top: 2%; */
     padding-top: 12px;
+}
+
+.pill-btn {
+	border: 2px solid var(--dark-grey);
+    border-radius: 25px;
+    padding: 5px 15px;
+    color: var(--primary);
+}
+
+.pill-btn:hover {
+	background: var(--primary);
+	color: white;
 }
 
 .Info_cz_Class {
@@ -481,35 +658,79 @@ i {
     color: rgba(150, 45, 62, 1);
 }
 
-.register-form {
-    padding: 48px;
-    width: 30%;
-    margin: auto;
-    border-radius: 10px;
-    background: #f2f2f2;
-}
-
-.form-control {
-	background: var(--base-grey);
-	color: var(--dark-grey);
-	border: none;
-}
-
-.form_icon {
-  	position: absolute;
-  	pointer-events: auto;
-	cursor: pointer;
-	z-index: 5;
-	right: 0;
-	background: none;
-	color: white;
-}
 .form_input {
 	position: relative;
 	z-index: 3;
 }
+
+.searchBar {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 5;
+    right: 0;
+    background: none;
+}
+
 .form_input:placeholder-shown {
 	z-index: 1;
 }
 
 
+
+
+.Icon_awesome_info_module_m_sidenav {
+    overflow: visible;
+    position: absolute;
+    width: 5.403px;
+    height: 14.408px;
+    left: 14.5px;
+    padding-top: 5px;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    font-size: inherit;
+    color: rgba(150, 45, 62, 1);
+    transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.Ellipse_9_module_c_sidenav {
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.161));
+    position: absolute;
+    overflow: visible;
+    width: 21px;
+    height: 21px;
+    left: 6px;
+    padding-top: 0px;
+}
+
+.Ellipse_10_module_c_sidenav {
+    position: absolute;
+    overflow: visible;
+    width: 25px;
+    height: 25px;
+    left: 4px;
+    padding-top: 0px;
+    margin-top: -2px;
+}
+
+.Ellipse_8_module_c_sidenav {
+    position: absolute;
+    overflow: visible;
+    width: 29px;
+    height: 29px;
+    left: 2px;
+    margin-top: -3px;
+}
+
+.textDivStaff {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
+
+.choiceDiv {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
