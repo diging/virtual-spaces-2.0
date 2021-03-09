@@ -46,9 +46,6 @@
     [class*="barPosition"] {
         font-size: 12px;
     }
-    [class*="closebtn"] {
-        font-size: 12px;
-    }
     [class*="sidenav"] {
         font-size: 12px;
         padding-top: 20px;
@@ -70,9 +67,13 @@
 }
 
 .wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
+    float: left;
+}
+
+.spaceClass {
+    position: relative;
+    right: 5%;
+    left: 5%;
 }
 
 #sidebar {
@@ -104,10 +105,10 @@
 
 @media ( max-width : 768px) {
     #sidebar {
-        margin-left: 0;
+        margin-left: -250px;
     }
     #sidebar.active {
-        margin-left: -250px;
+        margin-left: 0px;
     }
 }
 </style>
@@ -126,12 +127,6 @@
 				$('#dismiss').show();
           	    $('#sidebarCollapse').hide()
 			});
-			$('#dismiss').on('click', function () {
-          	  // hide side bar
-          	  $('#sidebar').toggleClass('active');
-          	  $('#sidebarCollapse').show()
-          	  $('#dismiss').hide();
-          })
         });
 
 		let maxWidth='(max-width: 1200px)';
@@ -146,7 +141,10 @@
             }
         }
 		function closeNav(){
-		    $("#mySidenav").css("width", "0px");
+			// hide side bar
+        	  $('#sidebar').toggleClass('active');
+        	  $('#sidebarCollapse').show()
+        	  $('#dismiss').hide();
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -298,12 +296,9 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class">
-                <div class="wrapper">
+                <div class="wrapper" style="display: flex";>
                     <nav id="sidebar" class="active">
-                        <button type="button" id="dismiss">
-                            <i class="fas fa-arrow-left"></i> <span
-                                style="cursor: pointer"></span>
-                        </button>
+                        <i class="far fa-times-circle fa-lg closebtn" id="dismiss" th:onclick="closeNav()"></i>
                         <ul th:each="space: ${publishedSpaces}">
                             <li><a class="dropdown-item"
                                 th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
@@ -335,7 +330,7 @@
                     </div>
                 </div>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin: auto; display: flex; justify-content: center; padding-top: 22px;">
+                    style="width: 80%; margin-left: 10px; display: flex; justify-content: center; padding-top: 22px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
