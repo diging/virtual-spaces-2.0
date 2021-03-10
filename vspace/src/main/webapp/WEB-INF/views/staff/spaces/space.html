@@ -57,7 +57,7 @@ function drawLinks(){
     $("#space i").remove();
     $.ajax({
         type: "GET",
-        url: "[(@{'/staff/space/'+${space.id}+'/links?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+        url: "[(@{'/staff/space/'+${space.id}+'/links'})]",
         cache       : false,
         contentType : false,
         processData : false,
@@ -69,9 +69,8 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
-            var img = document.getElementById("bgImage");
-            var imageHeight = img.height;
-            var imageWidth = img.width;
+            var imageHeight = $("#bgImage")[0].height;
+            var imageWidth = $("#bgImage")[0].width;
             var displayWidth = [(${display.width})];
             var displayHeight = [[${display.height}]];
             function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink){
