@@ -25,6 +25,10 @@ var storeY;
 var selectedModuleLinkId;
 var selectedSpaceLinkId;
 var selectedExternalLinkId;
+const displaceUnplishedOnX = 25
+const displaceUnplishedOnY = 13
+const displaceLableOnX = 10
+const displaceLableOnY = 35
 
 //link icons for space links
 var linkIconReader = new FileReader();
@@ -78,8 +82,8 @@ function drawLinks(){
                 if(isModal){
                     var linkPosX=(imageWidth*link.positionX)/displayWidth;
                     var linkPosY=(imageHeight*link.positionY)/displayHeight;
-                    modalLink.css('left',linkPosX + posXModal + 20);
-                    modalLink.css('top', linkPosY + posYModal + 20);
+                    modalLink.css('left',linkPosX + posXModal);
+                    modalLink.css('top', linkPosY + posYModal);
                 }else{
                     modalLink.css('left', link.positionX + posX);
                     modalLink.css('top', link.positionY + posY);
@@ -88,17 +92,16 @@ function drawLinks(){
                 modalLink.find("span").css('fill', 'grey');
                 modalLink.css('color', 'rgba(128,128,128,1)');
                 modalLink.css('font-size', "12px");
-                setInputElements(link,isModal,isExternalLink);
                 if(isSpaceLink && link.link.targetSpace.spaceStatus=="UNPUBLISHED"){
                     var unpublishedSpaceElement;
                     unpublishedSpaceElement=$('<i data-link-id="unpublished-'+link.link.id+'" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-'+link.link.id+'" style="color: var(--secondary);"></i>')
                     unpublishedSpaceElement.css('position', 'absolute');
                     if(isModal){
-                        unpublishedSpaceElement.css('left', linkPosX + posXModal + 25);
-                        unpublishedSpaceElement.css('top', linkPosY + posYModal - 13);
+                        unpublishedSpaceElement.css('left', linkPosX + posXModal + displaceUnplishedOnX);
+                        unpublishedSpaceElement.css('top', linkPosY + posYModal - displaceUnplishedOnY);
                     }else{
-                        unpublishedSpaceElement.css('left', link.positionX + posX + 25);
-                        unpublishedSpaceElement.css('top', link.positionY + posY - 13);
+                        unpublishedSpaceElement.css('left', link.positionX + posX + displaceUnplishedOnX);
+                        unpublishedSpaceElement.css('top', link.positionY + posY - displaceUnplishedOnY);
                     }
                     unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
                     unpublishedSpaceElement.css('font-size', "12px");
@@ -117,88 +120,38 @@ function drawLinks(){
             function setLabelPosition(link,id, isModal){
                 if(isModal){
                     $(".label-"+id).css({
-                        'left': link.positionX + posXModal - 10,
-                        'top': link.positionY + posYModal + 35,
+                        'left': link.positionX + posXModal - displaceLableOnX,
+                        'top': link.positionY + posYModal + displaceLableOnY,
                         'color': 'red'
                     }); 
                 }
                 else{
                     $(".label-"+id).css({
-                        'left': link.positionX + posX - 10,
-                        'top': link.positionY + posY + 35,
+                        'left': link.positionX + posX - displaceLableOnX,
+                        'top': link.positionY + posY + displaceLableOnY,
                         'color': 'red'
                     });
                 }
-            }
-            function setInputElements(link,isModal,isExternalLink){
-                var inputLabel;
-                var inputType;
-                var inputRotation;
-                if(isExternalLink){
-                    inputLabel = document.createElement("input");
-                    inputLabel.setAttribute("type", "hidden");
-                    inputLabel.setAttribute("id", "linkLabel-"+link.externalLink.id);
-                    inputLabel.setAttribute("value", link.externalLink.name);
-                    inputType = document.createElement("input");
-                    inputType.setAttribute("type", "hidden");
-                    inputType.setAttribute("id", "linkType-"+link.externalLink.id);
-                    inputType.setAttribute("value", link.type);
-                }else{
-                    inputRotation = document.createElement("input");
-                    inputRotation.setAttribute("type", "hidden");
-                    inputRotation.setAttribute("id", "linkRotation-"+link.link.id);
-                    inputRotation.setAttribute("value", link.rotation);
-                    inputLabel = document.createElement("input");
-                    inputLabel.setAttribute("type", "hidden");
-                    inputLabel.setAttribute("id", "linkLabel-"+link.link.id);
-                    inputLabel.setAttribute("value", link.link.name);
-                    inputType = document.createElement("input");
-                    inputType.setAttribute("type", "hidden");
-                    inputType.setAttribute("id", "linkType-"+link.link.id);
-                    inputType.setAttribute("value", link.type);
-                }
-
-                if(isModal){
-                    $("#space").append(inputRotation);
-                    $("#space").append(inputLabel);
-                    $("#space").append(inputType);
-                }else{
-                    $("#main-space").append(inputRotation);
-                    $("#main-space").append(inputLabel);
-                    $("#main-space").append(inputType);
-                }
-
             }
             spaceLinks.forEach(function(link,index){
                 if(link != null){
                     var modalSpacelink;
                     if(link.type == "ALERT"){
-                        modalSpacelink = $('<div class="alert alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="spaceLink-'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+                        modalSpacelink = $('<div class="alert alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
                     }
                     else if(link.type == "IMAGE" && link.image != null){
                         var modalSpaceImageURL = [[@{/api/image/}]]+link.image.id;
-                        modalSpacelink = $('<img id="spacelink-'+link.image.id+'" class="spaceLink-'+link.link.id+'" data-link-id="spaceLink'+link.link.id+'" src="'+modalSpaceImageURL+'" />');
+                        modalSpacelink = $('<img id="spacelinkModalId-'+link.link.id+'" class="spaceLink-'+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+modalSpaceImageURL+'" />');
                     }else{
-                        modalSpacelink = $('<span data-link-id="spaceLink-'+link.link.id+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+                        modalSpacelink = $('<span id="spacelinkModalId-'+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
                     }
-
-                    var inputLinkedSpace = document.createElement("input");
-                    inputLinkedSpace.setAttribute("type", "hidden");
-                    inputLinkedSpace.setAttribute("id", "linkTarget-"+link.link.id);
-                    inputLinkedSpace.setAttribute("value",link.link.targetSpace.id);
-
-                    var unpublishedSpaceElementModal;
                     setLinkPosition(modalSpacelink,link,true,true,false);
-                    $("#space").append(inputLinkedSpace);
                     $("#space").append(modalSpacelink);
 
                     $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
                     $('[data-link-id="'+link.link.id+'"]').click(function(e) {
-                        var rotation = document.getElementById("linkRotation-"+link.link.id).value;
-                        var label = document.getElementById("linkLabel-"+link.link.id).value;
-                        var type = document.getElementById("linkType-"+link.link.id).value;
-                        var targetSpace = document.getElementById("linkTarget-"+link.link.id).value;
-                        makeSpaceLinksEditable(label, link.link.id, rotation ,targetSpace,link.positionX,link.positionY,link.id,type);
+                        var linkData = $('#spacelinkModalId-'+link.link.id).data();
+                        makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
                     });
                 }
             })
@@ -210,29 +163,18 @@ function drawLinks(){
                     }
                     else if(link.type == "IMAGE" && link.image != null){
                         var spaceImageURL = [[@{/api/image/}]]+link.image.id;
-                        spaceLink = $('<img id="spacelink-'+link.image.id+'" class="spaceLink-'+link.link.id+'" data-link-id="'+link.link.id+'" src="'+spaceImageURL+'" />');
+                        spaceLink = $('<img id="spacelinkId-'+link.link.id+'" class="spaceLink-'+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
                     }
                     else{
-                        spaceLink = $('<span data-link-id="'+link.link.id+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+                        spaceLink = $('<span id="spacelinkId-'+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
                     }
-
-                    var inputLinkedSpace = document.createElement("input");
-                    inputLinkedSpace.setAttribute("type", "hidden");
-                    inputLinkedSpace.setAttribute("id", "linkTarget-"+link.link.id);
-                    inputLinkedSpace.setAttribute("value", link.link.targetSpace.id);
-
                     setLinkPosition(spaceLink,link,true,false,false);
-
-                    $("#main-space").append(inputLinkedSpace);
                     $("#main-space").append(spaceLink);
-
+                    
                     $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
                     $('[data-link-id="'+link.link.id+'"]').click(function(e) {
-                        var rotation = document.getElementById("linkRotation-"+link.link.id).value;
-                        var label = document.getElementById("linkLabel-"+link.link.id).value;
-                        var type = document.getElementById("linkType-"+link.link.id).value;
-                        var targetSpace = document.getElementById("linkTarget-"+link.link.id).value;
-                        makeSpaceLinksEditable(label, link.link.id, rotation ,targetSpace,link.positionX,link.positionY,link.id,type);
+                        var linkData = $('#spacelinkId-'+link.link.id).data();
+                        makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
                     });
                 }
             })
@@ -240,29 +182,21 @@ function drawLinks(){
                 if(link != null){
                     var modalModuleLink;
                     if(link.type=="ALERT"){
-                        modalModuleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+                        modalModuleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" id="moduleModallinkId-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
                     }
                     else if(link.type=="IMAGE" && link.image != null){
                         var modalModuleImageURL = [[@{/api/image/}]]+link.image.id;
                         modalModuleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+'" src="'+modalModuleImageURL+'" />');
                     }
                     else{
-                        modalModuleLink = $('<span data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+                        modalModuleLink = $('<span id="moduleModallinkId-'+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
                     }
                     setLinkPosition(modalModuleLink,link,false,true,false);
-                    var inputLinkedModule = document.createElement("input");
-                    inputLinkedModule.setAttribute("type", "hidden");
-                    inputLinkedModule.setAttribute("id", "moduleLinkTarget-"+link.link.id);
-                    inputLinkedModule.setAttribute("value", link.link.module.id);
-                    $("#space").append(inputLinkedModule);
                     $("#space").append(modalModuleLink);
                     $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
                     $('[data-link-id="'+link.link.id+'"]').click(function(e) {
-                        var rotation = document.getElementById("linkRotation-"+link.link.id).value;
-                        var label = document.getElementById("linkLabel-"+link.link.id).value;
-                        var type = document.getElementById("linkType-"+link.link.id).value;
-                        var targetModule = document.getElementById("moduleLinkTarget-"+link.link.id).value;
-                        makeModuleLinksEditable(label, link.link.id,rotation,targetModule,link.positionX,link.positionY,link.id, type);
+                        var linkData = $('#moduleModallinkId-'+link.link.id).data();
+                        makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
                     });
                 }
             })
@@ -270,29 +204,21 @@ function drawLinks(){
                 if(link != null){
                     var moduleLink;
                     if(link.type=="ALERT"){
-                        moduleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+                        moduleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" id="modulelinkId-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
                     }
                     else if(link.type=="IMAGE" && link.image != null){
                         var moduleImageURL = [[@{/api/image/}]]+link.image.id;
                         moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+'" src="'+moduleImageURL+'" />');
                     }
                     else{
-                        moduleLink = $('<span data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+                        moduleLink = $('<span id="modulelinkId-'+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
                     }
                     setLinkPosition(moduleLink,link,false,false,false);
-                    var inputLinkedModule = document.createElement("input");
-                    inputLinkedModule.setAttribute("type", "hidden");
-                    inputLinkedModule.setAttribute("id", "moduleLinkTarget-"+link.link.id);
-                    inputLinkedModule.setAttribute("value", link.link.module.id);
-                    $("#main-space").append(inputLinkedModule);
                     $("#main-space").append(moduleLink);
                     $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
                     $('[data-link-id="'+link.link.id+'"]').click(function(e) {
-                        var rotation = document.getElementById("linkRotation-"+link.link.id).value;
-                        var label = document.getElementById("linkLabel-"+link.link.id).value;
-                        var type = document.getElementById("linkType-"+link.link.id).value;
-                        var targetModule = document.getElementById("moduleLinkTarget-"+link.link.id).value;
-                        makeModuleLinksEditable(label, link.link.id,rotation,targetModule,link.positionX,link.positionY,link.id, type);
+                        var linkData = $('#modulelinkId-'+link.link.id).data();
+                        makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
                     });
                 }
             })
@@ -301,29 +227,17 @@ function drawLinks(){
                     var modalExternalLink ;
                     if(link.type=="IMAGE" && link.image != null){
                         var modalExternalImageURL = [[@{/api/image/}]]+link.image.id;
-                        modalExternalLink = $('<img id="'+link.image.id+'" class="externalLink-"'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" src="'+modalExternalImageURL+'" />');
-                    }else{
-                        modalExternalLink = $('<span data-link-id="'+link.externalLink.id+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>'); 
+                        modalExternalLink = $('<img id="externalModallinkId-'+link.externalLink.id+'"  data-linkTarget="'+link.link.module.id+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-"'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" src="'+modalExternalImageURL+'" />');
+                    }
+                    else{
+                        modalExternalLink = $('<span id="externalModallinkId-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>'); 
                     }
                     setLinkPosition(modalExternalLink,link,false,true,true);
-                    var inputExternalLinkURL = document.createElement("input");
-                    inputExternalLinkURL.setAttribute("type", "hidden");
-                    inputExternalLinkURL.setAttribute("id", "externalLinkTarget-"+link.externalLink.id);
-                    inputExternalLinkURL.setAttribute("value", link.externalLink.externalLink);
-                    $("#space").append(inputExternalLinkURL);
                     $("#space").append(modalExternalLink);
-
-                    $(".label-"+link.externalLink.id).css({
-                        'left': link.positionX + posXModal - 10,
-                        'top': link.positionY + posYModal + 35,
-                        'text-color': 'blue'
-                    });
                     $('[data-link-id="'+link.externalLink.id+'"]').css('cursor', 'pointer');
                     $('[data-link-id="'+link.externalLink.id+'"]').click(function(e) {
-                        var label = document.getElementById("linkLabel-"+link.externalLink.id).value;
-                        var type = document.getElementById("linkType-"+link.externalLink.id).value;
-                        var targetLink = document.getElementById("externalLinkTarget-"+link.externalLink.id).value;
-                        makeExternalLinksEditable(label,link.externalLink.id,targetLink,link.positionX,link.positionY,link.id,type);
+                        var linkData = $('#externalModallinkId-'+link.externalLink.id).data();
+                        makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
                     });
                 }
             })
@@ -332,23 +246,16 @@ function drawLinks(){
                     var externalLink;
                     if(link.type=="IMAGE" && link.image != null){
                         var imageURL = [[@{/api/image/}]]+link.image.id;
-                        externalLink = $('<img id="'+link.image.id+'" class="externalLink-"'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+                        externalLink = $('<img id="externallinkId-'+link.externalLink.id+'" data-linkTarget="'+link.link.module.id+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-"'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
                     }else{
-                        externalLink = $('<span data-link-id="'+link.externalLink.id+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+                        externalLink = $('<span id="externallinkId-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
                     }
                     setLinkPosition(externalLink,link,false,false,true);
-                    var inputExternalLinkURL = document.createElement("input");
-                    inputExternalLinkURL.setAttribute("type", "hidden");
-                    inputExternalLinkURL.setAttribute("id", "externalLinkTarget-"+link.externalLink.id);
-                    inputExternalLinkURL.setAttribute("value", link.externalLink.externalLink);
-                    $("#main-space").append(inputExternalLinkURL);
                     $("#main-space").append(externalLink);
                     $('[data-link-id="'+link.externalLink.id+'"]').css('cursor', 'pointer');
                     $('[data-link-id="'+link.externalLink.id+'"]').click(function(e) {
-                        var label = document.getElementById("linkLabel-"+link.externalLink.id).value;
-                        var type = document.getElementById("linkType-"+link.externalLink.id).value;
-                        var targetLink = document.getElementById("externalLinkTarget-"+link.externalLink.id).value;
-                        makeExternalLinksEditable(label,link.externalLink.id,targetLink,link.positionX,link.positionY,link.id,type);
+                        var linkData = $('#externalModallinkId-'+link.externalLink.id).data();
+                        makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
                     });
                 }
             })
@@ -375,8 +282,8 @@ function showSpaceLink(spaceLink, show, x, y) {
             'position': 'relative',
             'font-size': "10px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - 10,
-            'top': y + posY + 35,
+            'left': x + posX - displaceLableOnX,
+            'top': y + posY + displaceLableOnY,
             'color': 'grey'
         });
         link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-walking fa-lg Icon_awesome_info_staff_c"></i></div></span>');
@@ -386,8 +293,8 @@ function showSpaceLink(spaceLink, show, x, y) {
         if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
             unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
             unpublishedSpaceElement.css('position', 'absolute');
-            unpublishedSpaceElement.css('left', x + posX + 25);
-            unpublishedSpaceElement.css('top', y + posY - 13);
+            unpublishedSpaceElement.css('left', x + posX + displaceUnplishedOnX);
+            unpublishedSpaceElement.css('top', y + posY - displaceUnplishedOnY);
             unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
             unpublishedSpaceElement.css('font-size', "12px");
         }else{
@@ -442,8 +349,8 @@ function showModuleLink(moduleLink, show, x, y) {
             'position': 'absolute',
             'font-size': "10px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - 10,
-            'top': y + posY + 35,
+            'left': x + posX - displaceLableOnX,
+            'top': y + posY + displaceLableOnY,
             'color': 'red'
         });
         link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-info fa-lg Icon_awesome_info_staff_m"></i></div></span>');
@@ -497,8 +404,8 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
         if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
             unpublishedSpaceElement=$('<i data-link-id = "unpublished-' + spaceLink["id"] + '" class="fa fa-exclamation-triangle fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></i>')
             unpublishedSpaceElement.css('position', 'absolute');
-            unpublishedSpaceElement.css('left', posX + 25);
-            unpublishedSpaceElement.css('top', posY - 13);
+            unpublishedSpaceElement.css('left', posX + displaceUnplishedOnX);
+            unpublishedSpaceElement.css('top', posY - displaceUnplishedOnY);
             unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
             unpublishedSpaceElement.css('font-size', "12px");
             $("#space").append(unpublishedSpaceElement);
@@ -508,8 +415,8 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
     }
     $(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
     $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
-    $(selectedUnpublishedIconClass).css({ 'left': posX + 25});
-    $(selectedUnpublishedIconClass).css({ 'top': posY - 13});
+    $(selectedUnpublishedIconClass).css({ 'left': posX + displaceUnplishedOnX});
+    $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnplishedOnY});
     updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
 }
 
@@ -537,8 +444,8 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass).text(linkLabel);
     $(selectedLabelClass).css({ 'position': 'absolute'});
-    $(selectedLabelClass).css({ 'left': x + posX - 10});
-    $(selectedLabelClass).css({ 'top': y + posY + 30});
+    $(selectedLabelClass).css({ 'left': x + posX - displaceLableOnX});
+    $(selectedLabelClass).css({ 'top': y + posY + displaceLableOnY});
     feather.replace();    
 }
 
@@ -566,8 +473,8 @@ function showExternalLinks(externalLink, show, x, y) {
             'position': 'absolute',
             'font-size': "12px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - 10,
-            'top': y + posY + 35,
+            'left': x + posX - displaceLableOnX,
+            'top': y + posY + displaceLableOnY,
             'color': 'blue'
         });
         link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><i class="fas fa-external-link-alt fa-lg Icon_awesome_info_staff_e"></i></div></span>');
@@ -697,8 +604,11 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
         showSpaceLinkEdit(editSpaceLinkInfo(),false, storeX + $("#space").scrollLeft(),storeY + $("#space").scrollTop());
     });
     hideLinkInfoTabs();
+    displayForms("#editSpaceLinkInfo");
+}
+function displayForms(formToShow){
     $("#space").css("display", "-webkit-box");
-    $("#editSpaceLinkInfo").css("display", "flex");
+    $(formToShow).css("display", "flex");
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
@@ -730,8 +640,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
         showModuleLinkEdit(editModuleLinkInfo(), false, storeX + $("#space").scrollLeft(),storeY + $("#space").scrollTop());
     });
     hideLinkInfoTabs();
-    $("#space").css("display", "-webkit-box");
-    $("#editModuleLinkInfo").css("display", "flex");
+    displayForms("#editModuleLinkInfo");
 }
 
 function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
@@ -762,8 +671,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
         showExternalLinkEdit(editExternalLinkInfo(), false, storeX + $("#space").scrollLeft(),storeY + $("#space").scrollTop());
     });
     hideLinkInfoTabs();
-    $("#space").css("display", "-webkit-box");
-    $("#editExternalLinkInfo").css("display", "flex");
+    displayForms("#editExternalLinkInfo");
 }
 
 function resetHighlighting() {
@@ -812,8 +720,7 @@ $(function(){
                 showSpaceLink(createSpaceLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
             });
             hideLinkInfoTabs();
-            $("#space").css("display", "-webkit-box");
-            $("#createSpaceLinkAlert").css("display", "flex");
+            displayForms("#createSpaceLinkAlert");
         });
 
         $("#addModuleLinkButton").click(function(e) {
@@ -833,8 +740,7 @@ $(function(){
                 showModuleLink(createModuleLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
             });
             hideLinkInfoTabs();
-            $("#space").css("display", "-webkit-box");
-            $("#createModuleLinkAlert").css("display", "flex");
+            displayForms("#createModuleLinkAlert");
         }); 
 
         $("#addExternalLinkButton").click(function(e) {
@@ -847,7 +753,6 @@ $(function(){
                 $("#external-arrow").remove();
                 $("#ext_label").remove();
                 var icon;
-
                 var posX = $(this).position().left
                 var posY = $(this).position().top;
                 storeX = e.pageX - $(this).offset().left;
@@ -856,8 +761,7 @@ $(function(){
                 showExternalLinks(createExternalLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
             });
             hideLinkInfoTabs();
-            $("#space").css("display", "-webkit-box");
-            $("#createExternalLinkAlert").css("display","flex");
+            displayForms("#createExternalLinkAlert");
         });
 
         $('#changeBgImgButton').click(function(file) {
