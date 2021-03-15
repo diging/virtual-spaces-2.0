@@ -84,18 +84,39 @@ public class ImageService implements IImageService {
         return new ImageData(newHeight.intValue(), width);
     }
 
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+            sortingParameters = Sort.by(sortedBy);
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+            sortingParameters = sortingParameters.ascending();
+        } else {
+            sortingParameters = sortingParameters.descending();
+        }
+        return sortingParameters;
+    }
+    
     /**
      * Method to return the requested images
      * 
      * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
      *                page is returned
-     * @return list of images in the requested pageNo
+     * @param category. if category value is not null image list is filtered using 
+     *                category value
+     * @return list of images for the requested pageNo and category
      */
     @Override
-    public List<IVSImage> getImages(int pageNo) {
-        return getImages(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    public List<IVSImage> getImages(int pageNo, ImageCategory category) {
+        return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-
+    
+    
+    @Override
+    public List<IVSImage> getImages(int pageNo) {
+        return getImages(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
+    
     /**
      * Method to return the requested images
      * 
@@ -103,48 +124,55 @@ public class ImageService implements IImageService {
      *                page is returned
      * @return list of images in the requested pageNo and requested order.
      */
+
     @Override
-    public List<IVSImage> getImages(int pageNo, String sortedBy, String order) {
-        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
-        pageNo = validatePageNumber(pageNo);
-        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
-            sortingParameters = Sort.by(sortedBy);
-        }
-        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
-            sortingParameters = sortingParameters.ascending();
-        }
-        else {
-            sortingParameters = sortingParameters.descending();
-        }
+    public List<IVSImage> getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
+        pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<VSImage> images = imageRepo.findAll(sortByRequestedField);
+        Page<VSImage> images;
+        if(category==null) {
+            images = imageRepo.findAll(sortByRequestedField);
+        } else {
+            images = imageRepo.findByCategories(sortByRequestedField, category);
+        }
         List<IVSImage> results = new ArrayList<>();
         if(images != null) {
             images.getContent().forEach(i -> results.add(i));
         }
         return results;
     }
-
-    /**
-     * Method to return the total pages sufficient to display all images
-     * 
-     * @return totalPages required to display all images in DB
-     */
-    @Override
-    public long getTotalPages() {
-        return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
-    }
-
+    
     /**
      * Method to return the total image count
      * 
      * @return total count of images in DB
      */
-    @Override
-    public long getTotalImageCount() {
-        return imageRepo.count();
-    }
 
+    @Override
+    public long getTotalImageCount(ImageCategory category) {
+        if(category==null) {
+            return imageRepo.count();
+        }
+        return imageRepo.countByCategories(category);
+    }
+    
+    /**
+     * Method to return the total pages sufficient to display all images
+     * 
+     * @return totalPages required to display all images in DB
+     */
+
+    
+    @Override
+    public long getTotalPages(ImageCategory category) {
+        if(category==null) {
+            return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
+        }
+        long count = imageRepo.countByCategories(category);
+        return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
+    }
+    
     /**
      * Method to return page number after validation
      * 
@@ -152,9 +180,10 @@ public class ImageService implements IImageService {
      * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
      *         totalPages.
      */
+
     @Override
-    public int validatePageNumber(int pageNo) {
-        long totalPages = getTotalPages();
+    public int validatePageNumber(int pageNo, ImageCategory category) {
+        long totalPages = getTotalPages(category);
         if(pageNo<1) {
             return 1;
         } else if(pageNo>totalPages) {
