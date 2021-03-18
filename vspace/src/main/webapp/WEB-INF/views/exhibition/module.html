@@ -84,22 +84,22 @@
                </div>
             </a>
             
-            <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-               <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
-               <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-               <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+          <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
+          <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+              <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
+              <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+              <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
                   <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                     <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+                      <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                         class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                   </div>
                   <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
-                     <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+                      <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                         class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                   </div>
-               </div>
-            </div>
-            <div style="align-items: center" class="list-group" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+              </div>
+              <div style="align-items: center" class="list-group" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+                  <br/>[[${contents.video.title}]]
                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
                         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen ></iframe>
@@ -107,6 +107,7 @@
                         th:src="@{'/api/video/'+${contents.video.id}}" frameborder="0"
                         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen ></iframe>
+               </div>
             </div>
          </div>
       </div>
