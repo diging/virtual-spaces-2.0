@@ -109,7 +109,7 @@ $(document).ready(function($) {
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
- 				<i class="fa fa-info-circle black" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"></i>
+ 				<span class="icon-info-circle" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"></span>
 				</h2>
 				<p>[[${module.description}]]</p>
     		</div>
@@ -135,7 +135,7 @@ $(document).ready(function($) {
             <div id="list" style="margin-top: 0">
             <ul class="list-group list-group-flush" th:each="sequence: ${sequences}">
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}">
-                   <span><i class="fas fa-th-large" aria-hidden="true"></i></span>&emsp;[[${sequence.name}]]</a>
+                   <span class="icon-2x2-grid"></span>&emsp;[[${sequence.name}]]</a>
                    (Created on <span class="date">[[${sequence.creationDate}]]</span>
                    by [[${sequence.createdBy}]])
                </li>
@@ -155,26 +155,24 @@ $(document).ready(function($) {
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
                     <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 80%;">
                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
-                        <i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br> 
+                        <span class="icon-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></span><br> 
                         <span class="card-text" style="white-space: pre-wrap; max-height: 70px; overflow-y: scroll; display: inline-block;">[[${slide.description}]]</span>
                     </a>
                     <button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
                         th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
-                        <i class="fas fa-trash-alt" style="color: var(--error)"></i>
+                        <span class="icon-trash error"></span>
                     </button>
                 </div>
             </div>              
         </div>
 			
-		<div id="deleteSlideAlert" class="modal fade" role="dialog"
-		    data-value="0">
+		<div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
 		    <div class="modal-dialog">
 		        <div class="modal-content">
 		            <div class="modal-header">
-		                <h4 class="modal-title" id="deleteModalTitle">Confirm
-		                    Deletion?</h4>
+		                <h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
 		                <button type="button" id="closeSlide" class="close"
-		                    data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
+		                    data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
 		            </div>
 		            <div class="modal-body">
 		                <p>
