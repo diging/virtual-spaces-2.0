@@ -33,9 +33,10 @@ function createImageBlock(reader, width) {
     return imageblock;
 }
 
-function createVideoBlock(reader, videoSrc) {
-	var videoBlock = $('<div id="currentVideo" style="margin: 1%; border: 1px solid rgba(0, 0, 0, 0.125);" class="valueDiv card-body"><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /><a class="btn deleteVideo col-md-1" href="javascript:;" style="float: right;"><i style="color: red;" class="fas fa-trash-alt"></i></a></div>');
+function createVideoBlock(reader, videoSrc, title) {
+	var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><a class="btn col-md-1" href="#"><i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i></a><div><h3><strong></strong></h3><br/><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><i style="color: red;" class="fas fa-trash-alt"></i></a></div>');
 	videoBlock.find('iframe').attr('src', videoSrc);
+	videoBlock.find('h3 strong').html(title);
 	return videoBlock;
 }
 
@@ -83,16 +84,19 @@ function onDoubleClick(e){
     }
     else {
         var vidId = $(e.target).attr('id');
+        var title = $(e.target).find('h3 strong').html();
         if (vidId != '') {
             var url = $(e.target).find('iframe').attr('src');
             if (url.includes("www.")) {
                 $("#saveVideo").data('url', url);
                 $("#videoLink").val(url);
+                $("#videoTitle").val(title);
                 $("#urlTab").addClass("active");
                 $("#urlLink").addClass("active");
                 $("#uploadTab").removeClass("active");
                 $("#uploadLink").removeClass("active");
             }
+            
             $("#saveVideo").data('value', vidId);
             $("#addVideoAlert").show();
         }
@@ -190,7 +194,9 @@ function uploadImage() {
     function embedVideo() {
         var videoID = $("#saveVideo").data('value'); // gets video ID
         var oldUrl = $("#saveVideo").data('url');
+        //var oldTitle = $("#VideoTitle").data('title');
         var url = $("#videoLink").val();
+        var title = $("#videoTitle").val();
         var vidFile = $("#videoFile")[0].files[0];
         var reader = new FileReader();
         var videoBlock = "";
@@ -206,7 +212,7 @@ function uploadImage() {
 
             if (url) {
                 formData.append('url', url);
-                videoBlock = createVideoBlock(reader, url);
+                videoBlock = createVideoBlock(reader, url, title);
                 $("#" + videoBlockId).replaceWith(videoBlock);
             }
             if (vidFile) {
@@ -220,13 +226,13 @@ function uploadImage() {
         else {
             if (url) {
                 formData.append('url', url);
-                videoBlock = createVideoBlock(reader, url);
+                videoBlock = createVideoBlock(reader, url, title);
                 $('#slideSpace').append(videoBlock);
             }
             if (vidFile) {
                 formData.append('videoFile', vidFile);
                 reader.onload = function (theFile) {
-                    videoBlock = createVideoBlock(reader, theFile.target.result);
+                    videoBlock = createVideoBlock(reader, theFile.target.result, title);
                     $('#slideSpace').append(videoBlock);
                 }
             }
@@ -240,6 +246,7 @@ function uploadImage() {
             reader.readAsDataURL(vidFile);
         }
         formData.append('contentOrder', ++contentCount);
+        formData.append('videoTitle', title);
         $.ajax({
             enctype: 'multipart/form-data',
             // ------------- creating image content blocks ------------
@@ -268,6 +275,10 @@ function uploadImage() {
                 }
                 else {
                     $("#current").replaceWith(oldVideoBlock);
+                }
+                if(data.status == 400) {
+                	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Wrong request sent. Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.error').append(alert);
                 }
                 if (data.status == 403) {
                     $("#loginAlert").show();
@@ -622,10 +633,15 @@ $(document).ready(function() {
     
     $("#cancelVideoBtn").click(function() {
     	// Initialize selected video ID to blank, on clicking cancel button
+    	$("#videoTitle").val('');
     	$("#saveVideo").data('value', '');
     	$("#saveVideo").data('url', '');
+        $("#saveVideo").prop('disabled', true);
+    	$("#videoFile").val('');
+    	$("#videoLink").val('');
         $("#addVideoAlert").hide();
         $(".open").removeClass("open");
+        //$("#uploadLink").tab('show');
     });
     
     $("#submitText").on("click", function(e) {
@@ -735,14 +751,18 @@ $(document).ready(function() {
     
     $("#urlLink").on("click", function (e) {
         if ($("#videoFile").val()) {
+            $("#videoTitle").prop('disabled', true);
             $("#videoLink").prop('disabled', true);
             $("#saveVideo").prop('disabled', true);
         }
-        if ($("#videoFile").val() == '') {
+        if (!$("#videoFile").val()) {
+            $("#videoTitle").prop('disabled', false);
             $("#videoLink").prop('disabled', false);
             $("#saveVideo").prop('disabled', false);
         }
-
+        if (!$("#videoLink").val()) {
+            $("#saveVideo").prop('disabled', true);
+        }
         $("#urlLink").addClass("active show");
         $("#uploadLink").removeClass("active show");
         $("#saveVideo").html("Embed Video");
@@ -750,16 +770,45 @@ $(document).ready(function() {
 
     $("#uploadLink").on("click", function (e) {
         if ($("#videoLink").val()) {
+            $("#videoTitle").prop('disabled', true);
             $("#videoFile").prop('disabled', true);
             $("#saveVideo").prop('disabled', true);
         }
-        if ($("#videoLink").val() == '') {
+        else {
+            $("#videoTitle").prop('disabled', false);
             $("#videoFile").prop('disabled', false);
             $("#saveVideo").prop('disabled', false);
+        }
+        if (!$("#videoFile").val()) {
+            $("#saveVideo").prop('disabled', true);
         }
         $("#urlLink").removeClass("active show");
         $("#uploadLink").addClass("active show");
         $("#saveVideo").html("Upload Video");
+    });
+    
+    $("#videoLink").on("input", function (e) {
+        if (!$("#videoLink").val()) {
+            $("#saveVideo").prop('disabled', true);
+        }
+        else {
+            $("#saveVideo").prop('disabled', false);
+        }
+    });
+    
+    $("#videoFile").on("input", function (e) {
+        if (!$("#videoFile").val()) {
+            $("#saveVideo").prop('disabled', true);
+        }
+        else {
+            $("#saveVideo").prop('disabled', false);
+        }
+    });
+    
+    $("#videoTitle").on("input", function (e) {
+        if ($("#videoFile").val() || $("#videoLink").val()) {
+        $("#saveVideo").prop('disabled', false);
+        }
     });
     
     function updateTextBox(blockId, text) {
@@ -1077,12 +1126,13 @@ $(window).on('load', function () {
                                 </ul>
                                 <!-- Tab panes -->
                                 <div class="tab-content">
+                                <br/>
+                                    <label for="videoFile">Video Title:</label><input id="videoTitle" class="form-control" type="text" name="videoTitle"/>
                                     <div role="tabpanel" class="tab-pane active" id="uploadTab"><br />
-                                        Upload Video: <input id="videoFile" class="form-control" type="file" name="videoFile"
-                                            rows="5" cols="500" />
+                                        <label for="videoFile">Upload Video: </label><input id="videoFile" class="form-control-file" type="file" name="videoFile"/>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="urlTab"><br />
-                                        Enter URL: <input class="form-control" type="text" name="videoLink" rows="5" cols="500"
+                                        <label for="videoLink">Enter URL: </label><input class="form-control" type="text" name="videoLink" rows="5" cols="500"
                                             id="videoLink" />
                                     </div>
                                 </div>
@@ -1090,7 +1140,7 @@ $(window).on('load', function () {
                         </div>
                         <div class="modal-footer">
                             <button id="cancelVideoBtn" type="reset" class="btn light">Cancel</button>
-                            <button type="submit" id="saveVideo" class="btn btn-primary">Upload
+                            <button type="submit" id="saveVideo" class="btn btn-primary" disabled>Upload
                                 Video</button>
                         </div>
                     </form>
@@ -1164,21 +1214,25 @@ $(window).on('load', function () {
                     </a>
                 </div>
                 <div class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
-					<a class="btn col-md-1" href="#"> 
+					<a class="btn col-md-1" style="display: inline-block; height: 33px;" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
                     </a>
+                    <div>
+                    <h3><strong>[[${contents.video.title}]]</strong></h3>
+                    <br/>
                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
 						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen ></iframe>
-					<iframe th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}"
+					<iframe th:id="${contents.id}"  width="800" height="530" th:if="${contents.video.url == null}"
 						th:src="@{'/api/video/'+${contents.video.id}}" frameborder="0"
 						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen ></iframe>
+                        </div>
                     <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
                     <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <i style="color: red;" class="fas fa-trash-alt"></i>
                     </a>
-                    </div>
+                </div>
                 <div th:id="${contents.id}" class="tab textDiv row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}" style="align-items: center">
                 	<a class="btn col-md-1" href="#"> 
                     	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>

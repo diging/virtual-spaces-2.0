@@ -9,12 +9,12 @@ import edu.asu.diging.vspace.core.model.IVideoBlock;
 @Entity
 public class VideoBlock extends ContentBlock implements IVideoBlock {
     
+    @OneToOne(targetEntity = VSVideo.class)
+    private IVSVideo video;
+    
     public VideoBlock() {
     }
     
-    @OneToOne(targetEntity = VSVideo.class)
-    private IVSVideo video;
-
     public IVSVideo getVideo() {
         return video;
     }

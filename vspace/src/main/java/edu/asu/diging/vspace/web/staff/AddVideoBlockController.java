@@ -36,18 +36,20 @@ public class AddVideoBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video", method = RequestMethod.POST)
     public ResponseEntity<String> addVideoBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam(required = false) MultipartFile videoFile,
-            @RequestParam(required = false) String url, @RequestParam Integer contentOrder, Principal principal, RedirectAttributes attributes)
+            @RequestParam(required = false) String url, @RequestParam Integer contentOrder, @RequestParam String title, Principal principal, RedirectAttributes attributes)
             throws IOException {
-        
-        byte[] video = null; 
-        String fileName = null;
-        if (videoFile != null) {
-            video = videoFile.getBytes();
-            fileName = videoFile.getOriginalFilename();
-        }
         String videoId;
         try {
-            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,(videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder); 
+            if(videoFile == null && url.isEmpty()) {
+                throw new VideoCouldNotBeStoredException();
+            }
+            byte[] video = null; 
+            String fileName = null;
+            if (videoFile != null) {
+                video = videoFile.getBytes();
+                fileName = videoFile.getOriginalFilename();
+            }
+            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,(videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder, title); 
             videoId = videoBlockValue.getElement().getId();
         }
         catch (VideoCouldNotBeStoredException e) { 
@@ -55,7 +57,7 @@ public class AddVideoBlockController {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Video Content block cannot be stored."); 
-            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR); 
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST); 
         }
 
         return new ResponseEntity<>(videoId, HttpStatus.OK);

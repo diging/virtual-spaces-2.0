@@ -131,16 +131,18 @@ public class ContentBlockManager implements IContentBlockManager {
         return null;
     }
 
-    private IVSVideo saveVideoWithUrl(String url) {
+    private IVSVideo saveVideoWithUrl(String url, String title) {
         IVSVideo vidContent = videoFactory.createVideo(url);
+        vidContent.setTitle(title);
         return videoRepo.save((VSVideo) vidContent);
     }
     
-    private IVSVideo saveVideo(byte[] video, Long size, String filename) { 
+    private IVSVideo saveVideo(byte[] video, Long size, String filename, String title) { 
         if (video != null && video.length > 0) { 
             Tika tika = new Tika();
             String contentType = tika.detect(video);
             IVSVideo slideContentVideo = videoFactory.createVideo(filename, size, contentType);
+            slideContentVideo.setTitle(title);
             slideContentVideo = videoRepo.save((VSVideo) slideContentVideo);
             return slideContentVideo;
         }
@@ -205,26 +207,36 @@ public class ContentBlockManager implements IContentBlockManager {
      * createVideoBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder)
+    public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder, String title)
             throws VideoCouldNotBeStoredException {
         ISlide slide = slideManager.getSlide(slideId);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         IVideoBlock vidBlock = null;
-        if (url == null || url.equals("")) {
-            IVSVideo slideContentVideo = saveVideo(video, size, fileName);
-            storeVideoFile(video, slideContentVideo, fileName);
-            vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
-        } else {
-            IVSVideo vidContent = saveVideoWithUrl(url);
-            vidBlock = videoBlockFactory.createVideoBlock(slide, vidContent);
-        }
+        IVSVideo slideContentVideo = storeVideo(video, size, fileName, url, contentOrder, title);
+        vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
         vidBlock.setContentOrder(contentOrder);
         VideoBlock videoBlock = videoBlockRepo.save((VideoBlock) vidBlock);
-
         returnValue.setElement(videoBlock);
-
         return returnValue;
+    }
+    
+    private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, Integer contentOrder, String title) 
+    throws VideoCouldNotBeStoredException {
+        IVSVideo slideContentVideo = null;
+        if( !((url == null || url.equals("")) && video == null))
+        {
+            if (url == null || url.equals("")) {
+                slideContentVideo = saveVideo(video, size, fileName, title);
+                storeVideoFile(video, slideContentVideo, fileName);
+                slideContentVideo.setUrl(null);
+            } 
+            else {
+                slideContentVideo = saveVideoWithUrl(url, title);
+            }
+        }
+        
+        return slideContentVideo;
     }
 
     /**
@@ -252,10 +264,9 @@ public class ContentBlockManager implements IContentBlockManager {
      * Delete an image block using an id
      * 
      * @param id - id of resource to be deleted. If the id is null then the
-     *           functions returns nothing.
+     *           function deletes nothing.
      *
      */
-
     @Override
     public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
         if (id == null) {
@@ -272,7 +283,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * Delete an video block using an id
      * 
      * @param id - id of resource to be deleted. If the id is null then the
-     *           functions returns nothing.
+     *           method deletes nothing.
      *
      */
 
@@ -322,16 +333,10 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, Integer contentOrder)
+    public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, Integer contentOrder, String title)
             throws VideoCouldNotBeStoredException {
-        IVSVideo slideContentVideo = null;
-        if(video != null ) {
-            slideContentVideo = saveVideo(video, fileSize, filename);
-            storeVideoFile(video, slideContentVideo, filename);
-            slideContentVideo.setUrl(null);
-        } else {
-            slideContentVideo = saveVideoWithUrl(url);
-        }
+        IVSVideo slideContentVideo = storeVideo(video, fileSize, filename, url, contentOrder, title);
+
         videoBlock.setVideo(slideContentVideo);
         videoBlockRepo.save((VideoBlock) videoBlock);
     }

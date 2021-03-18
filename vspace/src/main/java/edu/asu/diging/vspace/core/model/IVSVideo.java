@@ -9,5 +9,9 @@ public interface IVSVideo extends IVSMedia {
     public String getUrl();
 
     public void setUrl(String url);
+    
+    public void setTitle(String title);
+    
+    public String getTitle();
 
 }

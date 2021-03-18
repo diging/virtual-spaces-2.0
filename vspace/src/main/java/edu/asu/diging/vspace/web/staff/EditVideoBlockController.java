@@ -35,7 +35,7 @@ public class EditVideoBlockController {
     public ResponseEntity<String> editVideoBlock(@PathVariable("id") String slideId,
             @PathVariable("videoBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam(value = "videoFile", required = false) MultipartFile file, @RequestParam(value = "url", required = false) String videoUrl, 
-            @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes) throws IOException {
+            @RequestParam("contentOrder") Integer contentOrder, @RequestParam("videoTitle") String videoTitle, Principal principal, RedirectAttributes attributes) throws IOException {
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
         byte[] video = null;
         String filename = null;
@@ -44,7 +44,7 @@ public class EditVideoBlockController {
             filename = file.getOriginalFilename();
         }
         try {
-            contentBlockManager.updateVideoBlock(videoBlock, video, (file != null) ? file.getSize() : null, videoUrl, filename, contentOrder);
+            contentBlockManager.updateVideoBlock(videoBlock, video, (file != null) ? file.getSize() : null, videoUrl, filename, contentOrder, videoTitle);
         } catch (VideoCouldNotBeStoredException e) {
             logger.error("Video block could not be stored, bad request.", e);
             ObjectMapper mapper = new ObjectMapper();

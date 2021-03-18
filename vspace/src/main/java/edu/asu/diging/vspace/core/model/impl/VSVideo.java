@@ -20,6 +20,8 @@ public class VSVideo extends VSMedia implements IVSVideo{
     private String url;
     
     private Long fileSize; 
+    
+    private String title;
 
     @Override
     public void setFileSize(Long fileSize) {
@@ -50,6 +52,16 @@ public class VSVideo extends VSMedia implements IVSVideo{
     @Override
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
     }
 
 }
