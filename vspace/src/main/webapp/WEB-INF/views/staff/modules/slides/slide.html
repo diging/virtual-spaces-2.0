@@ -34,7 +34,7 @@ function createImageBlock(reader, width) {
 }
 
 function createVideoBlock(reader, videoSrc, title) {
-	var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><a class="btn col-md-1" href="#"><i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i></a><div><h3><strong></strong></h3><br/><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><i style="color: red;" class="fas fa-trash-alt"></i></a></div>');
+	var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><div><h3><strong></strong></h3><br/><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
 	videoBlock.find('iframe').attr('src', videoSrc);
 	videoBlock.find('h3 strong').html(title);
 	return videoBlock;
@@ -202,7 +202,6 @@ function uploadImage() {
         var videoBlock = "";
         var ajaxUrl = '';
         var oldVideoBlock = '';
-
         var formData = new FormData();
         if (videoID) {
             oldVideoBlock = $("#" + videoID);
@@ -936,7 +935,7 @@ $(window).on('load', function () {
         	<button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
         		+&nbsp;<span class="icon-image"></span></button>&nbsp;
             <button type="button" id="addVideo" class="btn pill-btn" data-toggle="tooltip" title="Add Video" data-placement="top">
-                <i class="fa fa-plus"></i>&emsp;<i class="fa fa-video"></i></button>&nbsp;
+                +&nbsp;<span class="icon-video"></span></button>&nbsp;
         	<button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
         		+&nbsp;<span class="icon-checkmark"></span></button>
             <p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
@@ -1132,7 +1131,7 @@ $(window).on('load', function () {
                                         <label for="videoFile">Upload Video: </label><input id="videoFile" class="form-control-file" type="file" name="videoFile"/>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="urlTab"><br />
-                                        <label for="videoLink">Enter URL: </label><input class="form-control" type="text" name="videoLink" rows="5" cols="500"
+                                        <label for="videoLink">Enter URL: </label><input class="form-control" type="text" placeholder="Use Video Embed Link..." name="videoLink" rows="5" cols="500"
                                             id="videoLink" />
                                     </div>
                                 </div>
@@ -1204,9 +1203,6 @@ $(window).on('load', function () {
         <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
                 <div class="tab imgDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}" style="align-items: center">
-                	<a class="btn col-md-1" href="#"> 
-                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
-                    </a>
                     <img th:id="${contents.id}" class="imgDiv col-md-10" th:src="@{'/api/image/'+${contents.image.id}}" />
                     <input type="hidden" id="deleteImageId" th:value="${contents.id}" /> 
                     <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
@@ -1214,9 +1210,6 @@ $(window).on('load', function () {
                     </a>
                 </div>
                 <div class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
-					<a class="btn col-md-1" style="display: inline-block; height: 33px;" href="#"> 
-                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
-                    </a>
                     <div>
                     <h3><strong>[[${contents.video.title}]]</strong></h3>
                     <br/>
@@ -1230,13 +1223,10 @@ $(window).on('load', function () {
                         </div>
                     <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
                     <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
-                        <i style="color: red;" class="fas fa-trash-alt"></i>
+                        <span class="icon-trash error"></span>
                     </a>
                 </div>
                 <div th:id="${contents.id}" class="tab textDiv row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}" style="align-items: center">
-                	<a class="btn col-md-1" href="#"> 
-                    	<i style="color: var(--dark-grey)" class="fas fa-grip-vertical"></i>
-                    </a>
                     <p class="col-md-10"> [[${contents.text}]]</p>
                     <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                     

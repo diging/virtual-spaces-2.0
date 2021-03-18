@@ -35,7 +35,7 @@ public class EditVideoBlockController {
     public ResponseEntity<String> editVideoBlock(@PathVariable("id") String slideId,
             @PathVariable("videoBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam(value = "videoFile", required = false) MultipartFile file, @RequestParam(value = "url", required = false) String videoUrl, 
-            @RequestParam("contentOrder") Integer contentOrder, @RequestParam("videoTitle") String videoTitle, Principal principal, RedirectAttributes attributes) throws IOException {
+            @RequestParam("contentOrder") Integer contentOrder, @RequestParam(required = false) String videoTitle, Principal principal, RedirectAttributes attributes) throws IOException {
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
         byte[] video = null;
         String filename = null;

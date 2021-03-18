@@ -36,7 +36,7 @@ public class AddVideoBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video", method = RequestMethod.POST)
     public ResponseEntity<String> addVideoBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam(required = false) MultipartFile videoFile,
-            @RequestParam(required = false) String url, @RequestParam Integer contentOrder, @RequestParam String title, Principal principal, RedirectAttributes attributes)
+            @RequestParam(required = false) String url, @RequestParam Integer contentOrder, @RequestParam(required = false) String videoTitle, Principal principal, RedirectAttributes attributes)
             throws IOException {
         String videoId;
         try {
@@ -49,10 +49,10 @@ public class AddVideoBlockController {
                 video = videoFile.getBytes();
                 fileName = videoFile.getOriginalFilename();
             }
-            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,(videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder, title); 
+            CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,(videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder, videoTitle); 
             videoId = videoBlockValue.getElement().getId();
         }
-        catch (VideoCouldNotBeStoredException e) { 
+        catch (VideoCouldNotBeStoredException e) {
             logger.warn("Video block could not be stored, bad request.", e);
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
