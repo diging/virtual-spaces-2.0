@@ -222,7 +222,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
     
     private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, Integer contentOrder, String title) 
-    throws VideoCouldNotBeStoredException {
+        throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = null;
         if( !((url == null || url.equals("")) && video == null))
         {
