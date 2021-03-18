@@ -20,30 +20,30 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 
 @RestController
 public class ImageApiController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private ImageRepository imageRepo;
-	
-	@Autowired
-	private IStorageEngine storage;
-	
-	@RequestMapping("/api/image/{id}")
-	public ResponseEntity<byte[]> getImage(@PathVariable String id) {
-		IVSImage image = imageRepo.findById(id).get();
-		byte[] imageContent = null;
-		try {
-		    imageContent = storage.getMediaContent(image.getId(), image.getFilename());
-		} catch (IOException e) {
-			logger.error("Could not retrieve image.", e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-		HttpHeaders headers = new HttpHeaders();
-	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-	    headers.setContentType(MediaType.parseMediaType(image.getFileType()));
-	     
-	    return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-	}
+    @Autowired
+    private ImageRepository imageRepo;
+
+    @Autowired
+    private IStorageEngine storage;
+
+    @RequestMapping("/api/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+        IVSImage image = imageRepo.findById(id).get();
+        byte[] imageContent = null;
+        try {
+            imageContent = storage.getMediaContent(image.getId(), image.getFilename());
+        } catch (IOException e) {
+            logger.error("Could not retrieve image.", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.setContentType(MediaType.parseMediaType(image.getFileType()));
+
+        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+    }
 }
