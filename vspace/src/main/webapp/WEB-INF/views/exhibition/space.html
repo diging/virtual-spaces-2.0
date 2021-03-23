@@ -67,69 +67,6 @@
     }
 }
 
-/* Ashmi Toggle switch changes starts  */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    left: 150px;
-    top: -45px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-input:checked+.slider {
-    background-color: #2196F3;
-}
-
-input:focus+.slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked+.slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}
-/* Ashmi Toggle switch changes end  */
 </style>
 </head>
 
@@ -137,6 +74,23 @@ input:checked+.slider:before {
     <div layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
+		$(document).ready(function() {
+			$('#toggleBtn').click(function() {
+				let checkBox = document.getElementById('toggleBtn');
+				let maxImgWidth = '1200px'; // max width to set
+				
+				// resize the image to max width
+				if(checkBox.checked) {
+					let spaceWidth = $("#bgImage").css("width");
+				    $("#bgImage").css("width", maxImgWidth);
+				}
+				// set the width to default
+				else{
+                    $("#bgImage").css("width", "[(${display.width})]px");
+                    $('#bgImage').width('100%')
+                }
+			});
+		});
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
             if (window.matchMedia(maxWidth).matches){
@@ -291,15 +245,11 @@ input:checked+.slider:before {
 		}
 	</script>
 
-        <div id="resizeImage" style="margin-left: 15px">
-            <p>Resize Image Width:</p>
-            <label class="switch"> 
-                <input type="checkbox" id="toggleBtn">
-                <span class="slider round"></span>
-            </label>
-        </div>
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
+            <span class="imgResizeCheckbox" style="margin-left: 15px"> <input
+                type="checkbox" id="toggleBtn" /> Resize Image Width
+            </span>
             <div class="modalDown alert alert-warning center col-md-12"
                 style="text-align: center;"
                 th:style="${exhibitionConfig.mode == 'ACTIVE'? 'display:block' : 'display:none'}">
@@ -388,7 +338,7 @@ input:checked+.slider:before {
                         <div id="space">
 
                             <img
-                                th:style="|max-width: ${space.image.width}px; border-radius: 13px; width: 100%;|"
+                                th:style="|max-width: ${space.image.width}px; border-radius: 13px; width: 100%; |"
                                 id="bgImage" th:src="@{'/api/image/'+${space.image.id}}"/>
                         </div>
                     </div>
