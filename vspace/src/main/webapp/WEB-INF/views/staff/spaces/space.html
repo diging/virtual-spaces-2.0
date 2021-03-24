@@ -27,6 +27,8 @@ var selectedSpaceLinkId;
 var selectedExternalLinkId;
 const displaceUnpublishedOnX = 25
 const displaceUnpublishedOnY = 13
+const displaceUnpublishedOnXModal = 75
+const displaceUnpublishedOnYModal = 35
 const displaceLableOnX = 10
 const displaceLableOnY = 35
 
@@ -59,6 +61,14 @@ function drawLinks(){
         cache       : false,
         contentType : false,
         processData : false,
+        beforeSend: function () {
+            $("#loader").css('left', [(${display.width})]/2);
+            $("#loader").css('top', [(${display.height})]/2);
+            $("#loader").show();
+            },
+       	complete: function () {
+            $("#loader").hide();
+            },
         success: function(data) {
             var spaceLinks = data['spaceLinks'];
             var externalLinks = data['externalLinks'];
@@ -150,7 +160,7 @@ function drawLinks(){
                     else{
                         spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
                     }
-                    setLinkPosition(spaceLink,link,true,false,false);
+                    setLinkPosition(spaceLink,link,true,isModal,false);
                     $(divId).append(spaceLink);
                     
                     $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
@@ -244,11 +254,8 @@ function showSpaceLink(spaceLink, show, x, y) {
         link = $('<div id="link" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
     } else {
         $(space_label).css({
-            'position': 'relative',
-            'font-size': "10px",
+            'font-size': "12px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - displaceLableOnX,
-            'top': y + posY + displaceLableOnY,
             'color': 'grey'
         });
         link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span></div></span>');
@@ -359,6 +366,7 @@ function showModuleLinkEdit(moduleLink, show, posX, posY) {
 }
 
 function showSpaceLinkEdit(spaceLink, show, posX, posY) {
+    console.log("In Show Unpublished");
     spaceLink["x"]=storeX;
     spaceLink["y"]=storeY;
     var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
@@ -380,8 +388,8 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
     }
     $(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
     $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
-    $(selectedUnpublishedIconClass).css({ 'left': posX + displaceUnpublishedOnX});
-    $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnY});
+    $(selectedUnpublishedIconClass).css({ 'left': posX - displaceUnpublishedOnXModal});
+    $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnYModal});
     updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
 }
 
@@ -407,10 +415,8 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     $(selectedLinkClass).css({ 'position': 'absolute'});
     $(selectedLinkClass).css({ 'left': x + posX});
     $(selectedLinkClass).css({ 'top': y + posY});
-    $(selectedLabelClass).text(linkLabel);
-    $(selectedLabelClass).css({ 'position': 'absolute'});
-    $(selectedLabelClass).css({ 'left': x + posX - displaceLableOnX});
-    $(selectedLabelClass).css({ 'top': y + posY + displaceLableOnY});
+    $(selectedLabelClass+' span').remove();
+    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
     feather.replace();    
 }
 
@@ -419,7 +425,7 @@ function hideLinkInfoTabs(){
     $("#editSpaceLinkInfo").hide();
     $("#editModuleLinkInfo").hide();
     $("#errorMsg").text("");
-    $('#errorAlert').hide();    
+    $('#errorAlert').hide();
 }
 
 function showExternalLinks(externalLink, show, x, y) {
@@ -1891,6 +1897,9 @@ $(function(){
                     </div>
                 </div>
             </div>
+        </div>
+        <div id = "loader" style="position: relative; font-size: 30px;">
+            <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
         </div>
         <div id="main-space" th:if="${space.image != null}">
             <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
