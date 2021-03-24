@@ -78,15 +78,15 @@
 				let checkBox = document.getElementById('toggleBtn');
 				// max image width
 				let maxImgWidth = '1200px';
+				let spaceWidth = $("#bgImage").css("width");
 				
                 // resize the image to max width
 				if(checkBox.checked) {
-					let spaceWidth = $("#bgImage").css("width");
 				    $("#bgImage").css("width", maxImgWidth);
 				}
 				// set the image width to default
 				else{
-                    $("#bgImage").css("width", "[(${display.width})]px");
+                    $("#bgImage").css("width", spaceWidth);
                     $('#bgImage').width('100%')
                 }
 			});
