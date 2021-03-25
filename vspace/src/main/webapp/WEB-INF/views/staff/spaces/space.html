@@ -788,7 +788,13 @@ $(function(){
                 contentType : false,
                 processData : false,
                 enctype: 'multipart/form-data',
-                data: formData, 
+                data: formData,
+                beforeSend: function () {
+                    $("#saveLoader").show();
+                    },
+               	complete: function () {
+                    $("#saveLoader").hide();
+                    },
                 success: function(data) {
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
@@ -1381,6 +1387,13 @@ $(function(){
 		<div id="createSpaceLinkAlert" class="custom_form_style">
 			<form id="createSpaceLinkForm">
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div id = "saveLoader" style="font-size: 30px;">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
 	                <div class="row">
 	                    <div class="col">
 	                        <h5 class="alert-heading">Create new Space Link</h5>
