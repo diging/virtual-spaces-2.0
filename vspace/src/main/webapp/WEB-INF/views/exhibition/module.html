@@ -1,105 +1,97 @@
 <html layout:decorate="~{layouts/main}">
-
    <head>
       <style type="text/css">
          body {
          font-family: 'Montserrat', sans-serif;
          }
       </style>
+      <script th:inline="javascript">
+         $( document ).ready(function() {
+            $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
+            $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
+         });
+             function openLangNav() {
+                 $("#myLangSidenav").css("width","240px");
+             }
+             function closeLangNav() {
+                 $("#myLangSidenav").css("width","0");
+             }
+             function openNav(){
+                 $("#mySidenav").css("width", "170px");
+                 $("#mySidenav").css("height", "700px");
+             }
+             function closeNav(){
+                 $("#mySidenav").css("width", "0px");
+             }
+        </script>
    </head>
-   
    <body>
-      <div layout:fragment="content">
-      
-         <script>
-            $( document ).ready(function() {
-            	$("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
-            });
-                function openLangNav() {
-                    $("#myLangSidenav").css("width","240px");
-                }
-                function closeLangNav() {
-                    $("#myLangSidenav").css("width","0");
-                }
-                function openNav(){
-                    $("#mySidenav").css("width", "170px");
-                    $("#mySidenav").css("height", "700px");
-                }
-                function closeNav(){
-                    $("#mySidenav").css("width", "0px");
-                }
-         </script>
-         
-         <div id="Module_1" class="Module_1_Class">
-            <div class="textDiv" th:if="${showAlert != true}">
-               <h3>[[${module.name}]]</h3>
-            </div>
-            <div class="slideNumberClass">
-               <p>Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
-            </div>
-            
-            <div class="Group_7_Class">
-               <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
-                  <div class="Slideshow_previous Slideshow_previous_Class">
-                     <button class="btn circle-btn">
-	                     <span class="icon-chevron-left"></span>
-	                     <span class="tooltiptext">Previous slide</span>
-                     </button>
-                  </div>
-               </a>
-               <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-                  <div class="slideshow_next slideshow_next_Class">
-                     <button class="btn circle-btn">
-	                     <span class="icon-chevron-right"></span>
-	                     <span class="tooltiptext">Next slide</span>
-                     </button>              
-                  </div>
-               </a>
-            </div>
-            
-            <a th:href="@{'/exhibit/space/'+${spaceId}}">
-               <div class="exit_to_space_Class">
-                  <button class="btn circle-btn">
-	                  <span class="icon-double-chevron-left"></span>
-	                  <span class="tooltiptext">Go To Space</span>
+    <div layout:fragment="content">
+      <div id="Module_1" class="Module_1_Class">
+        <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: fixed; z-index: 100; top: 5.5%; width: 100%; display: flex;">
+            <h3 class="textDiv">[[${module.name}]]</h3>
+            <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
+        </div>
+         <div class="Group_7_Class" >
+            <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
+               <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
+                  <button class="btn circle-btn-slide-nav">
+                         <span class="icon-chevron-left slide-nav"></span>
+                         <span class="tooltiptext">Previous slide</span>
                   </button>
                </div>
-            </a>
-            
-            <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
-               <div class="exit_to_branchingPoint_Class">
-                  <button class="btn circle-btn">
-	                  <span class="icon-rewind-end"></span>
-	                  <span class="tooltiptext">Go To Start Sequence of Module</span>
-                  </button>
+           </a>
+            <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
+               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+                    <button class="btn circle-btn-slide-nav">
+                         <span class="icon-chevron-right slide-nav"></span>
+                         <span class="tooltiptext">Next slide</span>
+                    </button>  
                </div>
             </a>
-            
-            <a th:if="${showBackToPreviousChoice eq true}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
-               <div class="exit_to_previousChoice_Class">
+         </div>
+         <a th:href="@{'/exhibit/space/'+${spaceId}}">
+            <div class="exit_to_space_Class" style="position: fixed;  z-index:120;">
                   <button class="btn circle-btn">
-	                  <span class="icon-caret-left"></span>
-	                  <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
+                      <span class="icon-double-chevron-left"></span>
+                      <span class="tooltiptext">Go To Space</span>
                   </button>
-               </div>
-            </a>
-            
+            </div>
+         </a>
+         <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
+            <div class="exit_to_branchingPoint_Class" style="position: fixed;  z-index:110;">
+                  <button class="btn circle-btn">
+                      <span class="icon-rewind-end"></span>
+                      <span class="tooltiptext">Go To Start Sequence of Module</span>
+                  </button>
+            </div>
+         </a>
+         <a th:if="${showBackToPreviousChoice eq true}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
+            <div class="exit_to_previousChoice_Class" style="position: fixed; z-index:110;">
+                  <button class="btn circle-btn">
+                      <span class="icon-caret-left"></span>
+                      <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
+                  </button>
+            </div>
+         </a>
+         <div style="position: relative; top: 90px; padding-bottom:10px;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-               <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
-               <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-               <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
-                  <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                     <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-                        class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-                  </div>
-                  <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
-                     <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-                        class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-                  </div>
-               </div>
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
+                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+                    <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
+                        <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+                    </div>
+                    <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
+                        <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+                    </div>
+                </div>
             </div>
-         </div>
+        </div>
       </div>
-   </body>
+      </div>
+    </body>
 </html>
