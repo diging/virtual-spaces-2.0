@@ -61,10 +61,6 @@ function drawLinks(){
         contentType : false,
         processData : false,
         beforeSend: function () {
-            var posX = $("#main-bgImage").position().left;
-            var posY = $("#main-bgImage").position().top;
-            $("#loader").css('left', posX+[(${display.width})]/2);
-            $("#loader").css('top', posY+[(${display.height})]/2);
             $("#loader").show();
             },
        	complete: function () {
