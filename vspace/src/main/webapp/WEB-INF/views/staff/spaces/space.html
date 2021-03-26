@@ -49,14 +49,11 @@ moduleLinkIconReader.onload = function(e) {
 }
 
 function drawLinks(){
-    $("#main-space .Info_cz_Class").remove();
-    $("#main-space .unpublishedSpaceClass").remove();
-    $("#main-space .imageLink").remove();
-    //$("#main-space .ellipse_class").remove();
-    $("#space .Info_cz_Class").remove();
-    //$("#space .ellipse_class").remove();
-    $("#space .unpublishedSpaceClass").remove();
-    $("#space .imageLink").remove();
+    $(".Info_cz_Class").remove();
+    $(".imageLink").remove();
+    $(".ellipse_class").remove();
+    $(".unpublishedSpaceClass").remove();
+    
     $.ajax({
         type: "GET",
         url: "[(@{'/staff/space/'+${space.id}+'/links'})]",
@@ -64,8 +61,10 @@ function drawLinks(){
         contentType : false,
         processData : false,
         beforeSend: function () {
-            $("#loader").css('left', [(${display.width})]/2);
-            $("#loader").css('top', [(${display.height})]/2);
+            var posX = $("#main-bgImage").position().left;
+            var posY = $("#main-bgImage").position().top;
+            $("#loader").css('left', posX+[(${display.width})]/2);
+            $("#loader").css('top', posY+[(${display.height})]/2);
             $("#loader").show();
             },
        	complete: function () {
@@ -792,10 +791,10 @@ $(function(){
                 enctype: 'multipart/form-data',
                 data: formData,
                 beforeSend: function () {
-                    $("#saveLoader").show();
+                    $(".saveLoader").show();
                     },
                	complete: function () {
-                    $("#saveLoader").hide();
+                    $(".saveLoader").hide();
                     },
                 success: function(data) {
                     var linkData = JSON.parse(data);
@@ -864,7 +863,13 @@ $(function(){
                 contentType : false,
                 processData : false,
                 enctype: 'multipart/form-data',
-                data: formData, 
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success: function(data) {
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
@@ -905,6 +910,12 @@ $(function(){
                 processData: false,
                 enctype: 'multipart/form-data',
                 data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success: function(data){
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
@@ -947,6 +958,12 @@ $(function(){
                 processData : false,
                 enctype: 'multipart/form-data',
                 data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success: function(data) {
                     var linkData = JSON.parse(data);
                     $("#main-bgImage").off("click");
@@ -989,6 +1006,12 @@ $(function(){
                 processData : false,
                 enctype: 'multipart/form-data',
                 data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success: function(data) {
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
@@ -1046,7 +1069,13 @@ $(function(){
                 contentType : false,
                 processData : false,
                 enctype: 'multipart/form-data',
-                data: formData, 
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success: function(data) {
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
@@ -1073,6 +1102,12 @@ $(function(){
             $.ajax({
                 url: "[(@{'/staff/space/'+${space.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     $('[data-link-id="unpublished-' + linkId + '"]').remove();
@@ -1097,6 +1132,12 @@ $(function(){
             $.ajax({
                 url: "[(@{'/staff/space/'+${space.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     hideLinkInfoTabs();
@@ -1111,6 +1152,12 @@ $(function(){
             $.ajax({
                 url: "[(@{'/staff/space/'+${space.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     hideLinkInfoTabs();
@@ -1385,16 +1432,15 @@ $(function(){
             &nbsp;
         </div>
         <div id="space" th:if="${space.image != null}" class="link-modal flex-spacing">
+        <!-- <div id="saveLoader" style="position: absolute; font-size: 30px;">
+            <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        </div> -->
         <img id="bgImage"  th:src="@{'/api/image/'+${space.image.id}}" />
 		<div id="createSpaceLinkAlert" class="custom_form_style">
 			<form id="createSpaceLinkForm">
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div id = "saveLoader" style="font-size: 30px;">
-                                xyz<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                            </div>
-                        </div>
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
 	                <div class="row">
 	                    <div class="col">
@@ -1473,6 +1519,9 @@ $(function(){
 	        <div class="divider"></div>
 	        <form id="createModuleLinkForm">
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
 	                <div class="row">
 	                    <div class="col">
 	                        <h5 class="alert-heading">Create new Module Link</h5>
@@ -1531,6 +1580,9 @@ $(function(){
 	        <div class="divider"></div>
 	        <form id="createExternalLinkForm">
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
 	            	<div class="row">	
 	            		<div class="col">
 	            			<h5 class="alert-heading">Create new External Link</h5>
@@ -1599,6 +1651,9 @@ $(function(){
                     <a href="#" id="closeEditSpaceLinkInfo" class="icon-circle-close"></a>
                 </p>
 	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
 					<div class="row">
 						<div class="col">
 							<h6 class="alert-heading"><span style="color: var(--dark-grey)"> Space Link:</span> <span id="spaceLinkInfoLabelEdit"></span></h6>
@@ -1690,6 +1745,9 @@ $(function(){
                     <a href="#" id="closeEditModuleLinkInfo" class="icon-circle-close"></a>
                 </p>
                 <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <h6 class="alert-heading">
@@ -1764,6 +1822,9 @@ $(function(){
                     <a href="#" id="closeEditExternalLinkInfo" class="icon-circle-close"></a>
                 </p>
                 <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <h6 class="alert-heading">
@@ -1912,9 +1973,8 @@ $(function(){
                 </div>
             </div>
         </div>
-        
         <div id="main-space" th:if="${space.image != null}">
-            <div id="loader" style="position: relative; font-size: 30px;">
+            <div id="loader" style="position: absolute; font-size: 30px;">
                 <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
             </div>
             <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
