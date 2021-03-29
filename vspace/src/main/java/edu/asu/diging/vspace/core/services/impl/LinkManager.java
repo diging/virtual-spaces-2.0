@@ -17,10 +17,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
-import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
-import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
@@ -28,9 +26,6 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
 
     @Autowired
     private ISpaceManager spaceManager;
-
-    @Autowired
-    private ISpaceDisplayManager spaceDisplayManager;
 
     @Autowired
     private IImageFactory imageFactory;
@@ -106,10 +101,6 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
     }
 
     protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
-        ISpace space = spaceManager.getSpace(id);
-        ISpaceDisplay displayAttributes = spaceDisplayManager.getBySpace(space);
-        positionX = (displayAttributes.getWidth() * new Float(positionX))/space.getImage().getWidth();
-        positionY = (displayAttributes.getHeight() * new Float(positionY))/space.getImage().getHeight();
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);

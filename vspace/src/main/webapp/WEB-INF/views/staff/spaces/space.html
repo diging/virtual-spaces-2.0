@@ -74,8 +74,8 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
-            var imageHeight = $("#bgImage")[0].height;
-            var imageWidth = $("#bgImage")[0].width;
+            var imageHeight = [[${display.height}]];
+            var imageWidth = [(${display.width})];
             var displayWidth = [(${display.width})];
             var displayHeight = [[${display.height}]];
             function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink){
@@ -574,7 +574,7 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
         var posY = $(this).position().top;
         storeX = e.pageX  - $(this).offset().left;
         storeY = e.pageY  - $(this).offset().top;
-        showSpaceLinkEdit(editSpaceLinkInfo(),false, storeX + $("#space").scrollLeft(),storeY + $("#space").scrollTop());
+        showSpaceLinkEdit(editSpaceLinkInfo(),false, storeX,storeY);
     });
     hideLinkInfoTabs();
     displayForms("#editSpaceLinkInfo");
@@ -610,7 +610,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
         var posY = $(this).position().top;    
         storeX = e.pageX - $(this).offset().left;
         storeY = e.pageY - $(this).offset().top;
-        showModuleLinkEdit(editModuleLinkInfo(), false, storeX + $("#space").scrollLeft(),storeY + $("#space").scrollTop());
+        showModuleLinkEdit(editModuleLinkInfo(), false, storeX,storeY);
     });
     hideLinkInfoTabs();
     displayForms("#editModuleLinkInfo");
@@ -641,7 +641,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
         var posY = $(this).position().top;    
         storeX = e.pageX - $(this).offset().left;
         storeY = e.pageY - $(this).offset().top;
-        showExternalLinkEdit(editExternalLinkInfo(), false, storeX + $("#space").scrollLeft(),storeY + $("#space").scrollTop());
+        showExternalLinkEdit(editExternalLinkInfo(), false, storeX,storeY);
     });
     hideLinkInfoTabs();
     displayForms("#editExternalLinkInfo");
@@ -1427,14 +1427,12 @@ $(function(){
             	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
             &nbsp;
         </div>
-        <div id="space" th:if="${space.image != null}" class="link-modal flex-spacing">
-        <!-- <div id="saveLoader" style="position: absolute; font-size: 30px;">
-            <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-        </div> -->
-        <img id="bgImage"  th:src="@{'/api/image/'+${space.image.id}}" />
+        <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
+        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image.id}}" />
 		<div id="createSpaceLinkAlert" class="custom_form_style">
+            <div class="divider"></div>
 			<form id="createSpaceLinkForm">
-	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
@@ -1514,7 +1512,7 @@ $(function(){
 		<div id="createModuleLinkAlert" class="custom_form_style">
 	        <div class="divider"></div>
 	        <form id="createModuleLinkForm">
-	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
@@ -1575,7 +1573,7 @@ $(function(){
 		<div id="createExternalLinkAlert" class="custom_form_style">
 	        <div class="divider"></div>
 	        <form id="createExternalLinkForm">
-	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
@@ -1646,7 +1644,7 @@ $(function(){
                 <p class="float-right">
                     <a href="#" id="closeEditSpaceLinkInfo" class="icon-circle-close"></a>
                 </p>
-	            <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
@@ -1740,7 +1738,7 @@ $(function(){
                 <p class="float-right">
                     <a href="#" id="closeEditModuleLinkInfo" class="icon-circle-close"></a>
                 </p>
-                <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
@@ -1817,7 +1815,7 @@ $(function(){
                 <p class="float-right">
                     <a href="#" id="closeEditExternalLinkInfo" class="icon-circle-close"></a>
                 </p>
-                <div role="alert" style="margin-top: 30px; margin-right: 60px; margin-left: 30px;">
+                <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
