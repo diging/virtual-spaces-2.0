@@ -75,28 +75,28 @@
 		//# sourceURL=click.js
 		
 		let flag = 1;
-		function toggleImgSize(){
-			
-			let maxImgWidth = '1200px';
-			let spaceWidth = $("#bgImage").css("width");
-			
-            // resize the image to max width
-			if(flag == 1) {
-				flag = -flag;
-				document.getElementById('toggleBtn').className = "icon-collapse";
-			    $("#bgImage").css("width", maxImgWidth);
-			    $("#space a").remove();
-			    drawLinks();
-			}
-			else{
-				flag = -flag
-				document.getElementById('toggleBtn').className = "icon-expand";
-                $("#bgImage").css("width", spaceWidth);
-                $('#bgImage').width('100%')
-                $("#space a").remove();
-                drawLinks();
-            }
+	function toggleImgSize(){
+		
+		let maxImgWidth = '1200px';
+		let spaceWidth = $("#bgImage").css("width");
+		
+        // resize the image to max width
+		if(flag == 1) {
+			flag = -flag;
+			document.getElementById('toggleBtn').className = "icon-collapse";
+		    $("#bgImage").css("width", maxImgWidth);
+		    $("#space a").remove();
+		    drawLinks();
 		}
+		else{
+			flag = -flag
+			document.getElementById('toggleBtn').className = "icon-expand";
+            $("#bgImage").css("width", spaceWidth);
+            $('#bgImage').width('100%')
+            $("#space a").remove();
+            drawLinks();
+        }
+	}
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
             if (window.matchMedia(maxWidth).matches){
