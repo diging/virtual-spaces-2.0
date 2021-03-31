@@ -77,8 +77,6 @@
 		let flag = 1;
 		function toggleImgSize(){
 			
-			console.log("className 1st button click: "+document.getElementById('toggleBtn').className);
-			// max image width
 			let maxImgWidth = '1200px';
 			let spaceWidth = $("#bgImage").css("width");
 			
@@ -90,17 +88,13 @@
 			    $("#space a").remove();
 			    drawLinks();
 			}
-			// set the image width to default
 			else{
-				console.log("Inside else")
-				console.log("Flag value: "+flag)
 				flag = -flag
 				document.getElementById('toggleBtn').className = "icon-expand";
                 $("#bgImage").css("width", spaceWidth);
                 $('#bgImage').width('100%')
                 $("#space a").remove();
                 drawLinks();
-                
             }
 		}
 		let maxWidth='(max-width: 1200px)';
@@ -259,8 +253,10 @@
 
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
-            <span id="imgResizeCheckbox" style="margin-left: 15px"> <button
-                type="button" class="icon-expand" id="toggleBtn" onclick="toggleImgSize()">Resize Image</button>
+            <span id="imgResizeCheckbox" style="margin-left: 1050px">
+                Resize Image
+                <button type="button" class="icon-expand" id="toggleBtn"
+                    onclick="toggleImgSize()"></button>
             </span>
             <div class="modalDown alert alert-warning center col-md-12"
                 style="text-align: center;"
