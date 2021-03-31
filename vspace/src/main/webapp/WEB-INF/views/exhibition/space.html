@@ -141,7 +141,7 @@
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class" role="alert"><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        }
-    		        else if(link.type=="IMAGE"){
+    		        else if(link.type=="IMAGE" && link.image != null){
                         var spaceImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
@@ -209,7 +209,7 @@
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class" role="alert"><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
     		        }
-    		        else if(link.type=="IMAGE"){
+    		        else if(link.type=="IMAGE" && link.image != null){
                         var extImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
     		        }
