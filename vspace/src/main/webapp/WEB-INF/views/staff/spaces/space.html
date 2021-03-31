@@ -74,17 +74,11 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
-            var imageHeight = [[${display.height}]];
-            var imageWidth = [(${display.width})];
-            var displayWidth = [(${display.width})];
-            var displayHeight = [[${display.height}]];
             function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink){
                 modalLink.css('position', 'absolute');
                 if(isModal){
-                    var linkPosX=(imageWidth*link.positionX)/displayWidth;
-                    var linkPosY=(imageHeight*link.positionY)/displayHeight;
-                    modalLink.css('left',linkPosX + posXModal);
-                    modalLink.css('top', linkPosY + posYModal);
+                    modalLink.css('left',link.positionX + posXModal);
+                    modalLink.css('top', link.positionY + posYModal);
                 }else{
                     modalLink.css('left', link.positionX + posX);
                     modalLink.css('top', link.positionY + posY);
@@ -97,8 +91,8 @@ function drawLinks(){
                     var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
                     unpublishedSpaceElement.css('position', 'absolute');
                     if(isModal){
-                        unpublishedSpaceElement.css('left', linkPosX + posXModal + displaceUnpublishedOnX);
-                        unpublishedSpaceElement.css('top', linkPosY + posYModal - displaceUnpublishedOnY);
+                        unpublishedSpaceElement.css('left', link.positionX + posXModal + displaceUnpublishedOnX);
+                        unpublishedSpaceElement.css('top', link.positionY + posYModal - displaceUnpublishedOnY);
                     }else{
                         unpublishedSpaceElement.css('left', link.positionX + posX + displaceUnpublishedOnX);
                         unpublishedSpaceElement.css('top', link.positionY + posY - displaceUnpublishedOnY);
@@ -580,6 +574,7 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     displayForms("#editSpaceLinkInfo");
 }
 function displayForms(formToShow){
+    drawLinks();
     $("#space").css("display", "-webkit-box");
     $(formToShow).css("display", "flex");
 }
@@ -1822,7 +1817,7 @@ $(function(){
                     <div class="row">
                         <div class="col">
                             <h6 class="alert-heading">
-                                <span style="color: var(--dark-grey)">External
+                                <span style="color: var(--dark-grey)">Modify External
                                     Link: </span><span
                                     id="externalLinkInfoLabelEdit"></span>
                             </h6>
@@ -1833,22 +1828,6 @@ $(function(){
                     </div>
                     <input type="hidden" name="externalLinkIdValueEdit"
                         id="externalLinkIdValueEdit" />
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="alert-heading">
-                                <small>Modify External Link</small>
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <small>Please click on the image
-                                where you want to place the existing
-                                external link. Then click "Edit External
-                                Link".</small>
-                            <hr>
-                        </div>
-                    </div>
                     <input type="hidden" name="x" id="externalLinkXEdit" />
                     <input type="hidden" name="y" id="externalLinkYEdit" />
                     <input type="hidden" name="externalLinkDisplayId"
