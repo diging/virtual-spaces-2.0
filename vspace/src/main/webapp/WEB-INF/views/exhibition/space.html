@@ -73,28 +73,36 @@
     <div layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
-		$(document).ready(function() {
-			$('#toggleBtn').click(function() {
-				let checkBox = document.getElementById('toggleBtn');
-				// max image width
-				let maxImgWidth = '1200px';
-				let spaceWidth = $("#bgImage").css("width");
-				
-                // resize the image to max width
-				if(checkBox.checked) {
-				    $("#bgImage").css("width", maxImgWidth);
-				    $("#space a").remove();
-				    drawLinks();
-				}
-				// set the image width to default
-				else{
-                    $("#bgImage").css("width", spaceWidth);
-                    $('#bgImage').width('100%')
-                    $("#space a").remove();
-                    drawLinks();
-                }
-			});
-		});
+		
+		let flag = 1;
+		function toggleImgSize(){
+			
+			console.log("className 1st button click: "+document.getElementById('toggleBtn').className);
+			// max image width
+			let maxImgWidth = '1200px';
+			let spaceWidth = $("#bgImage").css("width");
+			
+            // resize the image to max width
+			if(flag == 1) {
+				flag = -flag;
+				document.getElementById('toggleBtn').className = "icon-collapse";
+			    $("#bgImage").css("width", maxImgWidth);
+			    $("#space a").remove();
+			    drawLinks();
+			}
+			// set the image width to default
+			else{
+				console.log("Inside else")
+				console.log("Flag value: "+flag)
+				flag = -flag
+				document.getElementById('toggleBtn').className = "icon-expand";
+                $("#bgImage").css("width", spaceWidth);
+                $('#bgImage').width('100%')
+                $("#space a").remove();
+                drawLinks();
+                
+            }
+		}
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
             if (window.matchMedia(maxWidth).matches){
@@ -251,8 +259,8 @@
 
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
-            <span class="imgResizeCheckbox" style="margin-left: 15px"> <input
-                type="checkbox" id="toggleBtn" /> Resize Image Width
+            <span id="imgResizeCheckbox" style="margin-left: 15px"> <button
+                type="button" class="icon-expand" id="toggleBtn" onclick="toggleImgSize()">Resize Image</button>
             </span>
             <div class="modalDown alert alert-warning center col-md-12"
                 style="text-align: center;"
