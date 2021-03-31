@@ -83,11 +83,15 @@
                 // resize the image to max width
 				if(checkBox.checked) {
 				    $("#bgImage").css("width", maxImgWidth);
+				    $("#space a").remove();
+				    drawLinks();
 				}
 				// set the image width to default
 				else{
                     $("#bgImage").css("width", spaceWidth);
                     $('#bgImage').width('100%')
+                    $("#space a").remove();
+                    drawLinks();
                 }
 			});
 		});
