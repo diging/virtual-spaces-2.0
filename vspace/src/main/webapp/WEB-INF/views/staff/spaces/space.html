@@ -563,10 +563,6 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
 
     $("#bgImage").on("click", function(e){
-        console.log("In Space");
-        console.log(selectedModuleLinkId);
-        console.log(selectedExternalLinkId);
-        console.log(selectedSpaceLinkId);
         e.preventDefault();
         var posX = $(this).position().left;
         var posY = $(this).position().top;
@@ -605,10 +601,6 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
 
     $("#bgImage").on("click", function(e){
         e.preventDefault();
-        console.log("In Module")
-        console.log(selectedModuleLinkId);
-        console.log(selectedExternalLinkId);
-        console.log(selectedSpaceLinkId);
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
         storeX = e.pageX - $(this).offset().left;
@@ -639,10 +631,6 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
 
     $("#bgImage").on("click", function(e){
-        console.log("In External")
-        console.log(selectedModuleLinkId);
-        console.log(selectedExternalLinkId);
-        console.log(selectedSpaceLinkId);
         e.preventDefault();
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
