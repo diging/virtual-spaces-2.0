@@ -563,6 +563,10 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
 
     $("#bgImage").on("click", function(e){
+        console.log("In Space");
+        console.log(selectedModuleLinkId);
+        console.log(selectedExternalLinkId);
+        console.log(selectedSpaceLinkId);
         e.preventDefault();
         var posX = $(this).position().left;
         var posY = $(this).position().top;
@@ -601,6 +605,10 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
 
     $("#bgImage").on("click", function(e){
         e.preventDefault();
+        console.log("In Module")
+        console.log(selectedModuleLinkId);
+        console.log(selectedExternalLinkId);
+        console.log(selectedSpaceLinkId);
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
         storeX = e.pageX - $(this).offset().left;
@@ -631,6 +639,10 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
 
     $("#bgImage").on("click", function(e){
+        console.log("In External")
+        console.log(selectedModuleLinkId);
+        console.log(selectedExternalLinkId);
+        console.log(selectedSpaceLinkId);
         e.preventDefault();
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
@@ -921,6 +933,7 @@ $(function(){
                     showModuleLinkEdit(moduleLinkInfo, true);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    selectedModuleLinkId=undefined;
                     drawLinks();
                 }
             });
@@ -970,6 +983,7 @@ $(function(){
                     $('#linkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    selectedSpaceLinkId=undefined;
                     drawLinks();
                 }
             });
@@ -1016,6 +1030,7 @@ $(function(){
                     showExternalLinkEdit(editExternalLinkInfo, true);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    selectedExternalLinkId=undefined;
                     drawLinks();
                 }
             });
@@ -1273,6 +1288,7 @@ $(function(){
 
         $("#closeEditModuleLinkInfo").click(function(e) {
             e.preventDefault();
+            selectedModuleLinkId=undefined;
             $("#moduleLinkInfoLabel").text("");
             $("#moduleLinkId").val("");
             resetHighlighting();
@@ -1283,6 +1299,7 @@ $(function(){
 
         $("#closeEditSpaceLinkInfo").click(function(e) {
             e.preventDefault();
+            selectedSpaceLinkId=undefined;
             $("#spaceLinkInfoLabel").text("");
             $("#spaceLinkId").val("");
             resetHighlighting();
@@ -1293,6 +1310,7 @@ $(function(){
 
         $("#closeEditExternalLinkInfo").click(function(e) {
             e.preventDefault();
+            selectedExternalLinkId=undefined;
             $("#externalLinkInfoLabel").text("");
             $("#externalLinkId").val("");
             resetHighlighting();
