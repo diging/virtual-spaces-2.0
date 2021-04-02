@@ -216,6 +216,33 @@ function drawLinks(){
         });
 	[/]
 	[/]
+	
+	[# th:each="block,loop : ${spaceTextBlocks}"]
+		var posX = $("#bgImage").position().left;
+		var posY = $("#bgImage").position().top;
+		
+		var imageHeight = parseInt($("#bgImage").css("height"));
+		var imageWidth = parseInt($("#bgImage").css("width"));
+		var height = ([[${block.height}]]*imageHeight)/100;
+		var width = ([[${block.width}]]*imageWidth)/100;
+		console.log(imageHeight);
+		console.log(imageWidth);
+		console.log(height);
+		console.log(width);
+		
+		var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-'+[[${block.spaceTextBlock.id}]]+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
+		
+		block.css('position', 'absolute');
+		block.css('left', [[${block.positionX}]] + posX);
+		block.css('top', [[${block.positionY}]] + posY);
+		block.css('font-size', "12px");
+		$("#space").append(block);
+		
+		$('[data-link-id="[(${block.spaceTextBlock.id})]"]').click(function(e) {
+		    console.log("In click function")
+			makeTextBlockEditable([[${block.id}]],[[${block.spaceTextBlock.id}]],[[${block.spaceTextBlock.text}]],[[${block.positionX}]],[[${block.positionY}]],[[${block.width}]],[[${block.height}]]);
+		});
+	[/]
 }
     
 function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
@@ -314,6 +341,43 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     hideLinkInfoTabs();
     $("#externalLinkInfo").show();
     $("#editExternalLinkInfo").show();
+}
+
+function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height){
+    selectedTextBlockId=blockId;
+    storeX=posX;
+	storeY=posY;
+    $("#textBlockId").val(blockId);
+    $("#textBlockXEdit").val(posX);
+    $("#textBlockYEdit").val(posY);
+    $("#textBlockDisplayId").val(blockDisplayId);
+    $("#textBoxWidthIDEdit").val(width);
+    $("#textBoxHeightIDEdit").val(height);
+    $("#textContentIDForEdit").val(text);
+    resetHighlighting();
+    
+    $("#bgImage").on("click", function(e){
+		e.preventDefault();
+		var posX = $(this).position().left;
+		var posY = $(this).position().top;    
+		storeX = e.pageX - $(this).offset().left;
+		storeY = e.pageY - $(this).offset().top;
+	});
+    //hideLinkInfoTabs();
+    $("#editTextBlockInfo").show();
+    
+}
+
+function resetHighlighting() {
+    // reset icon links
+    $('[data-link-id]').css("color", "red");
+     
+    // reset alert links
+    $('div[data-link-id]').removeClass("alert-warning");
+    $('div[data-link-id]').addClass("alert-primary");
+    
+    // reset image links
+    $('img[data-link-id]').css("border-width", "0px"); 
 }
 
 function resetHighlighting() {
@@ -511,6 +575,7 @@ function hideLinkInfoTabs(){
     $("#editExternalLinkInfo").hide();
     $("#editSpaceLinkInfo").hide();
     $("#editModuleLinkInfo").hide();
+    $("#editTextBlockInfo").hide();
     $("#errorMsg").text("");
     $('#errorAlert').hide();    
 }
@@ -599,6 +664,26 @@ function createModuleLinkInfo() {
 	return info;
 }
 
+function createTextBlockInfo() {
+	var info = {};
+	info["x"] = storeX;
+	info["y"] = storeY;
+	info["text"] = $("#textContentID").val();
+	info["heigth"] = $("#textBoxHeightID").val();
+	info["width"] = $("#textBoxWidthID").val();
+	return info;
+}
+
+function editTextBlockInfo() {
+	var info = {};
+	info["x"] = storeX;
+	info["y"] = storeY;
+	info["text"] = $("#textContentIDForEdit").val();
+	info["heigth"] = $("#textBoxHeightIDEdit").val();
+	info["width"] = $("#textBoxWidthIDEdit").val();
+	return info;
+}
+
 function editModuleLinkInfo() {
 	var info = {};
 	info["x"] = storeX;
@@ -631,6 +716,45 @@ function editExternalLinkInfo() {
 	return info;
 }
 
+function getTextArea(x,y) {
+    var posX = $("#bgImage").position().left;
+	var posY = $("#bgImage").position().top;
+    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both;"></textarea></span>');
+    text.css('position', 'absolute');
+    text.css('left', x + posX);
+    text.css('top', y + posY);
+	$("#space").append(text);
+	
+	var textB = document.getElementById('textB'),
+    tHeight = textB.clientHeight,
+    tWidth = textB.clientWidth;
+	
+	
+	var height = parseInt($("#bgImage").css("height"));
+    var width = parseInt($("#bgImage").css("width"));
+    
+    
+    
+	$("#textBoxWidthID").val(tWidth);
+    $("#textBoxHeightID").val(tHeight);
+    textB.onmouseup = function (e) {
+    	if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
+        	tHeight = textB.clientHeight;
+        	tWidth = textB.clientWidth;
+        	let percentileHeight = (tHeight*100)/height;
+            let percentileWidth = (tWidth*100)/width;
+        	$("#textBoxWidthID").val(percentileWidth);
+            $("#textBoxHeightID").val(percentileHeight);
+            $("#textContentID").val(textB.value);
+    	}
+	};
+	var percentileHeight = (tHeight*100)/height;
+    var percentileWidth = (tWidth*100)/width;
+	$("#textBoxWidthID").val(percentileWidth);
+    $("#textBoxHeightID").val(percentileHeight);
+    $("#textContentID").val(textB.value);
+}
+
 $(function(){
     $("#deleteSpace").click(function(){
         var spaceId = "${space.id}";
@@ -648,6 +772,26 @@ $(function(){
       });
     
     		// -------- buttons that open modals (e.g. to create space links) ------
+    		
+    		$("#addTextBlock").click(function(e){
+    		    hideLinkInfoTabs();
+    			$("#changeBgImgAlert").hide();
+    			$("#bgImage").off("click");
+    		    $("#bgImage").on("click", function(e){
+    		        e.preventDefault();
+    		    	$("#external-arrow").remove();
+    		    	$("#space_label").remove();
+    		    	$("#link").remove();
+    		    	$("#text").remove();
+    		    	var posX = $(this).position().left;
+    		    	var posY = $(this).position().top;    
+    		    	storeX = e.pageX - $(this).offset().left;
+    		    	storeY = e.pageY - $(this).offset().top;
+    		    	getTextArea(storeX,storeY);
+    		    });
+    	    	$("#addTextFormInfo").show();
+    		});
+		
     		  $("#addSpaceLinkButton").click(function(e) {
     		  	$("#createExternalLinkAlert").hide();
     		  	$("#changeBgImgAlert").hide();
@@ -719,6 +863,39 @@ $(function(){
 
 
     		  // ----------- submit buttons (e.g. to create space links) ------------------
+    		  
+    		  $("#addTextBlockBtn").click(function(e) {
+			    e.preventDefault();
+				
+				if (storeX == undefined || storeY == undefined) {
+					$("#errorMsg").text("Please click on the image to specify where the new block should be located.")
+					$('#errorAlert').show();
+					return;
+				}
+				
+				$("#addTextX").val(storeX);
+				$("#addTextY").val(storeY);
+				
+				var form = $("#addTextForm");
+				var formData = new FormData(form[0]);
+				
+				var textBlockInfo = createTextBlockInfo();
+		        
+			    $.ajax({
+					type: "POST",
+					url: "[(@{'/staff/space/'+${space.id}+'/textBlock?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+					cache       : false,
+			        contentType : false,
+			        processData : false,
+			        enctype: 'multipart/form-data',
+			        data: formData, 
+			        success: function(data) {
+			        	var blockData = JSON.parse(data);
+			        	$("#addTextFormInfo").hide();
+			        }
+				});
+			});
+    		  
     		  $("#createSpaceLinkBtn").click(function(e) {
     		  	e.preventDefault();
     		  	$('#errorAlert').hide();
@@ -1065,6 +1242,19 @@ $(function(){
     		              }
     		          });
     		  });
+    		  
+    		  $("#deleteTextBlockButton").click(function() {
+  			    var blockId = $("#textBlockId").val();
+  			    console.log(blockId);
+  		        $.ajax({
+  		            url: "[(@{'/staff/space/'+${space.id}+'/textBlock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+  		            method: "DELETE",
+  		                success:function(data) {
+  		                    $('[data-link-id="' + blockId + '"]').remove();
+  		                    hideLinkInfoTabs();
+  		                }
+  		            });
+  		      });
 
     		  $("#closeAlert").click(function() {
     		  	$('#errorAlert').hide();
@@ -1156,6 +1346,15 @@ $(function(){
     		  });
     		  
     		// ------------ Cancel buttons -----------------
+    		
+        		$("#cancelAddTextBlockBtn").click(function() {
+    		        storeX = null;
+    		        storeY = null;
+    		        $("#textContentID").val(""); 
+    		        $("#addTextFormInfo").hide();  
+    		        $('#errorAlert').hide();
+    		    });
+    		
     		  $("#cancelSpaceLinkBtn").click(function() {
     		      storeX = null;
     		      storeY = null;
@@ -1212,7 +1411,15 @@ $(function(){
     		      $("#externalLinkId").val("");
     		      resetHighlighting();
     		      $("#editExternalLinkInfo").hide();
-    		  }); 
+    		  });
+    		  $("#closeEditTextBlockInfo").click(function(e) {
+    		      e.preventDefault();
+			    	$("#textBoxHeightIDEdit").val("");
+			    	$("#textBoxWidthIDEdit").val("");
+			        $("#textContentIDForEdit").val("");
+			        resetHighlighting();
+			        $("#editTextBlockInfo").hide();
+    		  });
 		 
 });
 </script>
@@ -1514,6 +1721,69 @@ $(function(){
                         Module Link</button>
                 </p>
 
+            </div>
+        </form>
+        
+        <form id="addTextForm">
+            <div id="addTextFormInfo" class="alert alert-secondary"
+                role="alert"
+                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+
+                <div class="row">
+                    <div class="col">
+                        <small>Please click on the image where
+                            you want to place the Text content. Then
+                            click "Save".</small>
+                        </p>
+                        <hr>
+                    </div>
+                </div>
+
+                <input type="hidden" name="x" id="addTextX" /> <input
+                    type="hidden" name="y" id="addTextY" />
+
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Width:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxWidth"
+                            type="number" id="textBoxWidthID"
+                            name="width" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Height:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxHeight"
+                            type="number" id="textBoxHeightID"
+                            name="height" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Text:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="form-control-xs textContent"
+                             name="textContent"
+                            id="textContentID" style="width: inherit;"></textarea><br>
+                    </div>
+                </div>
+                <HR>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button id="addTextBlockBtn" type="reset"
+                            class="btn btn-primary btn-xs">Save</button>
+                    </div>
+                    <button id="cancelAddTextBlockBtn" type="reset"
+                        class="btn btn-light btn-xs">Cancel</button>
+                </div>
             </div>
         </form>
 
@@ -1894,6 +2164,84 @@ $(function(){
                 </div>
             </div>
         </form>
+        
+        <form id="editTextBlockForm">
+            <div id="editTextBlockInfo" class="alert alert-secondary"
+                role="alert"
+                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
+                <p class="float-right">
+                    <a href="#" id="closeEditTextBlockInfo"><span><i class="fas fa-window-close"></i></span></a>
+                </p>
+                <input type="hidden" name="textBlockId"
+                    id="textBlockId" />
+                <div class="row">
+                    <div class="col">
+                        <h6 class="alert-heading">
+                            <small>Modify Text Block</small>
+                        </h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <small>Please click on the image where
+                            you want to place the existing external
+                            link. Then click "Save".</small>
+                        </p>
+                        <hr>
+                    </div>
+                </div>
+                <input type="hidden" name="x" id="textBlockXEdit" /> <input
+                    type="hidden" name="y" id="textBlockYEdit" /> <input
+                    type="hidden" name="textBlockDisplayId"
+                    id="textBlockDisplayId" />
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Width:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxWidth"
+                            type="number" id="textBoxWidthIDEdit"
+                            name="width" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Height:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input class="form-control-xs textBoxHeight"
+                            type="number" id="textBoxHeightIDEdit"
+                            name="height" style="width: inherit;"><br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label><small>Text:</small> </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea class="form-control-xs textContent"
+                            name="textContentEdit"
+                            id="textContentIDForEdit" style="width: inherit;"></textarea><br>
+                    </div>
+                </div>
+                <HR>
+
+                <HR>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button id="editTextBlockBtn" type="reset"
+                            class="btn btn-primary btn-xs">Save</button>
+                    </div>
+                    <div class="col-sm-8">
+                        <button id="deleteTextBlockButton" type="reset"
+                            class="btn btn-primary btn-xs">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </form>
 
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <button type="button" id="addSpaceLinkButton"
@@ -1911,6 +2259,9 @@ $(function(){
             &nbsp;
             <button type="button" id="deleteSpace"
                 class="btn primary-btn btn-sm">Delete Space</button>
+            &nbsp;
+            <button type="button" id="addTextBlock"
+                class="btn primary-btn btn-sm">Add Text Block</button>
         </nav>
         <p></p>
 

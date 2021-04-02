@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
-import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @Controller
 public class SpaceController {
@@ -41,6 +42,9 @@ public class SpaceController {
     @Autowired
     private IExternalLinkManager externalLinkManager;
 
+    @Autowired
+    private ISpaceTextBlockManager spaceTextBlockManager;
+
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
 
@@ -54,6 +58,7 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
+        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return "staff/spaces/space";
     }
 
@@ -62,5 +67,5 @@ public class SpaceController {
         List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
-    
+
 }
