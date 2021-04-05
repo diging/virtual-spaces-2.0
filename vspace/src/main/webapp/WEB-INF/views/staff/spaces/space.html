@@ -225,10 +225,6 @@ function drawLinks(){
         var imageWidth = parseInt($("#bgImage").css("width"));
         var height = ([[${block.height}]]*imageHeight)/100;
         var width = ([[${block.width}]]*imageWidth)/100;
-        console.log(imageHeight);
-        console.log(imageWidth);
-        console.log(height);
-        console.log(width);
     
         var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-'+[[${block.spaceTextBlock.id}]]+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
     
@@ -239,7 +235,6 @@ function drawLinks(){
         $("#space").append(block);
     
         $('[data-link-id="[(${block.spaceTextBlock.id})]"]').click(function(e) {
-            console.log("In click function")
             makeTextBlockEditable([[${block.id}]],[[${block.spaceTextBlock.id}]],[[${block.spaceTextBlock.text}]],[[${block.positionX}]],[[${block.positionY}]],[[${block.width}]],[[${block.height}]]);
         });
     [/]
@@ -1152,7 +1147,6 @@ $(function(){
             var form = $("#editTextBlockForm");
             var formData = new FormData(form[0]);
             var textBlockInfo = editTextBlockInfo();
-            console.log(formData);
             $.ajax({
                 type: "POST",
                 url: "[(@{'/staff/space/link/textBlock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1282,7 +1276,6 @@ $(function(){
 
         $("#deleteTextBlockButton").click(function() {
             var blockId = $("#textBlockId").val();
-            console.log(blockId);
             $.ajax({
                 url: "[(@{'/staff/space/'+${space.id}+'/textBlock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
