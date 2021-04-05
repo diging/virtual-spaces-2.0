@@ -81,14 +81,14 @@
                 // resize the image to max width
 			    if (isResizeImgBtnClicked == 1) {
 			    	isResizeImgBtnClicked = -isResizeImgBtnClicked;
-                    document.getElementById('toggleBtn').className = "icon-collapse";
+			    	$("#toggleBtn").attr('class', "icon-collapse secondary");
                     $("#bgImage").css("width", maxImgWidth);
                     $("#space a").remove();
                     drawLinks();
                 }
                 else{
                 	isResizeImgBtnClicked = -isResizeImgBtnClicked;
-                    document.getElementById('toggleBtn').className = "icon-expand";
+                	$("#toggleBtn").attr('class', "icon-expand secondary");
                     $("#bgImage").css("width", spaceWidth);
                     $('#bgImage').width('100%')
                     $("#space a").remove();
@@ -253,7 +253,7 @@
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <span id="imgResizeCheckbox" style="margin-left: 1140px">
-                <button title="Resize Image" type="button" class="icon-expand" id="toggleBtn"
+                <button title="Resize Image" type="button" class="icon-expand secondary" id="toggleBtn"
                     onclick="toggleImgSize()"></button>
             </span>
             <div class="modalDown alert alert-warning center col-md-12"
