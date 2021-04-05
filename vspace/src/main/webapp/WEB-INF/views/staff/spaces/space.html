@@ -1137,6 +1137,43 @@ $(function(){
     		         	}
     		   	});
     		  });
+    		  
+    		  $("#editTextBlockBtn").click(function(e) {
+              	    e.preventDefault();
+              	    var blockId = $("#textBlockId").val();
+              	    if (storeX == undefined || storeY == undefined) {
+              	        $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+              	        $('#errorAlert').show();
+              	        return;
+              	    }
+              	    var linkedTextBlock = $("#textBlockId").val();
+              	    $("#textBlockXEdit").val(storeX);
+              	    $("#textBlockYEdit").val(storeY);
+              	    var form = $("#editTextBlockForm");
+              	    var formData = new FormData(form[0]);
+              	    var textBlockInfo = editTextBlockInfo();
+              	    console.log(formData);
+              	    $.ajax({
+              	        type: "POST",
+              	        url: "[(@{'/staff/space/link/textBlock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+              	        cache: false,
+              	        contentType : false,
+              	        processData : false,
+              	        enctype: 'multipart/form-data',
+              	        data: formData,
+              	        success: function(data) {
+              	            var linkData = JSON.parse(data);
+              	            $("#bgImage").off("click");
+              	            textBlockInfo["id"] = linkData["id"];
+              	            textBlockInfo["text"]=linkData["text"];
+              	            textBlockInfo["x"]=linkData["x"];
+              	            textBlockInfo["y"]=linkData["y"];
+              	            textBlockInfo["height"]=linkData["height"];
+              	            textBlockInfo["width"]=linkData["width"];
+              	            hideLinkInfoTabs();
+              	       	}
+              	 	});
+          		});
 
     		  $("#createExternalLinkBtn").click(function(e) {
     		  	e.preventDefault();
