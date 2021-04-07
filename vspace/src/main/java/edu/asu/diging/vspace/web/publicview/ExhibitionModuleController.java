@@ -34,9 +34,10 @@ public class ExhibitionModuleController {
         if (module == null) {
             return "redirect:/exhibit/404";
         } else if (module.getStartSequence() == null) {
+            System.out.println("Start sequence NULL ------> ");
             model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, module has not been configured yet.");
-            return "module";
+            return "/exhibition/setupModule";
         }
         String startSequenceID = module.getStartSequence().getId();
         return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;

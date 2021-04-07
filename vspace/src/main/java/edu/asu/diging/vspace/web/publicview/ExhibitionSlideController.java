@@ -67,7 +67,7 @@ public class ExhibitionSlideController {
         if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, module has not been configured yet.");
-            return "module";
+            return "/exhibition/setupModule";
         }
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
