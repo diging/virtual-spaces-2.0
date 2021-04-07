@@ -44,7 +44,7 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
         ISpace source = spaceManager.getSpace(id);
         ISpaceTextBlock textBlock=spaceTextBlockFactory.createSpaceTextBlock(text, source);
         ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width);
-        textBlock=spaceTextBlockRepo.save((SpaceTextBlock) textBlock);
+        spaceTextBlockRepo.save((SpaceTextBlock) textBlock);
         return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplay);
     }
 
