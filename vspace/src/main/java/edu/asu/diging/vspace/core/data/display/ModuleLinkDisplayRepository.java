@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.IModuleLink;
+import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 
 @Repository
@@ -14,5 +16,7 @@ import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 public interface ModuleLinkDisplayRepository extends PagingAndSortingRepository<ModuleLinkDisplay, String> {
 
     @Query("SELECT d FROM ModuleLinkDisplay d WHERE d.link.space.id = ?1")
-    public List<ModuleLinkDisplay> findModuleLinkDisplaysForSpace(String spaceId);
+    public List<IModuleLinkDisplay> findModuleLinkDisplaysForSpace(String spaceId);
+
+    public void deleteByLink(IModuleLink link);
 }

@@ -3,34 +3,25 @@ package edu.asu.diging.vspace.core.services;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ILink;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
-public interface ILinkManager {
+public interface ILinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends ILinkDisplay> {
 
-    ISpaceLinkDisplay createSpaceLink(String title, ISpace source, float positionX, float positionY, int rotation,
-            String linkedSpaceId, String spaceLinkLabel, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
+    U createLink(String title, String id, float positionX, float positionY,
+            int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
+            String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
-    List<ISpaceLinkDisplay> getSpaceLinkDisplays(String spaceId);
+    U updateLink(String title, String id, float positionX, float positionY,
+            int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
+            DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
 
-    List<IExternalLinkDisplay> getExternalLinkDisplays(String spaceId);
+    List<U> getLinkDisplays(String spaceId);
 
-    IExternalLinkDisplay createExternalLink(String title, ISpace source, float positionX, float positionY,
-            String externalLink, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
-    void deleteSpaceLink(String linkId);
-    
-    void deleteModuleLink(String linkId);
-    
-    IModuleLinkDisplay createModuleLink(String title, ISpace source, float positionX, float positionY, int rotation,
-            String linkedModuleId, String moduleLinkLabel, DisplayType displayType) throws SpaceDoesNotExistException;
-    
-    List<IModuleLinkDisplay> getModuleLinkDisplays(String spaceId);
-
-    void deleteExternalLink(String linkId);
-
+    void deleteLink(String linkId);
 }

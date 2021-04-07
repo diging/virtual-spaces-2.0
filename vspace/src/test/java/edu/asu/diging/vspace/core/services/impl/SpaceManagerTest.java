@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
@@ -29,9 +29,8 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
-import edu.asu.diging.vspace.core.model.impl.Sequence;
-import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -72,17 +71,26 @@ public class SpaceManagerTest {
     @Mock
     private ISpaceDisplayFactory spaceDisplayFactory;
 
+    @Mock
+    private ExhibitionManager exhibitionManager;
+
+
     @InjectMocks
     private SpaceManager managerToTest;
 
     private final String IMG_FILENAME = "img";
     private final String IMG_CONTENT_TYPE = "content/type";
+    private String spaceId = "spaceId";
     private String spaceId1, spaceId2;
+    private String spaceLinkId1;
+    private SpaceLink spaceLink;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000001";
+        spaceLinkId1 = "SPL000000001";
 
     }
 
@@ -116,22 +124,58 @@ public class SpaceManagerTest {
         Mockito.verify(spaceDisplayRepo).save((SpaceDisplay)spaceDisplay);
     }
 
-
-
-    @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException {
-        Mockito.doThrow(IllegalArgumentException.class)
-        .when(spaceRepo).deleteById(null);
+    @Test
+    public void test_deleteSpaceById_whenIdIsNull() throws SpaceDoesNotExistException{
         managerToTest.deleteSpaceById(null);
+        Mockito.verify(spaceDisplayRepo, Mockito.never()).deleteBySpaceId(null);
+        Mockito.verify(spaceRepo, Mockito.never()).deleteById(null);
     }
 
-    @Test(expected = SpaceDoesNotExistException.class)
-    public void test_deleteSpaceById_forNonExistentId() throws SpaceDoesNotExistException {
-        String imgId = "imgId";
-        Mockito.doThrow(EmptyResultDataAccessException.class)
-        .when(spaceRepo).deleteById(imgId);
-        managerToTest.deleteSpaceById(imgId);
+    @Test
+    public void test_deleteSpaceById_forNonExistentId() {  
+        managerToTest.deleteSpaceById(spaceId);
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId);
+        Mockito.verify(spaceRepo).deleteById(spaceId);
     }
+
+    @Test
+    public void test_deleteSpaceById_forSuccess() {  
+        managerToTest.deleteSpaceById(spaceId1);
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
+        Mockito.verify(spaceRepo).deleteById(spaceId1);
+    }
+
+    @Test
+    public void test_deleteSpaceById_whenSpaceHasLinks() {  
+        ISpace space = new Space();
+        spaceLink = new SpaceLink();
+        space.setId(spaceId2);
+        spaceLink.setId(spaceLinkId1);
+        spaceLink.setTargetSpace(space);
+        Mockito.when(spaceLinkRepo.getLinkedSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
+        managerToTest.deleteSpaceById(spaceId1);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
+        Mockito.verify(spaceLinkDisplayRepo).deleteBySpaceLinkId(spaceLinkId1);
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
+        Mockito.verify(spaceRepo).deleteById(spaceId1);
+    }
+
+    @Test
+    public void test_deleteSpaceById_whenLinksToSpace() {  
+        Space space = new Space();
+        spaceLink = new SpaceLink();
+        space.setId(spaceId1);
+        spaceLink.setId(spaceLinkId1);
+        spaceLink.setTargetSpace(space);
+        Mockito.when(spaceLinkRepo.getLinkedFromSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
+        managerToTest.deleteSpaceById(spaceId1);
+        Assert.assertEquals(spaceLink.getTargetSpace(), null);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
+        Mockito.verify(spaceLinkRepo).save(spaceLink);
+        Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
+        Mockito.verify(spaceRepo).deleteById(spaceId1);
+    }
+
 
     @Test
     public void test_getSpacesWithStatus_whenStatusIsNull() throws SpaceDoesNotExistException{
@@ -217,6 +261,41 @@ public class SpaceManagerTest {
         Mockito.when(spaceRepo.findAllBySpaceStatus(null)).thenReturn(spaceList);
         List<ISpace> spaceWithNullStatus= managerToTest.getSpacesWithStatus(SpaceStatus.UNPUBLISHED);
         Assert.assertTrue(spaceWithNullStatus.isEmpty());
+    }
+
+    @Test
+    public void test_getSpacesWithImageId_ImageIdIsValid(){
+        Space space=new Space();
+        space.setId(spaceId1);
+        VSImage image = new VSImage();
+        image.setId("IMG001");
+        space.setImage(image);
+        List<Space> spaceList=new ArrayList<>();
+        spaceList.add(space);
+        Mockito.when(spaceRepo.findAllByImageId("IMG001")).thenReturn(spaceList);
+        Optional<VSImage> mockImage = Optional.of(image);
+        Mockito.when(imageRepo.findById(image.getId())).thenReturn(mockImage);
+        List<ISpace> foundSpaceWithImageId= managerToTest.getSpacesWithImageId("IMG001");
+        String actualSpaceId = foundSpaceWithImageId.get(0).getId();
+        Assert.assertEquals(spaceId1, actualSpaceId);
+    }
+
+    @Test
+    public void test_getSpacesWithImageId_ImageIdIsInValid(){
+        Space space=new Space();
+        space.setId(spaceId1);
+        VSImage image = new VSImage();
+        image.setId("IMG001");
+        space.setImage(image);
+        List<Space> spaceList=new ArrayList<>();
+        Mockito.when(spaceRepo.findAllByImageId("IMG002")).thenReturn(spaceList);
+        Mockito.when(imageRepo.findById("IMG002")).thenReturn(Optional.empty());
+        Assert.assertNull(managerToTest.getSpacesWithImageId("IMG002"));
+    }
+
+    @Test
+    public void test_getSpacesWithImageId_ImageIdIsNull(){
+        Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
 
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +16,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.impl.SpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -28,7 +30,7 @@ public class ExhibitionConfigurationController {
     private SpaceRepository spaceRepo;
 
     @Autowired
-    private SpaceManager spaceManager;
+    private ISpaceManager spaceManager;
 
     @Autowired
     private IExhibitionManager exhibitManager;
@@ -40,12 +42,12 @@ public class ExhibitionConfigurationController {
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        if (exhibition != null) {
+        if(exhibition!=null) {
             model.addAttribute("exhibition", exhibition);
         } else {
             model.addAttribute("exhibition", new Exhibition());
         }
-        
+        model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         return "staff/exhibit/config";
     }
@@ -61,25 +63,29 @@ public class ExhibitionConfigurationController {
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title, RedirectAttributes attributes)
-            throws IOException {
+            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
+            @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
+            @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+            RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;
-        if (exhibitID == null || exhibitID.isEmpty()) {
+        if(exhibitID==null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
-
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
+        exhibition.setMode(exhibitMode);
+        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+            exhibition.setCustomMessage(customMessage);
+        }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
-
 }

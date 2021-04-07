@@ -54,16 +54,17 @@ public class SpaceDisplayManager implements ISpaceDisplayManager {
      */
     @Override
     public ISpaceDisplay getBySpace(ISpace space) {
-        IVSImage image = space.getImage();
+        IVSImage image = space!=null ? space.getImage():null;
         List<SpaceDisplay> displays = spaceDisplayRepo.getBySpace(space);
-        ISpaceDisplay display = displays.isEmpty() ? null : displays.get(0);
-        if (display == null ) {
+        ISpaceDisplay display = displays.isEmpty() ? null:displays.get(0);
+        if(display==null) {
             display = displayFactory.createSpaceDisplay();
         }
-        if (image != null) {
-            if (image.getWidth() <= 0 || image.getHeight() <= 0) {
+        if(image!=null) {
+            if(image.getWidth()<=0 || image.getHeight()<=0) {
                 try {
-                    ImageData data = imageService.getImageData(storage.getImageContent(image.getId(), image.getFilename()));
+                    ImageData data = imageService
+                        .getImageData(storage.getImageContent(image.getId(), image.getFilename()));
                     image.setWidth(data.getWidth());
                     image.setHeight(data.getHeight());
                 } catch (IOException e) {
@@ -71,19 +72,19 @@ public class SpaceDisplayManager implements ISpaceDisplayManager {
                     return display;
                 }
             }
-    
-            if (image.getWidth() <= maxBgImageWidth && image.getHeight() <= maxBgImageHeight) {
+
+            if(image.getWidth()<=maxBgImageWidth && image.getHeight()<=maxBgImageHeight) {
                 display.setWidth(image.getWidth());
                 display.setHeight(image.getHeight());
                 return display;
             }
-            
+
             ImageData data = imageService.getImageDimensions(image, maxBgImageWidth, maxBgImageHeight);
             display.setHeight(data.getHeight());
             display.setWidth(data.getWidth());
             spaceDisplayRepo.save((SpaceDisplay) display);
         }
-        
+
         return display;
     }
 }

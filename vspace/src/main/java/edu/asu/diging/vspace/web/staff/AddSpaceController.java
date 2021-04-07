@@ -27,7 +27,7 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
 public class AddSpaceController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -35,17 +35,17 @@ public class AddSpaceController {
 
     @Autowired
     private ISpaceFactory spaceFactory;
-    
+
     @Autowired
     private IImageService imageService;
-    
+
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
         model.addAttribute("space", new SpaceForm());
         model.addAttribute("images", imageService.getImages(1));
 
-        return "staff/space/add";
+        return "staff/spaces/add";
     }
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
@@ -69,21 +69,21 @@ public class AddSpaceController {
                 redirectAttrs.addAttribute("showAlert", true);
                 redirectAttrs.addAttribute("alertType", "danger");
                 redirectAttrs.addAttribute("message", "Selected image does not exist.");
-                return "redirect:/staff/space/list";
+                return "redirect:/staff/spaces/spacelist";
             }
             creationValue = spaceManager.storeSpace(space, image);
         }else {
             creationValue = spaceManager.storeSpace(space, bgImage, filename);
         }
-        
+
         if (creationValue != null) {
             return "redirect:/staff/space/" + creationValue.getElement().getId();
         }
-        
+
         redirectAttrs.addAttribute("showAlert", true);
         redirectAttrs.addAttribute("alertType", "danger");
         redirectAttrs.addAttribute("message", "Unkown error. Space could not be created.");
-        return "redirect:/staff/space/list";
+        return "redirect:/staff/spaces/spacelist";
     }
 
 }
