@@ -48,6 +48,126 @@ moduleLinkIconReader.onload = function(e) {
     showModuleLink(createModuleLinkInfo());
 }
 
+function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal){
+    modalLink.css('position', 'absolute');
+    if(isModal){
+        modalLink.css('left',link.positionX + posXModal);
+        modalLink.css('top', link.positionY + posYModal);
+    }else{
+        modalLink.css('left', link.positionX + posX);
+        modalLink.css('top', link.positionY + posY);
+    }
+    modalLink.css('transform', 'rotate('+link.rotation+'deg)');
+    modalLink.find("span").css('fill', 'grey');
+    modalLink.css('color', 'rgba(128,128,128,1)');
+    modalLink.css('font-size', "12px");
+    if(isSpaceLink && link.link.targetSpace.spaceStatus=="UNPUBLISHED"){
+        var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
+        unpublishedSpaceElement.css('position', 'absolute');
+        if(isModal){
+            unpublishedSpaceElement.css('left', link.positionX + posXModal + displaceUnpublishedOnX);
+            unpublishedSpaceElement.css('top', link.positionY + posYModal - displaceUnpublishedOnY);
+        }else{
+            unpublishedSpaceElement.css('left', link.positionX + posX + displaceUnpublishedOnX);
+            unpublishedSpaceElement.css('top', link.positionY + posY - displaceUnpublishedOnY);
+        }
+        unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+        unpublishedSpaceElement.css('font-size', "24px");
+        if(isModal){
+            $("#space").append(unpublishedSpaceElement);
+        }else{
+            $("#main-space").append(unpublishedSpaceElement);
+        }
+    }
+    if(isExternalLink){
+        setLabelPosition(link,link.externalLink.id,isModal, posX, posY, posXModal, posYModal);
+    }else{
+        setLabelPosition(link,link.link.id,isModal, posX, posY, posXModal, posYModal);
+    }
+}
+function setLabelPosition(link,id, isModal, posX, posY, posXModal, posYModal){
+    if(isModal){
+        $(".label-"+id).css({
+            'left': link.positionX + posXModal - displaceLableOnX,
+            'top': link.positionY + posYModal + displaceLableOnY,
+            'color': 'red'
+        }); 
+    }
+    else{
+        $(".label-"+id).css({
+            'left': link.positionX + posX - displaceLableOnX,
+            'top': link.positionY + posY + displaceLableOnY,
+            'color': 'red'
+        });
+    }
+}
+
+function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(link != null){
+        var spaceLink;
+        if(link.type == "ALERT"){
+            spaceLink = $('<div class="alert alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+        }
+        else if(link.type == "IMAGE" && link.image != null){
+            var spaceImageURL = [[@{/api/image/}]]+link.image.id;
+            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
+        }
+        else{
+            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+        }
+        setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal);
+        $(divId).append(spaceLink);
+        
+        $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
+        $('[data-link-id="'+link.link.id+'"]').click(function(e) {
+            var linkData = $('#'+spanId+link.link.id).data();
+            makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+        });
+    }
+}
+
+function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(link != null){
+        var moduleLink;
+        if(link.type=="ALERT"){
+            moduleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+        }
+        else if(link.type=="IMAGE" && link.image != null){
+            var moduleImageURL = [[@{/api/image/}]]+link.image.id;
+            moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" src="'+moduleImageURL+'" />');
+        }
+        else{
+            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+        }
+        setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal);
+        $(divId).append(moduleLink);
+        $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
+        $('[data-link-id="'+link.link.id+'"]').click(function(e) {
+            var linkData = $('#'+spanId+link.link.id).data();
+            makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
+        });
+    }
+}
+
+function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(link != null){
+        var externalLink;
+        if(link.type=="IMAGE" && link.image != null){
+            var imageURL = [[@{/api/image/}]]+link.image.id;
+            externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+        }else{
+            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+        }
+        setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
+        $(divId).append(externalLink);
+        $('[data-link-id="'+link.externalLink.id+'"]').css('cursor', 'pointer');
+        $('[data-link-id="'+link.externalLink.id+'"]').click(function(e) {
+            var linkData = $('#'+spanId+link.externalLink.id).data();
+            makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+        });
+    }
+}
+
 function drawLinks(){
     $(".Info_cz_Class").remove();
     $(".imageLink").remove();
@@ -74,157 +194,40 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
-            function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink){
-                modalLink.css('position', 'absolute');
-                if(isModal){
-                    modalLink.css('left',link.positionX + posXModal);
-                    modalLink.css('top', link.positionY + posYModal);
-                }else{
-                    modalLink.css('left', link.positionX + posX);
-                    modalLink.css('top', link.positionY + posY);
-                }
-                modalLink.css('transform', 'rotate('+link.rotation+'deg)');
-                modalLink.find("span").css('fill', 'grey');
-                modalLink.css('color', 'rgba(128,128,128,1)');
-                modalLink.css('font-size', "12px");
-                if(isSpaceLink && link.link.targetSpace.spaceStatus=="UNPUBLISHED"){
-                    var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
-                    unpublishedSpaceElement.css('position', 'absolute');
-                    if(isModal){
-                        unpublishedSpaceElement.css('left', link.positionX + posXModal + displaceUnpublishedOnX);
-                        unpublishedSpaceElement.css('top', link.positionY + posYModal - displaceUnpublishedOnY);
-                    }else{
-                        unpublishedSpaceElement.css('left', link.positionX + posX + displaceUnpublishedOnX);
-                        unpublishedSpaceElement.css('top', link.positionY + posY - displaceUnpublishedOnY);
-                    }
-                    unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-                    unpublishedSpaceElement.css('font-size', "24px");
-                    if(isModal){
-                        $("#space").append(unpublishedSpaceElement);
-                    }else{
-                        $("#main-space").append(unpublishedSpaceElement);
-                    }
-                }
-                if(isExternalLink){
-                    setLabelPosition(link,link.externalLink.id,isModal);
-                }else{
-                    setLabelPosition(link,link.link.id,isModal);
-                }
-            }
-            function setLabelPosition(link,id, isModal){
-                if(isModal){
-                    $(".label-"+id).css({
-                        'left': link.positionX + posXModal - displaceLableOnX,
-                        'top': link.positionY + posYModal + displaceLableOnY,
-                        'color': 'red'
-                    }); 
-                }
-                else{
-                    $(".label-"+id).css({
-                        'left': link.positionX + posX - displaceLableOnX,
-                        'top': link.positionY + posY + displaceLableOnY,
-                        'color': 'red'
-                    });
-                }
-            }
+            
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkModalId-";
                 var divId = "#space";
-                generateSpaceLinks(link,spanId,divId,true);
+                generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
             })
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkId-";
                 var divId = "#main-space";
-                generateSpaceLinks(link,spanId,divId,false);
+                generateSpaceLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
             })
-            
-            function generateSpaceLinks(link,spanId,divId,isModal){
-                if(link != null){
-                    var spaceLink;
-                    if(link.type == "ALERT"){
-                        spaceLink = $('<div class="alert alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
-                    }
-                    else if(link.type == "IMAGE" && link.image != null){
-                        var spaceImageURL = [[@{/api/image/}]]+link.image.id;
-                        spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
-                    }
-                    else{
-                        spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
-                    }
-                    setLinkPosition(spaceLink,link,true,isModal,false);
-                    $(divId).append(spaceLink);
-                    
-                    $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
-                    $('[data-link-id="'+link.link.id+'"]').click(function(e) {
-                        var linkData = $('#'+spanId+link.link.id).data();
-                        makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
-                    });
-                }
-            }
             
             moduleLinks.forEach(function(link,index){
                 var spanId= "moduleModallinkId-";
                 var divId = "#space";
-                generateModuleLinks(link,spanId,divId,true);
+                generateModuleLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
             })
             moduleLinks.forEach(function(link,index){
                 var spanId= "modulelinkId-";
                 var divId = "#main-space";
-                generateModuleLinks(link,spanId,divId,false);
+                generateModuleLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
             })
             
-            function generateModuleLinks(link,spanId,divId,isModal){
-                if(link != null){
-                    var moduleLink;
-                    if(link.type=="ALERT"){
-                        moduleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
-                    }
-                    else if(link.type=="IMAGE" && link.image != null){
-                        var moduleImageURL = [[@{/api/image/}]]+link.image.id;
-                        moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" src="'+moduleImageURL+'" />');
-                    }
-                    else{
-                        moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
-                    }
-                    setLinkPosition(moduleLink,link,false,isModal,false);
-                    $(divId).append(moduleLink);
-                    $('[data-link-id="'+link.link.id+'"]').css('cursor', 'pointer');
-                    $('[data-link-id="'+link.link.id+'"]').click(function(e) {
-                        var linkData = $('#'+spanId+link.link.id).data();
-                        makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
-                    });
-                }
-            }
             externalLinks.forEach(function(link,index){
                 var spanId= "externalModallinkId-";
                 var divId = "#space";
-                generateExternalLinks(link,spanId,divId,true);
+                generateExternalLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
             })
             
             externalLinks.forEach(function(link,index){
                 var spanId= "externallinkId-";
                 var divId = "#main-space";
-                generateExternalLinks(link,spanId,divId,false);
+                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
             })
-            
-            function generateExternalLinks(link,spanId,divId,isModal){
-                if(link != null){
-                    var externalLink;
-                    if(link.type=="IMAGE" && link.image != null){
-                        var imageURL = [[@{/api/image/}]]+link.image.id;
-                        externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
-                    }else{
-                        externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
-                    }
-                    setLinkPosition(externalLink,link,false,isModal,true);
-                    $(divId).append(externalLink);
-                    $('[data-link-id="'+link.externalLink.id+'"]').css('cursor', 'pointer');
-                    $('[data-link-id="'+link.externalLink.id+'"]').click(function(e) {
-                        var linkData = $('#'+spanId+link.externalLink.id).data();
-                        makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
-                    });
-                }
-            }
         }
     });
 }
@@ -242,7 +245,7 @@ function showSpaceLink(spaceLink, show, x, y) {
     if (spaceLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
     } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
-        link = $('<div id="link" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
+        link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
     } else {
         $(space_label).css({
             'font-size': "12px",
@@ -266,8 +269,8 @@ function showSpaceLink(spaceLink, show, x, y) {
     }
 
     link.css('position', 'absolute');
-    link.css('left', x + posX);
-    link.css('top', y + posY);
+    link.css('left', spaceLink["x"] + posX);
+    link.css('top', spaceLink["y"] + posY);
     link.css('color', 'rgba(128,128,128,1)');
     link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
     link.css('font-size', "12px");
@@ -290,8 +293,6 @@ function showSpaceLink(spaceLink, show, x, y) {
     $("#space").append(link);
     $("#space").append(unpublishedSpaceElement);
     $("#link").append(space_label);
-
-    feather.replace();
 }
 
 function showModuleLink(moduleLink, show, x, y) {
@@ -322,8 +323,8 @@ function showModuleLink(moduleLink, show, x, y) {
         link.find("div").css('fill', 'red');
     }
     link.css('position', 'absolute');
-    link.css('left', x + posX);
-    link.css('top', y + posY);
+    link.css('left', moduleLink["x"] + posX);
+    link.css('top', moduleLink["y"] + posY);
     link.css('color', 'red');
     link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
     link.css('font-size', "12px");
@@ -344,8 +345,6 @@ function showModuleLink(moduleLink, show, x, y) {
 
     $("#space").append(link);
     $("#link").append(module_label);
-
-    feather.replace();
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
@@ -448,8 +447,8 @@ function showExternalLinks(externalLink, show, x, y) {
     }
 
     link.css('position', 'absolute');
-    link.css('left', x + posX);
-    link.css('top', y + posY);
+    link.css('left', externalLink["x"] + posX);
+    link.css('top', externalLink["y"] + posY);
     link.css('color', 'blue');
     link.css('font-size', "12px");
 
@@ -555,10 +554,13 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     $("#spaceLinkRotationEdit").val(rotation);
     $('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
     $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
-    resetHighlighting(); 
+    if(linkType != "IMAGE"){
+    	resetHighlighting(); 
+    }
     $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
     $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
     $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
+    $('div[data-link-id="' + spaceLinkId + '"]').addClass("spaceLink");
     $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
     $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
 
@@ -802,6 +804,8 @@ $(function(){
                     $("#errorMsg").text("");
                     $('#errorAlert').hide();
                     $("#noLinksOnSpace").hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
                     var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
                     $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
                     if (spaceName == "${space.name}") {
@@ -874,6 +878,8 @@ $(function(){
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
                     $('#errorAlert').hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
                     $("#space").css("display", "none");
                     drawLinks();
                 }
@@ -1083,6 +1089,8 @@ $(function(){
                     $("#createExternalLinkAlert").hide();
                     $("#errorMsg").text("");
                     $('#errorAlert').hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
                     $("#external-arrow").attr("id","");
                     $("#space").css("display", "none");
                     drawLinks();
