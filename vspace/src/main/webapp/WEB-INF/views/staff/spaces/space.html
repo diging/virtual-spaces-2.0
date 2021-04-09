@@ -197,7 +197,7 @@ function drawLinks(){
             
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkModalId-";
-                var divId = "#space";
+                var divId = "#space"
                 generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
             })
             spaceLinks.forEach(function(link,index){
@@ -350,7 +350,7 @@ function showModuleLink(moduleLink, show, x, y) {
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
     moduleLink["x"]=storeX;
     moduleLink["y"]=storeY;
-    var selectedLinkClass = '.moduleLink-'+selectedModuleLinkId;
+    var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
     var selectedLabelClass = '.label-'+selectedModuleLinkId;
     updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"]);
 }
@@ -358,7 +358,7 @@ function showModuleLinkEdit(moduleLink, show, posX, posY) {
 function showSpaceLinkEdit(spaceLink, show, posX, posY) {
     spaceLink["x"]=storeX;
     spaceLink["y"]=storeY;
-    var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
+    var selectedLinkClass = '#spacelinkModalId-'+selectedSpaceLinkId;
     var selectedLabelClass = '.label-'+selectedSpaceLinkId;
     var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
     if(show) {
@@ -385,7 +385,7 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
 function showExternalLinkEdit(externalLink, show, posX, posY) {
     externalLink["x"]=storeX;
     externalLink["y"]=storeY;
-    var selectedLinkClass = '.externalLink-'+selectedExternalLinkId;
+    var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
     var selectedLabelClass = '.label-'+selectedExternalLinkId;
     updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
 }
