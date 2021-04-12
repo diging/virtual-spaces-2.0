@@ -35,6 +35,35 @@
     word-break: break-all;
 }
 
+.imgResizeCheckbox {
+    position: absolute;
+    width: 50px;
+    height: 44px;
+    left: 90%;
+    top: 15%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.imgResizeCheckbox:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
 .barPosition {
     top: 25px;
 }
@@ -81,14 +110,14 @@
                 // resize the image to max width
 			    if (isResizeImgBtnClicked == 1) {
 			    	isResizeImgBtnClicked = -isResizeImgBtnClicked;
-			    	$("#toggleBtn").attr('class', "icon-collapse secondary");
+			    	$("#toggleImgClass").attr('class', "icon-collapse secondary");
                     $("#bgImage").css("width", maxImgWidth);
                     $("#space a").remove();
                     drawLinks();
                 }
                 else{
                 	isResizeImgBtnClicked = -isResizeImgBtnClicked;
-                	$("#toggleBtn").attr('class', "icon-expand secondary");
+                	$("#toggleImgClass").attr('class', "icon-expand secondary");
                     $("#bgImage").css("width", spaceWidth);
                     $('#bgImage').width('100%')
                     $("#space a").remove();
@@ -252,11 +281,14 @@
 
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
-            <span id="imgResizeCheckbox" style="margin-left: 1140px">
-                <button title="Resize Image" type="button"
-                    class="icon-expand secondary" id="toggleBtn"
-                    onclick="toggleImgSize()"></button>
-            </span>
+            <div class="imgResizeCheckbox">
+                <button class="btn circle-btn" id="toggleBtn"
+                    onclick="toggleImgSize()">
+                    <span class="icon-expand secondary"
+                        id="toggleImgClass"></span> <span
+                        class="tooltiptext">Resize Image</span>
+                </button>
+            </div>
             <div class="modalDown alert alert-warning center col-md-12"
                 style="text-align: center;"
                 th:style="${exhibitionConfig.mode == 'ACTIVE'? 'display:block' : 'display:none'}">
