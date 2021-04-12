@@ -5,6 +5,7 @@ import java.util.List;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 public interface IModuleManager {
 
@@ -19,5 +20,7 @@ public interface IModuleManager {
     List<ISequence> getModuleSequences(String moduleId);
 
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
+
+    List<IVSpaceElement> findInNameOrDescriptionOfPublicModule(String searchText);
 
 }

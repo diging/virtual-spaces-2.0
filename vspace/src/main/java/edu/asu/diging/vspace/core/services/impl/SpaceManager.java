@@ -27,6 +27,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -279,5 +280,11 @@ public class SpaceManager implements ISpaceManager {
             space.setIncomingLinks( (spaceLinkRepo.getLinkedFromSpaces(space.getId())).size() > 0 ? true : false );
         }
         return spaces;
+    }
+
+    @Override
+    public List<IVSpaceElement> findInNameOrDescriptionOfPublicSpaces(String searchText) {
+        // TODO Auto-generated method stub
+        return spaceRepo.findInNameOrDescription(searchText);
     }
 }

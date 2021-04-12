@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 
@@ -81,5 +82,11 @@ public class ModuleManager implements IModuleManager {
     @Override
     public ISequence checkIfSequenceExists(String moduleId, String sequenceId) {
         return sequenceRepo.findSequenceForModuleAndSequence(moduleId,sequenceId);
+    }
+
+    @Override
+    public List<IVSpaceElement> findInNameOrDescriptionOfPublicModule(String searchText) {
+        // TODO Auto-generated method stub
+        return moduleRepo.findInNameOrDescription(searchText);
     }
 }
