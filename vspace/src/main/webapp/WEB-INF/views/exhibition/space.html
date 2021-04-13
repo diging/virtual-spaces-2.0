@@ -35,7 +35,7 @@
     word-break: break-all;
 }
 
-.imgResizeCheckbox {
+.imgResizeDiv {
     position: absolute;
     width: 50px;
     height: 44px;
@@ -45,7 +45,7 @@
     cursor: pointer;
 }
 
-.imgResizeCheckbox:hover .tooltiptext {
+.imgResizeDiv:hover .tooltiptext {
     visibility: visible;
 }
 
@@ -105,7 +105,7 @@
 		
             let isResizeImgBtnClicked = 1;
             function toggleImgSize(){
-                let maxImgWidth = '1200px';
+                let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
                 // resize the image to max width
 			    if (isResizeImgBtnClicked == 1) {
@@ -281,11 +281,11 @@
 
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
-            <div class="imgResizeCheckbox">
-                <button class="btn circle-btn" id="toggleBtn"
+            <div class="imgResizeDiv">
+                <button class="btn circle-btn" id="toggleBtn" style="width: 40px; height: 40px;"
                     onclick="toggleImgSize()">
                     <span class="icon-expand secondary"
-                        id="toggleImgClass"></span> <span
+                        id="toggleImgClass" style="margin-left: -4px;"></span> <span
                         class="tooltiptext">Resize Image</span>
                 </button>
             </div>
