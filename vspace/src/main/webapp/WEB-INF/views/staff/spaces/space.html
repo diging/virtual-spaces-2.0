@@ -40,14 +40,6 @@ linkIconReader.onload = function(e) {
     showSpaceLink(createSpaceLinkInfo());
 }
 
-//link icons for module links
-var moduleLinkIconReader = new FileReader();
-var moduleLinkIcon;
-moduleLinkIconReader.onload = function(e) {
-    moduleLinkIcon = e.target.result;
-    showModuleLink(createModuleLinkInfo());
-}
-
 function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal){
     modalLink.css('position', 'absolute');
     if(isModal){
@@ -61,16 +53,13 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.find("span").css('fill', 'grey');
     modalLink.css('color', 'rgba(128,128,128,1)');
     modalLink.css('font-size', "12px");
+    var positionX = isModal ? posXModal : posX;
+    var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && link.link.targetSpace.spaceStatus=="UNPUBLISHED"){
         var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
         unpublishedSpaceElement.css('position', 'absolute');
-        if(isModal){
-            unpublishedSpaceElement.css('left', link.positionX + posXModal + displaceUnpublishedOnX);
-            unpublishedSpaceElement.css('top', link.positionY + posYModal - displaceUnpublishedOnY);
-        }else{
-            unpublishedSpaceElement.css('left', link.positionX + posX + displaceUnpublishedOnX);
-            unpublishedSpaceElement.css('top', link.positionY + posY - displaceUnpublishedOnY);
-        }
+        unpublishedSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+        unpublishedSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
         unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
         unpublishedSpaceElement.css('font-size', "24px");
         if(isModal){
@@ -79,34 +68,22 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
             $("#main-space").append(unpublishedSpaceElement);
         }
     }
-    if(isExternalLink){
-        setLabelPosition(link,link.externalLink.id,isModal, posX, posY, posXModal, posYModal);
-    }else{
-        setLabelPosition(link,link.link.id,isModal, posX, posY, posXModal, posYModal);
-    }
+    var linkId = isExternalLink ? link.externalLink.id : link.link.id;
+    setLabelPosition(link,linkId,positionX,positionY);
 }
-function setLabelPosition(link,id, isModal, posX, posY, posXModal, posYModal){
-    if(isModal){
-        $(".label-"+id).css({
-            'left': link.positionX + posXModal - displaceLableOnX,
-            'top': link.positionY + posYModal + displaceLableOnY,
-            'color': 'red'
-        }); 
-    }
-    else{
-        $(".label-"+id).css({
-            'left': link.positionX + posX - displaceLableOnX,
-            'top': link.positionY + posY + displaceLableOnY,
-            'color': 'red'
-        });
-    }
+function setLabelPosition(link,id, positionX, positionY){
+	$(".label-"+id).css({
+	    'left': link.positionX + positionX - displaceLableOnX,
+	    'top': link.positionY + positionY + displaceLableOnY,
+	    'color': 'red'
+	}); 
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
     if(link != null){
         var spaceLink;
         if(link.type == "ALERT"){
-            spaceLink = $('<div class="alert alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+            spaceLink = $('<span id="'+spanId+link.link.id+'" class="alert alertLink alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></span>');
         }
         else if(link.type == "IMAGE" && link.image != null){
             var spaceImageURL = [[@{/api/image/}]]+link.image.id;
@@ -130,7 +107,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
     if(link != null){
         var moduleLink;
         if(link.type=="ALERT"){
-            moduleLink = $('<div class="alert alert-primary moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+            moduleLink = $('<div class="alert alert-primary alertLink moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
         }
         else if(link.type=="IMAGE" && link.image != null){
             var moduleImageURL = [[@{/api/image/}]]+link.image.id;
@@ -171,6 +148,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 function drawLinks(){
     $(".Info_cz_Class").remove();
     $(".imageLink").remove();
+    $(".alertLink").remove();
     $(".ellipse_class").remove();
     $(".unpublishedSpaceClass").remove();
     
@@ -243,7 +221,7 @@ function showSpaceLink(spaceLink, show, x, y) {
 
     var link;
     if (spaceLink["type"] == "ALERT") {
-        link = $('<div id="link" class="alert alert-primary spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
+        link = $('<div id="link" class="alert alert-primary alertLink spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
     } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
         link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
     } else {
@@ -305,10 +283,8 @@ function showModuleLink(moduleLink, show, x, y) {
 
     var link;
     if (moduleLink["type"] == "ALERT") {
-        link = $('<div id="link" class="alert alert-primary moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-    } else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
-        link = $('<div id="link" data-link-id="' + moduleLink["id"] + '" ><img src="' + moduleLinkIcon + '"></div>');
-    } else { 
+        link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
+    }else{ 
         $(module_label).css({
             'position': 'absolute',
             'font-size': "10px",
@@ -558,9 +534,9 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     	resetHighlighting(); 
     }
     $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
-    $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
+    /* $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
     $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
-    $('div[data-link-id="' + spaceLinkId + '"]').addClass("spaceLink");
+    $('div[data-link-id="' + spaceLinkId + '"]').addClass("spaceLink"); */
     $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
     $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
 
@@ -1224,12 +1200,6 @@ $(function(){
         $("#spaceLinkImage").change(function() {
             if (this.files && this.files[0]) {
                 linkIconReader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        $("#moduleLinkImage").change(function() {
-            if (this.files && this.files[0]) {
-                moduleLinkIconReader.readAsDataURL(this.files[0]);
             }
         });
 
