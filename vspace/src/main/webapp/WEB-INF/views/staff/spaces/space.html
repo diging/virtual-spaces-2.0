@@ -389,6 +389,9 @@ function hideLinkInfoTabs(){
     $("#editExternalLinkInfo").hide();
     $("#editSpaceLinkInfo").hide();
     $("#editModuleLinkInfo").hide();
+    $("#createExternalLinkAlert").hide();
+    $("#createSpaceLinkAlert").hide();
+    $("#createModuleLinkAlert").hide();
     $("#errorMsg").text("");
     $('#errorAlert').hide();
 }
@@ -534,9 +537,6 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     	resetHighlighting(); 
     }
     $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
-    /* $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
-    $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
-    $('div[data-link-id="' + spaceLinkId + '"]').addClass("spaceLink"); */
     $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
     $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
 
