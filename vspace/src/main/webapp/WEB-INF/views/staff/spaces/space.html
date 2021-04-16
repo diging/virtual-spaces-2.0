@@ -1381,16 +1381,6 @@ $(function(){
             </div>
  			 
  		</div>
-        <div id="errorAlert"
-            class="alert alert-danger alert-dismissible fade show"
-            role="alert"
-            style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
-            <strong>Error!</strong> <span id="errorMsg"></span>
-            <button type="button" class="close" id="closeAlert"
-                aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
 		
 		 <div style="margin: 20px 0">
             <button type="button" id="addSpaceLinkButton"class="btn primary-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top">
@@ -1408,7 +1398,17 @@ $(function(){
         </div>
         <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
         <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image.id}}" />
-		<div id="createSpaceLinkAlert" class="custom_form_style">
+        <div id="errorAlert"
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+            style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+            <strong>Error!</strong> <span id="errorMsg"></span>
+            <button type="button" class="close" id="closeAlert"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+		<div id="createSpaceLinkAlert" class="custom_form_style" style="z-index: 1;">
             <div class="divider"></div>
 			<form id="createSpaceLinkForm">
 	            <div role="alert" style="margin-top: 30px;">
@@ -1488,7 +1488,7 @@ $(function(){
 	        </form>
 		</div>
         
-		<div id="createModuleLinkAlert" class="custom_form_style">
+		<div id="createModuleLinkAlert" class="custom_form_style" style="z-index: 1;">
 	        <div class="divider"></div>
 	        <form id="createModuleLinkForm">
 	            <div role="alert" style="margin-top: 30px;">
@@ -1549,7 +1549,7 @@ $(function(){
 	        </form>
 		</div>
 		
-		<div id="createExternalLinkAlert" class="custom_form_style">
+		<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
 	        <div class="divider"></div>
 	        <form id="createExternalLinkForm">
 	            <div role="alert" style="margin-top: 30px;">
@@ -1617,7 +1617,7 @@ $(function(){
 	        </form>
 		</div>
 		
-		<div id="editSpaceLinkInfo" class="custom_form_style">
+		<div id="editSpaceLinkInfo" class="custom_form_style" style="z-index: 1;">
 	        <div class="divider"></div>
 	        <form id="editSpaceLinkForm">
                 <p class="float-right">
@@ -1711,7 +1711,7 @@ $(function(){
 	            </div>
 	        </form>
 		</div>
-        <div id="editModuleLinkInfo" class="custom_form_style">
+        <div id="editModuleLinkInfo" class="custom_form_style" style="z-index: 1;">
             <div class="divider"></div>
             <form id="editModuleLinkForm">
                 <p class="float-right">
@@ -1788,7 +1788,7 @@ $(function(){
                 </div>
             </form>
         </div>
-        <div id="editExternalLinkInfo" class="custom_form_style">
+        <div id="editExternalLinkInfo" class="custom_form_style" style="z-index: 1;">
             <div class="divider"></div>
             <form id="editExternalLinkForm">
                 <p class="float-right">
