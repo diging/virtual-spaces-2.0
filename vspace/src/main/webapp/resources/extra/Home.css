@@ -748,6 +748,21 @@
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
 }
 
+.slide-nav {
+    left: 10%;
+    position: absolute;
+    top: 10%;
+}
+
+.circle-btn-slide-nav {
+    background: white;
+    width: 33px;
+    height: 33px;
+    left:19%;
+    border-radius: 50%;
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+}
+
 .circle-btn:hover {
 	background: #f2f2f2;
 }
