@@ -45,7 +45,7 @@ public class EditSpaceTextBlockController{
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
-        linkNode.put("id", id);
+        linkNode.put("id", textBlockId);
         linkNode.put("x", x);
         linkNode.put("y", y);
         linkNode.put("width", width);

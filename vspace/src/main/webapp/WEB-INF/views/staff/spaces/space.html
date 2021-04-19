@@ -23,6 +23,7 @@ var storeY;
 var selectedModuleLinkId;
 var selectedSpaceLinkId;
 var selectedExternalLinkId;
+var selectedTextBlockId;
 
 function drawLinks(){
     [# th:each="link,loop : ${spaceLinks}"]
@@ -226,7 +227,7 @@ function drawLinks(){
         var height = ([[${block.height}]]*imageHeight)/100;
         var width = ([[${block.width}]]*imageWidth)/100;
     
-        var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-'+[[${block.spaceTextBlock.id}]]+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px;" readonly>'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
+        var block = $('<span data-link-id="'+[[${block.spaceTextBlock.id}]]+'" class="spaceLink-'+[[${block.spaceTextBlock.id}]]+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:both;" readonly type="textarea">'+[[${block.spaceTextBlock.text}]]+'</textarea></span>');
     
         block.css('position', 'absolute');
         block.css('left', [[${block.positionX}]] + posX);
@@ -357,8 +358,8 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
         var posY = $(this).position().top;    
         storeX = e.pageX - $(this).offset().left;
         storeY = e.pageY - $(this).offset().top;
+        showTextBlockEdit(editTextBlockInfo());
     });
-    //hideLinkInfoTabs();
     $("#editTextBlockInfo").show();
 
 }
@@ -388,6 +389,55 @@ function resetHighlighting() {
 }
 
 //--------- show links functions --------------
+
+function showTextBlock(textBlock, show){
+    $("#textB").remove();
+    $("#text").remove();
+    var posX = $("#bgImage").position().left;
+    var posY = $("#bgImage").position().top;
+    var imageHeight = parseInt($("#bgImage").css("height"));
+    var imageWidth = parseInt($("#bgImage").css("width"));
+    var textArea = $("<textarea class='textBlock' type='textarea'></textarea>");
+    textArea.css('width', (textBlock["width"]*imageWidth)/100);
+    textArea.css('height', (textBlock["height"]*imageHeight)/100);
+    textArea.css('resize', 'both');
+    textArea.text(textBlock["text"]);
+    var spaceTextBlock;
+    spaceTextBlock = $('<span class="spaceLink-' + textBlock["id"] + '" data-link-id="' + textBlock["id"] + '"></span>');
+    spaceTextBlock.css('position', 'absolute');
+    spaceTextBlock.css('left', textBlock["x"] + posX);
+    spaceTextBlock.css('top', textBlock["y"] + posY);
+    spaceTextBlock.css('font-size', "12px");
+
+    if (textBlock["id"]) {
+        spaceTextBlock.attr("data-link-id", textBlock["id"]);
+        spaceTextBlock.css('cursor', 'pointer');
+        spaceTextBlock.click(function(e) {
+            makeTextBlockEditable(textBlock["displayId"], textBlock["id"], textBlock["text"], textBlock["x"], textBlock["y"], textBlock["width"], textBlock["height"]);
+        });
+    }
+    spaceTextBlock.append(textArea);
+    $("#space").append(spaceTextBlock);
+    feather.replace();
+}
+
+function showTextBlockEdit(textBlock){
+    textBlock["x"]=storeX;
+    textBlock["y"]=storeY;
+    var selectedClass = ".spaceLink-"+selectedTextBlockId;
+    var selectedTextArea = ".spaceLink-"+selectedTextBlockId+" .textBlock";
+    var posX = $("#bgImage").position().left;
+    var posY = $("#bgImage").position().top;
+    var imageHeight = parseInt($("#bgImage").css("height"));
+    var imageWidth = parseInt($("#bgImage").css("width"));
+    $(selectedClass).css('left', textBlock["x"]+posX);
+    $(selectedClass).css('top', textBlock["y"]+posY);
+    $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
+    $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);	
+    $(selectedTextArea).text(textBlock["text"]);
+    feather.replace();
+}
+
 function showSpaceLink(spaceLink, show) {
     $("#space_label").remove();
     $("#link").remove();
@@ -664,7 +714,7 @@ function createTextBlockInfo() {
     info["x"] = storeX;
     info["y"] = storeY;
     info["text"] = $("#textContentID").val();
-    info["heigth"] = $("#textBoxHeightID").val();
+    info["height"] = $("#textBoxHeightID").val();
     info["width"] = $("#textBoxWidthID").val();
     return info;
 }
@@ -674,7 +724,7 @@ function editTextBlockInfo() {
     info["x"] = storeX;
     info["y"] = storeY;
     info["text"] = $("#textContentIDForEdit").val();
-    info["heigth"] = $("#textBoxHeightIDEdit").val();
+    info["height"] = $("#textBoxHeightIDEdit").val();
     info["width"] = $("#textBoxWidthIDEdit").val();
     return info;
 }
@@ -885,8 +935,16 @@ $(function(){
                 enctype: 'multipart/form-data',
                 data: formData, 
                 success: function(data) {
-                    var blockData = JSON.parse(data);
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    textBlockInfo["id"] = linkData["id"];
+                    textBlockInfo["displayId"]=linkData["displayId"];
+                    textBlockInfo["x"]=linkData["x"];
+                    textBlockInfo["y"]=linkData["y"];
+                    showTextBlock(textBlockInfo, true);
                     $("#addTextFormInfo").hide();
+                    $("#errorMsg").text("");
+                    $('#errorAlert').hide();
                 }
             });
         });
@@ -1159,11 +1217,12 @@ $(function(){
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     textBlockInfo["id"] = linkData["id"];
-                    textBlockInfo["text"]=linkData["text"];
+                    textBlockInfo["text"]=linkData["textContent"];
                     textBlockInfo["x"]=linkData["x"];
                     textBlockInfo["y"]=linkData["y"];
                     textBlockInfo["height"]=linkData["height"];
                     textBlockInfo["width"]=linkData["width"];
+                    showTextBlockEdit(textBlockInfo);
                     hideLinkInfoTabs();
                 }
             });
