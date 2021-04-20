@@ -14,7 +14,10 @@
    </head>
    <body>
     <div layout:fragment="content">
-      <div id="Module_1" class="Module_1_Class">
+      <div th:if="${showAlert == true}" class="alert alert-warning center col-md-12" style="text-align: center;">
+      [[${message}]]
+      </div>
+      <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
         <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: fixed; z-index: 100; top: 5.5%; width: 100%; display: flex;">
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
