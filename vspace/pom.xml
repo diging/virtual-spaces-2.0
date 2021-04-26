@@ -23,10 +23,10 @@
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3306/VSpace2</db.url>
-        <db.user>root</db.user>
-        <db.password>password</db.password>
-        <uploaded.files.path>C:/Diging/downloads</uploaded.files.path>
+        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC</db.url>
+        <db.user>vspace</db.user>
+        <db.password>vspace</db.password>
+        <uploaded.files.path></uploaded.files.path>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -329,7 +329,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
         </dependency>
 
         <dependency>

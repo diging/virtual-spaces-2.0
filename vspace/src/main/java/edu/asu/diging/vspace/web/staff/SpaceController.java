@@ -1,9 +1,12 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,6 +69,16 @@ public class SpaceController {
     public ResponseEntity<List<SpaceLink>> getSpaceLinksPresent(@PathVariable("spaceId") String spaceId) {
         List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/staff/space/{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,Object>> showSpaceLinks(@PathVariable String id, Model model) {
+        Map<String,Object> responseData = new HashMap<String,Object>();
+        responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
+        responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
+        responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
+        responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
 }
