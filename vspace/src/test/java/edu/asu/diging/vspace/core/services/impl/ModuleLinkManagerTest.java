@@ -22,12 +22,16 @@ import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 public class ModuleLinkManagerTest {
     @Mock
@@ -38,6 +42,9 @@ public class ModuleLinkManagerTest {
 
     @Mock
     private SpaceManager spaceManager;
+
+    @Mock
+    private SpaceDisplayManager spaceDisplayManager;
 
     @Mock
     private ModuleManager moduleManager;
@@ -64,6 +71,16 @@ public class ModuleLinkManagerTest {
 
         Space space = new Space();
         space.setId(spaceId1);
+        IVSImage spaceImage = new VSImage();
+        spaceImage.setHeight(700);
+        spaceImage.setWidth(1300);
+        space.setImage(spaceImage);
+
+        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+
+        Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
         Mockito.when(spaceManager.getSpace(space.getId())).thenReturn(space);
 
         IModuleLink moduleLink = new ModuleLink();
@@ -106,6 +123,16 @@ public class ModuleLinkManagerTest {
     public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
         ISpace space = new Space();
         space.setId(spaceId1);
+        IVSImage spaceImage = new VSImage();
+        spaceImage.setHeight(700);
+        spaceImage.setWidth(1300);
+        space.setImage(spaceImage);
+
+        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+
+        Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
         ModuleLinkDisplay moduleLinkDisplay = new ModuleLinkDisplay();
         IModuleLink moduleLink = new ModuleLink();
         moduleLink.setId("MOL001");

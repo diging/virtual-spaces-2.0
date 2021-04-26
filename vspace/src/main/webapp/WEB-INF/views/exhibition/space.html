@@ -153,12 +153,12 @@
 		    }
 		}
 		function closeModuleNav(){
-		    $("#mySideModulenav").css("width", "0px");
+		    $("#mySideModulenav").css("width", "0");
 		}
 		
 		function closeSpaceDescription(){
-		    $("#rightContent").css("width", "0px");
-		    $("#rightContent").css("height", "0px");
+		    $("#rightContent").css("width", "0");
+		    $("#rightContent").css("height", "0");
 		}
 		
 		function openSpaceDescription(){
@@ -183,104 +183,119 @@
 		});
 		
 		function drawLinks() {
-			[# th:each="link, iStat : ${spaceLinks}" ]
-			[# th:if="${link != null}" ]
-		        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-		        var posY = $("#space").position().top;
-		        var link = $('<a></a>');
-		        link.attr("href", "[(${link.link.targetSpace.id})]");
-		            var linkDisplay=$('<div class="InfoSpace_${iStat} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span><span class="tooltiptext">[(${link.link.name})]</span></div>');
-		
-		           
-		        linkDisplay.css('position', 'absolute');
-		        linkDisplay.css('transform', 'rotate([(${link.rotation})]deg)');
-		        linkDisplay.css('fill', 'grey'); 
-		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-		        var height = parseInt($("#bgImage").css("height"));
-		        var width = parseInt($("#bgImage").css("width"));
-		        var	linkPosX=(width*[(${link.positionX})])/[(${display.width})];
-		        var	linkPosY=(height*[(${link.positionY})])/[(${display.height})];
-		        linkDisplay.css('left',linkPosX + posX);
-		        linkDisplay.css('top', linkPosY + posY);
-		        link.append(linkDisplay);
-		        $("#space").append(link);
-		        $(".label-[(${iStat.index})]").css({
-		          'transform': 'rotate(0deg)',
-		          'left': [(${link.positionX})] + posX - 10, 
-		          'padding-top': '30px',
-		          'color': 'rgba(150, 45, 62, 1)',
-		          'font-size': '12px',
-		          'overflow': 'visible'
-		        });
-		    [/]
-		    [/]
-		   
-		    [# th:each="link, iStat : ${moduleList}" ]
-			[# th:if="${link != null}" ]	
-		        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-		        var posY = $("#space").position().top;
-		        var link = $('<a></a>');
-		        var moduleLinkURL = [[@{|/exhibit/${space.id}/module/${link.link.module.id}|}]];
-		        
-		        link.attr("href", moduleLinkURL);
-		        var linkDisplay = $('<div class="InfoModule_${iStat} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">[(${link.link.name})]</span></div>');
-		        linkDisplay.css('position', 'absolute');
-		        linkDisplay.css('transform', 'rotate([(${link.rotation})]deg)');
-		        linkDisplay.css('fill', 'grey'); 
-		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-		        var height = parseInt($("#bgImage").css("height"));
-		        var width = parseInt($("#bgImage").css("width"));
-		        var	linkPosX=(width*[(${link.positionX})])/[(${display.width})];
-		        var	linkPosY=(height*[(${link.positionY})])/[(${display.height})];
-		        linkDisplay.css('left',linkPosX + posX);
-		        linkDisplay.css('top', linkPosY + posY);
-		        link.append(linkDisplay);
-		        $("#space").append(link);
-		        $(".moduleLabel-[(${iStat.index})]").css({
-		            'transform': 'rotate(0deg)',
-		            'left': [(${link.positionX})] + posX - 10,
-		            'padding-top': '30px',
-		            'color': 'rgba(150, 45, 62, 1)',
-		            'font-size': '12px'
-		          });
-		    [/]
-		    [/]
-		    
-		    [# th:each="link, iStat : ${externalLinkList}" ]
-			[# th:if="${link != null}" ]
-		    {
-		        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-		        var posY = $("#space").position().top;
-		        var link = $('<a></a>');
-		        link.attr('href', "[(${link.externalLink.externalLink})]");
-		        link.attr('target', "_blank");
-		        var linkDisplay = $('<span class="fas fa-globe"></span>');
-		            var linkDisplay = $('<div class="InfoExt_${iStat} Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">[(${link.name})]</span></div>');
-		        
-		        linkDisplay.css('position', 'absolute');
-		        linkDisplay.css('transform', 'rotate([(${link.rotation})]deg)');
-		        linkDisplay.css('fill', 'grey'); 
-		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-		        var height = parseInt($("#bgImage").css("height"));
-		        var width = parseInt($("#bgImage").css("width"));
-		        var	linkPosX=(width*[(${link.positionX})])/[(${display.width})];
-		        var	linkPosY=(height*[(${link.positionY})])/[(${display.height})];
-		        linkDisplay.css('left',linkPosX + posX);
-		        linkDisplay.css('top', linkPosY + posY);
-		        link.append(linkDisplay);
-		        $("#space").append(link);
-		        $(".externalLabel-[(${iStat.index})]").css({
-		            'transform': 'rotate(0deg)',
-		            'left': [(${link.positionX})] + posX - 10,
-		            'padding-top': '30px',
-		            'color': 'rgba(150, 45, 62, 1)',
-		            'font-size': '12px'
-		          });
-		    }
-		    [/]
-		    [/]
+			var spaceLinks = [[${spaceLinks}]];
+			var moduleLinks = [[${moduleList}]];
+			var externalLinks = [[${externalLinkList}]];
+		    spaceLinks.forEach(function(link,index){
+                if(link!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+    		        var posY = $("#space").position().top;
+    		        var spaceLink = $('<a></a>');
+    		        spaceLink.attr("href", link.link.targetSpace.id);
+    		        var linkDisplay;
+    		        console.log(link.type);
+    		        if(link.type=="ALERT"){
+    		            linkDisplay = $('<div class="InfoSpace_'+index+' alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.link.name+'</span></div>');
+    		        }
+    		        else if(link.type=="IMAGE" && link.image != null){
+                        var spaceImageURL = [[@{/api/image/}]]+link.image.id;
+                        linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
+    		        }
+    		        else{
+                        linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        }
+    		        console.log(linkDisplay);
+    		        linkDisplay.css('position', 'absolute');
+    		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
+    		        linkDisplay.css('fill', 'grey'); 
+    		        linkDisplay.css('color', 'rgba(128,128,128,1)');
+    		        var height = parseInt($("#bgImage").css("height"));
+    		        var width = parseInt($("#bgImage").css("width"));
+    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosY=(height*link.positionY)/[(${display.height})];
+    		        linkDisplay.css('left',linkPosX + posX);
+    		        linkDisplay.css('top', linkPosY + posY);
+    		        spaceLink.append(linkDisplay);
+    		        $("#space").append(spaceLink);
+    		        $(".label-"+index).css({
+    		          'transform': 'rotate(0deg)',
+    		          'left': link.positionX + posX - 10, 
+    		          'padding-top': '30px',
+    		          'color': 'rgba(150, 45, 62, 1)',
+    		          'font-size': '12px',
+    		          'overflow': 'visible'
+    		        });
+                }
+            })
+            moduleLinks.forEach(function(link,index){
+                if(link!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+    		        var posY = $("#space").position().top;
+    		        var moduleLink = $('<a></a>');
+    		        var moduleLinkURL = [[@{|/exhibit/${space.id}/module/|}]]+link.link.module.id;
+    		        moduleLink.attr("href", moduleLinkURL);
+    		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        linkDisplay.css('position', 'absolute');
+    		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
+    		        linkDisplay.css('fill', 'grey'); 
+    		        linkDisplay.css('color', 'rgba(128,128,128,1)');
+    		        var height = parseInt($("#bgImage").css("height"));
+    		        var width = parseInt($("#bgImage").css("width"));
+    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosY=(height*link.positionY)/[(${display.height})];
+    		        linkDisplay.css('left',linkPosX + posX);
+    		        linkDisplay.css('top', linkPosY + posY);
+    		        moduleLink.append(linkDisplay);
+    		        $("#space").append(moduleLink);
+    		        $(".moduleLabel-"+index).css({
+    		            'transform': 'rotate(0deg)',
+    		            'left': link.positionX + posX - 10,
+    		            'padding-top': '30px',
+    		            'color': 'rgba(150, 45, 62, 1)',
+    		            'font-size': '12px'
+    		          });
+                }
+            })
+            externalLinks.forEach(function(link,index){
+                if(link!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+    		        var posY = $("#space").position().top;
+    		        var externalLink = $('<a></a>');
+    		        externalLink.attr('href', link.externalLink.externalLink);
+    		        externalLink.attr('target', "_blank");
+    		        if(link.type=="ALERT"){
+    		            linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
+    		        }
+    		        else if(link.type=="IMAGE" && link.image != null){
+                        var extImageURL = [[@{/api/image/}]]+link.image.id;
+                        linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
+    		        }
+    		        else{
+        		        var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
+    		        } 
+    		        linkDisplay.css('position', 'absolute');
+    		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
+    		        linkDisplay.css('fill', 'grey'); 
+    		        linkDisplay.css('color', 'rgba(128,128,128,1)');
+    		        var height = parseInt($("#bgImage").css("height"));
+    		        var width = parseInt($("#bgImage").css("width"));
+    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosY=(height*link.positionY)/[(${display.height})];
+    		        linkDisplay.css('left',linkPosX + posX);
+    		        linkDisplay.css('top', linkPosY + posY);
+    		        externalLink.append(linkDisplay);
+    		        $("#space").append(externalLink);
+    		        $(".externalLabel-"+index).css({
+    		            'transform': 'rotate(0deg)',
+    		            'left': link.positionX + posX - 10,
+    		            'padding-top': '30px',
+    		            'color': 'rgba(150, 45, 62, 1)',
+    		            'font-size': '12px'
+    		          });
+                }
+            })
 		}
-	</script>
+		</script>
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
