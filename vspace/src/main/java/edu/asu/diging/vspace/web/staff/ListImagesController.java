@@ -49,7 +49,7 @@ public class ListImagesController {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
         ImageCategory category = null;
-        if(!imageCategory.isEmpty()) {
+        if(imageCategory!=null && !imageCategory.isEmpty()) {
             try {
                 category = ImageCategory.valueOf(imageCategory);
             }catch(IllegalArgumentException e) {
