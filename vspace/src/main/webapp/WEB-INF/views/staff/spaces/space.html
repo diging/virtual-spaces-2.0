@@ -731,14 +731,22 @@ $(function(){
             $('#errorAlert').hide();
             var label = $("#spaceLinkLabel").val();
             var spaceName = $("#linkedSpace option:selected").text();
+            var type = $("#type option:selected").text();
 
             if (label == undefined || label == "") {
                 $("#errorMsg").text("Please fill the Label field before submitting.")
                 $('#errorAlert').show();
                 return;
             }
+            
             if (spaceName == undefined || spaceName == "Choose...") {
                 $("#errorMsg").text("Please select a space in Linked Space dropdown.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
                 $('#errorAlert').show();
                 return;
             }
@@ -819,7 +827,7 @@ $(function(){
                 return;
             }
 
-            if (linkedModules == undefined || linkedModules == "") {
+            if (linkedModules == undefined || linkedModules == "Choose...") {
                 $("#errorMsg").text("Please select linked modules.")
                 $('#errorAlert').show();
                 return;
@@ -1025,6 +1033,7 @@ $(function(){
 
             var externalLink = $("#externalLink").val();
             var externalLinkLabel = $("#externalLinkLabel").val();
+            var type = $("#extType option:selected").text();
 
 
             if (externalLink == undefined || externalLink == "") {
@@ -1035,6 +1044,12 @@ $(function(){
 
             if (externalLinkLabel == undefined || externalLinkLabel == "") {
                 $("#errorMsg").text("Please enter a label for this external link.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
                 $('#errorAlert').show();
                 return;
             }
