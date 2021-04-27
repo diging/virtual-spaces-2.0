@@ -4,8 +4,11 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+* {
+    font-family: Raleway;
+}
+
 html {
-  font-family: 'Roboto', sans-serif;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 }
@@ -1184,7 +1187,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: 'Roboto';
+  font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
   color: inherit;
