@@ -1085,7 +1085,6 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
@@ -1095,7 +1094,7 @@ input,
 button,
 select,
 textarea {
-  font-family: 'Roboto';
+  font-family: inherit;
   font-size: inherit;
   line-height: inherit;
 }
@@ -5995,8 +5994,7 @@ button.close {
 .tooltip {
   position: absolute;
   z-index: 1070;
-  display: block;
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  display: block;  
   font-size: 12px;
   font-style: normal;
   font-weight: normal;
@@ -6115,7 +6113,6 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: normal;
