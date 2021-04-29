@@ -48,7 +48,7 @@ externalLinkIconReader.onload = function(e) {
     showExternalLinks(createExternalLinkInfo());
 }
 
-function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal){
+function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock){
     modalLink.css('position', 'absolute');
     if(isModal){
         modalLink.css('left',link.positionX + posXModal);
@@ -76,8 +76,10 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
             $("#main-space").append(unpublishedSpaceElement);
         }
     }
-    var linkId = isExternalLink ? link.externalLink.id : link.link.id;
-    setLabelPosition(link,linkId,positionX,positionY);
+    if(!isTextBlock){
+        var linkId = isExternalLink ? link.externalLink.id : link.link.id;
+        setLabelPosition(link,linkId,positionX,positionY);
+    }
 }
 function setLabelPosition(link,id, positionX, positionY){
 	$(".label-"+id).css({
@@ -159,6 +161,31 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
     }
 }
 
+function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(block != null){
+        var imageHeight;
+        var imageWidth;
+        if(divId === '#space'){
+            imageHeight = parseInt($("#bgImage").css("height"));
+            imageWidth = parseInt($("#bgImage").css("width"));
+        }else{
+            imageHeight = parseInt($("#main-bgImage").css("height"));
+            imageWidth = parseInt($("#main-bgImage").css("width"));
+        }
+        var height = (block.height*imageHeight)/100;
+        var width = (block.width*imageWidth)/100;
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" class="spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:both;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
+        $(divId).append(textBlock);
+        if(spanId === "textBlockId-"){
+            $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
+            $('#'+spanId+block.spaceTextBlock.id).click(function(e) {
+                makeTextBlockEditable(block.id,block.spaceTextBlock.id,block.spaceTextBlock.text,block.positionX,block.positionY,block.width,block.height);
+            });
+        }
+    }
+}
+
 function drawLinks(){
     $(".Info_cz_Class").remove();
     $(".imageLink").remove();
@@ -224,25 +251,15 @@ function drawLinks(){
             })
             
             textBlocks.forEach(function(block,index){
-                var posX = $("#main-bgImage").position().left;
-                var posY = $("#main-bgImage").position().top;
+                var spanId= "textModalBlockId-";
+                var divId = "#space";
+                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal);
+            })
             
-                var imageHeight = parseInt($("#main-bgImage").css("height"));
-                var imageWidth = parseInt($("#main-bgImage").css("width"));
-                var height = (block.height*imageHeight)/100;
-                var width = (block.width*imageWidth)/100;
-            
-                var textBlock = $('<span data-link-id="'+block.spaceTextBlock.id+'" class="spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:both;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
-            
-                textBlock.css('position', 'absolute');
-                textBlock.css('left', block.positionX + posX);
-                textBlock.css('top', block.positionY + posY);
-                textBlock.css('font-size', "12px");
-                $("#main-space").append(textBlock);
-            
-                $('[data-link-id="'+block.spaceTextBlock.id+'"]').click(function(e) {
-                    makeTextBlockEditable(block.id,block.spaceTextBlock.id,block.spaceTextBlock.text,block.positionX,block.positionY,block.width,block.height);
-                });
+            textBlocks.forEach(function(block,index){
+                var spanId= "textBlockId-";
+                var divId = "#main-space";
+                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal);
             })
         }
     });
@@ -742,7 +759,8 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
         storeY = e.pageY - $(this).offset().top;
         showTextBlockEdit(editTextBlockInfo());
     });
-    $("#editTextBlockInfo").show();
+    hideLinkInfoTabs();
+    displayForms("#editTextBlockInfo");
 
 }
 
@@ -934,9 +952,12 @@ $(function(){
                     textBlockInfo["x"]=linkData["x"];
                     textBlockInfo["y"]=linkData["y"];
                     showTextBlock(textBlockInfo, true);
-                    $("#addTextFormInfo").hide();
                     $("#errorMsg").text("");
                     $('#errorAlert').hide();
+                    $("#addTextFormInfo").hide();
+                    $("#space").css("display", "none");
+                    form[0].reset();
+                    drawLinks();
                 }
             });
         });
@@ -974,6 +995,8 @@ $(function(){
                     textBlockInfo["width"]=linkData["width"];
                     showTextBlockEdit(textBlockInfo);
                     hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    selectedTextBlockId=undefined;
                     drawLinks();
                 }
             });
@@ -1432,6 +1455,8 @@ $(function(){
                 success:function(data) {
                     $('[data-link-id="' + blockId + '"]').remove();
                     hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    drawLinks();
                 }
             });
         });
@@ -1538,11 +1563,13 @@ $(function(){
             drawLinks();
         });
         
-        $("#cancelAddTextBlockBtn").click(function() {
+        $(".cancelAddTextBlockBtn").click(function() {
             storeX = null;
             storeY = null;
             $("#textContentID").val(""); 
-            $("#addTextFormInfo").hide();  
+            $("span#text").remove();
+            $("#space").hide();
+            $("#addTextFormInfo").hide();
             $('#errorAlert').hide();
             drawlinks();
         });
@@ -1588,10 +1615,12 @@ $(function(){
         
         $("#closeEditTextBlockInfo").click(function(e) {
             e.preventDefault();
+            selectedTextBlockId=undefined;
             $("#textBoxHeightIDEdit").val("");
             $("#textBoxWidthIDEdit").val("");
             $("#textContentIDForEdit").val("");
             resetHighlighting();
+            $("#space").hide();
             $("#editTextBlockInfo").hide();
             drawLinks();
         });
@@ -1985,12 +2014,10 @@ $(function(){
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <button id="addTextBlockBtn" type="reset"
-                                class="btn btn-primary btn-xs">Save</button>
-                        </div>
-                        <button id="cancelAddTextBlockBtn" type="reset"
-                            class="btn btn-light btn-xs">Cancel</button>
+                        <p class="mt-5 text-center">
+                            <button type="reset" class="btn btn-light btn-sm cancelAddTextBlockBtn">Cancel</button>
+                            <button id="addTextBlockBtn" type="submit" class="btn primary-btn btn-sm">Create Text Block</button>
+                        </p>
                     </div>
                 </div>
             </form>
@@ -2320,16 +2347,11 @@ $(function(){
                                 id="textContentIDForEdit" style="width: inherit; height: 100%;"></textarea><br>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <button id="editTextBlockBtn" type="reset"
-                                class="btn btn-primary btn-xs">Save</button>
-                        </div>
-                        <div class="col-sm-8">
-                            <button id="deleteTextBlockButton" type="reset"
-                                class="btn btn-primary btn-xs">Delete</button>
-                        </div>
-                    </div>
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteTextBlockButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editTextBlockBtn" type="reset" class="btn primary-btn btn-sm">Save Text Block</button>
+                    </p>
                 </div>
             </form>
         </div>
