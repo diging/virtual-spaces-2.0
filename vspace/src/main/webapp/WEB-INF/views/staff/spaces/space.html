@@ -174,13 +174,14 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
         }
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" class="spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:both;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:both;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
         setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
         $(divId).append(textBlock);
         if(spanId === "textBlockId-"){
             $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
             $('#'+spanId+block.spaceTextBlock.id).click(function(e) {
-                makeTextBlockEditable(block.id,block.spaceTextBlock.id,block.spaceTextBlock.text,block.positionX,block.positionY,block.width,block.height);
+                var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
+                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"]);
             });
         }
     }
@@ -192,6 +193,7 @@ function drawLinks(){
     $(".alertLink").remove();
     $(".ellipse_class").remove();
     $(".unpublishedSpaceClass").remove();
+    $(".textBlockClass").remove();
     
     $.ajax({
         type: "GET",
@@ -294,14 +296,13 @@ function showTextBlock(textBlock, show){
     }
     spaceTextBlock.append(textArea);
     $("#space").append(spaceTextBlock);
-    feather.replace();
 }
 
 function showTextBlockEdit(textBlock){
     textBlock["x"]=storeX;
     textBlock["y"]=storeY;
-    var selectedClass = ".spaceLink-"+selectedTextBlockId;
-    var selectedTextArea = ".spaceLink-"+selectedTextBlockId+" .textBlock";
+    var selectedClass = '#textModalBlockId-'+selectedTextBlockId;
+    var selectedTextArea = "#textModalBlockId-"+selectedTextBlockId+" .textBlock";
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var imageHeight = parseInt($("#bgImage").css("height"));
@@ -311,7 +312,6 @@ function showTextBlockEdit(textBlock){
     $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
     $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);   
     $(selectedTextArea).text(textBlock["text"]);
-    feather.replace();
 }
 
 function showSpaceLink(spaceLink, show, x, y) {
@@ -1571,7 +1571,7 @@ $(function(){
             $("#space").hide();
             $("#addTextFormInfo").hide();
             $('#errorAlert').hide();
-            drawlinks();
+            drawLinks();
         });
 
         $("#cancelBgImgBtn").click(function() {
@@ -1967,13 +1967,12 @@ $(function(){
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                    <div class="row">
+                    <div class="row">   
                         <div class="col">
-                            <small>Please click on the image where
-                                you want to place the Text content. Then
-                                click "Save".</small>
-                            </p>
-                            <hr>
+                            <h5 class="alert-heading">Create Text Block</h5>
+                            <p>Please click on the image where you
+                               want to place the new text block. Then click
+                               "Create Text Block".</p>
                         </div>
                     </div>
     
@@ -1983,7 +1982,7 @@ $(function(){
     
                     <div class="row">
                         <div class="col-sm-4">
-                            <label><small>Width:</small> </label>
+                            <label>Width:</label>
                         </div>
                         <div class="col-sm-8">
                             <input class="form-control-xs textBoxWidth"
@@ -1994,7 +1993,7 @@ $(function(){
     
                     <div class="row">
                         <div class="col-sm-4">
-                            <label><small>Height:</small> </label>
+                            <label>Height:</label>
                         </div>
                         <div class="col-sm-8">
                             <input class="form-control-xs textBoxHeight"
@@ -2005,16 +2004,16 @@ $(function(){
     
                     <div class="row" style="height: 32%;">
                         <div class="col-sm-4">
-                            <label><small>Text:</small> </label>
+                            <label>Text:</label>
                         </div>
                         <div class="col-sm-8">
                             <textarea class="form-control-xs textContent"
                                  name="textContent"
-                                id="textContentID" style="width: inherit; height: 100%;"></textarea><br>
+                                id="textContentID" style="width: 140%; height: 400%;"></textarea><br>
                         </div>
                     </div>
                     <div class="row">
-                        <p class="mt-5 text-center">
+                        <p class="mt-5 text-center" style="padding-top: 80%">
                             <button type="reset" class="btn btn-light btn-sm cancelAddTextBlockBtn">Cancel</button>
                             <button id="addTextBlockBtn" type="submit" class="btn primary-btn btn-sm">Create Text Block</button>
                         </p>
@@ -2294,20 +2293,17 @@ $(function(){
                     </div>
                     <input type="hidden" name="textBlockId"
                         id="textBlockId" />
+                        
                     <div class="row">
                         <div class="col">
                             <h6 class="alert-heading">
-                                <small>Modify Text Block</small>
+                                <span style="color: var(--dark-grey)">Modify Text 
+                                    Block </span><span
+                                    id="textBlockId"></span>
                             </h6>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <small>Please click on the image where
-                                you want to place the existing external
-                                link. Then click "Save".</small>
-                            </p>
-                            <hr>
+                            <p>Please click on the image where you
+                                want to place the existing text
+                                block. Then click "Edit Text Block".</p>
                         </div>
                     </div>
                     <input type="hidden" name="x" id="textBlockXEdit" /> <input
@@ -2317,7 +2313,7 @@ $(function(){
     
                     <div class="row">
                         <div class="col-sm-4">
-                            <label><small>Width:</small> </label>
+                            <label>Width:</label>
                         </div>
                         <div class="col-sm-8">
                             <input class="form-control-xs textBoxWidth"
@@ -2328,7 +2324,7 @@ $(function(){
     
                     <div class="row">
                         <div class="col-sm-4">
-                            <label><small>Height:</small> </label>
+                            <label>Height:</label>
                         </div>
                         <div class="col-sm-8">
                             <input class="form-control-xs textBoxHeight"
@@ -2339,18 +2335,18 @@ $(function(){
     
                     <div class="row" style="height: 32%;">
                         <div class="col-sm-4">
-                            <label><small>Text:</small> </label>
+                            <label>Text:</label>
                         </div>
                         <div class="col-sm-8">
                             <textarea class="form-control-xs textContent"
                                 name="textContentEdit"
-                                id="textContentIDForEdit" style="width: inherit; height: 100%;"></textarea><br>
+                                id="textContentIDForEdit" style="width: 140%; height: 400%;"></textarea><br>
                         </div>
                     </div>
                     
-                    <p class="mt-5 text-center">
+                    <p class="mt-5 text-center" style="padding-top: 80%">
                         <button id="deleteTextBlockButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
-                        <button id="editTextBlockBtn" type="reset" class="btn primary-btn btn-sm">Save Text Block</button>
+                        <button id="editTextBlockBtn" type="reset" class="btn primary-btn btn-sm">Edit Text Block</button>
                     </p>
                 </div>
             </form>
