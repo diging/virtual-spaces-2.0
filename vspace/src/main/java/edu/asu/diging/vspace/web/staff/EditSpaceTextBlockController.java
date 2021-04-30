@@ -28,7 +28,7 @@ public class EditSpaceTextBlockController{
     @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
 
-    @RequestMapping(value = "/staff/space/link/textBlock/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/link/textblock/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("textBlockId") String textBlockId, @RequestParam("textBlockDisplayId") String textBlockDisplayId, 
             @RequestParam("textContentEdit") String text,

@@ -30,7 +30,7 @@ public class AddSpaceTextBlockController {
     private ISpaceTextBlockManager spaceTextBlockManager;
 
 
-    @RequestMapping(value = "/staff/space/{id}/textBlock", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/{id}/textblock", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("textContent") String text,
             @RequestParam("height") String height, @RequestParam("width") String width)

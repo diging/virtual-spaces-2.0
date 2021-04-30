@@ -15,7 +15,7 @@ public class DeleteSpaceTextBlockController {
     @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
 
-    @RequestMapping(value = "/staff/space/{id}/textBlock/{blockId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/staff/space/{id}/textblock/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSpaceTextBlock(@PathVariable("id") String spaceId, @PathVariable("blockId") String blockId) {
         spaceTextBlockManager.deleteTextBlock(blockId);
         return new ResponseEntity<String>(HttpStatus.OK);

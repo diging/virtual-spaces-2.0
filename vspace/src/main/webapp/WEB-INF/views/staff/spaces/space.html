@@ -281,7 +281,7 @@ function showTextBlock(textBlock, show){
     textArea.css('resize', 'both');
     textArea.text(textBlock["text"]);
     var spaceTextBlock;
-    spaceTextBlock = $('<span class="spaceLink-' + textBlock["id"] + '" data-link-id="' + textBlock["id"] + '"></span>');
+    spaceTextBlock = $('<span class="textBlockClass spaceLink-' + textBlock["id"] + '" data-link-id="' + textBlock["id"] + '"></span>');
     spaceTextBlock.css('position', 'absolute');
     spaceTextBlock.css('left', textBlock["x"] + posX);
     spaceTextBlock.css('top', textBlock["y"] + posY);
@@ -938,7 +938,7 @@ $(function(){
 
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/'+${space.id}+'/textBlock?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/'+${space.id}+'/textblock?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache       : false,
                 contentType : false,
                 processData : false,
@@ -978,7 +978,7 @@ $(function(){
             var textBlockInfo = editTextBlockInfo();
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/link/textBlock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/link/textblock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache: false,
                 contentType : false,
                 processData : false,
@@ -1444,7 +1444,7 @@ $(function(){
         $("#deleteTextBlockButton").click(function() {
             var blockId = $("#textBlockId").val();
             $.ajax({
-                url: "[(@{'/staff/space/'+${space.id}+'/textBlock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                url: "[(@{'/staff/space/'+${space.id}+'/textblock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
                 beforeSend: function () {
                     $(".saveLoader").show();
