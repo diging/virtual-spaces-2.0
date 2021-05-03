@@ -5,7 +5,7 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 * {
-    font-family: Raleway;
+    font-family: Raleway, sans-serif;
 }
 
 html {
@@ -1534,7 +1534,6 @@ code,
 kbd,
 pre,
 samp {
-  font-family: 'Roboto', Monaco, Consolas, "Courier New", monospace;
 }
 code {
   padding: 2px 4px;
@@ -6381,7 +6380,6 @@ button.close {
 .carousel-control .icon-next {
   width: 20px;
   height: 20px;
-  font-family: 'Roboto', serif;
   line-height: 1;
 }
 .carousel-control .icon-prev:before {
