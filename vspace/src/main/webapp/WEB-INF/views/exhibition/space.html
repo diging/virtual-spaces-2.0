@@ -187,6 +187,9 @@
 			var moduleLinks = [[${moduleList}]];
 			var externalLinks = [[${externalLinkList}]];
 			var spaceTextBlocks = [[${spaceTextBlocks}]];
+			var height = parseInt($("#bgImage").css("height"));
+			var width = parseInt($("#bgImage").css("width"));
+			let relativeHeight = ([(${display.width})]/width)*height;
 		    spaceLinks.forEach(function(link,index){
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
@@ -194,7 +197,6 @@
     		        var spaceLink = $('<a></a>');
     		        spaceLink.attr("href", link.link.targetSpace.id);
     		        var linkDisplay;
-    		        console.log(link.type);
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoSpace_'+index+' alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.link.name+'</span></div>');
     		        }
@@ -209,10 +211,8 @@
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var height = parseInt($("#bgImage").css("height"));
-    		        var width = parseInt($("#bgImage").css("width"));
     		        var	linkPosX=(width*link.positionX)/[(${display.width})];
-    		        var	linkPosY=(height*link.positionY)/[(${display.height})];
+    		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
     		        spaceLink.append(linkDisplay);
@@ -239,10 +239,8 @@
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var height = parseInt($("#bgImage").css("height"));
-    		        var width = parseInt($("#bgImage").css("width"));
     		        var	linkPosX=(width*link.positionX)/[(${display.width})];
-    		        var	linkPosY=(height*link.positionY)/[(${display.height})];
+    		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
     		        moduleLink.append(linkDisplay);
@@ -277,10 +275,8 @@
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var height = parseInt($("#bgImage").css("height"));
-    		        var width = parseInt($("#bgImage").css("width"));
     		        var	linkPosX=(width*link.positionX)/[(${display.width})];
-    		        var	linkPosY=(height*link.positionY)/[(${display.height})];
+    		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
     		        externalLink.append(linkDisplay);
@@ -304,10 +300,8 @@
                     var widthText = block.width*10;
                     textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none;" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
                     textBlock.css('position', 'absolute');
-                    var height = parseInt($("#bgImage").css("height"));
-                    var width = parseInt($("#bgImage").css("width"));
                     var	linkPosX=(width*block.positionX)/[(${display.width})];
-                    var	linkPosY=(height*block.positionY)/[(${display.height})];
+                    var	linkPosY=(height*block.positionY)/relativeHeight;
                     textBlock.css('left', linkPosX + posX);
                     textBlock.css('top', linkPosY + posY);
                     $("#space").append(textBlock);
