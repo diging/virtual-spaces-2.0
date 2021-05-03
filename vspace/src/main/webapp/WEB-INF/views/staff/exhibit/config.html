@@ -31,11 +31,11 @@
 		<div style="padding: 30px 0;">
 		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-		        <input type="hidden" th:value="${exhibition.id}" name="exhibitionParam"/>
+		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam"/>
 		        <label for="space">Select the start space of the exhibition:</label>
 		        <select class="form-control" name="spaceParam">
 		             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}"
-		             th:selected="${#strings.equals(space.id,exhibition.startSpace.id)}">
+		             th:selected="${#strings.equals(space.id,exhibition?.startSpace?.id)}">
 		             	[[${space.name}]]
 		             </option>
 		        </select>

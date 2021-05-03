@@ -8,14 +8,16 @@
 <script th:src="@{'/resources/extra/space.js'}"></script>
 
 <script th:inline="javascript">
+//# sourceURL=script.js
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});
+
 $(window).on("load", function() {
-	$( window ).resize(function() {
-		$("#space span").remove();
-		$("#space i").remove();
-    	drawLinks();
+    $( window ).resize(function() {
+        drawLinks();
     });
     drawLinks();
-    
 });
 //store where a user clicked on an image
 var storeX;
@@ -23,487 +25,376 @@ var storeY;
 var selectedModuleLinkId;
 var selectedSpaceLinkId;
 var selectedExternalLinkId;
+const displaceUnpublishedOnX = 25
+const displaceUnpublishedOnY = 13
+const displaceUnpublishedOnXModal = 75
+const displaceUnpublishedOnYModal = 35
+const displaceLableOnX = 10
+const displaceLableOnY = 35
+
+//link icons for space links
+var linkIconReader = new FileReader();
+var linkIcon;
+linkIconReader.onload = function(e) {
+    linkIcon = e.target.result;
+    showSpaceLink(createSpaceLinkInfo());
+}
+
+var externalLinkIconReader = new FileReader();
+var externalLinkIcon;
+externalLinkIconReader.onload = function(e) {
+    externalLinkIcon = e.target.result;
+    showExternalLinks(createExternalLinkInfo());
+}
+
+function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal){
+    modalLink.css('position', 'absolute');
+    if(isModal){
+        modalLink.css('left',link.positionX + posXModal);
+        modalLink.css('top', link.positionY + posYModal);
+    }else{
+        modalLink.css('left', link.positionX + posX);
+        modalLink.css('top', link.positionY + posY);
+    }
+    modalLink.css('transform', 'rotate('+link.rotation+'deg)');
+    modalLink.find("span").css('fill', 'grey');
+    modalLink.css('color', 'rgba(128,128,128,1)');
+    modalLink.css('font-size', "12px");
+    var positionX = isModal ? posXModal : posX;
+    var positionY = isModal ? posYModal : posY;
+    if(isSpaceLink && link.link.targetSpace.spaceStatus=="UNPUBLISHED"){
+        var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
+        unpublishedSpaceElement.css('position', 'absolute');
+        unpublishedSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+        unpublishedSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+        unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+        unpublishedSpaceElement.css('font-size', "24px");
+        if(isModal){
+            $("#space").append(unpublishedSpaceElement);
+        }else{
+            $("#main-space").append(unpublishedSpaceElement);
+        }
+    }
+    var linkId = isExternalLink ? link.externalLink.id : link.link.id;
+    setLabelPosition(link,linkId,positionX,positionY);
+}
+function setLabelPosition(link,id, positionX, positionY){
+	$(".label-"+id).css({
+	    'left': link.positionX + positionX - displaceLableOnX,
+	    'top': link.positionY + positionY + displaceLableOnY,
+	    'color': 'red'
+	}); 
+}
+
+function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(link != null){
+        var spaceLink;
+        if(link.type == "ALERT"){
+            spaceLink = $('<span id="'+spanId+link.link.id+'" class="alert alertLink alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></span>');
+        }
+        else if(link.type == "IMAGE" && link.image != null){
+            var spaceImageURL = [[@{/api/image/}]]+link.image.id;
+            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
+        }
+        else{
+            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+        }
+        setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal);
+        $(divId).append(spaceLink);
+        
+        if(spanId === "spacelinkId-"){
+            $('#'+spanId+link.link.id).css('cursor', 'pointer');
+            $('#'+spanId+link.link.id).click(function(e) {
+                var linkData = $('#'+spanId+link.link.id).data();
+                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+            });
+        }
+    }
+}
+
+function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(link != null){
+        var moduleLink;
+        if(link.type=="ALERT"){
+            moduleLink = $('<div class="alert alert-primary alertLink moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+        }
+        else if(link.type=="IMAGE" && link.image != null){
+            var moduleImageURL = [[@{/api/image/}]]+link.image.id;
+            moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" src="'+moduleImageURL+'" />');
+        }
+        else{
+            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+        }
+        setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal);
+        $(divId).append(moduleLink);
+        if(spanId === "modulelinkId-"){
+            $('#'+spanId+link.link.id).css('cursor', 'pointer');
+            $('#'+spanId+link.link.id).click(function(e) {
+                var linkData = $('#'+spanId+link.link.id).data();
+                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
+            });
+        }
+    }
+}
+
+function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+    if(link != null){
+        var externalLink;
+        if(link.type=="IMAGE" && link.image != null){
+            var imageURL = [[@{/api/image/}]]+link.image.id;
+            externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+        }else{
+            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+        }
+        setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
+        $(divId).append(externalLink);
+        if(spanId === "externallinkId-"){
+            $('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
+            $('#'+spanId+link.externalLink.id).click(function(e) {
+                var linkData = $('#'+spanId+link.externalLink.id).data();
+                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+            });
+        }
+    }
+}
 
 function drawLinks(){
-    [# th:each="link,loop : ${spaceLinks}"]
-    [# th:if="${link != null}" ]
-		var posX = $("#bgImage").position().left;
-		var posY = $("#bgImage").position().top;
-		
-		var link;
-		[# th:if="${#strings.equals(link.type,'ALERT')}"]
-			link = $('<div class="alert alert-primary spaceLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="slabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
-		[/]
-		[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-		var imageURL = [[@{|/api/image/${link.image.id}|}]];
-           link = $('<img id="'+[[${link.image.id}]]+' class="spaceLink-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
-		[/]
-		[# th:if="${#strings.equals(link.type,'ARROW')}"]
-			link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="spaceLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="slabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
-		[/]
-		link.css('position', 'absolute');
-		link.css('left', [[${link.positionX}]] + posX);
-		link.css('top', [[${link.positionY}]] + posY);
-		link.css('transform', 'rotate([(${link.rotation})]deg)');
-		link.find("span").css('fill', 'red');
-		link.css('color', 'rgba(128,128,128,1)');
-		link.css('font-size', "12px");
-		var inputRotation = document.createElement("input");
-		inputRotation.setAttribute("type", "hidden");
-		inputRotation.setAttribute("id", "spaceLinkRotation-[(${link.link.id})]");
-		inputRotation.setAttribute("value", "[(${link.rotation})]");
-		var inputLabel = document.createElement("input");
-		inputLabel.setAttribute("type", "hidden");
-		inputLabel.setAttribute("id", "spaceLinkLabel-[(${link.link.id})]");
-		inputLabel.setAttribute("value", "[(${link.link.name})]");
-		var inputType = document.createElement("input");
-		inputType.setAttribute("type", "hidden");
-		inputType.setAttribute("id", "spaceLinkType-[(${link.link.id})]");
-		inputType.setAttribute("value", "[(${link.type})]");
-		var inputLinkedSpace = document.createElement("input");
-		inputLinkedSpace.setAttribute("type", "hidden");
-		inputLinkedSpace.setAttribute("id", "spaceLinkTarget-[(${link.link.id})]");
-		inputLinkedSpace.setAttribute("value", "[(${link?.link?.targetSpace?.id})]");
-		var unpublishedSpaceElement;
-		    [# th:if="${#strings.equals(link?.link?.targetSpace?.spaceStatus,'UNPUBLISHED')}"]
-			unpublishedSpaceElement=$('<span data-link-id="unpublished-[(${link.link.id})]" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-[(${link.link.id})]"></span>')
-			unpublishedSpaceElement.css('position', 'absolute');
-			unpublishedSpaceElement.css('left', [[${link.positionX}]] + posX + 25);
-			unpublishedSpaceElement.css('top', [[${link.positionY}]] + posY - 13);
-			unpublishedSpaceElement.css('transform', 'rotate([(${link.rotation})]deg)');
-			unpublishedSpaceElement.css('font-size', "12px");
-			[/]
-		//append to form element that you want .
-		$("#space").append(inputRotation);
-		$("#space").append(inputLabel);
-		$("#space").append(inputType);
-		$("#space").append(inputLinkedSpace);
-		$("#space").append(link);
-		$("#space").append(unpublishedSpaceElement);
-		
-		$(".slabel-[(${link.link.id})]").css({
-			'transform': 'rotate(0deg)',
-			'left': [[${link.positionX}]] + posX - 10,
-			'top': [[${link.positionY}]] + posY + 35,
-			'color': 'red'
-		});		
-		
-		$('[data-link-id="[(${link.link.id})]"]').css('cursor', 'pointer');
-		$('[data-link-id="[(${link.link.id})]"]').click(function(e) {
-		    var rotation = document.getElementById("spaceLinkRotation-[(${link.link.id})]").value;
-		    var label = document.getElementById("spaceLinkLabel-[(${link.link.id})]").value;
-		    var type = document.getElementById("spaceLinkType-[(${link.link.id})]").value;
-		    var targetSpace = document.getElementById("spaceLinkTarget-[(${link.link.id})]").value;
-			makeSpaceLinksEditable(label, [[${link.link.id}]], rotation ,targetSpace,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
-		});
-	[/]
-	[/]
-	[# th:each="link,loop : ${moduleLinks}"]
-	[# th:if="${link != null}" ]
-    	var link;
-    	var posX = $("#bgImage").position().left;
-    	var posY = $("#bgImage").position().top;
-    	[# th:if="${#strings.equals(link.type,'ALERT')}"]
-    		link = $('<div class="alert alert-primary moduleLink-'+[[${link.link.id}]]+'" role="alert" data-link-id="'+[[${link.link.id}]]+'"><p class="mlabel-'+[[${link.link.id}]]+'">'+[[${link.link.name}]]+'</p></div>');
-    	[/]
-    	[# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-    		var imageURL = [[@{|/api/image/${link.image.id}|}]];
-           link = $('<img id="'+[[${link.image.id}]]+'" data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+'" src="'+imageURL+'" />');
-        [/]
-    	[# th:if="${#strings.equals(link.type,'MODULE')}"]
+    $(".Info_cz_Class").remove();
+    $(".imageLink").remove();
+    $(".alertLink").remove();
+    $(".ellipse_class").remove();
+    $(".unpublishedSpaceClass").remove();
+    
+    $.ajax({
+        type: "GET",
+        url: "[(@{'/staff/space/'+${space.id}+'/links'})]",
+        cache       : false,
+        contentType : false,
+        processData : false,
+        beforeSend: function () {
+            $("#loader").show();
+            },
+       	complete: function () {
+            $("#loader").hide();
+            },
+        success: function(data) {
+            var spaceLinks = data['spaceLinks'];
+            var externalLinks = data['externalLinks'];
+            var moduleLinks = data['moduleLinks'];
+            var posXModal = $("#bgImage").position().left;
+            var posYModal = $("#bgImage").position().top;
+            var posX = $("#main-bgImage").position().left;
+            var posY = $("#main-bgImage").position().top;
+            
+            spaceLinks.forEach(function(link,index){
+                var spanId= "spacelinkModalId-";
+                var divId = "#space"
+                generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+            })
+            spaceLinks.forEach(function(link,index){
+                var spanId= "spacelinkId-";
+                var divId = "#main-space";
+                generateSpaceLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+            })
+            
+            moduleLinks.forEach(function(link,index){
+                var spanId= "moduleModallinkId-";
+                var divId = "#space";
+                generateModuleLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+            })
+            moduleLinks.forEach(function(link,index){
+                var spanId= "modulelinkId-";
+                var divId = "#main-space";
+                generateModuleLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+            })
+            
+            externalLinks.forEach(function(link,index){
+                var spanId= "externalModallinkId-";
+                var divId = "#space";
+                generateExternalLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+            })
+            
+            externalLinks.forEach(function(link,index){
+                var spanId= "externallinkId-";
+                var divId = "#main-space";
+                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+            })
+        }
+    });
+}
 
-    		link = $('<span data-link-id="'+[[${link.link.id}]]+'" class="moduleLink-'+[[${link.link.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="mlabel-'+[[${link.link.id}]]+'" data-link-id="'+[[${link.link.id}]]+'"><span class="tooltiptext">'+[[${link.link.name}]]+'</span></p></span>');
+//--------- show links functions --------------
+function showSpaceLink(spaceLink, show, x, y) {
+    $("#space_label").remove();
+    $("#link").remove();
+    var posX = $("#bgImage").position().left;
+    var posY = $("#bgImage").position().top;
+    var space_label = $("<p id='space_label' class='tooltiptext'></p>");
+    space_label.text(spaceLink["spaceLinkLabel"]);
 
-    	[/]
-    	link.css('position', 'absolute');
-    	link.css('left', [[${link.positionX}]] + posX);
-    	link.css('top', [[${link.positionY}]] + posY);
-    	link.css('transform', 'rotate([(${link.rotation})]deg)');
-    	link.find("span").css('fill', 'red');
-    	link.css('color', 'red');
-    	link.css('font-size', "12px");
-    	
-    	var inputRotation = document.createElement("input");
-    	inputRotation.setAttribute("type", "hidden");
-    	inputRotation.setAttribute("id", "moduleLinkRotation-[(${link.link.id})]");
-    	inputRotation.setAttribute("value", "[(${link.rotation})]");
-    	var inputLabel = document.createElement("input");
-    	inputLabel.setAttribute("type", "hidden");
-    	inputLabel.setAttribute("id", "moduleLinkLabel-[(${link.link.id})]");
-    	inputLabel.setAttribute("value", "[(${link.link.name})]");
-    	var inputType = document.createElement("input");
-    	inputType.setAttribute("type", "hidden");
-    	inputType.setAttribute("id", "moduleLinkType-[(${link.link.id})]");
-    	inputType.setAttribute("value", "[(${link.type})]");
-    	var inputLinkedSpace = document.createElement("input");
-    	inputLinkedSpace.setAttribute("type", "hidden");
-    	inputLinkedSpace.setAttribute("id", "moduleLinkTarget-[(${link.link.id})]");
-    	inputLinkedSpace.setAttribute("value", "[(${link.link.module.id})]");
-    	
-    	$("#space").append(inputRotation);
-    	$("#space").append(inputLabel);
-    	$("#space").append(inputType);
-    	$("#space").append(inputLinkedSpace);
-    	$("#space").append(link);
-    	
-    	$(".mlabel-[(${link.link.id})]").css({
-    		'transform': 'rotate(0deg)',
-    		'left': [[${link.positionX}]] + posX - 10,
-    		'top': [[${link.positionY}]] + posY + 35,
-    		'color': 'red'
-    	});		
-    	
-    	$('[data-link-id="[(${link.link.id})]"]').css('cursor', 'pointer');
-    	$('[data-link-id="[(${link.link.id})]"]').click(function(e) {
-    	    var rotation = document.getElementById("moduleLinkRotation-[(${link.link.id})]").value;
-    	    var label = document.getElementById("moduleLinkLabel-[(${link.link.id})]").value;
-    	    var type = document.getElementById("moduleLinkType-[(${link.link.id})]").value;
-    	    var targetModule = document.getElementById("moduleLinkTarget-[(${link.link.id})]").value;
-    		makeModuleLinksEditable(label, [[${link.link.id}]],rotation,targetModule,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]], type);
-    	});
-	[/]
-	[/]
-	[# th:each="link,loop : ${externalLinks}"]
-	[# th:if="${link != null}" ]
-    	var posX = $("#bgImage").position().left;
-        var posY = $("#bgImage").position().top;
-        var link ;
-        [# th:if="${#strings.equals(link.type,'IMAGE') and link?.image?.id != null}"]
-        	var imageURL = [[@{|/api/image/${link.image.id}|}]];
-            link = $('<img id="'+[[${link.image.id}]]+'" class="externalLink-"'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'" src="'+imageURL+'" />');
-        [/]
-            [# th:if="${#strings.equals(link.type,'ARROW')}"]
-            link = $('<span data-link-id="'+[[${link.externalLink.id}]]+'" class="externalLink-'+[[${link.externalLink.id}]]+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="elabel-'+[[${link.externalLink.id}]]+'" data-link-id="'+[[${link.externalLink.id}]]+'"><span class="tooltiptext">'+[[${link.externalLink.name}]]+'</span></p></span>');
-           
-        [/]
-        link.css('position', 'absolute');
-        link.css('left', [[${link.positionX}]] + posX);
-        link.css('top', [[${link.positionY}]] + posY);
-        link.css('color', 'blue');
-        link.css('font-size', "12px");
-        
-    	var inputLabel = document.createElement("input");
-    	inputLabel.setAttribute("type", "hidden");
-    	inputLabel.setAttribute("id", "externalLinkLabel-[(${link.externalLink.id})]");
-    	inputLabel.setAttribute("value", "[(${link.externalLink.name})]");
-    	var inputType = document.createElement("input");
-    	inputType.setAttribute("type", "hidden");
-    	inputType.setAttribute("id", "externalLinkType-[(${link.externalLink.id})]");
-    	inputType.setAttribute("value", "[(${link.type})]");
-    	var inputExternalLinkURL = document.createElement("input");
-    	inputExternalLinkURL.setAttribute("type", "hidden");
-    	inputExternalLinkURL.setAttribute("id", "externalLinkTarget-[(${link.externalLink.id})]");
-    	inputExternalLinkURL.setAttribute("value", "[(${link.externalLink.externalLink})]");
-    	
-    	$("#space").append(inputLabel);
-    	$("#space").append(inputType);
-    	$("#space").append(inputExternalLinkURL);
-        $("#space").append(link);
-        
-        $(".elabel-[(${link.externalLink.id})]").css({
+    var link;
+    if (spaceLink["type"] == "ALERT") {
+        link = $('<div id="link" class="alert alert-primary alertLink spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
+    } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
+        link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
+    } else {
+        $(space_label).css({
+            'font-size': "12px",
             'transform': 'rotate(0deg)',
-            'left': [[${link.positionX}]] + posX - 10,
-            'top': [[${link.positionY}]] + posY + 35,
-            'text-color': 'blue'
+            'color': 'grey'
         });
-        
-        $('[data-link-id="[(${link.externalLink.id})]"]').css('cursor', 'pointer');
-        $('[data-link-id="[(${link.externalLink.id})]"]').click(function(e) {
-    	    var label = document.getElementById("externalLinkLabel-[(${link.externalLink.id})]").value;
-    	    var type = document.getElementById("externalLinkType-[(${link.externalLink.id})]").value;
-    	    var targetLink = document.getElementById("externalLinkTarget-[(${link.externalLink.id})]").value;
-            makeExternalLinksEditable(label,[[${link.externalLink.id}]],targetLink,[[${link.positionX}]],[[${link.positionY}]],[[${link.id}]],type);
+        link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c "></span></div></span>');
+    }
+    if(show) {
+        var unpublishedSpaceElement;
+        if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+            unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></span>')
+            unpublishedSpaceElement.css('position', 'absolute');
+            unpublishedSpaceElement.css('left', x + posX + displaceUnpublishedOnX);
+            unpublishedSpaceElement.css('top', y + posY - displaceUnpublishedOnY);
+            unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+            unpublishedSpaceElement.css('font-size', "24px");
+        }else{
+            $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+        }    
+    }
+
+    link.css('position', 'absolute');
+    link.css('left', spaceLink["x"] + posX);
+    link.css('top', spaceLink["y"] + posY);
+    link.css('color', 'rgba(128,128,128,1)');
+    link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+    link.css('font-size', "12px");
+    if (spaceLink["id"]) {
+        link.attr("class", spaceLink["id"]);
+        link.css('cursor', 'pointer');
+        link.css('color', 'rgba(128,128,128,1)');
+        link.click(function(e) {
+            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
         });
-	[/]
-	[/]
-}
-    
-function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
-	$("#spaceLinkInfoLabel").text(spaceLinkName);
-    $("#spaceLinkId").val(spaceLinkId);
-    selectedSpaceLinkId=spaceLinkId;
-    storeX=posXEdit;
-	storeY=posYEdit;
-	$("#spaceLinkInfoLabel").text(spaceLinkName);
-	$("#spaceLinkDisplayId").val(displayLinkId);
-	$("#spaceLinkInfoLabelEdit").text(spaceLinkName);
-	$("#spaceLinkLabelEdit").val(spaceLinkName);
-	$("#spaceLinkId").val(spaceLinkId);
-	$("#spaceLinkIdValueEdit").val(spaceLinkId);
-	$("#spaceLinkRotationEdit").val(rotation);
-	$('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
-	$('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
-    resetHighlighting(); 
-    $('[data-link-id="' + spaceLinkId + '"]').css("color", "#c1bb88");
-    $('div[data-link-id="' + spaceLinkId + '"]').removeClass("alert-primary");
-    $('div[data-link-id="' + spaceLinkId + '"]').addClass("alert-warning");
-    $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
-    $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "#c1bb88");
-    
-    $("#bgImage").on("click", function(e){
-		e.preventDefault();
-		var posX = $(this).position().left;
-		var posY = $(this).position().top;    
-		storeX = e.pageX - $(this).offset().left;
-		storeY = e.pageY - $(this).offset().top;
-		showSpaceLinkEdit(editSpaceLinkInfo(),posX,posY);
-	});
-    hideLinkInfoTabs();
-    $("#editSpaceLinkInfo").show();
-}
 
-function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
-    
-    selectedModuleLinkId=moduleLinkId;
-    storeX=posXEdit;
-	storeY=posYEdit;
-	$("#moduleLinkInfoLabel").text(moduleLinkName);
-	$("#moduleLinkDisplayId").val(displayLinkId);
-	$("#moduleLinkInfoLabelEdit").text(moduleLinkName);
-	$("#moduleLinkLabelEdit").val(moduleLinkName);
-	$("#moduleLinkId").val(moduleLinkId);
-	$("#moduleLinkIdValueEdit").val(moduleLinkId);
-	$("#moduleLinkRotationEdit").val(rotation);
-	$('#typeEdit option[value="'+linkType+'"]').attr("selected", "selected");
-	$('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
-	resetHighlighting();     
-	$('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
-	$('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
-	$('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
-	$('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
-	
-	$("#bgImage").on("click", function(e){
-		e.preventDefault();
-		var posX = $(this).position().left;
-		var posY = $(this).position().top;    
-		storeX = e.pageX - $(this).offset().left;
-		storeY = e.pageY - $(this).offset().top;
-		showModuleLinkEdit(editModuleLinkInfo());
-	});
-	hideLinkInfoTabs();
-    $("#editModuleLinkInfo").show();
-}
-
-function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
-    selectedExternalLinkId=linkId;
-    storeX=posXEdit;
-	storeY=posYEdit;
-    $("#externalLinkInfoLabel").text(linkName);
-    $("#externalLinkId").val(linkId);
-	$("#externalLinkDisplayId").val(displayLinkId);
-	$("#externalLinkInfoLabelEdit").text(linkName);
-	$("#externalLinkLabelEdit").val(linkName);
-	$("#externalLinkIdValueEdit").val(linkId);
-	$("#externalLinkURLEdit").val(externalLinkURL);
-	$('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
-    resetHighlighting();
-          
-    $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
-    $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
-    $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
-    $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
-    
-    $("#bgImage").on("click", function(e){
-		e.preventDefault();
-		var posX = $(this).position().left;
-		var posY = $(this).position().top;    
-		storeX = e.pageX - $(this).offset().left;
-		storeY = e.pageY - $(this).offset().top;
-		showExternalLinkEdit(editExternalLinkInfo());
-	});
-    hideLinkInfoTabs();
-    $("#externalLinkInfo").show();
-    $("#editExternalLinkInfo").show();
-}
-
-function resetHighlighting() {
-    // reset icon links
-    $('[data-link-id]').css("color", "red");
-     
-    // reset alert links
-    $('div[data-link-id]').removeClass("alert-warning");
-    $('div[data-link-id]').addClass("alert-primary");
-    
-    // reset image links
-    $('img[data-link-id]').css("border-width", "0"); 
-}
-
-// --------- show links functions --------------
-function showSpaceLink(spaceLink, show) {
-	$("#space_label").remove();
-	$("#link").remove();
-	var posX = $("#bgImage").position().left;
-	var posY = $("#bgImage").position().top;
-	var space_label = $("<p id='space_label' class='tooltiptext'></p>");
-	space_label.text(spaceLink["spaceLinkLabel"]);
-	
-	var link;
-	if (spaceLink["type"] == "ALERT") {
-		link = $('<div id="link" class="alert alert-primary spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
-	} else if(spaceLink["type"] == "IMAGE" && linkIcon) {
-		link = $('<div id="link" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
-	} else {
-		$(space_label).css({
-			'position': 'absolute',
-			'font-size': "10px",
-			'transform': 'rotate(0deg)',
-			'left': spaceLink["x"] + posX - 10,
-			'top': spaceLink["y"] + posY + 35,
-			'color': 'red'
-		});
-		link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span></div></span>');
-	}
-	if(show) {
-	    var unpublishedSpaceElement;
-	    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-	        unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></span>')
-	        unpublishedSpaceElement.css('position', 'absolute');
-	        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
-	        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
-	        unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-	        unpublishedSpaceElement.css('font-size', "12px");
-	    }else{
-	        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
-	    }    
-	}
-	link.css('position', 'absolute');
-	link.css('left', spaceLink["x"] + posX);
-	link.css('top', spaceLink["y"] + posY);
-	link.css('color', 'rgba(128,128,128,1)');
-	link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-	link.css('font-size', "12px");
-	if (spaceLink["id"]) {
-		link.attr("class", spaceLink["id"]);
-		link.css('cursor', 'pointer');
-		link.css('color', 'rgba(128,128,128,1)');
-		link.click(function(e) {
-			makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
-        });
-		
-		space_label.attr("data-link-id", spaceLink["id"]);
-		space_label.attr("class", "tooltiptext slabel-"+spaceLink["id"]);
+        space_label.attr("data-link-id", spaceLink["id"]);
+        space_label.attr("class", "tooltiptext label-"+spaceLink["id"]);
         space_label.css('cursor', 'pointer');
         space_label.click(function(e) {
             makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
         });
-	}
+    }
 
-	$("#space").append(link);
-	$("#space").append(unpublishedSpaceElement);
-	$("#link").append(space_label);
-
-	feather.replace();
-}			        
-
-function showModuleLink(moduleLink, show) {
-	$("#module_label").remove();
-	$("#link").remove();
-	var posX = $("#bgImage").position().left;
-	var posY = $("#bgImage").position().top;
-	var module_label = $("<p id='module_label'></p>");
-	var module_label_text = $("<span class='tooltiptext' style='fill:red;'>");
-	module_label_text.text(moduleLink["moduleLinkLabel"]);
-	module_label.append(module_label_text);
-	
-	var link;
-	if (moduleLink["type"] == "ALERT") {
-		link = $('<div id="link" class="alert alert-primary moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-	} else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
-		link = $('<div id="link" data-link-id="' + moduleLink["id"] + '" ><img src="' + moduleLinkIcon + '"></div>');
-	} else { 
-		$(module_label).css({
-			'position': 'absolute',
-			'font-size': "10px",
-			'transform': 'rotate(0deg)',
-			'left': moduleLink["x"] + posX - 10,
-			'top': moduleLink["y"] + posY + 35,
-			'color': 'red'
-		});
-		link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
-	}
-	if(show) {
-		link.find("div").css('fill', 'red');
-	}
-	link.css('position', 'absolute');
-	link.css('left', moduleLink["x"] + posX);
-	link.css('top', moduleLink["y"] + posY);
-	link.css('color', 'red');
-	link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-	link.css('font-size', "12px");
-	
-	if (moduleLink["id"]) {
-		link.attr("data-link-id", moduleLink["id"]);
-		link.css('cursor', 'pointer');
-		link.click(function(e) {
-			makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
-		});
-		module_label.attr("data-link-id", moduleLink["id"]);
-		module_label.css('cursor', 'pointer');
-		module_label.attr("class", "tooltiptext mlabel-"+moduleLink["id"]);
-		module_label.click(function(e) {
-			makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
-		});
-	}
-
-	$("#space").append(link);
-	$("#link").append(module_label);
-
-	feather.replace();
+    $("#space").append(link);
+    $("#space").append(unpublishedSpaceElement);
+    $("#link").append(space_label);
 }
 
-function showModuleLinkEdit(moduleLink, show) {
-	moduleLink["x"]=storeX;
-	moduleLink["y"]=storeY;
-	var selectedLinkClass = '.moduleLink-'+selectedModuleLinkId;
-	var selectedLabelClass = '.mlabel-'+selectedModuleLinkId;
-	updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],moduleLink["x"],moduleLink["y"],moduleLink["moduleLinkLabel"]);
+function showModuleLink(moduleLink, show, x, y) {
+    $("#module_label").remove();
+    $("#link").remove();
+    var posX = $("#bgImage").position().left;
+    var posY = $("#bgImage").position().top;
+    var module_label = $("<p id='module_label' class='tooltiptext'></p>");
+    module_label.text(moduleLink["moduleLinkLabel"]);
+
+    var link;
+    if (moduleLink["type"] == "ALERT") {
+        link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
+    }else{ 
+        $(module_label).css({
+            'position': 'absolute',
+            'font-size': "10px",
+            'transform': 'rotate(0deg)',
+            'left': x + posX - displaceLableOnX,
+            'top': y + posY + displaceLableOnY,
+            'color': 'red'
+        });
+        link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
+    } 
+    if(show) {
+        link.find("div").css('fill', 'red');
+    }
+    link.css('position', 'absolute');
+    link.css('left', moduleLink["x"] + posX);
+    link.css('top', moduleLink["y"] + posY);
+    link.css('color', 'red');
+    link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
+    link.css('font-size', "12px");
+
+    if (moduleLink["id"]) {
+        link.attr("data-link-id", moduleLink["id"]);
+        link.css('cursor', 'pointer');
+        link.click(function(e) {
+            makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
+        });
+        module_label.attr("data-link-id", moduleLink["id"]);
+        module_label.css('cursor', 'pointer');
+        module_label.attr("class", "tooltiptext label-"+moduleLink["id"]);
+        module_label.click(function(e) {
+            makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
+        });
+    }
+
+    $("#space").append(link);
+    $("#link").append(module_label);
+}
+
+function showModuleLinkEdit(moduleLink, show, posX, posY) {
+    moduleLink["x"]=storeX;
+    moduleLink["y"]=storeY;
+    var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
+    var selectedLabelClass = '.label-'+selectedModuleLinkId;
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"]);
 }
 
 function showSpaceLinkEdit(spaceLink, show, posX, posY) {
-	spaceLink["x"]=storeX;
-	spaceLink["y"]=storeY;
-	var selectedLinkClass = '.spaceLink-'+selectedSpaceLinkId;
-	var selectedLabelClass = '.slabel-'+selectedSpaceLinkId;
-	var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
-	if(show) {
-	    var unpublishedSpaceElement;
-	    if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-	        unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '></span>')
-	        unpublishedSpaceElement.css('position', 'absolute');
-	        unpublishedSpaceElement.css('left', parseInt(spaceLink["x"]) + posX + 25);
-	        unpublishedSpaceElement.css('top', parseInt(spaceLink["y"]) + posY - 13);
-	        unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
-	        unpublishedSpaceElement.css('font-size', "12px");
-	        $("#space").append(unpublishedSpaceElement);
-	    }else{
-	        $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
-	    }    
-	}
-	$(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
+    spaceLink["x"]=storeX;
+    spaceLink["y"]=storeY;
+    var selectedLinkClass = '#spacelinkModalId-'+selectedSpaceLinkId;
+    var selectedLabelClass = '.label-'+selectedSpaceLinkId;
+    var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
+    if(show) {
+        var unpublishedSpaceElement;
+        if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+            unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '></span>')
+            unpublishedSpaceElement.css('position', 'absolute');
+            unpublishedSpaceElement.css('left', posX + displaceUnpublishedOnX);
+            unpublishedSpaceElement.css('top', posY - displaceUnpublishedOnY);
+            unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
+            unpublishedSpaceElement.css('font-size', "24px");
+            $("#space").append(unpublishedSpaceElement);
+        }else{
+            $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+        }    
+    }
+    $(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
     $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
-    $(selectedUnpublishedIconClass).css({ 'left': parseInt(spaceLink["x"]) + posX + 25});
-    $(selectedUnpublishedIconClass).css({ 'top': parseInt(spaceLink["y"]) + posY - 13});
-	updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],spaceLink["x"],spaceLink["y"],spaceLink["spaceLinkLabel"]);
+    $(selectedUnpublishedIconClass).css({ 'left': posX - displaceUnpublishedOnXModal});
+    $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnYModal});
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
 }
 
-function showExternalLinkEdit(externalLink, show) {
-	externalLink["x"]=storeX;
-	externalLink["y"]=storeY;
-	var selectedLinkClass = '.externalLink-'+selectedExternalLinkId;
-	var selectedLabelClass = '.elabel-'+selectedExternalLinkId;
-	updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],externalLink["x"],externalLink["y"],externalLink["externalLinkLabel"]);
+function showExternalLinkEdit(externalLink, show, posX, posY) {
+    externalLink["x"]=storeX;
+    externalLink["y"]=storeY;
+    var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
+    var selectedLabelClass = '.label-'+selectedExternalLinkId;
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
 }
 
-function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel){
-    var posX = $("#bgImage").position().left;
-	var posY = $("#bgImage").position().top;
+function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
+    var posX, posY;
+    if(show) {
+        posx = $("#main-bgImage").position().left;
+        posY = $("#main-bgImage").position().top;
+    }
+    else{
+        posX = $("#bgImage").position().left;
+        posY = $("#bgImage").position().top;
+    }
     $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
     $(selectedLinkClass).css({ 'position': 'absolute'});
     $(selectedLinkClass).css({ 'left': x + posX});
     $(selectedLinkClass).css({ 'top': y + posY});
-    $(selectedLabelClass+" .tooltiptext").text(linkLabel);
-    $(selectedLabelClass).css({ 'left': x + posX - 10});
-    $(selectedLabelClass).css({ 'top': y + posY + 30});
+    $(selectedLabelClass+' span').remove();
+    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
     feather.replace();    
 }
 
@@ -511,709 +402,910 @@ function hideLinkInfoTabs(){
     $("#editExternalLinkInfo").hide();
     $("#editSpaceLinkInfo").hide();
     $("#editModuleLinkInfo").hide();
+    $("#createExternalLinkAlert").hide();
+    $("#createSpaceLinkAlert").hide();
+    $("#createModuleLinkAlert").hide();
     $("#errorMsg").text("");
-    $('#errorAlert').hide();    
+    $('#errorAlert').hide();
 }
 
-function showExternalLinks(externalLink) {
-	$("#ext_label").remove();
-	$("#link").remove();
-	var posX = $("#bgImage").position().left;
-	var posY = $("#bgImage").position().top;
-	var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
-	ext_label.text(externalLink["externalLinkLabel"]);
-	
-	var link;
-	if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
-		link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
-	} else {
-		$(ext_label).css({
-			'position': 'absolute',
-			'font-size': "12px",
-			'transform': 'rotate(0deg)',
-			'left': externalLink["x"] + posX - 10,
-			'top': externalLink["y"] + posY + 35,
-			'color': 'blue'
-		});
-		link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
-	}
-	
-	link.css('position', 'absolute');
-	link.css('left', externalLink["x"] + posX);
-	link.css('top', externalLink["y"] + posY);
-	link.css('color', 'blue');
-	link.css('font-size', "12px");
-	
-	if (externalLink["id"]) {
-		link.attr("data-link-id", externalLink["id"]);
-		link.css('cursor', 'pointer');
-		link.attr('href', externalLink["url"]);
-		link.click(function(e) {
+function showExternalLinks(externalLink, show, x, y) {
+    $("#ext_label").remove();
+    $("#link").remove();
+    var posX = $("#bgImage").position().left;
+    var posY = $("#bgImage").position().top;
+    var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
+    ext_label.text(externalLink["externalLinkLabel"]);
+
+    var link;
+    if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
+        link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
+    } else {
+        $(ext_label).css({
+            'position': 'absolute',
+            'font-size': "12px",
+            'transform': 'rotate(0deg)',
+            'left': x + posX - displaceLableOnX,
+            'top': y + posY + displaceLableOnY,
+            'color': 'blue'
+        });
+        link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
+    }
+
+    link.css('position', 'absolute');
+    link.css('left', externalLink["x"] + posX);
+    link.css('top', externalLink["y"] + posY);
+    link.css('color', 'blue');
+    link.css('font-size', "12px");
+
+    if (externalLink["id"]) {
+        link.attr("data-link-id", externalLink["id"]);
+        link.css('cursor', 'pointer');
+        link.attr('href', externalLink["url"]);
+        link.click(function(e) {
             makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"]);
         });
-		
-		ext_label.attr("data-link-id", externalLink["id"]);
+
+        ext_label.attr("data-link-id", externalLink["id"]);
         ext_label.css('cursor', 'pointer');
-        ext_label.attr("class", "elabel-"+externalLink["id"]);
+        ext_label.attr("class", "label-"+externalLink["id"]);
         ext_label.click(function(e) {
             makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"]);
         });
-	}
+    }
 
-	$("#space").append(link);
-	$("#link").append(ext_label);
-	$("#external-link").remove();
-	
+    $("#space").append(link);
+    $("#link").append(ext_label);
+    $("#external-link").remove();
+
 }
 
-// --------- Utility functions -------------
+//--------- Utility functions -------------
 function createSpaceLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["rotation"] = $("#spaceLinkRotation").val();
-	info["linkedSpace"] = $("#linkedSpace").val();
-	info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-	info["type"] = $("#type").val();
+    var info = {};
+    info["x"] = storeX;
+    info["y"] = storeY;
+    info["rotation"] = $("#spaceLinkRotation").val();
+    info["linkedSpace"] = $("#linkedSpace").val();
+    info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+    info["type"] = $("#type").val();
     return info;
 }
 
 function createExternalLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["type"] = $("#extType").val();
-	info["externalLinkLabel"] = $("#externalLinkLabel").val();
-	info["externalLinkURL"] = $("#externalLink").val();
+    var info = {};
+    info["x"] = storeX;
+    info["y"] = storeY;
+    info["type"] = $("#extType").val();
+    info["externalLinkLabel"] = $("#externalLinkLabel").val();
+    info["externalLinkURL"] = $("#externalLink").val();
     return info;
 }
 
 function createModuleLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["rotation"] = $("#moduleLinkRotation").val();
-	info["linkedModule"] = $("#linkedModule").val();
-	info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
-	info["type"] = $("#type").val();
-	return info;
+    var info = {};
+    info["x"] = storeX;
+    info["y"] = storeY;
+    info["rotation"] = $("#moduleLinkRotation").val();
+    info["linkedModule"] = $("#linkedModule").val();
+    info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
+    info["type"] = $("#type").val();
+    return info;
 }
 
 function editModuleLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["rotation"] = $("#moduleLinkRotationEdit").val();
-	info["linkedModule"] = $("#moduleLinkIdEdit").val();
-	info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
-	info["type"] = $("#typeEdit").val();
-	return info;
+    var info = {};
+    info["x"] = storeX;
+    info["y"] = storeY;
+    info["rotation"] = $("#moduleLinkRotationEdit").val();
+    info["linkedModule"] = $("#moduleLinkIdEdit").val();
+    info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
+    info["type"] = $("#typeEdit").val();
+    return info;
 }
 
 function editSpaceLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["rotation"] = $("#spaceLinkRotationEdit").val();
-	info["linkedSpace"] = $("#spaceLinkIdEdit").val();
-	info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
-	info["type"] = $("#typeSpaceEdit").val();
-	return info;
+    var info = {};
+    info["x"] = storeX;
+    info["y"] = storeY;
+    info["rotation"] = $("#spaceLinkRotationEdit").val();
+    info["linkedSpace"] = $("#spaceLinkIdEdit").val();
+    info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
+    info["type"] = $("#typeSpaceEdit").val();
+    return info;
 }
 
 function editExternalLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["type"] = $("#extTypeEdit").val();
-	info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
-	info["externalLinkURL"] = $("#externalLinkURLEdit").val();
-	return info;
+    var info = {};
+    info["x"] = storeX;
+    info["y"] = storeY;
+    info["type"] = $("#extTypeEdit").val();
+    info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+    info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+    return info;
+}
+
+function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
+    $("#spaceLinkInfoLabel").text(spaceLinkName);
+    $("#spaceLinkId").val(spaceLinkId);
+    selectedSpaceLinkId=spaceLinkId;
+    storeX=posXEdit;
+    storeY=posYEdit;
+    $("#spaceLinkInfoLabel").text(spaceLinkName);
+    $("#spaceLinkDisplayId").val(displayLinkId);
+    $("#spaceLinkInfoLabelEdit").text(spaceLinkName);
+    $("#spaceLinkLabelEdit").val(spaceLinkName);
+    $("#spaceLinkId").val(spaceLinkId);
+    $("#spaceLinkIdValueEdit").val(spaceLinkId);
+    $("#spaceLinkRotationEdit").val(rotation);
+    $('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
+    $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
+    if(linkType != "IMAGE"){
+    	resetHighlighting(); 
+    }
+    $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
+    $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+    $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
+
+    $("#bgImage").on("click", function(e){
+        e.preventDefault();
+        var posX = $(this).position().left;
+        var posY = $(this).position().top;
+        storeX = e.pageX  - $(this).offset().left;
+        storeY = e.pageY  - $(this).offset().top;
+        showSpaceLinkEdit(editSpaceLinkInfo(),false, storeX,storeY);
+    });
+    hideLinkInfoTabs();
+    displayForms("#editSpaceLinkInfo");
+}
+function displayForms(formToShow){
+    drawLinks();
+    $("#space").css("display", "-webkit-box");
+    $(formToShow).css("display", "flex");
+}
+
+function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
+
+    selectedModuleLinkId=moduleLinkId;
+    storeX=posXEdit;
+    storeY=posYEdit;
+    $("#moduleLinkInfoLabel").text(moduleLinkName);
+    $("#moduleLinkDisplayId").val(displayLinkId);
+    $("#moduleLinkInfoLabelEdit").text(moduleLinkName);
+    $("#moduleLinkLabelEdit").val(moduleLinkName);
+    $("#moduleLinkId").val(moduleLinkId);
+    $("#moduleLinkIdValueEdit").val(moduleLinkId);
+    $("#moduleLinkRotationEdit").val(rotation);
+    $('#typeEdit option[value="'+linkType+'"]').attr("selected", "selected");
+    $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
+    resetHighlighting();     
+    $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
+    $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
+    $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
+    $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
+
+    $("#bgImage").on("click", function(e){
+        e.preventDefault();
+        var posX = $(this).position().left;
+        var posY = $(this).position().top;    
+        storeX = e.pageX - $(this).offset().left;
+        storeY = e.pageY - $(this).offset().top;
+        showModuleLinkEdit(editModuleLinkInfo(), false, storeX,storeY);
+    });
+    hideLinkInfoTabs();
+    displayForms("#editModuleLinkInfo");
+}
+
+function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
+    selectedExternalLinkId=linkId;
+    storeX=posXEdit;
+    storeY=posYEdit;
+    $("#externalLinkInfoLabel").text(linkName);
+    $("#externalLinkId").val(linkId);
+    $("#externalLinkDisplayId").val(displayLinkId);
+    $("#externalLinkInfoLabelEdit").text(linkName);
+    $("#externalLinkLabelEdit").val(linkName);
+    $("#externalLinkIdValueEdit").val(linkId);
+    $("#externalLinkURLEdit").val(externalLinkURL);
+    $('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
+    resetHighlighting();
+
+    $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
+    $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
+    $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
+    $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
+
+    $("#bgImage").on("click", function(e){
+        e.preventDefault();
+        var posX = $(this).position().left;
+        var posY = $(this).position().top;    
+        storeX = e.pageX - $(this).offset().left;
+        storeY = e.pageY - $(this).offset().top;
+        showExternalLinkEdit(editExternalLinkInfo(), false, storeX,storeY);
+    });
+    hideLinkInfoTabs();
+    displayForms("#editExternalLinkInfo");
+}
+
+function resetHighlighting() {
+    // reset icon links
+    $('[data-link-id]').css("color", "red");
+
+    // reset alert links
+    $('div[data-link-id]').removeClass("alert-warning");
+    $('div[data-link-id]').addClass("alert-primary");
+
+    // reset image links
+    $('img[data-link-id]').css("border-width", "0"); 
 }
 
 $(function(){
     $("#deleteSpace").click(function(){
         var spaceId = "${space.id}";
         checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'));
-});
-    $( document ).ready(function() {
-    	onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
-    	
-    	if ($("div#outgoingLinks a").length < 2) {
-    		  $("#noLinksOnSpace").show()
-    	 }
-    	if ($("div#incomingLinks a").length < 2) {
-    		  $("#noLinksToSpace").show()
-    	  }
-      });
-    
-    		// -------- buttons that open modals (e.g. to create space links) ------
-    		  $("#addSpaceLinkButton").click(function(e) {
-    		  	$("#createExternalLinkAlert").hide();
-    		  	$("#changeBgImgAlert").hide();
-    		  	$("#bgImage").off("click");
-    		  	$("#bgImage").on("click", function(e){
-    		  		e.preventDefault();
-    		  		$("#external-arrow").remove();
-    		  		$("#space_label").remove();
-    		  		$("#link").remove();
-    		  		var icon;
-    		  		var posX = $(this).position().left;
-    		  		var posY = $(this).position().top;    
-    		  		storeX = e.pageX - $(this).offset().left;
-    		  		storeY = e.pageY - $(this).offset().top;
-    		  		
-    		  	    showSpaceLink(createSpaceLinkInfo());
-    		  	});
-    		  	hideLinkInfoTabs();
-    		  	$("#createSpaceLinkAlert").show();
-    		  });
+    });
 
-    		   $("#addModuleLinkButton").click(function(e) {
-    		  	$("#createModuleLinkAlert").hide();
-    		  	$("#bgImage").off("click");
-    		  	$("#bgImage").on("click", function(e){
-    		  		e.preventDefault();
-    		  		$("#external-arrow").remove();
-    		  		$("#module_label").remove();
-    		  		$("#link").remove();
-    		  		var icon;
-    		  		var posX = $(this).position().left;
-    		  		var posY = $(this).position().top;    
-    		  		storeX = e.pageX - $(this).offset().left;
-    		  		storeY = e.pageY - $(this).offset().top;
-    		  		
-    		  	    showModuleLink(createModuleLinkInfo());
-    		  	});
-    		  	hideLinkInfoTabs();
-    		  	$("#createModuleLinkAlert").show();
-    		  }); 
+        $( document ).ready(function() {
+            onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
+            if ($("div#outgoingLinks a").length < 2) {
+                $("#noLinksOnSpace").show()
+            }
+            if ($("div#incomingLinks a").length < 2) {
+                $("#noLinksToSpace").show()
+            }
+        });
 
-    		  $("#addExternalLinkButton").click(function(e) {
-    		  	$("#createSpaceLinkAlert").hide();
-    		  	$("#changeBgImgAlert").hide();
-    		  	$("#bgImage").off("click");
-    		  	$("#bgImage").on("click", function(e){
-    		  	    e.preventDefault();
-    		  	    $("#link").remove();
-    		  	   	$("#external-arrow").remove();
-    		  	    $("#ext_label").remove();
-    		  	    var icon;
-    		  	    	    
-    		  	    var posX = $(this).position().left
-    		  	    var posY = $(this).position().top;
-    		  	    storeX = e.pageX - $(this).offset().left;
-    		  	    storeY = e.pageY - $(this).offset().top;
-    		  	    
-    		  	    showExternalLinks(createExternalLinkInfo());
-    		  	});
-    		  	hideLinkInfoTabs();
-    		  	$("#createExternalLinkAlert").show();
-    		  });
+        // -------- buttons that open modals (e.g. to create space links) ------
+        $("#addSpaceLinkButton").click(function(e) {
+            $("#createExternalLinkAlert").hide();
+            $("#changeBgImgAlert").hide();
+            $("#bgImage").off("click");
+            $("#bgImage").on("click", function(e){
+                e.preventDefault();
+                $("#external-arrow").remove();
+                $("#space_label").remove();
+                $("#link").remove();
+                var icon;
+                var posX = $(this).position().left;
+                var posY = $(this).position().top;    
+                storeX = e.pageX - $(this).offset().left;
+                storeY = e.pageY - $(this).offset().top;
+                showSpaceLink(createSpaceLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
+            });
+            hideLinkInfoTabs();
+            displayForms("#createSpaceLinkAlert");
+        });
 
-    		  $('#changeBgImgButton').click(function(file) {
-    		      $("#createSpaceLinkAlert").hide();
-    		      $("#createExternalLinkAlert").hide();
-    		      $("#changeBgImgAlert").show();          
-    		  });
+        $("#addModuleLinkButton").click(function(e) {
+            $("#createModuleLinkAlert").hide();
+            $("#bgImage").off("click");
+            $("#bgImage").on("click", function(e){
+                e.preventDefault();
+                $("#external-arrow").remove();
+                $("#module_label").remove();
+                $("#link").remove();
+                var icon;
+                var posX = $(this).position().left;
+                var posY = $(this).position().top;    
+                storeX = e.pageX - $(this).offset().left;
+                storeY = e.pageY - $(this).offset().top;
 
+                showModuleLink(createModuleLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
+            });
+            hideLinkInfoTabs();
+            displayForms("#createModuleLinkAlert");
+        }); 
 
-    		  // ----------- submit buttons (e.g. to create space links) ------------------
-    		  $("#createSpaceLinkBtn").click(function(e) {
-    		  	e.preventDefault();
-    		  	$('#errorAlert').hide();
-    		  	var label = $("#spaceLinkLabel").val();
-    		  	var spaceName = $("#linkedSpace option:selected").text();
-    		  	
-    		  	if (label == undefined || label == "") {
-    		  		$("#errorMsg").text("Please fill the Label field before submitting.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	if (spaceName == undefined || spaceName == "Choose...") {
-    		  		$("#errorMsg").text("Please select a space in Linked Space dropdown.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	if (storeX == undefined || storeY == undefined) {
-    		  		$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	$("#spaceLinkX").val(storeX);
-    		  	$("#spaceLinkY").val(storeY);
-    		  	
-    		  	var form = $("#createSpaceLinkForm");
-    		  	var label = $("#spaceLinkLabel").val();
-    		  	var spaceName = $("#linkedSpace option:selected").text();
-    		  	var spaceId = $("#linkedSpace option:selected").val(); 
-    		  	var formData = new FormData(form[0]);
-    		  	
-    		  	var spaceLinkInfo = createSpaceLinkInfo();
-    		      
-    		      $.ajax({
-    		  		type: "POST",
-    		  		url: "[(@{'/staff/space/'+${space.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-    		  		cache       : false,
-    		          contentType : false,
-    		          processData : false,
-    		          enctype: 'multipart/form-data',
-    		          data: formData, 
-    		          success: function(data) {
-    		          	var linkData = JSON.parse(data);
-    		          	$("#bgImage").off("click");
-    		          	spaceLinkInfo["id"] = linkData["id"];
-    		          	spaceLinkInfo["displayId"]=linkData["displayId"];
-    		          	spaceLinkInfo["x"]=linkData["x"];
-    		          	spaceLinkInfo["y"]=linkData["y"];
-    		          	spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
-    		              showSpaceLink(spaceLinkInfo, true);
-    		              $("#space_label").attr("id","");
-    		              $("#link").attr("id","");
-    		              $("#createSpaceLinkAlert").hide();  
-    		              $("#errorMsg").text("");
-    		              $('#errorAlert').hide();
-    		              $("#noLinksOnSpace").hide();
-    		              var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
-    		      		$("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
-    		      		if (spaceName == "${space.name}") {
-    		      			$("#noLinksToSpace").hide();
-    		      			$("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
-    		      		}
-    		          }
-    		  	});
-    		  });
+        $("#addExternalLinkButton").click(function(e) {
+            $("#createSpaceLinkAlert").hide();
+            $("#changeBgImgAlert").hide();
+            $("#bgImage").off("click");
+            $("#bgImage").on("click", function(e){
+                e.preventDefault();
+                $("#link").remove();
+                $("#external-arrow").remove();
+                $("#ext_label").remove();
+                var icon;
+                var posX = $(this).position().left
+                var posY = $(this).position().top;
+                storeX = e.pageX - $(this).offset().left;
+                storeY = e.pageY - $(this).offset().top;
 
-    		  $("#createModuleLinkBtn").click(function(e) {
-    		  	e.preventDefault();
-    		  	
-    		  	if (storeX == undefined || storeY == undefined) {
-    		  		$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	var linkedModules = $("#linkedModule").val();
-    		  	var moduleLabel = $("#moduleLinkLabel").val();
-    		  	
-    		  	if (moduleLabel == undefined || moduleLabel == "") {
-    		  		$("#errorMsg").text("Please enter the label for module.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	if (linkedModules == undefined || linkedModules == "") {
-    		  		$("#errorMsg").text("Please select linked modules.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	$("#moduleLinkX").val(storeX);
-    		  	$("#moduleLinkY").val(storeY);
-    		  	
-    		  	var form = $("#createModuleLinkForm");
-    		  	var formData = new FormData(form[0]);
-    		  	
-    		  	var moduleLinkInfo = createModuleLinkInfo();
-    		      
-    		      $.ajax({
-    		  		type: "POST",
-    		  		
-    		  		url: "[(@{'/staff/space/'+${space.id}+'/modulelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-    		  		cache       : false,
-    		          contentType : false,
-    		          processData : false,
-    		          enctype: 'multipart/form-data',
-    		          data: formData, 
-    		          success: function(data) {
-    		          	var linkData = JSON.parse(data);
-    		          	$("#bgImage").off("click");
-    		          	moduleLinkInfo["id"] = linkData["id"];
-    		          	moduleLinkInfo["displayId"]=linkData["displayId"];
-    		          	moduleLinkInfo["x"]=linkData["x"];
-    		          	moduleLinkInfo["y"]=linkData["y"];
-    		          	showModuleLink(moduleLinkInfo, true);
-    		          	$("#module_label").attr("id","");
-    		          	$("#link").attr("id","");
-    		          	$("#createModuleLinkAlert").hide();
-    		          	$("#errorMsg").text("");
-    		          	$('#errorAlert').hide();
-    		          }
-    		  	});
-    		  });
-    		  $("#editModuleLinkBtn").click(function(e) {
-    		      e.preventDefault();
-    		      var linkId = $("#moduleLinkIdEdit").val();
-    		      if(storeX == undefined || storeY == undefined){
-    		          $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
-    		          $('#errorAlert').show();
-    		          return;    
-    		      }
-    		      var linkedModules = $("#moduleLinkIdEdit").val();
-    		      $("#moduleLinkXEdit").val(storeX);
-    		      $("#moduleLinkYEdit").val(storeY);
-    		      var form = $("#editModuleLinkForm");
-    		      var formData = new FormData(form[0]);
-    		      var moduleLinkInfo = editModuleLinkInfo();
-    		      $.ajax({
-    		          type: "POST",
-    		          url: "[(@{'/staff/space/link/module/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-    		          cache: false,
-    		          contentType: false,
-    		          processData: false,
-    		          enctype: 'multipart/form-data',
-    		          data: formData,
-    		          success: function(data){
-    		              var linkData = JSON.parse(data);
-    		              $("#bgImage").off("click");
-    		              moduleLinkInfo["id"] = linkData["id"];
-    		              moduleLinkInfo["displayId"]=linkData["displayId"];
-    		              moduleLinkInfo["x"]=linkData["x"];
-    		          	moduleLinkInfo["y"]=linkData["y"];
-    		          	$('#moduleLinkRotation-'+selectedModuleLinkId).val(linkData["rotation"]);
-    		              $('#moduleLinkLabel-'+selectedModuleLinkId).val(linkData["label"]);
-    		              $('#moduleLinkType-'+selectedModuleLinkId).val(linkData["dislpayType"]);
-    		              $('#moduleLinkTarget-'+selectedModuleLinkId).val(linkData["linkedId"]);
-    		              showModuleLinkEdit(moduleLinkInfo, true);
-    		              hideLinkInfoTabs();
-    		          }
-    		      });
-    		  });
+                showExternalLinks(createExternalLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
+            });
+            hideLinkInfoTabs();
+            displayForms("#createExternalLinkAlert");
+        });
 
-    		  $("#editSpaceLinkBtn").click(function(e) {
-    		      e.preventDefault();
-    		      var linkId = $("#spaceLinkIdEdit").val();
-    		      if (storeX == undefined || storeY == undefined) {
-    		          $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-    		          $('#errorAlert').show();
-    		          return;    
-    		      }
-    		      var linkedSpace = $("#spaceLinkIdEdit").val();
-    		      $("#spaceLinkXEdit").val(storeX);
-    		      $("#spaceLinkYEdit").val(storeY);
-
-    		      var form = $("#editSpaceLinkForm");
-    		      var formData = new FormData(form[0]);
-    		      var spaceLinkInfo = editSpaceLinkInfo();
-    		      $.ajax({
-    		          type: "POST",
-    		          url: "[(@{'/staff/space/link/space/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-    		          cache: false,
-    		          contentType : false,
-    		          processData : false,
-    		          enctype: 'multipart/form-data',
-    		          data: formData,
-    		          success: function(data) {
-    		              var linkData = JSON.parse(data);
-    		              $("#bgImage").off("click");
-    		              spaceLinkInfo["id"] = linkData["id"];
-    		              spaceLinkInfo["displayId"]=linkData["displayId"];
-    		              spaceLinkInfo["x"]=linkData["x"];
-    		              spaceLinkInfo["y"]=linkData["y"];
-    		              spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
-    		              showSpaceLinkEdit(spaceLinkInfo, true);
-    		              $('#spaceLinkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
-    		              $('#spaceLinkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
-    		              $('#spaceLinkType-'+selectedSpaceLinkId).val(linkData["dislpayType"]);
-    		              $('#spaceLinkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
-    		              hideLinkInfoTabs();
-    		         	}
-    		   	});
-    		  });
-
-    		  $("#editExternalLinkBtn").click(function(e) {
-    		      e.preventDefault();
-    		      var linkId = $("#externalLinkIdEdit").val();
-    		      if (storeX == undefined || storeY == undefined) {
-    		          $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-    		          $('#errorAlert').show();
-    		          return;
-    		      }
-    		      var linkedSpace = $("#externalLinkIdEdit").val();
-    		      $("#externalLinkXEdit").val(storeX);
-    		      $("#externalLinkYEdit").val(storeY);
-    		      var form = $("#editExternalLinkForm");
-    		      var formData = new FormData(form[0]);
-    		      var externalLinkInfo = editExternalLinkInfo();
-    		      $.ajax({
-    		          type: "POST",
-    		          url: "[(@{'/staff/space/link/external/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-    		          cache: false,
-    		          contentType : false,
-    		          processData : false,
-    		          enctype: 'multipart/form-data',
-    		          data: formData,
-    		          success: function(data) {
-    		              var linkData = JSON.parse(data);
-    		              $("#bgImage").off("click");
-    		              externalLinkInfo["id"] = linkData["id"];
-    		              externalLinkInfo["displayId"]=linkData["displayId"];
-    		              externalLinkInfo["x"]=linkData["x"];
-    		              externalLinkInfo["y"]=linkData["y"];
-    		              $('#externalLinkLabel-'+selectedExternalLinkId).val(linkData["label"]);
-    		              $('#externalLinkType-'+selectedExternalLinkId).val(linkData["dislpayType"]);
-    		              $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
-    		              showExternalLinkEdit(editExternalLinkInfo, true);
-    		              hideLinkInfoTabs();
-    		         	}
-    		   	});
-    		  });
-
-    		  $("#createExternalLinkBtn").click(function(e) {
-    		  	e.preventDefault();
-    		  	var payload = {};
-    		  	
-    		  	if (storeX == undefined || storeY == undefined) {
-    		  		$("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	var externalLink = $("#externalLink").val();
-    		  	var externalLinkLabel = $("#externalLinkLabel").val();
-    		  	
-    		  	
-    		  	if (externalLink == undefined || externalLink == "") {
-    		  		$("#errorMsg").text("Please provide the link to the external link.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	
-    		  	if (externalLinkLabel == undefined || externalLinkLabel == "") {
-    		  		$("#errorMsg").text("Please enter a label for this external link.")
-    		  		$('#errorAlert').show();
-    		  		return;
-    		  	}
-    		  	$("#externalLinkX").val(storeX);
-    		  	$("#externalLinkY").val(storeY);
-    		  	
-    		  	var form = $("#createExternalLinkForm");
-    		  	var formData = new FormData(form[0]);
-    		  	var externalLinkInfo = createExternalLinkInfo();
-    		      
-    		      $.ajax({
-    		  		type: "POST",
-    		  		 url: "[(@{'/staff/space/'+${space.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-    		  		cache       : false,
-    		          contentType : false,
-    		          processData : false,
-    		          enctype: 'multipart/form-data',
-    		          data: formData, 
-    		          success: function(data) {
-    		          	var linkData = JSON.parse(data);
-    		          	$("#bgImage").off("click");
-    		          	externalLinkInfo["id"] = linkData["id"];
-    		          	externalLinkInfo["displayId"]=linkData["displayId"];
-    		          	externalLinkInfo["x"]=linkData["x"];
-    		          	externalLinkInfo["y"]=linkData["y"];
-    		          	showExternalLinks(externalLinkInfo, true);
-    		          	$("#ext_label").attr("id","");
-    		          	$("#link").attr("id","");
-    		          	$("#createExternalLinkAlert").hide();
-    		          	$("#errorMsg").text("");
-    		          	$('#errorAlert').hide();
-    		          	$("#external-arrow").attr("id","");
-    		          }
-    		  	});
-    		  });
-
-    		  // ------------- other buttons ------------
-    		  $("#deleteSpaceLinkButton").click(function() {
-    		  	var linkId = $("#spaceLinkIdValueEdit").val();
-    		  	$.ajax({
-    		  	    url: "[(@{'/staff/space/'+${space.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-    		  	  method: "DELETE",
-    		  	  success:function(data) {
-    		  		  $('[data-link-id="' + linkId + '"]').remove();
-    		  		  $('[data-link-id="unpublished-' + linkId + '"]').remove();
-    		  		  hideLinkInfoTabs();
-    		  		  $('a#'+linkId).remove();
-    		  		  if ($("div#outgoingLinks a").length < 2) {
-    		  			  $("#noLinksOnSpace").show();
-    		  		  }
-    		  		  if ($("div#incomingLinks a").length < 2) {
-    		  			  $("#noLinksToSpace").show();
-    		  		  }
-    		            $("#spaceLinkInfo").hide();
-    		  	    }
-    		  	});
-    		  });
+        $('#changeBgImgButton').click(function(file) {
+            $("#createSpaceLinkAlert").hide();
+            $("#createExternalLinkAlert").hide();
+            drawLinks();
+            $("#changeBgImgAlert").show();          
+        });
 
 
-    		  $("#deleteModuleLinkButton").click(function() {
-    		  	var linkId = $("#moduleLinkIdValueEdit").val();
-    		  	$.ajax({
-    		  	    url: "[(@{'/staff/space/'+${space.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-    		  		method: "DELETE",
-    		  			success:function(data) {
-    		  				$('[data-link-id="' + linkId + '"]').remove();
-    		  				hideLinkInfoTabs();
-    		  			}
-    		  		});
-    		  });
+        // ----------- submit buttons (e.g. to create space links) ------------------
+        $("#createSpaceLinkBtn").click(function(e) {
+            e.preventDefault();
+            $('#errorAlert').hide();
+            var label = $("#spaceLinkLabel").val();
+            var spaceName = $("#linkedSpace option:selected").text();
+            var type = $("#type option:selected").text();
 
-    		  $("#deleteExternalLinkButton").click(function() {
-    		      var linkId = $("#externalLinkIdValueEdit").val();
-    		      $.ajax({
-    		          url: "[(@{'/staff/space/'+${space.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-    		          method: "DELETE",
-    		              success:function(data) {
-    		                  $('[data-link-id="' + linkId + '"]').remove();
-    		                  hideLinkInfoTabs();
-    		              }
-    		          });
-    		  });
+            if (label == undefined || label == "") {
+                $("#errorMsg").text("Please fill the Label field before submitting.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (spaceName == undefined || spaceName == "Choose...") {
+                $("#errorMsg").text("Please select a space in Linked Space dropdown.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
+                $('#errorAlert').show();
+                return;
+            }
 
-    		  $("#closeAlert").click(function() {
-    		  	$('#errorAlert').hide();
-    		  });
+            if (storeX == undefined || storeY == undefined) {
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+                $('#errorAlert').show();
+                return;
+            }
 
-    		  // ------------- adjust links on background image (e.g. when inputs are changed) ------------
-    		  // external links
-    		  $(".extlink-target").change(function() {
-    		  	var externalLink = {};
-    		  	externalLink["x"] = storeX;
-    		  	externalLink["y"] = storeY;
-    		  	externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
-    		  	externalLink["url"] = $("#externalLink").val();
-    		  	externalLink["type"] = $("#extType").val();
-    		  	showExternalLinks(externalLink);
-    		  });		
-    		  	
-    		  // space links	
-    		  $('#spaceLinkRotation').change(function() {
-    		  	$('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-    		  });
+            $("#spaceLinkX").val(storeX);
+            $("#spaceLinkY").val(storeY);
 
-    		  $(".target").change(function() {
-    		  	showSpaceLink(createSpaceLinkInfo());
-    		  }); 
+            var form = $("#createSpaceLinkForm");
+            var label = $("#spaceLinkLabel").val();
+            var spaceName = $("#linkedSpace option:selected").text();
+            var spaceId = $("#linkedSpace option:selected").val(); 
+            var formData = new FormData(form[0]);
+            var spaceLinkInfo = createSpaceLinkInfo();
+            $.ajax({
+                type: "POST",
+                url: "[(@{'/staff/space/'+${space.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache       : false,
+                contentType : false,
+                processData : false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data) {
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    spaceLinkInfo["id"] = linkData["id"];
+                    spaceLinkInfo["displayId"]=linkData["displayId"];
+                    spaceLinkInfo["x"]=linkData["x"];
+                    spaceLinkInfo["y"]=linkData["y"];
+                    spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
+                    showSpaceLink(spaceLinkInfo, true);
+                    $("#space_label").attr("id","");
+                    $("#link").attr("id","");
+                    $("#createSpaceLinkAlert").hide();  
+                    $("#errorMsg").text("");
+                    $('#errorAlert').hide();
+                    $("#noLinksOnSpace").hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
+                    var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
+                    $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
+                    if (spaceName == "${space.name}") {
+                        $("#noLinksToSpace").hide();
+                        $("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
+                    }
+                    $("#space").css("display", "none");
+                    drawLinks();
+                }
+            });
+        });
 
-    		  $(".modulelink-target").change(function() {
-    		      showModuleLink(createModuleLinkInfo());
-    		  }); 
+        $("#createModuleLinkBtn").click(function(e) {
+            e.preventDefault();
 
-    		  // link icons for space links
-    		  var linkIconReader = new FileReader();
-    		  var linkIcon;
-    		  linkIconReader.onload = function(e) {
-    		  	linkIcon = e.target.result;
-    		  	showSpaceLink(createSpaceLinkInfo());
-    		  }
+            if (storeX == undefined || storeY == undefined) {
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+                $('#errorAlert').show();
+                return;
+            }
 
-    		  $('#moduleLinkRotation').change(function() {
-    		  	$('#link').css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-    		  });
+            var linkedModules = $("#linkedModule").val();
+            var moduleLabel = $("#moduleLinkLabel").val();
 
-    		  $('#moduleLinkRotationEdit').change(function() {
-    		  	$('#link').css('transform', 'rotate(' +$('#moduleLinkRotationEdit').val()+ 'deg)');
-    		  });
+            if (moduleLabel == undefined || moduleLabel == "") {
+                $("#errorMsg").text("Please enter the label for module.")
+                $('#errorAlert').show();
+                return;
+            }
 
-    		  $(".modulelink-targetEdit").change(function() {
-    		      showModuleLinkEdit(editModuleLinkInfo());
-    		  }); 
+            if (linkedModules == undefined || linkedModules == "Choose...") {
+                $("#errorMsg").text("Please select linked modules.")
+                $('#errorAlert').show();
+                return;
+            }
 
-    		  $(".spacelink-targetEdit").change(function() {
-    		      showSpaceLinkEdit(editSpaceLinkInfo());
-    		  });
+            $("#moduleLinkX").val(storeX);
+            $("#moduleLinkY").val(storeY);
 
-    		  $(".externallink-targetEdit").change(function() {
-    		      showExternalLinkEdit(editExternalLinkInfo());
-    		  });
+            var form = $("#createModuleLinkForm");
+            var formData = new FormData(form[0]);
+
+            var moduleLinkInfo = createModuleLinkInfo();
+
+            $.ajax({
+                type: "POST",
+
+                url: "[(@{'/staff/space/'+${space.id}+'/modulelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache       : false,
+                contentType : false,
+                processData : false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data) {
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    moduleLinkInfo["id"] = linkData["id"];
+                    moduleLinkInfo["displayId"]=linkData["displayId"];
+                    moduleLinkInfo["x"]=linkData["x"];
+                    moduleLinkInfo["y"]=linkData["y"];
+                    showModuleLink(moduleLinkInfo, true);
+                    $("#module_label").attr("id","");
+                    $("#link").attr("id","");
+                    $("#createModuleLinkAlert").hide();
+                    $("#errorMsg").text("");
+                    $('#errorAlert').hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
+                    $("#space").css("display", "none");
+                    drawLinks();
+                }
+            });
+        });
+        $("#editModuleLinkBtn").click(function(e) {
+            e.preventDefault();
+            var linkId = $("#moduleLinkIdEdit").val();
+            if(storeX == undefined || storeY == undefined){
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
+                $('#errorAlert').show();
+                return;    
+            }
+            var linkedModules = $("#moduleLinkIdEdit").val();
+            $("#moduleLinkXEdit").val(storeX);
+            $("#moduleLinkYEdit").val(storeY);
+            var form = $("#editModuleLinkForm");
+            var formData = new FormData(form[0]);
+            var moduleLinkInfo = editModuleLinkInfo();
+            $.ajax({
+                type: "POST",
+                url: "[(@{'/staff/space/link/module/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache: false,
+                contentType: false,
+                processData: false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data){
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    moduleLinkInfo["id"] = linkData["id"];
+                    moduleLinkInfo["displayId"]=linkData["displayId"];
+                    moduleLinkInfo["x"]=linkData["x"];
+                    moduleLinkInfo["y"]=linkData["y"];
+                    $('#linkRotation-'+selectedModuleLinkId).val(linkData["rotation"]);
+                    $('#linkLabel-'+selectedModuleLinkId).val(linkData["label"]);
+                    $('#linkType-'+selectedModuleLinkId).val(linkData["dislpayType"]);
+                    $('#moduleLinkTarget-'+selectedModuleLinkId).val(linkData["linkedId"]);
+                    showModuleLinkEdit(moduleLinkInfo, true);
+                    hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    selectedModuleLinkId=undefined;
+                    drawLinks();
+                }
+            });
+        });
+
+        $("#editSpaceLinkBtn").click(function(e) {
+            e.preventDefault();
+            var linkId = $("#spaceLinkIdEdit").val();
+            if (storeX == undefined || storeY == undefined) {
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+                $('#errorAlert').show();
+                return;    
+            }
+            var linkedSpace = $("#spaceLinkIdEdit").val();
+            $("#spaceLinkXEdit").val(storeX);
+            $("#spaceLinkYEdit").val(storeY);
+
+            var form = $("#editSpaceLinkForm");
+            var formData = new FormData(form[0]);
+            var spaceLinkInfo = editSpaceLinkInfo();
+            $.ajax({
+                type: "POST",
+                url: "[(@{'/staff/space/link/space/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache: false,
+                contentType : false,
+                processData : false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data) {
+                    var linkData = JSON.parse(data);
+                    $("#main-bgImage").off("click");
+                    spaceLinkInfo["id"] = linkData["id"];
+                    spaceLinkInfo["displayId"]=linkData["displayId"];
+                    spaceLinkInfo["x"]=linkData["x"];
+                    spaceLinkInfo["y"]=linkData["y"];
+                    spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
+                    showSpaceLinkEdit(spaceLinkInfo, true);
+                    $('#linkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
+                    $('#linkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
+                    $('#linkType-'+selectedSpaceLinkId).val(linkData["dislpayType"]);
+                    $('#linkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
+                    hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    selectedSpaceLinkId=undefined;
+                    drawLinks();
+                }
+            });
+        });
+
+        $("#editExternalLinkBtn").click(function(e) {
+            e.preventDefault();
+            var linkId = $("#externalLinkIdEdit").val();
+            if (storeX == undefined || storeY == undefined) {
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+                $('#errorAlert').show();
+                return;
+            }
+            var linkedSpace = $("#externalLinkIdEdit").val();
+            $("#externalLinkXEdit").val(storeX);
+            $("#externalLinkYEdit").val(storeY);
+            var form = $("#editExternalLinkForm");
+            var formData = new FormData(form[0]);
+            var externalLinkInfo = editExternalLinkInfo();
+            $.ajax({
+                type: "POST",
+                url: "[(@{'/staff/space/link/external/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache: false,
+                contentType : false,
+                processData : false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data) {
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    externalLinkInfo["id"] = linkData["id"];
+                    externalLinkInfo["displayId"]=linkData["displayId"];
+                    externalLinkInfo["x"]=linkData["x"];
+                    externalLinkInfo["y"]=linkData["y"];
+                    $('#linkLabel-'+selectedExternalLinkId).val(linkData["label"]);
+                    $('#linkType-'+selectedExternalLinkId).val(linkData["dislpayType"]);
+                    $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
+                    showExternalLinkEdit(editExternalLinkInfo, true);
+                    hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    selectedExternalLinkId=undefined;
+                    drawLinks();
+                }
+            });
+        });
+
+        $("#createExternalLinkBtn").click(function(e) {
+            e.preventDefault();
+            var payload = {};
+
+            if (storeX == undefined || storeY == undefined) {
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+                $('#errorAlert').show();
+                return;
+            }
+
+            var externalLink = $("#externalLink").val();
+            var externalLinkLabel = $("#externalLinkLabel").val();
+            var type = $("#extType option:selected").text();
 
 
-    		  $("#spaceLinkImage").change(function() {
-    		  	if (this.files && this.files[0]) {
-    		  		linkIconReader.readAsDataURL(this.files[0]);
-    		  	}
-    		  });
+            if (externalLink == undefined || externalLink == "") {
+                $("#errorMsg").text("Please provide the link to the external link.")
+                $('#errorAlert').show();
+                return;
+            }
 
-    		  // link icons for module links
-    		  var moduleLinkIconReader = new FileReader();
-    		  var moduleLinkIcon;
-    		  moduleLinkIconReader.onload = function(e) {
-    		  	moduleLinkIcon = e.target.result;
-    		      showModuleLink(createModuleLinkInfo());
-    		  }
-    		  $("#moduleLinkImage").change(function() {
-    		  	if (this.files && this.files[0]) {
-    		  		moduleLinkIconReader.readAsDataURL(this.files[0]);
-    		  	}
-    		  });
+            if (externalLinkLabel == undefined || externalLinkLabel == "") {
+                $("#errorMsg").text("Please enter a label for this external link.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
+                $('#errorAlert').show();
+                return;
+            }
+            $("#externalLinkX").val(storeX);
+            $("#externalLinkY").val(storeY);
 
-    		  var externalLinkIconReader = new FileReader();
-    		  var externalLinkIcon;
-    		  externalLinkIconReader.onload = function(e) {
-    		  	externalLinkIcon = e.target.result;
-    		      showExternalLinks(createExternalLinkInfo());
-    		  }
-    		  $("#externalLinkImage").change(function() {
-    		  	if (this.files && this.files[0]) {
-    		  		externalLinkIconReader.readAsDataURL(this.files[0]);
-    		  	}
-    		  });
-    		  
-    		// ------------ Cancel buttons -----------------
-    		  $("#cancelSpaceLinkBtn").click(function() {
-    		      storeX = null;
-    		      storeY = null;
-    		      $("#link").remove();
-    		      $("#space_label").remove();
-    		      $("#createSpaceLinkAlert").hide(); 
-    		      $('#errorAlert').hide();
-    		  });
+            var form = $("#createExternalLinkForm");
+            var formData = new FormData(form[0]);
+            var externalLinkInfo = createExternalLinkInfo();
 
-    		  $("#cancelModuleLinkBtn").click(function() {
-    		      storeX = null;
-    		      storeY = null;
-    		      $("#link").remove();
-    		      $("#module_label").remove();
-    		      $("#createModuleLinkAlert").hide();  
-    		      $('#errorAlert').hide();
-    		  }); 
+            $.ajax({
+                type: "POST",
+                url: "[(@{'/staff/space/'+${space.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache       : false,
+                contentType : false,
+                processData : false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data) {
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    externalLinkInfo["id"] = linkData["id"];
+                    externalLinkInfo["displayId"]=linkData["displayId"];
+                    externalLinkInfo["x"]=linkData["x"];
+                    externalLinkInfo["y"]=linkData["y"];
+                    showExternalLinks(externalLinkInfo, true);
+                    $("#ext_label").attr("id","");
+                    $("#link").attr("id","");
+                    $("#createExternalLinkAlert").hide();
+                    $("#errorMsg").text("");
+                    $('#errorAlert').hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
+                    $("#external-arrow").attr("id","");
+                    $("#space").css("display", "none");
+                    drawLinks();
+                }
+            });
+        });
 
-    		  $("#cancelExternalLinkBtn").click(function() {
-    		      storeX = null;
-    		      storeY = null;
-    		      $("#external-link").remove();
-    		      $("div#link").remove();
-    		      $("#external-arrow").remove();
-    		      $("#ext_label").remove();
-    		      $("#createExternalLinkAlert").hide();
-    		      $('#errorAlert').hide();
-    		  });
+        // ------------- other buttons ------------
+        $("#deleteSpaceLinkButton").click(function() {
+            var linkId = $("#spaceLinkIdValueEdit").val();
+            $.ajax({
+                url: "[(@{'/staff/space/'+${space.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                method: "DELETE",
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success:function(data) {
+                    $('[data-link-id="' + linkId + '"]').remove();
+                    $('[data-link-id="unpublished-' + linkId + '"]').remove();
+                    hideLinkInfoTabs();
+                    $('a#'+linkId).remove();
+                    if ($("div#outgoingLinks a").length < 2) {
+                        $("#noLinksOnSpace").show();
+                    }
+                    if ($("div#incomingLinks a").length < 2) {
+                        $("#noLinksToSpace").show();
+                    }
+                    $("#spaceLinkInfo").hide();
+                    $("#space").css("display", "none");
+                    drawLinks();
+                }
+            });
+        });
 
-    		  $("#cancelBgImgBtn").click(function() {
-    		      $("#file").val('');
-    		      $("#changeBgImgAlert").hide();
-    		  });
 
-    		  $("#closeEditModuleLinkInfo").click(function(e) {
-    		  	e.preventDefault();
-    		  	$("#moduleLinkInfoLabel").text("");
-    		      $("#moduleLinkId").val("");
-    		      resetHighlighting();
-    		      $("#editModuleLinkInfo").hide();
-    		  }); 
+        $("#deleteModuleLinkButton").click(function() {
+            var linkId = $("#moduleLinkIdValueEdit").val();
+            $.ajax({
+                url: "[(@{'/staff/space/'+${space.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                method: "DELETE",
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success:function(data) {
+                    $('[data-link-id="' + linkId + '"]').remove();
+                    hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    drawLinks();
+                }
+            });
+        });
 
-    		  $("#closeEditSpaceLinkInfo").click(function(e) {
-    		  	e.preventDefault();
-    		  	$("#spaceLinkInfoLabel").text("");
-    		      $("#spaceLinkId").val("");
-    		      resetHighlighting();
-    		      $("#editSpaceLinkInfo").hide();
-    		  }); 
+        $("#deleteExternalLinkButton").click(function() {
+            var linkId = $("#externalLinkIdValueEdit").val();
+            $.ajax({
+                url: "[(@{'/staff/space/'+${space.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                method: "DELETE",
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success:function(data) {
+                    $('[data-link-id="' + linkId + '"]').remove();
+                    hideLinkInfoTabs();
+                    $("#space").css("display", "none");
+                    drawLinks();
+                }
+            });
+        });
 
-    		  $("#closeEditExternalLinkInfo").click(function(e) {
-    		  	e.preventDefault();
-    		  	$("#externalLinkInfoLabel").text("");
-    		      $("#externalLinkId").val("");
-    		      resetHighlighting();
-    		      $("#editExternalLinkInfo").hide();
-    		  }); 
-		 
+        $("#closeAlert").click(function() {
+            $('#errorAlert').hide();
+        });
+
+        // ------------- adjust links on background image (e.g. when inputs are changed) ------------
+        // external links
+        $(".extlink-target").change(function() {
+            var externalLink = {};
+            externalLink["x"] = storeX;
+            externalLink["y"] = storeY;
+            externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
+            externalLink["url"] = $("#externalLink").val();
+            externalLink["type"] = $("#extType").val();
+            showExternalLinks(externalLink);
+        });     
+
+        // space links  
+        $('#spaceLinkRotation').change(function() {
+            $('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+        });
+
+        $(".target").change(function() {
+            showSpaceLink(createSpaceLinkInfo());
+        }); 
+
+        $(".modulelink-target").change(function() {
+            showModuleLink(createModuleLinkInfo());
+        }); 
+
+        // link icons for space links
+
+        $('#moduleLinkRotation').change(function() {
+            $('#link').css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
+        });
+
+        $('#moduleLinkRotationEdit').change(function() {
+            $('#link').css('transform', 'rotate(' +$('#moduleLinkRotationEdit').val()+ 'deg)');
+        });
+
+        $(".modulelink-targetEdit").change(function() {
+            showModuleLinkEdit(editModuleLinkInfo());
+        }); 
+
+        $(".spacelink-targetEdit").change(function() {
+            showSpaceLinkEdit(editSpaceLinkInfo());
+        });
+
+        $(".externallink-targetEdit").change(function() {
+            showExternalLinkEdit(editExternalLinkInfo());
+        });
+
+
+        $("#spaceLinkImage").change(function() {
+            if (this.files && this.files[0]) {
+                linkIconReader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        $("#externalLinkImage").change(function() {
+            if (this.files && this.files[0]) {
+                externalLinkIconReader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // ------------ Cancel buttons -----------------
+        $(".cancelSpaceLinkBtn").click(function() {
+            storeX = null;
+            storeY = null;
+            $("#link").remove();
+
+            $("#space_label").remove();
+            $("#space").hide();
+            $("#createSpaceLinkAlert").hide(); 
+            $('#errorAlert').hide();
+            drawLinks();
+        });
+
+        $(".cancelModuleLinkBtn").click(function() {
+            storeX = null;
+            storeY = null;
+            $("#link").remove();
+            $("#module_label").remove();
+            $("#space").hide();
+            $("#createModuleLinkAlert").hide();  
+            $('#errorAlert').hide();
+            drawLinks();
+        }); 
+
+        $(".cancelExternalLinkBtn").click(function() {
+            storeX = null;
+            storeY = null;
+            $("#external-link").remove();
+            $("div#link").remove();
+            $("#external-arrow").remove();
+            $("#ext_label").remove();
+            $("#space").hide();
+            $("#createExternalLinkAlert").hide();
+            $('#errorAlert').hide();
+            drawLinks();
+        });
+
+        $("#cancelBgImgBtn").click(function() {
+            drawLinks();
+            $("#file").val('');
+            $("#changeBgImgAlert").hide();
+        });
+
+        $("#closeEditModuleLinkInfo").click(function(e) {
+            e.preventDefault();
+            selectedModuleLinkId=undefined;
+            $("#moduleLinkInfoLabel").text("");
+            $("#moduleLinkId").val("");
+            resetHighlighting();
+            $("#space").hide();
+            $("#editModuleLinkInfo").hide();
+            drawLinks();
+        }); 
+
+        $("#closeEditSpaceLinkInfo").click(function(e) {
+            e.preventDefault();
+            selectedSpaceLinkId=undefined;
+            $("#spaceLinkInfoLabel").text("");
+            $("#spaceLinkId").val("");
+            resetHighlighting();
+            $("#space").hide();
+            $("#editSpaceLinkInfo").hide();
+            drawLinks();
+        }); 
+
+        $("#closeEditExternalLinkInfo").click(function(e) {
+            e.preventDefault();
+            selectedExternalLinkId=undefined;
+            $("#externalLinkInfoLabel").text("");
+            $("#externalLinkId").val("");
+            resetHighlighting();
+            $("#space").hide();
+            $("#editExternalLinkInfo").hide();
+            drawLinks();
+        });
 });
 </script>
 <style>
@@ -1222,7 +1314,8 @@ $(function(){
     width: 120px;
     color: white;
     text-align: center;
-    font-size: 12px padding: 3px 0;
+    font-size: 12px;
+    padding: 3px 0;
     border-radius: 6px;
     position: absolute;
     z-index: 1;
@@ -1234,87 +1327,99 @@ $(function(){
 .Info_cz_Class:hover .tooltiptext {
     visibility: visible;
 }
+#space {
+    max-width: 1800px;
+}
 </style>
 </head>
+
 <body>
     <div layout:fragment="content" class="main-content">
-        <h1>
-            Space: [[${space.name}]]<small style="margin-left: 10px;"><a
-                th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span></a></small>
-        </h1>
-
-        <div class="alert alert-light" role="alert">
-            Created on <span class="date">[[${space.creationDate}]]</span>
-            by [[${space.createdBy}]]. <br> Modified on <span
-                class="date">[[${space.modificationDate}]]</span> by
-            [[${space.modifiedBy}]].<br> <br> <span class="icon-warning secondary"></span>
-            indicates links to unpublished spaces.
+ 		<div class="flex-spacing">
+ 			<div>
+	    		<h2>
+		            <span style="color: var(--dark-grey)">Space:</span> [[${space.name}]]
+		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
+						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
+		            <a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span></a>
+		        </h2>
+		        <p>[[${space.description}]]</p>
+		        <div class="flex-spacing">
+		        	<div class="dropdown">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Incoming space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="incominglinks">
+					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
+			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
+			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem; color: var(--secondary);"
+			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.sourceSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
+			            </div>
+					  </div>
+					</div>
+					
+					<div class="dropdown">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Outgoing space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
+					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
+			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
+		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem; color: var(--secondary);"
+		                        th:if="${spaceLinks.targetSpace != null}"
+		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.targetSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
+						</div>
+					  </div>
+					</div>
+		        </div>
+		        
+		        
+	    	</div>
+	    	<div>
+                <label style="margin-right: 10px;">Space Status</label> 
+                <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/status'}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
+                    <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
+                        <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
+                        <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+                <label style="margin-right: 10px;">Show Links to Unpublished Spaces</label>
+                <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/showSpaceLinks'}" name="f">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
+                    <select class="form-control-sm" name="showSpaceLinksParam" style="width: 200px; display: inline;">
+                        <option th:id="No" th:value=false th:selected="${!space.showUnpublishedLinks}">No</option>
+                        <option th:id="Yes" th:value=true th:selected="${space.showUnpublishedLinks}">Yes</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+            </div>
+ 			 
+ 		</div>
+		
+		 <div style="margin: 20px 0">
+            <button type="button" id="addSpaceLinkButton"class="btn primary-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top">
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-layer-group"></i></button>
+            &nbsp;
+            <button type="button" id="addModuleLinkButton" class="btn primary-btn" data-toggle="tooltip" title="Add Link to Module" data-placement="top">
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-th-large"></i></button>
+            &nbsp;
+            <button type="button" id="addExternalLinkButton" class="btn primary-btn"  data-toggle="tooltip" title="Add Link to External" data-placement="top">
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-external-link-alt"></i></button>
+            &nbsp;
+            <button type="button" id="changeBgImgButton"  class="btn primary-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top">
+            	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
+            &nbsp;
         </div>
-        <div style="padding-bottom: 10px;">
-            <form method="POST"
-                th:action="@{'/staff/space/'+${space.id}+'/status'}">
-                <input type="hidden" th:name="${_csrf.parameterName}"
-                    th:value="${_csrf.token}" /> <label><h5>Space
-                        Status:</h5></label> <select class="form-control"
-                    name="statusParam"
-                    style="width: 200px; display: inline;">
-                    <option th:id="Published" th:value="PUBLISHED"
-                        th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published
-                    </option>
-                    <option th:id="Unpublished" th:value="UNPUBLISHED"
-                        th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished
-                    </option>
-                </select>
-                <p
-                    style="display: inline; padding-left: 10px;">
-                    <input class="btn primary-btn btn-sm" type="submit"
-                        value="Submit" />
-                </p>
-            </form>
-        </div>
-        <div style="padding-bottom: 10px;">
-           <form method="POST" th:action="@{'/staff/space/links/edit/'+${space.id}+'/incoming'}">
-             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-             <label><h5>Hide all space links to this space:</h5></label>
-             <select class="form-control" name="hideSpaceLinksParam" style="width: 200px; display: inline;">
-                <option th:id="No" th:value=false th:selected="${!space.hideIncomingLinks}">No</option>
-                <option th:id="Yes" th:value=true th:selected="${space.hideIncomingLinks}">Yes</option>
-             </select>
-             <p
-                    style="display: inline; padding-left: 10px;">
-                    <input class="btn primary-btn btn-sm" type="submit"
-                        value="Submit" />
-                </p>
-           </form>
-       </div>
-        
-        <div style="padding-bottom: 10px;">
-            <form method="POST"
-                th:action="@{'/staff/space/'+${space.id}+'/showSpaceLinks'}"
-                name="f">
-                <input type="hidden" th:name="${_csrf.parameterName}"
-                    th:value="${_csrf.token}" /> <label><h5>Show
-                        Links to Unpublished Spaces:</h5></label> <select
-                    class="form-control" name="showSpaceLinksParam"
-                    style="width: 200px; display: inline;">
-                    <option th:id="No" th:value=false
-                        th:selected="${!space.showUnpublishedLinks}">No</option>
-                    <option th:id="Yes" th:value=true
-                        th:selected="${space.showUnpublishedLinks}">Yes
-                    </option>
-                </select>
-                <p
-                    style="display: inline; padding-left: 10px;">
-                    <input class="btn primary-btn btn-sm" type="submit"
-                        value="Submit" />
-                </p>
-            </form>
-        </div>
-        <h5>Description:</h5>
-        <p style="max-height: 100px; overflow-y: scroll;">
-            [[${space.description}]]</p>
-
-
+        <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
+        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image.id}}" />
         <div id="errorAlert"
             class="alert alert-danger alert-dismissible fade show"
             role="alert"
@@ -1325,595 +1430,490 @@ $(function(){
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
-
-        <form id="createSpaceLinkForm">
-            <div id="createSpaceLinkAlert" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Create new Space Link</small>
-                        </h6>
+		<div id="createSpaceLinkAlert" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+			<form id="createSpaceLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the new space link. Then
-                            click "Create Space Link".</small>
-                        <hr>
+	                <div class="row">
+	                    <div class="col">
+	                        <h5 class="alert-heading">Create new Space Link</h5>
+	                        <p>Please click on the image where
+	                            you want to place the new space link. Then
+	                            click "Create Space Link".</p>
+	                    </div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="spaceLinkX" />
+	                <input type="hidden" name="y" id="spaceLinkY" />
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm" style="background: var(--base-grey); width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="type" name="type"  class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                            <option th:value="ALERT">Alert</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4" style="padding-right: 0;">
+	                        <label>Linked Space</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="linkedSpace" name="linkedSpace" class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
+	                            <option th:selected>Choose...</option>
+	                            <option th:each="space : ${spaces}" th:value="${space.id}">[[${space.name}]]
+	                                <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4" style="padding-right: 0;">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelSpaceLinkBtn btn-sm">Cancel</button>
+	                    <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Space Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
+        
+		<div id="createModuleLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createModuleLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                </div>
-
-                <input type="hidden" name="x" id="spaceLinkX" /> <input
-                    type="hidden" name="y" id="spaceLinkY" />
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Rotation:</small> </label>
+	                <div class="row">
+	                    <div class="col">
+	                        <h5 class="alert-heading">Create new Module Link</h5>
+	                        <p>Please click on the image where
+	                            you want to place the new module link. Then
+	                            click "Create Module Link".</p>
+	                    </div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="moduleLinkX" /> 
+	                <input type="hidden" name="y" id="moduleLinkY" />
+	                <input type="hidden" name="type" value="MODULE" />
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="number"
+	                            id="moduleLinkRotation" name="rotation"
+	                            value="0">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
+	                            name="moduleLinkLabel" id="moduleLinkLabel">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Linked Modules</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="linkedModule" name="linkedModule" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="${module.id}"
+	                                th:each="module : ${moduleList}">[[${module.name}]]</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
+	                    <button id="createModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Module Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
+		
+		<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createExternalLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                    <div class="col-sm-8">
-                        <input class="form-control-xs"
-                            style="width: inherit;" type="number"
-                            id="spaceLinkRotation" name="rotation"
-                            value="0"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input class="form-control-xs target"
-                            style="width: inherit;" type="text"
-                            name="spaceLinkLabel" id="spaceLinkLabel"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="type" name="type"
-                            class="form-control-xs target"
-                            style="width: inherit;">
-                            <option th:selected>Choose...</option>
-                            <option th:value="IMAGE">Image</option>
-                            <option th:value="ARROW">Link</option>
-                            <option th:value="ALERT">Alert</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>Linked Space:</small> </label>
-                    </div>
-                    <div class="col-sm-7">
-                        <select id="linkedSpace" name="linkedSpace"
-                            class="form-control-xs target"
-                            style="width: inherit;">
-                            <option th:selected>Choose...</option>
-                            <option th:each="space : ${spaces}"
-                                th:value="${space.id}">[[${space.name}]]
-                                <span
-                                    th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-8" style="padding-right: 0;">
-                        <label><small>Image:</small> </label>
-                    </div>
-                    <div class="col-sm-9">
-
-                        <input type="file" class="form-control-xs"
-                            name="spaceLinkImage" id="spaceLinkImage"><br>
-                    </div>
-                </div>
-
-                <HR>
-                <p class="mb-0 text-right">
-                    <button id="cancelSpaceLinkBtn" type="reset"
-                        class="btn btn-light btn-xs">Cancel</button>
-                    <button id="createSpaceLinkBtn" type="reset"
-                        class="btn primary-btn btn-xs">Create
-                        Space Link</button>
+	            	<div class="row">	
+	            		<div class="col">
+	            			<h5 class="alert-heading">Create new External Link</h5>
+			                <p>Please click on the image where you
+			                   want to place the new external link. Then click
+			                   "Create External Link".</p>
+	            		</div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="externalLinkX" /> 
+	                <input type="hidden" name="y" id="externalLinkY" /> 
+	                
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>Label</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                			 name="externalLinkLabel" id="externalLinkLabel">	
+	                	</div>
+	                </div>
+	                 
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>External Link</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                    		size="15" name="url" id="externalLink">	
+	                	</div>
+	                </div>               
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
+	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
+		
+		<div id="editSpaceLinkInfo" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="editSpaceLinkForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditSpaceLinkInfo" class="icon-circle-close"></a>
                 </p>
-
-            </div>
-        </form>
-
-        <form id="createModuleLinkForm">
-            <div id="createModuleLinkAlert"
-                class="alert alert-secondary" role="alert"
-                style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Create new Module Link</small>
-                        </h6>
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the new module link. Then
-                            click "Create Module Link".</small>
-                        <hr>
-                    </div>
-                </div>
-
-                <input type="hidden" name="x" id="moduleLinkX" /> <input
-                    type="hidden" name="y" id="moduleLinkY" />
-                <input
-                    type="hidden" name="type" value="MODULE" />
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Rotation:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input class="form-control-xs modulelink-target"
-                            style="width: inherit;" type="number"
-                            id="moduleLinkRotation" name="rotation"
-                            value="0"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input class="form-control-xs modulelink-target"
-                            style="width: inherit;" type="text"
-                            name="moduleLinkLabel" id="moduleLinkLabel"><br>
-                    </div>
-                </div>
-
-               <!--  <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="type" name="type"
-                            class="form-control-xs modulelink-target">
-                            <option th:selected>Choose...</option>
-                            <option th:value="MODULE">Module</option>
-                        </select>
-                    </div>
-                </div> -->
-
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>Linked Modules:</small> </label>
-                    </div>
-                    <div class="col-sm-6">
-                        <select id="linkedModule" name="linkedModule"
-                            class="form-control-xs modulelink-target"
-                            style="width: inherit;">
-                            <option th:selected>Choose...</option>
-                            <option th:value="${module.id}"
-                                th:each="module : ${moduleList}">[[${module.name}]]</option>
-                        </select>
-                    </div>
-                </div>
-
-                <HR>
-                <p class="mb-0 text-right">
-                    <button id="cancelModuleLinkBtn" type="reset"
-                        class="btn btn-light btn-xs">Cancel</button>
-                    <button id="createModuleLinkBtn" type="reset"
-                        class="btn primary-btn btn-xs">Create
-                        Module Link</button>
+					<div class="row">
+						<div class="col">
+							<h6 class="alert-heading"><span style="color: var(--dark-grey)"> Space Link:</span> <span id="spaceLinkInfoLabelEdit"></span></h6>
+							<p>Please click on the image where
+	                            you want to place the selected space link.
+	                            Then click "Edit Space Link".</p>
+						</div>
+					</div>
+	                
+	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
+	
+	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
+	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
+	                <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
+	
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm spacelink-targetEdit"
+	                            type="number" id="spaceLinkRotationEdit"
+	                            name="rotation" style="width: inherit; background: var(--base-grey)" />
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm spacelink-targetEdit"
+	                            type="text" name="spaceLinkLabel"
+	                            id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="typeSpaceEdit" name="type" class="form-control-sm spacelink-targetEdit"
+	                            style="width: inherit; background: var(--base-grey)">
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                            <option th:value="ALERT">Alert</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Linked Space</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control-sm spacelink-targetEdit"
+	                            style="width: inherit; background: var(--base-grey)">
+	                            <option th:each=" space : ${spaces}" th:value="${space.id}">[[${space.name}]]
+	                            	<span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
+	                           	</option>
+	
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+	                    </div>
+	                </div>
+	                
+	                <p class="mt-5 text-center">
+	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Changes</button>
+	                </p>
+	                
+	            </div>
+	        </form>
+		</div>
+        <div id="editModuleLinkInfo" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+            <form id="editModuleLinkForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditModuleLinkInfo" class="icon-circle-close"></a>
                 </p>
+                <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">
+                                    Module Link:</span> <span
+                                    id="moduleLinkInfoLabelEdit"></span>
+                            </h6>
+                            <p>Please click on the image
+                                where you want to place the existing
+                                module link. Then click "Edit Module".
+                            </p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
+                    <input type="hidden" name="type" value="MODULE" />
+                    <input type="hidden" name="x" id="moduleLinkXEdit" />
+                    <input type="hidden" name="y" id="moduleLinkYEdit" />
+                    <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
 
-            </div>
-        </form>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Rotation: </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm modulelink-targetEdit"
+                                type="number"
+                                id="moduleLinkRotationEdit"
+                                name="rotation" style="width: inherit;  background: var(--base-grey)"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Label:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm modulelink-targetEdit"
+                                type="text" name="moduleLinkLabel"
+                                id="moduleLinkLabelEdit"
+                                style="width: inherit;  background: var(--base-grey)"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="padding-right: 0;">
+                            <label>Linked
+                                    Modules:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="moduleLinkIdEdit"
+                                name="linkedModule"
+                                class="form-control-sm modulelink-targetEdit"
+                                style="width: inherit; background: var(--base-grey)">
+                                <option
+                                    th:each=" module : ${moduleList}"
+                                    th:value="${module.id}">[[${module.name}]]</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Module Link</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+        <div id="editExternalLinkInfo" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+            <form id="editExternalLinkForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditExternalLinkInfo" class="icon-circle-close"></a>
+                </p>
+                <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">Modify External
+                                    Link: </span><span
+                                    id="externalLinkInfoLabelEdit"></span>
+                            </h6>
+                            <p>Please click on the image where you
+                                want to place the existing external
+                                link. Then click "Edit External Link".</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="externalLinkIdValueEdit"
+                        id="externalLinkIdValueEdit" />
+                    <input type="hidden" name="x" id="externalLinkXEdit" />
+                    <input type="hidden" name="y" id="externalLinkYEdit" />
+                    <input type="hidden" name="externalLinkDisplayId"
+                        id="externalLinkDisplayId" />
 
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Label:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm externallink-targetEdit"
+                                type="text" name="externalLinkLabel"
+                                id="externalLinkLabelEdit"
+                                style="width: inherit; background: var(--base-grey)"><br>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4" style="padding-right: 0;">
+                            <label>External Link
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm externallink-targetEdit"
+                                type="text" name="url"
+                                id="externalLinkURLEdit"
+                                style="width: inherit; background: var(--base-grey)">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Type:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="extTypeEdit" name="type"
+                                class="form-control-sm externallink-targetEdit">
+                                <option th:value="IMAGE">Image</option>
+                                <option th:value="ARROW">Link</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3" style="padding-right: 0;">
+                            <label>Image:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control-sm"
+                                name="externalLinkImage"
+                                id="externalLinkImageEdit" style="width: inherit" />
+                        </div>
+                    </div>
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn btn-sm">Save External Link</button>
+                    </p>
+                    
+                </div>
+            </form>
+        </div>
+        </div>
         <form method="post"
             th:action="@{|/staff/space/update/${space.id}?${_csrf.parameterName}=${_csrf.token}|}"
             enctype="multipart/form-data">
             <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <div id="changeBgImgAlert" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 340px; height: 130px; display: none; position: absolute; top: 100px; right: 50px; z-index: 999">
-                <h6>
-                    <small>Change Background Image: </small>
-                </h6>
-                <input type="file" name="file" rows="5" cols="500"
-                    id="file" /><br> <br>
+                role="alert" style="background: white; display: none;">
+                <h6>Change Background Image</h6>
+                <input type="file" name="file" rows="5" cols="500" id="file" />
                 <p class="mb-0 text-right">
-                    <button type="submit" id="changeBgImgBtn"
-                        class="btn primary-btn btn-sm">Upload
-                        Image</button>
+                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
                     &nbsp;
-                    <button id="cancelBgImgBtn" type="button"
-                        class="btn light btn-sm">Cancel</button>
-                </p>
-            </div>
-
-        </form>
-
-        <form id="createExternalLinkForm">
-            <div id="createExternalLinkAlert"
-                class="alert alert-secondary" role="alert"
-                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <h6 class="alert-heading">
-                    <small>Create new External Link</small>
-                </h6>
-                <p>
-                    <small>Please click on the image where you
-                        want to place the new external link. Then click
-                        "Create External Link".</small>
-                </p>
-                <hr>
-
-                <input type="hidden" name="x" id="externalLinkX" /> <input
-                    type="hidden" name="y" id="externalLinkY" /> <label
-                    style="margin-right: 5px;"><small>Label:</small>
-                </label> <input class="form-control-xs extlink-target"
-                    type="text" name="externalLinkLabel"
-                    id="externalLinkLabel"><br> <label
-                    style="margin-right: 5px;"><small>External
-                        Link</small> </label> <input
-                    class="form-control-xs extlink-target" type="text"
-                    size="15" name="url" id="externalLink"><br>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="extType" name="type"
-                            class="form-control-xs extlink-target">
-                            <option th:selected>Choose...</option>
-                            <option th:value="IMAGE">Image</option>
-                            <option th:value="ARROW">Link</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0;">
-                        <label><small>Image:</small> </label>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="file" class="form-control-xs"
-                            name="externalLinkImage"
-                            id="externalLinkImage"><br>
-                    </div>
-                </div>
-
-                <HR>
-                <p class="mb-0 text-right">
-                    <button id="cancelExternalLinkBtn" type="reset"
-                        class="btn btn-light btn-xs">Cancel</button>
-                    <button id="createExternalLinkBtn" type="submit"
-                        class="btn primary-btn btn-xs">Create
-                        External Link</button>
+                    <button id="cancelBgImgBtn" type="button" class="btn light btn-sm btn-sm">Cancel</button>
                 </p>
             </div>
         </form>
-
-        <form id="editSpaceLinkForm">
-            <div id="editSpaceLinkInfo" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <p class="float-right">
-                    <a href="#" id="closeEditSpaceLinkInfo"><span class="icon-circle-close"></span></a>
-                </p>
-                <h6 class="alert-heading">
-                    Space Link: <span id="spaceLinkInfoLabelEdit"></span>
-                </h6>
-                <input type="hidden" name="spaceLinkIdValueEdit"
-                    id="spaceLinkIdValueEdit" />
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Modify Space Link</small>
-                        </h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the selected space link.
-                            Then click "Edit Space Link".</small>
-                        </p>
-                        <hr>
-                    </div>
-                </div>
-
-                <input type="hidden" name="x" id="spaceLinkXEdit" /> <input
-                    type="hidden" name="y" id="spaceLinkYEdit" /> <input
-                    type="hidden" name="spaceLinkDisplayId"
-                    id="spaceLinkDisplayId" />
-
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Rotation:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs spacelink-targetEdit"
-                            type="number" id="spaceLinkRotationEdit"
-                            name="rotation" style="width: inherit;"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs spacelink-targetEdit"
-                            type="text" name="spaceLinkLabel"
-                            id="spaceLinkLabelEdit" style="width: inherit;"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="typeSpaceEdit" name="type"
-                            class="form-control-xs spacelink-targetEdit"
-                            style="width: inherit;">
-                            <option th:value="IMAGE">Image</option>
-                            <option th:value="ARROW">Link</option>
-                            <option th:value="ALERT">Alert</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>Linked Space:</small> </label>
-                    </div>
-                    <div class="col-sm-7">
-                        <select id="spaceLinkIdEdit" name="linkedSpace"
-                            class="form-control-xs spacelink-targetEdit"
-                            style="width: inherit;">
-                            <option th:each=" space : ${spaces}"
-                                th:value="${space.id}">[[${space.name}]]<span
-                                    th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
-
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0;">
-                        <label><small>Image:</small> </label>
-                    </div>
-                    <div class="col-sm-9">
-                        <input type="file" class="form-control-xs"
-                            name="spaceLinkImage"
-                            id="spaceLinkImageEdit"><br>
-                    </div>
-                </div>
-                <HR>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button id="editSpaceLinkBtn" type="reset"
-                            class="btn primary-btn btn-xs">Save</button>
-                    </div>
-                    <div class="col-sm-8">
-                        <button id="deleteSpaceLinkButton" type="reset"
-                            class="btn primary-btn btn-xs">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <form id="editModuleLinkForm">
-            <div id="editModuleLinkInfo" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 280px; height: 700px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <p class="float-right">
-                    <a href="#" id="closeEditModuleLinkInfo"><span class="icon-circle-close"></span></a>
-                </p>
-                <h6 class="alert-heading">
-                    Module Link: <span id="moduleLinkInfoLabelEdit"></span>
-                </h6>
-                <input type="hidden" name="moduleLinkIdValueEdit"
-                    id="moduleLinkIdValueEdit" />
-                <input
-                    type="hidden" name="type" value="MODULE" />
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Modify Module Link</small>
-                        </h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the existing module link.
-                            Then click "Edit Module".</small>
-                        </p>
-                        <hr>
-                    </div>
-                </div>
-                <input type="hidden" name="x" id="moduleLinkXEdit" /> <input
-                    type="hidden" name="y" id="moduleLinkYEdit" /> <input
-                    type="hidden" name="moduleLinkDisplayId"
-                    id="moduleLinkDisplayId" />
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Rotation:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs modulelink-targetEdit"
-                            type="number" id="moduleLinkRotationEdit"
-                            name="rotation" style="width: inherit;"><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs modulelink-targetEdit"
-                            type="text" name="moduleLinkLabel"
-                            id="moduleLinkLabelEdit" style="width: inherit;"><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>Linked Modules:</small> </label>
-                    </div>
-                    <div class="col-sm-7">
-                        <select id="moduleLinkIdEdit"
-                            name="linkedModule"
-                            class="form-control-xs modulelink-targetEdit"
-                            style="width: 100%;">
-                            <option th:each=" module : ${moduleList}"
-                                th:value="${module.id}">[[${module.name}]]</option>
-                        </select>
-                    </div>
-                </div>
-                <HR>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button id="editModuleLinkBtn" type="reset"
-                            class="btn primary-btn btn-xs">Save</button>
-                    </div>
-                    <div class="col-sm-8">
-                        <button id="deleteModuleLinkButton" type="reset"
-                            class="btn primary-btn btn-xs">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <form id="editExternalLinkForm">
-            <div id="editExternalLinkInfo" class="alert alert-secondary"
-                role="alert"
-                style="cursor: move; width: 280px; height: 600px; display: none; position: absolute; top: 400px; right: 50px; z-index: 999">
-                <p class="float-right">
-                    <a href="#" id="closeEditExternalLinkInfo"><span class="icon-circle-close"></span></a>
-                </p>
-                <h6 class="alert-heading">
-                    External Link: <span id="externalLinkInfoLabelEdit"></span>
-                </h6>
-                <input type="hidden" name="externalLinkIdValueEdit"
-                    id="externalLinkIdValueEdit" />
-                <div class="row">
-                    <div class="col">
-                        <h6 class="alert-heading">
-                            <small>Modify External Link</small>
-                        </h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Please click on the image where
-                            you want to place the existing external
-                            link. Then click "Edit External Link".</small>
-                        <hr>
-                    </div>
-                </div>
-                <input type="hidden" name="x" id="externalLinkXEdit" />
-                <input type="hidden" name="y" id="externalLinkYEdit" />
-                <input type="hidden" name="externalLinkDisplayId"
-                    id="externalLinkDisplayId" />
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Label:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <input
-                            class="form-control-xs externallink-targetEdit"
-                            type="text" name="externalLinkLabel"
-                            id="externalLinkLabelEdit" style="width: inherit;"><br>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-5" style="padding-right: 0;">
-                        <label><small>External Link</small> </label>
-                    </div>
-                    <div class="col-sm-7">
-                        <input
-                            class="form-control-xs externallink-targetEdit"
-                            type="text" name="url"
-                            id="externalLinkURLEdit" style="width: inherit;">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label><small>Type:</small> </label>
-                    </div>
-                    <div class="col-sm-8">
-                        <select id="extTypeEdit" name="type"
-                            class="form-control-xs externallink-targetEdit">
-                            <option th:value="IMAGE">Image</option>
-                            <option th:value="ARROW">Link</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-3" style="padding-right: 0;">
-                        <label><small>Image:</small> </label>
-                    </div>
-                    <div class="col-sm-9">
-                        <input type="file" class="form-control-xs"
-                            name="externalLinkImage"
-                            id="externalLinkImageEdit"><br>
-                    </div>
-                </div>
-
-                <HR>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button id="editExternalLinkBtn" type="reset"
-                            class="btn primary-btn btn-xs">Save</button>
-                    </div>
-                    <div class="col-sm-8">
-                        <button id="deleteExternalLinkButton"
-                            type="reset" class="btn primary-btn btn-xs">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <button type="button" id="addSpaceLinkButton"
-                class="btn primary-btn btn-sm">Add Space Link</button>
-            &nbsp;
-            <button type="button" id="addModuleLinkButton"
-                class="btn primary-btn btn-sm">Add Module Link</button>
-            &nbsp;
-            <button type="button" id="addExternalLinkButton"
-                class="btn primary-btn btn-sm">Add External
-                Link</button>
-            &nbsp;
-            <button type="button" id="changeBgImgButton"
-                class="btn primary-btn btn-sm">Change Image</button>
-            &nbsp;
-            <button type="button" id="deleteSpace"
-                class="btn primary-btn btn-sm">Delete Space</button>
-        </nav>
-        <p></p>
-
         <div class="modal fade" id="confirm-space-delete" tabindex="-1"
             role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
@@ -1952,58 +1952,15 @@ $(function(){
                 </div>
             </div>
         </div>
-
-        <div id="space" style="float: left"
-            th:if="${space.image != null}">
-            <img id="bgImage"
-                th:style="|max-width: ${display.width}px;|"
-                th:src="@{'/api/image/'+${space.image.id}}" />
-        </div>
-
-        <!-- To display the spacelinks on current space and spaces from where current space is linked. -->
-
-        <div id="outgoingLinks" class="list-group"
-            style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
-            <a href="#"
-                style="padding-right: 0.25em; background-color: var(--secondary);"
-                class="list-group-item active"> Space links on this
-                space: </a>
-            <div id="noLinksOnSpace"
-                style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
-                There are no links on this space.</div>
-            <div th:each="spaceLinks : ${linksOnThisSpace}">
-                <div th:if="${spaceLinks.targetSpace != null}">
-                    <a  th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}"
-                        style='padding: .25rem .25rem;'
-                        class="list-group-item"
-                        th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
-                        &nbsp;[[${spaceLinks.targetSpace.name}]]</a>
-                </div>
-                <div th:if="${spaceLinks.targetSpace == null}">
-                    <a href="#" style='padding: .25rem .25rem;'
-                        class="list-group-item"
-                        th:id="${spaceLinks.id}">[[${spaceLinks.name}]]&nbsp;->
-                        &nbsp;&lt;No Space&gt;</a>
-                </div>
+        <div id="main-space" th:if="${space.image != null}">
+            <div id="loader" style="position: absolute; font-size: 30px;">
+                <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
             </div>
+            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
         </div>
-        <p></p>
-        <div id="incomingLinks" class="list-group"
-            style="margin-left: auto; padding-right: 0.25em; text-align: right; width: 20%">
-            <a href="#"
-                style="padding-right: 0.25em; background-color: var(--secondary);"
-                class="list-group-item active"> Space links to this
-                space: </a>
-            <div id="noLinksToSpace"
-                style="overflow: hidden; padding-right: 0.25em; text-align: right; display: none">
-                There are no links to this space.</div>
-            <th:block th:each="spaceLinks : ${linksToThisSpace}">
-                <a
-                    th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}"
-                    style='padding: .25rem .25rem;'
-                    class="list-group-item" th:id="${spaceLinks.id}">[[${spaceLinks.sourceSpace.name}]]</a>
-            </th:block>
-        </div>
+        <p class="text-right" style="margin-top: 50px">
+            <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
+        </p>
    </div> 
 </body>
 </html>
