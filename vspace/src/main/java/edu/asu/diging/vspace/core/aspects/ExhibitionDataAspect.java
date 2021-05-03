@@ -117,6 +117,9 @@ public class ExhibitionDataAspect {
         if(authFacade.getAuthenticatedUser()==null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
             return "maintenance";
         }
+        if((space!=null || module==null) && (space==null || module!=null)) {
+            return "redirect:/exhibit/search";
+        }
         // If the space and module Id is not found, show message on screen.
         if(space==null && module==null) {
             return "redirect:/exhibit/404";
