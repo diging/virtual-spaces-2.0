@@ -46,7 +46,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(linkLabel);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
 
     }
@@ -63,7 +63,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink,positionX,positionY,rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, id, positionX,positionY,rotation, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link,displayLink);
     }
 
@@ -100,7 +100,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         }
     }
 
-    protected void setDisplayProperties(ILinkDisplay linkDisplay,float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
+    protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);

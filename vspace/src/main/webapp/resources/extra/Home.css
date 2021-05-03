@@ -9,7 +9,7 @@
 
 [class^="icon-"], [class*=" icon-"] {
 	font-size: 24px;
-	vertical-align: middle;	
+	vertical-align: middle;
 }
 
 .secondary {
@@ -157,6 +157,10 @@
     background: #f2f2f2;
 }
 
+.form-control-sm {
+	border: none;
+}
+
 #wrapper_module {
     display: flex;
     width: 100%;
@@ -241,7 +245,7 @@
 }	
 
 .form-control {
-	border: none;	
+	border: none;
 }	
 
 .form_icon {	
@@ -659,8 +663,27 @@
 	z-index: 1;
 }
 
+.link-modal {
+	display: none;
+	position: fixed;
+	top: 2.5%;
+	right: 2.5%;
+	left: 2.5%;
+	bottom: 0;
+	z-index: 9999;
+	overflow-y: scroll;
+	background: white;
+	padding: 25px;
+	border-radius: 10px;
+	box-shadow: 0 0 300px rgba(0,0,0,0.9);
+}
 
-
+.divider {
+    height: 100%;
+    width: 1px;
+    background: var(--med-grey);
+    margin: 0px 20px;
+}
 
 .Icon_awesome_info_module_m_sidenav {
     overflow: visible;
@@ -723,6 +746,21 @@
 	height: 48px;
 	border-radius: 50%;
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+}
+
+.slide-nav {
+    left: 10%;
+    position: absolute;
+    top: 10%;
+}
+
+.circle-btn-slide-nav {
+    background: white;
+    width: 33px;
+    height: 33px;
+    left:19%;
+    border-radius: 50%;
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
 }
 
 .circle-btn:hover {
