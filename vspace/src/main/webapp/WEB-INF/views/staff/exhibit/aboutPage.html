@@ -4,129 +4,24 @@
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-<style type="text/css">
-.hova {
-	background-color: #f2f2f2;
-}
 
-.EasyMDEContainer .CodeMirror-wrap {
-	overflow-y: scroll;
-	height: 400px;
+<style type="text/css">
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
 }
+</style>
 </style>
 
 <script th:inline="javascript">
-	var markDown = null;
-	var defaultValue;
-	function onMouseEnter(e) {
-		var target = $(e.target);
 
-		$(".hova").removeClass("hova");
-		$(e.target).addClass("hova");
-		// This is needed to prevent only the p tag from being highlighted
-		if (target.is('p')) {
-			$(e.target).parent().addClass("hova");
-		}
-		//prevent normal hover actions
-		e.preventDefault();
-	}
-	function onMouseLeave(e) {
-		$(this).removeClass("hova");
-	}
-
-	function onDoubleClick(e) {
-		// get to the nearest divs class attribute
-		$(".EasyMDEContainer").remove();
-		var divName = $(e.target).closest('div').attr('class');
-		//if the div is a text content block 
-		if (divName.includes("textDivStaff")) {
-
-			$(e.target).closest('.textDivStaff').addClass("open");
-			var description = $("div.open p:eq(0)").text();
-			defaultValue = description;
-			$("#editTextAlert").show();
-			markDown = new EasyMDE({
-				element : $('#editTextBlock')[0]
-			});
-			markDown.value(description.trim());
-			//remove card border
-			$(".open").css('display', 'none');
-			$(".open").css('overflow-y', 'scroll');
-			$(".open").css('height', '400px');
-		}
-	}
 	$(document)
 			.ready(
 					function() {
-						$("#addText").click(function() {
-							$(".EasyMDEContainer").remove();
-							markDown = new EasyMDE({
-								element : $('#textBlockText')[0]
-							});
-							$("#addTextAlert").show();
-
-						});
-
-						$("#cancelSubmitText").click(function() {
-							$("#addTextAlert").hide();
-						});
-
-						$("#submitText")
-								.on(
-										"click",
-										function(e) {
-											$("#addTextAlert").hide();
-											e.preventDefault();
-											// ------------- creating text content blocks ------------
-
-											var text = markDown.value();
-											markDown.value('');
-											var textblock = $('<div id="'+ text +'" class="textDivStaff tab row"><p>'
-													+ text
-													+ '<input type="hidden" id="deleteTextId" value="'+text+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-											$(textblock).css({
-												'margin' : "10px"
-											});
-											$(textblock[0]).mouseenter(
-													onMouseEnter).mouseleave(
-													onMouseLeave).dblclick(
-													onDoubleClick);
-											$('#slideSpace').append(textblock);
-										});
-
-						$("#submitTextBlock").on("click", function(e) {
-							e.preventDefault();
-							// ------------- editting text content blocks ------------
-							var text = markDown.value();
-							markDown.value('');
-							var blockId = $(".open").attr("id");
-							$("#editTextAlert").hide();
-							updateTextBox(blockId, text)
-							$(".open").removeClass("open");
-						});
-						function updateTextBox(blockId, text) {
-							// clear text box and buttons
-							$(".open").empty();
-							$(".open")
-									.append(
-											'<p class="col-md-10">'
-													+ text
-													+ '</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
-							// reset border of the card
-							//rebind event handlers
-
-							$('.textDivStaff').mouseenter(onMouseEnter)
-									.mouseleave(onMouseLeave).dblclick(
-											onDoubleClick);
-							$(".open").css('display', 'flex');
-							// remove id from storage so its not there on refresh
-							$(".open").removeClass("open");
-						}
-						// must add the event to the document since the buttons are added dynamically
-						$('#cancelTextBlock').on('click', function() {
-							$("#editTextAlert").hide();
-							var blockId = $(this).closest(".open").attr("id");
-							updateTextBox(blockId, defaultValue);
+					
+						$(".EasyMDEContainer").remove();
+						markDown = new EasyMDE({
+							element : $('#textBlockText')[0]
 						});
 					});
 </script>
@@ -136,79 +31,21 @@
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition About Page</h2>
 		<div style="padding: 30px 0;">
-			<form th:action="@{/staff/exhibit/aboutpage}" method="POST" name="f">
-				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}" /> <input type="hidden"
-					th:value="${exhibition?.id}" name="exhibitionParam" />
+			<form
+				th:action="@{|/staff/exhibit/aboutpage?${_csrf.parameterName}=${_csrf.token}|}"
+				method="POST" name="f">
 				<div style="padding-top: 20px;">
 					<label for="title">About Page Title:</label> <input type="text"
-						class="form-control" name="title" th:value="${exhibition.title}" />
+						class="form-control" name="title" th:value="${exhiAbtPage.title}" />
 				</div>
-				<div style="margin: 40px 0">
-					<button type="button" id="addText" class="btn pill-btn"
-						data-toggle="tooltip" title="Add Text Block" data-placement="top">
-						+&nbsp;<span class="icon-text"></span>
-					</button>
-					&nbsp;
+				<div style="padding-top: 20px;">
+					<label for="text">Text:</label>
+					<textarea  id="textBlockText" rows="3"
+						name="aboutPageText" th:text="${exhiAbtPage.aboutPageText}"></textarea>
 				</div>
-				<p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
-				<div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
-					<div class="modal-dialog" role="document" th:draggable="true">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add new Text Block</h5>
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<form name="textForm" id="textUploadForm"
-								enctype="multipart/form-data" method="post">
-								<div class="modal-body">
-									<h6>
-										<small>Enter Text: </small>
-									</h6>
-									<textarea class="form-control" id="textBlockText" rows="3"></textarea>
-								</div>
-								<div class="modal-footer">
-									<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
-									<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div id="editTextAlert" class="modal" tabindex="-1" role="dialog"
-					th:draggable="true">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Edit Text Block</h5>
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<form name="textForm" id="textEditUploadForm"
-								enctype="multipart/form-data" method="post">
-								<div class="modal-body">
-									<h6>
-										<small>Edit Text: </small>
-									</h6>
-									<textarea class="form-control" id="editTextBlock" rows="3"></textarea>
-								</div>
-								<div class="modal-footer">
-									<button id="cancelTextBlock" type="reset" class="btn light">Cancel</button>
-									<button type="submit" id="submitTextBlock"
-										class="btn btn-primary">Submit</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div id="slideSpace"></div>
+
 				<p style="padding-top: 20px;">
-					<input class="btn primary-btn" type="submit" value="Submit" />
+					<button class="btn primary-btn" type="submit" value="submit">Submit</button>
 				</p>
 			</form>
 		</div>

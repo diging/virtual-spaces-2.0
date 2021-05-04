@@ -11,38 +11,38 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 public class ExhibitionAboutPage {
-	 @Id
-	    @GeneratedValue(generator = "exh_abtpg_id_generator")
-	    @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
-	    private String id;
+     @Id
+        @GeneratedValue(generator = "exh_abtpg_id_generator")
+        @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+        private String id;
 
-	    private String title;
-	    
-	    private List<String> aboutPageTextList;
+        private String title;
+        
+        private String aboutPageText;
 
-		public String getId() {
-			return id;
-		}
+        public String getId() {
+            return id;
+        }
 
-		public void setId(String id) {
-			this.id = id;
-		}
+        public void setId(String id) {
+            this.id = id;
+        }
 
-		public String getTitle() {
-			return title;
-		}
+        public String getTitle() {
+            return title;
+        }
 
-		public void setTitle(String title) {
-			this.title = title;
-		}
+        public void setTitle(String title) {
+            this.title = title;
+        }
 
-		public List<String> getAboutPageTextList() {
-			return aboutPageTextList;
-		}
+        public String getAboutPageText() {
+            return aboutPageText;
+        }
 
-		public void setAboutPageTextList(List<String> aboutPageTextList) {
-			this.aboutPageTextList = aboutPageTextList;
-		}
+        public void setAboutPageText(String aboutPageText) {
+            this.aboutPageText = aboutPageText;
+        }
 
-		
+ 
 }
