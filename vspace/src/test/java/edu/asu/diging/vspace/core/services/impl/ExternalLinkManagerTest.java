@@ -21,12 +21,16 @@ import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 public class ExternalLinkManagerTest {
 
@@ -38,6 +42,9 @@ public class ExternalLinkManagerTest {
 
     @Mock
     private SpaceManager spaceManager;
+
+    @Mock
+    private SpaceDisplayManager spaceDisplayManager;
 
     @Mock
     private IExternalLinkFactory externalLinkFactory;
@@ -63,6 +70,16 @@ public class ExternalLinkManagerTest {
 
         Space space = new Space();
         space.setId(spaceId1);
+        IVSImage spaceImage = new VSImage();
+        spaceImage.setHeight(700);
+        spaceImage.setWidth(1300);
+        space.setImage(spaceImage);
+
+        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+
+        Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
         Mockito.when(spaceManager.getSpace(space.getId())).thenReturn(space);
 
         IExternalLink externalLink = new ExternalLink();
@@ -103,6 +120,16 @@ public class ExternalLinkManagerTest {
     public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
         ISpace space = new Space();
         space.setId(spaceId1);
+        IVSImage spaceImage = new VSImage();
+        spaceImage.setHeight(700);
+        spaceImage.setWidth(1300);
+        space.setImage(spaceImage);
+
+        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+
+        Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
         ExternalLinkDisplay externalLinkDisplay = new ExternalLinkDisplay();
         IExternalLink externalLink = new ExternalLink();
         externalLink.setId("EXL001");

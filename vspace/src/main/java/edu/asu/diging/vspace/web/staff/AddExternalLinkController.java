@@ -50,7 +50,6 @@ public class AddExternalLinkController {
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-
         IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0, externalLink, title, type, linkImage, filename);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
