@@ -1,12 +1,16 @@
 <html layout:decorate="~{layouts/main_staff}">
+<head>
+<link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet" />
+</head>
+
 <body>
     <div class="main-content" layout:fragment="content">
         <h1>Edit Image: [[${imageForm.fileName}]]</h1>
         
         <form method="POST"
-        	th:action='@{|/staff/image/${imageId}/edit?${_csrf.parameterName}=${_csrf.token}|}' th:object="${imageForm}" 
-        	enctype="multipart/form-data" style="margin-top: 40px">
-             
+        	th:action='@{|/staff/image/${imageId}/edit|}' th:object="${imageForm}"
+        	style="margin-top: 40px">
+            
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">Name:</label>
                 <textarea class="form-control col-md-10" id="name" rows="1" cols="30"
