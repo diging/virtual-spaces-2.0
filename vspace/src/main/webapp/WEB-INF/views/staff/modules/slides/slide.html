@@ -289,6 +289,10 @@ $(document).ready(function() {
             uploadImage();
     });
     
+    $("#addBibliography").click(function() {
+        $("#addBiblioAlert").show();
+    });
+    
     $("#addChoice").click(function() {
         $("#addChoiceAlert").show();
     });
@@ -327,6 +331,10 @@ $(document).ready(function() {
 	
 	$("#cancelDeleteImage").click(function() {
 		$("#confirmDeleteImageAlert").hide();
+	});
+	
+	$("#cancelSubmitBiblio").click(function() {
+		$("#addBiblioAlert").hide();	
 	});
 	
 	$("#cancelDeleteChoiceBlock").click(function() {
@@ -492,6 +500,51 @@ $(document).ready(function() {
         });
     });
     
+    /* $("#sendBiblioForm").on('submit', function(e){ */
+    $("#submitBiblio").on("click", function(e) {
+        e.preventDefault();
+        // ------------- creating Bibliography content blocks ------------
+        
+        var formData = new FormData();
+        alert($("#titleBiblio").val());
+        formData.append('title', $("#titleBiblio").val());
+        formData.append('author', $("#authorBiblio").val());
+        formData.append('year', $("#yearBiblio").val());
+        formData.append('journal', $("#journalBiblio").val());
+        
+        $("#addBiblioAlert").hide();
+        ++contentCount;
+        formData.append('contentOrder', contentCount);
+        $.ajax({
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            type: 'POST',
+            cache       : false,
+            contentType : 'application/json; charset=utf-8',
+            processData : false,
+            dataType: 'json',
+            data: JSON.stringify(formData),
+            
+            success: function(data) {
+
+                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                $(textblock).css({
+                    'margin': "10px"
+                });
+                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('#slideSpace').append(textblock);             
+            },
+            error: function(data) {
+            	if (data.status == 403){
+            		$("#loginAlert").show();
+            	}
+            	else {
+                	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                	$('.error').append(alert);
+            	}
+            }
+        });
+    });
+    
     $('input:checkbox').click(function() {
         if ($(this).is(':checked')) {
         	$('#submitChoices').prop("disabled", false);
@@ -616,8 +669,45 @@ $(document).ready(function() {
            		}
            }
        });
-    });    
+    });
+    
+    $("#submitBiblioBlock").on("click", function(e){
+    	e.preventDefault();
+        // ------------- editting Bibliography content blocks ------------
+        
+        var text = markDown.value();
+        markDown.value('');
+        var formData = new FormData();
+        var blockId = $(".open").attr("id");
+        formData.append('textBlockDesc', text);
+        formData.append('textBlockId', blockId);
+    	$("#editTextAlert").hide();
+        $.ajax({
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            type: 'POST',
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data: formData,
+            enctype: 'multipart/form-data',
+            success: function(data) {
+                // replace text box with new description
+               updateTextBox(blockId, text)
+               $(".open").removeClass("open");
+           },
+           error: function(data) {
+        		if (data.status == 403) {
+           			$("#loginAlert").show();
+           		}
+           		else {
+               		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+               		$('.error').append(alert);
+           		}
+           }
+       });
+    });
 });
+
 
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
@@ -679,6 +769,8 @@ $(window).on('load', function () {
         	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
         		+&nbsp;<span class="icon-text"></span></button>&nbsp;
         	<button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
+        		+&nbsp;<span class="icon-image"></span></button>&nbsp;
+        	<button type="button" id="addBibliography" class="btn pill-btn" data-toggle="tooltip" title="Add Bibliography" data-placement="top">
         		+&nbsp;<span class="icon-image"></span></button>&nbsp;
         	<button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
         		+&nbsp;<span class="icon-checkmark"></span></button>
@@ -762,8 +854,6 @@ $(window).on('load', function () {
             </div>
         </div>
 
-
-
         <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document" th:draggable="true">
                 <div class="modal-content">
@@ -825,7 +915,6 @@ $(window).on('load', function () {
             </div>
         </div>
 
-
         <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document" th:draggable="true">
                 <div class="modal-content">
@@ -852,6 +941,82 @@ $(window).on('load', function () {
                             <button type="submit" id="uploadImage"
                                 class="btn btn-primary" data-value="">Upload
                                 Image</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document" th:draggable="true">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add new Bibliography Block</h5>
+                        <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form name="sendBiblioForm" id="sendBiblioForm">
+                        <div class="modal-body">
+                        	<div class="form-group">
+                        		<table>
+							      <tr>
+							        <td>
+			                            <label for="name" class="col-form-label">Title:</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="text" class="form-control"
+			                    			id="titleBiblio" name="titleBiblio" />
+			                    	</td>
+			                      </tr>
+			                    </table>
+	                    	</div>
+	                    	<div class="form-group">
+                        		<table>
+							      <tr>
+							        <td>
+			                            <label for="name" class="col-form-label">Author:</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="text" class="form-control"
+			                    			id="authorBiblio" name="authorBiblio" />
+			                    	</td>
+			                      </tr>
+			                    </table>
+	                    	</div>
+	                    	<div class="form-group">
+                        		<table>
+							      <tr>
+							        <td>
+			                            <label for="name" class="col-form-label">Year:</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="number" class="form-control"
+			                    			id="yearBiblio" name="yearBiblio" />
+			                    	</td>
+			                      </tr>
+			                    </table>
+	                    	</div>
+	                    	<div class="form-group">
+                        		<table>
+							      <tr>
+							        <td>
+			                            <label for="name" class="col-form-label">Journal:</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="text" class="form-control"
+			                    			id="journalBiblio" name="journalBiblio" />
+			                    	</td>
+			                      </tr>
+			                    </table>
+	                    	</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="cancelSubmitBiblio" type="reset"
+                                class="btn light">Cancel</button>
+                            <button type="submit" id="submitBiblio"
+                                class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>

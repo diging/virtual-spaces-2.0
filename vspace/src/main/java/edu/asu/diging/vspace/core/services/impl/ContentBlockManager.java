@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
@@ -19,11 +20,13 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.factory.IBiblioBlockFactory;
 import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
@@ -31,6 +34,7 @@ import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
@@ -50,6 +54,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private ITextBlockFactory textBlockFactory;
+    
+    @Autowired
+    private IBiblioBlockFactory biblioBlockFactory;
 
     @Autowired
     private IImageBlockFactory imageBlockFactory;
@@ -62,6 +69,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private TextContentBlockRepository textBlockRepo;
+    
+    @Autowired
+    private BiblioBlockRepository biblioBlockRepo;
 
     @Autowired
     private ImageContentBlockRepository imageBlockRepo;
@@ -265,5 +275,41 @@ public class ContentBlockManager implements IContentBlockManager {
         IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
     }
+
+    @Override
+    public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData) {
+        ISlide slide = slideManager.getSlide(slideId);
+        IBiblioBlock biblioBlock = biblioBlockFactory.createBiblioBlock(slide, biblioData);
+        biblioBlock = biblioBlockRepo.save((BiblioBlock) biblioBlock);
+        return biblioBlock;
+    }
+
+    @Override
+    public void deleteBiblioBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            return;
+        }
+        try {
+            biblioBlockRepo.deleteById(id);         
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        } 
+    }
+
+    @Override
+    public void updateBiblioBlock(BiblioBlock biblioBlock) {
+        biblioBlockRepo.save((BiblioBlock) biblioBlock);
+    }
+
+    @Override
+    public IBiblioBlock getBiblioBlock(String biblioBlockId) {
+        Optional<BiblioBlock> biblioBlock = biblioBlockRepo.findById(biblioBlockId);
+        if (biblioBlock.isPresent()) {
+            return biblioBlock.get();
+        }
+        return null;
+    }
+    
+    
 
 }
