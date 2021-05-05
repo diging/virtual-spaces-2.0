@@ -5,14 +5,15 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 /**
- * Model for ExhibitionAbout
+ * Model for Exhibition About Page
  * 
- * @author abiswa15
+ * @author Avirup Biswas
  *
  */
 @Entity
@@ -23,7 +24,8 @@ public class ExhibitionAboutPage {
     private String id;
 
     private String title;
-
+    
+    @Lob
     private String aboutPageText;
 
     public String getId() {

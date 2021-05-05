@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +17,13 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
+/**
+ * 
+ * @author Avirup Biswas
+ *
+ */
 @Controller
 public class ExhibitionAboutPageController {
 
@@ -28,21 +35,23 @@ public class ExhibitionAboutPageController {
      * @param model
      * @return
      */
-    
-    @RequestMapping("/staff/exhibit/aboutpage")
+
+    @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {
-        
+
         ExhibitionAboutPage exhibitionAboutPage = null;
-        if (null != exhibitAbtPageManager.findAll() && !exhibitAbtPageManager.findAll().isEmpty()) {
-            exhibitionAboutPage = exhibitAbtPageManager.findAll().get(0);
+        List<ExhibitionAboutPage> aboutPageList = exhibitAbtPageManager.findAll();
+        if (aboutPageList != null && !aboutPageList.isEmpty()) {
+            exhibitionAboutPage = aboutPageList.get(0);
         }
-        if (null != exhibitionAboutPage) {
-            model.addAttribute("exhiAbtPage", exhibitionAboutPage);
+        if (exhibitionAboutPage != null) {
+            model.addAttribute("aboutPage", exhibitionAboutPage);
         } else {
-            model.addAttribute("exhiAbtPage", new ExhibitionAboutPage());
+            model.addAttribute("aboutPage", new ExhibitionAboutPage());
         }
         return "staff/exhibit/aboutPage";
     }
+
     /**
      * 
      * @param request
@@ -52,25 +61,23 @@ public class ExhibitionAboutPageController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/staff/exhibit/aboutpage", method = RequestMethod.POST)
-    public RedirectView createOrUpdateExhibition(HttpServletRequest request, @RequestParam("title") String title,
-            @RequestParam("aboutPageText") String aboutPageText, RedirectAttributes attributes) throws IOException {
-               
+    
+    @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
+    public String createOrUpdateExhibition(@ModelAttribute ExhibitionAboutPage aboutPageForm, RedirectAttributes attributes) throws IOException {
         ExhibitionAboutPage exhibitionAboutPage = null;
-        if (null != exhibitAbtPageManager.findAll() && !exhibitAbtPageManager.findAll().isEmpty()) {
-            exhibitionAboutPage = exhibitAbtPageManager.findAll().get(0);
+        List<ExhibitionAboutPage> aboutPageList = exhibitAbtPageManager.findAll();
+        if (aboutPageList != null && !aboutPageList.isEmpty()) {
+            exhibitionAboutPage = aboutPageList.get(0);
+        } else {
+            exhibitionAboutPage = new ExhibitionAboutPage();
         }
-        else
-        {
-            exhibitionAboutPage= new ExhibitionAboutPage();
-        }
-        exhibitionAboutPage.setTitle(title);
-        exhibitionAboutPage.setAboutPageText(aboutPageText);
-        exhibitionAboutPage = exhibitAbtPageManager.storeExhibitionAbtPage(exhibitionAboutPage);
+        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+        exhibitionAboutPage = exhibitAbtPageManager.store(exhibitionAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
-        return new RedirectView(request.getContextPath() + "/staff/exhibit/aboutpage");
+        return "redirect:/staff/exhibit/about";
     }
 
 }

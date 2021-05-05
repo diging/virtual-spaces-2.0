@@ -10,7 +10,11 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
-
+/**
+ * 
+ * @author Avirup Biswas
+ *
+ */
 @Transactional
 @Service
 public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
@@ -33,7 +37,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * To store ExhibitionAboutPage
      */
     @Override
-    public ExhibitionAboutPage storeExhibitionAbtPage(ExhibitionAboutPage exhibitionAboutPage) {
+    public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
         return exhAbtRepo.save(exhibitionAboutPage);
     }
     

@@ -56,7 +56,7 @@
 			         <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'AboutPage' ? 'active' : '' }"
-			               th:href="@{/staff/exhibit/aboutpage}"> 
+			               th:href="@{/staff/exhibit/about}"> 
 			               <span class="icon-image secondary"></span><span class="custom_Text">&nbsp;About Page</span>
 			            </a>
 			        </li>
