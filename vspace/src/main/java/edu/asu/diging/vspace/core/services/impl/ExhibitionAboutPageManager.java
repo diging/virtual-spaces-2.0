@@ -20,16 +20,16 @@ import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 
     @Autowired
-    private ExhibitionAboutPageRepository exhAbtRepo;
+    private ExhibitionAboutPageRepository repo;
     
     /**
      * To retrieve all the ExhibitionAboutPage
      */
     @Override
     public List<ExhibitionAboutPage> findAll() {
-        Iterable<ExhibitionAboutPage> exhibitionAbtpages = exhAbtRepo.findAll();
+        Iterable<ExhibitionAboutPage> aboutpages = repo.findAll();
         List<ExhibitionAboutPage> results = new ArrayList<>();
-        exhibitionAbtpages.forEach(e -> results.add(e));
+        aboutpages.forEach(e -> results.add(e));
         return results;
     }
     
@@ -38,7 +38,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      */
     @Override
     public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
-        return exhAbtRepo.save(exhibitionAboutPage);
+        return repo.save(exhibitionAboutPage);
     }
     
 }
