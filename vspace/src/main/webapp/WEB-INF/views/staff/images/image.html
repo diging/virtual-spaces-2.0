@@ -2,7 +2,7 @@
 <head>
 </head>
 <body>
-    <div layout:fragment="content">
+    <div class="main-content" layout:fragment="content">
         <h1>
             Image: [[${image.filename}]] <small
                 style="margin-left: 10px;"><a
@@ -22,7 +22,11 @@
         <p style="max-height: 100px; overflow-y: scroll;">
             <b>Description:</b> [[${image.description}]]
         </p>
-        <div id="image">
+        
+	<a th:href="@{'/staff/image/'+${image.id}+'/edit'}"
+            class="btn primary-btn">Edit Image</a>
+                
+        <div id="image" style="margin-top:15px">
             <img id="bgImage" style="max-width:800px"
                 th:src="@{'/api/image/'+${image.id}}" />
         </div>
