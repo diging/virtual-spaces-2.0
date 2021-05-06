@@ -28,44 +28,26 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 public class ExhibitionAboutPageController {
 
     @Autowired
-    private IExhibitionAboutPageManager exhibitAbtPageManager;
-
-    /**
-     * 
-     * @param model
-     * @return
-     */
+    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {
 
         ExhibitionAboutPage exhibitionAboutPage = null;
-        List<ExhibitionAboutPage> aboutPageList = exhibitAbtPageManager.findAll();
+        List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         if (aboutPageList != null && !aboutPageList.isEmpty()) {
             exhibitionAboutPage = aboutPageList.get(0);
         }
-        if (exhibitionAboutPage != null) {
-            model.addAttribute("aboutPage", exhibitionAboutPage);
-        } else {
-            model.addAttribute("aboutPage", new ExhibitionAboutPage());
-        }
+        exhibitionAboutPage = exhibitionAboutPage != null ? exhibitionAboutPage:new ExhibitionAboutPage();
+        model.addAttribute("aboutPage", exhibitionAboutPage);
         return "staff/exhibit/aboutPage";
     }
 
-    /**
-     * 
-     * @param request
-     * @param title
-     * @param aboutPageText
-     * @param attributes
-     * @return
-     * @throws IOException
-     */
     
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
-    public String createOrUpdateExhibition(@ModelAttribute ExhibitionAboutPage aboutPageForm, RedirectAttributes attributes) throws IOException {
+    public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, RedirectAttributes attributes) throws IOException {
         ExhibitionAboutPage exhibitionAboutPage = null;
-        List<ExhibitionAboutPage> aboutPageList = exhibitAbtPageManager.findAll();
+        List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         if (aboutPageList != null && !aboutPageList.isEmpty()) {
             exhibitionAboutPage = aboutPageList.get(0);
         } else {
@@ -73,7 +55,7 @@ public class ExhibitionAboutPageController {
         }
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-        exhibitionAboutPage = exhibitAbtPageManager.store(exhibitionAboutPage);
+        exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");

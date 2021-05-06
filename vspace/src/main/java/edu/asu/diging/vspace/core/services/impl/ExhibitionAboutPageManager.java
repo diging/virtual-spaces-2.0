@@ -22,8 +22,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Autowired
     private ExhibitionAboutPageRepository repo;
     
-    /**
-     * To retrieve all the ExhibitionAboutPage
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
      */
     @Override
     public List<ExhibitionAboutPage> findAll() {
@@ -33,8 +33,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         return results;
     }
     
-    /**
-     * To store ExhibitionAboutPage
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
      */
     @Override
     public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
