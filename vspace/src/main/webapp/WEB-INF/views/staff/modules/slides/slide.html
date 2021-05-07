@@ -6,11 +6,12 @@
 
 <style type="text/css">
 .hova {
-    background-color: #f2f2f2;
+	background-color: #f2f2f2;
 }
-.EasyMDEContainer .CodeMirror-wrap{
-    overflow-y: scroll;
-    height: 400px;
+
+.EasyMDEContainer .CodeMirror-wrap {
+	overflow-y: scroll;
+	height: 400px;
 }
 </style>
 <script th:inline="javascript">
@@ -65,7 +66,31 @@ function onDoubleClick(e){
         $(".open").css('display', 'none');
         $(".open").css('overflow-y', 'scroll');
         $(".open").css('height', '400px');
-    } else {
+    } else if(divName.includes("biblioDivStaff")){
+    	
+    	$(e.target).closest('.biblioDivStaff').addClass("open");
+    	var description = $("div.open p:eq(0)").text();
+    	defaultValue = description;
+    	
+    	var title = $("div.open p span:eq(0)").text();
+        var author = $("div.open p span:eq(1)").text();
+        var year = $("div.open p span:eq(2)").text();
+        var journal = $("div.open p span:eq(3)").text();
+    	
+    	$("#editBiblioAlert").show();
+    	
+    	$("#editTitleBiblio").val(title);
+        $("#editAuthorBiblio").val(author);
+        $("#editYearBiblio").val(year);
+        $("#editJournalBiblio").val(journal);
+    	
+    	//remove card border
+        $(".open").css('display', 'none');
+        $(".open").css('overflow-y', 'scroll');
+        $(".open").css('height', '400px');
+    	
+    }
+    else {
     	// store image ID selected by the user to replace, onDoubleClick
     	var imgID = $(e.target).attr('id'); 
     	if(imgID != ''){
@@ -303,6 +328,13 @@ $(document).ready(function() {
 		$(alert).attr( 'value', $(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
+    
+    $(document).on("click", ".deleteBiblio", function(e) {
+		$("#confirmDeleteBiblioAlert").show();
+		var alert = $('<input type="hidden" id="deleteBiblioId">');
+		$(alert).attr( 'value', $(this).siblings('input').val());
+		$('.modal-footer').append(alert); 
+  	});
 	
 	$(document).on("click", ".deleteImage", function(e) {
 		$("#confirmDeleteImageAlert").show();
@@ -335,6 +367,13 @@ $(document).ready(function() {
 	
 	$("#cancelSubmitBiblio").click(function() {
 		$("#addBiblioAlert").hide();	
+	});
+	
+	$("#cancelDeleteBiblio").click(function() {
+		$("#confirmDeleteTextAlert").find('input').remove();
+		$("#confirmDeleteImageAlert").find('input').remove();
+		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+		$("#confirmDeleteTextAlert").hide();
 	});
 	
 	$("#cancelDeleteChoiceBlock").click(function() {
@@ -506,15 +545,23 @@ $(document).ready(function() {
         // ------------- creating Bibliography content blocks ------------
         
         var formData = new FormData();
-        alert($("#titleBiblio").val());
-        formData.append('title', $("#titleBiblio").val());
-        formData.append('author', $("#authorBiblio").val());
-        formData.append('year', $("#yearBiblio").val());
-        formData.append('journal', $("#journalBiblio").val());
+        var title = $("#titleBiblio").val();
+        var author = $("#authorBiblio").val();
+        var year = $("#yearBiblio").val();
+        var journal = $("#journalBiblio").val();
         
-        $("#addBiblioAlert").hide();
+        formData.append('title', title);
+        formData.append('author', author);
+        formData.append('year', year);
+        formData.append('journal', journal);
         ++contentCount;
         formData.append('contentOrder', contentCount);
+        $("#addBiblioAlert").hide();
+        
+        var object = {};
+        formData.forEach((value, key) => object[key] = value);
+        var jsonData = JSON.stringify(object);
+    	
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
             type: 'POST',
@@ -522,16 +569,16 @@ $(document).ready(function() {
             contentType : 'application/json; charset=utf-8',
             processData : false,
             dataType: 'json',
-            data: JSON.stringify(formData),
+            data: jsonData,
             
             success: function(data) {
-
-                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-                $(textblock).css({
+            	console.log(data)
+                var biblioblock = $('<div id="'+ title +'" class="biblioDivStaff tab row"><p>'+title+'<input type="hidden" id="deleteBiblioId" value="'+title+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                $(biblioblock).css({
                     'margin': "10px"
                 });
-                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(textblock);             
+                $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('#slideSpace').append(biblioblock);             
             },
             error: function(data) {
             	if (data.status == 403){
@@ -542,6 +589,7 @@ $(document).ready(function() {
                 	$('.error').append(alert);
             	}
             }
+            
         });
     });
     
@@ -630,9 +678,34 @@ $(document).ready(function() {
     	var blockId = $(this).closest(".open").attr("id");
     	updateTextBox(blockId, defaultValue);
     });
+    
+    function updateBiblioBox(blockId, formData, defaultValue) {
+        // clear biblio box and buttons
+        $(".open").empty();
+        if(formData!=null)
+        	$(".open").append('<p class="col-md-10">Title: ' + formData.get('title')+ ', Author: ' + formData.get('author') + ', Year: ' + formData.get('year') + ', Journal: ' + formData.get('journal') + '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+        else if(defaultValue!=null) {
+        	$(".open").append('<p class="col-md-10">' + defaultValue + '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+        }
+        //reset border of the card
+        //rebind event handlers
+        
+        $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $(".open").css('display', 'flex');
+        // remove id from storage so its not there on refresh
+        $(".open").removeClass("open");
+    }
+    
+ 	// must add the event to the document since the buttons are added dynamically
+    $('#cancelBiblioBlock').on('click',function(){
+    	$("#editBiblioAlert").hide();
+    	var blockId = $(this).closest(".open").attr("id");
+    	updateBiblioBox(blockId, null, defaultValue);
+    });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
     $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $("#submitTextBlock").on("click", function(e){
     	e.preventDefault();
@@ -673,29 +746,41 @@ $(document).ready(function() {
     
     $("#submitBiblioBlock").on("click", function(e){
     	e.preventDefault();
-        // ------------- editting Bibliography content blocks ------------
+        // ------------- editing Bibliography content blocks ------------
         
-        var text = markDown.value();
-        markDown.value('');
         var formData = new FormData();
+        var title = $("#editTitleBiblio").val();
+        var author = $("#editAuthorBiblio").val();
+        var year = $("#editYearBiblio").val();
+        var journal = $("#editJournalBiblio").val();
         var blockId = $(".open").attr("id");
-        formData.append('textBlockDesc', text);
-        formData.append('textBlockId', blockId);
-    	$("#editTextAlert").hide();
+        
+        formData.append('title', title);
+        formData.append('author', author);
+        formData.append('year', year);
+        formData.append('journal', journal);
+        formData.append('id', blockId);
+        $("#editBiblioAlert").hide();
+        
+        var object = {};
+        formData.forEach((value, key) => object[key] = value);
+        var jsonData = JSON.stringify(object);
+        
         $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
             type: 'POST',
             cache       : false,
-            contentType : false,
+            contentType : 'application/json; charset=utf-8',
             processData : false,
-            data: formData,
-            enctype: 'multipart/form-data',
+            dataType: 'json',
+            data: jsonData,
             success: function(data) {
-                // replace text box with new description
-               updateTextBox(blockId, text)
+               //replace Biblio box with new values
+               updateBiblioBox(blockId, formData, null)
                $(".open").removeClass("open");
            },
            error: function(data) {
+        	   console.log(data)
         		if (data.status == 403) {
            			$("#loginAlert").show();
            		}
@@ -731,390 +816,459 @@ $(window).on('load', function () {
 </script>
 </head>
 <body>
-    <div class="main-content" layout:fragment="content">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-            	<a th:href="@{/staff/dashboard}">Dashboard</a></li>
-            <li class="breadcrumb-item">
-            	<a th:href="@{/staff/module/list}">Modules</a></li>
-            <li class="breadcrumb-item">
-            	<a th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
-            <li class="breadcrumb-item" th:each="slideSequence: ${slideSequences}">
-            	<a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}" th:name="${slideSequence.name}">[[${slideSequence.name}]]</a></li>	
-            <li class="breadcrumb-item active">[[${slide.name}]]</li>
-        </ol>
-        
-        <div class="error"></div>
-        
-		<div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
-        	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    	<span class="icon-branch"></span> This Branching Point links to the following Sequences
+	<div class="main-content" layout:fragment="content">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a th:href="@{/staff/dashboard}">Dashboard</a></li>
+			<li class="breadcrumb-item"><a th:href="@{/staff/module/list}">Modules</a></li>
+			<li class="breadcrumb-item"><a
+				th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
+			<li class="breadcrumb-item"
+				th:each="slideSequence: ${slideSequences}"><a
+				th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}"
+				th:name="${slideSequence.name}">[[${slideSequence.name}]]</a></li>
+			<li class="breadcrumb-item active">[[${slide.name}]]</li>
+		</ol>
+
+		<div class="error"></div>
+
+		<div class="dropdown" style="float: right;"
+			th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
+			<button class="btn branchbtn dropdown-toggle" type="button"
+				id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="false">
+				<span class="icon-branch"></span> This Branching Point links to the
+				following Sequences
 			</button>
-			<div id="choiceSpaceData" class="dropdown-menu" aria-labelledby="dropdownMenu2">
-			    <a  th:each="choice: ${choices}" class="dropdown-item" 
-			    	th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
-	                th:name="${choice.sequence.name}" style="color:var(--primary);">[[${choice.sequence.name}]]</a>
+			<div id="choiceSpaceData" class="dropdown-menu"
+				aria-labelledby="dropdownMenu2">
+				<a th:each="choice: ${choices}" class="dropdown-item"
+					th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}"
+					th:name="${choice.sequence.name}" style="color: var(- -primary);">[[${choice.sequence.name}]]</a>
 			</div>
-        </div>
-        
-        <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
-        	<span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
-	   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
-	   		<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
-        		<span class="icon-edit"></span></a>
-        </h2>
-        <p id="description">[[${slide.description}]]</p>
-        
-        <div style="margin: 40px 0">
-        	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
-        		+&nbsp;<span class="icon-text"></span></button>&nbsp;
-        	<button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
-        		+&nbsp;<span class="icon-image"></span></button>&nbsp;
-        	<button type="button" id="addBibliography" class="btn pill-btn" data-toggle="tooltip" title="Add Bibliography" data-placement="top">
-        		+&nbsp;<span class="icon-image"></span></button>&nbsp;
-        	<button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
-        		+&nbsp;<span class="icon-checkmark"></span></button>
-            <p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
-        </div>
+		</div>
 
-        <!-- Delete Text Modal -->
-        <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
-            role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Are you sure you want to delete this
-                            text block?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="cancelDeleteText" type="reset"
-                            class="btn light">Cancel</button>
-                        <button type="submit" id="deleteText"
-                            class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Delete Image Modal -->
-        <div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
-            role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Are you sure you want to delete this
-                            image block?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="cancelDelete" type="reset"
-                            class="btn light">Cancel</button>
-                        <button type="submit" id="deleteImage"
-                            class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<h2>
+			<span style="color: var(- -dark-grey)">Slide:</span>
+			[[${slide.name}]] <span class="icon-info-circle"
+				data-toggle="tooltip" data-html="true" data-placement="top"
+				th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
+			<a
+				th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
+				<span class="icon-edit"></span>
+			</a>
+		</h2>
+		<p id="description">[[${slide.description}]]</p>
 
-        <!-- Delete ChoiceBlock Modal -->
-        <div id="confirmDeleteChoiceBlockAlert" class="modal"
-            tabindex="-1" role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Are you sure you want to delete this
-                            choices Block?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="cancelDeleteChoiceBlock"
-                            type="reset" class="btn light">Cancel</button>
-                        <button type="submit" id="deleteChoiceBlock"
-                            class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div style="margin: 40px 0">
+			<button type="button" id="addText" class="btn pill-btn"
+				data-toggle="tooltip" title="Add Text Block" data-placement="top">
+				+&nbsp;<span class="icon-text"></span>
+			</button>
+			&nbsp;
+			<button type="button" id="addImage" class="btn pill-btn"
+				data-toggle="tooltip" title="Add Image" data-placement="top">
+				+&nbsp;<span class="icon-image"></span>
+			</button>
+			&nbsp;
+			<button type="button" id="addBibliography" class="btn pill-btn"
+				data-toggle="tooltip" title="Add Bibliography" data-placement="top">
+				+&nbsp;<span class="icon-image"></span>
+			</button>
+			&nbsp;
+			<button type="button" id="addChoice" style="display: none;"
+				class="btn pill-btn" data-toggle="tooltip"
+				title="Add Sequence Choice" data-placement="top">
+				+&nbsp;<span class="icon-checkmark"></span>
+			</button>
+			<p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
+		</div>
 
-        <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" th:draggable="true">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add new Text Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="textForm" id="textUploadForm"
-                        enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>Enter Text: </small>
-                            </h6>
-                            <textarea class="form-control"
-                                id="textBlockText" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelSubmitText" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitText"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<!-- Delete Text Modal -->
+		<div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this text block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDeleteText" type="reset" class="btn light">Cancel</button>
+						<button type="submit" id="deleteText" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Delete Image Modal -->
+		<div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this image block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDelete" type="reset" class="btn light">Cancel</button>
+						<button type="submit" id="deleteImage" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div id="editTextAlert" class="modal" tabindex="-1"
-            role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Text Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="textForm" id="textEditUploadForm"
-                        enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>Edit Text: </small>
-                            </h6>
-                            <textarea class="form-control"
-                                id="editTextBlock" rows="3"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelTextBlock" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitTextBlock"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<!-- Delete ChoiceBlock Modal -->
+		<div id="confirmDeleteChoiceBlockAlert" class="modal" tabindex="-1"
+			role="dialog" th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirm Delete</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<h6>Are you sure you want to delete this choices Block?</h6>
+					</div>
+					<div class="modal-footer">
+						<button id="cancelDeleteChoiceBlock" type="reset"
+							class="btn light">Cancel</button>
+						<button type="submit" id="deleteChoiceBlock"
+							class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" th:draggable="true">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add new Image Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="photoForm" id="imageUploadForm"
-                        enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
-                            <h6>
-                                <small>Upload Image: </small>
-                            </h6>
-                            <input class="form-control" type="file"
-                                name="file" rows="5" cols="500"
-                                id="file" />
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelImageBtn" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="uploadImage"
-                                class="btn btn-primary" data-value="">Upload
-                                Image</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document" th:draggable="true">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add new Bibliography Block</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="sendBiblioForm" id="sendBiblioForm">
-                        <div class="modal-body">
-                        	<div class="form-group">
-                        		<table>
-							      <tr>
-							        <td>
-			                            <label for="name" class="col-form-label">Title:</label>
-			                    	</td>
-			                    	<td>
-			                    		<input type="text" class="form-control"
-			                    			id="titleBiblio" name="titleBiblio" />
-			                    	</td>
-			                      </tr>
-			                    </table>
-	                    	</div>
-	                    	<div class="form-group">
-                        		<table>
-							      <tr>
-							        <td>
-			                            <label for="name" class="col-form-label">Author:</label>
-			                    	</td>
-			                    	<td>
-			                    		<input type="text" class="form-control"
-			                    			id="authorBiblio" name="authorBiblio" />
-			                    	</td>
-			                      </tr>
-			                    </table>
-	                    	</div>
-	                    	<div class="form-group">
-                        		<table>
-							      <tr>
-							        <td>
-			                            <label for="name" class="col-form-label">Year:</label>
-			                    	</td>
-			                    	<td>
-			                    		<input type="number" class="form-control"
-			                    			id="yearBiblio" name="yearBiblio" />
-			                    	</td>
-			                      </tr>
-			                    </table>
-	                    	</div>
-	                    	<div class="form-group">
-                        		<table>
-							      <tr>
-							        <td>
-			                            <label for="name" class="col-form-label">Journal:</label>
-			                    	</td>
-			                    	<td>
-			                    		<input type="text" class="form-control"
-			                    			id="journalBiblio" name="journalBiblio" />
-			                    	</td>
-			                      </tr>
-			                    </table>
-	                    	</div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelSubmitBiblio" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitBiblio"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add new Text Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="textForm" id="textUploadForm"
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<h6>
+								<small>Enter Text: </small>
+							</h6>
+							<textarea class="form-control" id="textBlockText" rows="3"></textarea>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelSubmitText" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitText" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
-        <div id="loginAlert" class="modal" tabindex="-1" role="dialog"
-            backdrop="static"
-            style="display: none; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Login</h5>
-                    </div>
-                    <div class="modal-body">
-                        <h6>You are not logged in, please login.</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-primary" style="color: white;"
-                            onClick="window.location.reload();">Login</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div id="editTextAlert" class="modal" tabindex="-1" role="dialog"
+			th:draggable="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Text Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="textForm" id="textEditUploadForm"
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<h6>
+								<small>Edit Text: </small>
+							</h6>
+							<textarea class="form-control" id="editTextBlock" rows="3"></textarea>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelTextBlock" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitTextBlock"
+								class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
-        <div id="addChoiceAlert" class="modal" tabindex="-1"
-            role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Select from the
-                            Choices</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form name="choiceForm" id="choiceForm"
-                        enctype="multipart/form-data" method="post">
-                        <div id="choiceDiv" class="modal-body">
-                            <input class="choiceOptions"
-                                id="showAllChoices" type="checkbox"
-                                name="showAll" value="showAll"
-                                checked="true" /> <label for="showAll">Always
-                                show all choices</label><br />
-                            <div id="selectChoices">
-                                <div th:each="choice: ${choices}">
-                                    <input class="choiceOptions"
-                                        th:id="${choice.id}"
-                                        type="checkbox"
-                                        th:name="${choice.sequence.name}"
-                                        th:value="${choice.sequence.name}" />
-                                    <label th:for="${choice.id}">[[${choice.sequence.name}]]</label>
-                                    <br />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelSubmitChoice" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="submitChoices"
-                                class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add new Image Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="photoForm" id="imageUploadForm"
+						enctype="multipart/form-data" method="post">
+						<div class="modal-body">
+							<h6>
+								<small>Upload Image: </small>
+							</h6>
+							<input class="form-control" type="file" name="file" rows="5"
+								cols="500" id="file" />
+						</div>
+						<div class="modal-footer">
+							<button id="cancelImageBtn" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="uploadImage" class="btn btn-primary"
+								data-value="">Upload Image</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add new Bibliography Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="sendBiblioForm" id="sendBiblioForm">
+						<div class="modal-body">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Title:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="titleBiblio" name="titleBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Author:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="authorBiblio" name="authorBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Year:</label>
+										</td>
+										<td><input type="number" class="form-control"
+											id="yearBiblio" name="yearBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Journal:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="journalBiblio" name="journalBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Bibliography Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="sendBiblioForm" id="sendEditBiblioForm">
+						<div class="modal-body">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Title:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editTitleBiblio" name="ediTitleBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Author:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editAuthorBiblio" name="editAuthorBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Year:</label>
+										</td>
+										<td><input type="number" class="form-control"
+											id="editYearBiblio" name="editYearBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Journal:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editJournalBiblio" name="editJournalBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelBiblioBlock" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitBiblioBlock"
+								class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="loginAlert" class="modal" tabindex="-1" role="dialog"
+			backdrop="static"
+			style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Login</h5>
+					</div>
+					<div class="modal-body">
+						<h6>You are not logged in, please login.</h6>
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-primary" style="color: white;"
+							onClick="window.location.reload();">Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="addChoiceAlert" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Select from the Choices</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="choiceForm" id="choiceForm"
+						enctype="multipart/form-data" method="post">
+						<div id="choiceDiv" class="modal-body">
+							<input class="choiceOptions" id="showAllChoices" type="checkbox"
+								name="showAll" value="showAll" checked="true" /> <label
+								for="showAll">Always show all choices</label><br />
+							<div id="selectChoices">
+								<div th:each="choice: ${choices}">
+									<input class="choiceOptions" th:id="${choice.id}"
+										type="checkbox" th:name="${choice.sequence.name}"
+										th:value="${choice.sequence.name}" /> <label
+										th:for="${choice.id}">[[${choice.sequence.name}]]</label> <br />
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelSubmitChoice" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitChoices" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 
 
 
-        <div id="slideSpace">
-            <div th:each="contents: ${slideContents}">
-                <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                    <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
-                    <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
-                    <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
-                        <span class="icon-trash error"></span>
-                    </a>
-                </div>
-                <div th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
-                    <p class="col-md-10"> [[${contents.text}]]</p>
-                    <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
-                    
-                    <a class="btn deleteText col-md-1" href="javascript:;"> 
-                    	<span class="icon-trash error"></span>
-                    </a>
-                </div>
-                <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
-                    <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
-                        th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
-                        th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
-                    <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
-                    <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
-                        <span class="icon-trash error"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+		<div id="slideSpace">
+			<div th:each="contents: ${slideContents}">
+				<div th:id="${contents.id}" class="valueDiv tab row"
+					th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+					<img th:id="${contents.id}" class="imgDiv"
+						th:src="@{'/api/image/'+${contents.image.id}}" /> <input
+						type="hidden" id="deleteImageId" th:value="${contents.id}">
+					<a class="btn deleteImage col-md-1" href="javascript:;"
+						style="position: absolute; right: 25px;"> <span
+						class="icon-trash error"></span>
+					</a>
+				</div>
+				<div th:id="${contents.id}" class="textDivStaff tab row"
+					th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+					<p class="col-md-10">[[${contents.text}]]</p>
+					<input type="hidden" id="deleteTextId" th:value="${contents.id}" />
+
+					<a class="btn deleteText col-md-1" href="javascript:;"> <span
+						class="icon-trash error"></span>
+					</a>
+				</div>
+				<div th:id="${contents.id}" class="biblioDivStaff tab row"
+					th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
+					<p class="col-md-10">
+						Title: <span>[[${contents.title}]]</span>,Author: <span>[[${contents.author}]]</span>,
+						Year: <span>[[${contents.year}]]</span>, Journal: <span>[[${contents.journal}]]</span>
+					</p>
+					<input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
+
+					<a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
+						class="icon-trash error"></span>
+					</a>
+				</div>
+				<div th:id="${contents.id}" class="choiceDiv tab row"
+					th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}"
+					style="display: block;">
+					<a th:if="${contents.showsAll}" th:each="choice: ${choices}"
+						style="display: block; color: var(- -primary);"
+						th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+					<a th:if="!${contents.showsAll}"
+						th:each="choice: ${contents.choices}"
+						style="display: block; color: var(- -primary);"
+						th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+					<input type="hidden" class="col-md-8" id="deleteChoiceBlockId"
+						th:value="${contents.id}"> <a
+						class="btn deleteChoiceBlock col-md-1" href="javascript:;"
+						style="position: absolute; right: 0; top: 0;"> <span
+						class="icon-trash error"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>

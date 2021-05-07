@@ -14,10 +14,11 @@ public class BiblioBlockFactory implements IBiblioBlockFactory {
      * 
      * @see
      * edu.asu.diging.vspace.core.factory.impl.IBiblioBlockFactory#createBiblioBlock(
-     * java.lang.String, )
+     * java.lang.String, edu.asu.diging.vspace.core.model.IBiblioBlock)
      */
     @Override
     public IBiblioBlock createBiblioBlock(ISlide slide, IBiblioBlock biblioBlockData) {
+        biblioBlockData.setSlide(slide);
         return biblioBlockData;
     }
 

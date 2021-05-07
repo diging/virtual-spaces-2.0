@@ -14,16 +14,12 @@ import edu.asu.diging.vspace.core.model.ITextBlock;
 @Entity
 public class BiblioBlock extends ContentBlock implements IBiblioBlock {
 
-    @Lob
     private String title;
     
-    @Lob
     private String author;
     
-    @Lob
-    private int year;
+    private Integer year;
     
-    @Lob
     private String journal;
     
 
