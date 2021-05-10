@@ -35,10 +35,7 @@ public class ExhibitionAboutPageController {
 
         ExhibitionAboutPage exhibitionAboutPage = null;
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        if (aboutPageList != null && !aboutPageList.isEmpty()) {
-            exhibitionAboutPage = aboutPageList.get(0);
-        }
-        exhibitionAboutPage = exhibitionAboutPage != null ? exhibitionAboutPage:new ExhibitionAboutPage();
+        exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         model.addAttribute("aboutPage", exhibitionAboutPage);
         return "staff/exhibit/aboutPage";
     }
@@ -48,11 +45,7 @@ public class ExhibitionAboutPageController {
     public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, RedirectAttributes attributes) throws IOException {
         ExhibitionAboutPage exhibitionAboutPage = null;
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        if (aboutPageList != null && !aboutPageList.isEmpty()) {
-            exhibitionAboutPage = aboutPageList.get(0);
-        } else {
-            exhibitionAboutPage = new ExhibitionAboutPage();
-        }
+        exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
         exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
