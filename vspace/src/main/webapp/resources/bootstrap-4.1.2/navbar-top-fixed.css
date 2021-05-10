@@ -1,8 +1,10 @@
+* {
+    font-family: 'Raleway', sans-serif;
+}
 /* Show it is fixed to the top */
 body {
   min-height: 75rem;
   padding-top: 4.5rem;
-  font-family: 'Catamaran', sans-serif;
   background-color: black;
 }
 
