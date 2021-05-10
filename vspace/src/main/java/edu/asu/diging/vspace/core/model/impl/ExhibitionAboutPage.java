@@ -22,7 +22,8 @@ public class ExhibitionAboutPage {
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
+    
+    @Lob
     private String title;
     
     @Lob
