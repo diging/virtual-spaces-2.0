@@ -65,16 +65,16 @@
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/}"><span class="icon-play-circle secondary"></span></a>
+		            <a class="nav-link" th:href="@{/}" title="Exhibition Space"><span class="icon-play-circle secondary"></span></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
+		            <a class="nav-link" th:href="@{/staff/exhibit/config}" title="Exhibition Configuration"><span class="icon-gear secondary"></span></a>
 		          </li> 				  
 		        </ul>		        
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout"><span class="icon-sign-out"></span></button>
+		  				<button class="btn nav-link" type="submit" title="Logout"><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
 		         	</form>
 		        </div>
 		      </div>
