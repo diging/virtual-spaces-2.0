@@ -6,12 +6,11 @@
 
 <style type="text/css">
 .hova {
-	background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
-
-.EasyMDEContainer .CodeMirror-wrap {
-	overflow-y: scroll;
-	height: 400px;
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
 }
 </style>
 <script th:inline="javascript">
@@ -77,6 +76,7 @@ function onDoubleClick(e){
         var year = $("div.open p span:eq(2)").text();
         var journal = $("div.open p span:eq(3)").text();
     	
+    	//showing the edit bibliography form with all the respective values
     	$("#editBiblioAlert").show();
     	
     	$("#editTitleBiblio").val(title);
@@ -87,7 +87,7 @@ function onDoubleClick(e){
     	//remove card border
         $(".open").css('display', 'none');
         $(".open").css('overflow-y', 'scroll');
-        $(".open").css('height', '400px');
+        $(".open").css('max-height', '200px');
     	
     }
     else {
@@ -314,10 +314,6 @@ $(document).ready(function() {
             uploadImage();
     });
     
-    $("#addBibliography").click(function() {
-        $("#addBiblioAlert").show();
-    });
-    
     $("#addChoice").click(function() {
         $("#addChoiceAlert").show();
     });
@@ -328,6 +324,10 @@ $(document).ready(function() {
 		$(alert).attr( 'value', $(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
   	});
+  	
+  	$("#addBibliography").click(function() {
+        $("#addBiblioAlert").show();
+    });
     
     $(document).on("click", ".deleteBiblio", function(e) {
 		$("#confirmDeleteBiblioAlert").show();
@@ -539,7 +539,6 @@ $(document).ready(function() {
         });
     });
     
-    /* $("#sendBiblioForm").on('submit', function(e){ */
     $("#submitBiblio").on("click", function(e) {
         e.preventDefault();
         // ------------- creating Bibliography content blocks ------------
@@ -568,12 +567,12 @@ $(document).ready(function() {
             cache       : false,
             contentType : 'application/json; charset=utf-8',
             processData : false,
-            dataType: 'json',
             data: jsonData,
-            
             success: function(data) {
             	console.log(data)
-                var biblioblock = $('<div id="'+ title +'" class="biblioDivStaff tab row"><p>'+title+'<input type="hidden" id="deleteBiblioId" value="'+title+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                var biblioblock = $('<div id="'+ data +'" class="biblioDivStaff tab row"><p> Title: <span>' + title + '</span>, Author: <span>' + author + '</span>, Year:' 
+                		+ year + '</span>, Journal: <span>' + journal + '</span>'
+                		+'<input type="hidden" id="deleteBiblioId" value="'+data+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 $(biblioblock).css({
                     'margin': "10px"
                 });
@@ -746,7 +745,7 @@ $(document).ready(function() {
     
     $("#submitBiblioBlock").on("click", function(e){
     	e.preventDefault();
-        // ------------- editing Bibliography content blocks ------------
+        // ------------- editting Bibliography content blocks ------------
         
         var formData = new FormData();
         var title = $("#editTitleBiblio").val();
@@ -772,7 +771,6 @@ $(document).ready(function() {
             cache       : false,
             contentType : 'application/json; charset=utf-8',
             processData : false,
-            dataType: 'json',
             data: jsonData,
             success: function(data) {
                //replace Biblio box with new values
@@ -790,9 +788,8 @@ $(document).ready(function() {
            		}
            }
        });
-    });
+    });    
 });
-
 
 $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
@@ -1242,7 +1239,7 @@ $(window).on('load', function () {
 				<div th:id="${contents.id}" class="biblioDivStaff tab row"
 					th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
 					<p class="col-md-10">
-						Title: <span>[[${contents.title}]]</span>,Author: <span>[[${contents.author}]]</span>,
+						Title: <span>[[${contents.title}]]</span>, Author: <span>[[${contents.author}]]</span>,
 						Year: <span>[[${contents.year}]]</span>, Journal: <span>[[${contents.journal}]]</span>
 					</p>
 					<input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
