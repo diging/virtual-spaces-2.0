@@ -9,7 +9,6 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
 <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Virtual Spaces</title>
@@ -26,6 +25,7 @@
 <link th:href="@{/resources/extra/Module_1_slideshow_1.css}" type="text/css" rel="stylesheet">
 <link th:href="@{/resources/extra/Home.css}" type="text/css" rel="stylesheet">
 <link th:href="@{/resources/extra/Sequence.css}" type="text/css" rel="stylesheet">
+<link th:href="@{/resources/extra/diging-icon-pack.css}" type="text/css" rel="stylesheet">
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="<c:url value="/resources/bootstrap/assets/js/ie8-responsive-file-warning.js" />"></script><![endif]-->
@@ -57,8 +57,10 @@
         jQuery(elem).text(DateFormat.format.date(jQuery(elem).text(), longDateFormat));
       }
     });
-
     $('#deleteAlert').delay(2000).fadeOut();
+    $("#closeAlert").click(function() {
+	  	$('#errorMsg').hide();
+	  });
   });
 </script>
 
@@ -75,8 +77,16 @@
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
-    <div style="width: 80%; margin: 120px 0 60px auto">
-        <div layout:fragment="content"></div>
+    <div style="width: 80%; margin: 0 0 0 auto;">
+    <div th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert customWindow" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
+         [[${#request.getParameter('message')}]]
+         <button type="button" class="close" id="closeAlert"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+         </button>
+    </div>
+    <div layout:fragment="content">
+    </div>
     </div>
 </body>
 </html>

@@ -35,8 +35,10 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     @JoinColumn(name = "target_space_id")
     @NotFound(action=NotFoundAction.IGNORE)
     private ISpace targetSpace;
-
-    /* (non-Javadoc)
+    
+    /* 
+     * (non-Javadoc)
+     * 
      * @see edu.asu.diging.vspace.core.model.impl.ISpaceLink#getId()
      */
     @Override

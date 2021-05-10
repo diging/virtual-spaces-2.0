@@ -57,17 +57,17 @@ public class ExhibitionSlideController {
 
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
-            throw new SpaceNotFoundException(spaceId);
+            return "redirect:/exhibit/404";
         }
         IModule module = moduleManager.getModule(moduleId);
         model.addAttribute("module", module);
         if (module == null) {
-            throw new ModuleNotFoundException(moduleId);
+            return "redirect:/exhibit/404";
         }
         if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, module has not been configured yet.");
-            return "module";
+            return "/exhibition/module";
         }
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);

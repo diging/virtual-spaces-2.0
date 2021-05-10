@@ -27,16 +27,16 @@ public class ExhibitionModuleController {
             throws SpaceNotFoundException, ModuleNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
-            throw new SpaceNotFoundException(spaceId);
+            return "redirect:/exhibit/404";
         }
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null) {
-            throw new ModuleNotFoundException(id);
+            return "redirect:/exhibit/404";
         } else if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, module has not been configured yet.");
-            return "module";
+            return "/exhibition/module";
         }
         String startSequenceID = module.getStartSequence().getId();
         return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;

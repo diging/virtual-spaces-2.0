@@ -188,6 +188,7 @@ a, a:hover, a:focus {
     height: 700px;
 }
 
+<<<<<<< HEAD
 @media only screen and (max-width: 800px) {
     /* For mobile phones: */
     [class*="exit_to_space_Class"] {
@@ -195,6 +196,8 @@ a, a:hover, a:focus {
     }
 }
 
+=======
+>>>>>>> develop
 .tooltiptext {
     visibility: hidden;
     width: 120px;
