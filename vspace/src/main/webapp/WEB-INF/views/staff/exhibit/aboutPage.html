@@ -1,0 +1,49 @@
+
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<link rel="stylesheet"
+	href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+<style type="text/css">
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
+</style>
+</style>
+
+<script th:inline="javascript">
+	$(document).ready(function() {
+		$(".EasyMDEContainer").remove();
+		markDown = new EasyMDE({element : $('#textBlockText')[0]});
+	});
+</script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="main-content">
+		<h2>Exhibition About Page</h2>
+		<div style="padding: 30px 0;">
+			<form
+				th:action="@{/staff/exhibit/about?}"
+				method="POST" name="f">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+				<div style="padding-top: 20px;">
+					<label for="title">About Page Title:</label> <input type="text"
+						class="form-control" name="title" th:value="${aboutPage.title}" />
+				</div>
+				<div style="padding-top: 20px;">
+					<label for="text">Text:</label>
+					<textarea  id="textBlockText" rows="3"
+						name="aboutPageText" th:text="${aboutPage.aboutPageText}"></textarea>
+				</div>
+
+				<p style="padding-top: 20px;">
+					<button class="btn primary-btn" type="submit" value="submit">Submit</button>
+				</p>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
