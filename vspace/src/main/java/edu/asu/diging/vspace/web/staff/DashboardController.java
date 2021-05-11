@@ -29,5 +29,4 @@ public class DashboardController {
         model.addAttribute("recentModules", recentModules);
         return "staff/dashboard/dashboard";
     }
-
 }
