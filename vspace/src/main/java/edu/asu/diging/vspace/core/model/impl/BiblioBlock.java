@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.commonmark.node.Node;
@@ -9,7 +8,6 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
-import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
 public class BiblioBlock extends ContentBlock implements IBiblioBlock {
