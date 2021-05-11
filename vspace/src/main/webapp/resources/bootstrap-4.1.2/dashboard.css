@@ -1,6 +1,8 @@
+* {
+    font-family: 'Raleway'
+}
 body {
   font-size: .875rem;
-  font-family: 'Quicksand';
 }
 
 a {
