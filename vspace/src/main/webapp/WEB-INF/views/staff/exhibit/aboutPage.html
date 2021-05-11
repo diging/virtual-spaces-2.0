@@ -14,16 +14,10 @@
 </style>
 
 <script th:inline="javascript">
-
-	$(document)
-			.ready(
-					function() {
-					
-						$(".EasyMDEContainer").remove();
-						markDown = new EasyMDE({
-							element : $('#textBlockText')[0]
-						});
-					});
+	$(document).ready(function() {
+		$(".EasyMDEContainer").remove();
+		markDown = new EasyMDE({element : $('#textBlockText')[0]});
+	});
 </script>
 </head>
 

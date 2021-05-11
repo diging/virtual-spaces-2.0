@@ -32,10 +32,8 @@ public class ExhibitionAboutPageController {
 
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {
-
-        ExhibitionAboutPage exhibitionAboutPage = null;
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         model.addAttribute("aboutPage", exhibitionAboutPage);
         return "staff/exhibit/aboutPage";
     }
@@ -43,9 +41,8 @@ public class ExhibitionAboutPageController {
     
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
     public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, RedirectAttributes attributes) throws IOException {
-        ExhibitionAboutPage exhibitionAboutPage = null;
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
         exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);

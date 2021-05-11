@@ -17,8 +17,8 @@ public interface IExhibitionAboutPageManager {
     
     /**
      * This method stores Exhibition About page information and returns the {@link ExhibitionAboutPage} which is being stored
-     * @param {@link ExhibitionAboutPage} This object contain the value of Exhibition About page information
-     * @return {@link ExhibitionAboutPage} Return the object after being stored along with auto generated Id attached to it.
+     * @param {@link ExhibitionAboutPage} This object contains Exhibition about page values to be stored.
+     * @return {@link ExhibitionAboutPage} Returns the object after being stored. Object will now have an ID.
      */
     ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage);
 }
