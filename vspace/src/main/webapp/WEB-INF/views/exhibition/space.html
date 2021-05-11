@@ -297,8 +297,8 @@
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
                     var posY = $("#space").position().top;
                     var textBlock;
-                    var heightText = block.height*10;
-                    var widthText = block.width*10;
+                    var heightText = (block.height*height)/100;
+                    var widthText = (block.width*width)/100;
                     textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none;" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
                     textBlock.css('position', 'absolute');
                     var	linkPosX=(width*block.positionX)/[(${display.width})];
