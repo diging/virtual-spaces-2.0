@@ -17,6 +17,34 @@ public interface IBiblioBlock extends IContentBlock {
     String getJournal();
     
     void setJournal(String journal);
+    
+    String getUrl();
+    
+    void setUrl(String url);
+    
+    String getVolume();
+    
+    void setVolume(String volume);
+    
+    String getIssue();
+    
+    void setIssue(String issue);
+    
+    String getPages();
+    
+    void setPages(String pages);
+    
+    String getEditors();
+    
+    void setEditors(String editors);
+    
+    String getType();
+    
+    void setType(String type);
+    
+    String getNote();
+    
+    void setNote(String note);
 
     void setId(String id);
 

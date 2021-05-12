@@ -29,6 +29,13 @@ public class EditBiblioBlockController {
         biblioBlock.setAuthor(biblioBlockData.getAuthor());
         biblioBlock.setYear(biblioBlockData.getYear());
         biblioBlock.setJournal(biblioBlockData.getJournal());
+        biblioBlock.setUrl(biblioBlockData.getUrl());
+        biblioBlock.setVolume(biblioBlockData.getVolume());
+        biblioBlock.setIssue(biblioBlockData.getIssue());
+        biblioBlock.setPages(biblioBlockData.getPages());
+        biblioBlock.setEditors(biblioBlockData.getEditors());
+        biblioBlock.setType(biblioBlockData.getType());
+        biblioBlock.setNote(biblioBlockData.getNote());
         contentBlockManager.updateBiblioBlock((BiblioBlock) biblioBlock);
 
         return new ResponseEntity<String>(HttpStatus.OK);

@@ -20,6 +20,19 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     
     private String journal;
     
+    private String url;
+    
+    private String volume;
+    
+    private String issue;
+    
+    private String pages;
+    
+    private String editors;
+    
+    private String type;
+    
+    private String note;
 
     /*
      * (non-Javadoc)
@@ -78,6 +91,76 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     @Override
     public void setJournal(String journal) {
         this.journal = journal;
+    }
+    
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String getVolume() {
+        return volume;
+    }
+
+    @Override
+    public void setVolume(String volume) {
+        this.volume = volume;
+    }
+
+    @Override
+    public String getIssue() {
+        return issue;
+    }
+
+    @Override
+    public void setIssue(String issue) {
+        this.issue = issue;
+    }
+
+    @Override
+    public String getPages() {
+        return pages;
+    }
+
+    @Override
+    public void setPages(String pages) {
+        this.pages = pages;
+    }
+
+    @Override
+    public String getEditors() {
+        return editors;
+    }
+
+    @Override
+    public void setEditors(String editors) {
+        this.editors = editors;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String getNote() {
+        return note;
+    }
+
+    @Override
+    public void setNote(String note) {
+        this.note = note;
     }
 
 }
