@@ -66,29 +66,27 @@ function onDoubleClick(e){
         $(".open").css('overflow-y', 'scroll');
         $(".open").css('height', '400px');
     } else if(divName.includes("biblioDivStaff")){
+	   $(e.target).closest('.biblioDivStaff').addClass("open");
+	   var description = $("div.open p:eq(0)").text();
+    	   defaultValue = description;
     	
-    	$(e.target).closest('.biblioDivStaff').addClass("open");
-    	var description = $("div.open p:eq(0)").text();
-    	defaultValue = description;
+    	   var title = $("div.open p span:eq(0)").text();
+         var author = $("div.open p span:eq(1)").text();
+         var year = $("div.open p span:eq(2)").text();
+         var journal = $("div.open p span:eq(3)").text();
     	
-    	var title = $("div.open p span:eq(0)").text();
-        var author = $("div.open p span:eq(1)").text();
-        var year = $("div.open p span:eq(2)").text();
-        var journal = $("div.open p span:eq(3)").text();
+    	    //showing the edit bibliography form with all the respective values
+    	    $("#editBiblioAlert").show();
     	
-    	//showing the edit bibliography form with all the respective values
-    	$("#editBiblioAlert").show();
+    	    $("#editTitleBiblio").val(title);
+          $("#editAuthorBiblio").val(author);
+          $("#editYearBiblio").val(year);
+          $("#editJournalBiblio").val(journal);
     	
-    	$("#editTitleBiblio").val(title);
-        $("#editAuthorBiblio").val(author);
-        $("#editYearBiblio").val(year);
-        $("#editJournalBiblio").val(journal);
-    	
-    	//remove card border
-        $(".open").css('display', 'none');
-        $(".open").css('overflow-y', 'scroll');
-        $(".open").css('max-height', '200px');
-    	
+    	    //remove card border
+          $(".open").css('display', 'none');
+          $(".open").css('overflow-y', 'scroll');
+          $(".open").css('max-height', '200px');	
     }
     else {
     	// store image ID selected by the user to replace, onDoubleClick
