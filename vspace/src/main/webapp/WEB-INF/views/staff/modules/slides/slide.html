@@ -779,7 +779,7 @@ $(document).ready(function() {
     });
     
     $("#submitBiblioBlock").on("click", function(e){
-    	e.preventDefault();
+    	  e.preventDefault();
         // ------------- editting Bibliography content blocks ------------
         
         var formData = new FormData();
@@ -808,19 +808,18 @@ $(document).ready(function() {
             processData : false,
             data: jsonData,
             success: function(data) {
-               //replace Biblio box with new values
-               updateBiblioBox(blockId, formData, null)
-               $(".open").removeClass("open");
+                //replace Biblio box with new values
+                updateBiblioBox(blockId, formData, null)
+                $(".open").removeClass("open");
            },
            error: function(data) {
-        	   console.log(data)
-        		if (data.status == 403) {
-           			$("#loginAlert").show();
-           		}
-           		else {
-               		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-               		$('.error').append(alert);
-           		}
+	       if (data.status == 403) {
+	           $("#loginAlert").show();
+	       }
+	       else {
+	           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	           $('.error').append(alert);
+	       }
            }
        });
     });    
