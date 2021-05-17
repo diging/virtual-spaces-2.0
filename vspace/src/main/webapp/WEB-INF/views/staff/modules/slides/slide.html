@@ -74,6 +74,13 @@ function onDoubleClick(e){
          var author = $("div.open p span:eq(1)").text();
          var year = $("div.open p span:eq(2)").text();
          var journal = $("div.open p span:eq(3)").text();
+         var url = $("div.open p span:eq(4)").text();
+         var volume = $("div.open p span:eq(5)").text();
+         var issue = $("div.open p span:eq(6)").text();
+         var pages = $("div.open p span:eq(7)").text();
+         var editors = $("div.open p span:eq(8)").text();
+         var type = $("div.open p span:eq(9)").text();
+         var note = $("div.open p span:eq(10)").text();
     	
     	    //showing the edit bibliography form with all the respective values
     	    $("#editBiblioAlert").show();
@@ -82,6 +89,13 @@ function onDoubleClick(e){
           $("#editAuthorBiblio").val(author);
           $("#editYearBiblio").val(year);
           $("#editJournalBiblio").val(journal);
+          $("#editUrlBiblio").val(url);
+          $("#editVolumeBiblio").val(volume);
+          $("#editIssueBiblio").val(issue);
+          $("#editPagesBiblio").val(pages);
+          $("#editEditorsBiblio").val(editors);
+          $("#editTypeBiblio").val(type);
+          $("#editNoteBiblio").val(note);
     	
     	    //remove card border
           $(".open").css('display', 'none');
@@ -430,7 +444,7 @@ $(document).ready(function() {
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteBiblioAlert").hide();
 		var blockId = $('#deleteBiblioId').attr('value');
-		$('#deleteBiblioId').remove()
+		$('#deleteBiblioId').remove();
 		
 		// ------------- delete Bibliography content blocks ------------
 		$.ajax({
@@ -582,11 +596,25 @@ $(document).ready(function() {
         var author = $("#authorBiblio").val();
         var year = $("#yearBiblio").val();
         var journal = $("#journalBiblio").val();
+        var url = $("#urlBiblio").val();
+        var volume = $("#volumeBiblio").val();
+        var issue = $("#issueBiblio").val();
+        var pages = $("#pagesBiblio").val();
+        var editors = $("#editorsBiblio").val();
+        var type = $("#typeBiblio").val();
+        var note = $("#noteBiblio").val();
         
         formData.append('title', title);
         formData.append('author', author);
         formData.append('year', year);
         formData.append('journal', journal);
+        formData.append('url', url);
+        formData.append('volume', volume);
+        formData.append('issue', issue);
+        formData.append('pages', pages);
+        formData.append('editors', editors);
+        formData.append('type', type);
+        formData.append('note', note);
         ++contentCount;
         formData.append('contentOrder', contentCount);
         $("#addBiblioAlert").hide();
@@ -610,7 +638,7 @@ $(document).ready(function() {
 						+ 'Issue: <span>' + issue + '</span>, Pages: <span>' + pages + '</span>, '
 						+ 'Editors: <span>' + editors + '</span>, Type: <span>' + type + '</span>, '
 						+ 'Note: <span>' + note + '</span>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+data+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:60px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                		+ '<input type="hidden" id="deleteBiblioId" value="'+data+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 $(biblioblock).css({
                     'margin': "10px"
                 });
@@ -722,11 +750,11 @@ $(document).ready(function() {
         if(formData!=null)
         	$(".open").append('<p class="col-md-10">Title: ' + formData.get('title')+ ', Author: ' + formData.get('author') + ', Year: ' + formData.get('year') + ', Journal: ' + formData.get('journal') 
         			+ ', Url: ' + formData.get('url') + ', Volume: ' + formData.get('volume') + ', Issue: ' + formData.get('issue') 
-        			+ ', Pages: ' + formData.get(pages) + ', Editors: ' + formData.get(editors) + ', Type: ' + formData.get(type)
-        			+ ', Note: ' + formData.get(note)
-        			+ '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:60px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+        			+ ', Pages: ' + formData.get('pages') + ', Editors: ' + formData.get('editors') + ', Type: ' + formData.get('type')
+        			+ ', Note: ' + formData.get('note')
+        			+ '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
         else if(defaultValue!=null) {
-        	$(".open").append('<p class="col-md-10">' + defaultValue + '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:60px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+        	$(".open").append('<p class="col-md-10">' + defaultValue + '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
         }
         //reset border of the card
         //rebind event handlers
@@ -793,12 +821,26 @@ $(document).ready(function() {
         var author = $("#editAuthorBiblio").val();
         var year = $("#editYearBiblio").val();
         var journal = $("#editJournalBiblio").val();
+        var url = $("#editUrlBiblio").val();
+        var volume = $("#editVolumeBiblio").val();
+        var issue = $("#editIssueBiblio").val();
+        var pages = $("#editPagesBiblio").val();
+        var editors = $("#editEditorsBiblio").val();
+        var type = $("#editTypeBiblio").val();
+        var note = $("#editNoteBiblio").val();
         var blockId = $(".open").attr("id");
         
         formData.append('title', title);
         formData.append('author', author);
         formData.append('year', year);
         formData.append('journal', journal);
+        formData.append('url', url);
+        formData.append('volume', volume);
+        formData.append('issue', issue);
+        formData.append('pages', pages);
+        formData.append('editors', editors);
+        formData.append('type', type);
+        formData.append('note', note);
         formData.append('id', blockId);
         $("#editBiblioAlert").hide();
         
@@ -836,7 +878,7 @@ $(window).on('load', function () {
 	$(".deleteText").css('position', 'absolute');
 	$(".deleteText").css('right', '0');
 	$(".deleteBiblio").css('position', 'absolute');
-	$(".deleteBiblio").css('right', '60px');
+	$(".deleteBiblio").css('right', '0px');
 	var images = $(".imgDiv");
 	resizeImage(images);
 	
@@ -894,46 +936,12 @@ $(window).on('load', function () {
         		+&nbsp;<span class="icon-text"></span></button>&nbsp;
         	<button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
         		+&nbsp;<span class="icon-image"></span></button>&nbsp;
+        	<button type="button" id="addBibliography" class="btn pill-btn" data-toggle="tooltip" title="Add Bibliography block" data-placement="top">
+        		+&nbsp;<span class="icon-image"></span></button>&nbsp;
         	<button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
         		+&nbsp;<span class="icon-checkmark"></span></button>
             <p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
         </div>
-
-		<h2>
-			<span style="color: var(- -dark-grey)">Slide:</span>
-			[[${slide.name}]] <span class="icon-info-circle"
-				data-toggle="tooltip" data-html="true" data-placement="top"
-				th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
-			<a
-				th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
-				<span class="icon-edit"></span>
-			</a>
-		</h2>
-		<p id="description">[[${slide.description}]]</p>
-
-		<div style="margin: 40px 0">
-			<button type="button" id="addText" class="btn pill-btn"
-				data-toggle="tooltip" title="Add Text Block" data-placement="top">
-				+&nbsp;<span class="icon-text"></span>
-			</button>
-			&nbsp;
-			<button type="button" id="addImage" class="btn pill-btn"
-				data-toggle="tooltip" title="Add Image" data-placement="top">
-				+&nbsp;<span class="icon-image"></span>
-			</button>
-			&nbsp;
-			<button type="button" id="addBibliography" class="btn pill-btn"
-				data-toggle="tooltip" title="Add Bibliography" data-placement="top">
-				+&nbsp;<span class="icon-image"></span>
-			</button>
-			&nbsp;
-			<button type="button" id="addChoice" style="display: none;"
-				class="btn pill-btn" data-toggle="tooltip"
-				title="Add Sequence Choice" data-placement="top">
-				+&nbsp;<span class="icon-checkmark"></span>
-			</button>
-			<p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
-		</div>
 
 		<!-- Delete Text Modal -->
 		<div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
@@ -1188,6 +1196,66 @@ $(window).on('load', function () {
 									</tr>
 								</table>
 							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Volume:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="volumeBiblio" name="volumeBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Issue:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="issueBiblio" name="issueBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Pages:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="pagesBiblio" name="pagesBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Editors:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editorsBiblio" name="editorsBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Type:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="typeBiblio" name="typeBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Note:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="noteBiblio" name="noteBiblio" /></td>
+									</tr>
+								</table>
+							</div>
 						</div>
 						<div class="modal-footer">
 							<button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
@@ -1247,6 +1315,76 @@ $(window).on('load', function () {
 										</td>
 										<td><input type="text" class="form-control"
 											id="editJournalBiblio" name="editJournalBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Url:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editUrlBiblio" name="editUrlBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Volume:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editVolumeBiblio" name="editVolumeBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Issue:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editIssueBiblio" name="editIssueBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Pages:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editPagesBiblio" name="editPagesBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Editors:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editEditorsBiblio" name="editEditorsBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Type:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editTypeBiblio" name="editTypeBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Note:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editNoteBiblio" name="editNoteBiblio" /></td>
 									</tr>
 								</table>
 							</div>
