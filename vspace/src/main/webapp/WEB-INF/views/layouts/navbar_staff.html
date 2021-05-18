@@ -7,7 +7,7 @@
 	<body>
 		<div th:fragment="navbar">   
 		    <div id="mySidenav" class="sidenav">
-				<ul class="side-list">
+				<ul class="side-list" style="padding-left:80px;">
 		            <li class="nav-link alert alert-warning"
 						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
 						th:if="${exhibition}"
