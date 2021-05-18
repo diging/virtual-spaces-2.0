@@ -61,8 +61,8 @@
 			            </a>
 			        </li>
 		        </ul>
-		        <div class="footer">
-		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
+		        <div class="footer" style="word-break:break-word;">
+		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary);">
 		        		Virtual Spaces 2.0</a> <span class="icon-copyright"></span> DigInG 2020
 		        </div>
 			</div>  
@@ -72,7 +72,7 @@
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/}" title="Exhibition Space"><span class="icon-play-circle secondary"></span></a>
+		            <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 5px 15px;">
 		            <a class="nav-link" th:href="@{/staff/exhibit/config}" title="Exhibition Configuration"><span class="icon-gear secondary"></span></a>
@@ -81,7 +81,7 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout"><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
+		  				<button style="background-color: #ffffff !important; " class="btn nav-link" type="submit" title="Logout"><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
 		         	</form>
 		        </div>
 		      </div>

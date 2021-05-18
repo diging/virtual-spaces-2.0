@@ -14,7 +14,7 @@
 		      <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
 		          <li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
-		            <a class="nav-link" th:href="@{/}" title="Exhibition Space"><span class="icon-play-circle secondary"></span>
+		            <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
                         <span class="sr-only">(current)</span>
                     </a>
 		          </li> 
@@ -35,7 +35,7 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout" ><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
+		  				<button style="background-color: #ffffff !important; " class="btn nav-link" type="submit" title="Logout" ><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
 		         	</form>
 		         	<a class="btn nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"><span class="icon-sign-in"></span></a>
 		        </div>
