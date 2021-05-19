@@ -2,14 +2,12 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import static org.mockito.Mockito.when;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
@@ -20,7 +18,6 @@ import edu.asu.diging.vspace.core.factory.impl.BiblioBlockFactory;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.ISlideManager;
 
 public class ContentBlockManagerTest {
     @Mock
@@ -35,23 +32,16 @@ public class ContentBlockManagerTest {
     @Mock
     private SlideManager slideManager;
     
-    @Autowired
-    @InjectMocks
+    @Mock
     private BiblioBlockFactory biblioBlockFactory;
 
     @InjectMocks
-    @Mock
     private ContentBlockManager managerToTest;
-    
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        
-    }
-    
-    @Before 
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+
     }
 
     @Test
@@ -140,13 +130,11 @@ public class ContentBlockManagerTest {
         biblioBlock.setNote("TestNote");
         biblioBlock.setContentOrder(contentOrder);
         biblioBlock.setSlide(slide);
-
+        
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
-        IBiblioBlock actualBiblioBlock = managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
-        Assert.assertEquals(slide.getId(), actualBiblioBlock.getSlide().getId());
-        Assert.assertEquals(contentOrder, actualBiblioBlock.getContentOrder());
+        when(biblioBlockFactory.createBiblioBlock(slide, biblioBlock)).thenCallRealMethod();
+        managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
         Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
-
     }
 
 }
