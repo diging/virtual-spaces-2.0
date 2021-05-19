@@ -174,12 +174,12 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
         }
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:both;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
         setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
         $(divId).append(textBlock);
         if(spanId === "textBlockId-"){
             $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
-            $('#'+spanId+block.spaceTextBlock.id).click(function(e) {
+            $('#'+spanId+block.spaceTextBlock.id).click(function(e) {  
                 var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
                 makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"]);
             });
@@ -749,8 +749,7 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     $("#textBoxWidthIDEdit").val(width);
     $("#textBoxHeightIDEdit").val(height);
     $("#textContentIDForEdit").val(text);
-    resetHighlighting();
-
+    resetHighlighting(); 
     $("#bgImage").on("click", function(e){
         e.preventDefault();
         var posX = $(this).position().left;
@@ -758,12 +757,31 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
         storeX = e.pageX - $(this).offset().left;
         storeY = e.pageY - $(this).offset().top;
         showTextBlockEdit(editTextBlockInfo());
+        //edit(blockId);
     });
     hideLinkInfoTabs();
     displayForms("#editTextBlockInfo");
-
 }
-
+function edit(blockId)
+{
+	var textBlckVal = $("#textModalBlockId-"+blockId+" .textBlock")[0],
+    editHeight = textBlckVal.clientHeight,
+    editWidth = textBlckVal.clientWidth;
+    $("#textModalBlockId-"+blockId+" .textBlock").css('resize', 'both');
+    var Imgheight = parseInt($("#bgImage").css("height"));
+    var Imgwidth = parseInt($("#bgImage").css("width"));
+            
+    $("#textModalBlockId-"+blockId+" .textBlock").on("mouseup", function(e){
+    	 if (editHeight !== textBlckVal.clientHeight || editWidth !== textBlckVal.clientWidth ) {
+    		 editHeight = textBlckVal.clientHeight;
+    		 editWidth = textBlckVal.clientWidth;
+         let percentileHeight = (editHeight*100)/Imgheight;
+         let percentileWidth = (editWidth*100)/Imgwidth;
+         $("#textBoxWidthIDEdit").val(percentileWidth);
+         $("#textBoxHeightIDEdit").val(percentileHeight);
+    	 }
+    });
+}
 function resetHighlighting() {
     // reset icon links
     $('[data-link-id]').css("color", "red");
@@ -921,7 +939,6 @@ $(function(){
 
         $("#addTextBlockBtn").click(function(e) {
             e.preventDefault();
-
             if (storeX == undefined || storeY == undefined) {
                 $("#errorMsg").text("Please click on the image to specify where the new block should be located.")
                 $('#errorAlert').show();
@@ -944,6 +961,12 @@ $(function(){
                 processData : false,
                 enctype: 'multipart/form-data',
                 data: formData, 
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
                 success: function(data) {
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
