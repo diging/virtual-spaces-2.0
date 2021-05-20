@@ -42,7 +42,7 @@
 		            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
-			               th:href="@{/staff/images/list/1}"> 
+			               th:href="@{/staff/images/list}"> 
 			               <span class="icon-image secondary"></span><span class="custom_Text">&nbsp;Images</span>
 			            </a>
 			        </li>
@@ -51,6 +51,13 @@
 			               th:style="${currentPage == 'users' ? 'active' : '' }"
 			               th:href="@{/staff/user/list}"> 
 			               <span class="icon-user secondary"></span><span class="custom_Text">&nbsp;Users</span>
+			            </a>
+			        </li>
+			         <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+			            <a class="nav-link"
+			               th:style="${currentPage == 'AboutPage' ? 'active' : '' }"
+			               th:href="@{/staff/exhibit/about}"> 
+			               <span class="icon-info secondary"></span><span class="custom_Text">&nbsp;About Page</span>
 			            </a>
 			        </li>
 		        </ul>
