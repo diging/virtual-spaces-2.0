@@ -15,5 +15,6 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     List<Module> findTop5ByOrderByCreationDateDesc();
     
     List<Module> findAllByOrderByCreationDateDesc();
-
+    
+    List<Module> findAllByOrderByCreationDateAsc();
 }
