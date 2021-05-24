@@ -1,23 +1,19 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -65,7 +61,7 @@ public class SpaceOverviewController {
         ArrayNode nodeArray = mapper.createArrayNode();
         ArrayNode linkArray = mapper.createArrayNode();
         List<String> allNodeList = new ArrayList<>();
-        Map<String, List<String>> spaceLinkMap = new HashMap<>();
+        Map<String, List<String>> spaceLinkMap = new LinkedHashMap<>();
         spaceList.forEach(s -> {
             ObjectNode node = mapper.createObjectNode();
             node.put("name", s.getName());
@@ -138,11 +134,7 @@ public class SpaceOverviewController {
                 });
             }
         });
-        System.out.print("Value of the Json :");
-        System.out.print(mapper.writeValueAsString(linkArray));
-        
         model.addAttribute("overViewLink", mapper.writeValueAsString(linkArray));
-        
         return "staff/spaces/graph";
     }
 }
