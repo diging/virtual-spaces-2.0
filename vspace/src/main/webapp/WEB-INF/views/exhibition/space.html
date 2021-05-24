@@ -165,28 +165,27 @@
         <script th:inline="javascript">
 		//# sourceURL=click.js
 			
-            let isResizeImgBtnClicked = 1;
-            function toggleImgSize(){
+            function toggleImgSize(isClicked){
                 let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
                 isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+                if(isClicked) {
+			    	isResizeImgBtnClicked = -isResizeImgBtnClicked;
+				    setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
+			    }
                 // resize the image to max width
 			    if (isResizeImgBtnClicked == 1) {
-			    	isResizeImgBtnClicked = -isResizeImgBtnClicked;
 			    	$("#toggleImgClass").attr('class', "icon-collapse secondary");
                     $("#bgImage").css("width", maxImgWidth);
                     $("#space a").remove();
-                    drawLinks();
                 }
                 else{
-                	isResizeImgBtnClicked = -isResizeImgBtnClicked;
                 	$("#toggleImgClass").attr('class', "icon-expand secondary");
                     $("#bgImage").css("width", spaceWidth);
                     $('#bgImage').width('100%')
                     $("#space a").remove();
-                    drawLinks();
                 }
-			    setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null)
+			    drawLinks();
             }
 
 		let maxWidth='(max-width: 1200px)';
@@ -248,7 +247,9 @@
 		}
 		
 		$(window).on("load", function() {
-			console.log(document.cookie);
+			isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isResizeImgBtnClicked == "")
+				setCookie('isResizeImgBtnClicked', -1, null);
 		    let spaceHeight = $("#bgImage").css("height");
 		    $("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
@@ -256,12 +257,7 @@
 		    	drawLinks();
 		    });
 		    drawLinks();
-		    console.log([[${publishedSpaces}]]);
-		    var allPublishedSpaces = [[${publishedSpaces}]];
-		    let spaceStateMap = new Map();
-		    allPublishedSpaces.forEach(function(pubSpace, index) {
-		    	spaceStateMap.set()
-		    })
+		    toggleImgSize(0);
 		});
 		
 		function drawLinks() {
@@ -375,7 +371,7 @@
 		</script>
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
-                    onclick="toggleImgSize()">
+                    onclick="toggleImgSize(1)">
                     <span class="icon-expand secondary"
                         id="toggleImgClass" style="left: -4px;"></span> <span
                         class="tooltiptext">Resize Image</span>
@@ -383,7 +379,6 @@
             </div>
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
-            
             <div class="modalDown alert alert-warning center col-md-12"
                 style="text-align: center;"
                 th:style="${exhibitionConfig.mode == 'ACTIVE'? 'display:block' : 'display:none'}">
