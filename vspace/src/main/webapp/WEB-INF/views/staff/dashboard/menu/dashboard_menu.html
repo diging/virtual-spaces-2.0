@@ -41,6 +41,13 @@
 	               <span><i class="fas fa-file-image"></i></span> Images
 	            </a>
 	        </li>
+	        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+	            <a class="nav-link"
+	               th:style="${currentPage == 'biblios' ? 'active' : '' }"
+	               th:href="@{/staff/biblios/list/1}"> 
+	               <span><i class="fas fa-file-image"></i></span> Bibliographies
+	            </a>
+	        </li>
             <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 	            <a class="nav-link"
 	               th:style="${currentPage == 'users' ? 'active' : '' }"
