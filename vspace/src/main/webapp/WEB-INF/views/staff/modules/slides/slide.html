@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <style type="text/css">
@@ -445,11 +446,15 @@ $(document).ready(function() {
 		$("#confirmDeleteBiblioAlert").hide();
 		var blockId = $('#deleteBiblioId').attr('value');
 		$('#deleteBiblioId').remove();
+		var token =  $('input[name="_csrf"]').attr('value');
 		
 		// ------------- delete Bibliography content blocks ------------
 		$.ajax({
-		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId,
 		    type: 'DELETE',
+		    headers: {
+                'X-CSRF-Token': token 
+           	},
 		    success: function(result) {
 		        $('#' + blockId).remove();
 		        
@@ -586,6 +591,7 @@ $(document).ready(function() {
             }
         });
     });
+
     
     $("#submitBiblio").on("click", function(e) {
         e.preventDefault();
@@ -622,13 +628,17 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-    	
+        var token =  $('input[name="_csrf"]').attr('value');
+        
         $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography'})]",
             type: 'POST',
             cache       : false,
             contentType : 'application/json; charset=utf-8',
             processData : false,
+            headers: {
+                'X-CSRF-Token': token 
+           	},
             data: jsonData,
             success: function(data) {
             	console.log(data)
@@ -639,9 +649,7 @@ $(document).ready(function() {
 						+ 'Editors: <span>' + editors + '</span>, Type: <span>' + type + '</span>, '
 						+ 'Note: <span>' + note + '</span>'
                 		+ '<input type="hidden" id="deleteBiblioId" value="'+data+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-                $(biblioblock).css({
-                    'margin': "10px"
-                });
+                
                 $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             
             },
@@ -847,13 +855,17 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
+        var token =  $('input[name="_csrf"]').attr('value');
         
         $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/edit'})]",
             type: 'POST',
             cache       : false,
             contentType : 'application/json; charset=utf-8',
             processData : false,
+            headers: {
+                'X-CSRF-Token': token 
+           	},
             data: jsonData,
             success: function(data) {
                 //replace Biblio box with new values
@@ -937,7 +949,7 @@ $(window).on('load', function () {
         	<button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
         		+&nbsp;<span class="icon-image"></span></button>&nbsp;
         	<button type="button" id="addBibliography" class="btn pill-btn" data-toggle="tooltip" title="Add Bibliography block" data-placement="top">
-        		+&nbsp;<span class="icon-image"></span></button>&nbsp;
+        		+&nbsp;<span class="bi bi-bookmarks"></span></button>&nbsp;
         	<button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
         		+&nbsp;<span class="icon-checkmark"></span></button>
             <p style="margin-top: 1rem;">Double Click on a Block to Edit it</p>
@@ -1134,7 +1146,7 @@ $(window).on('load', function () {
             </div>
         </div>
 
-		<div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog">
+		<div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 			<div class="modal-dialog" role="document" th:draggable="true">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1171,7 +1183,7 @@ $(window).on('load', function () {
 									<tr>
 										<td><label for="name" class="col-form-label">Year:</label>
 										</td>
-										<td><input type="number" class="form-control"
+										<td><input type="text" class="form-control"
 											id="yearBiblio" name="yearBiblio" /></td>
 									</tr>
 								</table>
@@ -1266,7 +1278,7 @@ $(window).on('load', function () {
 			</div>
 		</div>
 
-		<div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog">
+		<div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 			<div class="modal-dialog" role="document" th:draggable="true">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1303,7 +1315,7 @@ $(window).on('load', function () {
 									<tr>
 										<td><label for="name" class="col-form-label">Year:</label>
 										</td>
-										<td><input type="number" class="form-control"
+										<td><input type="text" class="form-control"
 											id="editYearBiblio" name="editYearBiblio" /></td>
 									</tr>
 								</table>

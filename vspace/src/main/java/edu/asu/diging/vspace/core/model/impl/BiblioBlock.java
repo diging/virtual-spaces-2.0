@@ -54,14 +54,6 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     public void setTitle(String title) {
         this.title = title;
     }
-    
-    @Transient
-    public String htmlRenderedText() {
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(title);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        return renderer.render(document);
-    }
 
     @Override
     public void setAuthor(String author) {
