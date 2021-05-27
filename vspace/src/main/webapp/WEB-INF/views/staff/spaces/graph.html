@@ -4,54 +4,25 @@
 <style>
 .links line {
   stroke: #999;
-  stroke-opacity: 0.6;
   stroke-width: 2px;
 }
-
-.nodes circle {
-  fill:none;
-  stroke: #777;
-  stroke-width: 1.5px;
-}
-
 text {
   font-family: sans-serif;
-  font-size: 10px;
+  font-size: 15px;
 }
-
-a:link {
-	color: #EE3124;
-	text-decoration: none;
-}
-
-a:visited {
-	color: #EE3124;
-}
-
-a:hover {
-	color: #A4CD39;
-	text-decoration: underline;
-}
-
-a:active {
-	color: #EE3124;
+image { 
+ filter: drop-shadow(0px 0px 7px  #e39e44);
 }
 </style>
 </head>
 <body>
 <div  th:replace="layouts/main_staff"></div>
-<div id ="myjson" th:text="${overViewNode}" style="display: none;"></div>
-<div id ="myjson1" th:text="${overViewLink}" style="display: none;"></div>
-<div class="container">
-<div class ="row">
-<div class="col-10">
-<svg width="1320" height="650"></svg>
-	</div>
-	</div>
-	</div>
+<div id ="nodejson" th:text="${overViewNode}" style="display: none;"></div>
+<div id ="linkjson" th:text="${overViewLink}" style="display: none;"></div>
+<svg width="1520" height="650"></svg>
 <script>
-var nodeJson = JSON.parse($("#myjson").text());
-var linkJson = JSON.parse($("#myjson1").text());
+var nodeJson = JSON.parse($("#nodejson").text());
+var linkJson = JSON.parse($("#linkjson").text());
 var svg = d3.select("svg"),
 	    width = +svg.attr("width"),
 	    height = +svg.attr("height");
@@ -59,8 +30,8 @@ var svg = d3.select("svg"),
 	var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 	var simulation = d3.forceSimulation()
-	    .force("link", d3.forceLink().distance(300).strength(1))
-	    .force("charge", d3.forceManyBody().strength(-20))
+	    .force("link", d3.forceLink().distance(150).strength(1))
+	    .force("charge", d3.forceManyBody().strength(-100))
 	    .force("center", d3.forceCenter(width / 2, height / 2));
 		
      
@@ -71,7 +42,7 @@ var svg = d3.select("svg"),
 	    .enter().append("line");
 	  
 	  var node = svg.append("g")
-	      .attr("class", "nodes")
+	    .attr("class", "nodes")
 	    .selectAll("g")
 	    .data(nodeJson)
 	    .enter().append("g")
@@ -79,14 +50,31 @@ var svg = d3.select("svg"),
 	    .on("start", dragstarted)
 	    .on("drag", dragged)
 	    .on("end", dragended));
-	  	  
-	  var images = node.append("svg:image")
+	  	    
+    var modules = node.filter(function(d,i){
+    	  return d.isModule;
+    	}).append("svg:foreignObject")
+        .attr("x", function(d) { return -10;})
+        .attr("y", function(d) { return -10;})
+        .attr("height", 22)
+        .attr("width", 22) 
+        .append("xhtml:body")
+        .html('<i style="background-color: 	#F0F0F0 !important;" class="icon-2x2-grid secondary"></i>');
+        
+    
+   var images = node.filter(function(d,i){
+  	  return !d.isModule;
+  	}).append("svg:image")
     .attr("xlink:href",  function(d) {  return d.img;})
     .attr("x", function(d) { return -25;})
     .attr("y", function(d) { return -25;}) 
-    .attr("height", 50)
-    .attr("width", 50);
-	  
+    .attr("height", 100)
+    .attr("width", 100);
+
+     var setEvents = modules
+	    .on( 'click', function (d) {
+	        location.href = d.link;
+	     });
 	  var setEvents = images
 	    .on( 'click', function (d) {
 	        location.href = d.link;
@@ -98,8 +86,8 @@ var svg = d3.select("svg"),
 	        .transition()
 	        .attr("x", function(d) { return -60;})
 	        .attr("y", function(d) { return -60;})
-	        .attr("height", 100)
-	        .attr("width", 100);
+	        .attr("height", 300)
+	        .attr("width", 300);
 	    })
 	     // set back
 	          .on( 'mouseleave', function() {
@@ -107,24 +95,28 @@ var svg = d3.select("svg"),
 	              .transition()
 	              .attr("x", function(d) { return -25;})
 	              .attr("y", function(d) { return -25;})
-	              .attr("height", 50)
-	              .attr("width", 50);
+	              .attr("height", 100)
+	              .attr("width", 100);
 	          }); 
-	  
-	   var circles = node.append("circle")
-	      .attr("r", 10)
-	      .call(d3.drag()
-	          .on("start", dragstarted)
-	          .on("drag", dragged)
-	          .on("end", dragended));  
-
-	  var lables = node.append("text")
-	      .text(function(d) {
-	        return d.name;
-	      })
-	      .attr('x', 6)
-	      .attr('y', 3);
-
+	
+	      node.filter(function(d,i){
+	    	  return !d.isModule;
+	    	}).append("text")
+		      .text(function(d) {
+			        return d.name;
+			      })
+			      .attr('x', 10)
+			      .attr('y', 90);
+	      
+	      node.filter(function(d,i){
+	    	  return d.isModule;
+	    	}).append("text")
+		      .text(function(d) {
+			        return d.name;
+			      })
+			      .attr('x', 12)
+			      .attr('y', 20);
+	      
 	  node.append("title")
 	      .text(function(d) { return d.name; });
 
