@@ -170,22 +170,22 @@
                 let spaceWidth = $("#bgImage").css("width");
                 isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
                 if(isClicked) {
-			    	isResizeImgBtnClicked = -isResizeImgBtnClicked;
-				    setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
-			    }
+			isResizeImgBtnClicked = -isResizeImgBtnClicked;
+			setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
+		}
                 // resize the image to max width
-			    if (isResizeImgBtnClicked == 1) {
-			    	$("#toggleImgClass").attr('class', "icon-collapse secondary");
-                    $("#bgImage").css("width", maxImgWidth);
-                    $("#space a").remove();
+		if (isResizeImgBtnClicked == 1) {
+			$("#toggleImgClass").attr('class', "icon-collapse secondary");
+                    	$("#bgImage").css("width", maxImgWidth);
+                    	$("#space a").remove();
                 }
                 else{
                 	$("#toggleImgClass").attr('class', "icon-expand secondary");
-                    $("#bgImage").css("width", spaceWidth);
-                    $('#bgImage').width('100%')
-                    $("#space a").remove();
+                    	$("#bgImage").css("width", spaceWidth);
+                    	$('#bgImage').width('100%')
+                    	$("#space a").remove();
                 }
-			    drawLinks();
+		drawLinks();
             }
 
 		let maxWidth='(max-width: 1200px)';
