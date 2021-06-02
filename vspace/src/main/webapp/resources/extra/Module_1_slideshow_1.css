@@ -105,6 +105,7 @@
     width: 47px;
     white-space: nowrap;
     text-align: left;
+    font-family: Helvetica Neue;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -168,10 +169,7 @@ a, a:hover, a:focus {
 
 .imgDiv {
     position: relative;
-    max-width: 57%;
-    top: 0px;
     overflow: visible;
-    margin: 1%;
     display: block;
 }
 
