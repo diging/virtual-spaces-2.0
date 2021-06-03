@@ -5,16 +5,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
@@ -66,9 +69,12 @@ public class SpaceOverviewController {
         Map<String, List<IModuleLinkDisplay>> allSpaceToModulelinksListMap = new HashMap<>();
 
         getAllSpaceToModuleLink(allSpaceToModulelinksList, allSpaceToModulelinksListMap);
+        
+        Iterable<SpaceLinkDisplay> spaceToSpacelinksList = spaceLinkDisplayRepository.findAll();
 
-        List<ISpaceLinkDisplay> allSpaceToSpacelinksList = spaceLinkDisplayRepository
-                .findAllSpaceLinkDisplaysForSpace();
+        List<ISpaceLinkDisplay> allSpaceToSpacelinksList = new ArrayList<>();
+        
+        spaceToSpacelinksList.forEach(link -> allSpaceToSpacelinksList.add(link));
 
         Map<String, List<ISpaceLinkDisplay>> allSpaceToSpacelinksListMap = new HashMap<>();
 
@@ -85,7 +91,17 @@ public class SpaceOverviewController {
         model.addAttribute("overviewLink", mapper.writeValueAsString(linkArray));
         return "staff/spaces/graph";
     }
-
+/**
+ * To retrieve all space to space and space to module links corresponding to each space
+ * @param request
+ * @param spaceList
+ * @param mapper
+ * @param nodeArray
+ * @param allNodeList
+ * @param spaceLinkMap
+ * @param allSpaceToModulelinksListMap
+ * @param allSpaceToSpacelinksListMap
+ */
     private void getSpaceLinkMap(HttpServletRequest request, List<Space> spaceList, ObjectMapper mapper,
             ArrayNode nodeArray, List<String> allNodeList, Map<String, List<String>> spaceLinkMap,
             Map<String, List<IModuleLinkDisplay>> allSpaceToModulelinksListMap,
@@ -118,7 +134,12 @@ public class SpaceOverviewController {
             }
         }
     }
-
+    
+/**
+ * To retrieve all space to space links corresponding to each space
+ * @param allSpaceToSpacelinksList
+ * @param allSpaceToSpacelinksListMap
+ */
     private void getAllSpaceToSpaceLink(List<ISpaceLinkDisplay> allSpaceToSpacelinksList,
             Map<String, List<ISpaceLinkDisplay>> allSpaceToSpacelinksListMap) {
         allSpaceToSpacelinksList.forEach(link -> {
@@ -131,7 +152,11 @@ public class SpaceOverviewController {
             tempSpaceToSpacelinkList.add(link);
         });
     }
-
+/**
+ * To retrieve all space to module links corresponding to each space
+ * @param allSpaceToModulelinksList
+ * @param allSpaceToModulelinksListMap
+ */
     private void getAllSpaceToModuleLink(List<IModuleLinkDisplay> allSpaceToModulelinksList,
             Map<String, List<IModuleLinkDisplay>> allSpaceToModulelinksListMap) {
         allSpaceToModulelinksList.forEach(link -> {
@@ -145,6 +170,14 @@ public class SpaceOverviewController {
         });
     }
 
+    /**
+     * creating json for space node in the spaceoverview graph
+     * @param request
+     * @param spaceList
+     * @param mapper
+     * @param nodeArray
+     * @param allNodeList
+     */
     private void spaceNodeFormation(HttpServletRequest request, List<Space> spaceList, ObjectMapper mapper,
             ArrayNode nodeArray, List<String> allNodeList) {
         spaceList.forEach(space -> {
@@ -178,7 +211,14 @@ public class SpaceOverviewController {
             allNodeList.add(space.getId());
         });
     }
-
+/**
+ * creating json for module node in the spaceoverview graph
+ * @param request
+ * @param moduleList
+ * @param mapper
+ * @param nodeArray
+ * @param allNodeList
+ */
     private void moduleNodeFormation(HttpServletRequest request, List<Module> moduleList, ObjectMapper mapper,
             ArrayNode nodeArray, List<String> allNodeList) {
         moduleList.forEach(module -> {
@@ -195,7 +235,13 @@ public class SpaceOverviewController {
             allNodeList.add(module.getId());
         });
     }
-
+/**
+ * creating json for source node to all target nodes in the spaceoverview graph
+ * @param mapper
+ * @param linkArray
+ * @param allNodeList
+ * @param spaceLinkMap
+ */
     private void sourceToTargetFormation(ObjectMapper mapper, ArrayNode linkArray, List<String> allNodeList,
             Map<String, List<String>> spaceLinkMap) {
         spaceLinkMap.forEach((k, v) -> {
