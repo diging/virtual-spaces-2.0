@@ -1,5 +1,9 @@
 <html>
 <head>
+<script th:inline="javascript">
+var strNodeVal = [[${overviewNode}]],
+ strlinkVal = [[${overviewLink}]];
+</script>
 <script src="https://d3js.org/d3.v4.min.js" ></script>
 <style>
 .links line {
@@ -17,12 +21,10 @@ image {
 </head>
 <body>
 <div  th:replace="layouts/main_staff"></div>
-<div id ="nodejson" th:text="${overViewNode}" style="display: none;"></div>
-<div id ="linkjson" th:text="${overViewLink}" style="display: none;"></div>
 <svg width="1520" height="650"></svg>
 <script>
-var nodeJson = JSON.parse($("#nodejson").text());
-var linkJson = JSON.parse($("#linkjson").text());
+var nodeJson = JSON.parse(strNodeVal);
+var linkJson = JSON.parse(strlinkVal);
 var svg = d3.select("svg"),
 	    width = +svg.attr("width"),
 	    height = +svg.attr("height");
@@ -59,7 +61,7 @@ var svg = d3.select("svg"),
         .attr("height", 22)
         .attr("width", 22) 
         .append("xhtml:body")
-        .html('<i style="background-color: 	#F0F0F0 !important;" class="icon-2x2-grid secondary"></i>');
+        .html('<span style="background-color:#F0F0F0 !important;" class="icon-2x2-grid secondary"></span>');
         
     
    var images = node.filter(function(d,i){
@@ -70,6 +72,26 @@ var svg = d3.select("svg"),
     .attr("y", function(d) { return -25;}) 
     .attr("height", 100)
     .attr("width", 100);
+   
+   node.filter(function(d,i){
+ 	  return !d.isModule && d.isUnpublished;
+ 	}).append("svg:foreignObject")
+     .attr("x", function(d) { return -5;})
+     .attr("y", function(d) { return -5;})
+     .attr("height", 22)
+     .attr("width", 22) 
+     .append("xhtml:body")
+     .html('<span class="icon-warning secondary  secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
+
+   node.filter(function(d,i){
+	 	  return !d.isModule && d.isHideIncomingLinks;
+	 	}).append("svg:foreignObject")
+	     .attr("x", function(d) { return 20;})
+	     .attr("y", function(d) { return -5;})
+	     .attr("height", 22)
+	     .attr("width", 22) 
+	     .append("xhtml:body")
+	     .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
 
      var setEvents = modules
 	    .on( 'click', function (d) {

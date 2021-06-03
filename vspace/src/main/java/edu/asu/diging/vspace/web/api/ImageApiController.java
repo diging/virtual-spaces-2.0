@@ -21,6 +21,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 @RestController
 public class ImageApiController {
     
+    public static final String API_IMAGE_PATH = "/api/image/";
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -29,7 +31,7 @@ public class ImageApiController {
 	@Autowired
 	private IStorageEngine storage;
 	
-	@RequestMapping("/api/image/{id}")
+	@RequestMapping(API_IMAGE_PATH+"{id}")
 	public ResponseEntity<byte[]> getImage(@PathVariable String id) {
 		IVSImage image = imageRepo.findById(id).get();
 		byte[] imageContent = null;
