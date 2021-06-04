@@ -23,6 +23,9 @@ image {
 <div  th:replace="layouts/main_staff"></div>
 <svg width="1520" height="650"></svg>
 <script>
+$(document).ready(function() {
+	$("#logoutbtn").css("padding-top", "25px");
+});
 var nodeJson = JSON.parse(strNodeVal);
 var linkJson = JSON.parse(strlinkVal);
 var svg = d3.select("svg"),
@@ -81,7 +84,7 @@ var svg = d3.select("svg"),
      .attr("height", 22)
      .attr("width", 22) 
      .append("xhtml:body")
-     .html('<span class="icon-warning secondary  secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
+     .html('<span class="icon-warning secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
 
    node.filter(function(d,i){
 	 	  return !d.isModule && d.isHideIncomingLinks;
