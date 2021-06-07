@@ -20,7 +20,6 @@ import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.services.IBiblioService;
-import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 @Service
 public class BiblioService implements IBiblioService {
@@ -52,11 +51,11 @@ public class BiblioService implements IBiblioService {
     }
     
     /**
-     * Method to return the requested images
+     * Method to return the requested bibliographies
      * 
      * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
      *                page is returned
-     * @return list of images in the requested pageNo and requested order.
+     * @return list of bibliographies in the requested pageNo and requested order.
      */
 
     @Override
@@ -75,9 +74,9 @@ public class BiblioService implements IBiblioService {
     }
     
     /**
-     * Method to return the total image count
+     * Method to return the total bibliography count
      * 
-     * @return total count of images in DB
+     * @return total count of bibliographies in DB
      */
 
     @Override
@@ -86,9 +85,9 @@ public class BiblioService implements IBiblioService {
     }
     
     /**
-     * Method to return the total pages sufficient to display all images
+     * Method to return the total pages sufficient to display all bibliographies
      * 
-     * @return totalPages required to display all images in DB
+     * @return totalPages required to display all bibliographies in DB
      */
 
     
@@ -117,26 +116,35 @@ public class BiblioService implements IBiblioService {
     }
 
     /**
-     * Method to edit image details
+     * Method to edit bibliography details
      * 
-     * @param imageId   - image unique identifier
-     * @param imageForm - ImageForm with updated values for image fields
-     * @return throws ImageDoesNotExistException if no image exists with id,
+     * @param biblioId   - bibliography unique identifier
+     * @param biblioData - Bibliography data with updated values for bibliography fields
+     * @return throws BibliographyDoesNotExistException if no bibliography exists with id,
      */
     @Override
-    public void editBibliography(String imageId, ImageForm imageForm) throws BibliographyDoesNotExistException {
-        IBiblioBlock bibliography = getBiblioById(imageId);
-        bibliography.setName(imageForm.getName());
-        bibliography.setDescription(imageForm.getDescription());
+    public void editBibliography(String biblioId, IBiblioBlock biblioData) throws BibliographyDoesNotExistException {
+        IBiblioBlock bibliography = getBiblioById(biblioId);
+        bibliography.setTitle(biblioData.getTitle());
+        bibliography.setAuthor(biblioData.getAuthor());
+        bibliography.setYear(biblioData.getYear());
+        bibliography.setJournal(biblioData.getJournal());
+        bibliography.setUrl(biblioData.getUrl());
+        bibliography.setVolume(biblioData.getVolume());
+        bibliography.setIssue(biblioData.getIssue());
+        bibliography.setPages(biblioData.getPages());
+        bibliography.setEditors(biblioData.getEditors());
+        bibliography.setType(biblioData.getType());
+        bibliography.setNote(biblioData.getNote());
         biblioRepo.save((BiblioBlock) bibliography);
     }
 
     /**
-     * Method to lookup image by id
+     * Method to lookup bibliography by id
      * 
-     * @param imageId - image unique identifier
-     * @return image with provided image id if it exists, throws
-     *         ImageDoesNotExistException if no image exists with id,
+     * @param biblioId - bibliography unique identifier
+     * @return bibliography with provided bibliography id if it exists, throws
+     *         BibliographyDoesNotExistException if no bibliography exists with id,
      */
     @Override
     public IBiblioBlock getBiblioById(String biblioId) throws BibliographyDoesNotExistException {
@@ -146,15 +154,6 @@ public class BiblioService implements IBiblioService {
         } else {
             throw new BibliographyDoesNotExistException("Bibliography doesn't exist for biblio id" + biblioId);
         }
-    }
-
-    @Override
-    public List<IBiblioBlock> findByFilenameOrNameContains(String searchTerm) {
-        String likeSearchTerm = "%" + searchTerm + "%";
-        List<BiblioBlock> results = null;//biblioRepo.findByFilenameLikeOrNameLike(likeSearchTerm, likeSearchTerm);
-        List<IBiblioBlock> biblioResults = new ArrayList<>();
-        results.forEach(r -> biblioResults.add(r));
-        return biblioResults;
     }
 
 }

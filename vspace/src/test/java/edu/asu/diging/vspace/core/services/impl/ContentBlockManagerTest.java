@@ -119,7 +119,7 @@ public class ContentBlockManagerTest {
         IBiblioBlock biblioBlock = new BiblioBlock();
         biblioBlock.setTitle("TestTitle");
         biblioBlock.setAuthor("TestAuthor");
-        biblioBlock.setYear(2000);
+        biblioBlock.setYear("2000");
         biblioBlock.setJournal("TestJournal");
         biblioBlock.setUrl("TestUrl.com");
         biblioBlock.setVolume("TestVolume");

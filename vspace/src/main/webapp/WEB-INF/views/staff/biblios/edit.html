@@ -1,0 +1,75 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="main-content" layout:fragment="content">
+        <h1>Edit Bibliography: [[${biblioData.title}]]</h1>
+        
+        <form method="POST"
+        	th:action='@{|/staff/biblio/${biblioId}/edit|}' th:object="${biblioData}"
+        	style="margin-top: 40px">
+            
+            <div class="form-group row">
+                <label for="title" class="col-md-2 col-form-label">Title:</label>
+                <textarea class="form-control col-md-10" id="title" rows="1" cols="30"
+                	name="title">[[${biblioData.title}]]</textarea>
+            </div>
+            <div class="form-group row">
+                <label for="author" class="col-md-2 col-form-label">Author:</label>
+                <textarea class="form-control col-md-10" id="author" rows="1" cols="30"
+                	name="author">[[${biblioData.author}]]</textarea>
+            </div>
+            <div class="form-group row">
+                <label for="year" class="col-md-2 col-form-label">Year:</label>
+                <textarea class="form-control col-md-10" rows="1" cols="30" 
+                	id="year" name="year">[[${biblioData.year}]]</textarea>
+            </div>
+            <div class="form-group row">
+                <label for="journal" class="col-md-2 col-form-label">Journal:</label>
+                <textarea class="form-control col-md-10" id="journal" rows="1" cols="30"
+                	name="journal">[[${biblioData.journal}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="url" class="col-md-2 col-form-label">Url:</label>
+                <textarea class="form-control col-md-10" id="url" rows="1" cols="30"
+                	name="url">[[${biblioData.url}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="volume" class="col-md-2 col-form-label">Volume:</label>
+                <textarea class="form-control col-md-10" id="volume" rows="1" cols="30"
+                	name="volume">[[${biblioData.volume}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="issue" class="col-md-2 col-form-label">Issue:</label>
+                <textarea class="form-control col-md-10" id="issue" rows="1" cols="30"
+                	name="issue">[[${biblioData.issue}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="pages" class="col-md-2 col-form-label">Pages:</label>
+                <textarea class="form-control col-md-10" id="pages" rows="1" cols="30"
+                	name="pages">[[${biblioData.pages}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="editors" class="col-md-2 col-form-label">Editors:</label>
+                <textarea class="form-control col-md-10" id="editors" rows="1" cols="30"
+                	name="editors">[[${biblioData.editors}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="type" class="col-md-2 col-form-label">Type:</label>
+                <textarea class="form-control col-md-10" id="type" rows="1" cols="30"
+                	name="type">[[${biblioData.type}]]</textarea>
+			</div>
+			<div class="form-group row">
+                <label for="note" class="col-md-2 col-form-label">Note:</label>
+                <textarea class="form-control col-md-10" id="note" rows="1" cols="30"
+                	name="note">[[${biblioData.note}]]</textarea>
+			</div>
+
+            <button class="btn primary-btn" type="submit" value="submit">Save Bibliography</button>
+            <a th:href="@{|/staff/display/biblio/${biblioId}|}" class="btn btn-light">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

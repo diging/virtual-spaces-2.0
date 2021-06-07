@@ -4,32 +4,31 @@
 <body>
     <div class="main-content" layout:fragment="content">
         <h1>
-            Image: [[${image.filename}]] <small
+            Bibliography: [[${biblio.title}]] <small
                 style="margin-left: 10px;"><a
-                th:href="@{'/staff/image/'+${image.id}+'/edit'}"><span>&nbsp;<i
+                th:href="@{'/staff/biblio/'+${biblio.id}+'/edit'}"><span>&nbsp;<i
                         class="fas fa-edit"></i></span></a></small>
         </h1>
         <div class="alert alert-light" role="alert">
-            Created on <span class="date">[[${image.creationDate}]]</span>
-            by [[${image.createdBy}]]. <br> Modified on <span
-                class="date">[[${image.modificationDate}]]</span> by
-            [[${image.modifiedBy}]].
+            Created on <span class="date">[[${biblio.creationDate}]]</span>
+            by [[${biblio.createdBy}]]. <br> Modified on <span
+                class="date">[[${biblio.modificationDate}]]</span> by
+            [[${biblio.modifiedBy}]].
         </div>
 
-        <p style="max-height: 100px; overflow-y: scroll;">
-            <b>Name:</b> [[${image.name}]]
-        </p>
-        <p style="max-height: 100px; overflow-y: scroll;">
-            <b>Description:</b> [[${image.description}]]
-        </p>
+        <p><b>Author:</b> [[${biblio.author}]] </p>
+        <p><b>Year:</b> [[${biblio.year}]] </p>
+        <p><b>Journal:</b> [[${biblio.journal}]] </p>
+        <p><b>Url:</b> [[${biblio.url}]] </p>
+        <p><b>Volume:</b> [[${biblio.volume}]] </p>
+        <p><b>Issue:</b> [[${biblio.issue}]] </p>
+        <p><b>Pages:</b> [[${biblio.pages}]] </p>
+        <p><b>Editors:</b> [[${biblio.editors}]] </p>
+        <p><b>Type:</b> [[${biblio.type}]] </p>
+        <p><b>Note:</b> [[${biblio.note}]] </p>
         
-	<a th:href="@{'/staff/image/'+${image.id}+'/edit'}"
-            class="btn primary-btn">Edit Image</a>
-                
-        <div id="image" style="margin-top:15px">
-            <img id="bgImage" style="max-width:800px"
-                th:src="@{'/api/image/'+${image.id}}" />
-        </div>
+	<a th:href="@{'/staff/biblio/'+${biblio.id}+'/edit'}"
+		class="btn primary-btn">Edit Bibliography</a>
     </div>
 </body>
 </html>

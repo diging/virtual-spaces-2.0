@@ -1,51 +1,9 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
-<script th:inline="javascript">
-//# sourceURL=js.js
-function removeTag(event) {
-    var imageId = $(event.target).data("image-id");
-    var category = $(event.target).data("category");
-    $.ajax({
-          url: "[(@{'/staff/images/'})]" + imageId + '/tag?' + [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]]+'&tag=' + category,
-          method: "DELETE",
-       }).done(function() {
-            $("#category-badge-" + imageId + "-" + category).remove();
-       });
-}
-
-function toggleChange(form, imageId) {
-	var catValue = $(form).find("option:selected").val();
-    $.post($(form).attr('action') + "&tag=" + catValue, function( data ) {
-        var category = $('<span class="badge badge-warning"></span>');
-        category.attr('id', 'category-badge-' + imageId + "-" + catValue);
-        category.attr("data-category", catValue);
-        var catText = $(form).find("option:selected").text();
-        category.append(catText + " ");
-        var removeTagButton = $('<i data-image-id="' + imageId + '" data-category="' + catValue + '" class="fas fa-times removeTag"></i>');
-        removeTagButton.click(removeTag);
-        removeTagButton.css('cursor', 'pointer');
-        category.append(removeTagButton);
-        var isDuplicate = false;
-        $("#tags-" + imageId).children().each(function(idx,elem) {
-            if ($(elem).data('category') == catValue) {
-                isDuplicate = true;
-            }
-        });
-        if (!isDuplicate) {
-            $("#tags-" + imageId).append(category);
-        }
-        
-        $(form)[0].reset();
-    });
-}
+<script th:inline="javascript"> 
 
 $( document ).ready(function() {
-    $(".removeTag").click(function(e) {
-    	removeTag(e);
-    });
-
-    $(".removeTag").css('cursor', 'pointer');
     $('#page-selection').bootpag({
         total: [(${totalPages})],
         page: [(${currentPageNumber})],
@@ -62,8 +20,8 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign("./"+num+"?imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
-    });
+        window.location.assign("./"+num+"?sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+    }); 
 
   $("table.table thead th").each(function(){
       var head = $(this);
@@ -78,29 +36,22 @@ $( document ).ready(function() {
     if(headerSortPropName != 'tag') {
         if(headerSortPropName=='[(${sortProperty})]'){
             window.location.href = window.location.pathname+
-            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
+            '?&sort='+ headerSortPropName+'&order='+
             ('[(${order})]' == 'desc'?'asc':'desc');
         }else{
             window.location.href = window.location.pathname+
-            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
+            '?sort='+ headerSortPropName+'&order=asc';
         }
     }
     });
    
-   $("#filterTag").on("change", function(e) {
-       e.preventDefault();
-       var selectedId=e.target.value;
-       var formData = new FormData();
-       if(selectedId === "all"){
-           var url = "[(@{'/staff/images/list/'})]"+'?imageCat=&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
-           window.location = url;
-       }else{
-           var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
-           window.location = url;
-       }
-       
-   });
-});
+ });
+   
+function rowClicked(value) {
+	var url = "[(@{'/staff/display/biblio/'})]" + value;
+	window.location = url;
+}
+
 </script>
 <style>
 .pagination>li>a {
@@ -124,77 +75,26 @@ $( document ).ready(function() {
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
-        <h2>Images</h2>
+        <h2>Bibliographies</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
-            contains the following images.</div>
+            contains the following bibliographies.</div>
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col" sort-prop="filename"><a
-                        href="#">Filename</a></th>
-                    <th scope="col" sort-prop="name"><a href="#">Name</a></th>
-                    <th scope="col" sort-prop="space">Space</th>
-                    <th scope="col" sort-prop="createdBy"><a
-                        href="#">Created By</a></th>
-                    <th scope="col" sort-prop="creationDate"><a
-                        href="#">Created Date</a></th>
-                    <th scope="col" sort-prop="tag">Tag<select
-                        id="filterTag" name="tagFilter"
-                        class="form-control form-control-sm">
-                            <option th:value="all">Show All</option>
-                            <option th:each="catTag:${imageCategories}"
-                                th:value="${catTag}"
-                                th:selected="${#strings.equals(catTag,imageCategory)}">
-                                [[${@environment.getProperty('image_category_' + catTag)}]]
-                            </option>
-                    </select></th>
+                    <th scope="col" sort-prop="title"><a href="#">Title</a></th>
+                    <th scope="col" sort-prop="author"><a href="#">Author</a></th>
+                    <th scope="col" sort-prop="year"><a href="#">Year</a></th>
+                    <th scope="col" sort-prop="journal"><a href="#">Journal</a></th>
+                    <th scope="col" >. . . . . .</th>
                 </tr>
             </thead>
             <tbody class="tableBody">
-                <tr th:each="image: ${images}" th:class="${catTag}">
-                    <th scope="row"><a
-                        th:href="@{'/staff/display/image/'+${image.id}}"><img
-                            th:src="@{'/api/image/'+${image.id}}"
-                            class="img-thumbnail">
-                            [[${image.filename}]]</a></th>
-                    <td>[[${image.name}]]</td>
-                    <td><a
-                        th:each="space,stat:${imageToSpaces[image.id]}"
-                        th:href="@{'/staff/space/'+${space.id}}">[[${space.name}]]<span
-                            th:if="${stat.count < #lists.size(imageToSpaces[image.id])}">,<br></span></a>
-                    </td>
-                    <td>[[${image.createdBy}]]</td>
-                    <td><span class="date">[[${image.creationDate}]]</span></td>
-                    <td><span th:id="'tags-'+${image.id}"><span
-                            th:each="cat:${image.categories}"
-                            th:id="'category-badge-'+${image.id}+'-'+${cat}"
-                            th:data-category="${cat}"
-                            class="badge badge-warning">[[${@environment.getProperty('image_category_'
-                                + cat)}]] <i
-                                th:data-image-id="${image.id}"
-                                th:data-category="${cat}"
-                                class="fas fa-times removeTag"></i>
-                        </span>
-                    </span>
-                        <form id="changeTagForm"
-                            th:action="@{'/staff/images/'+${image.id}+'/tag?'+${_csrf.parameterName}+'='+${_csrf.token}}"
-                            method="post">
-                            <input type="hidden" name="imageID"
-                                th:value="${image.id}" id="imageID" />
-                            <select id="changeTag" name="tag"
-                                th:onChange="toggleChange(this.form, '[(${image.id})]')"
-                                class="form-control form-control-sm"
-                                style="width: 68px;">
-                                <option>Assign a tag</option>
-                                <option
-                                    th:each="catTag:${imageCategories}"
-                                    th:value="${catTag}">[[${@environment.getProperty('image_category_'
-                                    + catTag)}]]</option>
-                            </select>
-                        </form></td>
-                        <td style="display:none;" class="filteredData"><span
-                            th:each="cat:${image.categories}">[[${cat}]]
-                        </span></td>
+                <tr th:each="biblio: ${biblios}" style="cursor: pointer" th:biblio-id="${biblio.id}" onclick="rowClicked(this.getAttribute('biblio-id'))">
+                    <td>[[${biblio.title}]]</td>
+                    <td>[[${biblio.author}]]</td>
+                    <td>[[${biblio.year}]]</td>
+                    <td>[[${biblio.journal}]]</td>
+                    <td>. . . . . .</td>
                 </tr>
             </tbody>
         </table>

@@ -16,7 +16,7 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     
     private String author;
     
-    private Integer year;
+    private String year;
     
     private String journal;
     
@@ -74,12 +74,12 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     }
 
     @Override
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
     @Override
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 

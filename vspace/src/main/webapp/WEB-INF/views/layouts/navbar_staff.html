@@ -46,6 +46,13 @@
 			               <span class="icon-image secondary"></span><span class="custom_Text">&nbsp;Images</span>
 			            </a>
 			        </li>
+			        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+			            <a class="nav-link"
+			               th:style="${currentPage == 'biblios' ? 'active' : '' }"
+			               th:href="@{/staff/biblios/list}"> 
+			               <span class="icon-book-open-alt secondary"></span><span class="custom_Text">&nbsp;Bibliographies</span>
+			            </a>
+			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'users' ? 'active' : '' }"

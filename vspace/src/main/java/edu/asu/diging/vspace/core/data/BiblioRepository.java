@@ -10,13 +10,4 @@ import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 @JaversSpringDataAuditable
 public interface BiblioRepository extends PagingAndSortingRepository<BiblioBlock, String> {
 
-//    List<VSImage> findByFilenameLikeOrNameLike(String filename, String name);
-
-//    List<VSImage> findByFilenameLike(String filename);
-
-//    Page<VSImage> findByCategories(Pageable pageable, ImageCategory category);
-
-//    List<IVSImage> findByCategories(ImageCategory category);
-    
-//    long countByCategories(ImageCategory category);
 }

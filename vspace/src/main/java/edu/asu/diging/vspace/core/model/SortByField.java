@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SortByField {
-    CREATION_DATE("creationDate"), FILENAME("filename"), NAME("name"), CREATED_BY("createdBy");
+    CREATION_DATE("creationDate"), FILENAME("filename"), NAME("name"), CREATED_BY("createdBy"), 
+    BIBLIO_TITLE("title"), BIBLIO_AUTHOR("author"), BIBLIO_YEAR("year"), BIBLIO_JOURNAL("journal");
 
     private final String value;
 

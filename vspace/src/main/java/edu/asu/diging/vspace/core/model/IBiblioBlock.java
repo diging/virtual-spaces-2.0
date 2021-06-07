@@ -10,9 +10,9 @@ public interface IBiblioBlock extends IContentBlock {
 
     String getAuthor();
 
-    int getYear();
+    String getYear();
     
-    void setYear(int year);
+    void setYear(String year);
 
     String getJournal();
     

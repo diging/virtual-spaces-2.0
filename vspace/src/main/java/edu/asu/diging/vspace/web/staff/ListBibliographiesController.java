@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
-import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.services.IBiblioService;
-import edu.asu.diging.vspace.core.services.IImageService;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class ListBibliographiesController {
@@ -32,9 +25,6 @@ public class ListBibliographiesController {
 
     @Autowired
     private IBiblioService biblioService;
-
-    @Autowired
-    private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/biblios/list")
     public String listSpacesWithoutNum(Model model,
@@ -55,18 +45,11 @@ public class ListBibliographiesController {
             pageNo = 1;
         }
         List<IBiblioBlock> biblios;
+        biblios = biblioService.getBibliographies(pageNo, sortedBy, order);
+        
         model.addAttribute("totalPages", biblioService.getTotalPages());
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalBiblioCount", biblioService.getTotalBiblioCount());
-        biblios = biblioService.getBibliographies(pageNo, sortedBy, order);
-        Map<String, List<ISpace>> biblioToSpaces = new HashMap<String, List<ISpace>>();
-        for(IBiblioBlock biblio : biblios) {
-            List<ISpace> spaces = spaceManager.getSpacesWithImageId(biblio.getId());
-            if(spaces!=null && spaces.size()>0) {
-                biblioToSpaces.put(biblio.getId(), spaces);
-            }
-        }
-        model.addAttribute("biblioToSpaces",biblioToSpaces);
         model.addAttribute("biblios", biblios);
         model.addAttribute("sortProperty",
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
