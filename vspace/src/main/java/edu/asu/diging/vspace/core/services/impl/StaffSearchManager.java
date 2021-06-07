@@ -32,18 +32,18 @@ public class StaffSearchManager implements IStaffSearchManager{
     /**
      * This method is used to fetch the staff side search. The search text id searched 
      * in space, module and slide tables.
-     * @param searchString - This is the string entered in the search box.
+     * @param search - This is the string entered in the search box.
      * @return resultElements - Has all relevant VSpaceElements with the search texts.
      */
     @Override
-    public HashSet<IVSpaceElement> getAllSearchedElements(String searchString) {
+    public HashSet<IVSpaceElement> getAllSearchedElements(String search) {
         
         HashSet<IVSpaceElement> resultElements = new HashSet<>();
         
-        resultElements.addAll(spaceManager.findInNameOrDescriptionOfSpaces(searchString));
-        resultElements.addAll(moduleManager.findInNameOrDescriptionOfModule(searchString));
-        resultElements.addAll(slideManager.findInNameOrDescriptionOfSlide(searchString));
-        resultElements.addAll(textContentBlockRepo.findInNameOrDescription(searchString));
+        resultElements.addAll(spaceManager.findInNameOrDescriptionOfSpaces(search));
+        resultElements.addAll(moduleManager.findInNameOrDescriptionOfModule(search));
+        resultElements.addAll(slideManager.findInNameOrDescriptionOfSlide(search));
+        resultElements.addAll(textContentBlockRepo.findInNameOrDescription(search));
         return resultElements;
     }
     
