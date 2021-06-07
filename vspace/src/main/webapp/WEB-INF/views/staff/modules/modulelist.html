@@ -34,32 +34,30 @@
         
         <div style="text-align: right">
         	<button class="btn btn-sm" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
-        		<i class="fas fa-list-ul black" style="position: relative; padding-top: 12%;"></i></button>
+        		<span class="icon-bulleted-list"></span></button>
         	<button class="btn btn-sm" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
-        		<i class="fas fa-th" style="position: relative; padding-top: 12%;"></i></button>
-            <!-- Added for future development -->
-        	<!-- <button class="btn" style="background: white"><i class="fas fa-filter black"></i></button> -->
+        		<span class="icon-grid-block"></span></button>
         </div>
         
         <div class="grid" id="grid">
 
 			<div th:each="module: ${vspaceModules}" class="btn-group">
-                <div class="btn-group">
+                <div class="btn-group" style="width: 11.75rem;">
 				<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
 					<span class="card-title" style="white-space: pre-wrap; line-break: anywhere; font-size: 1.25rem;">[[${module.name}]]</span>
                     <br>
                     <span style="white-space: pre-wrap; line-break: auto; max-height: 50px; overflow-y: scroll; display: inline-block;">[[${module.description}]]</span>
                     </a>
-					<button type="button" class="btn btn-light"> <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
-				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
-				
+					<button type="button" class="btn btn-light"> <span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top"
+                        th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></span></button>
                 </div>
 			</div>
 		</div>
+
 		<div id="list" style="margin-top: 15px;">
 			<ul class="list-group list-group-flush" th:each="module: ${vspaceModules}">
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
-                   <span><i class="fas fa-th-large" aria-hidden="true"></i></span>&emsp;[[${module.name}]]</a>
+                   <span class='icon-2x2-grid'></span>&emsp;[[${module.name}]]</a>
                    (Created on <span class="date">[[${module.creationDate}]]</span>
                    by [[${module.createdBy}]])
                </li>

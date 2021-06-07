@@ -17,26 +17,26 @@
 		        <div>
 		        
 	            <form th:if="${!user.enabled}" th:action="@{'/staff/user/'+${user.username}+'/approve'}"  th:object="${approveUrl}" method="POST">
-	            	<button style="padding:0" class="btn btn-link"><span><i class="fas fa-user-check"></i></span> Activate</button>
+	            	<button style="padding:0" class="btn btn-link"><span class="icon-checkmark-alt"></span> Activate</button>
 	            </form>
 		        <div th:if="${user.enabled}" style="display: flex">
                     <form th:if="${!user.admin}" th:action="@{'/staff/user/'+${user.username}+'/admin'}" th:object="${postUrl}" method="POST">
-                        <button style="padding:0" class="btn btn-link"><span><i class="fas fa-key"></i></span> Make Admin</button>
+                        <button style="padding:0" class="btn btn-link"><span class="icon-admin"></span> Make Admin</button>
                     </form>
                     <form th:if="${user.admin}" th:action="@{'/staff/user/'+${user.username}+'/admin/remove'}" th:obejct="${removeUrl}" method="POST">
-                    <button style="padding:0" class="btn btn-link"><span><i class="fas fa-user"></i></span> Remove Admin Role</button>
+                    <button style="padding:0" class="btn btn-link"><span class="icon-admin-slash"></span> Remove Admin Role</button>
                     </form>
                     
                     <form th:if="${!#lists.contains(user.roles, 'STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/add?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
-                        <button style="padding:0" class="btn btn-link"><span><i class="fas fa-user"></i></span> Make Staff</button>
+                        <button style="padding:0" class="btn btn-link"><span class="icon-user"></span> Make Staff</button>
                     </form>
                     
                     <form th:if="${#lists.contains(user.roles, 'STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/remove?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
-                        <button style="padding:0" class="btn btn-link"><span><i class="fas fa-user"></i></span> Remove Staff Role</button>
+                        <button style="padding:0" class="btn btn-link"><span class="icon-user-slash"></span> Remove Staff Role</button>
                     </form> 
                 
                     <form th:action="@{'/staff/user/'+${user.username}+'/disable'}" th:object="${disableUrl}" method="POST">
-                        <button style="padding:0" class="btn btn-link"><span><i class="fas fa-user-slash"></i></span> Deactivate User</button>
+                        <button style="padding:0" class="btn btn-link"><span class="icon-close-alt"></span> Deactivate User</button>
                     </form>
                 </div>
 		        

@@ -1,9 +1,12 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
-import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
@@ -61,6 +64,15 @@ public class SpaceController {
     public ResponseEntity<List<SpaceLink>> getSpaceLinksPresent(@PathVariable("spaceId") String spaceId) {
         List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/staff/space/{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,Object>> showSpaceLinks(@PathVariable String id, Model model) {
+        Map<String,Object> responseData = new HashMap<String,Object>();
+        responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
+        responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
+        responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
     
 }

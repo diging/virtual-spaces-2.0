@@ -29,20 +29,19 @@
 						    <span class="sr-only">Toggle Dropdown</span>
 						</button>
 						<div class="dropdown-menu">
-						    <a class="dropdown-item" th:href="@{'/staff/space/'+${space.id}+'/edit'}"><i class="fa fa-pen black"></i>&emsp;Edit Space</a>
+						    <a class="dropdown-item" th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span>&nbsp;Edit Space</a>
 						    <div class="dropdown-divider"></div>
 						    <a  th:onclick="javascript:checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'))"
 		                        class="checkSpaceLinkPresent dropdown-item" data-toggle="modal">
 		                        <span class="checkSpaceLinkPresent" id="deleteSpace">
-		                        <i class="fas fa-trash-alt" style="color: var(--error)"></i></span>&emsp;Delete
+		                        <span class="icon-trash error"></span></span>&nbsp;Delete
 		                    </a>
 						</div>					
 					</div>
 				</div>
-				<a class="add" th:href="@{/staff/space/add}"><i class="fa fa-plus-circle" style="margin: auto; color: var(--med-grey)"></i></a>
+				<a class="add" th:href="@{/staff/space/add}"><span class="icon-circle-add" style="margin: auto; color: var(--med-grey)"></span></a>
 			</div>
 		</div>
-        
 		<div class="tab" style="margin-top: 10px; padding: 10px;">
 			<h4>Modules</h4>
 			<div class="grid" style="margin-top: 10px;">
@@ -51,11 +50,11 @@
 					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
 						<span class="card-title">[[${module.name}]]</span>
 					</a>
-                    <button type="button" class="btn btn-light"><i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" style="float: right" 
-                            th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i></button>
+                    <button type="button" class="btn btn-light"><span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" style="float: right" 
+                            th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></span></button>
                     </div>
 				</div>
-				<a class="add" th:href="@{/staff/module/add}"><i class="fa fa-plus-circle" style="margin: auto; color: var(--med-grey)"></i></a>
+				<a class="add" th:href="@{/staff/module/add}"><span class="icon-circle-add" style="margin: auto; color: var(--med-grey)"></span></a>
 			</div>	
 		</div>
     </div>      

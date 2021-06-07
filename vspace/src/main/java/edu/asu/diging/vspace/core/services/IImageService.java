@@ -14,19 +14,21 @@ public interface IImageService {
     ImageData getImageData(byte[] image);
 
     ImageData getImageDimensions(IVSImage image, int width, int height);
-    
-    long getTotalPages();
+
+    List<IVSImage> getImages(int pageNo, ImageCategory filter);
     
     List<IVSImage> getImages(int pageNo);
-    
-    List<IVSImage> getImages(int pageNo, String sortedBy, String order);
-    
-    long getTotalImageCount();
 
-    int validatePageNumber(int pageNo);
-    
+    List<IVSImage> getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
+
+    long getTotalImageCount(ImageCategory filter);
+
+    long getTotalPages(ImageCategory filter);
+
+    int validatePageNumber(int pageNo, ImageCategory filter);
+
     void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
-    
+
     IVSImage getImageById(String imageId) throws ImageDoesNotExistException;
 
     void addCategory(IVSImage image, ImageCategory category);

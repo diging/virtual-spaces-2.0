@@ -1,5 +1,6 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<script src="https://unpkg.com/moment"></script>
 <script th:inline="javascript">
 //# sourceURL=click.js
 //------------Deleting Slides-------------------
@@ -10,7 +11,6 @@ function deleteSlide(slideId) {
         cache       : false,
         contentType : false,
         success: function(data) {
-            console.log(slideId);
             $("#"+slideId).closest('.slide').remove();
         },
         error: function(data) {
@@ -44,7 +44,6 @@ function checkSlideInSequence(slideId) {
 }
 
 function loadSlidesInSequences(sequenceId) {
-		console.log(sequenceId);
 		var moduleId=[[${module.id}]];
 		$('.slidesInSeq').empty();
 		$.ajax({
@@ -53,8 +52,6 @@ function loadSlidesInSequences(sequenceId) {
 			async: false,
 			success: function(response) {
 				$.each(response, function (index, slide) {
-				    console.log(slide.id);
-				    console.log(slide.name);
 					$('.slidesInSeq').append(
 							'<a class="dropdown-item" href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+slide.name+'</a>'
 						);
@@ -64,6 +61,12 @@ function loadSlidesInSequences(sequenceId) {
 }
 
 $(document).ready(function($) {
+    
+    var dateFormat = 'MM-DD-YYYY hh:mm:ss A';
+    var date = document.getElementById('creationDate').value;
+    var localDate = moment(moment.utc(date)).local();
+    var dateInfo = document.getElementById('dateInfo');
+    dateInfo.title="Created on "+ localDate.format(dateFormat) +" by "+ [[${module.createdBy}]];
 	
 	$("#addSlideButton").on("click", function(e) {
 		$("#createSlideAlert").show();
@@ -92,7 +95,7 @@ $(document).ready(function($) {
 	});
 	
 	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
+		$('[data-toggle="tooltip"]').tooltip();
 	});
 				
 });
@@ -102,81 +105,74 @@ $(document).ready(function($) {
 <body>
     <div class="main-content" layout:fragment="content">
     
-    	<div class="flex-spacing"> 
+    	<div class="flex-spacing" style="margin-bottom: 0;"> 
     		<div>
     			<h2>
 				<span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
-				<i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top"
-				    	th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></i>
+ 				<span class="icon-info-circle" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"></span>
 				</h2>
 				<p>[[${module.description}]]</p>
     		</div>
 	
-			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">        
-		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f">
+			<div style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">
+		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
 		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
-					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important">
+					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important; height:auto;">
 						<option th:value="Select" th:text="Select"></option>
 		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
 		            </select>
-		            <button type="submit" class="btn primary-btn">Submit</button>
+		            <button type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 			</div>
     	</div>
-    	
-    	<div class="tab">
-    		<div style="display: flex; justify-content: space-between">
-    			<h4>All Slides</h4>
-                <!-- Commenting as this is planned for future development -->
-    			<!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
-                <a th:href="@{${module.id}+'/slide/add'}" class="btn outline" >+ New Slide</a>
-    		</div>
-    		<div class="grid" id="grid">
-				<div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
-					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 10rem;">
-						<span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
-						<i class="fas fa-code-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></i><br>	
-						<span class="card-text" style="white-space: pre-wrap;">[[${slide.description}]]</span>
-					</a>
-					<button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
-				  		th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
-				    	<i class="fas fa-trash-alt" style="color: var(--error)"></i>
-				  	</button>
-				</div>
-			</div>	    		
-    	</div>
-    	
-    	<div class="tab">
+    	<div class="tab" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
-				<a th:href="@{${module.id}+'/sequence/add'}" class="btn outline" >+ New Sequence</a>				
-			</div>	
-			
-			<div class="grid">
-				<div th:each="sequence: ${sequences}" class="btn-group dropdown">
-				  <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}" class="btn btn-light" style="width: 10rem;"><span  style="white-space: pre-wrap;">[[${sequence.name}]]</span></a>
-				  <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split sequence" data-toggle="dropdown" th:id="${sequence.id}" 
-				  	aria-haspopup="true" aria-expanded="false">
-				    	<i class="fa fa-folder-open"></i>
-				  </button>
-                  <div class="dropdown-menu slidesInSeq">
-                  </div>
-				</div>
-                
+				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Sequence</a>				
 			</div>
+            
+            <div id="list" style="margin-top: 0">
+            <ul class="list-group list-group-flush" th:each="sequence: ${sequences}">
+               <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}">
+                   <span class="icon-2x2-grid"></span>&emsp;[[${sequence.name}]]</a>
+                   (Created on <span class="date">[[${sequence.creationDate}]]</span>
+                   by [[${sequence.createdBy}]])
+               </li>
+            </ul>
+        </div>
 			
     	</div>
+        
+        <div class="tab" style="margin-top: 10px">
+            <div style="display: flex; justify-content: space-between">
+                <h4>All Slides</h4>
+                <!-- Commenting as this is planned for future development -->
+                <!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Slide</a>
+            </div>
+            <div class="grid" id="grid" style="margin-top: 10px;">
+                <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
+                    <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 80%;">
+                        <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
+                        <span class="icon-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></span><br> 
+                        <span class="card-text" style="white-space: pre-wrap; max-height: 70px; overflow-y: scroll; display: inline-block;">[[${slide.description}]]</span>
+                    </a>
+                    <button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
+                        th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
+                        <span class="icon-trash error"></span>
+                    </button>
+                </div>
+            </div>              
+        </div>
 			
-		<div id="deleteSlideAlert" class="modal fade" role="dialog"
-		    data-value="0">
+		<div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
 		    <div class="modal-dialog">
 		        <div class="modal-content">
 		            <div class="modal-header">
-		                <h4 class="modal-title" id="deleteModalTitle">Confirm
-		                    Deletion?</h4>
+		                <h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
 		                <button type="button" id="closeSlide" class="close"
-		                    data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
+		                    data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
 		            </div>
 		            <div class="modal-body">
 		                <p>
@@ -194,6 +190,7 @@ $(document).ready(function($) {
 		        </div>
 		    </div>
 		</div>
+        <input type="hidden" th:id="creationDate" th:value=${module.creationDate}>
 	</div>
 </body>
 </html>

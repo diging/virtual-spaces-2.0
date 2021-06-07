@@ -7,8 +7,9 @@
 	--base-grey: #F2F2F2;
 }
 
-i {
-	font-size: 20px;
+[class^="icon-"], [class*=" icon-"] {
+	font-size: 24px;
+	vertical-align: middle;
 }
 
 .secondary {
@@ -17,6 +18,10 @@ i {
 
 .white {
 	color: white;
+}
+
+.error {
+	color: #dc3545;
 }
 
 .black {
@@ -47,7 +52,6 @@ i {
     border-radius: 13px; */
 }
 
-
 .nav-bar {
     position: relative;
     width: 100%;
@@ -60,6 +64,7 @@ i {
     box-shadow: 0px 5px 10px rgba(0,0,0,0.08);
     z-index: 1;
     top: 0;
+    height:8%;
 }
 
 .footer {
@@ -153,6 +158,10 @@ i {
     background: #f2f2f2;
 }
 
+.form-control-sm {
+	border: none;
+}
+
 #wrapper_module {
     display: flex;
     width: 100%;
@@ -237,7 +246,7 @@ i {
 }	
 
 .form-control {
-	border: none;	
+	border: none;
 }	
 
 .form_icon {	
@@ -403,9 +412,9 @@ i {
 .moduleBarPosition {
     position: absolute;
     color: rgba(150, 45, 62, 1);
-    right: 30%;
-    /* top: 2%; */
-    padding-top: 12px;
+	top: 9px;
+	left: 9px;
+	font-size: 20px;
 }
 
 .pill-btn {
@@ -462,35 +471,26 @@ i {
 .Icon_awesome_info_c {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 7.793px;
-    top: 6.48px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: larger;
+    font-size: 20px;
+    top: 4px;
+    left: 4px;
 }
 
 .Icon_awesome_info_m {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 11.5px;
-    top: 7px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: inherit;
+    font-size: 20px;
+    top: 4px;
+    left: 4px;
     color: rgba(150, 45, 62, 1);
 }
 
 .Icon_awesome_info_e {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
+    font-size: 16px;
+    top: 7px;
     left: 7px;
-    top: 8.4px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: inherit;
     color: rgba(150, 45, 62, 1);
 }
 
@@ -604,14 +604,10 @@ i {
 .Icon_awesome_info_module_m {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 14.5px;
-    padding-top: 8px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: inherit;
+    font-size: 20px;
+    top: 4px;
+    left: 4px;
     color: rgba(150, 45, 62, 1);
-    transform: matrix(1, 0, 0, 1, 0, 0);
 }
 
 .imageStyle {
@@ -627,35 +623,26 @@ i {
 .Icon_awesome_info_staff_c {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 7.793px;
-    top: 3.48px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: larger;
+    font-size: 20px;
+    top: 4px;
+    left: 4px;
 }
 
 .Icon_awesome_info_staff_m {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 11.5px;
-    top: 5px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: inherit;
+    font-size: 20px;
+    top: 4px;
+    left: 4px;
     color: rgba(150, 45, 62, 1);
 }
 
 .Icon_awesome_info_staff_e {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 7px;
-    top: 5.4px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: inherit;
+    font-size: 20px;
+    top: 4px;
+    left: 4px;
     color: rgba(150, 45, 62, 1);
 }
 
@@ -677,20 +664,34 @@ i {
 	z-index: 1;
 }
 
+.link-modal {
+	display: none;
+	position: fixed;
+	top: 2.5%;
+	right: 2.5%;
+	left: 2.5%;
+	bottom: 0;
+	z-index: 9999;
+	overflow-y: scroll;
+	background: white;
+	padding: 25px;
+	border-radius: 10px;
+	box-shadow: 0 0 300px rgba(0,0,0,0.9);
+}
 
-
+.divider {
+    height: 100%;
+    width: 1px;
+    background: var(--med-grey);
+    margin: 0px 20px;
+}
 
 .Icon_awesome_info_module_m_sidenav {
     overflow: visible;
     position: absolute;
-    width: 5.403px;
-    height: 14.408px;
-    left: 14.5px;
-    padding-top: 5px;
-    transform: matrix(1, 0, 0, 1, 0, 0);
-    font-size: inherit;
+    font-size: 20px;
+    left: 6px;
     color: rgba(150, 45, 62, 1);
-    transform: matrix(1, 0, 0, 1, 0, 0);
 }
 
 .Ellipse_9_module_c_sidenav {
@@ -734,4 +735,35 @@ i {
     top: 0px;
     overflow: visible;
     text-align: justify;
+}
+.custom_form_style {
+    display: none;
+    width: 25%;
+}
+
+.circle-btn {
+	background: white;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+}
+
+.slide-nav {
+    left: 10%;
+    position: absolute;
+    top: 10%;
+}
+
+.circle-btn-slide-nav {
+    background: white;
+    width: 33px;
+    height: 33px;
+    left:19%;
+    border-radius: 50%;
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+}
+
+.circle-btn:hover {
+	background: #f2f2f2;
 }
