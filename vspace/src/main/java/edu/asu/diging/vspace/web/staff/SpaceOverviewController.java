@@ -5,25 +5,23 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -52,40 +50,30 @@ public class SpaceOverviewController {
 
     @RequestMapping("/staff/overview")
     public String spaceOverview(HttpServletRequest request, Model model) throws JsonProcessingException {
+
         Iterable<Space> allSpaceList = spaceRepo.findAll();
-        List<Space> spaceList = new ArrayList<>();
-        allSpaceList.forEach(space -> spaceList.add(space));
         Iterable<Module> allModuleList = moduleRepo.findAll();
-        List<Module> moduleList = new ArrayList<>();
-        allModuleList.forEach(module -> moduleList.add(module));
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode nodeArray = mapper.createArrayNode();
-        ArrayNode linkArray = mapper.createArrayNode();
+
         List<String> allNodeList = new ArrayList<>();
         Map<String, List<String>> spaceLinkMap = new LinkedHashMap<>();
 
-        List<IModuleLinkDisplay> allSpaceToModulelinksList = moduleLinkDisplayRepository
-                .findModuleLinkDisplaysForAllSpace();
+        Iterable<ModuleLinkDisplay> spaceToModuleLinks = moduleLinkDisplayRepository.findAll();
+        Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap = new HashMap<>();
+        getSpaceToAllOtherlink(spaceToModuleLinks, spaceToModuleLinksMap, true);
 
-        Map<String, List<IModuleLinkDisplay>> allSpaceToModulelinksListMap = new HashMap<>();
+        Iterable<SpaceLinkDisplay> spaceToSpaceLinksList = spaceLinkDisplayRepository.findAll();
+        Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap = new HashMap<>();
+        getSpaceToAllOtherlink(spaceToSpaceLinksList, spaceToSpaceLinksMap, false);
 
-        getSpaceToAllOtherlink(allSpaceToModulelinksList, allSpaceToModulelinksListMap, true);
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode nodeArray = mapper.createArrayNode();
+        ArrayNode linkArray = mapper.createArrayNode();
 
-        Iterable<SpaceLinkDisplay> spaceToSpacelinksList = spaceLinkDisplayRepository.findAll();
+        getSpaceLinkMap(request.getContextPath(), allSpaceList, mapper, nodeArray, allNodeList, spaceLinkMap,
+                spaceToModuleLinksMap, spaceToSpaceLinksMap);
 
-        List<ISpaceLinkDisplay> allSpaceToSpacelinksList = new ArrayList<>();
-
-        spaceToSpacelinksList.forEach(link -> allSpaceToSpacelinksList.add(link));
-
-        Map<String, List<ISpaceLinkDisplay>> allSpaceToSpacelinksListMap = new HashMap<>();
-
-        getSpaceToAllOtherlink(allSpaceToSpacelinksList, allSpaceToSpacelinksListMap, false);
-
-        getSpaceLinkMap(request, spaceList, mapper, nodeArray, allNodeList, spaceLinkMap, allSpaceToModulelinksListMap,
-                allSpaceToSpacelinksListMap);
-
-        if (moduleList != null && !moduleList.isEmpty()) {
-            nodeFormation(request, moduleList, mapper, nodeArray, allNodeList, true);
+        if (allModuleList != null) {
+            nodeFormation(request.getContextPath(), allModuleList, mapper, nodeArray, allNodeList, true);
         }
         sourceToTargetFormation(mapper, linkArray, allNodeList, spaceLinkMap);
         model.addAttribute("overviewNode", mapper.writeValueAsString(nodeArray));
@@ -98,42 +86,36 @@ public class SpaceOverviewController {
      * each space
      * 
      * @param request
-     * @param spaceList
+     * @param allSpaceList
      * @param mapper
      * @param nodeArray
      * @param allNodeList
      * @param spaceLinkMap
-     * @param allSpaceToModulelinksListMap
-     * @param allSpaceToSpacelinksListMap
+     * @param allSpaceToModuleLinksMap
+     * @param allSpaceToSpaceLinksMap
      */
-    private void getSpaceLinkMap(HttpServletRequest request, List<Space> spaceList, ObjectMapper mapper,
+    private void getSpaceLinkMap(String contextPath, Iterable<Space> allSpaceList, ObjectMapper mapper,
             ArrayNode nodeArray, List<String> allNodeList, Map<String, List<String>> spaceLinkMap,
-            Map<String, List<IModuleLinkDisplay>> allSpaceToModulelinksListMap,
-            Map<String, List<ISpaceLinkDisplay>> allSpaceToSpacelinksListMap) {
-        if (spaceList != null && !spaceList.isEmpty()) {
-            nodeFormation(request, spaceList, mapper, nodeArray, allNodeList, false);
-            for (Space space : spaceList) {
-                List<IModuleLinkDisplay> spaceToModulelinksList = allSpaceToModulelinksListMap.get(space.getId());
-                List<ISpaceLinkDisplay> spaceLinks = null;
-                spaceLinks = allSpaceToSpacelinksListMap.get(space.getId());
-                List<ISpaceLinkDisplay> spaceToSpaceLinksList = null;
+            Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
+            Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap) {
+        if (allSpaceList != null) {
+            nodeFormation(contextPath, allSpaceList, mapper, nodeArray, allNodeList, false);
+            for (Space space : allSpaceList) {
+                List<ModuleLinkDisplay> spaceToModulelinksList = spaceToModuleLinksMap.get(space.getId());
+                List<SpaceLinkDisplay> spaceLinks = spaceToSpaceLinksMap.get(space.getId());
+                List<SpaceLinkDisplay> spaceToSpaceLinksList = new ArrayList<>();
                 if (spaceLinks != null) {
-                    spaceToSpaceLinksList = new ArrayList<>();
                     spaceToSpaceLinksList.addAll(spaceLinks);
                 }
                 List<String> spaceAllLink = new ArrayList<>();
-                if (spaceToModulelinksList != null && !spaceToModulelinksList.isEmpty()) {
 
-                    spaceToModulelinksList.forEach(link -> {
-                        spaceAllLink.add(link.getLink().getModule().getId());
-                    });
-                }
-                if (spaceToSpaceLinksList != null && !spaceToSpaceLinksList.isEmpty()) {
+                spaceToModulelinksList.forEach(link -> {
+                    spaceAllLink.add(link.getLink().getModule().getId());
+                });
 
-                    spaceToSpaceLinksList.forEach(link -> {
-                        spaceAllLink.add(link.getLink().getTarget().getId());
-                    });
-                }
+                spaceToSpaceLinksList.forEach(link -> {
+                    spaceAllLink.add(link.getLink().getTarget().getId());
+                });
                 spaceLinkMap.put(space.getId(), spaceAllLink);
             }
         }
@@ -147,17 +129,16 @@ public class SpaceOverviewController {
      * @param spaceToAllOtherlinksMap
      * @param isModule
      */
-    private <T> void getSpaceToAllOtherlink(List<T> spaceToAllOtherlinksList,
-            Map<String, List<T>> spaceToAllOtherlinksMap, boolean isModule) {
-        spaceToAllOtherlinksList.forEach(link -> {
+    private <T> void getSpaceToAllOtherlink(Iterable<T> spaceToAllOtherLinksList,
+            Map<String, List<T>> spaceToAllOtherLinksMap, boolean isModule) {
+
+        spaceToAllOtherLinksList.forEach(link -> {
             String spaceId = isModule == true ? ((IModuleLinkDisplay) link).getLink().getSpace().getId()
                     : ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId();
-            if (!spaceToAllOtherlinksMap.containsKey(spaceId)) {
-                List<T> tempSpaceToOtherlinkList = new ArrayList<>();
-                spaceToAllOtherlinksMap.put(spaceId, tempSpaceToOtherlinkList);
+            if (!spaceToAllOtherLinksMap.containsKey(spaceId)) {
+                spaceToAllOtherLinksMap.put(spaceId, new ArrayList<>());
             }
-            List<T> tempSpaceToOtherlinkList = spaceToAllOtherlinksMap.get(spaceId);
-            tempSpaceToOtherlinkList.add(link);
+            spaceToAllOtherLinksMap.get(spaceId).add(link);
         });
     }
 
@@ -172,14 +153,15 @@ public class SpaceOverviewController {
      * @param allNodeList
      * @param isModule
      */
-    private <T> void nodeFormation(HttpServletRequest request, List<T> nodeList, ObjectMapper mapper,
-            ArrayNode nodeArray, List<String> allNodeList, boolean isModule) {
-        nodeList.forEach(nodeval -> {
+    private <T> void nodeFormation(String contextPath, Iterable<T> nodeList, ObjectMapper mapper, ArrayNode nodeArray,
+            List<String> allNodeList, boolean isModule) {
+
+        for (T nodeval : nodeList) {
             VSpaceElement nodeObj = isModule == true ? (Module) nodeval : (Space) nodeval;
             ObjectNode node = mapper.createObjectNode();
             node.put("name", nodeObj.getName());
             StringBuilder linkPathBuilder = new StringBuilder();
-            linkPathBuilder.append(request.getContextPath());
+            linkPathBuilder.append(contextPath);
             String path = isModule == true ? ModuleController.STAFF_MODULE_PATH : SpaceController.STAFF_SPACE_PATH;
             linkPathBuilder.append(path);
             linkPathBuilder.append(nodeObj.getId());
@@ -187,7 +169,7 @@ public class SpaceOverviewController {
             String imagePath = "";
             if (!isModule) {
                 StringBuilder imagePathBuilder = new StringBuilder();
-                imagePathBuilder.append(request.getContextPath());
+                imagePathBuilder.append(contextPath);
                 imagePathBuilder.append(ImageApiController.API_IMAGE_PATH);
                 imagePathBuilder.append(((Space) nodeObj).getImage().getId());
                 imagePath = imagePathBuilder.toString();
@@ -209,7 +191,7 @@ public class SpaceOverviewController {
             }
             nodeArray.add(node);
             allNodeList.add(nodeObj.getId());
-        });
+        }
     }
 
     /**
@@ -222,15 +204,14 @@ public class SpaceOverviewController {
      */
     private void sourceToTargetFormation(ObjectMapper mapper, ArrayNode linkArray, List<String> allNodeList,
             Map<String, List<String>> spaceLinkMap) {
-        spaceLinkMap.forEach((k, v) -> {
-            if (!v.isEmpty()) {
-                v.forEach(e -> {
-                    ObjectNode node = mapper.createObjectNode();
-                    node.put("target", allNodeList.indexOf(e));
-                    node.put("source", allNodeList.indexOf(k));
-                    linkArray.add(node);
-                });
+
+        for (Entry<String, List<String>> entry : spaceLinkMap.entrySet()) {
+            for (String value : entry.getValue()) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("target", allNodeList.indexOf(value));
+                node.put("source", allNodeList.indexOf(entry.getKey()));
+                linkArray.add(node);
             }
-        });
+        }
     }
 }

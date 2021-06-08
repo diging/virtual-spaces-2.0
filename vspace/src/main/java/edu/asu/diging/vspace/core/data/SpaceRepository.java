@@ -18,7 +18,4 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
     List<Space> findAllBySpaceStatus(SpaceStatus spaceStatus);
 
     List<Space> findAllByImageId(String imageId);
-    
-    List<Space> findAllByOrderByCreationDateAsc();
-
 }
