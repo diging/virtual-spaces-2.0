@@ -184,6 +184,15 @@ a, a:hover, a:focus {
     margin: auto;
 }
 
+.biblioDiv {
+    position: relative;
+    width: 57%;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+    margin: auto;
+}
+
 .slideNumberClass {
     position: absolute;
     width: 84%;

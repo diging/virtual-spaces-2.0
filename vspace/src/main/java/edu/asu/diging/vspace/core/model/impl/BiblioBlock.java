@@ -155,4 +155,20 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
         this.note = note;
     }
 
+    @Override
+    @Transient
+    public String toString() {
+        return "title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal
+                + ", url=" + url + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors="
+                + editors + ", type=" + type + ", note=" + note ;
+    }
+    
+    @Transient
+    public String htmlRenderedText() {
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(toString());
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(document);
+    }  
+
 }
