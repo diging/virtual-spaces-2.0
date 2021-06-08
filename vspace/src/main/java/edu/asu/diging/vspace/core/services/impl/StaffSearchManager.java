@@ -30,7 +30,7 @@ public class StaffSearchManager implements IStaffSearchManager{
     
     
     /**
-     * This method is used to fetch the staff side search. The search text id searched 
+     * This method is used to fetch the staff side search. The search text searched 
      * in space, module and slide tables.
      * @param search - This is the string entered in the search box.
      * @return resultElements - Has all relevant VSpaceElements with the search texts.
@@ -40,9 +40,9 @@ public class StaffSearchManager implements IStaffSearchManager{
         
         HashSet<IVSpaceElement> resultElements = new HashSet<>();
         
-        resultElements.addAll(spaceManager.findInNameOrDescriptionOfSpaces(search));
-        resultElements.addAll(moduleManager.findInNameOrDescriptionOfModule(search));
-        resultElements.addAll(slideManager.findInNameOrDescriptionOfSlide(search));
+        resultElements.addAll(spaceManager.findInNameOrDescription(search));
+        resultElements.addAll(moduleManager.findInNameOrDescription(search));
+        resultElements.addAll(slideManager.findInNameOrDescription(search));
         resultElements.addAll(textContentBlockRepo.findInNameOrDescription(search));
         return resultElements;
     }

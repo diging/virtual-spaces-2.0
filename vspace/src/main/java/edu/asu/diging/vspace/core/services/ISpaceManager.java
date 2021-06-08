@@ -36,6 +36,6 @@ public interface ISpaceManager {
     
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
-    List<IVSpaceElement> findInNameOrDescriptionOfSpaces(String searchText);
+    List<IVSpaceElement> findInNameOrDescription(String searchText);
 
 }

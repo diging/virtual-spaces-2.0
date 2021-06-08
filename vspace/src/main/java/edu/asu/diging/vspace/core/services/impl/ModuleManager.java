@@ -85,7 +85,7 @@ public class ModuleManager implements IModuleManager {
     }
     
     @Override
-    public List<IVSpaceElement> findInNameOrDescriptionOfModule(String searchText) {
+    public List<IVSpaceElement> findInNameOrDescription(String searchText) {
         return moduleRepo.findInNameOrDescription(searchText);
     }
 }

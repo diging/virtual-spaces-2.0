@@ -15,10 +15,10 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 public interface ModuleRepository extends PagingAndSortingRepository<Module, String> {
 
     List<Module> findTop5ByOrderByCreationDateDesc();
-    
+
     @Query("SELECT d FROM Module d WHERE d.name like %?1% OR d.description LIKE %?1%")
     public List<IVSpaceElement> findInNameOrDescription(String searchText);
 
-List<Module> findAllByOrderByCreationDateDesc();
+    List<Module> findAllByOrderByCreationDateDesc();
 
 }

@@ -30,5 +30,5 @@ public interface ISlideManager {
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
-    List<IVSpaceElement> findInNameOrDescriptionOfSlide(String searchText);
+    List<IVSpaceElement> findInNameOrDescription(String searchText);
 }
