@@ -109,14 +109,26 @@ public class SpaceOverviewController {
                 }
                 List<String> spaceAllLink = new ArrayList<>();
 
-                spaceToModulelinksList.forEach(link -> {
-                    spaceAllLink.add(link.getLink().getModule().getId());
-                });
-
-                spaceToSpaceLinksList.forEach(link -> {
-                    spaceAllLink.add(link.getLink().getTarget().getId());
-                });
+                if (spaceToModulelinksList != null) {
+                    spaceToModulelinksList.forEach(link -> {
+                        if (link.getLink() != null && link.getLink().getModule() != null
+                                && link.getLink().getModule().getId() != null) {
+                            spaceAllLink.add(link.getLink().getModule().getId());
+                        }
+                    });
+                }
+                if (spaceToSpaceLinksList != null) {
+                    spaceToSpaceLinksList.forEach(link -> {
+                        if (link.getLink() != null && link.getLink().getTarget() != null
+                                && link.getLink().getTarget().getId() != null) {
+                            spaceAllLink.add(link.getLink().getTarget().getId());
+                        }
+                    });
+                }
+                if(space.getId()!=null)
+                {
                 spaceLinkMap.put(space.getId(), spaceAllLink);
+                }
             }
         }
     }
@@ -133,12 +145,24 @@ public class SpaceOverviewController {
             Map<String, List<T>> spaceToAllOtherLinksMap, boolean isModule) {
 
         spaceToAllOtherLinksList.forEach(link -> {
-            String spaceId = isModule == true ? ((IModuleLinkDisplay) link).getLink().getSpace().getId()
-                    : ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId();
-            if (!spaceToAllOtherLinksMap.containsKey(spaceId)) {
-                spaceToAllOtherLinksMap.put(spaceId, new ArrayList<>());
+            String spaceId = null;
+            spaceId = isModule == true
+                    ? ((IModuleLinkDisplay) link).getLink() != null
+                            && ((IModuleLinkDisplay) link).getLink().getSpace() != null
+                            && ((IModuleLinkDisplay) link).getLink().getSpace().getId() != null
+                                    ? ((IModuleLinkDisplay) link).getLink().getSpace().getId()
+                                    : null
+                    : ((ISpaceLinkDisplay) link).getLink() != null
+                            && ((ISpaceLinkDisplay) link).getLink().getSourceSpace() != null
+                            && ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId() != null
+                                    ? ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId()
+                                    : null;
+            if (spaceId != null) {
+                if (!spaceToAllOtherLinksMap.containsKey(spaceId)) {
+                    spaceToAllOtherLinksMap.put(spaceId, new ArrayList<>());
+                }
+                spaceToAllOtherLinksMap.get(spaceId).add(link);
             }
-            spaceToAllOtherLinksMap.get(spaceId).add(link);
         });
     }
 
@@ -158,6 +182,8 @@ public class SpaceOverviewController {
 
         for (T nodeval : nodeList) {
             VSpaceElement nodeObj = isModule == true ? (Module) nodeval : (Space) nodeval;
+            if(nodeObj!=null)
+            {
             ObjectNode node = mapper.createObjectNode();
             node.put("name", nodeObj.getName());
             StringBuilder linkPathBuilder = new StringBuilder();
@@ -189,8 +215,15 @@ public class SpaceOverviewController {
                     node.put("isHideIncomingLinks", false);
                 }
             }
+            if(node!=null)
+            {
             nodeArray.add(node);
+            }
+            if(nodeObj.getId()!=null)
+            {
             allNodeList.add(nodeObj.getId());
+            }
+            }
         }
     }
 
