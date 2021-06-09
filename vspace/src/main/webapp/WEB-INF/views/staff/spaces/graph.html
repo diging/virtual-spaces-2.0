@@ -63,8 +63,8 @@ var svg = d3.select("svg"),
         .attr("y", function(d) { return -10;})
         .attr("height", 22)
         .attr("width", 22) 
-        .append("xhtml:body")
-        .html('<span style="background-color:#F0F0F0 !important;" class="icon-2x2-grid secondary"></span>');
+        //.append("xhtml:body")
+        .html('<span class="icon-2x2-grid secondary"></span>');
         
     
    var images = node.filter(function(d,i){
@@ -83,7 +83,7 @@ var svg = d3.select("svg"),
      .attr("y", function(d) { return -5;})
      .attr("height", 22)
      .attr("width", 22) 
-     .append("xhtml:body")
+     //.append("xhtml:body")
      .html('<span class="icon-warning secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
 
    node.filter(function(d,i){
@@ -93,7 +93,7 @@ var svg = d3.select("svg"),
 	     .attr("y", function(d) { return -5;})
 	     .attr("height", 22)
 	     .attr("width", 22) 
-	     .append("xhtml:body")
+	     //.append("xhtml:body")
 	     .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
 
      var setEvents = modules

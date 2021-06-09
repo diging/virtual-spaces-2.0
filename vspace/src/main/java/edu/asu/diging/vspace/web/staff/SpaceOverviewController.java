@@ -108,14 +108,20 @@ public class SpaceOverviewController {
                     spaceToSpaceLinksList.addAll(spaceLinks);
                 }
                 List<String> spaceAllLink = new ArrayList<>();
+                if(spaceToModulelinksList!=null) {
+                    spaceToModulelinksList.forEach(link -> {
+                        if(link.getLink()!=null && link.getLink().getModule()!=null)
+                            spaceAllLink.add(link.getLink().getModule().getId());
+                    });
+                }
 
-                spaceToModulelinksList.forEach(link -> {
-                    spaceAllLink.add(link.getLink().getModule().getId());
-                });
-
-                spaceToSpaceLinksList.forEach(link -> {
-                    spaceAllLink.add(link.getLink().getTarget().getId());
-                });
+                if(spaceToSpaceLinksList!=null) {
+                    spaceToSpaceLinksList.forEach(link -> {
+                        if(link.getLink()!=null && link.getLink().getTarget()!=null)
+                            spaceAllLink.add(link.getLink().getTarget().getId());
+                    });
+                }
+                
                 spaceLinkMap.put(space.getId(), spaceAllLink);
             }
         }
