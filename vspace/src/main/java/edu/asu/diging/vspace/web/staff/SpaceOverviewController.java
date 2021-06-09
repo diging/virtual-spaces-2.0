@@ -108,21 +108,26 @@ public class SpaceOverviewController {
                     spaceToSpaceLinksList.addAll(spaceLinks);
                 }
                 List<String> spaceAllLink = new ArrayList<>();
-                if(spaceToModulelinksList!=null) {
-                    spaceToModulelinksList.forEach(link -> {
-                        if(link.getLink()!=null && link.getLink().getModule()!=null)
-                            spaceAllLink.add(link.getLink().getModule().getId());
-                    });
-                }
 
-                if(spaceToSpaceLinksList!=null) {
-                    spaceToSpaceLinksList.forEach(link -> {
-                        if(link.getLink()!=null && link.getLink().getTarget()!=null)
-                            spaceAllLink.add(link.getLink().getTarget().getId());
+                if (spaceToModulelinksList != null) {
+                    spaceToModulelinksList.forEach(link -> {
+                        if (link.getLink() != null && link.getLink().getModule() != null
+                                && link.getLink().getModule().getId() != null) {
+                            spaceAllLink.add(link.getLink().getModule().getId());
+                        }
                     });
                 }
-                
-                spaceLinkMap.put(space.getId(), spaceAllLink);
+                if (spaceToSpaceLinksList != null) {
+                    spaceToSpaceLinksList.forEach(link -> {
+                        if (link.getLink() != null && link.getLink().getTarget() != null
+                                && link.getLink().getTarget().getId() != null) {
+                            spaceAllLink.add(link.getLink().getTarget().getId());
+                        }
+                    });
+                }
+                if (space.getId() != null) {
+                    spaceLinkMap.put(space.getId(), spaceAllLink);
+                }
             }
         }
     }
@@ -139,12 +144,24 @@ public class SpaceOverviewController {
             Map<String, List<T>> spaceToAllOtherLinksMap, boolean isModule) {
 
         spaceToAllOtherLinksList.forEach(link -> {
-            String spaceId = isModule == true ? ((IModuleLinkDisplay) link).getLink().getSpace().getId()
-                    : ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId();
-            if (!spaceToAllOtherLinksMap.containsKey(spaceId)) {
-                spaceToAllOtherLinksMap.put(spaceId, new ArrayList<>());
+            String spaceId = null;
+            spaceId = isModule == true
+                    ? ((IModuleLinkDisplay) link).getLink() != null
+                            && ((IModuleLinkDisplay) link).getLink().getSpace() != null
+                            && ((IModuleLinkDisplay) link).getLink().getSpace().getId() != null
+                                    ? ((IModuleLinkDisplay) link).getLink().getSpace().getId()
+                                    : null
+                    : ((ISpaceLinkDisplay) link).getLink() != null
+                            && ((ISpaceLinkDisplay) link).getLink().getSourceSpace() != null
+                            && ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId() != null
+                                    ? ((ISpaceLinkDisplay) link).getLink().getSourceSpace().getId()
+                                    : null;
+            if (spaceId != null) {
+                if (!spaceToAllOtherLinksMap.containsKey(spaceId)) {
+                    spaceToAllOtherLinksMap.put(spaceId, new ArrayList<>());
+                }
+                spaceToAllOtherLinksMap.get(spaceId).add(link);
             }
-            spaceToAllOtherLinksMap.get(spaceId).add(link);
         });
     }
 
@@ -164,39 +181,45 @@ public class SpaceOverviewController {
 
         for (T nodeval : nodeList) {
             VSpaceElement nodeObj = isModule == true ? (Module) nodeval : (Space) nodeval;
-            ObjectNode node = mapper.createObjectNode();
-            node.put("name", nodeObj.getName());
-            StringBuilder linkPathBuilder = new StringBuilder();
-            linkPathBuilder.append(contextPath);
-            String path = isModule == true ? ModuleController.STAFF_MODULE_PATH : SpaceController.STAFF_SPACE_PATH;
-            linkPathBuilder.append(path);
-            linkPathBuilder.append(nodeObj.getId());
-            node.put("link", linkPathBuilder.toString());
-            String imagePath = "";
-            if (!isModule) {
-                StringBuilder imagePathBuilder = new StringBuilder();
-                imagePathBuilder.append(contextPath);
-                imagePathBuilder.append(ImageApiController.API_IMAGE_PATH);
-                imagePathBuilder.append(((Space) nodeObj).getImage().getId());
-                imagePath = imagePathBuilder.toString();
-            }
-            node.put("img", imagePath);
-            node.put("isModule", isModule);
-            if (!isModule) {
-                if (((Space) nodeObj).getSpaceStatus() != null
-                        && ((Space) nodeObj).getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
-                    node.put("isUnpublished", true);
-                } else {
-                    node.put("isUnpublished", false);
+            if (nodeObj != null) {
+                ObjectNode node = mapper.createObjectNode();
+                node.put("name", nodeObj.getName());
+                StringBuilder linkPathBuilder = new StringBuilder();
+                linkPathBuilder.append(contextPath);
+                String path = isModule == true ? ModuleController.STAFF_MODULE_PATH : SpaceController.STAFF_SPACE_PATH;
+                linkPathBuilder.append(path);
+                linkPathBuilder.append(nodeObj.getId());
+                node.put("link", linkPathBuilder.toString());
+                String imagePath = "";
+                if (!isModule) {
+                    StringBuilder imagePathBuilder = new StringBuilder();
+                    imagePathBuilder.append(contextPath);
+                    imagePathBuilder.append(ImageApiController.API_IMAGE_PATH);
+                    imagePathBuilder.append(((Space) nodeObj).getImage().getId());
+                    imagePath = imagePathBuilder.toString();
                 }
-                if (((Space) nodeObj).isHideIncomingLinks()) {
-                    node.put("isHideIncomingLinks", true);
-                } else {
-                    node.put("isHideIncomingLinks", false);
+                node.put("img", imagePath);
+                node.put("isModule", isModule);
+                if (!isModule) {
+                    if (((Space) nodeObj).getSpaceStatus() != null
+                            && ((Space) nodeObj).getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
+                        node.put("isUnpublished", true);
+                    } else {
+                        node.put("isUnpublished", false);
+                    }
+                    if (((Space) nodeObj).isHideIncomingLinks()) {
+                        node.put("isHideIncomingLinks", true);
+                    } else {
+                        node.put("isHideIncomingLinks", false);
+                    }
+                }
+                if (node != null) {
+                    nodeArray.add(node);
+                }
+                if (nodeObj.getId() != null) {
+                    allNodeList.add(nodeObj.getId());
                 }
             }
-            nodeArray.add(node);
-            allNodeList.add(nodeObj.getId());
         }
     }
 
