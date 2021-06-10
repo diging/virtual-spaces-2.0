@@ -47,10 +47,7 @@
 			<div class="grid" style="margin-top: 10px;">
 				<div th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<5" >
                     <div class="btn-group" >
-					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" th:if="${module.name!=null && #strings.length(module.name)>20}" style="width:10rem;white-space: normal;overflow-wrap: break-word;">
-						<span class="card-title">[[${module.name}]]</span>
-					</a>
-					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" th:if="${module.name!=null && #strings.length(module.name)<=20}" style="width:10rem;">
+					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width:10rem;white-space: normal;overflow-wrap: break-word;">
 						<span class="card-title">[[${module.name}]]</span>
 					</a>
                     <button type="button" class="btn btn-light"><span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" style="float: right" 
