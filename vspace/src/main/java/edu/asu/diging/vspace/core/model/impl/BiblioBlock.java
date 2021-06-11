@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -178,44 +179,59 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     @Transient
     public String urlEncodedBiblioMetaData() throws UnsupportedEncodingException {
         
-        String urlEncodedBiblioMetaData = "url_ver=Z39.88-2004&ctx_ver=Z39.88-2004&rfr_id=info%3Asid%2Fzotero.org%3A2&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adissertation";
-            if(title!=null)
-                urlEncodedBiblioMetaData += "&rft.title=" + URLEncoder.encode(title, StandardCharsets.UTF_8.toString()); 
-            
-            if(author!=null)
-                urlEncodedBiblioMetaData += "&rft.au=" + URLEncoder.encode(author, StandardCharsets.UTF_8.toString()); 
-            
-            if(year!=null)
-                urlEncodedBiblioMetaData += "&rft.date=" + URLEncoder.encode(year, StandardCharsets.UTF_8.toString());
-            
-            if(journal!=null)
-                urlEncodedBiblioMetaData += "&rft.journal=" + URLEncoder.encode(journal, StandardCharsets.UTF_8.toString());
-            
-            if(url!=null)
-                urlEncodedBiblioMetaData += "&rft.identifier=" + URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
-            
-            if(volume!=null)
-                urlEncodedBiblioMetaData += "&rft.volume=" + URLEncoder.encode(volume, StandardCharsets.UTF_8.toString());
-            
-            if(issue!=null)
-                urlEncodedBiblioMetaData += "&rft.issue=" + URLEncoder.encode(issue, StandardCharsets.UTF_8.toString());
-            
-            if(pages!=null)
-                urlEncodedBiblioMetaData += "&rft.pages=" + URLEncoder.encode(pages, StandardCharsets.UTF_8.toString());
-            
-            if(editors!=null)
-                urlEncodedBiblioMetaData += "&rft.editors=" + URLEncoder.encode(editors, StandardCharsets.UTF_8.toString());
-            
-            if(type!=null)
-                urlEncodedBiblioMetaData += "&rft.type=" + URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
-            
-            if(note!=null)
-                urlEncodedBiblioMetaData += "&rft.note=" + URLEncoder.encode(note, StandardCharsets.UTF_8.toString());
-            
-            urlEncodedBiblioMetaData += "&rft.language=en";
-                
-                
-//        urlEncodedBiblioMetaData = "url_ver=Z39.88-2004&ctx_ver=Z39.88-2004&rfr_id=info%3Asid%2Fzotero.org%3A2&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adissertation&rft.title=La%20digitalisation%20des%20points%20de%20vente%20%3A%20compl%C3%A9mentarit%C3%A9%20entre%20les%20boutiques%20physiques%20et%20les%20boutiques%20connect%C3%A9es&rft.inst=IDRAC&rft.degree=Th%C3%A8se%20professionnelle&rft.au=KHETTAL%2C%20Sarah&rft.date=03%2F11%2F2016&rft.place=Lyon&rft.language=Fran%C3%A7ais&rft.tpages=91%20p%2E&rft.identifier=http://infotheque.campushep-lyon.net/Record.htm?record=19218093124910362759";
+        
+        
+        String urlEncodedBiblioMetaData = "url_ver=Z39.88-2004&ctx_ver=Z39.88-2004";
+        
+        String ref_id = "info:sid/zotero.org:2";
+        urlEncodedBiblioMetaData += "&rfr_id=" + URLEncoder.encode(ref_id, StandardCharsets.UTF_8.toString()); 
+        
+        String rft_val_fmt = "info:ofi/fmt:kev:mtx:dissertation";
+        urlEncodedBiblioMetaData += "&rft_val_fmt=" + URLEncoder.encode(rft_val_fmt, StandardCharsets.UTF_8.toString());
+        
+        
+//        urlEncodedBiblioMetaData = "url_ver=Z39.88-2004&ctx_ver=Z39.88-2004&rfr_id=info:sid/zotero.org:2&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation";
+//        System.out.println(StringEscapeUtils.escapeHtml4(urlEncodedBiblioMetaData));
+//        urlEncodedBiblioMetaData = StringEscapeUtils.escapeHtml4(urlEncodedBiblioMetaData);
+        
+        if(title!=null)
+            urlEncodedBiblioMetaData += ("&rft.title=") + URLEncoder.encode(title, StandardCharsets.UTF_8.toString()); 
+        
+        if(author!=null)
+            urlEncodedBiblioMetaData += ("&rft.au=") + URLEncoder.encode(author, StandardCharsets.UTF_8.toString()); 
+        
+        if(year!=null)
+            urlEncodedBiblioMetaData += ("&rft.date=") + URLEncoder.encode(year, StandardCharsets.UTF_8.toString());
+        
+        if(journal!=null)
+            urlEncodedBiblioMetaData += ("&rft.jtitle=") + URLEncoder.encode(journal, StandardCharsets.UTF_8.toString());
+        
+        if(url!=null)
+            urlEncodedBiblioMetaData += ("&rft_id=") + URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+        
+        if(volume!=null)
+            urlEncodedBiblioMetaData += ("&rft.volume=") + URLEncoder.encode(volume, StandardCharsets.UTF_8.toString());
+        
+        if(issue!=null)
+            urlEncodedBiblioMetaData += ("&rft.issue=") + URLEncoder.encode(issue, StandardCharsets.UTF_8.toString());
+        
+        if(pages!=null)
+            urlEncodedBiblioMetaData += ("&rft.pages=") + URLEncoder.encode(pages, StandardCharsets.UTF_8.toString());
+        
+        if(editors!=null)
+            urlEncodedBiblioMetaData += ("&rft.editors=") + URLEncoder.encode(editors, StandardCharsets.UTF_8.toString());
+        
+        if(type!=null)
+            urlEncodedBiblioMetaData += ("&rft.type=") + URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
+        
+        if(note!=null)
+            urlEncodedBiblioMetaData += ("&rft.note=") + URLEncoder.encode(note, StandardCharsets.UTF_8.toString());
+        
+        urlEncodedBiblioMetaData += ("&rft.language=en");
+        
+//        urlEncodedBiblioMetaData = StringEscapeUtils.escapeHtml4(urlEncodedBiblioMetaData);
+        System.out.println(urlEncodedBiblioMetaData);
+        
         return urlEncodedBiblioMetaData;
     }
 

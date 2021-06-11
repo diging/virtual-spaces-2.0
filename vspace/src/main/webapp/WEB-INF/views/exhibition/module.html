@@ -80,6 +80,9 @@
          </a>
          <div style="position: relative; top: 90px; padding-bottom:10px;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
+            <div>
+            	<span class='Z3988' title='url_ver=Z39.88-2004&ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fzotero.org%3A2&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adissertation&amp;rft.title=La%20digitalisation%20des%20points%20de%20vente%20%3A%20compl%C3%A9mentarit%C3%A9%20entre%20les%20boutiques%20physiques%20et%20les%20boutiques%20connect%C3%A9es&amp;rft.inst=IDRAC&amp;rft.degree=Th%C3%A8se%20professionnelle&amp;rft.au=KHETTAL%2C%20Sarah&amp;rft.date=03%2F11%2F2016&amp;rft.place=Lyon&amp;rft.language=Fran%C3%A7ais&amp;rft.tpages=91%20p%2E&amp;rft.identifier=http://infotheque.campushep-lyon.net/Record.htm?record=19218093124910362759' > </span>
+            </div>
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
@@ -95,6 +98,8 @@
                 		rft.type=blogPost&amp;
                 		rft.format=text&amp;
                 		rft.identifier={{ site.url | cgi_escape }}{{ page.url | cgi_escape }}&amp; -->
+                		
+                		
                 		
                 	</div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
