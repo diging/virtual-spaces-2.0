@@ -7,7 +7,7 @@
             $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
             $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
             
-            var myObj = [(${currentSlideCon.contents[4].id})];
+           /* /*   var myObj = [(${currentSlideCon.contents[4].id})]; */
             /* myObj.forEach(myFunction);
             
             function myFunction(item, index) {
@@ -80,54 +80,14 @@
          </a>
          <div style="position: relative; top: 90px; padding-bottom:10px;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div>
-            	<meta name="citation_title" content="The testis isoform of the phosphorylase kinase catalytic subunit (PhK-T) plays a critical role in regulation of glycogen mobilization in developing lung">
-<meta name="citation_author" content="Liu, Li">
-<meta name="citation_author" content="Rannels, Stephen R.">
-<meta name="citation_author" content="Falconieri, Mary">
-<meta name="citation_author" content="Phillips, Karen S.">
-<meta name="citation_author" content="Wolpert, Ellen B.">
-<meta name="citation_author" content="Weaver, Timothy E.">
-<meta name="citation_publication_date" content="1996/05/17">
-<meta name="citation_journal_title" content="Journal of Biological Chemistry">
-<meta name="citation_volume" content="271">
-<meta name="citation_issue" content="20">
-<meta name="citation_firstpage" content="11761">
-<meta name="citation_lastpage" content="11766">
-<meta name="citation_pdf_url" content="http://www.example.com/content/271/20/11761.full.pdf">abc 
-            </div>
-            <div>
-            	<meta name="DC.title" content="Critical chain in practice: using the theory of constraints to manage projects & portfolios" />
-
-<meta name="DC.creator" content="BERNARD, Jean-Pierre, ICORD, Isabelle" />
-
-<meta name="DC.subject" content="GESTION DE PROJET, ORGANISATION DU TRAVAIL, PLANNING, DEFINITION DES TACHES, CHANGEMENT ORGANISATIONNEL" />
-
-<meta name="DC.description" content="RESUME : <BR><BR>The same cause always produces the same effect. This is the case with our projects. The project management methods did not really change in a century when Henry Gantt invented his famous chart. The way we traditionally manage the inevitable hazards does not allow us to launch our products on time better nowadays than yesterday. The critical chain offers some way out to this vicious circle by applying some basic rules which could be difficult to implement without solid guidelines. This book describes concretely step by step the implementation of CCPM in a single project and in a project portfolio... in order to optimize our efforts and profitability!" />
-
-<meta name="DC.publisher" content="Emotion primitive" />
-
-<meta name="DC.date" content="01/10/2014" />
-
-<meta name="DC.type" content="Livre numérique" />
-
-<meta name="DC.format" content="118 p." />
-
-<meta name="DC.identifier" content="9782954804439" />
-
-<meta name="DC.source" content="http://infotheque.campushep-lyon.net/Record.htm?record=19212658124910308309"; />
-
-            	abcd2
-            </div>
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">[(${contents.htmlRenderedBiblio()})]</div>
                 	<div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" class="biblioDiv" >
                 	
 
-
-                		<span class="Z3988" title="ctx_ver=Z39.88-2004;rft_val_fmt=info:ofi/fmt:kev:mtx:dc;rft.title={{ ${contents.title} | cgi_escape }};rft.author={{ ${contents.author} | cgi_escape }};rft.year={{ ${contents.year} | cgi_escape }};rft.identifier={{ ${contents.title} | cgi_escape }};rft.language=English"></span>[(${contents.htmlRenderedText()})] <br> 
+						<span class='Z3988' th:title='${contents.urlEncodedBiblioMetaData()}' > </span>
                 		<!-- rft.aulast={{ site.data.contact.name_last | cgi_escape }}&amp;
                 		rft.aufirst={{ site.data.contact.name_first | cgi_escape }}&amp;
                 		rft.source={{ site.data.site.title | cgi_escape }}&amp;
