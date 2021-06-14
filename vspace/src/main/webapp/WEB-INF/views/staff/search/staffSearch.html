@@ -1,8 +1,9 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
 <script th:inline="javascript">
 	$(document).ready(function($) {
-		var modelAttributeValue = [[${searchResult}]];
+		var modelAttributeValue = [[${searchResults}]];
         if(modelAttributeValue.length != 0) {
             $("#noResult").hide();
         }
@@ -13,9 +14,42 @@
 			
 			$('[data-toggle="tooltip"]').tooltip()
 		});
+		
+		 $('#page-selection').bootpag({
+		        total: [(${totalPages})],
+		        page: [(${currentPageNumber})],
+		        maxVisible: 10,
+		        leaps: true,
+		        firstLastUse: true,
+		        first: '|<',
+		        last: '>|',
+		        wrapClass: 'pagination',
+		        activeClass: 'active',
+		        disabledClass: 'disabled',
+		        nextClass: 'next',
+		        prevClass: 'prev',
+		        lastClass: 'last',
+		        firstClass: 'first'
+		    }).on("page", function(event, num){
+		        window.location.assign("./"+num+"?searchText="+[[${searchWord}]]);
+		    });
 
 	});
 </script>
+<style>
+.pagination>li>a {
+    border: 1px solid var(--primary);
+    padding: 5px;
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+}
+</style>
 </head>
 <body>
     <div class="main-content" layout:fragment="content">
@@ -27,7 +61,7 @@
             <h5><center>No result to display.</center></h5>
             </div>
             <div id="resultDisplay">
-                <div th:each="contents: ${searchResult}">
+                <div th:each="contents: ${searchResults}">
                     <div th:id="${contents.id}"
                         th:if="${#strings.equals(contents['class'].simpleName,'Space')}">
                         <a th:href="@{'/staff/space/'+${contents.id}}"
@@ -93,6 +127,8 @@
                     </div>
                 </div>
             </div>
+            <br>
+           <div id="page-selection"></div>
         </div>
 </body>
 </html>
