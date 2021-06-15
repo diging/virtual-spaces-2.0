@@ -164,11 +164,10 @@
     <div layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
-			
             function toggleImgSize(isClicked){
                 let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
-                isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+                var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
                 if(isClicked) {
 			isResizeImgBtnClicked = -isResizeImgBtnClicked;
 			setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
@@ -247,7 +246,7 @@
 		}
 		
 		$(window).on("load", function() {
-			isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
 			if(isResizeImgBtnClicked == "")
 				setCookie('isResizeImgBtnClicked', -1, null);
 		    let spaceHeight = $("#bgImage").css("height");
@@ -400,7 +399,7 @@
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; margin-top: -50px; display: flex; justify-content: center; padding-top: 10px;">
+                    style="width: 80%; margin-left: 10px; margin-top: -50px; display: flex; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
