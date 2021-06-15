@@ -26,7 +26,6 @@ public class AddBiblioBlockController {
             @PathVariable("moduleId") String moduleId, @RequestBody BiblioBlock biblioBlockData) throws IOException {
 
         IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioBlockData);
-
         return new ResponseEntity<>(biblioBlock.getId(), HttpStatus.OK);
     }
 
