@@ -64,6 +64,7 @@
     box-shadow: 0px 5px 10px rgba(0,0,0,0.08);
     z-index: 1;
     top: 0;
+    height:8%;
 }
 
 .footer {
@@ -157,9 +158,9 @@
     background: #f2f2f2;
 }
 
-/* .form-control-sm {
+.form-control-sm {
 	border: none;
-} */
+}
 
 #wrapper_module {
     display: flex;
@@ -245,8 +246,9 @@
 }
 
 .form-control {
-  width: 350px;
-}
+	border: none;
+	width: 350px;
+}	
 
 .col-form-label {
   display: inline-block;
