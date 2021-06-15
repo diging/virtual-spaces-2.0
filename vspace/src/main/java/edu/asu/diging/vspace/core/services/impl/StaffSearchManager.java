@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class StaffSearchManager implements IStaffSearchManager {
     @Override
     public HashSet<IVSpaceElement> getAllSearchedElements(String search) {
 
-        HashSet<IVSpaceElement> resultElements = new HashSet<>();
+        HashSet<IVSpaceElement> resultElements = new LinkedHashSet<>();
 
         resultElements.addAll(spaceManager.findInNameOrDescription(search));
         resultElements.addAll(moduleManager.findInNameOrDescription(search));
