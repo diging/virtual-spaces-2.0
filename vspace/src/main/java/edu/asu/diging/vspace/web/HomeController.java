@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ public class HomeController {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null && exhibition.getStartSpace() != null) {
             //
-            if(authentication.getPrincipal()!="anonymousUser")
+            if(!(authentication instanceof AnonymousAuthenticationToken))
                 return "redirect:/staff/dashboard/";
             else
                 return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
