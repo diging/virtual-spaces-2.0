@@ -117,7 +117,6 @@
 }
 
 .spaceClass {
-    position: relative;
     right: 5%;
     left: 5%;
 }
@@ -164,10 +163,11 @@
     <div layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
+			
             function toggleImgSize(isClicked){
                 let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
-                var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+                isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
                 if(isClicked) {
 			isResizeImgBtnClicked = -isResizeImgBtnClicked;
 			setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
@@ -176,12 +176,16 @@
 		if (isResizeImgBtnClicked == 1) {
 			$("#toggleImgClass").attr('class', "icon-collapse secondary");
                     	$("#bgImage").css("width", maxImgWidth);
+                    	$(".spaceClass").css("width", "100%");
+                    	$(".spaceClass").css("position", "");
                     	$("#space a").remove();
                 }
                 else{
                 	$("#toggleImgClass").attr('class', "icon-expand secondary");
                     	$("#bgImage").css("width", spaceWidth);
-                    	$('#bgImage').width('100%')
+                    	$('#bgImage').width('100%');
+                    	$(".spaceClass").css("width", "80%");
+                    	$(".spaceClass").css("position", "relative");
                     	$("#space a").remove();
                 }
 		drawLinks();
@@ -246,7 +250,7 @@
 		}
 		
 		$(window).on("load", function() {
-			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
 			if(isResizeImgBtnClicked == "")
 				setCookie('isResizeImgBtnClicked', -1, null);
 		    let spaceHeight = $("#bgImage").css("height");
@@ -399,7 +403,7 @@
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; margin-top: -50px; display: flex; padding-top: 10px;">
+                    style="width: 80%; margin-left: 10px; display: flex; justify-content: center; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
