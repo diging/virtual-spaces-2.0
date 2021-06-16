@@ -1,13 +1,12 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 	<head>
-	
 	</head>
 	
 	<body>
 		<div th:fragment="navbar">   
 		    <div id="mySidenav" class="sidenav">
-				<ul class="side-list">
+				<ul class="side-list" style="padding:1px;display: table;margin: 0 auto;padding-top:35px">
 		            <li class="nav-link alert alert-warning"
 						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
 						th:if="${exhibition}"
@@ -44,6 +43,7 @@
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list}"> 
 			               <span class="icon-image secondary"></span><span class="custom_Text">&nbsp;Images</span>
+
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
@@ -88,4 +88,5 @@
 		    </nav> 
           </div>
 	</body>
+
 </html>
