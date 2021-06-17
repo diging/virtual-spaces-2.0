@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
 public class DeleteBiblioBlockController {
@@ -22,9 +26,30 @@ public class DeleteBiblioBlockController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private IModuleManager moduleManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteBiblioBlock(@PathVariable("blockId") String blockId) throws IOException {
+    public ResponseEntity<String> deleteBiblioBlock(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
+            @PathVariable("blockId") String blockId) throws IOException {
+        
+        ISlide slide = slideManager.getSlide(slideId);
+        IModule module = moduleManager.getModule(moduleId);
+        // If the slide Id and module Id is not found, show message on screen.
+        if(slide==null) {
+            logger.warn("Slide Id does not exist, bad request.");
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        
+        if(module==null) {
+            logger.warn("Module Id does not exist, bad request.");
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        
         try {
             contentBlockManager.deleteBiblioBlockById(blockId);
         } catch (BlockDoesNotExistException e) {

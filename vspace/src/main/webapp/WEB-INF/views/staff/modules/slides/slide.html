@@ -642,13 +642,22 @@ $(document).ready(function() {
             data: jsonData,
             success: function(data) {
             	console.log(data)
-                var biblioblock = $('<div id="'+ data +'" class="biblioDivStaff tab row"><p> Title: <span>' + title + '</span>, Author: <span>' + author + '</span>, Year:' 
-                		+ '<span>' + year + '</span>, Journal: <span>' + journal + '</span>, '
-                		+ 'Url: <span>' + url + '</span>, Volume: <span>' + volume + '</span>, '
-						+ 'Issue: <span>' + issue + '</span>, Pages: <span>' + pages + '</span>, '
-						+ 'Editors: <span>' + editors + '</span>, Type: <span>' + type + '</span>, '
-						+ 'Note: <span>' + note + '</span>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+data+'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+            	elements = JSON.parse(data);
+			  	/* jQuery.each(elements, function(index, element) {
+					var li = $('<li class="nav-item"></li>');
+				  	var a = $('<a class="nav-link"></a>');
+				  	a.attr('href', element.id);
+				  	li.append(a);
+				  	a.html('<span data-feather="codepen"></span>' + element.name);
+				  	$("#spacelist").append(li);
+			  	}); */
+                var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
+                		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
+                		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
+						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
+						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
+						+ 'Note: <span>' + data.note + '</span>'
+                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 
                 $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             

@@ -280,8 +280,7 @@ public class ContentBlockManager implements IContentBlockManager {
     public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData) {
         ISlide slide = slideManager.getSlide(slideId);
         IBiblioBlock biblioBlock = biblioBlockFactory.createBiblioBlock(slide, biblioData);
-        biblioBlock = biblioBlockRepo.save((BiblioBlock) biblioBlock);
-        return biblioBlock;
+        return biblioBlockRepo.save((BiblioBlock) biblioBlock);
     }
 
     @Override
