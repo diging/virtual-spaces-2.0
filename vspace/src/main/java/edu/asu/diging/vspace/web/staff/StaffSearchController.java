@@ -58,9 +58,8 @@ public class StaffSearchController {
         model.addAttribute("totalPages", getTotalPages(elementSet.size()));
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("searchWord", searchString);
-        model.addAttribute("conIndex", new ExternalLinkValue("0"));
+        model.addAttribute("conIndex", new StringBuilder());
         model.addAttribute("searchResults", elementList);
-        model.addAttribute("resultCount", elementList.size());
         return "/staff/search/staffSearch";
     }
 

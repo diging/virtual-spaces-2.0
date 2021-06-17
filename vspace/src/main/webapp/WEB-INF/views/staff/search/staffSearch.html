@@ -6,9 +6,11 @@
 		var modelAttributeValue = [[${searchResults}]];
         if(modelAttributeValue.length != 0) {
             $("#noResult").hide();
+            $("#resultDisplay").show();
         }
         else {
             $("#noResult").show();
+            $("#resultDisplay").hide();
         }
 		$(function() {
 			
@@ -78,20 +80,20 @@
 
                     <div th:id="${contents.id}"
                         th:if="${#strings.equals(contents['class'].simpleName,'Module')}">
-                        <th:block th:text="${conIndex.setValue('0')}" />
+                        <th:block th:text="${conIndex.setLength(0)}" />
                         <a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
                             class="textDivStaff tab  btn btn-light">
                             <div th:each="slide, counter : ${contents.slides}"
                             th:unless="${counter.count > 1}">
                             <div th:each="img : ${slide.contents}"
-                            th:if="${#strings.equals(img['class'].simpleName,'ImageBlock')}" th:unless="${#strings.equals(conIndex.getValue(),'1')}">
+                            th:if="${#strings.equals(img['class'].simpleName,'ImageBlock')}" th:unless="${#strings.length(conIndex.toString()) == 1}">
                             <img
                             style="border-radius: 25px; float: left; width: 150px; height: 150px;"
                             th:src="@{'/api/image/'+${img?.image?.id}}" alt="Module image" />
-                            <th:block th:text="${conIndex.setValue('1')}" />
+                            <th:block th:text="${conIndex.setLength(1)}" />
                             </div>
                             </div>
-                            <div th:if="${#strings.equals(conIndex.getValue(),'0')}">
+                            <div th:if="${#strings.isEmpty(conIndex.toString())}">
                                  <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
@@ -104,18 +106,17 @@
                     
                     <div th:id="${contents.id}"
                         th:if="${#strings.equals(contents['class'].simpleName,'Slide')}">
-                        <th:block th:text="${conIndex.setValue('0')}" />
+                        <th:block th:text="${conIndex.setLength(0)}" />
                         <a class="textDivStaff tab  btn btn-light" style="width: 100%"
                             th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
                             <div th:each="contentBlocks : ${contents.contents}"
-                            th:if="${#strings.equals(contentBlocks['class'].simpleName,'ImageBlock')}" th:unless="${#strings.equals(conIndex.getValue(),'1')}">
+                            th:if="${#strings.equals(contentBlocks['class'].simpleName,'ImageBlock')}" th:unless="${#strings.length(conIndex.toString()) == 1}">
                                 <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
                                     style="border-radius: 25px; float: left; width: 150px; height: 150px;"
                                     th:src="@{'/api/image/'+${contentBlocks?.image?.id}}" alt="Slide image" />
-                                <th:block th:text="${conIndex.setValue('1')}" />
-                                    
+                                <th:block th:text="${conIndex.setLength(1)}" />
                             </div>
-                            <div th:if="${#strings.equals(conIndex.getValue(),'0')}">
+                            <div th:if="${#strings.isEmpty(conIndex.toString())}">
                                  <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
@@ -126,9 +127,9 @@
                         </a>
                     </div>
                 </div>
+                <br>
+                <div id="page-selection"></div>
             </div>
-            <br>
-           <div id="page-selection"></div>
         </div>
 </body>
 </html>
