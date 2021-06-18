@@ -641,16 +641,7 @@ $(document).ready(function() {
            	},
             data: jsonData,
             success: function(data) {
-            	console.log(data)
-            	elements = JSON.parse(data);
-			  	/* jQuery.each(elements, function(index, element) {
-					var li = $('<li class="nav-item"></li>');
-				  	var a = $('<a class="nav-link"></a>');
-				  	a.attr('href', element.id);
-				  	li.append(a);
-				  	a.html('<span data-feather="codepen"></span>' + element.name);
-				  	$("#spacelist").append(li);
-			  	}); */
+            	data = JSON.parse(data);
                 var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
                 		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
                 		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
