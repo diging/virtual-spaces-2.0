@@ -147,24 +147,6 @@ public class ContentBlockManager implements IContentBlockManager {
         returnValue.setElement(imageBlock);
         return returnValue;
     }
-    /**
-      * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
-     * createImageBlock(java.lang.String, edu.asu.diging.vspace.core.model, java.lang.Integer)
-     */
-    @Override
-    public CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder) {
-
-        ISlide slide = slideManager.getSlide(slideId);
-        CreationReturnValue returnValue = new CreationReturnValue();
-        returnValue.setErrorMsgs(new ArrayList<>());
-        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
-        imgBlock.setContentOrder(contentOrder);
-        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
-        returnValue.setElement(imageBlock);
-        return returnValue;
-    }
 
     /**
      * Delete a text block using an id
@@ -241,11 +223,7 @@ public class ContentBlockManager implements IContentBlockManager {
         imageBlock.setImage(slideContentImage);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
-    @Override
-    public void updateImageBlock(IImageBlock imageBlock,IVSImage slideContentImage, Integer contentOrder){
-        imageBlock.setImage(slideContentImage);
-        imageBlockRepo.save((ImageBlock) imageBlock);
-    }
+
     @Override
     public IImageBlock getImageBlock(String imgBlockId) {
         Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
@@ -291,6 +269,32 @@ public class ContentBlockManager implements IContentBlockManager {
         IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder,
                 choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
+    }
+
+    /**
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     *      createImageBlock(java.lang.String, edu.asu.diging.vspace.core.model,
+     *      java.lang.Integer)
+     */
+    @Override
+    public CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder) {
+
+        ISlide slide = slideManager.getSlide(slideId);
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
+        imgBlock.setContentOrder(contentOrder);
+        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
+        returnValue.setElement(imageBlock);
+        return returnValue;
+    }
+
+    @Override
+    public void updateImageBlock(IImageBlock imageBlock, IVSImage slideContentImage, Integer contentOrder) {
+        imageBlock.setImage(slideContentImage);
+        imageBlockRepo.save((ImageBlock) imageBlock);
     }
 
 }
