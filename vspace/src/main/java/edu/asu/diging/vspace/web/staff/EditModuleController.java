@@ -29,7 +29,7 @@ public class EditModuleController {
             model.addAttribute("moduleId", moduleId);
             return "staff/modules/edit";
         } else {
-            return "badrequest";
+            return "redirect:/404";
         }
     }
 
