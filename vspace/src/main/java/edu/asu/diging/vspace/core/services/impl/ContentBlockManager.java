@@ -100,31 +100,6 @@ public class ContentBlockManager implements IContentBlockManager {
         return textBlock;
     }
 
-    private IVSImage saveImage(byte[] image, String filename) {
-        if (image != null && image.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(image);
-            IVSImage slideContentImage = imageFactory.createImage(filename, contentType);
-            slideContentImage = imageRepo.save((VSImage) slideContentImage);
-            return slideContentImage;
-        }
-        return null;
-    }
-
-    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
-            throws ImageCouldNotBeStoredException {
-        if (slideContentImage != null) {
-            String relativePath = null;
-            try {
-                relativePath = storage.storeFile(image, filename, slideContentImage.getId());
-            } catch (FileStorageException e) {
-                throw new ImageCouldNotBeStoredException(e);
-            }
-            slideContentImage.setParentPath(relativePath);
-            imageRepo.save((VSImage) slideContentImage);
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -144,6 +119,26 @@ public class ContentBlockManager implements IContentBlockManager {
         imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
 
+        returnValue.setElement(imageBlock);
+        return returnValue;
+    }
+
+    /**
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     *      createImageBlock(java.lang.String, edu.asu.diging.vspace.core.model,
+     *      java.lang.Integer)
+     */
+    @Override
+    public CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder) {
+
+        ISlide slide = slideManager.getSlide(slideId);
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
+        imgBlock.setContentOrder(contentOrder);
+        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
         returnValue.setElement(imageBlock);
         return returnValue;
     }
@@ -225,6 +220,12 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
+    public void updateImageBlock(IImageBlock imageBlock, IVSImage slideContentImage, Integer contentOrder) {
+        imageBlock.setImage(slideContentImage);
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
+
+    @Override
     public IImageBlock getImageBlock(String imgBlockId) {
         Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
         if (imgBlock.isPresent()) {
@@ -271,30 +272,29 @@ public class ContentBlockManager implements IContentBlockManager {
         return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 
-    /**
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
-     *      createImageBlock(java.lang.String, edu.asu.diging.vspace.core.model,
-     *      java.lang.Integer)
-     */
-    @Override
-    public CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder) {
-
-        ISlide slide = slideManager.getSlide(slideId);
-        CreationReturnValue returnValue = new CreationReturnValue();
-        returnValue.setErrorMsgs(new ArrayList<>());
-        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
-        imgBlock.setContentOrder(contentOrder);
-        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
-        returnValue.setElement(imageBlock);
-        return returnValue;
+    private IVSImage saveImage(byte[] image, String filename) {
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            IVSImage slideContentImage = imageFactory.createImage(filename, contentType);
+            slideContentImage = imageRepo.save((VSImage) slideContentImage);
+            return slideContentImage;
+        }
+        return null;
     }
 
-    @Override
-    public void updateImageBlock(IImageBlock imageBlock, IVSImage slideContentImage, Integer contentOrder) {
-        imageBlock.setImage(slideContentImage);
-        imageBlockRepo.save((ImageBlock) imageBlock);
+    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
+            throws ImageCouldNotBeStoredException {
+        if (slideContentImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, slideContentImage.getId());
+            } catch (FileStorageException e) {
+                throw new ImageCouldNotBeStoredException(e);
+            }
+            slideContentImage.setParentPath(relativePath);
+            imageRepo.save((VSImage) slideContentImage);
+        }
     }
 
 }
