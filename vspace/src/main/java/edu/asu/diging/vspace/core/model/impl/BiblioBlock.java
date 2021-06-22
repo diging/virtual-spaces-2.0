@@ -168,9 +168,8 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
 
     @Transient
     public String urlEncodedBiblioMetaData() {
-        BiblioContext biblioContext = new BiblioContext(new CitationStyleDefault(), this);
-        biblioContext.executeBiblioMetadata(this);
-        
+        BiblioContext biblioContext = new BiblioContext(new CitationStyleDefault(), this); //currently default citation 
+        return biblioContext.executeBiblioMetadata(this);
     }
 
 }
