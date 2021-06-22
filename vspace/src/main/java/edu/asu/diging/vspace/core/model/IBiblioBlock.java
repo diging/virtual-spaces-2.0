@@ -1,50 +1,20 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+
 public interface IBiblioBlock extends IContentBlock {
 
-    void setTitle(String title);
+    void setBiblioTitle(String biblioTitle);
 
-    String getTitle();
+    String getBiblioTitle();
     
-    void setAuthor(String author);
+    void setDescription(String author);
 
-    String getAuthor();
-
-    String getYear();
+    String getDescription();
     
-    void setYear(String year);
-
-    String getJournal();
+    void setReferenceList(List<IReference> referenceList);
     
-    void setJournal(String journal);
-    
-    String getUrl();
-    
-    void setUrl(String url);
-    
-    String getVolume();
-    
-    void setVolume(String volume);
-    
-    String getIssue();
-    
-    void setIssue(String issue);
-    
-    String getPages();
-    
-    void setPages(String pages);
-    
-    String getEditors();
-    
-    void setEditors(String editors);
-    
-    String getType();
-    
-    void setType(String type);
-    
-    String getNote();
-    
-    void setNote(String note);
+    List<IReference> getReferenceList();
 
     void setId(String id);
 

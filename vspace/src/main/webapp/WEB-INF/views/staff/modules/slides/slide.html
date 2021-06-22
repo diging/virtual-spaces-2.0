@@ -598,8 +598,10 @@ $(document).ready(function() {
         // ------------- creating Bibliography content blocks ------------
         
         var formData = new FormData();
-        var title = $("#titleBiblio").val();
-        var author = $("#authorBiblio").val();
+        var biblioTitle = $("#titleBiblio").val();
+        var description = $("#descriptionBiblio").val();
+        
+        /* var author = $("#authorBiblio").val();
         var year = $("#yearBiblio").val();
         var journal = $("#journalBiblio").val();
         var url = $("#urlBiblio").val();
@@ -608,10 +610,11 @@ $(document).ready(function() {
         var pages = $("#pagesBiblio").val();
         var editors = $("#editorsBiblio").val();
         var type = $("#typeBiblio").val();
-        var note = $("#noteBiblio").val();
+        var note = $("#noteBiblio").val(); */
         
-        formData.append('title', title);
-        formData.append('author', author);
+        formData.append('biblioTitle', biblioTitle);
+        formData.append('description', description);
+        /* formData.append('author', author);
         formData.append('year', year);
         formData.append('journal', journal);
         formData.append('url', url);
@@ -620,7 +623,7 @@ $(document).ready(function() {
         formData.append('pages', pages);
         formData.append('editors', editors);
         formData.append('type', type);
-        formData.append('note', note);
+        formData.append('note', note); */
         ++contentCount;
         formData.append('contentOrder', contentCount);
         $("#addBiblioAlert").hide();
@@ -642,13 +645,15 @@ $(document).ready(function() {
             data: jsonData,
             success: function(data) {
             	data = JSON.parse(data);
-                var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
+            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span>' +
+                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                /* var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
                 		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
                 		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
 						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
 						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
 						+ 'Note: <span>' + data.note + '</span>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>'); */
                 
                 $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             
