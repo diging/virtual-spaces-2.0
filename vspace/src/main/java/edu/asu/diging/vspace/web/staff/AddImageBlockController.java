@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,41 +20,65 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 @Controller
 public class AddImageBlockController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IContentBlockManager contentBlockManager;
 
+    @Autowired
+    private IImageService imageService;
+
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image", method = RequestMethod.POST)
     public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
-            @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
+            @PathVariable("moduleId") String moduleId,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("contentOrder") Integer contentOrder, Principal principal,
+            @RequestParam(value = "imageId", required = false) String imageId, RedirectAttributes attributes)
             throws IOException {
-
-        byte[] image = null;
-        String filename = null;
-        if (file != null) {
-            image = file.getBytes();
-            filename = file.getOriginalFilename();
+        if (imageId != null && !imageId.isEmpty()) {
+            IVSImage image;
+            try {
+                image = imageService.getImageById(imageId);
+                CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
+                        contentOrder);
+                IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
+                imageId = imageBlock.getId();
+            } catch (ImageDoesNotExistException e) {
+                logger.error("Image does not exist.", e);
+                attributes.addAttribute("showAlert", true);
+                attributes.addAttribute("alertType", "danger");
+                attributes.addAttribute("message", "Selected image does not exist.");
+                return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            try {
+                byte[] image = null;
+                String filename = null;
+                if (file != null) {
+                    image = file.getBytes();
+                    filename = file.getOriginalFilename();
+                }
+                CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
+                        filename, contentOrder);
+                IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
+                imageId = imageBlock.getId();
+            } catch (ImageCouldNotBeStoredException e) {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("errorMessage", "Image Content block cannot be stored.");
+                return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
-        String imageId;
-        try {
-            CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image, filename,
-                    contentOrder);
-            IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
-            imageId = imageBlock.getId();
-        } catch (ImageCouldNotBeStoredException e) {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "Image Content block cannot be stored.");
-            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
         return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 }

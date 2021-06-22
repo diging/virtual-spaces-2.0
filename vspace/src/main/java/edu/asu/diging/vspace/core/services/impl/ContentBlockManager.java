@@ -87,7 +87,8 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
      * lang.String, java.lang.String)
      */
     @Override
@@ -146,6 +147,24 @@ public class ContentBlockManager implements IContentBlockManager {
         returnValue.setElement(imageBlock);
         return returnValue;
     }
+    /**
+      * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     * createImageBlock(java.lang.String, edu.asu.diging.vspace.core.model, java.lang.Integer)
+     */
+    @Override
+    public CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder) {
+
+        ISlide slide = slideManager.getSlide(slideId);
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
+        imgBlock.setContentOrder(contentOrder);
+        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
+        returnValue.setElement(imageBlock);
+        return returnValue;
+    }
 
     /**
      * Delete a text block using an id
@@ -161,7 +180,7 @@ public class ContentBlockManager implements IContentBlockManager {
             return;
         }
         try {
-            textBlockRepo.deleteById(id);         
+            textBlockRepo.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -203,7 +222,7 @@ public class ContentBlockManager implements IContentBlockManager {
             return;
         }
         try {
-            choiceBlockRepo.deleteById(id);         
+            choiceBlockRepo.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -222,7 +241,11 @@ public class ContentBlockManager implements IContentBlockManager {
         imageBlock.setImage(slideContentImage);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
-
+    @Override
+    public void updateImageBlock(IImageBlock imageBlock,IVSImage slideContentImage, Integer contentOrder){
+        imageBlock.setImage(slideContentImage);
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
     @Override
     public IImageBlock getImageBlock(String imgBlockId) {
         Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
@@ -253,17 +276,21 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
      * lang.String, java.lang.String, java.lang.Integer)
      */
     @Override
-    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll) {
+    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
+            boolean showsAll) {
         List<IChoice> choices = new ArrayList<IChoice>();
-        if(!showsAll) {
-            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice)).collect(Collectors.toList());
+        if (!showsAll) {
+            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice))
+                    .collect(Collectors.toList());
         }
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
-        return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder,
+                choices, showsAll);
+        return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 
 }
