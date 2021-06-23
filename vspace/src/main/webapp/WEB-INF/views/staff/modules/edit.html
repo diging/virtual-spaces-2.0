@@ -5,9 +5,9 @@
 		<h1>Edit Module: [(${moduleForm.name})]</h1>
 
 		<form method="POST"
-			th:action='@{|/staff/module/${moduleId}/edit?${_csrf.parameterName}=${_csrf.token}|}' th:object="${moduleForm}"
-			enctype="multipart/form-data" style="margin-top: 40px">
-
+			th:action='@{|/staff/module/${moduleId}/edit?|}' th:object="${moduleForm}"
+			 style="margin-top: 40px">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 			<div class="form-group row">
 				<label for="name" class="col-md-2 col-form-label">Module Name:</label> 
 				<textarea type="text" class="form-control col-md-10" id="name" rows="1" cols="30"
