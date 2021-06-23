@@ -25,17 +25,8 @@ public class EditBiblioBlockController {
     public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestBody BiblioBlock biblioBlockData) throws IOException {
         IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(biblioBlockData.getId());
-        biblioBlock.setTitle(biblioBlockData.getTitle());
-        biblioBlock.setAuthor(biblioBlockData.getAuthor());
-        biblioBlock.setYear(biblioBlockData.getYear());
-        biblioBlock.setJournal(biblioBlockData.getJournal());
-        biblioBlock.setUrl(biblioBlockData.getUrl());
-        biblioBlock.setVolume(biblioBlockData.getVolume());
-        biblioBlock.setIssue(biblioBlockData.getIssue());
-        biblioBlock.setPages(biblioBlockData.getPages());
-        biblioBlock.setEditors(biblioBlockData.getEditors());
-        biblioBlock.setType(biblioBlockData.getType());
-        biblioBlock.setNote(biblioBlockData.getNote());
+        biblioBlock.setBiblioTitle(biblioBlockData.getBiblioTitle());
+        biblioBlock.setDescription(biblioBlockData.getDescription());
         contentBlockManager.updateBiblioBlock((BiblioBlock) biblioBlock);
 
         return new ResponseEntity<String>(HttpStatus.OK);

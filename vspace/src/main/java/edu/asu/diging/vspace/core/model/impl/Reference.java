@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.time.OffsetDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,12 +12,10 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.biblioExpose.BiblioContext;
-import edu.asu.diging.vspace.biblioExpose.CitationStyleDefault;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
-import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IReference;
-import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.referenceExpose.CitationStyleDefault;
+import edu.asu.diging.vspace.referenceExpose.ReferenceContext;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
@@ -184,7 +180,7 @@ public class Reference extends VSpaceElement implements IReference {
 
     @Transient
     public String urlEncodedBiblioMetaData() {
-        BiblioContext biblioContext = new BiblioContext(new CitationStyleDefault(), this); //currently default citation 
+        ReferenceContext biblioContext = new ReferenceContext(new CitationStyleDefault(), this); //currently default citation 
         return biblioContext.executeBiblioMetadata(this);
     }
 
@@ -200,14 +196,12 @@ public class Reference extends VSpaceElement implements IReference {
 
     @Override
     public void setId(String id) {
-        // TODO Auto-generated method stub
-        
+        this.id = id;
     }
 
     @Override
     public String getId() {
-        // TODO Auto-generated method stub
-        return null;
+        return id;
     }
 
 }

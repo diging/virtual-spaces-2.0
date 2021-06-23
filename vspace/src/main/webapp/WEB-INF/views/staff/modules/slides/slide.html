@@ -645,7 +645,7 @@ $(document).ready(function() {
             data: jsonData,
             success: function(data) {
             	data = JSON.parse(data);
-            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span>' +
+            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.biblioTitle + '</span><br> Description: <span>' + data.description + '</span>'
                 		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
                 /* var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
                 		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
@@ -1150,8 +1150,51 @@ $(window).on('load', function () {
                 </div>
             </div>
         </div>
-
+		
 		<div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Add new Bibliography Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="sendBiblioForm" id="sendBiblioForm">
+						<div class="modal-body">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Title: </label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="titleBiblio" name="titleBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Description: </label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="descriptionBiblio" name="descriptionBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 			<div class="modal-dialog" role="document" th:draggable="true">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1500,12 +1543,8 @@ $(window).on('load', function () {
                 <div th:id="${contents.id}" class="biblioDivStaff tab row"
 					th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
 					<p class="col-md-10">
-						Title: <span>[[${contents.title}]]</span>, Author: <span>[[${contents.author}]]</span>,
-						Year: <span>[[${contents.year}]]</span>, Journal: <span>[[${contents.journal}]]</span>,
-						Url: <span>[[${contents.url}]]</span>, Volume: <span>[[${contents.volume}]]</span>,
-						Issue: <span>[[${contents.issue}]]</span>, Pages: <span>[[${contents.pages}]]</span>,
-						Editors: <span>[[${contents.editors}]]</span>, Type: <span>[[${contents.type}]]</span>,
-						Note: <span>[[${contents.note}]]</span>
+						Title: <span>[[${contents.biblioTitle}]]</span><br>Description: <span>[[${contents.description}]]</span>
+						
 					</p>
 					<input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
 					<a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
