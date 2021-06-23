@@ -46,17 +46,15 @@ public class EditImageBlockController {
             throws IOException {
 
         IImageBlock imageBlock = contentBlockManager.getImageBlock(blockId);
-        if (imageId != null && !imageId.isEmpty()) {
+        if (imageId != null && !imageId.trim().isEmpty()) {
+            IVSImage image = null;
             try {
-                IVSImage image = imageService.getImageById(imageId);
-                contentBlockManager.updateImageBlock(imageBlock, image, contentOrder);
+                image = imageService.getImageById(imageId);
             } catch (ImageDoesNotExistException e) {
                 logger.error("Image does not exist.", e);
-                attributes.addAttribute("showAlert", true);
-                attributes.addAttribute("alertType", "danger");
-                attributes.addAttribute("message", "Selected image does not exist.");
                 return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
             }
+            contentBlockManager.updateImageBlock(imageBlock, image, contentOrder);
         } else {
 
             byte[] image = null;
@@ -73,7 +71,6 @@ public class EditImageBlockController {
                 node.put("errorMessage", "Image Content block cannot be stored.");
                 return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
         }
         return new ResponseEntity<String>(HttpStatus.OK);
     }

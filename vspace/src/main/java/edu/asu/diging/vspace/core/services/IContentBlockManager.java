@@ -14,14 +14,14 @@ import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface IContentBlockManager {
 
-    List<IContentBlock> getAllContentBlocks(String slideId);
-
     ITextBlock createTextBlock(String slideId, String content, Integer contentOrder);
 
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
 
-    CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder);
+    CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder);
+
+    List<IContentBlock> getAllContentBlocks(String slideId);
 
     void deleteTextBlockById(String blockid) throws BlockDoesNotExistException;
 
@@ -31,16 +31,16 @@ public interface IContentBlockManager {
 
     void updateTextBlock(TextBlock textBlock);
 
-    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
-            throws ImageCouldNotBeStoredException;
-
-    void updateImageBlock(IImageBlock imageBlock, IVSImage slideContentImage, Integer contentOrder);
-
     IImageBlock getImageBlock(String imgBlockId);
 
     ITextBlock getTextBlock(String textBlockId);
 
     IChoiceBlock getChoiceBlock(String choiceBlockId);
+
+    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+            throws ImageCouldNotBeStoredException;
+
+    void updateImageBlock(IImageBlock imageBlock, IVSImage image, Integer contentOrder);
 
     IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
             boolean showsAll);

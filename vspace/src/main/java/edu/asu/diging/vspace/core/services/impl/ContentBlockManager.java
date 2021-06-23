@@ -100,6 +100,31 @@ public class ContentBlockManager implements IContentBlockManager {
         return textBlock;
     }
 
+    private IVSImage saveImage(byte[] image, String filename) {
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            IVSImage slideContentImage = imageFactory.createImage(filename, contentType);
+            slideContentImage = imageRepo.save((VSImage) slideContentImage);
+            return slideContentImage;
+        }
+        return null;
+    }
+
+    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
+            throws ImageCouldNotBeStoredException {
+        if (slideContentImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, slideContentImage.getId());
+            } catch (FileStorageException e) {
+                throw new ImageCouldNotBeStoredException(e);
+            }
+            slideContentImage.setParentPath(relativePath);
+            imageRepo.save((VSImage) slideContentImage);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -127,16 +152,16 @@ public class ContentBlockManager implements IContentBlockManager {
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
-     *      createImageBlock(java.lang.String, edu.asu.diging.vspace.core.model,
-     *      java.lang.Integer)
+     *      createImageBlock(java.lang.String,
+     *      edu.asu.diging.vspace.core.model.IVSImage, java.lang.Integer)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, IVSImage slideContentImage, Integer contentOrder) {
+    public CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder) {
 
         ISlide slide = slideManager.getSlide(slideId);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
-        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, slideContentImage);
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, image);
         imgBlock.setContentOrder(contentOrder);
         ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
         returnValue.setElement(imageBlock);
@@ -220,8 +245,8 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateImageBlock(IImageBlock imageBlock, IVSImage slideContentImage, Integer contentOrder) {
-        imageBlock.setImage(slideContentImage);
+    public void updateImageBlock(IImageBlock imageBlock, IVSImage image, Integer contentOrder) {
+        imageBlock.setImage(image);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
 
@@ -270,31 +295,6 @@ public class ContentBlockManager implements IContentBlockManager {
         IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder,
                 choices, showsAll);
         return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
-    }
-
-    private IVSImage saveImage(byte[] image, String filename) {
-        if (image != null && image.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(image);
-            IVSImage slideContentImage = imageFactory.createImage(filename, contentType);
-            slideContentImage = imageRepo.save((VSImage) slideContentImage);
-            return slideContentImage;
-        }
-        return null;
-    }
-
-    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
-            throws ImageCouldNotBeStoredException {
-        if (slideContentImage != null) {
-            String relativePath = null;
-            try {
-                relativePath = storage.storeFile(image, filename, slideContentImage.getId());
-            } catch (FileStorageException e) {
-                throw new ImageCouldNotBeStoredException(e);
-            }
-            slideContentImage.setParentPath(relativePath);
-            imageRepo.save((VSImage) slideContentImage);
-        }
     }
 
 }

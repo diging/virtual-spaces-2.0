@@ -1,13 +1,10 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-<link rel="stylesheet"
-	href="https://unpkg.com/easymde/dist/easymde.min.css">
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"
-	rel="stylesheet" />
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
 <style type="text/css">
 .hova {
 	background-color: #f2f2f2;
@@ -89,75 +86,83 @@ function onDoubleClick(e){
     }
 }
     
-function uploadImage() {
-	var imgID = $("#uploadImage").data('value') // gets image ID
-	 var reader  = new FileReader();
+function uploadImage() 
+{
+	var imgBlockID = $("#uploadImage").data('value') // gets image block ID
+	var reader  = new FileReader();
     var file = $('#file')[0].files[0];
     var chooseFromExisting = true;
     var formData = new FormData();
+    
     if (typeof(file) != "undefined")
-	{
+	 {
     	chooseFromExisting = false;
     	formData.append('file', file);
 	    formData.append('content', file.name);
-	}
+	 }
     formData.append('contentOrder', contentCount); 
     var imageSource = $('#selectedImage').find('img').attr('src');
     var imageId = "";
     if(typeof(imageSource) != "undefined")
-    	{
-          imageId = imageSource.split("/").pop().split(".")[0];
-       }
+     {
+       imageId = imageSource.split("/").pop().split(".")[0];
+     }
     var imageblock = "";
  	var oldImageBlock = "";
  	
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
-    if (imgID != '') {
-    	oldImageBlock = $("#" + imgID);
-    	var imageBlockId = imgID;
+    if (imgBlockID != '') 
+    {
+    	oldImageBlock = $("#" + imgBlockID);
+    	var imageBlockId = imgBlockID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
     	 if(!chooseFromExisting)
-    		 {
-        reader.onload = function (theFile) {  
-	        var image = new Image();
-	        image.src = theFile.target.result;
-	        image.onload = function () {
-	            imageblock = createImageBlock(reader, this.width);
-	            $("#" + imageBlockId).replaceWith(imageblock);	
-	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-        	    };
-              }
-    		 }
+    	  {
+        	reader.onload = function (theFile)
+        		{  
+	        		var image = new Image();
+	        		image.src = theFile.target.result;
+	        		image.onload = function ()
+	        		{
+	            		imageblock = createImageBlock(reader, this.width);
+	            		$("#" + imageBlockId).replaceWith(imageblock);	
+	           	    	$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        	        };
+                }
+    	   }
     	 else
-    		 {
+    	   {
     		 	var image = new Image();
              	image.src = $('#selectedImage').find('img').attr('src');
     		    formData.append('imageId',imageId);
     	  	    imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
 	            $("#" + imageBlockId).replaceWith(imageblock);	
 	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-    		 }
+    	   }
         // Reset data-attribute to get current selected image ID
         $("#uploadImage").data('value', '');
       }
-  	else {
+  	else
+  	{
   		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-  	   if(!chooseFromExisting)
+  	    if(!chooseFromExisting)
   		   {
-      		  reader.onload = function (theFile) {        	
-              var image = new Image();
-              image.src = theFile.target.result;
-              image.onload = function() {
-              imageblock = createImageBlock(reader, this.width);  
-              $('#slideSpace').append(imageblock); 
-              $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+      		  reader.onload = function (theFile) 
+      		  {        	
+              	var image = new Image();
+              	image.src = theFile.target.result;
+              	image.onload = function() 
+              	{
+              		imageblock = createImageBlock(reader, this.width);  
+             		$('#slideSpace').append(imageblock); 
+              		$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 };          
               } 
   		   }
-  	   else
+  	    else
   		   {
   		 	 var image = new Image();
              image.src = $('#selectedImage').find('img').attr('src');

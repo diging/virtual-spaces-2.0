@@ -45,7 +45,7 @@ public class AddImageBlockController {
             @RequestParam("contentOrder") Integer contentOrder, Principal principal,
             @RequestParam(value = "imageId", required = false) String imageId, RedirectAttributes attributes)
             throws IOException {
-        if (imageId != null && !imageId.isEmpty()) {
+        if (imageId != null && !imageId.trim().isEmpty()) {
             IVSImage image;
             try {
                 image = imageService.getImageById(imageId);
@@ -55,9 +55,6 @@ public class AddImageBlockController {
                 imageId = imageBlock.getId();
             } catch (ImageDoesNotExistException e) {
                 logger.error("Image does not exist.", e);
-                attributes.addAttribute("showAlert", true);
-                attributes.addAttribute("alertType", "danger");
-                attributes.addAttribute("message", "Selected image does not exist.");
                 return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
             }
         } else {
