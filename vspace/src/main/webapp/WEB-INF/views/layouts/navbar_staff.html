@@ -67,11 +67,11 @@
 			</div>  
 			
 			<nav class="nav-bar">
-		      <a class="navbar-brand" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"> <b>Staff</b> </a>
+		      <a class="navbar-brand" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"> <b>Staff</b> </a>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><span class="icon-play-circle secondary"></span></a>
+		            <a class="nav-link" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><span class="icon-play-circle secondary"></span></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 5px 15px;">
 		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
