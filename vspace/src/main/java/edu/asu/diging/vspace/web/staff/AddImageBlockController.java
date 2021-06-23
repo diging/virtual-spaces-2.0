@@ -49,14 +49,14 @@ public class AddImageBlockController {
             IVSImage image;
             try {
                 image = imageService.getImageById(imageId);
-                CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
-                        contentOrder);
-                IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
-                imageId = imageBlock.getId();
             } catch (ImageDoesNotExistException e) {
                 logger.error("Image does not exist.", e);
                 return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
             }
+            CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
+                    contentOrder);
+            IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
+            imageId = imageBlock.getId();
         } else {
             try {
                 byte[] image = null;
