@@ -72,7 +72,8 @@ function onDoubleClick(e){
     	   defaultValue = description;
     	
     	   var title = $("div.open p span:eq(0)").text();
-         var author = $("div.open p span:eq(1)").text();
+    	   var desc = $("div.open p span:eq(1)").text();  
+         /* var author = $("div.open p span:eq(1)").text();
          var year = $("div.open p span:eq(2)").text();
          var journal = $("div.open p span:eq(3)").text();
          var url = $("div.open p span:eq(4)").text();
@@ -81,13 +82,14 @@ function onDoubleClick(e){
          var pages = $("div.open p span:eq(7)").text();
          var editors = $("div.open p span:eq(8)").text();
          var type = $("div.open p span:eq(9)").text();
-         var note = $("div.open p span:eq(10)").text();
+         var note = $("div.open p span:eq(10)").text(); */
     	
     	    //showing the edit bibliography form with all the respective values
     	    $("#editBiblioAlert").show();
     	
     	    $("#editTitleBiblio").val(title);
-          $("#editAuthorBiblio").val(author);
+    	    $("#editDescBiblio").val(desc);
+          /* $("#editAuthorBiblio").val(author);
           $("#editYearBiblio").val(year);
           $("#editJournalBiblio").val(journal);
           $("#editUrlBiblio").val(url);
@@ -96,7 +98,7 @@ function onDoubleClick(e){
           $("#editPagesBiblio").val(pages);
           $("#editEditorsBiblio").val(editors);
           $("#editTypeBiblio").val(type);
-          $("#editNoteBiblio").val(note);
+          $("#editNoteBiblio").val(note); */
     	
     	    //remove card border
           $(".open").css('display', 'none');
@@ -341,6 +343,10 @@ $(document).ready(function() {
   	$("#addBibliography").click(function() {
         $("#addBiblioAlert").show();
     });
+  	
+  	$("#addReference").click(function() {
+        $("#addReferenceAlert").show();
+    });
     
     $(document).on("click", ".deleteBiblio", function(e) {
 		$("#confirmDeleteBiblioAlert").show();
@@ -381,6 +387,10 @@ $(document).ready(function() {
 	
 	$("#cancelSubmitBiblio").click(function() {
 		$("#addBiblioAlert").hide();	
+	});
+	
+	$("#cancelSubmitReference").click(function() {
+		$("#addReferenceAlert").hide();	
 	});
 	
 	$("#cancelDeleteBiblio").click(function() {
@@ -424,7 +434,6 @@ $(document).ready(function() {
 		    type: 'DELETE',
 		    success: function(result) {
 		        $('#' + blockId).remove();
-		        
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -457,7 +466,6 @@ $(document).ready(function() {
            	},
 		    success: function(result) {
 		        $('#' + blockId).remove();
-		        
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -601,29 +609,8 @@ $(document).ready(function() {
         var biblioTitle = $("#titleBiblio").val();
         var description = $("#descriptionBiblio").val();
         
-        /* var author = $("#authorBiblio").val();
-        var year = $("#yearBiblio").val();
-        var journal = $("#journalBiblio").val();
-        var url = $("#urlBiblio").val();
-        var volume = $("#volumeBiblio").val();
-        var issue = $("#issueBiblio").val();
-        var pages = $("#pagesBiblio").val();
-        var editors = $("#editorsBiblio").val();
-        var type = $("#typeBiblio").val();
-        var note = $("#noteBiblio").val(); */
-        
         formData.append('biblioTitle', biblioTitle);
         formData.append('description', description);
-        /* formData.append('author', author);
-        formData.append('year', year);
-        formData.append('journal', journal);
-        formData.append('url', url);
-        formData.append('volume', volume);
-        formData.append('issue', issue);
-        formData.append('pages', pages);
-        formData.append('editors', editors);
-        formData.append('type', type);
-        formData.append('note', note); */
         ++contentCount;
         formData.append('contentOrder', contentCount);
         $("#addBiblioAlert").hide();
@@ -645,18 +632,86 @@ $(document).ready(function() {
             data: jsonData,
             success: function(data) {
             	data = JSON.parse(data);
-            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.biblioTitle + '</span><br> Description: <span>' + data.description + '</span>'
+            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span>'
                 		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-                /* var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
+
+            	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('#slideSpace').append(biblioblock);             
+            },
+            error: function(data) {
+            	if (data.status == 403){
+            		$("#loginAlert").show();
+            	}
+            	else {
+                	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                	$('.error').append(alert);
+            	}
+            }
+            
+        });
+    });
+    
+    $("#submitReference").on("click", function(e) {
+        e.preventDefault();
+        // ------------- creating reference ------------
+        
+        var formData = new FormData();
+        var title = $("#titleRef").val();
+        var author = $("#authorRef").val();
+        var year = $("#yearRef").val();
+        var journal = $("#journalRef").val();
+        var url = $("#urlRef").val();
+        var volume = $("#volumeRef").val();
+        var issue = $("#issueRef").val();
+        var pages = $("#pagesRef").val();
+        var editors = $("#editorsRef").val();
+        var type = $("#typeRef").val();
+        var note = $("#noteRef").val();
+        
+        formData.append('title', title);
+        formData.append('author', author);
+        formData.append('year', year);
+        formData.append('journal', journal);
+        formData.append('url', url);
+        formData.append('volume', volume);
+        formData.append('issue', issue);
+        formData.append('pages', pages);
+        formData.append('editors', editors);
+        formData.append('type', type);
+        formData.append('note', note);
+        /* ++contentCount;
+        formData.append('contentOrder', contentCount); */
+        var blockId = $(this).closest("div").attr("id");
+        
+        $("#addReferenceAlert").hide();
+        
+        var object = {};
+        formData.forEach((value, key) => object[key] = value);
+        var jsonData = JSON.stringify(object);
+        var token =  $('input[name="_csrf"]').attr('value');
+        
+        $.ajax({
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/reference/add'})]",
+            type: 'POST',
+            cache       : false,
+            contentType : 'application/json; charset=utf-8',
+            processData : false,
+            headers: {
+                'X-CSRF-Token': token 
+           	},
+            data: jsonData,
+            success: function(data) {
+            	data = JSON.parse(data);
+            	var referenceblock = $('<p id="'+ data.id +'" class="referenceDivStaff tab row"> Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
                 		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
                 		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
 						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
 						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
 						+ 'Note: <span>' + data.note + '</span>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>'); */
-                
-                $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(biblioblock);             
+                		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p>');
+
+            	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            	$('#' + blockId).find('#referenceSpace').append(referenceblock);             
             },
             error: function(data) {
             	if (data.status == 403){
@@ -761,10 +816,7 @@ $(document).ready(function() {
         // clear biblio box and buttons
         $(".open").empty();
         if(formData!=null)
-        	$(".open").append('<p class="col-md-10">Title: ' + formData.get('title')+ ', Author: ' + formData.get('author') + ', Year: ' + formData.get('year') + ', Journal: ' + formData.get('journal') 
-        			+ ', Url: ' + formData.get('url') + ', Volume: ' + formData.get('volume') + ', Issue: ' + formData.get('issue') 
-        			+ ', Pages: ' + formData.get('pages') + ', Editors: ' + formData.get('editors') + ', Type: ' + formData.get('type')
-        			+ ', Note: ' + formData.get('note')
+        	$(".open").append('<p class="col-md-10">Title: ' + formData.get('biblioTitle')+ ', Description: ' + formData.get('description')
         			+ '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
         else if(defaultValue!=null) {
         	$(".open").append('<p class="col-md-10">' + defaultValue + '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
@@ -831,8 +883,8 @@ $(document).ready(function() {
         
         var formData = new FormData();
         var title = $("#editTitleBiblio").val();
-        var author = $("#editAuthorBiblio").val();
-        var year = $("#editYearBiblio").val();
+        var desc = $("#editDescBiblio").val();
+        /* var year = $("#editYearBiblio").val();
         var journal = $("#editJournalBiblio").val();
         var url = $("#editUrlBiblio").val();
         var volume = $("#editVolumeBiblio").val();
@@ -840,12 +892,12 @@ $(document).ready(function() {
         var pages = $("#editPagesBiblio").val();
         var editors = $("#editEditorsBiblio").val();
         var type = $("#editTypeBiblio").val();
-        var note = $("#editNoteBiblio").val();
+        var note = $("#editNoteBiblio").val(); */
         var blockId = $(".open").attr("id");
         
-        formData.append('title', title);
-        formData.append('author', author);
-        formData.append('year', year);
+        formData.append('biblioTitle', title);
+        formData.append('description', desc);
+        /* formData.append('year', year);
         formData.append('journal', journal);
         formData.append('url', url);
         formData.append('volume', volume);
@@ -853,7 +905,7 @@ $(document).ready(function() {
         formData.append('pages', pages);
         formData.append('editors', editors);
         formData.append('type', type);
-        formData.append('note', note);
+        formData.append('note', note);*/
         formData.append('id', blockId);
         $("#editBiblioAlert").hide();
         
@@ -1198,13 +1250,13 @@ $(window).on('load', function () {
 			<div class="modal-dialog" role="document" th:draggable="true">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Add new Bibliography Block</h5>
+						<h5 class="modal-title">Add new Reference</h5>
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<form name="sendBiblioForm" id="sendBiblioForm">
+					<form name="sendReferenceForm" id="sendReferenceForm">
 						<div class="modal-body">
 							<div class="form-group">
 								<table>
@@ -1212,7 +1264,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Title:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="titleBiblio" name="titleBiblio" /></td>
+											id="titleRef" name="titleRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1222,7 +1274,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Author:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="authorBiblio" name="authorBiblio" /></td>
+											id="authorRef" name="authorRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1232,7 +1284,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Year:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="yearBiblio" name="yearBiblio" /></td>
+											id="yearRef" name="yearRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1242,7 +1294,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Journal:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="journalBiblio" name="journalBiblio" /></td>
+											id="journalRef" name="journalRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1252,7 +1304,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Url:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="urlBiblio" name="urlBiblio" /></td>
+											id="urlRef" name="urlRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1262,7 +1314,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Volume:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="volumeBiblio" name="volumeBiblio" /></td>
+											id="volumeRef" name="volumeRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1272,7 +1324,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Issue:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="issueBiblio" name="issueBiblio" /></td>
+											id="issueRef" name="issueRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1282,7 +1334,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Pages:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="pagesBiblio" name="pagesBiblio" /></td>
+											id="pagesRef" name="pagesRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1292,7 +1344,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Editors:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="editorsBiblio" name="editorsBiblio" /></td>
+											id="editorsRef" name="editorsRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1302,7 +1354,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Type:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="typeBiblio" name="typeBiblio" /></td>
+											id="typeRef" name="typeRef" /></td>
 									</tr>
 								</table>
 							</div>
@@ -1312,21 +1364,62 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Note:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="noteBiblio" name="noteBiblio" /></td>
+											id="noteRef" name="noteRef" /></td>
 									</tr>
 								</table>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
-							<button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
+							<button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
-
 		<div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+			<div class="modal-dialog" role="document" th:draggable="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Bibliography Block</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form name="sendBiblioForm" id="sendEditBiblioForm">
+						<div class="modal-body">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Title:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editTitleBiblio" name="ediTitleBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+							<div class="form-group">
+								<table>
+									<tr>
+										<td><label for="name" class="col-form-label">Description:</label>
+										</td>
+										<td><input type="text" class="form-control"
+											id="editDescBiblio" name="editDescBiblio" /></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="cancelBiblioBlock" type="reset" class="btn light">Cancel</button>
+							<button type="submit" id="submitBiblioBlock"
+								class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="editReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 			<div class="modal-dialog" role="document" th:draggable="true">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1543,13 +1636,25 @@ $(window).on('load', function () {
                 <div th:id="${contents.id}" class="biblioDivStaff tab row"
 					th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
 					<p class="col-md-10">
-						Title: <span>[[${contents.biblioTitle}]]</span><br>Description: <span>[[${contents.description}]]</span>
-						
+						Title: <span>[[${contents.biblioTitle}]]</span>, Description: <span>[[${contents.description}]]</span>
 					</p>
 					<input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
 					<a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
 						class="icon-trash error"></span>
 					</a>
+					<br/>
+					<a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
+					
+					<div id="referenceSpace" th:each="contentRef: ${contents.referenceList}">
+						<p class="col-md-10">
+							Title: <span>[[${contentRef.title}]]</span>, Author: <span>[[${contentRef.author}]]</span>,
+							Year: <span>[[${contentRef.year}]]</span>, Journal: <span>[[${contentRef.journal}]]</span>,
+							Url: <span>[[${contentRef.url}]]</span>, Volume: <span>[[${contentRef.volume}]]</span>,
+							Issue: <span>[[${contentRef.issue}]]</span>, Pages: <span>[[${contentRef.pages}]]</span>,
+							Editors: <span>[[${contentRef.editors}]]</span>, Type: <span>[[${contentRef.type}]]</span>,
+							Note: <span>[[${contentRef.note}]]</span>
+						</p>
+					</div>
 				</div>
                 <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
                     <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
