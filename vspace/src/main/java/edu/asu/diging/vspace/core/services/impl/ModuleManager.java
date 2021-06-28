@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,8 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Transactional
 @Service
@@ -84,6 +87,10 @@ public class ModuleManager implements IModuleManager {
         return sequenceRepo.findSequenceForModuleAndSequence(moduleId,sequenceId);
     }
     
+    @Override
+    public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText) {
+        return moduleRepo.findInNameOrDescription(requestedPage,searchText);
+    }
     @Override
     public List<IVSpaceElement> findInNameOrDescription(String searchText) {
         return moduleRepo.findInNameOrDescription(searchText);

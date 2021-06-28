@@ -3,23 +3,78 @@
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
 <script th:inline="javascript">
 	$(document).ready(function($) {
-		var modelAttributeValue = [[${searchResults}]];
-        if(modelAttributeValue.length != 0) {
-            $("#noResult").hide();
-            $("#resultDisplay").show();
+		$("#space").removeClass("active");
+		$("#module").removeClass("active");
+		$("#slide").removeClass("active");
+		$("#slideText").removeClass("active");
+		
+		var tab = [[${activeTab}]];
+		$("#"+tab).addClass("active");
+		$('#my'+tab).addClass('active');
+		$('#my'+tab).addClass('show');
+		
+		var spaceModelAttributeValue = [[${spaceSearchResults}]];
+        if(spaceModelAttributeValue.length != 0) {
+            $("#spaceNoResult").hide();
+            $("#spaceResultDisplay").show();
         }
         else {
-            $("#noResult").show();
-            $("#resultDisplay").hide();
+        	   $("#spaceNoResult").show();
+               $("#spaceResultDisplay").hide();
         }
-		$(function() {
-			
-			$('[data-toggle="tooltip"]').tooltip()
-		});
 		
-		 $('#page-selection').bootpag({
-		        total: [(${totalPages})],
-		        page: [(${currentPageNumber})],
+        var moduleModelAttributeValue = [[${moduleSearchResults}]];
+        if(moduleModelAttributeValue.length != 0) {
+            $("#moduleNoResult").hide();
+            $("#moduleResultDisplay").show();
+        }
+        else {
+        	 $("#moduleNoResult").show();
+            $("#moduleResultDisplay").hide();
+        }  
+		
+        var slideModelAttributeValue = [[${slideSearchResults}]];
+        if(slideModelAttributeValue.length != 0) {
+            $("#slideNoResult").hide();
+            $("#slideResultDisplay").show();
+        }
+        else {
+        	   $("#slideNoResult").show();
+               $("#slideResultDisplay").hide();
+        } 
+        
+        var slideTextModelAttributeValue = [[${slideTextSearchResults}]];
+        if(slideTextModelAttributeValue.length != 0) {
+            $("#slideTextNoResult").hide();
+            $("#slideTextResultDisplay").show();
+        }
+        else {
+        	   $("#slideTextNoResult").show();
+               $("#slideTextResultDisplay").hide();
+        } 
+        
+        $('#spacepage-selection').bootpag({
+	        total: [(${spaceTotalPages})],
+	        page: [(${spaceCurrentPageNumber})],
+	        maxVisible: 10,
+	        leaps: true,
+	        firstLastUse: true,
+	        first: '|<',
+	        last: '>|',
+	        wrapClass: 'pagination',
+	        activeClass: 'active',
+	        disabledClass: 'disabled',
+	        nextClass: 'next',
+	        prevClass: 'prev',
+	        lastClass: 'last',
+	        firstClass: 'first'
+	    }).on("page", function(event, num){
+	        window.location.assign("./searchPage?page="+num+"&searchText="+[[${searchWord}]]+"&tab="+"space");
+	    });
+        
+		 $('#modulepage-selection').bootpag({
+		        total: [(${moduleTotalPages})],
+		        page: [(${moduleCurrentPageNumber})],
 		        maxVisible: 10,
 		        leaps: true,
 		        firstLastUse: true,
@@ -33,7 +88,45 @@
 		        lastClass: 'last',
 		        firstClass: 'first'
 		    }).on("page", function(event, num){
-		        window.location.assign("./"+num+"?searchText="+[[${searchWord}]]);
+		        window.location.assign("./searchPage?page="+num+"&searchText="+[[${searchWord}]]+"&tab="+"module");
+		    });
+        
+		  $('#slidepage-selection').bootpag({
+		        total: [(${slideTotalPages})],
+		        page: [(${slideCurrentPageNumber})],
+		        maxVisible: 10,
+		        leaps: true,
+		        firstLastUse: true,
+		        first: '|<',
+		        last: '>|',
+		        wrapClass: 'pagination',
+		        activeClass: 'active',
+		        disabledClass: 'disabled',
+		        nextClass: 'next',
+		        prevClass: 'prev',
+		        lastClass: 'last',
+		        firstClass: 'first'
+		    }).on("page", function(event, num){
+		        window.location.assign("./searchPage?page="+num+"&searchText="+[[${searchWord}]]+"&tab="+"slide");
+		    });
+		  
+		  $('#slideTextPage-selection').bootpag({
+		        total: [(${slideTextTotalPages})],
+		        page: [(${slideTextCurrentPageNumber})],
+		        maxVisible: 10,
+		        leaps: true,
+		        firstLastUse: true,
+		        first: '|<',
+		        last: '>|',
+		        wrapClass: 'pagination',
+		        activeClass: 'active',
+		        disabledClass: 'disabled',
+		        nextClass: 'next',
+		        prevClass: 'prev',
+		        lastClass: 'last',
+		        firstClass: 'first'
+		    }).on("page", function(event, num){
+		        window.location.assign("./searchPage?page="+num+"&searchText="+[[${searchWord}]]+"&tab="+"slideText");
 		    });
 
 	});
@@ -51,21 +144,39 @@
     color: #fff;
     font-size: 15px;
 }
+a.nav-link.active.show
+{
+background:#F2A950;
+}
 </style>
 </head>
 <body>
-    <div class="main-content" layout:fragment="content">
+<div layout:fragment="content" class="container">
+<ul class="nav-tabs nav">
+<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
+<a href="#space" id="myspace" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Space</font></a>
+</li>
+<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
+<a href="#module" id="mymodule" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Module</font></a>
+</li>
+<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
+<a href="#slide" id="myslide" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Slide</font></a>
+</li>
+<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
+<a href="#slideText" id="myslidetext" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Slide text</font></a>
+</li>
+</ul>
+<div class="tab-content container">
 
-        <div class="">
-            <div><h3>Search Results</h3>
+<div class="tab-pane" id="space">
+<div><h3>Search Results For Spaces</h3>
             <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
-            <div id="noResult">
+            <div id="spaceNoResult">
             <h5><center>No result to display.</center></h5>
             </div>
-            <div id="resultDisplay">
-                <div th:each="contents: ${searchResults}">
-                    <div th:id="${contents.id}"
-                        th:if="${#strings.equals(contents['class'].simpleName,'Space')}">
+<div id="spaceResultDisplay">
+  <div th:each="contents: ${spaceSearchResults}">
+  <div th:id="${contents.id}">
                         <a th:href="@{'/staff/space/'+${contents.id}}"
                             class="textDivStaff tab  btn btn-light"
                             style="width: 100%"> <span
@@ -76,10 +187,22 @@
                             style="color: var(--dark-grey)">  Space:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-                    </div>
+  </div>
+  </div>
+<br>
+<div id="spacepage-selection"></div>
+</div>
+</div>
 
-                    <div th:id="${contents.id}"
-                        th:if="${#strings.equals(contents['class'].simpleName,'Module')}">
+<div class="tab-pane" id="module">
+<div><h3>Search Results For Modules</h3>
+            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
+            <div id="moduleNoResult">
+            <h5><center>No result to display.</center></h5>
+            </div>
+<div id="moduleResultDisplay">
+<div th:each="contents: ${moduleSearchResults}">
+  <div th:id="${contents.id}">
                         <th:block th:text="${conIndex.setLength(0)}" />
                         <a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
                             class="textDivStaff tab  btn btn-light">
@@ -102,10 +225,22 @@
                             style="color: var(--dark-grey)">  Module:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-                    </div>
-                    
-                    <div th:id="${contents.id}"
-                        th:if="${#strings.equals(contents['class'].simpleName,'Slide')}">
+    </div>
+</div>
+<br>
+<div id="modulepage-selection"></div>
+</div>
+</div>
+
+<div class="tab-pane" id="slide">
+<div><h3>Search Results For Slides</h3>
+            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
+            <div id="slideNoResult">
+            <h5><center>No result to display.</center></h5>
+            </div>
+<div id="slideResultDisplay">
+<div th:each="contents: ${slideSearchResults}">
+  <div th:id="${contents.id}">
                         <th:block th:text="${conIndex.setLength(0)}" />
                         <a class="textDivStaff tab  btn btn-light" style="width: 100%"
                             th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
@@ -125,11 +260,48 @@
                             style="color: var(--dark-grey)">  Slide:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-                    </div>
-                </div>
-                <br>
-                <div id="page-selection"></div>
+   </div>
+</div>
+<br>
+<div id="slidepage-selection"></div>
+</div>
+</div>
+
+<div class="tab-pane" id="slideText">
+<div><h3>Search Results For Slides TextBlocks</h3>
+            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
+            <div id="slideTextNoResult">
+            <h5><center>No result to display.</center></h5>
             </div>
-        </div>
+<div id="slideTextResultDisplay">
+<div th:each="contents: ${slideTextSearchResults}">
+  <div th:id="${contents.id}">
+                        <th:block th:text="${conIndex.setLength(0)}" />
+                        <a class="textDivStaff tab  btn btn-light" style="width: 100%"
+                            th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
+                            <div th:each="contentBlocks : ${contents.contents}"
+                            th:if="${#strings.equals(contentBlocks['class'].simpleName,'ImageBlock')}" th:unless="${#strings.length(conIndex.toString()) == 1}">
+                                <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+                                    style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                    th:src="@{'/api/image/'+${contentBlocks?.image?.id}}" alt="Slide image" />
+                                <th:block th:text="${conIndex.setLength(1)}" />
+                            </div>
+                            <div th:if="${#strings.isEmpty(conIndex.toString())}">
+                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                 th:src="@{'/resources/images/placeholder.png'}"/>
+                            </div>
+                            <span class="card-title"
+                            style="white-space: pre-wrap; line-break: anywhere;"><span 
+                            style="color: var(--dark-grey)">  Slide:</span> [[${contents.name}]]<br><span 
+                            style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
+                        </a>
+   </div>
+</div>
+<br>
+<div id="slideTextPage-selection"></div>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>

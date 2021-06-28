@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.core.data;
 import java.util.List;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,9 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     
     @Query("SELECT d.sequence FROM Slide d WHERE d.id = ?1")
     public List<Sequence> getSequencesForSlide(String slideId);
+    
+    @Query("SELECT d from Slide d WHERE d.name like %?1% OR d.description like %?1%")
+    public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
     
     @Query("SELECT d from Slide d WHERE d.name like %?1% OR d.description like %?1%")
     public List<IVSpaceElement> findInNameOrDescription(String searchText);

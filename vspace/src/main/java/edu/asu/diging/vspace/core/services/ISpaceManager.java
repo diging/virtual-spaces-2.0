@@ -2,6 +2,9 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -9,7 +12,6 @@ import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface ISpaceManager {
@@ -36,6 +38,8 @@ public interface ISpaceManager {
     
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
+    Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
+
     List<IVSpaceElement> findInNameOrDescription(String searchText);
 
 }

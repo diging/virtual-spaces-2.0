@@ -6,7 +6,8 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -30,5 +31,7 @@ public interface ISlideManager {
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
+    Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
+
     List<IVSpaceElement> findInNameOrDescription(String searchText);
 }
