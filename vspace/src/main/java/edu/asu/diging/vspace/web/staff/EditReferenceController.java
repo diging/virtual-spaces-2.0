@@ -21,21 +21,22 @@ public class EditReferenceController {
     @Autowired
     private IReferenceManager referenceManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/reference/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editReference(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestBody Reference ref) throws IOException {
+            @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
+            @RequestBody Reference ref) throws IOException {
         IReference reference = referenceManager.getReference(ref.getId());
-        reference.setTitle(reference.getTitle());
-        reference.setAuthor(reference.getAuthor());
+        reference.setTitle(ref.getTitle());
+        reference.setAuthor(ref.getAuthor());
         reference.setYear(reference.getYear());
-        reference.setJournal(reference.getJournal());
-        reference.setUrl(reference.getUrl());
-        reference.setVolume(reference.getVolume());
-        reference.setIssue(reference.getIssue());
-        reference.setPages(reference.getPages());
-        reference.setEditors(reference.getEditors());
-        reference.setType(reference.getType());
-        reference.setNote(reference.getNote());
+        reference.setJournal(ref.getJournal());
+        reference.setUrl(ref.getUrl());
+        reference.setVolume(ref.getVolume());
+        reference.setIssue(ref.getIssue());
+        reference.setPages(ref.getPages());
+        reference.setEditors(ref.getEditors());
+        reference.setType(ref.getType());
+        reference.setNote(ref.getNote());
         referenceManager.updateReference((Reference) reference);
 
         return new ResponseEntity<String>(HttpStatus.OK);
