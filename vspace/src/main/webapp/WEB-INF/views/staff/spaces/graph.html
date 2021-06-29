@@ -17,27 +17,47 @@ text {
 image { 
  filter: drop-shadow(1px 1px 7px  #e39e44);
 }
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 </style>
 </head>
 <body>
 <div layout:fragment="content">
-<svg width="1520" height="650"></svg>
-</div>
 <script>
-$(document).ready(function() {
-	$("#logoutbtn").css("padding-top", "25px");
-});
 var nodeJson = JSON.parse(strNodeVal);
 var linkJson = JSON.parse(strlinkVal);
-var svg = d3.select("svg"),
-	    width = +svg.attr("width"),
-	    height = +svg.attr("height");
+
+var w = window,
+d = document,
+e = d.documentElement,
+g = $('body')[0],
+x = w.innerWidth || e.clientWidth || g.clientWidth,
+y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+var svg = d3.select("body").append("svg")
+.attr("width", x)
+.attr("height", y);
+
+width = +svg.attr("width"),
+height = +svg.attr("height");
 
 	var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 	var simulation = d3.forceSimulation()
 	    .force("link", d3.forceLink().distance(150).strength(1))
-	    .force("charge", d3.forceManyBody().strength(-100))
+	    .force("charge", d3.forceManyBody().strength(-50))
 	    .force("center", d3.forceCenter(width / 2, height / 2));
 		
      
@@ -184,6 +204,6 @@ var svg = d3.select("svg"),
 	  d.fy = null;
 	} 
 	</script>
-	
+</div>	
 </body>
 </html>

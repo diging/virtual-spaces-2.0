@@ -87,7 +87,7 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button id="logoutbtn" style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout"><span  style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
+		  				<button style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout"><span  style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
 		         	</form>
 		        </div>
 		      </div>
