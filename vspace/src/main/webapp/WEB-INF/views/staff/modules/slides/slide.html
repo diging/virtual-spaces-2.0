@@ -5,14 +5,42 @@
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 
 <style type="text/css">
-.hova {
-    background-color: #f2f2f2;
-}
-.EasyMDEContainer .CodeMirror-wrap{
-    overflow-y: scroll;
-    height: 400px;
-}
+	.hova {
+	    background-color: #f2f2f2;
+	}
+	
+	.EasyMDEContainer .CodeMirror-wrap{
+	    overflow-y: scroll;
+	    height: 400px;
+	}
+	
+	.shepherd-button {
+		background-color: var(--primary);
+		color: white;
+		text-transform: none;
+	}
+	
+	.shepherd-button:hover {
+		background-color: var(--primary);
+		opacity: 80%;
+	}
+	
+	.shepherd-header {
+		background: var(--base-grey) !important;
+	}
+	
+	.shepherd-title {
+		color: #121212;
+		text-align: left;
+		font-weight: 600;
+	}
+	
+	.shepherd-text {
+		color: var(--dark-grey);
+		text-align: left;
+	}
 </style>
+
 <script th:inline="javascript">
 //# sourceURL=click.js
 var contentCount = [[${#lists.size(slideContents)}]];
@@ -165,6 +193,87 @@ function uploadImage() {
 }
 
 $(document).ready(function() {
+	
+	const tour = new Shepherd.Tour({
+		  defaultStepOptions: {
+		    cancelIcon: {
+		      enabled: true
+		    },
+		    classes: '',
+		    scrollTo: { behavior: 'smooth', block: 'center' },
+		    useModalOverlay: {
+		    	enabled: true
+		    }
+		  }
+		});
+
+	tour.addStep({
+	  title: 'Welcome to the slide editor!',
+	  text: `Add or edit the content you want to show on your slides.`,
+	  buttons: [
+	    {
+	      action() {
+	        return this.next();
+	      },
+	      text: 'Next'
+	    }
+	  ],
+	  id: 'creating1'
+	});
+	
+	tour.addStep({
+	  title: 'Easy navigation',
+	  text: `Keep track of your location in the module or navigate back up the order.`,
+	  attachTo: {
+	    element: '.breadcrumb',
+	    on: 'bottom'
+	  },
+	  buttons: [
+	    {
+	      action() {
+	        return this.back();
+	      },
+	      classes: 'shepherd-button-secondary',
+	      text: 'Back'
+	    },
+	    {
+	      action() {
+	        return this.next();
+	      },
+	      classes: 'btn primary-btn',
+	      text: 'Next'
+	    }
+	  ],
+	  id: 'creating2'
+	});
+	
+	tour.addStep({
+	  title: 'Adding content',
+	  text: `Looks like your slide is empty. Add a text block/image. `,
+	  attachTo: {
+	    element: '.pill-btn',
+	    on: 'bottom'
+	  },
+	  buttons: [
+	    {
+	      action() {
+	        return this.back();
+	      },
+	      classes: 'shepherd-button-secondary',
+	      text: 'Back'
+	    },
+	    {
+	      action() {
+	        return this.next();
+	      },
+	      text: 'Done'
+	    }
+	  ],
+	  id: 'creating3'
+	});
+	
+	
+	tour.start();
     
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
@@ -619,7 +728,7 @@ $(document).ready(function() {
     });    
 });
 
-$(window).on('load', function () {
+$(window).on('load', function () {	
 	var divWindow = $(".valueDiv");
 	$(".deleteText").css('position', 'absolute');
 	$(".deleteText").css('right', '0');
@@ -667,7 +776,7 @@ $(window).on('load', function () {
 			</div>
         </div>
         
-        <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
+        <h2 class="heading"><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
         	<span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
 	   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
 	   		<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
