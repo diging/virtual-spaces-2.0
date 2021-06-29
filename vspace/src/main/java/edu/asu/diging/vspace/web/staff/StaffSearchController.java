@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.web.staff;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -21,8 +22,8 @@ public class StaffSearchController {
     @Autowired
     private IStaffSearchManager staffSearchManager;
 
-    // @Value("${page_size}")
-    private int pageSize = 3;
+    @Value("${page_size}")
+    private int pageSize;
 
     @RequestMapping(value = "/staff/search")
     @GetMapping
