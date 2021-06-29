@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -46,7 +44,7 @@ public class DeleteReferenceController {
         ISlide slide = slideManager.getSlide(slideId);
         IModule module = moduleManager.getModule(moduleId);
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        // If the slide Id and module Id is not found, show message on screen.
+        // If the slide Id, module Id and Biblio ID is not found, show message on screen.
         if(slide==null) {
             logger.warn("Slide Id does not exist, bad request.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -64,8 +62,8 @@ public class DeleteReferenceController {
         
         try {
             referenceManager.deleteReferenceById(refId, biblioId);
-        } catch (ReferenceDoesNotExistException e) {
-            logger.warn("Biblio Id does not exist, bad request.", e);
+        } catch (Exception e) {
+            logger.error("Reference id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 

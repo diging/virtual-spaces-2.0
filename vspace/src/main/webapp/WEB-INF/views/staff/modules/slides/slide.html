@@ -362,7 +362,7 @@ $(document).ready(function() {
         $("#addBiblioAlert").show();
     });
   	
-  	$("#addReference").click(function() {
+  	$(document).on("click", ".addReference", function(e) {
         $("#addReferenceAlert").show();
         var alert = $('<input type="hidden" id="currentBiblioId">');
 		$(alert).attr( 'value', $(this).closest("div").attr("id"));
@@ -381,6 +381,10 @@ $(document).ready(function() {
 		var alert = $('<input type="hidden" id="deleteReferenceId">');
 		$(alert).attr( 'value', $(this).siblings('input').val());
 		$('.modal-footer').append(alert); 
+		
+		var alert2 = $('<input type="hidden" id="currentBiblioId">');
+		$(alert2).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
+		$('.modal-footer').append(alert2); 
   	});
 	
 	$(document).on("click", ".deleteImage", function(e) {
@@ -529,19 +533,22 @@ $(document).ready(function() {
 		$("#confirmDeleteBiblioAlert").find('input').remove();
 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		$("#confirmDeleteRefAlert").hide();
-		var blockId = $('#deleteReferenceId').attr('value');
+		var refId = $('#deleteReferenceId').attr('value');
 		$('#deleteReferenceId').remove();
+		var biblioBlockId = $('#currentBiblioId').attr('value');
+		$('#currentBiblioId').remove();
+		
 		var token =  $('input[name="_csrf"]').attr('value');
 		
 		// ------------- delete Reference ------------
 		$.ajax({
-		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId,
+		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refId,
 		    type: 'DELETE',
 		    headers: {
                 'X-CSRF-Token': token 
            	},
 		    success: function(result) {
-		        $('#' + blockId).remove();
+		        $('#' + refId).remove();
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -910,6 +917,7 @@ $(document).ready(function() {
     
  	// must add the event to the document since the buttons are added dynamically
     $('#cancelBiblioBlock').on('click',function(){
+    	$("#editBiblioAlert").find('input').remove();
     	$("#editBiblioAlert").hide();
     	var blockId = $(this).closest(".open").attr("id");
     	updateBiblioBox(blockId, null, defaultValue);
@@ -938,6 +946,7 @@ $(document).ready(function() {
  	
  // must add the event to the document since the buttons are added dynamically
     $('#cancelRefBlock').on('click',function(){
+    	$("#editReferenceAlert").find('input').remove();
     	$("#editReferenceAlert").hide();
     	var refId = $(this).closest(".open").attr("id");
     	updateReferenceBox(refId, null, defaultValue);
@@ -991,28 +1000,10 @@ $(document).ready(function() {
         var formData = new FormData();
         var title = $("#editTitleBiblio").val();
         var desc = $("#editDescBiblio").val();
-        /* var year = $("#editYearBiblio").val();
-        var journal = $("#editJournalBiblio").val();
-        var url = $("#editUrlBiblio").val();
-        var volume = $("#editVolumeBiblio").val();
-        var issue = $("#editIssueBiblio").val();
-        var pages = $("#editPagesBiblio").val();
-        var editors = $("#editEditorsBiblio").val();
-        var type = $("#editTypeBiblio").val();
-        var note = $("#editNoteBiblio").val(); */
         var blockId = $(".open").attr("id");
         
         formData.append('biblioTitle', title);
         formData.append('description', desc);
-        /* formData.append('year', year);
-        formData.append('journal', journal);
-        formData.append('url', url);
-        formData.append('volume', volume);
-        formData.append('issue', issue);
-        formData.append('pages', pages);
-        formData.append('editors', editors);
-        formData.append('type', type);
-        formData.append('note', note);*/
         formData.append('id', blockId);
         $("#editBiblioAlert").hide();
         
@@ -1097,7 +1088,7 @@ $(document).ready(function() {
          	},
           data: jsonData,
           success: function(data) {
-              //replace Biblio box with new values
+              //replace Reference box with new values
               updateReferenceBox(blockId, formData, null)
               $(".open").removeClass("open");
          },
@@ -1838,7 +1829,7 @@ $(window).on('load', function () {
 					<a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
 						class="icon-trash error"></span>
 					</a>
-					<a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
+					<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
 					
 					<div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.referenceList}">
