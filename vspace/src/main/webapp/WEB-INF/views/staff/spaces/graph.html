@@ -1,4 +1,4 @@
-<html>
+<html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:inline="javascript">
 var strNodeVal = [[${overviewNode}]],
@@ -20,8 +20,9 @@ image {
 </style>
 </head>
 <body>
-<div  th:replace="layouts/main_staff"></div>
+<div layout:fragment="content">
 <svg width="1520" height="650"></svg>
+</div>
 <script>
 $(document).ready(function() {
 	$("#logoutbtn").css("padding-top", "25px");
