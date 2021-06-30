@@ -539,7 +539,7 @@ $(document).ready(function() {
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" class="col-md-8" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0;"><span class="icon-trash error"></span></a></div>')
             	$(choiceblock).css({
                     'display': "block"
                 });
