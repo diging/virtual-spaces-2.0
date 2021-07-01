@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
@@ -23,9 +24,13 @@ public class DeleteChoiceBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
+    @Autowired
+    private ContentBlockRepository contentBlockRepository;
+    
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choiceBlock/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteChoiceBlock(@PathVariable("blockId") String blockId) throws IOException {
         try {
+            contentBlockRepository.updateContentOrder(blockId);
             contentBlockManager.deleteChoiceBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Choice Block Id does not exist, bad request.", e);
