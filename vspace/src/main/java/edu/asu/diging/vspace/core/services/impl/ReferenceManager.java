@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -55,7 +57,20 @@ public class ReferenceManager implements IReferenceManager {
         try {
             referenceRepo.delete((Reference) getReference(referenceId));
         } catch (IllegalArgumentException exception) {
-            logger.error("Unable to delete reference.", exception);
+            logger.error("Unable to delete reference" + referenceId + ". ", exception);
         }
+    }
+
+    @Override
+    public void deleteRefences(List<IReference> references, String BiblioId) {
+        for(IReference ref : references) {
+            deleteReferenceById(ref.getId(), BiblioId);
+        }
+        
+    }
+
+    @Override
+    public List<IReference> getReferencesForBiblio(String biblioId) {
+        return new ArrayList<>(referenceRepo.findReferencesForBiblio(biblioId));
     }
 }

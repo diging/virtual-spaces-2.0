@@ -19,6 +19,7 @@
 var contentCount = [[${#lists.size(slideContents)}]];
 var markDown = null;
 var defaultValue;
+var formDataCancel;
 
 $(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
@@ -78,7 +79,10 @@ function onDoubleClick(e){
     	
     	    $("#editTitleBiblio").val(title);
     	    $("#editDescBiblio").val(desc);
-    	
+    		
+    	    formDataCancel = new FormData();
+    	    formDataCancel.append('biblioTitle', title);
+    	    formDataCancel.append('description', desc);
     	    //remove card border
           $(".open").css('display', 'none');
           $(".open").css('overflow-y', 'scroll');
@@ -118,6 +122,19 @@ function onDoubleClick(e){
             $("#editEditorsRef").val(editors);
             $("#editTypeRef").val(type);
             $("#editNoteRef").val(note);
+            
+            formDataCancel = new FormData();
+            formDataCancel.append('title', title);
+            formDataCancel.append('author', author);
+            formDataCancel.append('year', year);
+            formDataCancel.append('journal', journal);
+            formDataCancel.append('url', url);
+            formDataCancel.append('volume', volume);
+            formDataCancel.append('issue', issue);
+            formDataCancel.append('pages', pages);
+            formDataCancel.append('editors', editors);
+            formDataCancel.append('type', type);
+            formDataCancel.append('note', note);
     	
     	    //remove card border
           $(".open").css('display', 'none');
@@ -898,16 +915,13 @@ $(document).ready(function() {
     	updateTextBox(blockId, defaultValue);
     });
     
-    function updateBiblioBox(blockId, formData, defaultValue) {
+    function updateBiblioBox(blockId, formData) {
         // clear biblio box and buttons
         $(".open").empty();
-        if(formData!=null)
-        	$(".open").append('<p class="col-md-10">Title: ' + formData.get('biblioTitle')+ ', Description: ' + formData.get('description')
-        			+ '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
-        else if(defaultValue!=null) {
-        	$(".open").append('<p class="col-md-10">' + defaultValue + '</p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
-        }
-        //reset border of the card
+       	$(".open").append('<p class="col-md-10">Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, Description: <span>' + formData.get('description')
+       			+ '</span></p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+
+       	//reset border of the card
         //rebind event handlers
         $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         $(".open").css('display', 'flex');
@@ -917,26 +931,23 @@ $(document).ready(function() {
     
  	// must add the event to the document since the buttons are added dynamically
     $('#cancelBiblioBlock').on('click',function(){
-    	$("#editBiblioAlert").find('input').remove();
+    	$('#currentBiblioId').remove();
     	$("#editBiblioAlert").hide();
-    	var blockId = $(this).closest(".open").attr("id");
-    	updateBiblioBox(blockId, null, defaultValue);
+    	var blockId = $(".open").attr("id");
+    	updateBiblioBox(blockId, formDataCancel);
     });
  	
-    function updateReferenceBox(blockId, formData, defaultValue) {
+    function updateReferenceBox(blockId, formData) {
         // clear biblio box and buttons
         $(".open").empty();
-        if(formData!=null)
-        	$(".open").append('<p class="col-md-10">Reference Title: ' + formData.get('title')
-        			+ ', Author: ' + formData.get('author') + ', Year: ' + formData.get('year') + ', Journal: ' + formData.get('journal') 
-        			+ ', Url: ' + formData.get('url') + ', Volume: ' + formData.get('volume') + ', Issue: ' + formData.get('issue') 
-        			+ ', Pages: ' + formData.get('pages') + ', Editors: ' + formData.get('editors') + ', Type: ' + formData.get('type')
-        			+ ', Note: ' + formData.get('note')
-        			+ '</p><input type="hidden" id="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
-        else if(defaultValue!=null) {
-        	$(".open").append('<p class="col-md-10">' + defaultValue + '</p><input type="hidden" id="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
-        }
-        //reset border of the card
+       	$(".open").append('<p class="col-md-10">Reference Title: <span>' + formData.get('title')
+       			+ '</span>, Author: <span>' + formData.get('author') + '</span>, Year: <span>' + formData.get('year') + '</span>, Journal: <span>' + formData.get('journal') 
+       			+ '</span>, Url: <span>' + formData.get('url') + '</span>, Volume: <span>' + formData.get('volume') + '</span>, Issue: <span>' + formData.get('issue') 
+       			+ '</span>, Pages: <span>' + formData.get('pages') + '</span>, Editors: <span>' + formData.get('editors') + '</span>, Type: <span>' + formData.get('type')
+       			+ '</span>, Note: <span>' + formData.get('note')
+       			+ '</span></p><input type="hidden" id="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
+        
+       	//reset border of the card
         //rebind event handlers
         $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
         $(".open").css('display', 'flex');
@@ -946,15 +957,16 @@ $(document).ready(function() {
  	
  // must add the event to the document since the buttons are added dynamically
     $('#cancelRefBlock').on('click',function(){
-    	$("#editReferenceAlert").find('input').remove();
+    	$('#currentBiblioId').remove();
     	$("#editReferenceAlert").hide();
-    	var refId = $(this).closest(".open").attr("id");
-    	updateReferenceBox(refId, null, defaultValue);
+    	var refId = $(".open").attr("id");
+    	updateReferenceBox(refId, formDataCancel);
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
     $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
     $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 
     $("#submitTextBlock").on("click", function(e){
     	e.preventDefault();
@@ -1024,7 +1036,7 @@ $(document).ready(function() {
             data: jsonData,
             success: function(data) {
                 //replace Biblio box with new values
-                updateBiblioBox(blockId, formData, null)
+                updateBiblioBox(blockId, formData)
                 $(".open").removeClass("open");
            },
            error: function(data) {
@@ -1089,7 +1101,7 @@ $(document).ready(function() {
           data: jsonData,
           success: function(data) {
               //replace Reference box with new values
-              updateReferenceBox(blockId, formData, null)
+              updateReferenceBox(blockId, formData)
               $(".open").removeClass("open");
          },
          error: function(data) {
