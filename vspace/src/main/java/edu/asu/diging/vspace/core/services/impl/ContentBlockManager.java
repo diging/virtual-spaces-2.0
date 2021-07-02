@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
@@ -71,6 +72,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private IStorageEngine storage;
+    
+    @Autowired
+    private ContentBlockRepository contentBlockRepository;
 
     /*
      * (non-Javadoc)
@@ -266,4 +270,25 @@ public class ContentBlockManager implements IContentBlockManager {
         return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
     }
 
+    /**
+     * Adjusting the content order of the blocks of slide once it is dragged and changed position
+     * 
+     *  @param blockId - id of block whose content order needs to be adjusted.
+     *  @param contentOrder - value with which contentOrder of block needs to be updated.
+     *           functions returns nothing.
+     */
+
+    @Override
+    public void adjustContentOrder(String blockId, Integer contentOrder) throws BlockDoesNotExistException {
+        if (blockId == null) {
+            return;
+        }
+        try {
+            contentBlockRepository.adjustContentOrder(blockId, contentOrder);        
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
+    
 }

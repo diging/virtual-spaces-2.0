@@ -3,7 +3,7 @@
 <link rel="stylesheet"
 	href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-
+<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
 <style type="text/css">
 .hova {
     background-color: #f2f2f2;
@@ -165,6 +165,43 @@ function uploadImage() {
 }
 
 $(document).ready(function() {
+	$('#slideSpace').sortable({
+		update: function(event,ui)
+		{
+			$(this).children().each(function(index,element){
+				var blockId;
+				if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined")
+					{
+					blockId=$(element).attr('id');
+					} 
+				else
+					{
+					blockId = $(element.innerHTML).filter('div').attr('id');
+					}
+				if($(element.innerHTML).filter('div').attr('data-position') != index)
+					{
+					 var formData = new FormData();
+				     formData.append('contentOrder', index);
+				      $.ajax({
+				        enctype: 'multipart/form-data',
+				     // ------------- adjusting content order of blocks if their position changed after dragging ----------
+				        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/adjustContentOrder/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+				        type: 'POST',
+				        cache       : false,
+				        contentType : false,
+				        processData : false,
+				        data: formData,
+				        success: function(data) {
+				        },
+				        error: function(data) {
+				        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		                	$('.error').append(alert);
+				        }
+				    });
+					}
+			});
+		}
+	});
     
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
@@ -924,14 +961,14 @@ $(window).on('load', function () {
 
         <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
-                <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+                <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
                     <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
                     <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
                     <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <span class="icon-trash error"></span>
                     </a>
                 </div>
-                <div th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
                     <p class="col-md-10"> [[${contents.text}]]</p>
                     <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                     
@@ -939,7 +976,7 @@ $(window).on('load', function () {
                     	<span class="icon-trash error"></span>
                     </a>
                 </div>
-                <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
+                <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
                     <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
                         th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
                     <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"

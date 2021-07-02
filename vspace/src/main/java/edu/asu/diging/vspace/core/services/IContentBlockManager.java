@@ -37,6 +37,8 @@ public interface IContentBlockManager {
     void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
 
-    IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll);   
+    IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll);
+
+    void adjustContentOrder(String blockId, Integer contentOrder) throws BlockDoesNotExistException;   
 
 }
