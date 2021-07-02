@@ -107,7 +107,6 @@ function onDoubleClick(e){
     	    //showing the edit bibliography form with all the respective values
     	    $("#editReferenceAlert").show();
     	    var alert = $('<input type="hidden" id="currentBiblioId">');
-    		/* $(alert).attr( 'value', $(this).parent().parent().parent().attr("id"));*/
     		$(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
     		$('.modal-footer').append(alert); 
     	
@@ -648,9 +647,6 @@ $(document).ready(function() {
 	});
 	
 					
-    
-
-    
 	$("#cancelSubmitChoice").click(function() {
         $("#addChoiceAlert").hide();	
     });
@@ -715,6 +711,9 @@ $(document).ready(function() {
         formData.append('description', description);
         ++contentCount;
         formData.append('contentOrder', contentCount);
+        
+        $("#titleBiblio").val('');
+        $("#descriptionBiblio").val('');
         $("#addBiblioAlert").hide();
         
         var object = {};
@@ -782,9 +781,19 @@ $(document).ready(function() {
         formData.append('editors', editors);
         formData.append('type', type);
         formData.append('note', note);
-        /* ++contentCount;
-        formData.append('contentOrder', contentCount); */
         var biblioBlockId = $('#currentBiblioId').attr('value');
+        
+        $("#titleRef").val('');
+        $("#authorRef").val('');
+        $("#yearRef").val('');
+        $("#journalRef").val('');
+        $("#urlRef").val('');
+        $("#volumeRef").val('');
+        $("#issueRef").val('');
+        $("#pagesRef").val('');
+        $("#editorsRef").val('');
+        $("#typeRef").val('');
+        $("#noteRef").val('');
         $("#addReferenceAlert").hide();
         
         var object = {};
@@ -1594,7 +1603,7 @@ $(window).on('load', function () {
 										<td><label for="name" class="col-form-label">Title:</label>
 										</td>
 										<td><input type="text" class="form-control"
-											id="editTitleBiblio" name="ediTitleBiblio" /></td>
+											id="editTitleBiblio" name="editTitleBiblio" /></td>
 									</tr>
 								</table>
 							</div>

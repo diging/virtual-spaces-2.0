@@ -75,7 +75,16 @@
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
                 	[(${contents.htmlRenderedBiblio()})]
-                	<span class='Z3988' th:title='${contents.urlEncodedBiblioMetaData()}' > </span>
+                	<ul>
+	                	<div th:each="contentRef: ${contents.referenceList}">
+							<li>
+								<div th:id="${contentRef.id}" class="referenceDiv">
+									[(${contentRef.htmlRenderedReference()})]
+								</div>
+								<span class='Z3988' th:title='${contentRef.urlEncodedRefMetaData()}' > </span>
+							</li>
+						</div>
+					</ul>
                 </div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">

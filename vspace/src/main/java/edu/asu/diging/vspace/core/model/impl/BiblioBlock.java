@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -50,6 +55,20 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     @Override
     public List<IReference> getReferenceList() {
         return referenceList;
+    }
+    
+    @Override
+    @Transient
+    public String toString() {
+        return "Bibliography title=" + biblioTitle + ", description=" + description ;
+    }
+    
+    @Transient
+    public String htmlRenderedBiblio() {
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(toString());
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(document);
     }
 
 }
