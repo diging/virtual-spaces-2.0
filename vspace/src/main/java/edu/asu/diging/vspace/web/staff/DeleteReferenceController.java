@@ -44,7 +44,7 @@ public class DeleteReferenceController {
         ISlide slide = slideManager.getSlide(slideId);
         IModule module = moduleManager.getModule(moduleId);
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        // If the slide Id, module Id and Biblio ID is not found, show message on screen.
+
         if(slide==null) {
             logger.warn("Slide Id does not exist, bad request.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -60,12 +60,7 @@ public class DeleteReferenceController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         
-        try {
-            referenceManager.deleteReferenceById(refId, biblioId);
-        } catch (Exception e) {
-            logger.error("Reference id does not exist, bad request.", e);
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
+        referenceManager.deleteReferenceById(refId, biblioId);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }

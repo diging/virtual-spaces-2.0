@@ -8,8 +8,12 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
@@ -20,6 +24,7 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
 import edu.asu.diging.vspace.core.factory.IBiblioBlockFactory;
 import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
@@ -31,6 +36,7 @@ import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -40,14 +46,21 @@ import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IReferenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import javassist.tools.web.BadHttpRequest;
 
 @Transactional
 @Service
 public class ContentBlockManager implements IContentBlockManager {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ISlideManager slideManager;
+    
+    @Autowired
+    private IReferenceManager referenceManager;
 
     @Autowired
     private IImageFactory imageFactory;
@@ -288,6 +301,7 @@ public class ContentBlockManager implements IContentBlockManager {
         if (id == null) {
             return;
         }
+        
         try {
             biblioBlockRepo.deleteById(id);         
         } catch (EmptyResultDataAccessException e) {

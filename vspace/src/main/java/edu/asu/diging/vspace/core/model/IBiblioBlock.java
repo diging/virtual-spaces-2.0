@@ -8,7 +8,7 @@ public interface IBiblioBlock extends IContentBlock {
 
     String getBiblioTitle();
     
-    void setDescription(String author);
+    void setDescription(String desc);
 
     String getDescription();
     

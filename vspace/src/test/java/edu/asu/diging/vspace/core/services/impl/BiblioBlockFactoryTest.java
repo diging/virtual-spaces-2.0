@@ -21,17 +21,21 @@ public class BiblioBlockFactoryTest {
         slide.setId("slide1"); 
 
         IBiblioBlock biblioBlock = new BiblioBlock();
-        biblioBlock.setTitle("TestTitle");
-        biblioBlock.setAuthor("TestAuthor");
-        biblioBlock.setYear(2000);
-        biblioBlock.setJournal("TestJournal");
-        biblioBlock.setUrl("TestUrl.com");
-        biblioBlock.setVolume("TestVolume");
-        biblioBlock.setIssue("TestIssue");
-        biblioBlock.setPages("TestPages");
-        biblioBlock.setEditors("TestEditors");
-        biblioBlock.setType("TestType");
-        biblioBlock.setNote("TestNote");
+        biblioBlock.setBiblioTitle("TestTitle");
+        biblioBlock.setDescription("Test Description");
+        
+        
+//        biblioBlock.setTitle("TestTitle");
+//        biblioBlock.setAuthor("TestAuthor");
+//        biblioBlock.setYear(2000);
+//        biblioBlock.setJournal("TestJournal");
+//        biblioBlock.setUrl("TestUrl.com");
+//        biblioBlock.setVolume("TestVolume");
+//        biblioBlock.setIssue("TestIssue");
+//        biblioBlock.setPages("TestPages");
+//        biblioBlock.setEditors("TestEditors");
+//        biblioBlock.setType("TestType");
+//        biblioBlock.setNote("TestNote");
         biblioBlock.setContentOrder(contentOrder);
 
         IBiblioBlock actualBiblioBlock = biblioBlockFactoryToTest.createBiblioBlock(slide, biblioBlock);

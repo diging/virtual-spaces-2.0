@@ -16,7 +16,7 @@ public interface IReferenceManager {
 
     void deleteReferenceById(String referenceId, String BiblioId);
     
-    void deleteRefences(List<IReference> references, String BiblioId);
+    void deleteReferences(List<IReference> references, String BiblioId);
 
     List<IReference> getReferencesForBiblio(String biblioId);
 

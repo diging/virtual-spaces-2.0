@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -36,16 +37,13 @@ public class DeleteBiblioBlockController {
     @Autowired
     private ISlideManager slideManager;
     
-    @Autowired
-    private IReferenceManager referenceManager;
-
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBiblioBlock(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
-            @PathVariable("blockId") String blockId) throws IOException {
+            @PathVariable("blockId") String blockId) throws IOException, ReferenceListDeletionForBiblioException {
         
         ISlide slide = slideManager.getSlide(slideId);
         IModule module = moduleManager.getModule(moduleId);
-        // If the slide Id and module Id is not found, show message on screen.
+
         if(slide==null) {
             logger.warn("Slide Id does not exist, bad request.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -54,17 +52,6 @@ public class DeleteBiblioBlockController {
         if(module==null) {
             logger.warn("Module Id does not exist, bad request.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
-        
-        List<IReference> refList = referenceManager.getReferencesForBiblio(blockId);
-        
-        if(refList.size()>0) {
-            try {
-                referenceManager.deleteRefences(refList, blockId);
-            } catch (Exception e) {
-                logger.error("Erorr while deleting References for Bibliography.", e);
-                return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-            }
         }
         
         try {

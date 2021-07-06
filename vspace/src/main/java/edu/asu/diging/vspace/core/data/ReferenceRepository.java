@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
 @Repository
@@ -16,5 +15,7 @@ public interface ReferenceRepository extends PagingAndSortingRepository<Referenc
 
     @Query("SELECT d FROM Reference d WHERE d.biblio.id = ?1")
     public List<Reference> findReferencesForBiblio(String biblioId);
+    
+    public List<Reference> findByBiblioId(String biblioId);
     
 }

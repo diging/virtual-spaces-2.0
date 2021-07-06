@@ -22,7 +22,6 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
 
     private String description;
     
-  //-------- @JsonIgnore used as this Reference will be returned in a controller
     @JsonIgnore
     @OneToMany(targetEntity = Reference.class, mappedBy = "biblio")
     private List<IReference> referenceList;

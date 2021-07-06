@@ -62,7 +62,7 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void deleteRefences(List<IReference> references, String BiblioId) {
+    public void deleteReferences(List<IReference> references, String BiblioId) {
         for(IReference ref : references) {
             deleteReferenceById(ref.getId(), BiblioId);
         }
@@ -71,6 +71,6 @@ public class ReferenceManager implements IReferenceManager {
 
     @Override
     public List<IReference> getReferencesForBiblio(String biblioId) {
-        return new ArrayList<>(referenceRepo.findReferencesForBiblio(biblioId));
+        return new ArrayList<>(referenceRepo.findByBiblioId(biblioId));
     }
 }
