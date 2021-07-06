@@ -70,12 +70,18 @@
 		      <a class="navbar-brand" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"> <b>Staff</b> </a>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
-		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><span class="icon-play-circle secondary"></span></a>
-		          </li> 
-		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
-		          </li> 				  
+		        	<li class="nav-item active" style="padding-right: 20px;">
+		        		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" style="display: flex; align-items:center">
+					      	<div style="height: 5px; width: 5px; border-radius:50%; background-color: var(--success)"></div>
+					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as staff</em>
+					    </div>
+		        	</li>
+					<li class="nav-item active" style="padding: 5px 15px;">
+						<a class="nav-link" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace.id}|}"><span class="icon-play-circle secondary"></span></a>
+					</li> 
+					<li class="nav-item active" style="padding: 5px 15px;">
+						<a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
+					</li> 				  
 		        </ul>		        
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
