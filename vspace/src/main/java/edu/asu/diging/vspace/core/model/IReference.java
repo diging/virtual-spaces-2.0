@@ -1,11 +1,15 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+
+import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
+
 public interface IReference extends IVSpaceElement {
     
-    void setBiblio(IBiblioBlock biblio);
+    List<BiblioBlock> getBiblioList();
 
-    IBiblioBlock getBiblio();
-
+    void setBiblioList(List<BiblioBlock> biblioList);
+    
     void setTitle(String title);
 
     String getTitle();

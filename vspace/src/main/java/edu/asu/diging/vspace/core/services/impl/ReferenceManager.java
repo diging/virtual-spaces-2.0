@@ -10,17 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
-import edu.asu.diging.vspace.core.factory.impl.ReferenceFactory;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
 
 @Service
 public class ReferenceManager implements IReferenceManager {
-
-    @Autowired
-    private ReferenceFactory referenceFactory;
 
     @Autowired
     private ReferenceRepository referenceRepo;
@@ -29,8 +26,8 @@ public class ReferenceManager implements IReferenceManager {
 
     @Override
     public IReference createReference(IBiblioBlock biblio, Reference reference) {
-        IReference ref = referenceFactory.createReference(biblio, reference);
-        return referenceRepo.save((Reference) ref);
+        reference.getBiblioList().add((BiblioBlock) biblio);
+        return referenceRepo.save((Reference) reference);
     }
 
     @Override

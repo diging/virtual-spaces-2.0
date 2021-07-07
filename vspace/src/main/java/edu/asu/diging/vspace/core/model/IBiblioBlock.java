@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
+import edu.asu.diging.vspace.core.model.impl.Reference;
+
 public interface IBiblioBlock extends IContentBlock {
 
     void setBiblioTitle(String biblioTitle);
@@ -12,9 +14,9 @@ public interface IBiblioBlock extends IContentBlock {
 
     String getDescription();
     
-    void setReferenceList(List<IReference> referenceList);
+    void setReferenceList(List<Reference> referenceList);
     
-    List<IReference> getReferenceList();
+    List<Reference> getReferenceList();
 
     void setId(String id);
 

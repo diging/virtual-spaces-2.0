@@ -1,9 +1,14 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
 import org.commonmark.node.Node;
@@ -12,7 +17,8 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IBiblioBlock;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.referenceExpose.CitationStyleDefault;
 import edu.asu.diging.vspace.referenceExpose.ReferenceContext;
@@ -27,8 +33,9 @@ public class Reference extends VSpaceElement implements IReference {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
-    @ManyToOne(targetEntity = BiblioBlock.class)
-    private IBiblioBlock biblio;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "referenceList") 
+    private List<BiblioBlock> biblioList = new ArrayList<>();
 
     private String title;
 
@@ -185,16 +192,6 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     @Override
-    public void setBiblio(IBiblioBlock biblio) {
-        this.biblio = biblio;
-    }
-
-    @Override
-    public IBiblioBlock getBiblio() {
-        return biblio;
-    }
-
-    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -204,4 +201,12 @@ public class Reference extends VSpaceElement implements IReference {
         return id;
     }
 
+    public List<BiblioBlock> getBiblioList() {
+        return biblioList;
+    }
+
+    public void setBiblioList(List<BiblioBlock> biblioList) {
+        this.biblioList = biblioList;
+    }
+    
 }

@@ -3,7 +3,9 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
 import org.commonmark.node.Node;
@@ -13,7 +15,6 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
-import edu.asu.diging.vspace.core.model.IReference;
 
 @Entity
 public class BiblioBlock extends ContentBlock implements IBiblioBlock {
@@ -22,9 +23,12 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
 
     private String description;
     
-    @JsonIgnore
-    @OneToMany(targetEntity = Reference.class, mappedBy = "biblio")
-    private List<IReference> referenceList;
+    @JsonIgnore    
+    @ManyToMany
+//    @JoinTable(name = "biblio_reference"
+//    , joinColumns =
+//    @JoinColumn(name = "BIBLIO_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "REFERENCE_ID", referencedColumnName = "id"))
+    private List<Reference> referenceList;
 
     @Override
     public String getBiblioTitle() {
@@ -47,12 +51,12 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     }
 
     @Override
-    public void setReferenceList(List<IReference> referenceList) {
+    public void setReferenceList(List<Reference> referenceList) {
         this.referenceList = referenceList;
     }
 
     @Override
-    public List<IReference> getReferenceList() {
+    public List<Reference> getReferenceList() {
         return referenceList;
     }
     

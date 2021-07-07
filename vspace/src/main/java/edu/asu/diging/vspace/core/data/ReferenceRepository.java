@@ -13,9 +13,9 @@ import edu.asu.diging.vspace.core.model.impl.Reference;
 @JaversSpringDataAuditable
 public interface ReferenceRepository extends PagingAndSortingRepository<Reference, String> {
 
-    @Query("SELECT d FROM Reference d WHERE d.biblio.id = ?1")
-    public List<Reference> findReferencesForBiblio(String biblioId);
-    
+//    @Query("SELECT d FROM Reference d WHERE d.biblio.id = ?1")
+//    public List<Reference> findReferencesForBiblio(String biblioId);
+//    
     public List<Reference> findByBiblioId(String biblioId);
-    
+//    
 }
