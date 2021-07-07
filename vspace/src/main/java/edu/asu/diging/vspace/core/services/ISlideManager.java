@@ -29,6 +29,4 @@ public interface ISlideManager {
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
 
-    ISlide createSlide(String slideId);
-
 }

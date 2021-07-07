@@ -52,7 +52,7 @@ public class AddSlideController {
         if(type.equals(SlideType.BRANCHING_POINT)) {
             IBranchingPoint branchingPoint = slideManager.createBranchingPoint(module, slideForm, type);
             IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(branchingPoint.getId(), null, 0, true);
-                    slideId = branchingPoint.getId();
+            slideId = branchingPoint.getId();
         } 
         else {
             ISlide slide = slideManager.createSlide(module, slideForm, type);
