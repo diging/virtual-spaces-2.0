@@ -41,7 +41,6 @@ import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.IReferenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Transactional

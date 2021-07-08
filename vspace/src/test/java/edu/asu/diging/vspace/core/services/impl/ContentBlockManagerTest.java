@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
@@ -21,13 +20,11 @@ import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
-import edu.asu.diging.vspace.core.factory.impl.BiblioBlockFactory;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.IReferenceManager;
 
 public class ContentBlockManagerTest {
     @Mock
@@ -48,9 +45,6 @@ public class ContentBlockManagerTest {
     @Mock
     private ReferenceManager refManager;
     
-    @Mock
-    private BiblioBlockFactory biblioBlockFactory;
-
     @InjectMocks
     private ContentBlockManager managerToTest;
 
@@ -153,22 +147,10 @@ public class ContentBlockManagerTest {
         biblioBlock.setBiblioTitle("TestTitle");
         biblioBlock.setDescription("Test Description");
         
-//        biblioBlock.setTitle("TestTitle");
-//        biblioBlock.setAuthor("TestAuthor");
-//        biblioBlock.setYear(2000);
-//        biblioBlock.setJournal("TestJournal");
-//        biblioBlock.setUrl("TestUrl.com");
-//        biblioBlock.setVolume("TestVolume");
-//        biblioBlock.setIssue("TestIssue");
-//        biblioBlock.setPages("TestPages");
-//        biblioBlock.setEditors("TestEditors");
-//        biblioBlock.setType("TestType");
-//        biblioBlock.setNote("TestNote");
         biblioBlock.setContentOrder(contentOrder);
         biblioBlock.setSlide(slide);
         
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
-        when(biblioBlockFactory.createBiblioBlock(slide, biblioBlock)).thenCallRealMethod();
         managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
         Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
     }

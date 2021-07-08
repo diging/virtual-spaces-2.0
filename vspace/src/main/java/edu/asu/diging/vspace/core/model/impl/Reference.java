@@ -6,8 +6,8 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
@@ -34,8 +34,11 @@ public class Reference extends VSpaceElement implements IReference {
     private String id;
     
     @JsonIgnore
-    @ManyToMany(mappedBy = "referenceList") 
-    private List<BiblioBlock> biblioList = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "Biblio_Reference"
+    , joinColumns =
+    @JoinColumn(name = "REFERENCE_ID"), inverseJoinColumns = @JoinColumn(name = "BIBLIO_ID"))
+    private List<BiblioBlock> biblios = new ArrayList<>();
 
     private String title;
 
@@ -201,12 +204,12 @@ public class Reference extends VSpaceElement implements IReference {
         return id;
     }
 
-    public List<BiblioBlock> getBiblioList() {
-        return biblioList;
+    public List<BiblioBlock> getBiblios() {
+        return biblios;
     }
 
-    public void setBiblioList(List<BiblioBlock> biblioList) {
-        this.biblioList = biblioList;
+    public void setBiblios(List<BiblioBlock> biblios) {
+        this.biblios = biblios;
     }
     
 }

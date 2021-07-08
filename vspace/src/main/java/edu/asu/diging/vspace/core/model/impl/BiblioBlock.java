@@ -25,10 +25,10 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     
     @JsonIgnore    
     @ManyToMany
-//    @JoinTable(name = "biblio_reference"
-//    , joinColumns =
-//    @JoinColumn(name = "BIBLIO_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "REFERENCE_ID", referencedColumnName = "id"))
-    private List<Reference> referenceList;
+    @JoinTable(name = "Biblio_Reference"
+    , joinColumns =
+    @JoinColumn(name = "BIBLIO_ID"), inverseJoinColumns = @JoinColumn(name = "REFERENCE_ID"))
+    private List<Reference> references;
 
     @Override
     public String getBiblioTitle() {
@@ -51,13 +51,13 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     }
 
     @Override
-    public void setReferenceList(List<Reference> referenceList) {
-        this.referenceList = referenceList;
+    public void setReferences(List<Reference> references) {
+        this.references = references;
     }
 
     @Override
-    public List<Reference> getReferenceList() {
-        return referenceList;
+    public List<Reference> getReferences() {
+        return references;
     }
     
     @Override

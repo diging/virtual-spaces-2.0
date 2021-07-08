@@ -5,7 +5,7 @@ public class ReferenceDoesNotExistException extends Exception {
     /**
      * 
      */
-    private static final long serialVersionUID = 7132786913055311185L;    
+    private static final long serialVersionUID = 1L;    
 
     public ReferenceDoesNotExistException() {
         super();

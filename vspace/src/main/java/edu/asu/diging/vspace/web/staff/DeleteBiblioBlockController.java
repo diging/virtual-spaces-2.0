@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
 import edu.asu.diging.vspace.core.model.IModule;
-import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.core.services.IReferenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller

@@ -1853,7 +1853,7 @@ $(window).on('load', function () {
 					<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
 					
 					<div id="referenceSpace" class="col-md-10">
-						<div th:each="contentRef: ${contents.referenceList}">
+						<div th:each="contentRef: ${contents.references}">
 							<div th:id="${contentRef.id}" class="referenceDivStaff tab row">
 								<p class="col-md-10">
 									Reference Title: <span>[[${contentRef.title}]]</span>, Author: <span>[[${contentRef.author}]]</span>,

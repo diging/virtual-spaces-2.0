@@ -6,9 +6,9 @@ import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 
 public interface IReference extends IVSpaceElement {
     
-    List<BiblioBlock> getBiblioList();
+    List<BiblioBlock> getBiblios();
 
-    void setBiblioList(List<BiblioBlock> biblioList);
+    void setBiblios(List<BiblioBlock> biblios);
     
     void setTitle(String title);
 

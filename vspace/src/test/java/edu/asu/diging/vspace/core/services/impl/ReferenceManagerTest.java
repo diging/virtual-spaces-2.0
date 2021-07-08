@@ -70,7 +70,6 @@ public class ReferenceManagerTest {
     
     @Test
     public void test_deleteReferenceId_refIdIsNull() {
-
         Mockito.when(refRepo.findById(null)).thenReturn(Optional.empty());
         refManagerToTest.deleteReferenceById(null, biblioId);
         Mockito.verify(refRepo, Mockito.never()).deleteById(refIdNotPresent);

@@ -14,9 +14,9 @@ public interface IBiblioBlock extends IContentBlock {
 
     String getDescription();
     
-    void setReferenceList(List<Reference> referenceList);
+    void setReferences(List<Reference> references);
     
-    List<Reference> getReferenceList();
+    List<Reference> getReferences();
 
     void setId(String id);
 

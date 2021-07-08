@@ -26,7 +26,7 @@ public class ReferenceManager implements IReferenceManager {
 
     @Override
     public IReference createReference(IBiblioBlock biblio, Reference reference) {
-        reference.getBiblioList().add((BiblioBlock) biblio);
+        reference.getBiblios().add((BiblioBlock) biblio);
         return referenceRepo.save((Reference) reference);
     }
 
@@ -68,6 +68,6 @@ public class ReferenceManager implements IReferenceManager {
 
     @Override
     public List<IReference> getReferencesForBiblio(String biblioId) {
-        return new ArrayList<>(referenceRepo.findByBiblioId(biblioId));
+        return new ArrayList<>(referenceRepo.findByBiblios_Id(biblioId));
     }
 }
