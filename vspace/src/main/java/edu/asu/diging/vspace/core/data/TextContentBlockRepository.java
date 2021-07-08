@@ -19,6 +19,6 @@ public interface TextContentBlockRepository extends PagingAndSortingRepository<T
     @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
     public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage, String searchText);
 
-    @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
-    public List<IVSpaceElement> findInNameOrDescription(String searchText);
+    @Query("SELECT COUNT(distinct c.slide) FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
+    public long findInNameOrDescription(String searchText);
 }

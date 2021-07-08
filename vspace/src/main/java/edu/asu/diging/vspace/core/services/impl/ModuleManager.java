@@ -92,7 +92,7 @@ public class ModuleManager implements IModuleManager {
         return moduleRepo.findInNameOrDescription(requestedPage,searchText);
     }
     @Override
-    public List<IVSpaceElement> findInNameOrDescription(String searchText) {
+    public long findInNameOrDescription(String searchText) {
         return moduleRepo.findInNameOrDescription(searchText);
     }
 }

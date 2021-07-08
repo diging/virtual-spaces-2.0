@@ -26,7 +26,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     @Query("SELECT d from Slide d WHERE d.name like %?1% OR d.description like %?1%")
     public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
     
-    @Query("SELECT d from Slide d WHERE d.name like %?1% OR d.description like %?1%")
-    public List<IVSpaceElement> findInNameOrDescription(String searchText);
+    @Query("SELECT COUNT(distinct d.id) from Slide d WHERE d.name like %?1% OR d.description like %?1%")
+    public long findInNameOrDescription(String searchText);
     
 }

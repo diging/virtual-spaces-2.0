@@ -26,6 +26,6 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
     @Query("SELECT d from Space d WHERE d.name LIKE %?1% OR d.description LIKE %?1%")
     public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
 
-    @Query("SELECT d from Space d WHERE d.name LIKE %?1% OR d.description LIKE %?1%")
-    public List<IVSpaceElement> findInNameOrDescription(String searchText);
+    @Query("SELECT COUNT(distinct d.id) from Space d WHERE d.name LIKE %?1% OR d.description LIKE %?1%")
+    public long findInNameOrDescription(String searchText);
 }

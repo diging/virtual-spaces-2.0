@@ -170,7 +170,7 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public List<IVSpaceElement> findInNameOrDescription(String searchText) {
+    public long findInNameOrDescription(String searchText) {
 
         return slideRepo.findInNameOrDescription(searchText);
     }

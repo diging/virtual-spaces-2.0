@@ -25,5 +25,5 @@ public interface IModuleManager {
     
     Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
     
-    List<IVSpaceElement> findInNameOrDescription(String searchText);
+    long findInNameOrDescription(String searchText);
 }

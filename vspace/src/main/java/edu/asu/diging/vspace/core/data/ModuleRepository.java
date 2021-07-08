@@ -20,8 +20,8 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     @Query("SELECT d FROM Module d WHERE d.name like %?1% OR d.description LIKE %?1%")
     public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
     
-    @Query("SELECT d FROM Module d WHERE d.name like %?1% OR d.description LIKE %?1%")
-    public List<IVSpaceElement> findInNameOrDescription(String searchText);
+    @Query("SELECT COUNT(distinct d.id) FROM Module d WHERE d.name like %?1% OR d.description LIKE %?1%")
+    public long findInNameOrDescription(String searchText);
 
     List<Module> findAllByOrderByCreationDateDesc();
 
