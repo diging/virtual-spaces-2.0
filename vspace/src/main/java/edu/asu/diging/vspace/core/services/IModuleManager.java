@@ -23,7 +23,5 @@ public interface IModuleManager {
 
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
     
-    Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
-    
-    long findInNameOrDescription(String searchText);
+    Page<IVSpaceElement> findByNameOrDescription(Pageable requestedPage,String searchText);
 }

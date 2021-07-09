@@ -38,8 +38,6 @@ public interface ISpaceManager {
     
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
-    Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage,String searchText);
-
-    long findInNameOrDescription(String searchText);
+    Page<IVSpaceElement> findByNameOrDescription(Pageable requestedPage,String searchText);
 
 }

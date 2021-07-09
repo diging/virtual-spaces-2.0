@@ -6,24 +6,21 @@ import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 public interface IStaffSearchManager {
 
-    HashSet<IVSpaceElement> searchSpaces(String search,int page,long totalSpacePage,String tab,StringBuilder strSpacePageNo);
+    HashSet<IVSpaceElement> searchInSpaces(String search,int page);
 
-    HashSet<IVSpaceElement> searchModules(String search,int page,long totalModulePage,String tab,StringBuilder strModulePageNo);
+    HashSet<IVSpaceElement> searchInModules(String search,int page);
 
-    HashSet<IVSpaceElement> searchSlides(String search,int page,long totalSlidePage,String tab,StringBuilder strSlidePageNo);
+    HashSet<IVSpaceElement> searchInSlides(String search,int page);
 
-    HashSet<IVSpaceElement> searchSlideTexts(String search,int page,long totalSlideTextPage,String tab,StringBuilder strSlideTextPageNo);
+    HashSet<IVSpaceElement> searchInSlideTexts(String search,int page);
 
     int validatePageNumber(int pageNo, long totalPages);
 
-    long getTotalPages(long count);
-
-    long getCountOfSearchedModule(String search);
-
-    long getCountOfSearchedSpace(String search);
-
-    long getCountOfSearchedSlide(String search);
-
-    long getCountOfSearchedSlideText(String search);
-
+    long getTotalSpacePages(String search);
+    
+    long getTotalModulePages(String search);
+    
+    long getTotalSlidePages(String search);
+    
+    long getTotalSlideTextPages(String search);
 }

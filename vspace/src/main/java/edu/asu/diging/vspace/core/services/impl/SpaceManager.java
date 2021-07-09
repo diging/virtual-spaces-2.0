@@ -286,13 +286,7 @@ public class SpaceManager implements ISpaceManager {
     }
 
     @Override
-    public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage, String searchText) {
-
-        return spaceRepo.findInNameOrDescription(requestedPage, searchText);
-    }
-
-    @Override
-    public long findInNameOrDescription(String searchText) {
-        return spaceRepo.findInNameOrDescription(searchText);
+    public Page<IVSpaceElement> findByNameOrDescription(Pageable requestedPage, String searchText) {
+        return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
 }

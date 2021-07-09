@@ -164,14 +164,8 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public Page<IVSpaceElement> findInNameOrDescription(Pageable requestedPage, String searchText) {
+    public Page<IVSpaceElement> findByNameOrDescription(Pageable requestedPage, String searchText) {
 
-        return slideRepo.findInNameOrDescription(requestedPage, searchText);
-    }
-
-    @Override
-    public long findInNameOrDescription(String searchText) {
-
-        return slideRepo.findInNameOrDescription(searchText);
+        return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
 }

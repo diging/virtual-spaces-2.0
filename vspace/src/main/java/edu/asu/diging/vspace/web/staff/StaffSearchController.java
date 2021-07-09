@@ -16,19 +16,21 @@ public class StaffSearchController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search")
-    public String getAllSearchedElements(@RequestParam(value = "page", defaultValue = "1") String page, Model model,
+    public String searchInVspace(@RequestParam(value = "spacePagenum",required=false, defaultValue = "1") String spacePagenum, 
+            @RequestParam(value = "modulePagenum",required=false, defaultValue = "1") String modulePagenum,
+            @RequestParam(value = "slidePagenum",required=false, defaultValue = "1") String slidePagenum,
+            @RequestParam(value = "slideTextPagenum",required=false, defaultValue = "1") String slideTextPagenum,Model model,
             @RequestParam(name = "searchText") String searchString, @RequestParam(value = "tab", defaultValue = "module") String tab) {
 
-        paginationForSpace(page, model, searchString, tab);
+        paginationForSpace(spacePagenum, model, searchString);
 
-        paginationForModule(page, model, searchString, tab);
+        paginationForModule(modulePagenum, model, searchString);
 
-        paginationForSlide(page, model, searchString, tab);
+        paginationForSlide(slidePagenum, model, searchString);
 
-        paginationForSlideText(page, model, searchString, tab);
+        paginationForSlideText(slideTextPagenum, model, searchString);
         
         model.addAttribute("searchWord", searchString);
-        model.addAttribute("conIndex", new StringBuilder());
         model.addAttribute("activeTab", tab);
         return "/staff/search/staffSearch";
     }
@@ -36,68 +38,56 @@ public class StaffSearchController {
     /**
      * This method is used for pagination of all searched string that belong to space table
      * 
-     * @param page ---> current page number sent as request parameter in the URL.
+     * @param spacePagenum ---> current page number sent as request parameter in the URL.
      * @param model ---> This the object of Model attribute in spring spring MVC.
      * @param searchString ---> This is the search string which is being searched.
-     * @param tab ---> This is the current tab name
      */
-    private void paginationForSpace(String page, Model model, String searchString, String tab) {
-        long totalSpacePage = staffSearchManager.getCountOfSearchedSpace(searchString);
-        StringBuilder strSpacePageNo = new StringBuilder();
-        HashSet<IVSpaceElement> spaceSet = staffSearchManager.searchSpaces(searchString,Integer.parseInt(page),totalSpacePage,tab,strSpacePageNo);
-        model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(strSpacePageNo.toString()));
-        model.addAttribute("spaceTotalPages", staffSearchManager.getTotalPages(totalSpacePage));
+    private void paginationForSpace(String spacePagenum, Model model, String searchString) {
+        HashSet<IVSpaceElement> spaceSet = staffSearchManager.searchInSpaces(searchString,Integer.parseInt(spacePagenum));
+        model.addAttribute("spaceCurrentPageNumber",Integer.parseInt(spacePagenum));
+        model.addAttribute("spaceTotalPages", staffSearchManager.getTotalSpacePages(searchString));
         model.addAttribute("spaceSearchResults", spaceSet);
     }
     
     /**
      * This method is used for pagination of all searched string that belong to module table
      * 
-     * @param page ---> current page number sent as request parameter in the URL.
+     * @param modulePagenum ---> current page number sent as request parameter in the URL.
      * @param model ---> This the object of Model attribute in spring spring MVC.
      * @param searchString ---> This is the search string which is being searched.
-     * @param tab ---> This is the current tab name
      */
-    private void paginationForModule(String page, Model model, String searchString, String tab) {
-        long totalModulePage = staffSearchManager.getCountOfSearchedModule(searchString);
-        StringBuilder strModulePageNo = new StringBuilder();
-        HashSet<IVSpaceElement> moduleSet = staffSearchManager.searchModules(searchString, Integer.parseInt(page),totalModulePage,tab,strModulePageNo);
-        model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(strModulePageNo.toString()));
-        model.addAttribute("moduleTotalPages", staffSearchManager.getTotalPages(totalModulePage));
+    private void paginationForModule(String modulePagenum, Model model, String searchString) {
+        HashSet<IVSpaceElement> moduleSet = staffSearchManager.searchInModules(searchString, Integer.parseInt(modulePagenum));
+        model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
+        model.addAttribute("moduleTotalPages", staffSearchManager.getTotalModulePages(searchString));
         model.addAttribute("moduleSearchResults", moduleSet);
     }
     
     /**
      * This method is used for pagination of all searched string that belong to slide table
      * 
-     * @param page ---> current page number sent as request parameter in the URL.
+     * @param slidePagenum ---> current page number sent as request parameter in the URL.
      * @param model ---> This the object of Model attribute in spring spring MVC.
      * @param searchString ---> This is the search string which is being searched.
-     * @param tab ---> This is the current tab name
      */
-    private void paginationForSlide(String page, Model model, String searchString, String tab) {
-        long totalSlidePage = staffSearchManager.getCountOfSearchedSlide(searchString);
-        StringBuilder strSlidePageNo = new StringBuilder();
-        HashSet<IVSpaceElement> slideSet = staffSearchManager.searchSlides(searchString, Integer.parseInt(page),totalSlidePage,tab,strSlidePageNo);
-        model.addAttribute("slideCurrentPageNumber", Integer.parseInt(strSlidePageNo.toString()));
-        model.addAttribute("slideTotalPages", staffSearchManager.getTotalPages(totalSlidePage));
+    private void paginationForSlide(String slidePagenum, Model model, String searchString) {
+        HashSet<IVSpaceElement> slideSet = staffSearchManager.searchInSlides(searchString, Integer.parseInt(slidePagenum));
+        model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
+        model.addAttribute("slideTotalPages", staffSearchManager.getTotalSlidePages(searchString));
         model.addAttribute("slideSearchResults", slideSet);
     }
     
     /**
      * This method is used for pagination of all searched string that belong to text blocks of slide
      * 
-     * @param page ---> current page number sent as request parameter in the URL.
+     * @param slideTextPagenum ---> current page number sent as request parameter in the URL.
      * @param model ---> This the object of Model attribute in spring spring MVC.
      * @param searchString ---> This is the search string which is being searched.
-     * @param tab ---> This is the current tab name
      */
-    private void paginationForSlideText(String page, Model model, String searchString, String tab) {
-        long totalSlideTextPage = staffSearchManager.getCountOfSearchedSlideText(searchString);
-        StringBuilder strSlideTextPageNo = new StringBuilder();
-        HashSet<IVSpaceElement> slideTextSet = staffSearchManager.searchSlideTexts(searchString, Integer.parseInt(page),totalSlideTextPage,tab,strSlideTextPageNo);
-        model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(strSlideTextPageNo.toString()));
-        model.addAttribute("slideTextTotalPages", staffSearchManager.getTotalPages(totalSlideTextPage));
+    private void paginationForSlideText(String slideTextPagenum, Model model, String searchString) {
+        HashSet<IVSpaceElement> slideTextSet = staffSearchManager.searchInSlideTexts(searchString, Integer.parseInt(slideTextPagenum));
+        model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
+        model.addAttribute("slideTextTotalPages", staffSearchManager.getTotalSlideTextPages(searchString));
         model.addAttribute("slideTextSearchResults", slideTextSet);
     }
 }
