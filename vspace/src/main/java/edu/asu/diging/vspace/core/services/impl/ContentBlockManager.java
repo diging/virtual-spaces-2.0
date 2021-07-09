@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.factory.IBiblioBlockFactory;
 import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -45,19 +46,18 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 @Transactional
 @Service
 public class ContentBlockManager implements IContentBlockManager {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ISlideManager slideManager;
-
+    
     @Autowired
     private IImageFactory imageFactory;
 
     @Autowired
     private ITextBlockFactory textBlockFactory;
     
-    @Autowired
-    private IBiblioBlockFactory biblioBlockFactory;
-
     @Autowired
     private IImageBlockFactory imageBlockFactory;
 
@@ -277,11 +277,10 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData) {
+    public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblio) {
         ISlide slide = slideManager.getSlide(slideId);
-        IBiblioBlock biblioBlock = biblioBlockFactory.createBiblioBlock(slide, biblioData);
-        biblioBlock = biblioBlockRepo.save((BiblioBlock) biblioBlock);
-        return biblioBlock;
+        biblio.setSlide(slide);
+        return biblioBlockRepo.save((BiblioBlock) biblio);
     }
 
     @Override
@@ -289,6 +288,7 @@ public class ContentBlockManager implements IContentBlockManager {
         if (id == null) {
             return;
         }
+        
         try {
             biblioBlockRepo.deleteById(id);         
         } catch (EmptyResultDataAccessException e) {

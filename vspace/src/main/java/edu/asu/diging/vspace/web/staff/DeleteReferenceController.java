@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
+import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.IReferenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
-public class DeleteBiblioBlockController {
+public class DeleteReferenceController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -34,12 +34,16 @@ public class DeleteBiblioBlockController {
     @Autowired
     private ISlideManager slideManager;
     
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteBiblioBlock(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
-            @PathVariable("blockId") String blockId) throws IOException, ReferenceListDeletionForBiblioException {
+    @Autowired
+    private IReferenceManager referenceManager;
+
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteReference(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
+            @PathVariable("biblioId") String biblioId, @PathVariable("refId") String refId) throws IOException {
         
         ISlide slide = slideManager.getSlide(slideId);
         IModule module = moduleManager.getModule(moduleId);
+        IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
 
         if(slide==null) {
             logger.warn("Slide Id does not exist, bad request.");
@@ -51,12 +55,12 @@ public class DeleteBiblioBlockController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         
-        try {
-            contentBlockManager.deleteBiblioBlockById(blockId);
-        } catch (BlockDoesNotExistException e) {
-            logger.warn("Biblio Id does not exist, bad request.", e);
+        if(biblio==null) {
+            logger.warn("Biblio Block Id does not exist, bad request.");
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
+        
+        referenceManager.deleteReferenceById(refId, biblioId);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }
