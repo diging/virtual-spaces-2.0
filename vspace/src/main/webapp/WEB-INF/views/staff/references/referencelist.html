@@ -48,7 +48,7 @@ $( document ).ready(function() {
  });
    
 function rowClicked(value) {
-	var url = "[(@{'/staff/display/biblio/'})]" + value;
+	var url = "[(@{'/staff/display/reference/'})]" + value;
 	window.location = url;
 }
 
@@ -75,9 +75,9 @@ function rowClicked(value) {
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
-        <h2>Bibliographies</h2>
+        <h2>References</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
-            contains the following bibliographies.</div>
+            contains the following references.</div>
         <table class="table">
             <thead>
                 <tr>
@@ -85,15 +85,17 @@ function rowClicked(value) {
                     <th scope="col" sort-prop="author"><a href="#">Author</a></th>
                     <th scope="col" sort-prop="year"><a href="#">Year</a></th>
                     <th scope="col" sort-prop="journal"><a href="#">Journal</a></th>
+                    <th scope="col" sort-prop="creationDate"><a href="#">Created Date</a></th>
                     <th scope="col" >. . . . . .</th>
                 </tr>
             </thead>
             <tbody class="tableBody">
-                <tr th:each="biblio: ${biblios}" style="cursor: pointer" th:biblio-id="${biblio.id}" onclick="rowClicked(this.getAttribute('biblio-id'))">
-                    <td>[[${biblio.title}]]</td>
-                    <td>[[${biblio.author}]]</td>
-                    <td>[[${biblio.year}]]</td>
-                    <td>[[${biblio.journal}]]</td>
+                <tr th:each="reference: ${references}" style="cursor: pointer" th:ref-id="${reference.id}" onclick="rowClicked(this.getAttribute('ref-id'))">
+                    <td>[[${reference.title}]]</td>
+                    <td>[[${reference.author}]]</td>
+                    <td>[[${reference.year}]]</td>
+                    <td>[[${reference.journal}]]</td>
+                    <td>[[${reference.creationDate}]]</td>
                     <td>. . . . . .</td>
                 </tr>
             </tbody>

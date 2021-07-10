@@ -151,7 +151,6 @@ public class ContentBlockManagerTest {
         biblioBlock.setSlide(slide);
         
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
-        when(biblioBlockFactory.createBiblioBlock(slide, biblioBlock)).thenCallRealMethod();
         managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
         Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
     }

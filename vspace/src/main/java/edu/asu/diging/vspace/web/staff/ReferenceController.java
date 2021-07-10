@@ -6,19 +6,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.diging.vspace.core.data.BiblioRepository;
-import edu.asu.diging.vspace.core.model.IBiblioBlock;
+import edu.asu.diging.vspace.core.data.ReferenceRepository;
+import edu.asu.diging.vspace.core.model.IReference;
 
 @Controller
-public class BiblioController {
+public class ReferenceController {
     
     @Autowired
-    private BiblioRepository biblioRepo;
+    private ReferenceRepository referenceRepo;
 
-    @RequestMapping("/staff/display/biblio/{id}")
+    @RequestMapping("/staff/display/reference/{id}")
     public String showBiblio(@PathVariable String id, Model model) {
-        IBiblioBlock biblio = biblioRepo.findById(id).get();
-        model.addAttribute("biblio", biblio);
-        return "staff/biblios/biblio";
+        IReference reference = referenceRepo.findById(id).get();
+        model.addAttribute("reference", reference);
+        return "staff/references/reference";
     }
 }
