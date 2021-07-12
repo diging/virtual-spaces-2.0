@@ -164,6 +164,8 @@
         <script th:inline="javascript">
 		//# sourceURL=click.js
 			
+			var isResizeImgBtnClicked;
+		
             function toggleImgSize(isClicked){
                 let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
@@ -178,6 +180,7 @@
                     	$("#bgImage").css("width", maxImgWidth);
                     	$(".spaceClass").css("width", "100%");
                     	$(".spaceClass").css("position", "");
+                    	$(".container-fluid").css("padding-left", "0px");
                     	$("#space a").remove();
                 }
                 else{
@@ -186,6 +189,7 @@
                     	$('#bgImage').width('100%');
                     	$(".spaceClass").css("width", "80%");
                     	$(".spaceClass").css("position", "relative");
+                    	$(".container-fluid").css("padding-left", "15px");
                     	$("#space a").remove();
                 }
 		drawLinks();
