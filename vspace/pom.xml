@@ -10,9 +10,9 @@
 
     <properties>
         <org.slf4j-version>1.7.5</org.slf4j-version>
-        <spring.version>5.0.7.RELEASE</spring.version>
+        <spring.version>5.0.19.RELEASE</spring.version>
         <spring-data.version>Kay-SR8</spring-data.version>
-        <spring-security-version>5.3.10.RELEASE</spring-security-version>
+        <spring-security-version>5.3.3.RELEASE</spring-security-version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <javers.version>5.11.1</javers.version>
         <simple-users-version>0.5</simple-users-version>
@@ -23,10 +23,10 @@
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3307/vspace?serverTimezone=UTC</db.url>
-        <db.user>root</db.user>
-        <db.password>root</db.password>
-        <uploaded.files.path>/Users/pradeep/DeveloperAtDiging/storage-docker</uploaded.files.path>
+        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC</db.url>
+        <db.user>vspace</db.user>
+        <db.password>vspace</db.password>
+        <uploaded.files.path></uploaded.files.path>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -186,17 +186,6 @@
             </exclusions>
             <scope>runtime</scope>
         </dependency>
-        <!-- Added by Pradeep  -->
-        <dependency>
-		  <groupId>javax.annotation</groupId>
-		  <artifactId>javax.annotation-api</artifactId>
-		  <version>1.3.2</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
-		    <version>2.3.0</version>
-		</dependency>
         
         <!-- MarkDown -->
         <dependency>
@@ -340,7 +329,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
         </dependency>
 
         <dependency>
