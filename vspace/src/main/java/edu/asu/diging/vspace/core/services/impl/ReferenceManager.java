@@ -62,7 +62,9 @@ public class ReferenceManager implements IReferenceManager {
         }
 
         try {
-            referenceRepo.delete((Reference) getReference(referenceId));
+            Reference ref = (Reference) getReference(referenceId);
+            if(ref!=null)
+                referenceRepo.deleteById(ref.getId());
         } catch (IllegalArgumentException exception) {
             logger.error("Unable to delete reference" + referenceId + ". ", exception);
         }
