@@ -54,7 +54,7 @@ public class EditImageBlockController {
                 logger.error("Image does not exist.", e);
                 return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
             }
-            contentBlockManager.updateImageBlock(imageBlock, image, contentOrder);
+            contentBlockManager.updateImageBlock(imageBlock, image);
         } else {
 
             byte[] image = null;

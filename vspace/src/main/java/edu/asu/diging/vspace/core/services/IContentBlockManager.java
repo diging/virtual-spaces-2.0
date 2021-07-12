@@ -40,7 +40,7 @@ public interface IContentBlockManager {
     void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
 
-    void updateImageBlock(IImageBlock imageBlock, IVSImage image, Integer contentOrder);
+    void updateImageBlock(IImageBlock imageBlock, IVSImage image);
 
     IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
             boolean showsAll);
