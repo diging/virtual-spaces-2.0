@@ -169,6 +169,7 @@
             function toggleImgSize(isClicked){
                 let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
+                let maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
                 isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
                 if(isClicked) {
 			isResizeImgBtnClicked = -isResizeImgBtnClicked;
@@ -177,21 +178,26 @@
                 // resize the image to max width
 		if (isResizeImgBtnClicked == 1) {
 			$("#toggleImgClass").attr('class', "icon-collapse secondary");
-                    	$("#bgImage").css("width", maxImgWidth);
-                    	$(".spaceClass").css("width", "100%");
-                    	$(".spaceClass").css("position", "");
-                    	$(".container-fluid").css("padding-left", "0px");
-                    	$("#space a").remove();
+			if(maxImgWidthOrig > maxImgWidth) {
+				$("#bgImage").css("width", maxImgWidth);
+            	$(".spaceClass").css("width", "100%"); 
+            	$(".spaceClass").css("position", "");
+            	$(".container-fluid").css("padding-right", "0px");
+            	$(".container-fluid").css("padding-left", "0px");
+			}
                 }
                 else{
                 	$("#toggleImgClass").attr('class', "icon-expand secondary");
+                	if(maxImgWidthOrig > maxImgWidth) {
                     	$("#bgImage").css("width", spaceWidth);
                     	$('#bgImage').width('100%');
                     	$(".spaceClass").css("width", "80%");
                     	$(".spaceClass").css("position", "relative");
+                    	$(".container-fluid").css("padding-right", "15px");
                     	$(".container-fluid").css("padding-left", "15px");
-                    	$("#space a").remove();
+                	}
                 }
+		$("#space a").remove();        
 		drawLinks();
             }
 
@@ -407,7 +413,7 @@
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; display: flex; justify-content: center; padding-top: 10px;">
+                    style="width: 80%; display: flex; justify-content: center; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
@@ -454,7 +460,7 @@
                                 <span class="icon-grid-dots moduleBarPosition"></span>
                             </div>
                         </div>
-                        <div class="text-Div">
+                        <div class="text-Div"  style="margin-left: 10px;">
                             <h3 class="spaceName">
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"
