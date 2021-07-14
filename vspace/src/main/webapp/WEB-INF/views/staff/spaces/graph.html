@@ -4,7 +4,7 @@
 var strNodeVal = [[${overviewNode}]],
  strlinkVal = [[${overviewLink}]];
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <style>
 .links line {
   stroke: #999;
@@ -17,14 +17,21 @@ text {
 image { 
  filter: drop-shadow(1px 1px 7px  #e39e44);
 }
+svg
+{
+width: 100%;
+}
 </style>
 </head>
 <body>
 <div layout:fragment="content">
+<div><center><p>Double Click On Space's Image or Module Icon to go to the respective Space or Module's Page</p></center></div>
+<div id="mainContent">
+<svg></svg>
+</div>
 <script>
 var nodeJson = JSON.parse(strNodeVal);
 var linkJson = JSON.parse(strlinkVal);
-
 var w = window,
 d = document,
 e = d.documentElement,
@@ -32,38 +39,54 @@ g = $('body')[0],
 x = w.innerWidth || e.clientWidth || g.clientWidth,
 y = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
-var svg = d3.select("body").append("svg")
-.attr("width", x)
-.attr("height", y);
+var svg = d3.select("body")
+          .select("svg")
+          .attr("width", x)
+          .attr("height", y);
 
 width = +svg.attr("width"),
 height = +svg.attr("height");
 
-	var color = d3.scaleOrdinal(d3.schemeCategory20);
+force = d3.layout.force()
+.size([width, height])
+.charge(-400)
+.linkDistance(40);
 
-	var simulation = d3.forceSimulation()
-	    .force("link", d3.forceLink().distance(150).strength(1))
-	    .force("charge", d3.forceManyBody().strength(-50))
-	    .force("center", d3.forceCenter(width / 2, height / 2));
-		
-     
-	  var link = svg.append("g")
+ drag = force.drag().on('dragstart', function(d) {
+    return d.fixed = true;
+  });
+
+ _ref = linkJson;
+ for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+   l = _ref[_i];
+   _ref2 = nodeJson;
+   for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+     n = _ref2[_j];
+     if (l.source === n.id) {
+       l.source = n;
+       continue;
+     }
+     if (l.target === n.id) {
+       l.target = n;
+       continue;
+     }
+   }
+ }
+ 
+ var link = svg.append("g")
 	      .attr("class", "links")
 	    .selectAll("line")
 	    .data(linkJson)
 	    .enter().append("line");
 	  
-	  var node = svg.append("g")
+	 var node = svg.append("g")
 	    .attr("class", "nodes")
 	    .selectAll("g")
 	    .data(nodeJson)
 	    .enter().append("g")
-	    .call(d3.drag()
-	    .on("start", dragstarted)
-	    .on("drag", dragged)
-	    .on("end", dragended));
+	    .call(drag);  
 	  	    
-    var modules = node.filter(function(d,i){
+     var modules = node.filter(function(d,i){
     	  return d.isModule;
     	}).append("svg:foreignObject")
         .attr("x", function(d) { return -10;})
@@ -104,11 +127,11 @@ height = +svg.attr("height");
 	     .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
 
      var setEvents = modules
-	    .on( 'click', function (d) {
+	    .on( 'dblclick', function (d) {
 	        location.href = d.link;
 	     });
 	  var setEvents = images
-	    .on( 'click', function (d) {
+	    .on( 'dblclick', function (d) {
 	        location.href = d.link;
 	     })
 
@@ -152,12 +175,10 @@ height = +svg.attr("height");
 	  node.append("title")
 	      .text(function(d) { return d.name; });
 
-	  simulation
-	      .nodes(nodeJson)
+	  force.nodes(nodeJson)
 	      .on("tick", ticked);
 
-	  simulation.force("link")
-	      .links(linkJson);
+	  force.links(linkJson).start();
 
 	  function ticked() {
 	    link
@@ -171,24 +192,6 @@ height = +svg.attr("height");
 	          return "translate(" + d.x + "," + d.y + ")";
 	        })
 	  }
-
-
-	 function dragstarted(d) {
-	  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-	  d.fx = d.x;
-	  d.fy = d.y;
-	}
-
-	function dragged(d) {
-	  d.fx = d3.event.x;
-	  d.fy = d3.event.y;
-	}
-
-	function dragended(d) {
-	  if (!d3.event.active) simulation.alphaTarget(0);
-	  d.fx = null;
-	  d.fy = null;
-	} 
 	</script>
 </div>	
 </body>
