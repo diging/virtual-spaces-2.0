@@ -164,13 +164,11 @@
         <script th:inline="javascript">
 		//# sourceURL=click.js
 			
-			var isResizeImgBtnClicked;
-		
             function toggleImgSize(isClicked){
                 let maxImgWidth = $(window).width();
                 let spaceWidth = $("#bgImage").css("width");
                 let maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
-                isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+                var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
                 if(isClicked) {
 			isResizeImgBtnClicked = -isResizeImgBtnClicked;
 			setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
@@ -195,10 +193,10 @@
                     	$(".spaceClass").css("position", "relative");
                     	$(".container-fluid").css("padding-right", "15px");
                     	$(".container-fluid").css("padding-left", "15px");
-                	}
-                }
-		$("#space a").remove();        
-		drawLinks();
+                    }
+                  }
+		  $("#space a").remove();        
+		  drawLinks();
             }
 
 		let maxWidth='(max-width: 1200px)';
@@ -260,7 +258,7 @@
 		}
 		
 		$(window).on("load", function() {
-			isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
 			if(isResizeImgBtnClicked == "")
 				setCookie('isResizeImgBtnClicked', -1, null);
 		    let spaceHeight = $("#bgImage").css("height");
