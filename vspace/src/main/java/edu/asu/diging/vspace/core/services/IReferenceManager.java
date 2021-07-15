@@ -11,14 +11,12 @@ public interface IReferenceManager {
 
     IReference getReference(String referenceId);
     
-    IReference createReference(IBiblioBlock biblio, Reference reference);
+    IReference saveReference(IBiblioBlock biblio, Reference reference);
 
-    void updateReference(Reference reference);
+    void updateReference(IReference reference);
 
-    void deleteReferenceById(String referenceId, String BiblioId);
+    void deleteReferenceById(String referenceId) throws ReferenceDoesNotExistException;
     
-    void deleteReferences(List<IReference> references, String BiblioId);
-
     List<IReference> getReferencesForBiblio(String biblioId);
     
     List<IReference> getReferences(int pageNo);
@@ -31,8 +29,8 @@ public interface IReferenceManager {
 
     int validatePageNumber(int pageNo);
 
-    void editReference(String referenceId, IReference referenceData) throws ReferenceDoesNotExistException;
+    void updateReference(String referenceId, IReference referenceData);
 
-    IReference getReferenceById(String referenceId) throws ReferenceDoesNotExistException;
+    IReference getReferenceById(String referenceId);
 
 }

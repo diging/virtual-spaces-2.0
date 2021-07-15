@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
@@ -31,31 +30,18 @@ public class EditReferenceController {
     
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.GET)
     public String show(Model model, @PathVariable("referenceId") String referenceId, RedirectAttributes attributes) {
-        try {
-            IReference reference = referenceManager.getReferenceById(referenceId);
-            model.addAttribute("referenceData", reference);
-            model.addAttribute("referenceId", referenceId);
-        } catch(ReferenceDoesNotExistException refDoesNotExistException) {
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Reference doesnt exist with given reference id.");
-            return "redirect:/staff/references/list/";  
-        }
+        IReference reference = referenceManager.getReferenceById(referenceId);
+        model.addAttribute("referenceData", reference);
+        model.addAttribute("referenceId", referenceId);
         return "staff/references/edit";
     }
     
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.POST)
     public String save(@ModelAttribute Reference refData, @PathVariable("referenceId") String referenceId, 
             RedirectAttributes attributes) {
-        try {
-            referenceManager.editReference(referenceId, refData);
-        } catch (ReferenceDoesNotExistException refDoesNotExistException) {
-            logger.error("Edit Reference Failed" + refDoesNotExistException);
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Edit Reference Failed. Please try again");
-            return "redirect:/staff/references/list/1";
-        }
+        IReference reference = referenceManager.getReferenceById(referenceId);
+        refData.setId(reference.getId());
+        referenceManager.updateReference(referenceId, refData);
         return "redirect:/staff/display/reference/{referenceId}";
     }
 

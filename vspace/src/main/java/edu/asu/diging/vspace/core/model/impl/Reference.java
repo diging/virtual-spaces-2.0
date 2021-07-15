@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.referenceExpose.CitationStyleDefault;
 import edu.asu.diging.vspace.referenceExpose.ReferenceContext;
+import edu.asu.diging.vspace.referenceExpose.ReferenceMetadataDisplay;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
@@ -173,28 +174,6 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     @Override
-    @Transient
-    public String toString() {
-        return "Reference title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal + ", url=" + url
-                + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors=" + editors + ", type="
-                + type + ", note=" + note;
-    }
-
-    @Transient
-    public String htmlRenderedReference() {
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(toString());
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        return renderer.render(document);
-    }
-
-    @Transient
-    public String urlEncodedRefMetaData() {
-        ReferenceContext biblioContext = new ReferenceContext(new CitationStyleDefault(), this); //currently default citation 
-        return biblioContext.executeBiblioMetadata(this);
-    }
-
-    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -210,6 +189,18 @@ public class Reference extends VSpaceElement implements IReference {
 
     public void setBiblios(List<BiblioBlock> biblios) {
         this.biblios = biblios;
+    }
+    
+    @Override
+    public String toString() {
+        return "Reference title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal + ", url=" + url
+                + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors=" + editors + ", type="
+                + type + ", note=" + note;
+    }
+
+    @Transient
+    public String urlEncodedRefMetaData() {
+        return ReferenceMetadataDisplay.urlEncodedRefMetaData(this);
     }
     
 }

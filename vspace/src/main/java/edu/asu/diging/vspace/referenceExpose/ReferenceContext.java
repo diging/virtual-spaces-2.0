@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.referenceExpose;
 
 import edu.asu.diging.vspace.core.model.IReference;
-import edu.asu.diging.vspace.core.model.impl.Reference;
 
 public class ReferenceContext {
     
@@ -9,7 +8,7 @@ public class ReferenceContext {
     
     private IReference reference;
 
-    public ReferenceContext(ICitationStyle citationStyle, Reference reference) {
+    public ReferenceContext(ICitationStyle citationStyle, IReference reference) {
         this.citationStyle = citationStyle;
         this.reference = reference;
     }
@@ -21,8 +20,8 @@ public class ReferenceContext {
         return referenceMetadata;
     }
 
-    public String  executeBiblioMetadata(IReference reference) {
+    public String  executeBiblioMetadata() {
         IReferenceMetadata referenceMetadata = this.getReferenceMetadataConverter();
-        return referenceMetadata.createReferenceMetadata(citationStyle, reference);
+        return referenceMetadata.createReferenceMetadata(this.citationStyle, this.reference);
     }
 }

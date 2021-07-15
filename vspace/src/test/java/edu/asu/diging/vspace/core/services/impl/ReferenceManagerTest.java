@@ -296,7 +296,7 @@ public class ReferenceManagerTest {
     @Test
     public void test_editBibliography_success() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.of(refList.get(1)));
-        refManagerToTest.editReference(REF_ID1, refForm);
+        refManagerToTest.updateReference(REF_ID1, refForm);
         Assert.assertEquals(refForm.getTitle(), ref1.getTitle());
         Assert.assertEquals(refForm.getAuthor(), ref1.getAuthor());
         Assert.assertEquals(refForm.getAuthor(), ref1.getAuthor());
@@ -314,7 +314,7 @@ public class ReferenceManagerTest {
     @Test(expected = ReferenceDoesNotExistException.class)
     public void test_editBibliography_whenNoBibliographyExists() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.empty());
-        refManagerToTest.editReference(REF_ID1, refForm);
+        refManagerToTest.updateReference(REF_ID1, refForm);
     }
 
     @Test

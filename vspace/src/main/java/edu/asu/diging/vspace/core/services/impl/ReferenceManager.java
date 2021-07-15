@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
+import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
@@ -26,16 +28,17 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 @Service
 public class ReferenceManager implements IReferenceManager {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private ReferenceRepository referenceRepo;
     
     @Value("${page_size}")
     private int pageSize;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public IReference createReference(IBiblioBlock biblio, Reference reference) {
+    public IReference saveReference(IBiblioBlock biblio, Reference reference) {
         reference.getBiblios().add((BiblioBlock) biblio);
         return referenceRepo.save((Reference) reference);
     }
@@ -50,37 +53,27 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void updateReference(Reference reference) {
+    public void updateReference(IReference reference) {
         referenceRepo.save((Reference) reference);
     }
 
     @Override
-    public void deleteReferenceById(String referenceId, String BiblioId) {
+    public void deleteReferenceById(String referenceId) throws ReferenceDoesNotExistException {
         if (referenceId == null) {
-            logger.error("Reference Id cannot be null.");
+            logger.warn("Reference Id cannot be null.");
             return;
         }
 
         try {
-            Reference ref = (Reference) getReference(referenceId);
-            if(ref!=null)
-                referenceRepo.deleteById(ref.getId());
-        } catch (IllegalArgumentException exception) {
-            logger.error("Unable to delete reference" + referenceId + ". ", exception);
+            referenceRepo.deleteById(referenceId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ReferenceDoesNotExistException(e);
         }
-    }
-
-    @Override
-    public void deleteReferences(List<IReference> references, String BiblioId) {
-        for(IReference ref : references) {
-            deleteReferenceById(ref.getId(), BiblioId);
-        }
-        
     }
 
     @Override
     public List<IReference> getReferencesForBiblio(String biblioId) {
-        return new ArrayList<>(referenceRepo.findByBiblios_Id(biblioId));
+        return referenceRepo.findByBiblios_Id(biblioId);
     }
  
     private Sort getSortingParameters(String sortedBy, String order) {
@@ -106,8 +99,7 @@ public class ReferenceManager implements IReferenceManager {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<Reference> references;
-        references = referenceRepo.findAll(sortByRequestedField);
+        Page<Reference> references = referenceRepo.findAll(sortByRequestedField);
         
         List<IReference> results = new ArrayList<>();
         if(references != null) {
@@ -138,29 +130,16 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void editReference(String referenceId, IReference referenceData) throws ReferenceDoesNotExistException {
-        IReference reference = getReferenceById(referenceId);
-        reference.setTitle(referenceData.getTitle());
-        reference.setAuthor(referenceData.getAuthor());
-        reference.setYear(referenceData.getYear());
-        reference.setJournal(referenceData.getJournal());
-        reference.setUrl(referenceData.getUrl());
-        reference.setVolume(referenceData.getVolume());
-        reference.setIssue(referenceData.getIssue());
-        reference.setPages(referenceData.getPages());
-        reference.setEditors(referenceData.getEditors());
-        reference.setType(referenceData.getType());
-        reference.setNote(referenceData.getNote());
-        referenceRepo.save((Reference) reference);
+    public void updateReference(String referenceId, IReference referenceData) {
+        referenceRepo.save((Reference) referenceData);
     }
 
     @Override
-    public IReference getReferenceById(String referenceId) throws ReferenceDoesNotExistException {
+    public IReference getReferenceById(String referenceId) {
         Optional<Reference> referenceOptional = referenceRepo.findById(referenceId);
         if(referenceOptional.isPresent()) {
             return referenceOptional.get();
-        } else {
-            throw new ReferenceDoesNotExistException("Reference doesn't exist for reference id" + referenceId);
-        }
+        } 
+        return null;
     }
 }

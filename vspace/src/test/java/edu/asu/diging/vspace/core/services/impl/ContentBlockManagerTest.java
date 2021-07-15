@@ -94,33 +94,15 @@ public class ContentBlockManagerTest {
         String imageBlockId = null;
         managerToTest.deleteImageBlockById(null);
         Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
-
     }
     
     @Test
     public void test_deleteBiblioBlockById_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
-        String biblioBlockId = "2";
+        String biblioBlockId = "CON000000002";
         managerToTest.deleteBiblioBlockById(biblioBlockId);
         Mockito.verify(biblioBlockRepo).deleteById(biblioBlockId);
     }
     
-    @Test
-    public void test_deleteBiblioBlockByIdWithRefs_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
-        String biblioId = "CON000000002";
-        String refId = "REF000000002";
-        Reference refObj = new Reference();
-        refObj.setId(refId);
-        
-        List<IReference> refList = new ArrayList<>();
-        refList.add(refObj);
-        
-        when(refManager.getReferencesForBiblio(biblioId)).thenReturn(refList);
-        doNothing().when(refRepo).deleteById(refId);
-        managerToTest.deleteBiblioBlockById(biblioId);
-        Mockito.verify(refManager).deleteReferences(refList, biblioId);
-        Mockito.verify(biblioBlockRepo).deleteById(biblioId);
-    }
-
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteBiblioBlockById_forNonExistentId() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = "notARealId";

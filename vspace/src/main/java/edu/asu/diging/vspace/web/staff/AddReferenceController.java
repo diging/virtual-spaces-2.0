@@ -34,7 +34,7 @@ public class AddReferenceController {
             @RequestBody Reference reference, Model model) throws JsonProcessingException {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        IReference ref = referenceManager.createReference(biblio, reference);
+        IReference ref = referenceManager.saveReference(biblio, reference);
         ObjectMapper mapper = new ObjectMapper();
         return new ResponseEntity<>(mapper.writeValueAsString(ref), HttpStatus.OK);
     }

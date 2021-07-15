@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -39,7 +40,7 @@ public class DeleteReferenceController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteReference(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
-            @PathVariable("biblioId") String biblioId, @PathVariable("refId") String refId) throws IOException {
+            @PathVariable("biblioId") String biblioId, @PathVariable("refId") String refId) throws IOException, ReferenceDoesNotExistException {
         
         ISlide slide = slideManager.getSlide(slideId);
         IModule module = moduleManager.getModule(moduleId);
@@ -60,7 +61,7 @@ public class DeleteReferenceController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         
-        referenceManager.deleteReferenceById(refId, biblioId);
+        referenceManager.deleteReferenceById(refId);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }
