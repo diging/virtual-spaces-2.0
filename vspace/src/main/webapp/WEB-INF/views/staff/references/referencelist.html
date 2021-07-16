@@ -1,0 +1,106 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
+<script th:inline="javascript"> 
+
+$( document ).ready(function() {
+    $('#page-selection').bootpag({
+        total: [(${totalPages})],
+        page: [(${currentPageNumber})],
+        maxVisible: 10,
+        leaps: true,
+        firstLastUse: true,
+        first: '|<',
+        last: '>|',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+        window.location.assign("./"+num+"?sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+    }); 
+
+  $("table.table thead th").each(function(){
+      var head = $(this);
+      if(head.attr('sort-prop')=='[(${sortProperty})]'){
+          head.append([[${order}]]=='desc'?'<i class="fas fa-sort-down"></i>':'<i class="fas fa-sort-up"></i>')
+      }
+      });
+
+   //set click action, reload page on clicking with all query params
+   $("table.table thead th").click(function() {
+    var headerSortPropName = $(this).attr("sort-prop");
+    if(headerSortPropName != 'tag') {
+        if(headerSortPropName=='[(${sortProperty})]'){
+            window.location.href = window.location.pathname+
+            '?&sort='+ headerSortPropName+'&order='+
+            ('[(${order})]' == 'desc'?'asc':'desc');
+        }else{
+            window.location.href = window.location.pathname+
+            '?sort='+ headerSortPropName+'&order=asc';
+        }
+    }
+    });
+   
+ });
+   
+function rowClicked(value) {
+	var url = "[(@{'/staff/display/reference/'})]" + value;
+	window.location = url;
+}
+
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid var(--primary);
+    padding: 5px;
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+</style>
+</head>
+<body>
+    <div layout:fragment="content" class="main-content">
+        <h2>References</h2>
+        <div style="padding-bottom: 20px;">This virtual exhibition
+            contains the following references.</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="title"><a href="#">Title</a></th>
+                    <th scope="col" sort-prop="author"><a href="#">Author</a></th>
+                    <th scope="col" sort-prop="year"><a href="#">Year</a></th>
+                    <th scope="col" sort-prop="journal"><a href="#">Journal</a></th>
+                    <th scope="col" sort-prop="creationDate"><a href="#">Created Date</a></th>
+                    <th scope="col" >. . . . . .</th>
+                </tr>
+            </thead>
+            <tbody class="tableBody">
+                <tr th:each="reference: ${references}" style="cursor: pointer" th:ref-id="${reference.id}" onclick="rowClicked(this.getAttribute('ref-id'))">
+                    <td>[[${reference.title}]]</td>
+                    <td>[[${reference.author}]]</td>
+                    <td>[[${reference.year}]]</td>
+                    <td>[[${reference.journal}]]</td>
+                    <td>[[${reference.creationDate}]]</td>
+                    <td>. . . . . .</td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="page-selection"></div>
+    </div>
+</body>
+</html>

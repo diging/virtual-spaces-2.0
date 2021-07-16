@@ -70,10 +70,25 @@
          </a>
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+            <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
+                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
+                	<p class="col-md-10">Bibliography title: <span>[(${contents.biblioTitle})]</span>, description: <span>[(${contents.description})]</span></p>
+                	<ul>
+	                	<div th:each="contentRef: ${contents.references}">
+							<li>
+								<div th:id="${contentRef.id}" class="referenceDiv">
+									<p class="col-md-10">Reference title: <span>[(${contentRef.title})]</span>, author:<span>[(${contentRef.author})]</span>, year: <span>[(${contentRef.year})]</span>
+										, journal: <span>[(${contentRef.journal})]</span>, url: <span>[(${contentRef.url})]</span>, volume: <span>[(${contentRef.volume})]</span>, issue: <span>[(${contentRef.issue})]</span>
+										, pages: <span>[(${contentRef.pages})]</span>, editors: <span>[(${contentRef.editors})]</span>, type: <span>[(${contentRef.type})]</span>, note: <span>[(${contentRef.note})]</span></p>
+								</div>
+								<span class='Z3988' th:title='${contentRef.urlEncodedRefMetaData()}' > </span>
+							</li>
+						</div>
+					</ul>
+                </div>
+                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
                         <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>

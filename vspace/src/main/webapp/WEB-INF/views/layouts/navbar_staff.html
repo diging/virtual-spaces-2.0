@@ -1,6 +1,7 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 	<head>
+	
 	</head>
 	
 	<body>
@@ -43,6 +44,13 @@
 			               th:style="${currentPage == 'images' ? 'active' : '' }"
 			               th:href="@{/staff/images/list}"> 
 			               <span class="icon-image secondary"></span><span class="custom_Text">&nbsp;Images</span>
+			            </a>
+			        </li>
+			        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+			            <a class="nav-link"
+			               th:style="${currentPage == 'references' ? 'active' : '' }"
+			               th:href="@{/staff/references/list}"> 
+			               <span class="icon-book-open-alt secondary"></span><span class="custom_Text">&nbsp;References</span>
 			            </a>
 			        </li>
 		            <li class="nav-item" sec:authorize="hasRole('ADMIN')">

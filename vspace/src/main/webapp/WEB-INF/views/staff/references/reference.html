@@ -1,0 +1,34 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+</head>
+<body>
+    <div class="main-content" layout:fragment="content">
+        <h1>
+            Reference: [[${reference.title}]] <small
+                style="margin-left: 10px;"><a
+                th:href="@{'/staff/reference/'+${reference.id}+'/edit'}"><span>&nbsp;<i
+                        class="fas fa-edit"></i></span></a></small>
+        </h1>
+        <div class="alert alert-light" role="alert">
+            Created on <span class="date">[[${reference.creationDate}]]</span>
+            by [[${reference.createdBy}]]. <br> Modified on <span
+                class="date">[[${reference.modificationDate}]]</span> by
+            [[${reference.modifiedBy}]].
+        </div>
+
+        <p><b>Author:</b> [[${reference.author}]] </p>
+        <p><b>Year:</b> [[${reference.year}]] </p>
+        <p><b>Journal:</b> [[${reference.journal}]] </p>
+        <p><b>Url:</b> [[${reference.url}]] </p>
+        <p><b>Volume:</b> [[${reference.volume}]] </p>
+        <p><b>Issue:</b> [[${reference.issue}]] </p>
+        <p><b>Pages:</b> [[${reference.pages}]] </p>
+        <p><b>Editors:</b> [[${reference.editors}]] </p>
+        <p><b>Type:</b> [[${reference.type}]] </p>
+        <p><b>Note:</b> [[${reference.note}]] </p>
+        
+	<a th:href="@{'/staff/reference/'+${reference.id}+'/edit'}"
+		class="btn primary-btn">Edit Reference</a>
+    </div>
+</body>
+</html>
