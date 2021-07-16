@@ -23,14 +23,11 @@ public class DeleteImageBlockController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
-    @Autowired
-    private ContentBlockRepository contentBlockRepository;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteImageBlock(@PathVariable("blockId") String blockId) throws IOException {
+
         try {
-            contentBlockRepository.updateContentOrder(blockId);
             contentBlockManager.deleteImageBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Image Id does not exist, bad request.", e);

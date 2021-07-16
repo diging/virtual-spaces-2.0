@@ -21,18 +21,13 @@ public class AddTextBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @Autowired
-    private ContentBlockRepository contentBlockRepository;
-
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST)
     public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("content") String content) throws IOException {
 
-        Integer contentOrder = contentBlockRepository.findMaxContentOrder(slideId);
-        if (contentOrder == null) {
-            contentOrder = -1;
-        }
-        contentOrder=contentOrder+1;
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        
         ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
 
         return new ResponseEntity<>(textBlock.getId(), HttpStatus.OK);

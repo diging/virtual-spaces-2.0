@@ -26,19 +26,14 @@ public class AddChoiceBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @Autowired
-    private ContentBlockRepository contentBlockRepository;
-
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choice/content", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> addChoiceBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("selectedChoices") List<String> selectedChoices,
             @RequestParam("showsAll") boolean showsAll) throws IOException {
 
-        Integer contentOrder = contentBlockRepository.findMaxContentOrder(slideId);
-        if (contentOrder == null) {
-            contentOrder = -1;
-        }
-        contentOrder=contentOrder+1;
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+
         IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, selectedChoices, contentOrder,
                 showsAll);
         /*

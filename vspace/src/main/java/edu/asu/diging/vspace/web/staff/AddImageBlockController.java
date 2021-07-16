@@ -29,9 +29,6 @@ public class AddImageBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @Autowired
-    private ContentBlockRepository contentBlockRepository;
-
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image", method = RequestMethod.POST)
     public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file, Principal principal,
@@ -44,11 +41,9 @@ public class AddImageBlockController {
             filename = file.getOriginalFilename();
         }
         String imageId;
-        Integer contentOrder = contentBlockRepository.findMaxContentOrder(slideId);
-        if (contentOrder == null) {
-            contentOrder = -1;
-        }
-        contentOrder=contentOrder+1;
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        
         try {
             CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image, filename,
                     contentOrder);

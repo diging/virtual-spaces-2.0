@@ -23,16 +23,13 @@ public class DeleteTextBlockController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
-    @Autowired
-    private ContentBlockRepository contentBlockRepository;
-    
+
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteTextBlock(@PathVariable("blockId") String blockId) throws IOException {
+
         try {
-            contentBlockRepository.updateContentOrder(blockId);
             contentBlockManager.deleteTextBlockById(blockId);
-            
+
         } catch (BlockDoesNotExistException e) {
             logger.warn("Text Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

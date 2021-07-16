@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 import javax.transaction.Transactional;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 
@@ -15,9 +18,5 @@ public interface ContentBlockRepository extends PagingAndSortingRepository<Conte
     @Query("SELECT max(contentOrder) FROM ContentBlock d WHERE d.slide.id = ?1")
     public Integer findMaxContentOrder(String slideId);
     
-    @Modifying
-    @Transactional
-    @Query(value="UPDATE ContentBlock c SET c.contentOrder = c.contentOrder -1 WHERE c.contentOrder > (SELECT d.contentOrder FROM ContentBlock d WHERE d.id=?1)")
-    public int updateContentOrder(String blockId);
-    
+    public List<ContentBlock> findByContentOrderGreaterThan(Integer contentOrder);
 }
