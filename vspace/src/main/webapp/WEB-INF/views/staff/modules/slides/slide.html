@@ -24,7 +24,7 @@ $(function () {
 });
 
 function createImageBlock(reader, width) {
-    var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="position: absolute; right:64px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>');
+    var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
     imageblock.find('img').attr('src', reader.result);
     if(width > 800)
     	imageblock.find('img').attr('width', '800px');
@@ -53,7 +53,6 @@ function onDoubleClick(e){
     var divName = $(e.target).closest('div').attr('class');
     //if the div is a text content block 
     if(divName.includes("textDivStaff")){
-
     	$(e.target).closest('.textDivStaff').addClass("open");
         var description = $("div.open p:eq(0)").text();
     	defaultValue = description;
@@ -469,10 +468,7 @@ $(document).ready(function() {
             enctype: 'multipart/form-data',
             success: function(data) {
 
-                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-                $(textblock).css({
-                    'margin': "10px"
-                });
+                var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
                 $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(textblock);             
             },
@@ -537,7 +533,7 @@ $(document).ready(function() {
                         });
                    });
                 }
-                choiceblock.append('<input type="hidden" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>')
+                choiceblock.append('<input type="hidden" class="col-md-8" id="deleteChoiceBlockId" value="'+ data['choiceBlock'].id +'"><a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0;"><span class="icon-trash error"></span></a></div>')
             	$(choiceblock).css({
                     'display': "block"
                 });
@@ -555,11 +551,13 @@ $(document).ready(function() {
     function updateTextBox(blockId, text) {
         // clear text box and buttons
         $(".open").empty();
-        $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+        $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
         // reset border of the card
         //rebind event handlers
-        
         $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        //resetting the height and overflow-y so that the TextBlock doesn't expand
+        $('.textDivStaff').css('height', 'auto');
+        $('.textDivStaff').css('overflow-y', 'visible');
         $(".open").css('display', 'flex');
         // remove id from storage so its not there on refresh
         $(".open").removeClass("open");
@@ -925,7 +923,7 @@ $(window).on('load', function () {
                         <span class="icon-trash error"></span>
                     </a>
                 </div>
-                <div th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                <div style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
                     <p class="col-md-10"> [[${contents.text}]]</p>
                     <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                     
@@ -947,3 +945,4 @@ $(window).on('load', function () {
         </div>
     </div>
 </body>
+</html>

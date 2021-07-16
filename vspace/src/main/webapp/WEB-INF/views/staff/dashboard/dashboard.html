@@ -44,19 +44,19 @@
 		</div>
 		<div class="tab" style="margin-top: 10px; padding: 10px;">
 			<h4>Modules</h4>
-			<div class="grid" style="margin-top: 10px;">
-				<div th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<5" >
-                    <div class="btn-group">
-					<a th:href="@{'/staff/module/'+${module.id}}" class="btn btn-light" style="width: 10rem;">
-						<span class="card-title">[[${module.name}]]</span>
+			<div class="list" style="margin-top: 10px;">
+				<ul class="list-group list-group-flush" th:each="module,iterStat: ${recentModules}" th:if="${iterStat.index}<5" >
+                    <li class="list-group-item">
+					<a th:href="@{'/staff/module/'+${module.id}}" style="white-space: normal;overflow-wrap: break-word;">
+						<span class='icon-2x2-grid'></span>&nbsp;&nbsp;&nbsp;&nbsp;[[${module.name}]]
 					</a>
-                    <button type="button" class="btn btn-light"><span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" style="float: right" 
-                            th:title="|Created on <span class='date'>${module.creationDate}</span> by ${module.createdBy}|"></span></button>
-                    </div>
-				</div>
-				<a class="add" th:href="@{/staff/module/add}"><span class="icon-circle-add" style="margin: auto; color: var(--med-grey)"></span></a>
-			</div>	
-		</div>
+                    (Created on <span class="date">[[${module.creationDate}]]</span>
+                   by [[${module.createdBy}]])
+                    </li>
+				</ul>
+				<br><a class="add" th:href="@{/staff/module/add}"><span class="icon-circle-add" style="margin: auto; color: var(--med-grey)"></span></a>
+			</div>
+			</div>
     </div>      
 </div>
 </body>
