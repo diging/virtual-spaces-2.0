@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
-import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
@@ -76,19 +75,6 @@ public class ReferenceManager implements IReferenceManager {
         return referenceRepo.findByBiblios_Id(biblioId);
     }
  
-    private Sort getSortingParameters(String sortedBy, String order) {
-        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
-        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
-            sortingParameters = Sort.by(sortedBy);
-        }
-        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
-            sortingParameters = sortingParameters.ascending();
-        } else {
-            sortingParameters = sortingParameters.descending();
-        }
-        return sortingParameters;
-    }
-    
     @Override
     public List<IReference> getReferences(int pageNo) {
         return getReferences(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
@@ -142,4 +128,18 @@ public class ReferenceManager implements IReferenceManager {
         } 
         return null;
     }
+    
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+            sortingParameters = Sort.by(sortedBy);
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+            sortingParameters = sortingParameters.ascending();
+        } else {
+            sortingParameters = sortingParameters.descending();
+        }
+        return sortingParameters;
+    }
+    
 }

@@ -25,9 +25,8 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     
     @JsonIgnore    
     @ManyToMany
-    @JoinTable(name = "Biblio_Reference"
-    , joinColumns =
-    @JoinColumn(name = "BIBLIO_ID"), inverseJoinColumns = @JoinColumn(name = "REFERENCE_ID"))
+    @JoinTable(name = "Biblio_Reference", joinColumns = @JoinColumn(name = "BIBLIO_ID"), 
+        inverseJoinColumns = @JoinColumn(name = "REFERENCE_ID"))
     private List<Reference> references;
 
     @Override

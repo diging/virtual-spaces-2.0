@@ -11,17 +11,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IReference;
-import edu.asu.diging.vspace.referenceExpose.CitationStyleDefault;
-import edu.asu.diging.vspace.referenceExpose.ReferenceContext;
 import edu.asu.diging.vspace.referenceExpose.ReferenceMetadataDisplay;
 
 @Entity
@@ -36,9 +31,8 @@ public class Reference extends VSpaceElement implements IReference {
     
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "Biblio_Reference"
-    , joinColumns =
-    @JoinColumn(name = "REFERENCE_ID"), inverseJoinColumns = @JoinColumn(name = "BIBLIO_ID"))
+    @JoinTable(name = "Biblio_Reference", joinColumns = @JoinColumn(name = "REFERENCE_ID"), 
+        inverseJoinColumns = @JoinColumn(name = "BIBLIO_ID"))
     private List<BiblioBlock> biblios = new ArrayList<>();
 
     private String title;
