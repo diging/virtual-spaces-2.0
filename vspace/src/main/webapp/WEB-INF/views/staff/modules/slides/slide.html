@@ -83,8 +83,6 @@ function uploadImage() {
     var reader  = new FileReader();
     var formData = new FormData();
     formData.append('file', file);
-    formData.append('content', file.name);
-    formData.append('contentOrder', contentCount);
     var imageblock = "";
  	var oldImageBlock = "";
     
@@ -459,8 +457,6 @@ $(document).ready(function() {
         var formData = new FormData();
         var text = markDown.value();
         formData.append('content', text);
-        ++contentCount;
-        formData.append('contentOrder', contentCount);
         markDown.value('');
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -511,8 +507,6 @@ $(document).ready(function() {
         }
         var formData = new FormData();
         formData.append('selectedChoices', selectedChoice);
-        ++contentCount;
-        formData.append('contentOrder', contentCount);
         formData.append('showsAll', showsAll);
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content?'+${_csrf.parameterName}+'='+${_csrf.token}})]",

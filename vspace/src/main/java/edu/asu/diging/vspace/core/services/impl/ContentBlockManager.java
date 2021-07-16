@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
@@ -32,6 +33,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
+import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -72,6 +74,9 @@ public class ContentBlockManager implements IContentBlockManager {
     @Autowired
     private IStorageEngine storage;
 
+    @Autowired
+    private ContentBlockRepository contentBlockRepository;
+
     /*
      * (non-Javadoc)
      * 
@@ -87,7 +92,8 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
      * lang.String, java.lang.String)
      */
     @Override
@@ -148,7 +154,8 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
-     * Delete a text block using an id
+     * Delete a text block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
      * 
      * @param id - id of resource to be deleted. If the id is null then the
      *           functions returns nothing.
@@ -160,8 +167,16 @@ public class ContentBlockManager implements IContentBlockManager {
         if (id == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(id);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
-            textBlockRepo.deleteById(id);         
+            textBlockRepo.deleteById(id);
+            updateContentOrder(contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -169,7 +184,8 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
-     * Delete an image block using an id
+     * Delete an image block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
      * 
      * @param id - id of resource to be deleted. If the id is null then the
      *           functions returns nothing.
@@ -181,8 +197,16 @@ public class ContentBlockManager implements IContentBlockManager {
         if (id == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(id);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
             imageBlockRepo.deleteById(id);
+            updateContentOrder(contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -190,7 +214,8 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
-     * Delete a choices block using an id
+     * Delete a choices block using an id and also decrease content order by 1 of
+     * all the slide's block which are after this block
      * 
      * @param id - id of resource to be deleted. If the id is null then the
      *           functions returns nothing.
@@ -202,8 +227,16 @@ public class ContentBlockManager implements IContentBlockManager {
         if (id == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(id);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
-            choiceBlockRepo.deleteById(id);         
+            choiceBlockRepo.deleteById(id);
+            updateContentOrder(contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -215,7 +248,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
             throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = saveImage(image, filename);
         storeImageFile(image, slideContentImage, filename);
@@ -253,17 +286,42 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
      * lang.String, java.lang.String, java.lang.Integer)
      */
     @Override
-    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll) {
+    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
+            boolean showsAll) {
         List<IChoice> choices = new ArrayList<IChoice>();
-        if(!showsAll) {
-            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice)).collect(Collectors.toList());
+        if (!showsAll) {
+            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice))
+                    .collect(Collectors.toList());
         }
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
-        return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder,
+                choices, showsAll);
+        return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 
+    /**
+     * Retrieving the maximum content order for a slide
+     */
+    @Override
+    public Integer findMaxContentOrder(String slideId) {
+        return contentBlockRepository.findMaxContentOrder(slideId);
+    }
+
+    /**
+     * decreasing content order by 1 of the slide's block which are after the
+     * specified contentOrder
+     */
+    private void updateContentOrder(Integer contentOrder) {
+        if (contentOrder != null) {
+            List<ContentBlock> contentBlockList = contentBlockRepository.findByContentOrderGreaterThan(contentOrder);
+            for (ContentBlock eachContentBlock : contentBlockList) {
+                eachContentBlock.setContentOrder(eachContentBlock.getContentOrder() - 1);
+            }
+            contentBlockRepository.saveAll(contentBlockList);
+        }
+    }
 }

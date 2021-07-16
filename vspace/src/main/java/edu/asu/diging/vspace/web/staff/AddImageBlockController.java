@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
@@ -30,9 +31,8 @@ public class AddImageBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image", method = RequestMethod.POST)
     public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file,
-            @RequestParam("contentOrder") Integer contentOrder, Principal principal, RedirectAttributes attributes)
-            throws IOException {
+            @PathVariable("moduleId") String moduleId, @RequestParam("file") MultipartFile file, Principal principal,
+            RedirectAttributes attributes) throws IOException {
 
         byte[] image = null;
         String filename = null;
@@ -41,6 +41,9 @@ public class AddImageBlockController {
             filename = file.getOriginalFilename();
         }
         String imageId;
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        
         try {
             CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image, filename,
                     contentOrder);

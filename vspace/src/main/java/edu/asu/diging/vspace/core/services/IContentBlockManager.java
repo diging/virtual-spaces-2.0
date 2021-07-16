@@ -34,9 +34,10 @@ public interface IContentBlockManager {
 
     IChoiceBlock getChoiceBlock(String choiceBlockId);
 
-    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
             throws ImageCouldNotBeStoredException;
 
     IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll);   
-
+    
+    Integer findMaxContentOrder(String slideId);
 }

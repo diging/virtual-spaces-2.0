@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
@@ -25,6 +26,7 @@ public class DeleteImageBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteImageBlock(@PathVariable("blockId") String blockId) throws IOException {
+
         try {
             contentBlockManager.deleteImageBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
