@@ -23,7 +23,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.impl.Reference;
@@ -148,21 +147,21 @@ public class ReferenceManagerTest {
         ref.setId(REF_ID1);
         Optional<Reference> refObj = Optional.of(ref);
         Mockito.when(refRepo.findById(ref.getId())).thenReturn(refObj);
-        refManagerToTest.deleteReferenceById(REF_ID1, BIBLIO_ID);
+        refManagerToTest.deleteReferenceById(REF_ID1);
         Mockito.verify(refRepo).deleteById(REF_ID1);
     }
 
     @Test
-    public void test_deleteReferenceById_refIdNotPresent() throws SlideDoesNotExistException {
+    public void test_deleteReferenceById_refIdNotPresent() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID_NOT_PRESENT)).thenReturn(Optional.empty());
-        refManagerToTest.deleteReferenceById(REF_ID_NOT_PRESENT, BIBLIO_ID);
+        refManagerToTest.deleteReferenceById(REF_ID_NOT_PRESENT);
         Mockito.verify(refRepo, Mockito.never()).deleteById(REF_ID_NOT_PRESENT);
     }
 
     @Test
-    public void test_deleteReferenceId_refIdIsNull() {
+    public void test_deleteReferenceId_refIdIsNull() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(null)).thenReturn(Optional.empty());
-        refManagerToTest.deleteReferenceById(null, BIBLIO_ID);
+        refManagerToTest.deleteReferenceById(null);
         Mockito.verify(refRepo, Mockito.never()).deleteById(REF_ID_NOT_PRESENT);
     }
 
@@ -296,7 +295,7 @@ public class ReferenceManagerTest {
     @Test
     public void test_editBibliography_success() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.of(refList.get(1)));
-        refManagerToTest.updateReference(REF_ID1, refForm);
+        refManagerToTest.updateReference(refForm);
         Assert.assertEquals(refForm.getTitle(), ref1.getTitle());
         Assert.assertEquals(refForm.getAuthor(), ref1.getAuthor());
         Assert.assertEquals(refForm.getAuthor(), ref1.getAuthor());
@@ -314,7 +313,7 @@ public class ReferenceManagerTest {
     @Test(expected = ReferenceDoesNotExistException.class)
     public void test_editBibliography_whenNoBibliographyExists() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.empty());
-        refManagerToTest.updateReference(REF_ID1, refForm);
+        refManagerToTest.updateReference(refForm);
     }
 
     @Test

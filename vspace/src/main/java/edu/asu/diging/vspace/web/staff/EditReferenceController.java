@@ -41,7 +41,7 @@ public class EditReferenceController {
             RedirectAttributes attributes) {
         IReference reference = referenceManager.getReferenceById(referenceId);
         refData.setId(reference.getId());
-        referenceManager.updateReference(referenceId, refData);
+        referenceManager.updateReference(refData);
         return "redirect:/staff/display/reference/{referenceId}";
     }
 

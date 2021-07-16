@@ -116,11 +116,6 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void updateReference(String referenceId, IReference referenceData) {
-        referenceRepo.save((Reference) referenceData);
-    }
-
-    @Override
     public IReference getReferenceById(String referenceId) {
         Optional<Reference> referenceOptional = referenceRepo.findById(referenceId);
         if(referenceOptional.isPresent()) {
