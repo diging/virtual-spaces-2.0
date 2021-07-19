@@ -1,12 +1,15 @@
 <html layout:decorate="~{layouts/main}">
 <head>
+<link th:href="@{/resources/extra/Home.css}" rel="stylesheet"  type="text/css" id="applicationStylesheet"/>
 <script th:inline="javascript">
-	
+$(document).ready(function() {
+
+});
 </script>
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="">
+        <div class="container-fluid">
             <div><h3>Search Results</h3></div>
         </div>
     </div>
