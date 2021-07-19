@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +8,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
@@ -17,11 +18,8 @@ import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 @Transactional
 @Service
@@ -88,7 +86,7 @@ public class ModuleManager implements IModuleManager {
     }
     
     @Override
-    public Page<IVSpaceElement> findByNameOrDescription(Pageable requestedPage,String searchText) {
+    public Page<Module> findByNameOrDescription(Pageable requestedPage,String searchText) {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
 }

@@ -20,6 +20,6 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
 
     List<Space> findAllByImageId(String imageId);
 
-    public Page<IVSpaceElement> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    public Page<Space> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 }

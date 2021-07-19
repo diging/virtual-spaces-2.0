@@ -2,25 +2,27 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.HashSet;
 
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import org.springframework.data.domain.Page;
+
+import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.Module;
 
 public interface IStaffSearchManager {
 
-    HashSet<IVSpaceElement> searchInSpaces(String search,int page);
+    Page<Space> searchInSpaces(String search, int page);
 
-    HashSet<IVSpaceElement> searchInModules(String search,int page);
+    Page<Module> searchInModules(String search, int page);
 
-    HashSet<IVSpaceElement> searchInSlides(String search,int page);
+    Page<Slide> searchInSlides(String search, int page);
 
-    HashSet<IVSpaceElement> searchInSlideTexts(String search,int page);
-
-    int validatePageNumber(int pageNo, long totalPages);
+    Page<Slide> searchInSlideTexts(String search, int page);
 
     long getTotalSpacePages(String search);
-    
+
     long getTotalModulePages(String search);
-    
+
     long getTotalSlidePages(String search);
-    
+
     long getTotalSlideTextPages(String search);
 }

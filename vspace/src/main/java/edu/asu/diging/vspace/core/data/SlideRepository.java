@@ -23,7 +23,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     @Query("SELECT d.sequence FROM Slide d WHERE d.id = ?1")
     public List<Sequence> getSequencesForSlide(String slideId);
     
-    public Page<IVSpaceElement> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    public Page<Slide> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
     
 }

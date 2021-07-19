@@ -10,6 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 
 @Repository
@@ -17,5 +18,5 @@ import edu.asu.diging.vspace.core.model.impl.TextBlock;
 public interface TextContentBlockRepository extends PagingAndSortingRepository<TextBlock, String> {
 
     @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
-    public Page<IVSpaceElement> findWithNameOrDescription(Pageable requestedPage, String searchText);
+    public Page<Slide> findWithNameOrDescription(Pageable requestedPage, String searchText);
 }

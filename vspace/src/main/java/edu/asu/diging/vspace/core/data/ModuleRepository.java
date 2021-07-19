@@ -15,7 +15,7 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
 
     List<Module> findTop5ByOrderByCreationDateDesc();
 
-    public Page<IVSpaceElement> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    public Page<Module> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 
     List<Module> findAllByOrderByCreationDateDesc();

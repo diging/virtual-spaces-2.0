@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +41,7 @@ public class StaffSearchManagerTest {
 
     @Mock
     private ISlideManager slideManager;
-    
+
     @Mock
     private TextContentBlockRepository textContentBlockRepo;
 
@@ -49,13 +49,13 @@ public class StaffSearchManagerTest {
     @InjectMocks
     private StaffSearchManager serviceToTest;
 
-    private List<IVSpaceElement> spaces;
-    
-    private List<IVSpaceElement> modules;
-    
-    private List<IVSpaceElement> slides;
-    
-    private List<IVSpaceElement> slideTexts;
+    private List<Space> spaces;
+
+    private List<Module> modules;
+
+    private List<Slide> slides;
+
+    private List<Slide> slideTexts;
 
     @Before
     public void init() {
@@ -95,171 +95,174 @@ public class StaffSearchManagerTest {
     public void test_searchSpaces_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "space";
-        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(spaces));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSpaces(search,1);
-        assertEquals(2, tempResult.size());
+        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
+        Page<Space> tempResult = serviceToTest.searchInSpaces(search, 1);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SPACE_ID_1", idList.get(0));
         assertEquals("SPACE_ID_2", idList.get(1));
-        verify(spaceManager,times(2)).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager, times(2)).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
     public void test_searchSpaces_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(5, 10);
         String search = "space";
-        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(spaces));
+        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
         Mockito.doReturn(6L).when(serviceToTest).getTotalSpacePages(search);
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSpaces(search,7);
-        assertEquals(2, tempResult.size());
+        Page<Space> tempResult = serviceToTest.searchInSpaces(search, 7);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SPACE_ID_1", idList.get(0));
         assertEquals("SPACE_ID_2", idList.get(1));
         verify(spaceManager).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSpaces_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "space";
-        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(spaces));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSpaces(search,-1);
-        assertEquals(2, tempResult.size());
+        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
+        Page<Space> tempResult = serviceToTest.searchInSpaces(search, -1);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SPACE_ID_1", idList.get(0));
         assertEquals("SPACE_ID_2", idList.get(1));
-        verify(spaceManager,times(2)).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager, times(2)).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchModules_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
-        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(modules));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInModules(search,1);
-        assertEquals(2, tempResult.size());
+        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
+        Page<Module> tempResult = serviceToTest.searchInModules(search, 1);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager,times(2)).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager, times(2)).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchModules_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(5, 10);
         String search = "module";
-        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(modules));
+        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
         Mockito.doReturn(6L).when(serviceToTest).getTotalModulePages(search);
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInModules(search,7);
-        assertEquals(2, tempResult.size());
+        Page<Module> tempResult = serviceToTest.searchInModules(search, 7);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
         verify(moduleManager).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchModules_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
-        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(modules));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInModules(search,-2);
-        assertEquals(2, tempResult.size());
+        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
+        Page<Module> tempResult = serviceToTest.searchInModules(search, -2);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager,times(2)).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager, times(2)).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSlides_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
-        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(slides));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSlides(search,1);
-        assertEquals(2, tempResult.size());
+        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
+        Page<Slide> tempResult = serviceToTest.searchInSlides(search, 1);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager,times(2)).findByNameOrDescription(requestedPage, search);
+        verify(slideManager, times(2)).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSlides_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(5, 10);
         String search = "slide";
-        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(slides));
+        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
         Mockito.doReturn(6L).when(serviceToTest).getTotalSlidePages(search);
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSlides(search,7);
-        assertEquals(2, tempResult.size());
+        Page<Slide> tempResult = serviceToTest.searchInSlides(search, 7);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
         verify(slideManager).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSlides_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
-        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(slides));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSlides(search,-2);
-        assertEquals(2, tempResult.size());
+        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
+        Page<Slide> tempResult = serviceToTest.searchInSlides(search, -2);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager,times(2)).findByNameOrDescription(requestedPage, search);
+        verify(slideManager, times(2)).findByNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSlideTexts_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(slideTexts));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSlideTexts(search,1);
-        assertEquals(2, tempResult.size());
+        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
+                .thenReturn(new PageImpl<Slide>(slideTexts));
+        Page<Slide> tempResult = serviceToTest.searchInSlideTexts(search, 1);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo,times(2)).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo, times(2)).findWithNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSlideTexts_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(5, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(slideTexts));
+        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
+                .thenReturn(new PageImpl<Slide>(slideTexts));
         Mockito.doReturn(6L).when(serviceToTest).getTotalSlideTextPages(search);
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSlideTexts(search,7);
-        assertEquals(2, tempResult.size());
+        Page<Slide> tempResult = serviceToTest.searchInSlideTexts(search, 7);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
         verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
     }
-    
+
     @Test
     public void test_searchSlideTexts_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IVSpaceElement>(slideTexts));
-        HashSet<IVSpaceElement> tempResult = serviceToTest.searchInSlideTexts(search,-2);
-        assertEquals(2, tempResult.size());
+        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
+                .thenReturn(new PageImpl<Slide>(slideTexts));
+        Page<Slide> tempResult = serviceToTest.searchInSlideTexts(search, -2);
+        assertEquals(2, tempResult.getContent().size());
         List<String> idList = new ArrayList<>();
         tempResult.forEach(x -> idList.add(x.getId()));
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo,times(2)).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo, times(2)).findWithNameOrDescription(requestedPage, search);
     }
 }

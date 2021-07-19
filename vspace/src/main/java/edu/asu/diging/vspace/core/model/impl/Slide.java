@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -42,7 +43,7 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
-
+    
     @JsonIgnore
     @Transient
     private ImageBlock firstImageBlock;
@@ -142,21 +143,14 @@ public class Slide extends VSpaceElement implements ISlide {
      */
     public ImageBlock getFirstImageBlock() {
         List<IContentBlock> allBlocks = getContents();
-        if (allBlocks == null) {
-            return null;
-        }
         ImageBlock imageBlock = null;
-        for (IContentBlock contentBlock : allBlocks) {
-            if (contentBlock instanceof ImageBlock) {
-                imageBlock = (ImageBlock) contentBlock;
-                break;
+        if (allBlocks != null) {
+            Optional<IContentBlock> firstImageBlock = allBlocks.stream()
+                    .filter(contentBlock -> contentBlock instanceof ImageBlock).findFirst();
+            if (firstImageBlock.isPresent()) {
+                imageBlock = (ImageBlock) firstImageBlock.get();
             }
         }
         return imageBlock;
     }
-
-    public void setFirstImageBlock(ImageBlock firstImageBlock) {
-        this.firstImageBlock = firstImageBlock;
-    }
-
 }
