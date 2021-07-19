@@ -56,20 +56,19 @@ public class EditImageBlockController {
             }
             contentBlockManager.updateImageBlock(imageBlock, image);
         } else {
-
             byte[] image = null;
             String filename = null;
             if (file != null) {
                 image = file.getBytes();
                 filename = file.getOriginalFilename();
-            }
-            try {
-                contentBlockManager.updateImageBlock(imageBlock, image, filename, contentOrder);
-            } catch (ImageCouldNotBeStoredException e) {
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put("errorMessage", "Image Content block cannot be stored.");
-                return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+                try {
+                    contentBlockManager.updateImageBlock(imageBlock, image, filename, contentOrder);
+                } catch (ImageCouldNotBeStoredException e) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("errorMessage", "Image Content block cannot be stored.");
+                    return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             }
         }
         return new ResponseEntity<String>(HttpStatus.OK);

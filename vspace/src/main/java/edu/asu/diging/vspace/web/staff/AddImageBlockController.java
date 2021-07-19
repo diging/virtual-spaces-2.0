@@ -45,6 +45,8 @@ public class AddImageBlockController {
             @RequestParam("contentOrder") Integer contentOrder, Principal principal,
             @RequestParam(value = "imageId", required = false) String imageId, RedirectAttributes attributes)
             throws IOException {
+
+        IVSpaceElement imageBlock;
         if (imageId != null && !imageId.trim().isEmpty()) {
             IVSImage image;
             try {
@@ -55,25 +57,25 @@ public class AddImageBlockController {
             }
             CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
                     contentOrder);
-            IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
+            imageBlock = imageBlockReturnValue.getElement();
             imageId = imageBlock.getId();
         } else {
-            try {
-                byte[] image = null;
-                String filename = null;
-                if (file != null) {
-                    image = file.getBytes();
-                    filename = file.getOriginalFilename();
+            byte[] image = null;
+            String filename = null;
+            if (file != null) {
+                image = file.getBytes();
+                filename = file.getOriginalFilename();
+                try {
+                    CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
+                            filename, contentOrder);
+                    imageBlock = imageBlockReturnValue.getElement();
+                } catch (ImageCouldNotBeStoredException e) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    ObjectNode node = mapper.createObjectNode();
+                    node.put("errorMessage", "Image Content block cannot be stored.");
+                    return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
-                        filename, contentOrder);
-                IVSpaceElement imageBlock = imageBlockReturnValue.getElement();
                 imageId = imageBlock.getId();
-            } catch (ImageCouldNotBeStoredException e) {
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put("errorMessage", "Image Content block cannot be stored.");
-                return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         return new ResponseEntity<>(imageId, HttpStatus.OK);
