@@ -2,28 +2,28 @@
 <head>
 <link th:href="@{/resources/bootstrap-4.1.2/login.css}" rel="stylesheet" />
 </head>
+
 <body>
-    <div layout:fragment="content">
+    <div class="main-content" layout:fragment="content">
         <h1>Edit Image: [[${imageForm.fileName}]]</h1>
-        <form th:action="@{'/staff/image/'+${imageId}+'/edit'}"
-            method="POST" name="f">
-            <input type="hidden" name="${_csrf.parameterName}"
-                value="${_csrf.token}" />
+        
+        <form method="POST"
+        	th:action='@{|/staff/image/${imageId}/edit|}' th:object="${imageForm}"
+        	style="margin-top: 40px">
+            
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">Name:</label>
-                <input type="text" class="form-control col-md-10"
-                    id="name" name="name" />
+                <textarea class="form-control col-md-10" id="name" rows="1" cols="30"
+                	name="name">[[${imageForm.name}]]</textarea>
             </div>
             <div class="form-group row">
                 <label for="description" class="col-md-2 col-form-label">Description:</label>
-                <textarea class="form-control col-md-10" rows="5"
-                    cols="30" id="description" name="description"></textarea>
+                <textarea class="form-control col-md-10" rows="5" cols="30" 
+                	id="description" name="description">[[${imageForm.description}]]</textarea>
             </div>
 
-            <button class="btn btn-primary btn-sm" type="submit"
-                value="submit">Save Image</button>
-            <a th:href="@{'/staff/display/image/'+${imageId}}"
-                class="btn btn-light btn-sm">Cancel</a>
+            <button class="btn primary-btn" type="submit" value="submit">Save Image</button>
+            <a th:href="@{|/staff/display/image/${imageId}|}" class="btn btn-light">Cancel</a>
         </form>
     </div>
 </body>

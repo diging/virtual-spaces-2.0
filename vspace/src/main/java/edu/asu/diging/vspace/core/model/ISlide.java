@@ -11,5 +11,5 @@ public interface ISlide extends IVSpaceElement {
     void setContents(List<IContentBlock> contents);
 
     List<IContentBlock> getContents();
-
+   
 }

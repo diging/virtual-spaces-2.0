@@ -1,13 +1,12 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 	<head>
-	
 	</head>
 	
 	<body>
 		<div th:fragment="navbar">   
 		    <div id="mySidenav" class="sidenav">
-				<ul class="side-list">
+				<ul class="side-list" style="padding:1px;display: table;margin: 0 auto;padding-top:35px">
 		            <li class="nav-link alert alert-warning"
 						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
 						th:if="${exhibition}"
@@ -53,8 +52,15 @@
 			               <span class="icon-user secondary"></span><span class="custom_Text">&nbsp;Users</span>
 			            </a>
 			        </li>
+			         <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+			            <a class="nav-link"
+			               th:style="${currentPage == 'AboutPage' ? 'active' : '' }"
+			               th:href="@{/staff/exhibit/about}"> 
+			               <span class="icon-info secondary"></span><span class="custom_Text">&nbsp;About Page</span>
+			            </a>
+			        </li>
 		        </ul>
-		        <div class="footer">
+		        <div class="footer" style="word-break:break-word;">
 		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
 		        		Virtual Spaces 2.0</a> <span class="icon-copyright"></span> DigInG 2020
 		        </div>
@@ -62,23 +68,49 @@
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
-		      <div class="nav" id="navbarCollapse">
+              <div>
+                <input type="text" id="searchField" placeholder="Search..."><a id="searchLink"><button style="height:30px" type="submit" id="searchButton" disabled><span class="icon-search"></span></button></a>
+              </div>
+              <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
 		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/}"><span class="icon-play-circle secondary"></span></a>
+		            <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span></a>
 		          </li> 
 		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
-		          </li> 				  
-		        </ul>		        
+		            <a class="nav-link" th:href="@{/staff/exhibit/config}" title="Exhibition Configuration"><span class="icon-gear secondary"></span></a>
+		          </li>
+		        </ul>
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout"><span class="icon-sign-out"></span></button>
+		  				<button style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout"><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
 		         	</form>
 		        </div>
 		      </div>
 		    </nav> 
+            <script>
+                 $(document).on('input', '#searchField', function(e){
+                	 if($("#searchField").val().trim()) {
+                          $('#searchButton').removeAttr('disabled');
+                	 }
+                	 else {
+                         $('#searchButton').attr('disabled','true');
+                	 }
+                	 if (!$('#searchButton').attr('disabled') && $("#searchField").val().trim())
+                		 { 
+                			$("#searchLink").attr('href','[[@{/staff/search?searchText=}]]'+$("#searchField").val());
+                		 } 
+                	 else
+                		 {
+                		 $("#searchLink").attr('href','');
+                		 }
+                });
+                 $(document).on('keydown', function(e) { 
+                     if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
+                         $("#searchButton").trigger('click');
+                     }
+                 })
+            </script>
           </div>
 	</body>
 </html>

@@ -6,6 +6,10 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.model.impl.Module;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IModuleManager {
 
@@ -20,7 +24,6 @@ public interface IModuleManager {
     List<ISequence> getModuleSequences(String moduleId);
 
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
-
-    List<IVSpaceElement> findInNameOrDescriptionOfPublicModule(String searchText);
-
+    
+    Page<Module> findByNameOrDescription(Pageable requestedPage,String searchText);
 }

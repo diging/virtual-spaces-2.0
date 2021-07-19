@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,22 +29,24 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @Id
     @GeneratedValue(generator = "slide_id_generator")
-    @GenericGenerator(name = "slide_id_generator", 
-        parameters = @Parameter(name = "prefix", value = "SLI"),
-        strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "slide_id_generator", parameters = @Parameter(name = "prefix", value = "SLI"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @ManyToOne(targetEntity = Module.class)
     private IModule module;
 
-    //-------- @JsonIgnore used as this entity will be returned in a controller
-    @JsonIgnore 
+    // -------- @JsonIgnore used as this entity will be returned in a controller
+    @JsonIgnore
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
     private List<IContentBlock> contents;
-    
+
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
+    
+    @JsonIgnore
+    @Transient
+    private ImageBlock firstImageBlock;
 
     /*
      * (non-Javadoc)
@@ -77,8 +81,7 @@ public class Slide extends VSpaceElement implements ISlide {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setImage(edu.asu.diging.
      * vspace. core.model.IModule)
      */
     @Override
@@ -106,15 +109,14 @@ public class Slide extends VSpaceElement implements ISlide {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISlide#setContents(edu.asu.diging.
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setContents(edu.asu.diging.
      * vspace. core.model.IContentBlock)
      */
     @Override
     public void setContents(List<IContentBlock> contents) {
         this.contents = contents;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -127,12 +129,28 @@ public class Slide extends VSpaceElement implements ISlide {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISlide#setSequence(java.util.List)
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setSequence(java.util.List)
      */
     public void setSequence(List<ISequence> sequence) {
         this.sequence = sequence;
     }
 
-
+    /**
+     * This Method will retrieve the first ImageBlock of a slide if the ImageBlock
+     * is present
+     * 
+     * @return ImageBlock
+     */
+    public ImageBlock getFirstImageBlock() {
+        List<IContentBlock> allBlocks = getContents();
+        ImageBlock imageBlock = null;
+        if (allBlocks != null) {
+            Optional<IContentBlock> firstImageBlock = allBlocks.stream()
+                    .filter(contentBlock -> contentBlock instanceof ImageBlock).findFirst();
+            if (firstImageBlock.isPresent()) {
+                imageBlock = (ImageBlock) firstImageBlock.get();
+            }
+        }
+        return imageBlock;
+    }
 }

@@ -1,6 +1,5 @@
 <html layout:decorate="~{layouts/main}">
 	<head>
-    
 	
 	</head>
 	
@@ -12,18 +11,15 @@
 		      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		        <span class="navbar-toggler-icon"></span>
 		      </button> -->
-              <div>
-                <input type="text" id="searchField" placeholder="Search..."><a th:href="@{/exhibit/search}" id="searchLink"><button type="submit" id="searchButton" disabled><span class="icon-search"></span></button></a>
-              </div>
 		      <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
 		          <li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
-		            <a class="nav-link" th:href="@{/}"><span class="icon-play-circle secondary"></span>
+		            <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
                         <span class="sr-only">(current)</span>
                     </a>
 		          </li> 
 				  <li sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
-					<a class="nav-link" th:href="@{/staff/dashboard}"><span class="icon-home secondary"></span>
+					<a class="nav-link" th:href="@{/staff/dashboard}" title="Staff Dashboard"><span class="icon-home secondary"></span>
 						<span class="sr-only">(current)</span>
 					</a>
 				  </li>
@@ -39,29 +35,12 @@
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button class="btn nav-link" type="submit" title="Logout"><span class="icon-sign-out"></span></button>
+		  				<button style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout" ><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
 		         	</form>
 		         	<a class="btn nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"><span class="icon-sign-in"></span></a>
 		        </div>
 		      </div>
 		    </nav>
-            <script>
-                $(document).on('input', '#searchField', function(e){
-                    if($("#searchField").val().trim()) {
-                         $('#searchButton').removeAttr('disabled');
-                    }
-                    else {
-                        $('#searchButton').attr('disabled','true');
-                    }
-                    $("#searchLink").attr('href','[[@{/exhibit/search?searchText=}]]'+$("#searchField").val());
-                });
-                $(document).on('keydown', function(e) {
-                    if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
-                        $("#searchButton").trigger('click');
-                    }
-                })
-                //# sourceURL=script.js
-            </script>
 	    </div>
 	</body>
 </html>
