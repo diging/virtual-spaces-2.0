@@ -40,6 +40,4 @@ public interface ISpaceManager {
     
     Page<Space> findByNameOrDescription(Pageable requestedPage,String searchText);
 
-    List<IVSpaceElement> findInNameOrDescriptionOfPublicSpaces(String searchText);
-
 }
