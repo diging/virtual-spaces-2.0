@@ -13,7 +13,7 @@
 		        	<li class="nav-item active" style="padding-right: 35px;">
 		        		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" style="display: flex; align-items:center">
 					      	<div style="height: 5px; width: 5px; border-radius:50%; background-color: var(--success)"></div>
-					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as staff</em>
+					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
 		        	</li>
 					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
