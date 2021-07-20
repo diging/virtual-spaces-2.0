@@ -117,6 +117,7 @@
 }
 
 .spaceClass {
+	position: relative;
     right: 5%;
     left: 5%;
 }
@@ -160,7 +161,7 @@
 </head>
 
 <body>
-    <div layout:fragment="content">
+    <div id="mainDivContent" layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
 			
@@ -174,25 +175,35 @@
 			setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
 		}
                 // resize the image to max width
+                var spaceImg = $("#space");
 		if (isResizeImgBtnClicked == 1) {
 			$("#toggleImgClass").attr('class', "icon-collapse secondary");
 			if(maxImgWidthOrig > maxImgWidth) {
+				$("#space").remove();
+				$("#mainDivContent").append(spaceImg);
+				$(".spaceClass").css("display", ""); 
+				$(".spaceClass").css("justify-content", "");
 				$("#bgImage").css("width", maxImgWidth);
-            	$(".spaceClass").css("width", "100%"); 
-            	$(".spaceClass").css("position", "");
-            	$(".container-fluid").css("padding-right", "0px");
-            	$(".container-fluid").css("padding-left", "0px");
+            	$(".spaceClass").css("height", "");
+            	$("#Module_1").css("height", "");
+            	$("#Module_1").css("min-height", "");
+            	$("#Module_1").css("margin-bottom", "0px");
+            	
+            	
 			}
                 }
                 else{
                 	$("#toggleImgClass").attr('class', "icon-expand secondary");
                 	if(maxImgWidthOrig > maxImgWidth) {
+                		$("#space").remove();
+                		$(".spaceClass").children().first().append(spaceImg);
+                		$(".spaceClass").css("display", "flex"); 
+                		$(".spaceClass").css("justify-content", "");
                     	$("#bgImage").css("width", spaceWidth);
                     	$('#bgImage').width('100%');
-                    	$(".spaceClass").css("width", "80%");
-                    	$(".spaceClass").css("position", "relative");
-                    	$(".container-fluid").css("padding-right", "15px");
-                    	$(".container-fluid").css("padding-left", "15px");
+                    	$(".spaceClass").css("height", "800px");
+                    	$("#Module_1").css("margin-bottom", "60px");
+                    	
                     }
                   }
 		  $("#space a").remove();        
@@ -411,7 +422,7 @@
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; display: flex; justify-content: center; padding-top: 10px;">
+                    style="width: 80%; margin-left: 10px; margin-top: -50px;  padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
@@ -458,7 +469,7 @@
                                 <span class="icon-grid-dots moduleBarPosition"></span>
                             </div>
                         </div>
-                        <div class="text-Div"  style="margin-left: 10px;">
+                        <div class="text-Div" >
                             <h3 class="spaceName">
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"
