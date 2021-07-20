@@ -30,7 +30,6 @@ public class HomeController {
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null && exhibition.getStartSpace() != null) {
-            //
             if(!(authentication instanceof AnonymousAuthenticationToken))
                 return "redirect:/staff/dashboard/";
             else
