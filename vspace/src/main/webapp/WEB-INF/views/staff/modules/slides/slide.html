@@ -192,10 +192,8 @@ function uploadImage() {
    	$('#file').val('');
 }
 
-$(document).ready(function() {
-	
+function guidedTour() {
 	if(!contentCount) {
-		
 		const tour = new Shepherd.Tour({
 			  defaultStepOptions: {
 			    cancelIcon: {
@@ -274,7 +272,12 @@ $(document).ready(function() {
 		
 		
 		tour.start();
-	}	
+	}
+}
+
+$(document).ready(function() {	
+	
+	guidedTour();
     
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
@@ -777,13 +780,25 @@ $(window).on('load', function () {
 			</div>
         </div>
         
-        <h2 class="heading"><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
-        	<span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
-	   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
-	   		<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
-        		<span class="icon-edit"></span></a>
-        </h2>
-        <p id="description">[[${slide.description}]]</p>
+        <div style="display: flex">
+	        <div style="margin-right: 20px">
+	        	<h2 class="heading"><span style="color: var(--dark-grey);">Slide:</span> [[${slide.name}]]</h2>
+		        <p id="description">[[${slide.description}]]</p>
+	        </div>
+	        
+	        <div class="dropdown">
+				<button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="icon-menu-dots"></span>
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
+			   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
+					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
+		        		<span class="icon-edit"></span></a>
+					<button class="btn" th:onclick="guidedTour()" data-toggle="tooltip" data-placement="bottom" title="Start tour"><span class="icon-web"></span></button>
+				</div>
+			</div>
+		</div>
         
         <div style="margin: 40px 0 20px; width: fit-content" class="content-btns">
         	<button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
