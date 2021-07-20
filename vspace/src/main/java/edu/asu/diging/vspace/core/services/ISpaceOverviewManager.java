@@ -18,23 +18,7 @@ public interface ISpaceOverviewManager {
 
     Map<String, List<SpaceLinkDisplay>> getSpaceToSpaceLinks();
 
-    void getSpaceLinkMap(String contextPath, ObjectMapper mapper, ArrayNode nodeArray,
-            Map<String, List<String>> spaceLinkMap, Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
+    Map<String, List<String>> getSpaceLinkMap(Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
             Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap);
-
-    void createNodeForOverviewGraph(String contextPath, Iterable<? extends IVSpaceElement> nodeList,
-            ObjectMapper mapper, ArrayNode nodeArray);
-
-    void createModuleNodeInOverviewGraph(String contextPath, ObjectMapper mapper, ArrayNode nodeArray);
-
-    void createSpaceNodeInOverviewGraph(String contextPath, ObjectMapper mapper, ArrayNode nodeArray);
-
-    void createLinkForOverviewGraph(ObjectMapper mapper, ArrayNode linkArray, Map<String, List<String>> spaceLinkMap);
-
-    void createSpaceNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, Space space, ObjectNode node,
-            String contextPath, String spaceId);
-
-    void createModuleNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, ObjectNode node,
-            String contextPath, String moduleId);
 
 }
