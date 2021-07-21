@@ -186,7 +186,7 @@
 				$("#bgImage").css("width", maxImgWidth);
             	$(".spaceClass").css("height", "");
             	$("#Module_1").css("height", "");
-            	$("#Module_1").css("min-height", "");
+            	$("#Module_1").css("min-height", "0");
             	$("#Module_1").css("margin-bottom", "0px");
             	
             	
@@ -422,7 +422,7 @@
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; margin-top: -50px;  padding-top: 10px;">
+                    style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
