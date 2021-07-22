@@ -184,10 +184,10 @@
 				$(".spaceClass").css("display", ""); 
 				$(".spaceClass").css("justify-content", "");
 				$("#bgImage").css("width", maxImgWidth);
-            	$(".spaceClass").css("height", "");
-            	$("#Module_1").css("height", "");
-            	$("#Module_1").css("min-height", "0");
-            	$("#Module_1").css("margin-bottom", "0px");
+            			$(".spaceClass").css("height", "");
+            			$("#Module_1").css("height", "");
+            			$("#Module_1").css("min-height", "0");
+            			$("#Module_1").css("margin-bottom", "0px");
 			}
                 }
                 else{
@@ -197,15 +197,14 @@
                 		$(".spaceClass").children().first().append(spaceImg);
                 		$(".spaceClass").css("display", "flex"); 
                 		$(".spaceClass").css("justify-content", "");
-                    	$("#bgImage").css("width", spaceWidth);
-                    	$('#bgImage').width('100%');
-                    	$(".spaceClass").css("height", "800px");
-                    	$("#Module_1").css("margin-bottom", "60px");
-                    	
-                    }
+                    		$("#bgImage").css("width", spaceWidth);
+                    		$('#bgImage').width('100%');
+                    		$(".spaceClass").css("height", "800px");
+                    		$("#Module_1").css("margin-bottom", "60px");
+                    	}
                   }
-		  $("#space a").remove();        
-		  drawLinks();
+                $("#space a").remove();        
+		drawLinks();
             }
 
 		let maxWidth='(max-width: 1200px)';
@@ -268,13 +267,14 @@
 		
 		$(window).on("load", function() {
 			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
-			if(isResizeImgBtnClicked == "")
+			if(isResizeImgBtnClicked == "") {
 				setCookie('isResizeImgBtnClicked', -1, null);
+			}
 		    let spaceHeight = $("#bgImage").css("height");
 		    $("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
 				$("#space a").remove();
-		    	drawLinks();
+		    		drawLinks();
 		    });
 		    drawLinks();
 		    toggleImgSize(0);
