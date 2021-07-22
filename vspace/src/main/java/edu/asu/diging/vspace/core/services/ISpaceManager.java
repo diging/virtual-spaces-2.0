@@ -39,5 +39,7 @@ public interface ISpaceManager {
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
     Page<Space> findByNameOrDescription(Pageable requestedPage,String searchText);
+    
+    Page<Space> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchText);
 
 }

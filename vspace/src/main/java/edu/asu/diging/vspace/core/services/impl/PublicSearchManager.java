@@ -11,6 +11,7 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -49,7 +50,7 @@ public class PublicSearchManager implements IPublicSearchManager{
     public Page<Space> searchInSpaces(String searchTerm, int page) {
         int spacePageNo = validatePageNumber(page, getTotalSpacePages(searchTerm));
         Pageable requestedPageForSpace = PageRequest.of(spacePageNo - 1, pageSize);
-        return spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
     }
 
     /**

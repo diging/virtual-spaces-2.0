@@ -1,4 +1,4 @@
-<html layout:decorate="~{layouts/main_staff}">
+<html layout:decorate="~{layouts/main}">
 <head>
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
 <script th:inline="javascript">
@@ -151,7 +151,8 @@ background:#F2A950;
 </style>
 </head>
 <body>
-<div layout:fragment="content" class="container">
+<div layout:fragment="content">
+<div class="container">
 <ul class="nav-tabs nav">
 <li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
 <a href="#space" id="myspace" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Space</font></a>
@@ -182,7 +183,7 @@ background:#F2A950;
                             style="width: 100%"> <span
                             class="card-title"
                             style="white-space: pre-wrap; line-break: anywhere;"><img
-                            style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                            style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                             th:src="@{'/api/image/'+${contents?.image?.id}}" alt="Space image" /><span 
                             style="color: var(--dark-grey)">  Space:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
@@ -209,16 +210,16 @@ background:#F2A950;
                             th:unless="${counter.count > 1}">
                             <div th:if=" ${slide?.firstImageBlock !=null}" th:each="img : ${slide?.firstImageBlock}">
                             <img
-                            style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                            style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                             th:src="@{'/api/image/'+${img?.image?.id}}" alt="Module image" />
                             </div>
                             <div th:if=" ${slide?.firstImageBlock ==null}">
-                            <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                            <img  style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
                             </div>
                              <div th:if=" ${#lists.isEmpty(contents.slides)}">
-                            <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                            <img  style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
                             <span class="card-title"
@@ -247,16 +248,16 @@ background:#F2A950;
                             <div th:if="${not #lists.isEmpty(contents.contents)}">
                             <div th:if="${contents?.firstImageBlock !=null}">
                                 <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
-                                    style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                    style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                     th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}" alt="Slide image" />
                             </div>
                              <div th:if="${contents?.firstImageBlock ==null}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
                             </div>
                             <div th:if="${#lists.isEmpty(contents.contents)}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
                             <span class="card-title"
@@ -285,16 +286,16 @@ background:#F2A950;
                             <div th:if="${not #lists.isEmpty(contents.contents)}">
                             <div th:if="${contents?.firstImageBlock !=null}">
                                 <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
-                                    style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                    style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                     th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}" alt="Slide image" />
                             </div>
                             <div th:if="${contents?.firstImageBlock ==null}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
                             </div>
                             <div th:if="${#lists.isEmpty(contents.contents)}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
+                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px; margin: 10px;"
                                  th:src="@{'/resources/images/placeholder.png'}"/>
                             </div>
                             <span class="card-title"
@@ -306,6 +307,7 @@ background:#F2A950;
 </div>
 <br>
 <div id="slideTextPage-selection"></div>
+</div>
 </div>
 </div>
 </div>
