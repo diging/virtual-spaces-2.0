@@ -166,9 +166,9 @@
 		//# sourceURL=click.js
 			
             function toggleImgSize(isClicked){
-                let maxImgWidth = $(window).width();
-                let spaceWidth = $("#bgImage").css("width");
-                let maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+                var maxImgWidth = $(window).width();
+                var spaceWidth = $("#bgImage").css("width");
+                var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
                 var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
                 if(isClicked) {
 			isResizeImgBtnClicked = -isResizeImgBtnClicked;
@@ -188,8 +188,6 @@
             	$("#Module_1").css("height", "");
             	$("#Module_1").css("min-height", "0");
             	$("#Module_1").css("margin-bottom", "0px");
-            	
-            	
 			}
                 }
                 else{
