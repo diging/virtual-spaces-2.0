@@ -11,6 +11,9 @@
 		      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 		        <span class="navbar-toggler-icon"></span>
 		      </button> -->
+              <div>
+                <input type="text" id="searchField" placeholder="Search..."><a th:href="@{/exhibit/search}" id="searchLink"><button type="submit" id="searchButton" disabled><span class="icon-search"></span></button></a>
+              </div>
 		      <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
 		          <li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
@@ -41,6 +44,23 @@
 		        </div>
 		      </div>
 		    </nav>
+            <script>
+                $(document).on('input', '#searchField', function(e){
+                    if($("#searchField").val().trim()) {
+                         $('#searchButton').removeAttr('disabled');
+                    }
+                    else {
+                        $('#searchButton').attr('disabled','true');
+                    }
+                    $("#searchLink").attr('href','[[@{/exhibit/search?searchText=}]]'+$("#searchField").val());
+                });
+                $(document).on('keydown', function(e) {
+                    if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
+                        $("#searchButton").trigger('click');
+                    }
+                })
+                //# sourceURL=script.js
+            </script>
 	    </div>
 	</body>
 </html>
