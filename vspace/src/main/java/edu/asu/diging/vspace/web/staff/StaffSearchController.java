@@ -26,8 +26,7 @@ public class StaffSearchController {
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
-            Model model, @RequestParam(name = "searchText") String searchTerm,
-            @RequestParam(value = "tab", defaultValue = "module") String tab) {
+            Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         paginationForSpace(spacePagenum, model, searchTerm);
 
@@ -38,7 +37,7 @@ public class StaffSearchController {
         paginationForSlideText(slideTextPagenum, model, searchTerm);
 
         model.addAttribute("searchWord", searchTerm);
-        model.addAttribute("activeTab", tab);
+        
         return "/staff/search/staffSearch";
     }
 

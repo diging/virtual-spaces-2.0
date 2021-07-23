@@ -16,6 +16,13 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
+/**
+ * This class has all the methods with the business logics for searching a word
+ * in staff page.
+ * 
+ * @author Avirup Biswas
+ *
+ */
 @Service
 public class StaffSearchManager implements IStaffSearchManager {
 
@@ -47,9 +54,20 @@ public class StaffSearchManager implements IStaffSearchManager {
 
     @Override
     public Page<Space> searchInSpaces(String searchTerm, int page) {
-        int spacePageNo = validatePageNumber(page, getTotalSpacePages(searchTerm));
-        Pageable requestedPageForSpace = PageRequest.of(spacePageNo - 1, pageSize);
-        return spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForSpace;
+        Page<Space> spacePage;
+        requestedPageForSpace = PageRequest.of(page - 1, pageSize);
+        spacePage = spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        int totalSpacePage = spacePage.getTotalPages();
+        if (page > totalSpacePage) {
+            totalSpacePage = totalSpacePage == 0 ? 1 : totalSpacePage;
+            requestedPageForSpace = PageRequest.of(totalSpacePage - 1, pageSize);
+            spacePage = spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        }
+        return spacePage;
     }
 
     /**
@@ -64,9 +82,20 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public Page<Module> searchInModules(String searchTerm, int page) {
-        int modulePageNo = validatePageNumber(page, getTotalModulePages(searchTerm));
-        Pageable requestedPageForModule = PageRequest.of(modulePageNo - 1, pageSize);
-        return moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForModule;
+        Page<Module> modulePage;
+        requestedPageForModule = PageRequest.of(page - 1, pageSize);
+        modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        int totalModulePage = modulePage.getTotalPages();
+        if (page > totalModulePage) {
+            totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
+            requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
+            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        }
+        return modulePage;
     }
 
     /**
@@ -81,9 +110,20 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public Page<Slide> searchInSlides(String searchTerm, int page) {
-        int slidePageNo = validatePageNumber(page, getTotalSlidePages(searchTerm));
-        Pageable requestedPageForSlide = PageRequest.of(slidePageNo - 1, pageSize);
-        return slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForSlide;
+        Page<Slide> slidePage;
+        requestedPageForSlide = PageRequest.of(page - 1, pageSize);
+        slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        int totalSlidePage = slidePage.getTotalPages();
+        if (page > totalSlidePage) {
+            totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
+            requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
+            slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        }
+        return slidePage;
     }
 
     /**
@@ -98,26 +138,20 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public Page<Slide> searchInSlideTexts(String searchTerm, int page) {
-        int slideTextPageNo = validatePageNumber(page, getTotalSlideTextPages(searchTerm));
-        Pageable requestedPageForSlideText = PageRequest.of(slideTextPageNo - 1, pageSize);
-        return textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
-    }
-
-    /**
-     * Method to return page number after validation
-     * 
-     * @param pageNo page provided by calling method(Note: The page number starts
-     *               from 1.)
-     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
-     *         totalPages.
-     */
-    private int validatePageNumber(int pageNo, long totalPages) {
-        if (pageNo < 1) {
-            return 1;
-        } else if (pageNo > totalPages) {
-            return (totalPages == 0) ? 1 : (int) totalPages;
+        if (page < 1) {
+            page = 1;
         }
-        return pageNo;
+        Pageable requestedPageForSlideText;
+        Page<Slide> slidetextPage;
+        requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
+        slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        int totalSlideTextPage = slidetextPage.getTotalPages();
+        if (page > totalSlideTextPage) {
+            totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;
+            requestedPageForSlideText = PageRequest.of(totalSlideTextPage - 1, pageSize);
+            slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        }
+        return slidetextPage;
     }
 
     /**

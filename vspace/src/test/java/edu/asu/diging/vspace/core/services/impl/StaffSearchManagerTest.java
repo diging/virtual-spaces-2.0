@@ -6,8 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -45,7 +43,6 @@ public class StaffSearchManagerTest {
     @Mock
     private TextContentBlockRepository textContentBlockRepo;
 
-    @Spy
     @InjectMocks
     private StaffSearchManager serviceToTest;
 
@@ -98,26 +95,26 @@ public class StaffSearchManagerTest {
         when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
         Page<Space> tempResult = serviceToTest.searchInSpaces(search, 1);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_1", idList.get(0));
         assertEquals("SPACE_ID_2", idList.get(1));
-        verify(spaceManager, times(2)).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
     public void test_searchSpaces_pageGreaterThanTotalPages() {
-        Pageable requestedPage = PageRequest.of(5, 10);
+        Pageable requestedPage = PageRequest.of(6, 10);
         String search = "space";
         when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
-        Mockito.doReturn(6L).when(serviceToTest).getTotalSpacePages(search);
+        Pageable requestedPage1 = PageRequest.of(0, 10);
+        when(spaceManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<Space>(spaces));
         Page<Space> tempResult = serviceToTest.searchInSpaces(search, 7);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_1", idList.get(0));
         assertEquals("SPACE_ID_2", idList.get(1));
         verify(spaceManager).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager).findByNameOrDescription(requestedPage1, search);
     }
 
     @Test
@@ -127,11 +124,10 @@ public class StaffSearchManagerTest {
         when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
         Page<Space> tempResult = serviceToTest.searchInSpaces(search, -1);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_1", idList.get(0));
         assertEquals("SPACE_ID_2", idList.get(1));
-        verify(spaceManager, times(2)).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
@@ -141,26 +137,26 @@ public class StaffSearchManagerTest {
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
         Page<Module> tempResult = serviceToTest.searchInModules(search, 1);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager, times(2)).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
     public void test_searchModules_pageGreaterThanTotalPages() {
-        Pageable requestedPage = PageRequest.of(5, 10);
+        Pageable requestedPage = PageRequest.of(6, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
-        Mockito.doReturn(6L).when(serviceToTest).getTotalModulePages(search);
+        Pageable requestedPage1 = PageRequest.of(0, 10);
+        when(moduleManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<Module>(modules));
         Page<Module> tempResult = serviceToTest.searchInModules(search, 7);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
         verify(moduleManager).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager).findByNameOrDescription(requestedPage1, search);
     }
 
     @Test
@@ -170,11 +166,10 @@ public class StaffSearchManagerTest {
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
         Page<Module> tempResult = serviceToTest.searchInModules(search, -2);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager, times(2)).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
@@ -184,26 +179,26 @@ public class StaffSearchManagerTest {
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
         Page<Slide> tempResult = serviceToTest.searchInSlides(search, 1);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager, times(2)).findByNameOrDescription(requestedPage, search);
+        verify(slideManager).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
     public void test_searchSlides_pageGreaterThanTotalPages() {
-        Pageable requestedPage = PageRequest.of(5, 10);
+        Pageable requestedPage = PageRequest.of(6, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
-        Mockito.doReturn(6L).when(serviceToTest).getTotalSlidePages(search);
+        Pageable requestedPage1 = PageRequest.of(0, 10);
+        when(slideManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<Slide>(slides));
         Page<Slide> tempResult = serviceToTest.searchInSlides(search, 7);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
         verify(slideManager).findByNameOrDescription(requestedPage, search);
+        verify(slideManager).findByNameOrDescription(requestedPage1, search);
     }
 
     @Test
@@ -213,11 +208,10 @@ public class StaffSearchManagerTest {
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
         Page<Slide> tempResult = serviceToTest.searchInSlides(search, -2);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager, times(2)).findByNameOrDescription(requestedPage, search);
+        verify(slideManager).findByNameOrDescription(requestedPage, search);
     }
 
     @Test
@@ -228,27 +222,28 @@ public class StaffSearchManagerTest {
                 .thenReturn(new PageImpl<Slide>(slideTexts));
         Page<Slide> tempResult = serviceToTest.searchInSlideTexts(search, 1);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo, times(2)).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
     }
 
     @Test
     public void test_searchSlideTexts_pageGreaterThanTotalPages() {
-        Pageable requestedPage = PageRequest.of(5, 10);
+        Pageable requestedPage = PageRequest.of(6, 10);
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
                 .thenReturn(new PageImpl<Slide>(slideTexts));
-        Mockito.doReturn(6L).when(serviceToTest).getTotalSlideTextPages(search);
+        Pageable requestedPage1 = PageRequest.of(0, 10);
+        when(textContentBlockRepo.findWithNameOrDescription(requestedPage1, search))
+                .thenReturn(new PageImpl<Slide>(slideTexts));
         Page<Slide> tempResult = serviceToTest.searchInSlideTexts(search, 7);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
         verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage1, search);
     }
 
     @Test
@@ -259,10 +254,9 @@ public class StaffSearchManagerTest {
                 .thenReturn(new PageImpl<Slide>(slideTexts));
         Page<Slide> tempResult = serviceToTest.searchInSlideTexts(search, -2);
         assertEquals(2, tempResult.getContent().size());
-        List<String> idList = new ArrayList<>();
-        tempResult.forEach(x -> idList.add(x.getId()));
+        List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo, times(2)).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
     }
 }

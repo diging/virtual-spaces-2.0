@@ -10,19 +10,19 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 
 public interface IStaffSearchManager {
 
-    Page<Space> searchInSpaces(String search, int page);
+    Page<Space> searchInSpaces(String searchTerm, int page);
 
-    Page<Module> searchInModules(String search, int page);
+    Page<Module> searchInModules(String searchTerm, int page);
 
-    Page<Slide> searchInSlides(String search, int page);
+    Page<Slide> searchInSlides(String searchTerm, int page);
 
-    Page<Slide> searchInSlideTexts(String search, int page);
+    Page<Slide> searchInSlideTexts(String searchTerm, int page);
 
-    long getTotalSpacePages(String search);
+    long getTotalSpacePages(String searchTerm);
 
-    long getTotalModulePages(String search);
+    long getTotalModulePages(String searchTerm);
 
-    long getTotalSlidePages(String search);
+    long getTotalSlidePages(String searchTerm);
 
-    long getTotalSlideTextPages(String search);
+    long getTotalSlideTextPages(String searchTerm);
 }
