@@ -2,182 +2,375 @@
 <head>
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
 <script th:inline="javascript">
-	$(document).ready(function($) {
-		$("#space").removeClass("active");
-		$("#module").removeClass("active");
-		$("#slide").removeClass("active");
-		$("#slideText").removeClass("active");
+$(document).ready(function($) {
+	var searchWord = [[${searchWord}]];
+	$("#module").addClass("active");
+	$("#mymodule").addClass("active");
+	$("#mymodule").addClass("show");
 		
-		var tab = [[${activeTab}]];
-		$("#"+tab).addClass("active");
-		$('#my'+tab).addClass('active');
-		$('#my'+tab).addClass('show');
+	var spaceModelAttributeValue = [[${spaceSearchResults}]];
+	if(spaceModelAttributeValue.length != 0) {
+       $("#spaceNoResult").hide();
+       $("#spaceResultDisplay").show();
+     }
+     else {
+        $("#spaceNoResult").show();
+        $("#spaceResultDisplay").hide();
+     }
 		
-		var spaceModelAttributeValue = [[${spaceSearchResults}]];
-        if(spaceModelAttributeValue.length != 0) {
-            $("#spaceNoResult").hide();
-            $("#spaceResultDisplay").show();
-        }
-        else {
-        	   $("#spaceNoResult").show();
-               $("#spaceResultDisplay").hide();
-        }
+	var moduleModelAttributeValue = [[${moduleSearchResults}]];
+	if(moduleModelAttributeValue.length != 0) {
+       $("#moduleNoResult").hide();
+       $("#moduleResultDisplay").show();
+       }
+     else {
+        $("#moduleNoResult").show();
+        $("#moduleResultDisplay").hide();
+       }  
 		
-        var moduleModelAttributeValue = [[${moduleSearchResults}]];
-        if(moduleModelAttributeValue.length != 0) {
-            $("#moduleNoResult").hide();
-            $("#moduleResultDisplay").show();
+	var slideModelAttributeValue = [[${slideSearchResults}]];
+	if(slideModelAttributeValue.length != 0) {
+       $("#slideNoResult").hide();
+       $("#slideResultDisplay").show();
+       }
+    else {
+       $("#slideNoResult").show();
+       $("#slideResultDisplay").hide();
+       } 
+        
+	var slideTextModelAttributeValue = [[${slideTextSearchResults}]];
+	if(slideTextModelAttributeValue.length != 0) {
+       $("#slideTextNoResult").hide();
+       $("#slideTextResultDisplay").show();
         }
-        else {
-        	 $("#moduleNoResult").show();
-            $("#moduleResultDisplay").hide();
-        }  
-		
-        var slideModelAttributeValue = [[${slideSearchResults}]];
-        if(slideModelAttributeValue.length != 0) {
-            $("#slideNoResult").hide();
-            $("#slideResultDisplay").show();
-        }
-        else {
-        	   $("#slideNoResult").show();
-               $("#slideResultDisplay").hide();
+     else {
+        $("#slideTextNoResult").show();
+        $("#slideTextResultDisplay").hide();
         } 
         
-        var slideTextModelAttributeValue = [[${slideTextSearchResults}]];
-        if(slideTextModelAttributeValue.length != 0) {
-            $("#slideTextNoResult").hide();
-            $("#slideTextResultDisplay").show();
-        }
-        else {
-        	   $("#slideTextNoResult").show();
-               $("#slideTextResultDisplay").hide();
-        } 
-        
-        $('#spacepage-selection').bootpag({
-	        total: [(${spaceTotalPages})],
-	        page: [(${spaceCurrentPageNumber})],
-	        maxVisible: 10,
-	        leaps: true,
-	        firstLastUse: true,
-	        first: '|<',
-	        last: '>|',
-	        wrapClass: 'pagination',
-	        activeClass: 'active',
-	        disabledClass: 'disabled',
-	        nextClass: 'next',
-	        prevClass: 'prev',
-	        lastClass: 'last',
-	        firstClass: 'first'
-	    }).on("page", function(event, num){
-	        window.location.assign("./search?spacePagenum="+num+"&searchText="+[[${searchWord}]]+"&tab="+"space");
+$('#spacepage-selection').bootpag({
+	total: [[${spaceTotalPages}]],
+	page: [[${spaceCurrentPageNumber}]],
+	maxVisible: 10,
+	leaps: true,
+	firstLastUse: true,
+	first: '|<',
+	last: '>|',
+	wrapClass: 'pagination',
+	activeClass: 'active',
+	disabledClass: 'disabled',
+	nextClass: 'next',
+	prevClass: 'prev',
+	lastClass: 'last',
+	firstClass: 'first'
+	}).on("page", function(event, num){
+	$.ajax({
+        url: "[(@{'/staff/search/space'})]"+'?'+"spacePagenum="+num+"&searchText="+searchWord,
+		type: 'GET',
+	    cache : false,
+		contentType : false,
+		success: function(data) {
+		spaceSet = data['spaceSet'];
+		$("#spaceResultDisplay").empty();
+		for(let i=0;i<spaceSet.length;i++)
+		{
+		  var divtag = $("<div></div>");
+		  divtag.attr('id',spaceSet[i].id);
+		  var anchor = $("<a></a>");
+		  anchor.attr('href',"[(@{'/staff/space/'})]"+spaceSet[i].id);
+		  anchor.attr('class',"textDivStaff tab  btn btn-light");
+		  anchor.css('width','100%');
+		  var span1 = $("<span></span>");
+		  span1.attr('class',"card-title");
+		  span1.css('white-space',"pre-wrap");
+		  span1.css('line-break',"anywhere");
+		  var img = $("<img></img>");
+		  img.attr('src',"[(@{'/api/image/'})]"+spaceSet[i].image.id);
+		  img.css('border-radius','25px');
+		  img.css('float','left');
+		  img.css('width','150px');
+		  img.css('height','150px');
+		  span1.append(img);
+		  var span2 = $("<span>"+'  Space:'+"</span>");
+		  span2.css('color','var(--dark-grey)');
+		  span1.append(span2);
+		  span1.append(spaceSet[i].name+'<br>');
+		  var span3 = $("<span>"+'  Description:'+"</span>");
+		  span3.css('color','var(--dark-grey)');
+		  span1.append(span3);
+		  span1.append(spaceSet[i].description);
+		  anchor.append(span1);
+		  divtag.append(anchor);
+		  $("#spaceResultDisplay").append(divtag);
+		}
+		  }
+			});
 	    });
         
-		 $('#modulepage-selection').bootpag({
-		        total: [(${moduleTotalPages})],
-		        page: [(${moduleCurrentPageNumber})],
-		        maxVisible: 10,
-		        leaps: true,
-		        firstLastUse: true,
-		        first: '|<',
-		        last: '>|',
-		        wrapClass: 'pagination',
-		        activeClass: 'active',
-		        disabledClass: 'disabled',
-		        nextClass: 'next',
-		        prevClass: 'prev',
-		        lastClass: 'last',
-		        firstClass: 'first'
-		    }).on("page", function(event, num){
-		        window.location.assign("./search?modulePagenum="+num+"&searchText="+[[${searchWord}]]+"&tab="+"module");
-		    });
+$('#modulepage-selection').bootpag({
+	total: [[${moduleTotalPages}]],
+	page: [[${moduleCurrentPageNumber}]],
+	maxVisible: 10,
+	leaps: true,
+	firstLastUse: true,
+	first: '|<',
+	last: '>|',
+	wrapClass: 'pagination',
+	activeClass: 'active',
+	disabledClass: 'disabled',
+	nextClass: 'next',
+	prevClass: 'prev',
+	lastClass: 'last',
+	firstClass: 'first'
+	}).on("page", function(event, num){
+	$.ajax({
+		url: "[(@{'/staff/search/module'})]"+'?'+"modulePagenum="+num+"&searchText="+searchWord,
+		type: 'GET',
+		cache : false,
+		contentType : false,
+	    success: function(data) {
+		moduleSet = data['moduleSet'];
+		moduleFirstSlideFirstImage = data['moduleFirstSlideFirstImage'];
+		$("#moduleResultDisplay").empty();
+		for(let i=0;i<moduleSet.length;i++)
+		{
+		 var divtag = $("<div></div>");
+		 divtag.attr('id',moduleSet[i].id);
+		 var anchor = $("<a></a>");
+		 anchor.attr('href',"[(@{'/staff/module/'})]"+moduleSet[i].id);
+		 anchor.attr('class',"textDivStaff tab  btn btn-light");
+		 anchor.css('width','100%');
+		 var img = $("<img></img>");
+		 var firstSlideFirstImageId = moduleFirstSlideFirstImage[moduleSet[i].id];
+		 if(firstSlideFirstImageId == null)
+		 {
+		  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+		 }
+		else
+		 {
+		  img.attr('src',"[(@{'/api/image/'})]"+firstSlideFirstImageId);
+		 }
+		img.css('border-radius','25px');
+		img.css('float','left');
+		img.css('width','150px');
+		img.css('height','150px');
+		anchor.append(img);
+		var span1 = $("<span></span>");
+		span1.attr('class',"card-title");
+		span1.css('white-space',"pre-wrap");
+		span1.css('line-break',"anywhere");
+	    var span2 = $("<span>"+'  Module:'+"</span>");
+		span2.css('color','var(--dark-grey)');
+		span1.append(span2);
+		span1.append(moduleSet[i].name+'<br>');
+		var span3 = $("<span>"+'  Description:'+"</span>");
+		span3.css('color','var(--dark-grey)');
+		span1.append(span3);
+		span1.append(moduleSet[i].description);
+		anchor.append(span1);
+		divtag.append(anchor);
+		$("#moduleResultDisplay").append(divtag);
+	}
+	 }
+	  });
+	});
         
-		  $('#slidepage-selection').bootpag({
-		        total: [(${slideTotalPages})],
-		        page: [(${slideCurrentPageNumber})],
-		        maxVisible: 10,
-		        leaps: true,
-		        firstLastUse: true,
-		        first: '|<',
-		        last: '>|',
-		        wrapClass: 'pagination',
-		        activeClass: 'active',
-		        disabledClass: 'disabled',
-		        nextClass: 'next',
-		        prevClass: 'prev',
-		        lastClass: 'last',
-		        firstClass: 'first'
-		    }).on("page", function(event, num){
-		        window.location.assign("./search?slidePagenum="+num+"&searchText="+[[${searchWord}]]+"&tab="+"slide");
-		    });
+$('#slidepage-selection').bootpag({
+	total: [[${slideTotalPages}]],
+	page: [[${slideCurrentPageNumber}]],
+	maxVisible: 10,
+	leaps: true,
+	firstLastUse: true,
+	first: '|<',
+	last: '>|',
+    wrapClass: 'pagination',
+	activeClass: 'active',
+	disabledClass: 'disabled',
+	nextClass: 'next',
+	prevClass: 'prev',
+	lastClass: 'last',
+    firstClass: 'first'
+	}).on("page", function(event, num){
+	$.ajax({
+	    url: "[(@{'/staff/search/slide'})]"+'?'+"slidePagenum="+num+"&searchText="+searchWord,
+		type: 'GET',
+		cache : false,
+		contentType : false,
+		success: function(data) {
+		slideSet = data['slideSet'];
+		slideFirstImage = data['slideFirstImage'];
+		$("#slideResultDisplay").empty();
+		for(let i=0;i<slideSet.length;i++)
+		{
+		 var divtag = $("<div></div>");
+		 divtag.attr('id',slideSet[i].id);
+		 var anchor = $("<a></a>");
+		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideSet[i].module.id+'/slide/'+slideSet[i].id);
+		 anchor.attr('class',"textDivStaff tab  btn btn-light");
+		 anchor.css('width','100%');
+		 var img = $("<img></img>");
+		 var slideFirstImageId = slideFirstImage[slideSet[i].id];
+		 if(slideFirstImageId == null)
+		 {
+		  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+		 }
+		 else
+		 {
+		  img.attr('src',"[(@{'/api/image/'})]"+slideFirstImageId);
+		 }
+		  img.css('border-radius','25px');
+		  img.css('float','left');
+		  img.css('width','150px');
+		  img.css('height','150px');
+		  anchor.append(img);
+		  var span1 = $("<span></span>");
+		  span1.attr('class',"card-title");
+		  span1.css('white-space',"pre-wrap");
+		  span1.css('line-break',"anywhere");
+		  var span2 = $("<span>"+'  Slide:'+"</span>");
+		  span2.css('color','var(--dark-grey)');
+		  span1.append(span2);
+		  span1.append(slideSet[i].name+'<br>');
+		  var span3 = $("<span>"+'  Description:'+"</span>");
+		  span3.css('color','var(--dark-grey)');
+		  span1.append(span3);
+		  span1.append(slideSet[i].description);
+		  anchor.append(span1);
+		  divtag.append(anchor);
+		  $("#slideResultDisplay").append(divtag);
+		}
+		 }
+		  });
+		});
 		  
-		  $('#slideTextPage-selection').bootpag({
-		        total: [(${slideTextTotalPages})],
-		        page: [(${slideTextCurrentPageNumber})],
-		        maxVisible: 10,
-		        leaps: true,
-		        firstLastUse: true,
-		        first: '|<',
-		        last: '>|',
-		        wrapClass: 'pagination',
-		        activeClass: 'active',
-		        disabledClass: 'disabled',
-		        nextClass: 'next',
-		        prevClass: 'prev',
-		        lastClass: 'last',
-		        firstClass: 'first'
-		    }).on("page", function(event, num){
-		        window.location.assign("./search?slideTextPagenum="+num+"&searchText="+[[${searchWord}]]+"&tab="+"slideText");
-		    });
-
+$('#slideTextPage-selection').bootpag({
+	total: [[${slideTextTotalPages}]],
+	page: [[${slideTextCurrentPageNumber}]],
+	maxVisible: 10,
+    leaps: true,
+	firstLastUse: true,
+	first: '|<',
+	last: '>|',
+	wrapClass: 'pagination',
+	activeClass: 'active',
+	disabledClass: 'disabled',
+	nextClass: 'next',
+	prevClass: 'prev',
+	lastClass: 'last',
+	firstClass: 'first'
+	}).on("page", function(event, num){
+	$.ajax({
+		url: "[(@{'/staff/search/slideText'})]"+'?'+"slideTextPagenum="+num+"&searchText="+searchWord,
+		type: 'GET',
+		cache : false,
+		contentType : false,
+		success: function(data) {
+		slideTextSet = data['slideTextSet'];
+		slideTextFirstImage = data['slideTextFirstImage'];
+		$("#slideTextResultDisplay").empty();
+		for(let i=0;i<slideTextSet.length;i++)
+		{
+		 var divtag = $("<div></div>");
+		 divtag.attr('id',slideTextSet[i].id);
+		 var anchor = $("<a></a>");
+		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextSet[i].module.id+'/slide/'+slideTextSet[i].id);
+		 anchor.attr('class',"textDivStaff tab  btn btn-light");
+		 anchor.css('width','100%');
+		 var img = $("<img></img>");
+		 var slideTextFirstImageId = slideTextFirstImage[slideTextSet[i].id];
+		 if(slideTextFirstImageId == null)
+		 {
+		  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+		 }
+		else
+		{
+		  img.attr('src',"[(@{'/api/image/'})]"+slideTextFirstImageId);
+		}
+		img.css('border-radius','25px');
+		img.css('float','left');
+	    img.css('width','150px');
+		img.css('height','150px');
+		anchor.append(img);
+		var span1 = $("<span></span>");
+		span1.attr('class',"card-title");
+		span1.css('white-space',"pre-wrap");
+		span1.css('line-break',"anywhere");
+		var span2 = $("<span>"+'  Slide:'+"</span>");
+		span2.css('color','var(--dark-grey)');
+	    span1.append(span2);
+		span1.append(slideTextSet[i].name+'<br>');
+		var span3 = $("<span>"+'  Description:'+"</span>");
+		span3.css('color','var(--dark-grey)');
+		span1.append(span3);
+		span1.append(slideTextSet[i].description);
+		anchor.append(span1);
+		divtag.append(anchor);
+		$("#slideTextResultDisplay").append(divtag);
+	   }
+	}
+	});
+	 });
 	});
 </script>
 <style>
 .pagination>li>a {
-    border: 1px solid var(--primary);
-    padding: 5px;
-    color: var(--primary);
-    font-size: 15px;
+	border: 1px solid #A55941;
+	padding: 5px;
+	color: #A55941;
+	font-size: 15px;
 }
 
 .pagination>li.active>a {
-    background: var(--primary);
-    color: #fff;
-    font-size: 15px;
+	background: #A55941;
+	color: #fff;
+	font-size: 15px;
 }
-a.nav-link.active.show
-{
-background:#F2A950;
+
+a.nav-link.active.show {
+	background: #F2A950;
 }
 </style>
 </head>
 <body>
-<div layout:fragment="content" class="container">
-<ul class="nav-tabs nav">
-<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
-<a href="#space" id="myspace" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Space</font></a>
-</li>
-<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
-<a href="#module" id="mymodule" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Module</font></a>
-</li>
-<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
-<a href="#slide" id="myslide" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Slide</font></a>
-</li>
-<li class="nav-item" style="background:#A55941;border:2px solid white;border-radius:6px;">
-<a href="#slideText" id="myslideText" class="nav-link" data-toggle="tab"><font color="#FFFFFF">Slide text</font></a>
-</li>
-</ul>
-<div class="tab-content container">
+	<div layout:fragment="content" class="container">
+		<ul class="nav-tabs nav">
+			<li class="nav-item"
+				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
+				<a href="#space" id="myspace" class="nav-link" data-toggle="tab"><font
+					color="#FFFFFF">Space</font></a>
+			</li>
+			<li class="nav-item"
+				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
+				<a href="#module" id="mymodule" class="nav-link" data-toggle="tab"><font
+					color="#FFFFFF">Module</font></a>
+			</li>
+			<li class="nav-item"
+				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
+				<a href="#slide" id="myslide" class="nav-link" data-toggle="tab"><font
+					color="#FFFFFF">Slide</font></a>
+			</li>
+			<li class="nav-item"
+				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
+				<a href="#slideText" id="myslideText" class="nav-link"
+				data-toggle="tab"><font color="#FFFFFF">Slide text</font></a>
+			</li>
+		</ul>
+		<div class="tab-content container">
 
-<div class="tab-pane" id="space">
-<div><h3>Search Results In Spaces</h3>
-            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
-            <div id="spaceNoResult">
-            <h5><center>No result to display.</center></h5>
-            </div>
-<div id="spaceResultDisplay">
-  <div th:each="contents: ${spaceSearchResults}">
-  <div th:id="${contents.id}">
-                        <a th:href="@{'/staff/space/'+${contents.id}}"
+			<div class="tab-pane" id="space">
+				<div><h3>Search Results In Spaces</h3>
+					<h5>Keyword:<grey><b>[[${searchWord}]]</b></grey>
+					</h5>
+				</div>
+				<div id="spaceNoResult">
+					<h5>
+						<center>No result to display.</center>
+					</h5>
+				</div>
+				<div id="spaceResultDisplay">
+					<div th:each="contents: ${spaceSearchResults}">
+						<div th:id="${contents.id}">
+							  <a th:href="@{'/staff/space/'+${contents.id}}"
                             class="textDivStaff tab  btn btn-light"
                             style="width: 100%"> <span
                             class="card-title"
@@ -187,23 +380,23 @@ background:#F2A950;
                             style="color: var(--dark-grey)">  Space:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-  </div>
-  </div>
-<br>
-<div id="spacepage-selection"></div>
-</div>
-</div>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div id="spacepage-selection"></div>
+			</div>
 
-<div class="tab-pane" id="module">
-<div><h3>Search Results In Modules</h3>
+			<div class="tab-pane" id="module">
+				<div><h3>Search Results In Modules</h3>
             <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
             <div id="moduleNoResult">
             <h5><center>No result to display.</center></h5>
             </div>
-<div id="moduleResultDisplay">
-<div th:each="contents: ${moduleSearchResults}">
-  <div th:id="${contents.id}">
-                        <a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
+				<div id="moduleResultDisplay">
+					<div th:each="contents: ${moduleSearchResults}">
+						<div th:id="${contents.id}">
+							<a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
                             class="textDivStaff tab  btn btn-light">
                             <div th:each="slide, counter : ${contents.slides}"
                             th:unless="${counter.count > 1}">
@@ -226,23 +419,27 @@ background:#F2A950;
                             style="color: var(--dark-grey)">  Module:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-    </div>
-</div>
-<br>
-<div id="modulepage-selection"></div>
-</div>
-</div>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div id="modulepage-selection"></div>
+			</div>
 
-<div class="tab-pane" id="slide">
-<div><h3>Search Results In Slides</h3>
-            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
-            <div id="slideNoResult">
-            <h5><center>No result to display.</center></h5>
-            </div>
-<div id="slideResultDisplay">
-<div th:each="contents: ${slideSearchResults}">
-  <div th:id="${contents.id}">
-                        <a class="textDivStaff tab  btn btn-light" style="width: 100%"
+			<div class="tab-pane" id="slide">
+				<div><h3>Search Results In Slides</h3>
+					<h5>Keyword:<grey><b>[[${searchWord}]]</b></grey>
+					</h5>
+				</div>
+				<div id="slideNoResult">
+					<h5>
+						<center>No result to display.</center>
+					</h5>
+				</div>
+				<div id="slideResultDisplay">
+					<div th:each="contents: ${slideSearchResults}">
+						<div th:id="${contents.id}">
+						 <a class="textDivStaff tab  btn btn-light" style="width: 100%"
                             th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
                             <div th:if="${not #lists.isEmpty(contents.contents)}">
                             <div th:if="${contents?.firstImageBlock !=null}">
@@ -264,23 +461,27 @@ background:#F2A950;
                             style="color: var(--dark-grey)">  Slide:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-   </div>
-</div>
-<br>
-<div id="slidepage-selection"></div>
-</div>
-</div>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div id="slidepage-selection"></div>
+			</div>
 
-<div class="tab-pane" id="slideText">
-<div><h3>Search Results In Slide's TextBlocks</h3>
-            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
-            <div id="slideTextNoResult">
-            <h5><center>No result to display.</center></h5>
-            </div>
-<div id="slideTextResultDisplay">
-<div th:each="contents: ${slideTextSearchResults}">
-  <div th:id="${contents.id}">
-                        <a class="textDivStaff tab  btn btn-light" style="width: 100%"
+			<div class="tab-pane" id="slideText">
+				<div><h3>Search Results In Slide's TextBlocks</h3>
+					<h5>Keyword:<grey><b>[[${searchWord}]]</b></grey>
+					</h5>
+				</div>
+				<div id="slideTextNoResult">
+					<h5>
+						<center>No result to display.</center>
+					</h5>
+				</div>
+				<div id="slideTextResultDisplay">
+					<div th:each="contents: ${slideTextSearchResults}">
+						<div th:id="${contents.id}">
+							<a class="textDivStaff tab  btn btn-light" style="width: 100%"
                             th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
                             <div th:if="${not #lists.isEmpty(contents.contents)}">
                             <div th:if="${contents?.firstImageBlock !=null}">
@@ -302,13 +503,13 @@ background:#F2A950;
                             style="color: var(--dark-grey)">  Slide:</span> [[${contents.name}]]<br><span 
                             style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
                         </a>
-   </div>
-</div>
-<br>
-<div id="slideTextPage-selection"></div>
-</div>
-</div>
-</div>
-</div>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div id="slideTextPage-selection"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

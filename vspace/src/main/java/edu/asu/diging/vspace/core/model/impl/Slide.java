@@ -44,9 +44,11 @@ public class Slide extends VSpaceElement implements ISlide {
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
     
-    @JsonIgnore
-    @Transient
-    private ImageBlock firstImageBlock;
+    /*
+     * @JsonIgnore
+     * 
+     * @Transient private ImageBlock firstImageBlock;
+     */
 
     /*
      * (non-Javadoc)
@@ -141,6 +143,7 @@ public class Slide extends VSpaceElement implements ISlide {
      * 
      * @return ImageBlock
      */
+    @JsonIgnore
     public ImageBlock getFirstImageBlock() {
         List<IContentBlock> allBlocks = getContents();
         ImageBlock imageBlock = null;
