@@ -117,7 +117,7 @@
 }
 
 .spaceClass {
-	position: relative;
+    position: relative;
     right: 5%;
     left: 5%;
 }
@@ -165,47 +165,47 @@
         <script th:inline="javascript">
 		//# sourceURL=click.js
 			
-            function toggleImgSize(isClicked){
-                var maxImgWidth = $(window).width();
-                var spaceWidth = $("#bgImage").css("width");
-                var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
-                var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
-                if(isClicked) {
-			isResizeImgBtnClicked = -isResizeImgBtnClicked;
-			setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
-		}
-                // resize the image to max width
-                var spaceImg = $("#space");
-		if (isResizeImgBtnClicked == 1) {
-			$("#toggleImgClass").attr('class', "icon-collapse secondary");
-			if(maxImgWidthOrig > maxImgWidth) {
-				$("#space").remove();
-				$("#mainDivContent").append(spaceImg);
-				$(".spaceClass").css("display", ""); 
-				$(".spaceClass").css("justify-content", "");
-				$("#bgImage").css("width", maxImgWidth);
-            			$(".spaceClass").css("height", "");
-            			$("#Module_1").css("height", "");
-            			$("#Module_1").css("min-height", "0");
-            			$("#Module_1").css("margin-bottom", "0px");
+		function toggleImgSize(isClicked){
+			var maxImgWidth = $(window).width();
+			var spaceWidth = $("#bgImage").css("width");
+			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isClicked) {
+				isResizeImgBtnClicked = -isResizeImgBtnClicked;
+				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
 			}
-                }
-                else{
-                	$("#toggleImgClass").attr('class', "icon-expand secondary");
-                	if(maxImgWidthOrig > maxImgWidth) {
-                		$("#space").remove();
-                		$(".spaceClass").children().first().append(spaceImg);
-                		$(".spaceClass").css("display", "flex"); 
-                		$(".spaceClass").css("justify-content", "");
-                    		$("#bgImage").css("width", spaceWidth);
-                    		$('#bgImage').width('100%');
-                    		$(".spaceClass").css("height", "800px");
-                    		$("#Module_1").css("margin-bottom", "60px");
-                    	}
-                  }
-                $("#space a").remove();        
-		drawLinks();
-            }
+			// resize the image to max width
+			var spaceImg = $("#space");
+			if (isResizeImgBtnClicked == 1) {
+				$("#toggleImgClass").attr('class', "icon-collapse secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$("#space").remove();
+					$("#mainDivContent").append(spaceImg);
+					$(".spaceClass").css("display", ""); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", maxImgWidth);
+					$(".spaceClass").css("height", "");
+					$("#Module_1").css("height", "");
+					$("#Module_1").css("min-height", "0");
+					$("#Module_1").css("margin-bottom", "0px");
+				}
+        	}
+			else{
+				$("#toggleImgClass").attr('class', "icon-expand secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$("#space").remove();
+					$(".spaceClass").children().first().append(spaceImg);
+					$(".spaceClass").css("display", "flex"); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", spaceWidth);
+					$('#bgImage').width('100%');
+					$(".spaceClass").css("height", "800px");
+					$("#Module_1").css("margin-bottom", "60px");
+				}
+			}
+			$("#space a").remove();        
+			drawLinks();
+		}
 
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
