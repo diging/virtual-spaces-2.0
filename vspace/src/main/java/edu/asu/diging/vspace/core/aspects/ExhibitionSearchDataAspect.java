@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.general.search;
+package edu.asu.diging.vspace.core.aspects;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
