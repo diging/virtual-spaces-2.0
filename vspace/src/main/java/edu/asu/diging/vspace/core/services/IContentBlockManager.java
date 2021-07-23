@@ -20,11 +20,11 @@ public interface IContentBlockManager {
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 
-    void deleteTextBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteTextBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
 
-    void deleteImageBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteImageBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
 
-    void deleteChoiceBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteChoiceBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
 
     void updateTextBlock(TextBlock textBlock);
 

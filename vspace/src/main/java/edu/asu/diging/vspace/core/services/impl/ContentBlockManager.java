@@ -157,26 +157,27 @@ public class ContentBlockManager implements IContentBlockManager {
      * Delete a text block using an id and also decrease content order by 1 of all
      * the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the
+     * @param blockId - id of resource to be deleted. If the id is null then the
      *           functions returns nothing.
-     *
+     * @param slideId - id of the slide in which the text block with blockId is present.
+     *           
      */
 
     @Override
-    public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteTextBlockById(String blockId,String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
         Integer contentOrder = null;
-        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(id);
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
         if (contentBlock.isPresent()) {
             contentOrder = contentBlock.get().getContentOrder();
         } else {
             throw new BlockDoesNotExistException("Block Id not present");
         }
         try {
-            textBlockRepo.deleteById(id);
-            updateContentOrder(contentOrder);
+            textBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId,contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -187,26 +188,26 @@ public class ContentBlockManager implements IContentBlockManager {
      * Delete an image block using an id and also decrease content order by 1 of all
      * the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the
+     * @param blockId - id of resource to be deleted. If the id is null then the
      *           functions returns nothing.
-     *
+     * @param slideId - id of the slide in which the Image block with blockId is present.
      */
 
     @Override
-    public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteImageBlockById(String blockId,String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
         Integer contentOrder = null;
-        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(id);
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
         if (contentBlock.isPresent()) {
             contentOrder = contentBlock.get().getContentOrder();
         } else {
             throw new BlockDoesNotExistException("Block Id not present");
         }
         try {
-            imageBlockRepo.deleteById(id);
-            updateContentOrder(contentOrder);
+            imageBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId,contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -217,26 +218,26 @@ public class ContentBlockManager implements IContentBlockManager {
      * Delete a choices block using an id and also decrease content order by 1 of
      * all the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the
+     * @param blockId - id of resource to be deleted. If the id is null then the
      *           functions returns nothing.
-     *
+     * @param slideId - id of the slide in which the choice block with blockId is present.
      */
 
     @Override
-    public void deleteChoiceBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteChoiceBlockById(String blockId,String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
         Integer contentOrder = null;
-        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(id);
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
         if (contentBlock.isPresent()) {
             contentOrder = contentBlock.get().getContentOrder();
         } else {
             throw new BlockDoesNotExistException("Block Id not present");
         }
         try {
-            choiceBlockRepo.deleteById(id);
-            updateContentOrder(contentOrder);
+            choiceBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId,contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -315,9 +316,10 @@ public class ContentBlockManager implements IContentBlockManager {
      * decreasing content order by 1 of the slide's block which are after the
      * specified contentOrder
      */
-    private void updateContentOrder(Integer contentOrder) {
-        if (contentOrder != null) {
-            List<ContentBlock> contentBlockList = contentBlockRepository.findByContentOrderGreaterThan(contentOrder);
+    private void updateContentOrder(String slideId,Integer contentOrder) {
+        
+        if (slideId!=null && contentOrder != null) {
+            List<ContentBlock> contentBlockList = contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId,contentOrder);
             for (ContentBlock eachContentBlock : contentBlockList) {
                 eachContentBlock.setContentOrder(eachContentBlock.getContentOrder() - 1);
             }

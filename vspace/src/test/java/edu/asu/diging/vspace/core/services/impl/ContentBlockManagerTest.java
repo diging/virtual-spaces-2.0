@@ -31,7 +31,7 @@ public class ContentBlockManagerTest {
     @Test
     public void test_deleteTextBlockById_success() throws BlockDoesNotExistException {
         String textBlockId = "2";
-        managerToTest.deleteTextBlockById(textBlockId);
+        managerToTest.deleteTextBlockById(textBlockId,null);
         Mockito.verify(textBlockRepo).deleteById(textBlockId);
     }
 
@@ -39,20 +39,20 @@ public class ContentBlockManagerTest {
     public void test_deleteTextBlockById_forNonExistentId() throws BlockDoesNotExistException {
         String textBlockId = "notARealId";
         Mockito.doThrow(EmptyResultDataAccessException.class).when(textBlockRepo).deleteById(textBlockId);
-        managerToTest.deleteTextBlockById(textBlockId);
+        managerToTest.deleteTextBlockById(textBlockId,null);
     }
 
     @Test
     public void test_deleteTextBlockById_whenIdIsNull() throws BlockDoesNotExistException {
         String textBlockId = null;
-        managerToTest.deleteTextBlockById(null);
+        managerToTest.deleteTextBlockById(null,null);
         Mockito.verify(textBlockRepo, Mockito.never()).deleteById(textBlockId);
     }
 
     @Test
     public void test_deleteImageBlockById_success() throws BlockDoesNotExistException {
         String imageBlockId = "2";
-        managerToTest.deleteImageBlockById(imageBlockId);
+        managerToTest.deleteImageBlockById(imageBlockId,null);
         Mockito.verify(imageBlockRepo).deleteById(imageBlockId);
     }
 
@@ -60,13 +60,13 @@ public class ContentBlockManagerTest {
     public void test_deleteImageBlockById_forNonExistentId() throws BlockDoesNotExistException {
         String imageBlockId = "notARealId";
         Mockito.doThrow(EmptyResultDataAccessException.class).when(imageBlockRepo).deleteById(imageBlockId);
-        managerToTest.deleteImageBlockById(imageBlockId);
+        managerToTest.deleteImageBlockById(imageBlockId,null);
     }
 
     @Test
     public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
         String imageBlockId = null;
-        managerToTest.deleteImageBlockById(null);
+        managerToTest.deleteImageBlockById(null,null);
         Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
 
     }

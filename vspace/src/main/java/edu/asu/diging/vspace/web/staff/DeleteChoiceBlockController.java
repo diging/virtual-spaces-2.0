@@ -25,10 +25,10 @@ public class DeleteChoiceBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/choiceBlock/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteChoiceBlock(@PathVariable("blockId") String blockId) throws IOException {
+    public ResponseEntity<String> deleteChoiceBlock(@PathVariable("id") String slideId,@PathVariable("blockId") String blockId) throws IOException {
 
         try {
-            contentBlockManager.deleteChoiceBlockById(blockId);
+            contentBlockManager.deleteChoiceBlockById(blockId,slideId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Choice Block Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

@@ -25,10 +25,10 @@ public class DeleteTextBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteTextBlock(@PathVariable("blockId") String blockId) throws IOException {
+    public ResponseEntity<String> deleteTextBlock(@PathVariable("id") String slideId,@PathVariable("blockId") String blockId) throws IOException {
 
         try {
-            contentBlockManager.deleteTextBlockById(blockId);
+            contentBlockManager.deleteTextBlockById(blockId,slideId);
 
         } catch (BlockDoesNotExistException e) {
             logger.warn("Text Id does not exist, bad request.", e);

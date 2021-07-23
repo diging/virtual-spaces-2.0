@@ -25,10 +25,10 @@ public class DeleteImageBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteImageBlock(@PathVariable("blockId") String blockId) throws IOException {
+    public ResponseEntity<String> deleteImageBlock(@PathVariable("id") String slideId,@PathVariable("blockId") String blockId) throws IOException {
 
         try {
-            contentBlockManager.deleteImageBlockById(blockId);
+            contentBlockManager.deleteImageBlockById(blockId,slideId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Image Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

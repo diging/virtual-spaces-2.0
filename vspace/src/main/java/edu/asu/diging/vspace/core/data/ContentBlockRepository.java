@@ -18,5 +18,5 @@ public interface ContentBlockRepository extends PagingAndSortingRepository<Conte
     @Query("SELECT max(contentOrder) FROM ContentBlock d WHERE d.slide.id = ?1")
     public Integer findMaxContentOrder(String slideId);
     
-    public List<ContentBlock> findByContentOrderGreaterThan(Integer contentOrder);
+    public List<ContentBlock> findBySlide_IdAndContentOrderGreaterThan(String slideId,Integer contentOrder);
 }
