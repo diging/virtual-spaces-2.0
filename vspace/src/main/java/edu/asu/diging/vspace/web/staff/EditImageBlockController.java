@@ -56,11 +56,9 @@ public class EditImageBlockController {
             }
             contentBlockManager.updateImageBlock(imageBlock, image);
         } else {
-            byte[] image = null;
-            String filename = null;
             if (file != null) {
-                image = file.getBytes();
-                filename = file.getOriginalFilename();
+                byte[] image = file.getBytes();
+                String filename = file.getOriginalFilename();
                 try {
                     contentBlockManager.updateImageBlock(imageBlock, image, filename, contentOrder);
                 } catch (ImageCouldNotBeStoredException e) {

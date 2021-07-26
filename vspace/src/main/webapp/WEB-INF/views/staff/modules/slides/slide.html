@@ -109,69 +109,69 @@ function uploadImage() {
     // Ashmi changes for Story VSPC-64
     
 	// checks if image ID is present to replace
-    if (imgBlockID != '') {
+if (imgBlockID != '') {
     	oldImageBlock = $("#" + imgBlockID);
     	var imageBlockId = imgBlockID;
     	formData.append('imageBlockId',imageBlockId);
         var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-        if(!chooseFromExisting)
-  	     {
-      	   reader.onload = function (theFile)
-      		 {  
-	        		var image = new Image();
-	        		image.src = theFile.target.result;
-	        		image.onload = function ()
-	        		{
-	            		imageblock = createImageBlock(reader, this.width);
-	            		$("#" + imageBlockId).replaceWith(imageblock);	
-	           	    	$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-      	            };
-              }
-  	     }
-  	   else
-  	     {
-  		 	  var image = new Image();
-           	  image.src = $('#selectedImage').find('img').attr('src');
-  		      formData.append('imageId',imageId);
-  	  	      imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
-	          $("#" + imageBlockId).replaceWith(imageblock);	
-	          $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-  	     }
-        // Reset data-attribute to get current selected image ID
-        $("#uploadImage").data('value', '');
-      }
-  	else {
-  	  var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-  	  if(!chooseFromExisting)
-	     {
-		    reader.onload = function (theFile) 
-		    {        	
-       		  var image = new Image();
-       		  image.src = theFile.target.result;
-       	      image.onload = function() 
-              {
-       		      imageblock = createImageBlock(reader, this.width);  
-      		      $('#slideSpace').append(imageblock); 
-       		      $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-              };          
-            } 
-	     }
-      else
-	   {
-	 	 var image = new Image();
-         image.src = $('#selectedImage').find('img').attr('src');
-		 formData.append('imageId',imageId);
-		 imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
- 	 	 $('#slideSpace').append(imageblock); 
-	 	 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-	   }
+ if(!chooseFromExisting)
+  {
+    reader.onload = function (theFile)
+    {  
+	 var image = new Image();
+	 image.src = theFile.target.result;
+	 image.onload = function ()
+	 {
+	 imageblock = createImageBlock(reader, this.width);
+	 $("#" + imageBlockId).replaceWith(imageblock);	
+	 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    };
+   }
+  }
+ else
+ {
+  var image = new Image();
+  image.src = $('#selectedImage').find('img').attr('src');
+  formData.append('imageId',imageId);
+  imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
+  $("#" + imageBlockId).replaceWith(imageblock);	
+  $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+}
+// Reset data-attribute to get current selected image ID
+$("#uploadImage").data('value', '');
+}
+else {
+ var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+ if(!chooseFromExisting)
+ {
+  reader.onload = function (theFile) 
+  {        	
+    var image = new Image();
+    image.src = theFile.target.result;
+    image.onload = function() 
+    {
+     imageblock = createImageBlock(reader, this.width);  
+     $('#slideSpace').append(imageblock); 
+     $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+    };          
+  } 
+ }
+else
+{
+ var image = new Image();
+ image.src = $('#selectedImage').find('img').attr('src');
+ formData.append('imageId',imageId);
+ imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
+ $('#slideSpace').append(imageblock); 
+ $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+ }
         ++contentCount; 
-    }
+}
   	
-    if (!chooseFromExisting)
-	{
-	    reader.readAsDataURL(file)
-	}
+if (!chooseFromExisting)
+{
+  reader.readAsDataURL(file)
+}
     $.ajax({
         enctype: 'multipart/form-data',
         // ------------- creating image content blocks ------------
@@ -209,12 +209,12 @@ function uploadImage() {
         }
     });
     // Reset the image file name 
-   	$('#file').val('');
-   	if(chooseFromExisting)
-	{
-	$("#selectedImage").empty();
-	$('#imageId').prop('selectedIndex',0).trigger( "change" );
-	}
+$('#file').val('');
+if(chooseFromExisting)
+ {
+  $("#selectedImage").empty();
+  $('#imageId').prop('selectedIndex',0).trigger( "change" );
+ }
 }
 
 $(document).ready(function() {
@@ -499,12 +499,19 @@ $(document).ready(function() {
     });
 	
     $("#cancelImageBtn").click(function() {
+    	$("#imageId").attr("disabled", false);
     	$("#selectedImage").empty();
     	$('#imageId').prop('selectedIndex',0).trigger( "change" );
     	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '');
         $("#addImgAlert").hide();
         $(".open").removeClass("open");
+    });
+    
+    $("#file").click(function() {
+    	$("#selectedImage").empty();
+    	$('#imageId').prop('selectedIndex',0).trigger( "change" );
+    	$("#imageId").attr("disabled", true);
     });
     
     $("#submitText").on("click", function(e) {
@@ -940,14 +947,17 @@ $(window).on('load', function () {
                                 name="file" rows="5" cols="500"
                                 id="file" />
                             <div>
-								<select id="imageId" name="imageId"
+                            <h6>
+                                <small>Or choose an existing image. </small>
+                            </h6>
+							  <select id="imageId" name="imageId"
 									class="form-control-xs target"
 									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
+								<option selected value="">Choose from existing</option>
+							   </select>
 							</div>
 							<div>
-								<span id="selectedImage" width="200px"></span>
+							  <span id="selectedImage" width="200px"></span>
 							</div>
                         </div>
                         <div class="modal-footer">

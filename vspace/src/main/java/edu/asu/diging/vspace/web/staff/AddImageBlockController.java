@@ -60,11 +60,9 @@ public class AddImageBlockController {
             imageBlock = imageBlockReturnValue.getElement();
             imageId = imageBlock.getId();
         } else {
-            byte[] image = null;
-            String filename = null;
             if (file != null) {
-                image = file.getBytes();
-                filename = file.getOriginalFilename();
+                byte[] image = file.getBytes();
+                String filename = file.getOriginalFilename();
                 try {
                     CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
                             filename, contentOrder);
