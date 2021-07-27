@@ -5,11 +5,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -25,8 +24,7 @@ import edu.asu.diging.vspace.web.staff.ModuleController;
 import edu.asu.diging.vspace.web.staff.SpaceController;
 
 @Component
-@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class SpaceOverviewDataFormat {
+public class SpaceOverviewFormatter {
 
     private static final String SOURCE = "source";
 
@@ -52,68 +50,69 @@ public class SpaceOverviewDataFormat {
     @Autowired
     private ModuleRepository moduleRepo;
 
-    private ArrayNode nodeArray;
-
-    private ArrayNode linkArray;
-
-    public SpaceOverviewDataFormat() {
-        this.nodeArray = JsonHelper.getMapper().createArrayNode();
-        this.linkArray = JsonHelper.getMapper().createArrayNode();
-    }
+    @Autowired
+    private JsonHelper jsonHelper;
 
     /**
-     * creating ArrayNode for module node in the spaceoverview graph
+     * creating ArrayNode for space and module node in the spaceoverview graph
      * 
-     * @param contextPath This variable holds the contextpath of the application
-     * 
+     * @param contextPath   This variable holds the contextpath of the application
+     * @param SpaceNodeList List of spaces
+     * @param nodeArray     This gets populated with space node in the spaceoverview
+     *                      graph
      * @throws JsonProcessingException
      */
-    public void createModuleNodeInOverviewGraph(String contextPath) throws JsonProcessingException {
-        Iterable<Module> allModulesList = moduleRepo.findAll();
-        constructNodeArray(contextPath, allModulesList);
-    }
+    private void constructSpaceNodeArray(String contextPath, Iterable<Space> spaceNodeList, ArrayNode nodeArray)
+            throws JsonProcessingException {
 
-    /**
-     * creating ArrayNode for space node in the spaceoverview graph
-     * 
-     * @param contextPath This variable holds the contextpath of the application
-     * 
-     * @throws JsonProcessingException
-     */
-    public void createSpaceNodeInOverviewGraph(String contextPath) throws JsonProcessingException {
-        Iterable<Space> allSpacesList = spaceRepo.findAll();
-        constructNodeArray(contextPath, allSpacesList);
+        if (spaceNodeList != null) {
+            StringBuilder linkPathBuilder = new StringBuilder();
+            StringBuilder imagePathBuilder = new StringBuilder();
+            for (Space spaceNode : spaceNodeList) {
+                ObjectNode node = createNodeAndSetName(spaceNode);
+                String id = spaceNode.getId();
+                createSpaceNode(linkPathBuilder, imagePathBuilder, spaceNode, node, contextPath, id);
+                nodeArray.add(node);
+            }
+        }
     }
 
     /**
      * creating ArrayNode for space and module node in the spaceoverview graph
      * 
-     * @param contextPath This variable holds the contextpath of the application
-     * @param nodeList    List of space/module
-     * 
+     * @param contextPath    This variable holds the contextpath of the application
+     * @param moduleNodeList List of modules
+     * @param nodeArray      This gets populated with module node in the
+     *                       spaceoverview graph
      * @throws JsonProcessingException
      */
-    public void constructNodeArray(String contextPath, Iterable<? extends IVSpaceElement> nodeList)
+    private void constructModuleNodeArray(String contextPath, Iterable<Module> moduleNodeList, ArrayNode nodeArray)
             throws JsonProcessingException {
 
-        if (nodeList != null) {
+        if (moduleNodeList != null) {
             StringBuilder linkPathBuilder = new StringBuilder();
             StringBuilder imagePathBuilder = new StringBuilder();
-            for (IVSpaceElement nodeval : nodeList) {
-                if (nodeval != null) {
-                    ObjectNode node = JsonHelper.getMapper().createObjectNode();
-                    node.put(NAME, nodeval.getName());
-                    String id = nodeval.getId();
-                    if (nodeval instanceof Space) {
-                        createSpaceNode(linkPathBuilder, imagePathBuilder, (Space) nodeval, node, contextPath, id);
-                    }
-                    if (nodeval instanceof Module) {
-                        createModuleNode(linkPathBuilder, imagePathBuilder, node, contextPath, id);
-                    }
-                    nodeArray.add(node);
-                }
+            for (Module moduleNode : moduleNodeList) {
+                ObjectNode node = createNodeAndSetName(moduleNode);
+                String id = moduleNode.getId();
+                createModuleNode(linkPathBuilder, imagePathBuilder, node, contextPath, id);
+                nodeArray.add(node);
             }
         }
+    }
+
+    /**
+     * This is a common method for both space and module
+     * 
+     * @param nodeval This variable store either space/module node
+     * @return After setting name variable of node it returns the node
+     */
+    private ObjectNode createNodeAndSetName(IVSpaceElement nodeval) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put(NAME, nodeval.getName());
+        return node;
     }
 
     /**
@@ -131,9 +130,9 @@ public class SpaceOverviewDataFormat {
      * @param spaceId          This variable is holding the space id corresponding
      *                         each space in vspace
      */
-    public void createSpaceNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, Space space,
+    private void createSpaceNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, Space space,
             ObjectNode node, String contextPath, String spaceId) {
-        
+
         node.put(ID, spaceId);
         linkPathBuilder.setLength(0);
         linkPathBuilder.append(contextPath);
@@ -173,9 +172,9 @@ public class SpaceOverviewDataFormat {
      * @param moduleId         This variable is holding the module id corresponding
      *                         each module in vspace
      */
-    public void createModuleNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, ObjectNode node,
+    private void createModuleNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, ObjectNode node,
             String contextPath, String moduleId) {
-        
+
         node.put(ID, moduleId);
         linkPathBuilder.setLength(0);
         linkPathBuilder.append(contextPath);
@@ -187,35 +186,43 @@ public class SpaceOverviewDataFormat {
     }
 
     /**
-     * @param contextPath   This variable holds the contextpath of the
-     *                      application
+     * @param contextPath This variable holds the contextpath of the application
      * @return Json corresponding to nodeArray
      * @throws JsonProcessingException
      */
-    public String createNodeForOverviewGraph(String contextPath) throws JsonProcessingException {
-        createModuleNodeInOverviewGraph(contextPath);
-        createSpaceNodeInOverviewGraph(contextPath);
-        return JsonHelper.convertToJson(nodeArray);
+    public String createNodes(String contextPath) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode nodeArray = mapper.createArrayNode();
+        Iterable<Module> allModulesList = moduleRepo.findAll();
+        constructModuleNodeArray(contextPath, allModulesList, nodeArray);
+        Iterable<Space> allSpacesList = spaceRepo.findAll();
+        constructSpaceNodeArray(contextPath, allSpacesList, nodeArray);
+        return jsonHelper.convertToJson(mapper, nodeArray);
     }
 
     /**
      * creating json for edge between nodes in the spaceoverview graph
      * 
-     * @param spaceLinkMap List of all links corresponding to each space
+     * @param spaceLinkedToToSpacesAndModulesMap List of all links corresponding to
+     *                                           each space
      * @return Json corresponding to linkArray
      * @throws JsonProcessingException
      */
-    public String createLinkForOverviewGraph(Map<String, List<String>> spaceLinkMap) throws JsonProcessingException {
+    public String createEdges(Map<String, List<String>> spaceLinkedToToSpacesAndModulesMap)
+            throws JsonProcessingException {
 
-        for (Entry<String, List<String>> entry : spaceLinkMap.entrySet()) {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode linkArray = mapper.createArrayNode();
+        for (Entry<String, List<String>> entry : spaceLinkedToToSpacesAndModulesMap.entrySet()) {
             for (String value : entry.getValue()) {
-                ObjectNode link = JsonHelper.getMapper().createObjectNode();
+                ObjectNode link = mapper.createObjectNode();
                 link.put(TARGET, value);
                 link.put(SOURCE, entry.getKey());
                 linkArray.add(link);
             }
         }
-        return JsonHelper.convertToJson(linkArray);
+        return jsonHelper.convertToJson(mapper, linkArray);
     }
 
 }

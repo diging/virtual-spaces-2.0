@@ -1,25 +1,19 @@
 package edu.asu.diging.vspace.core.util;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * This is a utility method to convert java object to Json.
+ * @author abiswa15
+ *
+ */
+@Service
 public class JsonHelper {
 
-    private static ObjectMapper mapper;
-    
-    static
-    {
-        mapper = new ObjectMapper();
-    }
-    
-    public static String convertToJson(Object object) throws JsonProcessingException
-    {
-        String jsonResult="";
-        jsonResult=mapper.writeValueAsString(object);
+    public String convertToJson(ObjectMapper mapper,Object object) throws JsonProcessingException {
+        String jsonResult = mapper.writeValueAsString(object);
         return jsonResult;
-    }
-    
-    public static ObjectMapper getMapper() {
-        return mapper;
     }
 }

@@ -30,7 +30,10 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
     private ModuleLinkDisplayRepository moduleLinkDisplayRepository;
 
     /**
-     * This method is used to fetch all linked modules corresponding to a space.
+     * This method is used to fetch all moduleLinks which are connected to a space.
+     * 
+     * @return a Map whose key is spaceId and value is list of moduleLinks connected
+     *         with the spaceId.
      */
     @Override
     public Map<String, List<ModuleLinkDisplay>> getSpaceToModuleLinks() {
@@ -39,10 +42,8 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
         Iterable<ModuleLinkDisplay> spaceToModuleLinksList = moduleLinkDisplayRepository.findAll();
 
         for (ModuleLinkDisplay link : spaceToModuleLinksList) {
-            String spaceId = null;
-
             if (link.getLink() != null && link.getLink().getSpace() != null) {
-                spaceId = link.getLink().getSpace().getId();
+                String spaceId = link.getLink().getSpace().getId();
                 if (!spaceToModuleLinksMap.containsKey(spaceId)) {
                     spaceToModuleLinksMap.put(spaceId, new ArrayList<>());
                 }
@@ -53,7 +54,11 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
     }
 
     /**
-     * This method is used to fetch all linked space corresponding to a space
+     * This method is used to fetch all linked spacelinks corresponding to a space(i.e. a
+     * space connected to other spaces)
+     * 
+     *  @return a Map whose key is spaceId and value is list of spaceLinks connected
+     *         with the spaceId.
      */
     @Override
     public Map<String, List<SpaceLinkDisplay>> getSpaceToSpaceLinks() {
@@ -61,10 +66,8 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
         Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap = new HashMap<>();
         Iterable<SpaceLinkDisplay> spaceToSpaceLinksList = spaceLinkDisplayRepository.findAll();
         for (SpaceLinkDisplay link : spaceToSpaceLinksList) {
-            String spaceId = null;
             if (link.getLink() != null && link.getLink().getSourceSpace() != null) {
-
-                spaceId = link.getLink().getSourceSpace().getId();
+                String spaceId = link.getLink().getSourceSpace().getId();
                 if (!spaceToSpaceLinksMap.containsKey(spaceId)) {
                     spaceToSpaceLinksMap.put(spaceId, new ArrayList<>());
                 }
@@ -76,7 +79,7 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
 
     /**
      * To retrieve all space to space and space to module links corresponding to
-     * each space
+     * each space(i.e. a space connected with all other spaces and modules)
      * 
      * @param spaceLinkMap          For holding list of all links corresponding to
      *                              each space
@@ -86,7 +89,8 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
      *                              other spaces
      */
     @Override
-    public Map<String, List<String>> getSpaceLinkMap(Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
+    public Map<String, List<String>> getSpaceLinkedToSpacesAndModules(
+            Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
             Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap) {
 
         Map<String, List<String>> spaceLinkMap = new LinkedHashMap<>();
@@ -95,23 +99,23 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
             for (Space space : allSpacesList) {
                 List<ModuleLinkDisplay> spaceToModulelinksList = spaceToModuleLinksMap.get(space.getId());
                 List<SpaceLinkDisplay> spaceToSpaceLinksList = spaceToSpaceLinksMap.get(space.getId());
-                List<String> listOfSpaceIdAndModuleId = new ArrayList<>();
+                List<String> listOfSpaceIdAndModuleIds = new ArrayList<>();
 
                 if (spaceToModulelinksList != null) {
                     spaceToModulelinksList.forEach(link -> {
                         if (link.getLink() != null && link.getLink().getModule() != null) {
-                            listOfSpaceIdAndModuleId.add(link.getLink().getModule().getId());
+                            listOfSpaceIdAndModuleIds.add(link.getLink().getModule().getId());
                         }
                     });
                 }
                 if (spaceToSpaceLinksList != null) {
                     spaceToSpaceLinksList.forEach(link -> {
                         if (link.getLink() != null && link.getLink().getTarget() != null) {
-                            listOfSpaceIdAndModuleId.add(link.getLink().getTarget().getId());
+                            listOfSpaceIdAndModuleIds.add(link.getLink().getTarget().getId());
                         }
                     });
                 }
-                spaceLinkMap.put(space.getId(), listOfSpaceIdAndModuleId);
+                spaceLinkMap.put(space.getId(), listOfSpaceIdAndModuleIds);
             }
         }
         return spaceLinkMap;
