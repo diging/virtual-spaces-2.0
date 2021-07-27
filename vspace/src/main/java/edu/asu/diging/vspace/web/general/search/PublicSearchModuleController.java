@@ -1,10 +1,14 @@
 package edu.asu.diging.vspace.web.general.search;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,24 +19,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.ModuleWithSpace;
+import edu.asu.diging.vspace.core.model.impl.PublicSearch;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.StaffSearch;
-import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 
 @Controller
 public class PublicSearchModuleController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private IStaffSearchManager staffSearchManager;
+    private IPublicSearchManager publicSearchManager;
+    
+    @Autowired
+    private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(value = "/exhibit/search/module")
-    public ResponseEntity<StaffSearch> searchInVspace(
+    public ResponseEntity<PublicSearch> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         HashSet<Module> moduleSet = paginationForModule(modulePagenum, searchTerm);
-        StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setModuleSet(moduleSet);
+        PublicSearch publicSearch = new PublicSearch();
+        publicSearch.setModuleSet(moduleSet);
         
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
         
@@ -47,9 +59,9 @@ public class PublicSearchModuleController {
                 firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
             }
             moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
-            staffSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
+            publicSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
         }
-        return new ResponseEntity<StaffSearch>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<PublicSearch>(publicSearch, HttpStatus.OK);
     }
 
     /**
@@ -63,9 +75,23 @@ public class PublicSearchModuleController {
      * @param searchTerm    This is the search string which is being searched.
      */
     private HashSet<Module> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<Module> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<Module> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         HashSet<Module> moduleSet = new LinkedHashSet<>();
-        moduleSet.addAll(modulePage.getContent());
+        
+        for(Module module : modulePage.getContent()) {
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
+            if(moduleLink!=null) {
+                ModuleWithSpace modWithSpace = new ModuleWithSpace();
+                try {
+                    BeanUtils.copyProperties(modWithSpace, module);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
+                }
+                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                moduleSet.add(modWithSpace);
+            }
+        }
+        
         return moduleSet;
     }
 

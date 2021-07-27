@@ -103,5 +103,9 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     protected void deleteLinkRepo(IModuleLink link) {
         moduleLinkRepo.delete((ModuleLink) link);
     }
+    
+    public ModuleLink findFirstByModule(IModule module) {
+        return moduleLinkRepo.findFirstByModule(module);
+    }
 
 }

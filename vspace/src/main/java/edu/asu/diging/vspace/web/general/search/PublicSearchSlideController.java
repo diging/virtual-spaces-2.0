@@ -1,10 +1,14 @@
 package edu.asu.diging.vspace.web.general.search;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,15 +18,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.model.impl.StaffSearch;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
 @Controller
 public class PublicSearchSlideController {
-
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private IStaffSearchManager staffSearchManager;
+    
+    @Autowired
+    private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(value = "/exhibit/search/slide")
     public ResponseEntity<StaffSearch> searchInVspace(
@@ -60,7 +72,20 @@ public class PublicSearchSlideController {
     private HashSet<Slide> paginationForSlide(String slidePagenum, String searchTerm) {
         Page<Slide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         HashSet<Slide> slideSet = new LinkedHashSet<>();
-        slideSet.addAll(slidePage.getContent());
+        
+        for(Slide slide : slidePage.getContent()) {
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+            if(moduleLink!=null) {
+                SlideWithSpace slideWithSpace = new SlideWithSpace();
+                try {
+                    BeanUtils.copyProperties(slideWithSpace, slide);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
+                }
+                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                slideSet.add(slideWithSpace);
+            }
+        }
         return slideSet;
     }
 }

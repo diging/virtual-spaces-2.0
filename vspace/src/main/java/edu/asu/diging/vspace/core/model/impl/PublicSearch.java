@@ -5,7 +5,7 @@ import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.ISearch;
 
-public class StaffSearch implements ISearch {
+public class PublicSearch implements ISearch {
     
     private HashSet<Space> spaceSet;
 

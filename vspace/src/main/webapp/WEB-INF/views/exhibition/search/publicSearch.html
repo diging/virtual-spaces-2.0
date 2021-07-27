@@ -77,7 +77,7 @@ $('#spacepage-selection').bootpag({
 		  var divtag = $("<div></div>");
 		  divtag.attr('id',spaceSet[i].id);
 		  var anchor = $("<a></a>");
-		  anchor.attr('href',"[(@{'/staff/space/'})]"+spaceSet[i].id);
+		  anchor.attr('href',"[(@{'/exhibit/space/'})]"+spaceSet[i].id);
 		  anchor.attr('class',"textDivStaff tab  btn btn-light");
 		  anchor.css('width','100%');
 		  var span1 = $("<span></span>");
@@ -137,7 +137,7 @@ $('#modulepage-selection').bootpag({
 		 var divtag = $("<div></div>");
 		 divtag.attr('id',moduleSet[i].id);
 		 var anchor = $("<a></a>");
-		 anchor.attr('href',"[(@{'/staff/module/'})]"+moduleSet[i].id);
+		 anchor.attr('href',"[(@{'/exhibit/'})]" +moduleSet[i].spaceId+'/module/'+moduleSet[i].id);
 		 anchor.attr('class',"textDivStaff tab  btn btn-light");
 		 anchor.css('width','100%');
 		 var img = $("<img></img>");
@@ -205,7 +205,7 @@ $('#slidepage-selection').bootpag({
 		 var divtag = $("<div></div>");
 		 divtag.attr('id',slideSet[i].id);
 		 var anchor = $("<a></a>");
-		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideSet[i].module.id+'/slide/'+slideSet[i].id);
+		 anchor.attr('href',"[(@{'/exhibit/'})]"+slideSet[i].spaceId+'/module/'+slideSet[i].module.id+'/sequence/'+ slideSet[i].module.startSequence.id + '/slide/'+slideSet[i].id);
 		 anchor.attr('class',"textDivStaff tab  btn btn-light");
 		 anchor.css('width','100%');
 		 var img = $("<img></img>");
@@ -371,7 +371,7 @@ a.nav-link.active.show {
 				<div id="spaceResultDisplay">
 					<div th:each="contents: ${spaceSearchResults}">
 						<div th:id="${contents.id}">
-							  <a th:href="@{'/staff/space/'+${contents.id}}"
+							  <a th:href="@{'/exhibit/space/'+${contents.id}}"
                             class="textDivStaff tab  btn btn-light"
                             style="width: 100%"> <span
                             class="card-title"
@@ -397,7 +397,7 @@ a.nav-link.active.show {
 				<div id="moduleResultDisplay">
 					<div th:each="contents: ${moduleSearchResults}">
 						<div th:id="${contents.id}">
-							<a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
+							<a th:href="@{'/exhibit/' + ${contents.spaceId} + '/module/' + ${contents.id}}" style="width: 100%"
                             class="textDivStaff tab  btn btn-light">
                             <div th:each="slide, counter : ${contents.slides}"
                             th:unless="${counter.count > 1}">
@@ -441,7 +441,7 @@ a.nav-link.active.show {
 					<div th:each="contents: ${slideSearchResults}">
 						<div th:id="${contents.id}">
 						 <a class="textDivStaff tab  btn btn-light" style="width: 100%"
-                            th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
+                            th:href="@{'/exhibit/' + ${contents.spaceId} + '/module/' + ${contents.module.id} + '/sequence/' + ${contents.module.startSequence.id} + '/slide/'+${contents.id}}">
                             <div th:if="${not #lists.isEmpty(contents.contents)}">
                             <div th:if="${contents?.firstImageBlock !=null}">
                                 <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"

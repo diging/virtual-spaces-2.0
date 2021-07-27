@@ -1,7 +1,11 @@
 package edu.asu.diging.vspace.web.general.search;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -9,20 +13,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
-import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.ModuleWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 
 @Controller
 public class ExhibitionPublicSearchController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IPublicSearchManager publicSearchManager;
+    
+    @Autowired
+    private IModuleLinkManager moduleLinkManager;
     
     @RequestMapping(value = "/exhibit/search", method=RequestMethod.GET)
     public String getAllSearchedElements(
@@ -43,7 +53,6 @@ public class ExhibitionPublicSearchController {
 
         model.addAttribute("searchWord", searchTerm);
         model.addAttribute("activeTab", tab);
-//        model.addAttribute("resultCount", elementList.size());
         return "exhibition/search/publicSearch";
     }
     
@@ -81,8 +90,21 @@ public class ExhibitionPublicSearchController {
         Page<Module> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
-        HashSet<Module> moduleSet = new LinkedHashSet<>();
-        moduleSet.addAll(modulePage.getContent());
+        HashSet<ModuleWithSpace> moduleSet = new LinkedHashSet<>();
+        
+        for(Module module : modulePage.getContent()) {
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
+            if(moduleLink!=null) {
+                ModuleWithSpace modWithSpace = new ModuleWithSpace();
+                try {
+                    BeanUtils.copyProperties(modWithSpace, module);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
+                }
+                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                moduleSet.add(modWithSpace);
+            }
+        }
         model.addAttribute("moduleSearchResults", moduleSet);
     }
 
@@ -101,7 +123,20 @@ public class ExhibitionPublicSearchController {
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         HashSet<Slide> slideSet = new LinkedHashSet<>();
-        slideSet.addAll(slidePage.getContent());
+        
+        for(Slide slide : slidePage.getContent()) {
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+            if(moduleLink!=null) {
+                SlideWithSpace slideWithSpace = new SlideWithSpace();
+                try {
+                    BeanUtils.copyProperties(slideWithSpace, slide);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
+                }
+                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                slideSet.add(slideWithSpace);
+            }
+        }
         model.addAttribute("slideSearchResults", slideSet);
     }
 
