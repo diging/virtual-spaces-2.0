@@ -13,32 +13,6 @@
 	    overflow-y: scroll;
 	    height: 400px;
 	}
-	
-	.shepherd-button {
-		background-color: var(--primary);
-		color: white;
-		text-transform: none;
-	}
-	
-	.shepherd-button:hover {
-		background-color: var(--primary);
-		opacity: 80%;
-	}
-	
-	.shepherd-header {
-		background: var(--base-grey) !important;
-	}
-	
-	.shepherd-title {
-		color: #121212;
-		text-align: left;
-		font-weight: 600;
-	}
-	
-	.shepherd-text {
-		color: #121212;
-		text-align: left;
-	}
 </style>
 
 <script th:inline="javascript">
@@ -193,91 +167,93 @@ function uploadImage() {
 }
 
 function guidedTour() {
-	if(!contentCount) {
-		const tour = new Shepherd.Tour({
-			  defaultStepOptions: {
-			    cancelIcon: {
-			      enabled: true
-			    },
-			    classes: '',
-			    scrollTo: { behavior: 'smooth', block: 'center' },
-			  },
-			  useModalOverlay: true,
-			});
+	const tour = new Shepherd.Tour({
+		  defaultStepOptions: {
+		    cancelIcon: {
+		      enabled: true
+		    },
+		    classes: '',
+		    scrollTo: { behavior: 'smooth', block: 'center' },
+		  },
+		  useModalOverlay: true,
+		});
+
+	tour.addStep({
+	  title: 'Welcome to the slide editor!',
+	  text: `Add or edit the content you want to show on your slides.`,
+	  buttons: [
+	    {
+	      action() {
+	        return this.next();
+	      },
+	      text: 'Next'
+	    }
+	  ],
+	  id: 'creating1'
+	});
 	
-		tour.addStep({
-		  title: 'Welcome to the slide editor!',
-		  text: `Add or edit the content you want to show on your slides.`,
-		  buttons: [
-		    {
-		      action() {
-		        return this.next();
-		      },
-		      text: 'Next'
-		    }
-		  ],
-		  id: 'creating1'
-		});
-		
-		tour.addStep({
-		  title: 'Easy navigation',
-		  text: `Keep track of your location in the module or navigate back up the order.`,
-		  attachTo: {
-		    element: '.breadcrumb',
-		    on: 'bottom'
-		  },
-		  buttons: [
-		    {
-		      action() {
-		        return this.back();
-		      },
-		      classes: 'shepherd-button-secondary',
-		      text: 'Back'
-		    },
-		    {
-		      action() {
-		        return this.next();
-		      },
-		      classes: 'btn primary-btn',
-		      text: 'Next'
-		    }
-		  ],
-		  id: 'creating2'
-		});
-		
-		tour.addStep({
-		  title: 'Adding content',
-		  text: `Looks like your slide is empty. Add a text block/image. `,
-		  attachTo: {
-		    element: '.content-btns',
-		    on: 'bottom'
-		  },
-		  buttons: [
-		    {
-		      action() {
-		        return this.back();
-		      },
-		      classes: 'shepherd-button-secondary',
-		      text: 'Back'
-		    },
-		    {
-		      action() {
-		        return this.next();
-		      },
-		      text: 'Done'
-		    }
-		  ],
-		  id: 'creating3'
-		});
-		
-		
-		tour.start();
-	}
+	tour.addStep({
+	  title: 'Easy navigation',
+	  text: `Keep track of your location in the module or navigate back up the order.`,
+	  attachTo: {
+	    element: '.breadcrumb',
+	    on: 'bottom'
+	  },
+	  buttons: [
+	    {
+	      action() {
+	        return this.back();
+	      },
+	      classes: 'shepherd-button-secondary',
+	      text: 'Back'
+	    },
+	    {
+	      action() {
+	        return this.next();
+	      },
+	      classes: 'btn primary-btn',
+	      text: 'Next'
+	    }
+	  ],
+	  id: 'creating2'
+	});
+	
+	tour.addStep({
+	  title: 'Adding content',
+	  text: `Looks like your slide is empty. Add a text block/image. `,
+	  attachTo: {
+	    element: '.content-btns',
+	    on: 'bottom'
+	  },
+	  buttons: [
+	    {
+	      action() {
+	        return this.back();
+	      },
+	      classes: 'shepherd-button-secondary',
+	      text: 'Back'
+	    },
+	    {
+	      action() {
+	        return this.next();
+	      },
+	      text: 'Done'
+	    }
+	  ],
+	  id: 'creating3'
+	});
+	
+	
+	tour.start();
 }
+
 
 $(document).ready(function() {	
 	
-	guidedTour();
+	if (localStorage.getItem("newSlide") == "true") {
+		guidedTour();
+		localStorage.setItem("newSlide", false);
+	}
     
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
@@ -791,11 +767,11 @@ $(window).on('load', function () {
 					<span class="icon-menu-dots"></span>
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
-			   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
-					<a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
-		        		<span class="icon-edit"></span></a>
-					<button class="btn" th:onclick="guidedTour()" data-toggle="tooltip" data-placement="bottom" title="Start tour"><span class="icon-web"></span></button>
+					<a class="dropdown-item" data-toggle="tooltip" data-html="true" data-placement="top" 
+			   			th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"><span class="icon-info-circle"></span>&emsp; Slide info</a>
+					<a class="dropdown-item" th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
+		        		<span class="icon-edit"></span>&emsp; Edit slide</a>
+					<a class="dropdown-item" style="cursor: pointer" th:onclick="guidedTour()"><span class="icon-map"></span>&emsp; Start tour</a>
 				</div>
 			</div>
 		</div>
