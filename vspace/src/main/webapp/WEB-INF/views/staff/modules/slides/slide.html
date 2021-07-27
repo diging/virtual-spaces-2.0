@@ -215,6 +215,7 @@ if(chooseFromExisting)
   $("#selectedImage").empty();
   $('#imageId').prop('selectedIndex',0).trigger( "change" );
  }
+$("#imageId").attr("disabled", false);
 }
 
 $(document).ready(function() {
