@@ -38,12 +38,12 @@ public class SpaceOverviewController {
 
         Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap = spaceOverviewManager.getSpaceToSpaceLinks();
 
-        Map<String, List<String>> spaceLinkedToSpacesAndModulesMap = spaceOverviewManager.getSpaceLinkedToSpacesAndModules(spaceToModuleLinksMap,
+        Map<String, List<String>> spacesToSpacesAndModulesMap = spaceOverviewManager.getSpacesToSpacesAndModulesMap(spaceToModuleLinksMap,
                 spaceToSpaceLinksMap);
 
         String nodesJson = spaceOverviewDataFormatter.createNodes(request.getContextPath());
 
-        String linksJson = spaceOverviewDataFormatter.createEdges(spaceLinkedToSpacesAndModulesMap);
+        String linksJson = spaceOverviewDataFormatter.createEdges(spacesToSpacesAndModulesMap);
 
         model.addAttribute("overviewNode", nodesJson);
         model.addAttribute("overviewLink", linksJson);

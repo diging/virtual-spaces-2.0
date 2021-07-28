@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -105,12 +104,11 @@ public class SpaceOverviewFormatter {
      * This is a common method for both space and module
      * 
      * @param nodeval This variable store either space/module node
-     * @return After setting name variable of node it returns the node
+     * @return After setting name variable of node with spacename/modulename it returns the node
      */
     private ObjectNode createNodeAndSetName(IVSpaceElement nodeval) {
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
+        ObjectNode node = jsonHelper.getMapper().createObjectNode();
         node.put(NAME, nodeval.getName());
         return node;
     }
@@ -192,13 +190,12 @@ public class SpaceOverviewFormatter {
      */
     public String createNodes(String contextPath) throws JsonProcessingException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode nodeArray = mapper.createArrayNode();
+        ArrayNode nodeArray = jsonHelper.getMapper().createArrayNode();
         Iterable<Module> allModulesList = moduleRepo.findAll();
         constructModuleNodeArray(contextPath, allModulesList, nodeArray);
         Iterable<Space> allSpacesList = spaceRepo.findAll();
         constructSpaceNodeArray(contextPath, allSpacesList, nodeArray);
-        return jsonHelper.convertToJson(mapper, nodeArray);
+        return jsonHelper.convertToJson(nodeArray);
     }
 
     /**
@@ -212,17 +209,16 @@ public class SpaceOverviewFormatter {
     public String createEdges(Map<String, List<String>> spaceLinkedToToSpacesAndModulesMap)
             throws JsonProcessingException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode linkArray = mapper.createArrayNode();
+        ArrayNode linkArray = jsonHelper.getMapper().createArrayNode();
         for (Entry<String, List<String>> entry : spaceLinkedToToSpacesAndModulesMap.entrySet()) {
             for (String value : entry.getValue()) {
-                ObjectNode link = mapper.createObjectNode();
+                ObjectNode link = jsonHelper.getMapper().createObjectNode();
                 link.put(TARGET, value);
                 link.put(SOURCE, entry.getKey());
                 linkArray.add(link);
             }
         }
-        return jsonHelper.convertToJson(mapper, linkArray);
+        return jsonHelper.convertToJson(linkArray);
     }
 
 }

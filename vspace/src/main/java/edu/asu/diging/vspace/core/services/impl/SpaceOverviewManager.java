@@ -89,7 +89,7 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
      *                              other spaces
      */
     @Override
-    public Map<String, List<String>> getSpaceLinkedToSpacesAndModules(
+    public Map<String, List<String>> getSpacesToSpacesAndModulesMap(
             Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
             Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap) {
 

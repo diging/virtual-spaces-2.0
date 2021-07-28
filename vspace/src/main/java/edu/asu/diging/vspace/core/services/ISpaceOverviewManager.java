@@ -12,7 +12,7 @@ public interface ISpaceOverviewManager {
 
     Map<String, List<SpaceLinkDisplay>> getSpaceToSpaceLinks();
 
-    Map<String, List<String>> getSpaceLinkedToSpacesAndModules(Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
+    Map<String, List<String>> getSpacesToSpacesAndModulesMap(Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
             Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap);
 
 }
