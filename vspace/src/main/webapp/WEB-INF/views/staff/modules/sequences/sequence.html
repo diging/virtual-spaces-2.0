@@ -229,7 +229,7 @@
 		  title: 'Easy navigation',
 		  text: `Keep track of your location in the module or navigate back up the order.`,
 		  attachTo: {
-		    element: '.slides',
+		    element: '.breadcrumb',
 		    on: 'bottom'
 		  },
 		  buttons: [
@@ -255,7 +255,7 @@
 		  title: 'Select the slides in your sequence.',
 		  text: `Choose the slides you want in the sequence by double clicking the slide title. Drag to reorder. `,
 		  attachTo: {
-		    element: '.startSequence',
+		    element: '.form-group',
 		    on: 'bottom'
 		  },
 		  buttons: [
@@ -293,8 +293,8 @@
 		
 		<div class ="blur">
 			<div style="display: flex; margin-bottom: 20px">
-				<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Sequence:</span> [[${sequence.name}]]</h2>
-				<div style="margin-left: .1%;" class="blur row align-items-center">		
+				<div>		
+					<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Sequence:</span> [[${sequence.name}]]</h2>
 					<p id="description"> [[${sequence.description}]]</p>
 					<button id="submitDescription" type="button"
 						class="btn primary-btn btn-sm"
@@ -329,8 +329,8 @@
 		
 		<div id="slideSpace" class="blur">
 			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
-				<div class="form-group row">
-					<label for="Slides" class="col-md-2 col-form-label">Select
+				<div class="form-group row" style="width: fit-content; margin-left: 0px">
+					<label for="Slides" style="margin-right: 15px">Select
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
 					<select multiple="multiple" id="ordered-slides" name="selectSequence">
