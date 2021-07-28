@@ -22,7 +22,7 @@
             </a>
         </div>
         <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
-        <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: fixed; z-index: 100; top: 5.5%; width: 100%; display: flex;">
+        <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
         </div>
@@ -68,7 +68,7 @@
                   </button>
             </div>
          </a>
-         <div style="position: relative; top: 90px; padding-bottom:10px;">
+         <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">

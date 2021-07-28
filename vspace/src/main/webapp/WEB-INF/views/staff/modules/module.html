@@ -216,7 +216,7 @@ $(document).ready(function($) {
 </head>
 <body>
     <div class="main-content" layout:fragment="content">
-    
+  
     	<div class="flex-spacing" style="margin-bottom: 40px;"> 
 	    	<div style="display: flex">
 	    		<div style="margin-right: 20px">
@@ -237,14 +237,14 @@ $(document).ready(function($) {
 			</div>
 		
 			<div class="startSequence" style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">
-		        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
-		             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
+          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
 					<select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important; height:auto;">
-						<option th:value="Select" th:text="Select"></option>
-		                <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
-		            </select>
-		            <button type="submit" class="btn primary-btn btn-sm">Submit</button>
+						  <option th:value="Select" th:text="Select"></option>
+              <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
+          </select>
+          <button type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 			</div>
     	</div>
