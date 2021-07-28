@@ -329,7 +329,7 @@
 		
 		<div id="slideSpace" class="blur">
 			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
-				<div class="form-group row" style="width: fit-content; margin-left: 0px">
+				<div class="form-group row" style="width: fit-content; margin-left: none">
 					<label for="Slides" style="margin-right: 15px">Select
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
