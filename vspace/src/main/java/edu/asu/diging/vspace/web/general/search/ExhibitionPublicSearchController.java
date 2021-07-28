@@ -158,7 +158,20 @@ public class ExhibitionPublicSearchController {
         model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
         HashSet<Slide> slideTextSet = new LinkedHashSet<>();
-        slideTextSet.addAll(slideTextPage.getContent());
+        
+        for(Slide slide : slideTextPage.getContent()) {
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+            if(moduleLink!=null) {
+                SlideWithSpace slideWithSpace = new SlideWithSpace();
+                try {
+                    BeanUtils.copyProperties(slideWithSpace, slide);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
+                }
+                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                slideTextSet.add(slideWithSpace);
+            }
+        }
         model.addAttribute("slideTextSearchResults", slideTextSet);
     }
     

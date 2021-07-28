@@ -273,7 +273,7 @@ $('#slideTextPage-selection').bootpag({
 		 var divtag = $("<div></div>");
 		 divtag.attr('id',slideTextSet[i].id);
 		 var anchor = $("<a></a>");
-		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextSet[i].module.id+'/slide/'+slideTextSet[i].id);
+		 anchor.attr('href',"[(@{'/exhibit/'})]"+slideTextSet[i].spaceId+'/module/'+slideTextSet[i].module.id+'/sequence/'+ slideTextSet[i].module.startSequence.id + '/slide/'+slideTextSet[i].id);
 		 anchor.attr('class',"textDivStaff tab  btn btn-light");
 		 anchor.css('width','100%');
 		 var img = $("<img></img>");
@@ -483,7 +483,7 @@ a.nav-link.active.show {
 					<div th:each="contents: ${slideTextSearchResults}">
 						<div th:id="${contents.id}">
 							<a class="textDivStaff tab  btn btn-light" style="width: 100%"
-                            th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
+                            th:href="@{'/exhibit/' + ${contents.spaceId} + '/module/' + ${contents.module.id} + '/sequence/' + ${contents.module.startSequence.id} + '/slide/'+${contents.id}}">
                             <div th:if="${not #lists.isEmpty(contents.contents)}">
                             <div th:if="${contents?.firstImageBlock !=null}">
                                 <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
