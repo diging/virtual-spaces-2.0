@@ -1,95 +1,95 @@
 package edu.asu.diging.vspace.core.model;
 
 public class SpaceOverview {
-    
- private String name;
- 
- private String id;
- 
- private String link;
- 
- private String img;
- 
- private boolean module;
- 
- private boolean unpublished;
- 
- private boolean hideIncomingLinks;
- 
- private String source;
- 
- private String target;
 
-public String getName() {
-    return name;
-}
+    private String name;
 
-public void setName(String name) {
-    this.name = name;
-}
+    private String id;
 
-public String getId() {
-    return id;
-}
+    private String link;
 
-public void setId(String id) {
-    this.id = id;
-}
+    private String img;
 
-public String getLink() {
-    return link;
-}
+    private boolean module;
 
-public void setLink(String link) {
-    this.link = link;
-}
+    private boolean unpublished;
 
-public String getImg() {
-    return img;
-}
+    private boolean hideIncomingLinks;
 
-public void setImg(String img) {
-    this.img = img;
-}
+    private String source;
 
-public boolean isModule() {
-    return module;
-}
+    private String target;
 
-public void setModule(boolean module) {
-    this.module = module;
-}
+    public String getName() {
+        return name;
+    }
 
-public boolean isUnpublished() {
-    return unpublished;
-}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-public void setUnpublished(boolean unpublished) {
-    this.unpublished = unpublished;
-}
+    public String getId() {
+        return id;
+    }
 
-public boolean isHideIncomingLinks() {
-    return hideIncomingLinks;
-}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-public void setHideIncomingLinks(boolean hideIncomingLinks) {
-    this.hideIncomingLinks = hideIncomingLinks;
-}
+    public String getLink() {
+        return link;
+    }
 
-public String getSource() {
-    return source;
-}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-public void setSource(String source) {
-    this.source = source;
-}
+    public String getImg() {
+        return img;
+    }
 
-public String getTarget() {
-    return target;
-}
+    public void setImg(String img) {
+        this.img = img;
+    }
 
-public void setTarget(String target) {
-    this.target = target;
-}
+    public boolean isModule() {
+        return module;
+    }
+
+    public void setModule(boolean module) {
+        this.module = module;
+    }
+
+    public boolean isUnpublished() {
+        return unpublished;
+    }
+
+    public void setUnpublished(boolean unpublished) {
+        this.unpublished = unpublished;
+    }
+
+    public boolean isHideIncomingLinks() {
+        return hideIncomingLinks;
+    }
+
+    public void setHideIncomingLinks(boolean hideIncomingLinks) {
+        this.hideIncomingLinks = hideIncomingLinks;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
 }
