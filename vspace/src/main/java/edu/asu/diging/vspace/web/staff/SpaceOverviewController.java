@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
-import edu.asu.diging.vspace.core.services.impl.SpaceOverviewFormatter;
+import edu.asu.diging.vspace.core.services.impl.SpaceOverviewDataFormatter;
 import edu.asu.diging.vspace.core.services.impl.SpaceOverviewManager;
 
 /**
@@ -29,7 +29,7 @@ public class SpaceOverviewController {
     private SpaceOverviewManager spaceOverviewManager;
 
     @Autowired
-    private SpaceOverviewFormatter spaceOverviewDataFormatter;
+    private SpaceOverviewDataFormatter spaceOverviewDataFormatter;
 
     @RequestMapping("/staff/overview")
     public String spaceOverview(HttpServletRequest request, Model model) throws JsonProcessingException {
@@ -38,12 +38,15 @@ public class SpaceOverviewController {
 
         Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap = spaceOverviewManager.getSpaceToSpaceLinks();
 
-        Map<String, List<String>> spacesToSpacesAndModulesMap = spaceOverviewManager.getSpacesToSpacesAndModulesMap(spaceToModuleLinksMap,
-                spaceToSpaceLinksMap);
+        Map<String, List<String>> spacesToSpacesAndModulesMap = spaceOverviewManager
+                .getSpacesToSpacesAndModulesMap(spaceToModuleLinksMap, spaceToSpaceLinksMap);
 
-        String nodesJson = spaceOverviewDataFormatter.createNodes(request.getContextPath());
+        Map<String, String> jsonFormatMap = spaceOverviewDataFormatter.getJsonFormat(request.getContextPath(),
+                spacesToSpacesAndModulesMap);
 
-        String linksJson = spaceOverviewDataFormatter.createEdges(spacesToSpacesAndModulesMap);
+        String nodesJson = jsonFormatMap.get("nodesJson");
+
+        String linksJson = jsonFormatMap.get("linksJson");
 
         model.addAttribute("overviewNode", nodesJson);
         model.addAttribute("overviewLink", linksJson);

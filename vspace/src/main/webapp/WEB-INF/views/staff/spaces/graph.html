@@ -87,18 +87,17 @@ force = d3.layout.force()
 	    .call(drag);  
 	  	    
      var modules = node.filter(function(d,i){
-    	  return d.isModule;
+    	  return d.module;
     	}).append("svg:foreignObject")
         .attr("x", function(d) { return -10;})
         .attr("y", function(d) { return -10;})
         .attr("height", 22)
         .attr("width", 22) 
-        //.append("xhtml:body")
         .html('<span class="icon-2x2-grid secondary"></span>');
         
     
    var images = node.filter(function(d,i){
-  	  return !d.isModule;
+  	  return !d.module;
   	}).append("svg:image")
     .attr("xlink:href",  function(d) {  return d.img;})
     .attr("x", function(d) { return -25;})
@@ -107,23 +106,21 @@ force = d3.layout.force()
     .attr("width", 100);
    
    node.filter(function(d,i){
- 	  return !d.isModule && d.isUnpublished;
+ 	  return !d.module && d.unpublished;
  	}).append("svg:foreignObject")
      .attr("x", function(d) { return -5;})
      .attr("y", function(d) { return -5;})
-     .attr("height", 22)
-     .attr("width", 22) 
-     //.append("xhtml:body")
+     .attr("height", 24)
+     .attr("width", 24) 
      .html('<span class="icon-warning secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
 
    node.filter(function(d,i){
-	 	  return !d.isModule && d.isHideIncomingLinks;
+	 	  return !d.module && d.hideIncomingLinks;
 	 	}).append("svg:foreignObject")
 	     .attr("x", function(d) { return 20;})
 	     .attr("y", function(d) { return -5;})
-	     .attr("height", 22)
-	     .attr("width", 22) 
-	     //.append("xhtml:body")
+	     .attr("height", 24)
+	     .attr("width", 24) 
 	     .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
 
      var setEvents = modules
@@ -155,7 +152,7 @@ force = d3.layout.force()
 	          }); 
 	
 	      node.filter(function(d,i){
-	    	  return !d.isModule;
+	    	  return !d.module;
 	    	}).append("text")
 		      .text(function(d) {
 			        return d.name;
@@ -164,7 +161,7 @@ force = d3.layout.force()
 			      .attr('y', 90);
 	      
 	      node.filter(function(d,i){
-	    	  return d.isModule;
+	    	  return d.module;
 	    	}).append("text")
 		      .text(function(d) {
 			        return d.name;
