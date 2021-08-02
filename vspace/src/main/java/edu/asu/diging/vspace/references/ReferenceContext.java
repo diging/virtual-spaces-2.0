@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.referenceExpose;
+package edu.asu.diging.vspace.references;
 
 import edu.asu.diging.vspace.core.model.IReference;
 
@@ -16,7 +16,7 @@ public class ReferenceContext {
     public IReferenceMetadata getReferenceMetadataConverter() {
         //We can introduce switch case for different types of metadata/citation style to return appropriate IBiblioMetadata
         //For now its default
-        IReferenceMetadata referenceMetadata = new ZoteroDefaultMetaData(citationStyle, reference);
+        IReferenceMetadata referenceMetadata = new DefaultMetaData(citationStyle, reference);
         return referenceMetadata;
     }
 

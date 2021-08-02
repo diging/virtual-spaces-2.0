@@ -17,7 +17,8 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IReference;
-import edu.asu.diging.vspace.referenceExpose.ReferenceMetadataDisplay;
+import edu.asu.diging.vspace.references.ReferenceMetaDataType;
+import edu.asu.diging.vspace.references.ReferenceMetadataDisplay;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
@@ -56,6 +57,9 @@ public class Reference extends VSpaceElement implements IReference {
     private String type;
 
     private String note;
+    
+    @Transient
+    private String metaData;
 
     @Override
     public String getTitle() {
@@ -185,6 +189,14 @@ public class Reference extends VSpaceElement implements IReference {
         this.biblios = biblios;
     }
     
+    public String getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(String metaData) {
+        this.metaData = metaData;
+    }
+
     @Override
     public String toString() {
         return "Reference title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal + ", url=" + url
@@ -192,9 +204,9 @@ public class Reference extends VSpaceElement implements IReference {
                 + type + ", note=" + note;
     }
 
-    @Transient
-    public String urlEncodedRefMetaData() {
-        return ReferenceMetadataDisplay.urlEncodedRefMetaData(this);
-    }
+//    @Transient
+//    public String urlEncodedRefMetaData() {
+//        return ReferenceMetadataDisplay.urlEncodedRefMetaData(ReferenceMetaDataType.DEFAULT, this);
+//    }
     
 }

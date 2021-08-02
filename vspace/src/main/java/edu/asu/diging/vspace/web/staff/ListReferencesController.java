@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
+import edu.asu.diging.vspace.references.ReferenceMetadataRegistry;
 
 @Controller
 public class ListReferencesController {
@@ -25,6 +26,9 @@ public class ListReferencesController {
 
     @Autowired
     private IReferenceManager referenceManager;
+    
+    @Autowired
+    private static ReferenceMetadataRegistry refMetaDataRegistry;
 
     @RequestMapping("/staff/references/list")
     public String listSpacesWithoutNum(Model model,

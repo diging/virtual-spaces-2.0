@@ -1,14 +1,15 @@
-package edu.asu.diging.vspace.referenceExpose;
+package edu.asu.diging.vspace.references;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.model.IReference;
 
-public class ZoteroDefaultMetaData implements IReferenceMetadata {
-
-    String biblioMetadataStyle = "defaultZoteroMetadata";
+@Service
+public class DefaultMetaData implements ReferenceMetadataProvider {
 
     //For now its default
     ICitationStyle citationStyle;
@@ -16,26 +17,26 @@ public class ZoteroDefaultMetaData implements IReferenceMetadata {
     IReference reference;
     
     //These all values are fixed for default metadata 
-    String urlVersion = "url_ver=Z39.88-2004";
+    private String urlVersion = "url_ver=Z39.88-2004";
     
-    String ctxVersion = "ctx_ver=Z39.88-2004";
+    private String ctxVersion = "ctx_ver=Z39.88-2004";
     
-    String rfrId = "info:sid/zotero.org:2";
+    private String rfrId = "info:sid/zotero.org:2";
     
-    String rftValFmt = "info:ofi/fmt:kev:mtx:dissertation";
+    private String rftValFmt = "info:ofi/fmt:kev:mtx:dissertation";
     
-    ZoteroDefaultMetaData(ICitationStyle citationStyle, IReference reference) {
+    DefaultMetaData(ICitationStyle citationStyle, IReference reference) {
         this.citationStyle = citationStyle;
         this.reference = reference;
     }
 
     @Override
-    public String getReferenceMetadataStyle() {
-        return biblioMetadataStyle;
+    public ReferenceMetaDataType getReferenceMetadataType() {
+        return ReferenceMetaDataType.DEFAULT;
     }
 
     @Override
-    public String createReferenceMetadata(ICitationStyle citationStyle, IReference reference) {
+    public String getReferenceMetadata(IReference reference) {
         String urlEncodedReferenceMetaData = urlVersion + "&" + ctxVersion;
         try {
             urlEncodedReferenceMetaData += "&rfr_id=" + URLEncoder.encode(rfrId, StandardCharsets.UTF_8.toString());
