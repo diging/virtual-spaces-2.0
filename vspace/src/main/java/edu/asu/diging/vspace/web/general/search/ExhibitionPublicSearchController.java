@@ -92,6 +92,7 @@ public class ExhibitionPublicSearchController {
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
         HashSet<ModuleWithSpace> moduleSet = new LinkedHashSet<>();
         
+        //Adding space info for each module
         for(Module module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
             if(moduleLink!=null) {
@@ -124,6 +125,7 @@ public class ExhibitionPublicSearchController {
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         HashSet<Slide> slideSet = new LinkedHashSet<>();
         
+       //Adding space info for each slide
         for(Slide slide : slidePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
@@ -159,6 +161,7 @@ public class ExhibitionPublicSearchController {
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
         HashSet<Slide> slideTextSet = new LinkedHashSet<>();
         
+        //Adding space info for each slide
         for(Slide slide : slideTextPage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
