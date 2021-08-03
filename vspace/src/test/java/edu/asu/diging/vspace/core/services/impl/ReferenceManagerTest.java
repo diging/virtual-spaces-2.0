@@ -40,7 +40,7 @@ public class ReferenceManagerTest {
     private IReference ref1, ref2;
     private Reference refForm;
 
-    private String REF_ID1, REF_ID2, REF_ID_NOT_PRESENT, BIBLIO_ID;
+    private String REF_ID1, REF_ID2, REF_ID_NOT_PRESENT;
     private final String REF_TITLE1 = "TestTitle1";
     private final String REF_AUTHOR1 = "TestAuthor1";
     private final String REF_YEAR1 = "2000";
@@ -84,8 +84,6 @@ public class ReferenceManagerTest {
         REF_ID1 = "REF000000002";
         REF_ID2 = "REF000000001";
         REF_ID_NOT_PRESENT = "REF000000300";
-
-        BIBLIO_ID = "CON000000002";
 
         Reference refObj = new Reference();
         refObj.setId(REF_ID1);

@@ -4,18 +4,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.model.impl.Reference;
 
 @Service
 public class DefaultMetaData implements ReferenceMetadataProvider {
-
-    //For now its default
-    ICitationStyle citationStyle;
-
-    IReference reference;
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     //These all values are fixed for default metadata 
     private String urlVersion = "url_ver=Z39.88-2004";
     
@@ -24,11 +23,6 @@ public class DefaultMetaData implements ReferenceMetadataProvider {
     private String rfrId = "info:sid/zotero.org:2";
     
     private String rftValFmt = "info:ofi/fmt:kev:mtx:dissertation";
-    
-    DefaultMetaData(ICitationStyle citationStyle, IReference reference) {
-        this.citationStyle = citationStyle;
-        this.reference = reference;
-    }
 
     @Override
     public ReferenceMetaDataType getReferenceMetadataType() {
@@ -36,7 +30,7 @@ public class DefaultMetaData implements ReferenceMetadataProvider {
     }
 
     @Override
-    public String getReferenceMetadata(IReference reference) {
+    public String getReferenceMetadata(Reference reference) {
         String urlEncodedReferenceMetaData = urlVersion + "&" + ctxVersion;
         try {
             urlEncodedReferenceMetaData += "&rfr_id=" + URLEncoder.encode(rfrId, StandardCharsets.UTF_8.toString());
@@ -110,7 +104,7 @@ public class DefaultMetaData implements ReferenceMetadataProvider {
             urlEncodedReferenceMetaData += ("&rft.language=en");
 
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error("Error while encoding reference metadata. ", e);
         }
 
         return urlEncodedReferenceMetaData;

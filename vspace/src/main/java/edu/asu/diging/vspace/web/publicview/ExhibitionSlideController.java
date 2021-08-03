@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
+import edu.asu.diging.vspace.references.ReferenceMetadataRegistry;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.web.exception.SlideNotFoundException;
@@ -44,7 +45,7 @@ public class ExhibitionSlideController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
-
+    
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,

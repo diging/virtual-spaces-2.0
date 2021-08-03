@@ -74,7 +74,7 @@
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
-                	<p class="col-md-10">Bibliography title: <span>[(${contents.biblioTitle})]</span>, description: <span>[(${contents.description})]</span></p>
+                	<p>Bibliography title: <span>[(${contents.biblioTitle})]</span>, description: <span>[(${contents.description})]</span></p>
                 	<ul>
 	                	<div th:each="contentRef: ${contents.references}">
 							<li>
@@ -83,7 +83,7 @@
 										, journal: <span>[(${contentRef.journal})]</span>, url: <span>[(${contentRef.url})]</span>, volume: <span>[(${contentRef.volume})]</span>, issue: <span>[(${contentRef.issue})]</span>
 										, pages: <span>[(${contentRef.pages})]</span>, editors: <span>[(${contentRef.editors})]</span>, type: <span>[(${contentRef.type})]</span>, note: <span>[(${contentRef.note})]</span></p>
 								</div>
-								<span class='Z3988' th:title='${contentRef.urlEncodedRefMetaData()}' > </span>
+								<span class='Z3988' th:title='${@referenceMetadataRegistry.getProvider("default").getReferenceMetadata(contentRef)}' > </span>
 							</li>
 						</div>
 					</ul>

@@ -1,10 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +17,7 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
-import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
-import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
 public class ContentBlockManagerTest {

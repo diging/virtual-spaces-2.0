@@ -53,7 +53,7 @@ public interface IReference extends IVSpaceElement {
     String getNote();
     
     void setNote(String note);
-
+    
     void setId(String id);
 
     String getId();
