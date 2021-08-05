@@ -15,11 +15,4 @@ public interface IPublicSearchManager {
 
     Page<Slide> searchInSlideTexts(String search, int page);
 
-    long getTotalSpacePages(String search);
-
-    long getTotalModulePages(String search);
-
-    long getTotalSlidePages(String search);
-
-    long getTotalSlideTextPages(String search);
 }

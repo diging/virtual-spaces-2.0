@@ -48,9 +48,18 @@ public class PublicSearchManager implements IPublicSearchManager{
 
     @Override
     public Page<Space> searchInSpaces(String searchTerm, int page) {
-        int spacePageNo = validatePageNumber(page, getTotalSpacePages(searchTerm));
-        Pageable requestedPageForSpace = PageRequest.of(spacePageNo - 1, pageSize);
-        return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForSpace = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
+        int totalSpacePage = spacePage.getTotalPages();
+        if (page > totalSpacePage) {
+            totalSpacePage = totalSpacePage == 0 ? 1 : totalSpacePage;
+            requestedPageForSpace = PageRequest.of(totalSpacePage - 1, pageSize);
+            spacePage = spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
+        }
+        return spacePage;
     }
 
     /**
@@ -65,9 +74,18 @@ public class PublicSearchManager implements IPublicSearchManager{
      */
     @Override
     public Page<Module> searchInModules(String searchTerm, int page) {
-        int modulePageNo = validatePageNumber(page, getTotalModulePages(searchTerm));
-        Pageable requestedPageForModule = PageRequest.of(modulePageNo - 1, pageSize);
-        return moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
+        Page<Module> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        int totalModulePage = modulePage.getTotalPages();
+        if (page > totalModulePage) {
+            totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
+            requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
+            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        }
+        return modulePage;
     }
 
     /**
@@ -82,9 +100,18 @@ public class PublicSearchManager implements IPublicSearchManager{
      */
     @Override
     public Page<Slide> searchInSlides(String searchTerm, int page) {
-        int slidePageNo = validatePageNumber(page, getTotalSlidePages(searchTerm));
-        Pageable requestedPageForSlide = PageRequest.of(slidePageNo - 1, pageSize);
-        return slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
+        Page<Slide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        int totalSlidePage = slidePage.getTotalPages();
+        if (page > totalSlidePage) {
+            totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
+            requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
+            slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        }
+        return slidePage;
     }
 
     /**
@@ -99,83 +126,18 @@ public class PublicSearchManager implements IPublicSearchManager{
      */
     @Override
     public Page<Slide> searchInSlideTexts(String searchTerm, int page) {
-        int slideTextPageNo = validatePageNumber(page, getTotalSlideTextPages(searchTerm));
-        Pageable requestedPageForSlideText = PageRequest.of(slideTextPageNo - 1, pageSize);
-        return textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
-    }
-
-    /**
-     * Method to return page number after validation
-     * 
-     * @param pageNo page provided by calling method(Note: The page number starts
-     *               from 1.)
-     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
-     *         totalPages.
-     */
-    private int validatePageNumber(int pageNo, long totalPages) {
-        if (pageNo < 1) {
-            return 1;
-        } else if (pageNo > totalPages) {
-            return (totalPages == 0) ? 1 : (int) totalPages;
+        if (page < 1) {
+            page = 1;
         }
-        return pageNo;
+        Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
+        Page<Slide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        int totalSlideTextPage = slidetextPage.getTotalPages();
+        if (page > totalSlideTextPage) {
+            totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;
+            requestedPageForSlideText = PageRequest.of(totalSlideTextPage - 1, pageSize);
+            slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        }
+        return slidetextPage;
     }
 
-    /**
-     * Method to return the total pages sufficient to display all spaces whose name
-     * or description matches with the search string
-     * 
-     * @param searchTerm string which has been searched
-     * @return totalPages required to display all spaces whose name or description
-     *         matches with the search string in DB
-     */
-    @Override
-    public long getTotalSpacePages(String searchTerm) {
-        Pageable requestedPageForSpace = PageRequest.of(0, pageSize);
-        return spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm).getTotalPages();
-    }
-
-    /**
-     * Method to return the total pages sufficient to display all modules whose name
-     * or description matches with the search string
-     *
-     * @param searchTerm string which has been searched
-     * @return totalPages required to display all modules whose name or description
-     *         matches with the search string in DB
-     */
-    @Override
-    public long getTotalModulePages(String searchTerm) {
-        Pageable requestedPageForModule = PageRequest.of(0, pageSize);
-        return moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm).getTotalPages();
-    }
-
-    /**
-     * Method to return the total pages sufficient to display all slides whose name
-     * or description matches with the search string
-     * 
-     * @param searchTerm string which has been searched
-     * @return totalPages required to display all slides whose text blocks contains
-     *         the search string in DB
-     */
-    @Override
-    public long getTotalSlidePages(String searchTerm) {
-        Pageable requestedPageForSlide = PageRequest.of(0, pageSize);
-        return slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm).getTotalPages();
-    }
-
-    /**
-     * Method to return the total pages sufficient to display all slides whose text
-     * blocks contains the search string
-     * 
-     * @param searchTerm string which has been searched
-     * @return totalPages required to display all slides whose text blocks contains
-     *         the search string in DB
-     */
-    @Override
-    public long getTotalSlideTextPages(String searchTerm) {
-        Pageable requestedPageForSlideText = PageRequest.of(0, pageSize);
-        return textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm).getTotalPages();
-    }
-    
-    
 }
