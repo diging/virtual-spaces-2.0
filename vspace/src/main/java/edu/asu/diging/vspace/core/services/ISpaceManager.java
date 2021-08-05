@@ -42,4 +42,5 @@ public interface ISpaceManager {
     
     Page<Space> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchText);
 
+    int findByNameOrDescription(String searchTerm);
 }

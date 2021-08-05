@@ -1,44 +1,44 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.ISearch;
 
 public class StaffSearch implements ISearch {
     
-    private HashSet<Space> spaceSet;
+    private List<Space> spaceList;
 
-    private HashSet<Module> moduleSet;
+    private List<Module> moduleList;
     
     private  Map<String,String> moduleFirstSlideFirstImage;
 
-    private HashSet<Slide> slideSet;
+    private List<Slide> slideList;
     
     private Map<String, String> slideFirstImage;
 
-    private HashSet<Slide> slideTextSet;
+    private List<Slide> slideTextList;
     
     private Map<String, String> slideTextFirstImage;
 
     @Override
-    public HashSet<Space> getSpaceSet() {
-        return spaceSet;
+    public List<Space> getSpaceList() {
+        return spaceList;
     }
 
     @Override
-    public void setSpaceSet(HashSet<Space> spaceSet) {
-        this.spaceSet = spaceSet;
+    public void setSpaceList(List<Space> spaceList) {
+        this.spaceList = spaceList;
     }
 
     @Override
-    public HashSet<Module> getModuleSet() {
-        return moduleSet;
+    public List<Module> getModuleList() {
+        return moduleList;
     }
 
     @Override
-    public void setModuleSet(HashSet<Module> moduleSet) {
-        this.moduleSet = moduleSet;
+    public void setModuleList(List<Module> moduleList) {
+        this.moduleList = moduleList;
     }
 
     @Override
@@ -52,13 +52,13 @@ public class StaffSearch implements ISearch {
     }
 
     @Override
-    public HashSet<Slide> getSlideSet() {
-        return slideSet;
+    public List<Slide> getSlideList() {
+        return slideList;
     }
 
     @Override
-    public void setSlideSet(HashSet<Slide> slideSet) {
-        this.slideSet = slideSet;
+    public void setSlideList(List<Slide> slideList) {
+        this.slideList = slideList;
     }
 
     @Override
@@ -72,13 +72,13 @@ public class StaffSearch implements ISearch {
     }
 
     @Override
-    public HashSet<Slide> getSlideTextSet() {
-        return slideTextSet;
+    public List<Slide> getSlideTextList() {
+        return slideTextList;
     }
 
     @Override
-    public void setSlideTextSet(HashSet<Slide> slideTextSet) {
-        this.slideTextSet = slideTextSet;
+    public void setSlideTextList(List<Slide> slideTextList) {
+        this.slideTextList = slideTextList;
     }
 
     @Override

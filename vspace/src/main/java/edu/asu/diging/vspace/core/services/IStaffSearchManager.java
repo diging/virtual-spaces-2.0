@@ -1,12 +1,10 @@
 package edu.asu.diging.vspace.core.services;
 
-import java.util.HashSet;
-
 import org.springframework.data.domain.Page;
 
+import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.Module;
 
 public interface IStaffSearchManager {
 
@@ -17,12 +15,12 @@ public interface IStaffSearchManager {
     Page<Slide> searchInSlides(String searchTerm, int page);
 
     Page<Slide> searchInSlideTexts(String searchTerm, int page);
+    
+    int getTotalSpaceCount(String searchTerm);
 
-    long getTotalSpacePages(String searchTerm);
+    int getTotalModuleCount(String searchTerm);
 
-    long getTotalModulePages(String searchTerm);
+    int getTotalSlideCount(String searchTerm);
 
-    long getTotalSlidePages(String searchTerm);
-
-    long getTotalSlideTextPages(String searchTerm);
+    int getTotalSlideTextCount(String searchTerm);
 }

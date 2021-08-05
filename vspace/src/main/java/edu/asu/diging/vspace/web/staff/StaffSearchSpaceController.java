@@ -1,9 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.StaffSearch;
+import edu.asu.diging.vspace.core.model.impl.StaffSearchSpace;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
 @Controller
@@ -27,14 +24,14 @@ public class StaffSearchSpaceController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search/space")
-    public ResponseEntity<StaffSearch> searchInVspace(
+    public ResponseEntity<StaffSearchSpace> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
-        HashSet<Space> spaceSet = paginationForSpace(spacePagenum, searchTerm);
-        StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setSpaceSet(spaceSet);
-        return new ResponseEntity<StaffSearch>(staffSearch, HttpStatus.OK);
+        List<Space> spaceList = paginationForSpace(spacePagenum, searchTerm);
+        StaffSearchSpace staffSearch = new StaffSearchSpace();
+        staffSearch.setSpaceList(spaceList);
+        return new ResponseEntity<StaffSearchSpace>(staffSearch, HttpStatus.OK);
     }
 
     /**
@@ -46,10 +43,8 @@ public class StaffSearchSpaceController {
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private HashSet<Space> paginationForSpace(String spacePagenum, String searchTerm) {
+    private List<Space> paginationForSpace(String spacePagenum, String searchTerm) {
         Page<Space> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
-        HashSet<Space> spaceSet = new LinkedHashSet<>();
-        spaceSet.addAll(spacePage.getContent());
-        return spaceSet;
+        return spacePage.getContent();
     }
 }

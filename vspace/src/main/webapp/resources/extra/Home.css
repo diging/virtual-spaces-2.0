@@ -767,3 +767,17 @@
 .circle-btn:hover {
 	background: #f2f2f2;
 }
+
+.searchInput {
+	display: flex;
+    background: var(--base-grey);
+    border-radius: 5px;
+}
+
+.searchImg {
+	border-radius: 25px;
+	float: left;
+	width: 150px;
+	height: 150px;
+	margin-right: 15px !important;
+}
