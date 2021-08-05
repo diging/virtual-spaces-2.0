@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,8 @@ import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 @Service
 public class StaffSearchManager implements IStaffSearchManager {
 
-    // @Value("${page_size}")
-    private int pageSize = 3;
+    @Value("${page_size}")
+    private int pageSize;
 
     @Autowired
     private ISpaceManager spaceManager;
