@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.web.general.search;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,9 +31,9 @@ public class PublicSearchSpaceController {
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
-        HashSet<Space> spaceSet = paginationForSpace(spacePagenum, searchTerm);
+        List<Space> spaceList = paginationForSpace(spacePagenum, searchTerm);
         StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setSpaceSet(spaceSet);
+        staffSearch.setSpaceList(spaceList);
         return new ResponseEntity<StaffSearch>(staffSearch, HttpStatus.OK);
     }
 
@@ -46,10 +46,8 @@ public class PublicSearchSpaceController {
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private HashSet<Space> paginationForSpace(String spacePagenum, String searchTerm) {
+    private List<Space> paginationForSpace(String spacePagenum, String searchTerm) {
         Page<Space> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
-        HashSet<Space> spaceSet = new LinkedHashSet<>();
-        spaceSet.addAll(spacePage.getContent());
-        return spaceSet;
+        return spacePage.getContent();
     }
 }

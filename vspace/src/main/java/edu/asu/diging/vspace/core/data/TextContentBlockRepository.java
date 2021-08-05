@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.data;
 
-import java.util.List;
-
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +17,6 @@ public interface TextContentBlockRepository extends PagingAndSortingRepository<T
     @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
     public Page<Slide> findWithNameOrDescription(Pageable requestedPage, String searchText);
     
-    @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
-    public List<Slide> findWithNameOrDescription(String searchText);
+    @Query("SELECT COUNT(DISTINCT c.slide) FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
+    public int countByNameOrDescription(String searchText);
 }

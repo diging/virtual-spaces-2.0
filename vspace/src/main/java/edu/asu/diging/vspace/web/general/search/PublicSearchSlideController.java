@@ -1,9 +1,9 @@
 package edu.asu.diging.vspace.web.general.search;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -41,13 +41,13 @@ public class PublicSearchSlideController {
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        HashSet<Slide> slideSet = paginationForSlide(slidePagenum, searchTerm);
+        List<Slide> slideList = paginationForSlide(slidePagenum, searchTerm);
         StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setSlideSet(slideSet);
+        staffSearch.setSlideList(slideList);
         
         Map<String, String> slideFirstImage = new HashMap<>();
         
-        for (Slide slide : slideSet) {
+        for (Slide slide : slideList) {
             
             String slideFirstImageId = null;
             
@@ -69,9 +69,9 @@ public class PublicSearchSlideController {
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private HashSet<Slide> paginationForSlide(String slidePagenum, String searchTerm) {
+    private List<Slide> paginationForSlide(String slidePagenum, String searchTerm) {
         Page<Slide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
-        HashSet<Slide> slideSet = new LinkedHashSet<>();
+        List<Slide> slideList = new ArrayList<>();
         
         for(Slide slide : slidePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
@@ -83,9 +83,9 @@ public class PublicSearchSlideController {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
                 slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideSet.add(slideWithSpace);
+                slideList.add(slideWithSpace);
             }
         }
-        return slideSet;
+        return slideList;
     }
 }

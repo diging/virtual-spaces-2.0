@@ -1,9 +1,9 @@
 package edu.asu.diging.vspace.web.general.search;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -42,13 +42,13 @@ public class PublicSearchModuleController {
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        HashSet<Module> moduleSet = paginationForModule(modulePagenum, searchTerm);
+        List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
         PublicSearch publicSearch = new PublicSearch();
-        publicSearch.setModuleSet(moduleSet);
+        publicSearch.setModuleList(moduleList);
         
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
         
-        for (Module module : moduleSet) {
+        for (Module module : moduleList) {
             
             Slide slide = module.getSlides() != null && !module.getSlides().isEmpty()
                     ? (Slide) module.getSlides().get(0) : null;
@@ -74,9 +74,9 @@ public class PublicSearchModuleController {
      *                      URL.
      * @param searchTerm    This is the search string which is being searched.
      */
-    private HashSet<Module> paginationForModule(String modulePagenum, String searchTerm) {
+    private List<Module> paginationForModule(String modulePagenum, String searchTerm) {
         Page<Module> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-        HashSet<Module> moduleSet = new LinkedHashSet<>();
+        List<Module> moduleList = new ArrayList<>();
         
         for(Module module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
@@ -88,11 +88,11 @@ public class PublicSearchModuleController {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
                 modWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                moduleSet.add(modWithSpace);
+                moduleList.add(modWithSpace);
             }
         }
         
-        return moduleSet;
+        return moduleList;
     }
 
 }

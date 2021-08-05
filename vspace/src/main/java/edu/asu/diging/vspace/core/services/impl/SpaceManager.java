@@ -8,8 +8,6 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
@@ -78,8 +76,6 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /*
      * (non-Javadoc)
@@ -290,13 +286,17 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
-    public int findByNameOrDescription(String searchTerm)
-    {
-        return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm).size();
+    public int countByNameOrDescription(String searchTerm){
+        return spaceRepo.countDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm);
     }
     
     @Override
-    public Page<Space> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchText) {
-        return spaceRepo.findDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(requestedPage, spaceStatus, searchText, searchText);
+    public Page<Space> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchTerm) {
+        return spaceRepo.findDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(requestedPage, spaceStatus, searchTerm, searchTerm);
+    }
+
+    @Override
+    public int countBySpaceStatusAndNameOrDescription(SpaceStatus spaceStatus, String searchTerm) {
+        return spaceRepo.countDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(spaceStatus, searchTerm, searchTerm);
     }
 }

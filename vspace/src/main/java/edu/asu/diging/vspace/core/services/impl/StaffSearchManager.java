@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -160,7 +158,7 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public int getTotalSpaceCount(String searchTerm) {
-        int totalSpaceCount = spaceManager.findByNameOrDescription(searchTerm);
+        int totalSpaceCount = spaceManager.countByNameOrDescription(searchTerm);
         return totalSpaceCount;
     }
 
@@ -172,7 +170,7 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public int getTotalModuleCount(String searchTerm) {
-        int totalModuleCount = moduleManager.findByNameOrDescription(searchTerm);
+        int totalModuleCount = moduleManager.countByNameOrDescription(searchTerm);
         return totalModuleCount;
     }
     
@@ -184,7 +182,7 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public int getTotalSlideCount(String searchTerm) {
-        int totalSlideCount = slideManager.findByNameOrDescription(searchTerm);
+        int totalSlideCount = slideManager.countByNameOrDescription(searchTerm);
         return totalSlideCount;
     }
     
@@ -196,7 +194,6 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public int getTotalSlideTextCount(String searchTerm) {
-        List<Slide> totalSlideTextList = textContentBlockRepo.findWithNameOrDescription(searchTerm);
-        return totalSlideTextList.size();
+        return textContentBlockRepo.countByNameOrDescription(searchTerm);
     }
 }

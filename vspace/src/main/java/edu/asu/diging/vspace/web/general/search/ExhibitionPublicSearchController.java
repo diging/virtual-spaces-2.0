@@ -52,7 +52,11 @@ public class ExhibitionPublicSearchController {
         paginationForSlideText(slideTextPagenum, model, searchTerm);
 
         model.addAttribute("searchWord", searchTerm);
-        model.addAttribute("activeTab", tab);
+        model.addAttribute("spaceCount", publicSearchManager.getTotalSpaceCount(searchTerm));
+        model.addAttribute("moduleCount", publicSearchManager.getTotalModuleCount(searchTerm));
+        model.addAttribute("slideCount", publicSearchManager.getTotalSlideCount(searchTerm));
+        model.addAttribute("slideTextCount", publicSearchManager.getTotalSlideTextCount(searchTerm));
+//        model.addAttribute("activeTab", tab);
         return "exhibition/search/publicSearch";
     }
     

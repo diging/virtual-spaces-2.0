@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -140,4 +142,59 @@ public class PublicSearchManager implements IPublicSearchManager{
         return slidetextPage;
     }
 
+    /**
+     * Method to return the total pages sufficient to display all spaces whose name
+     * or description matches with the search string
+     * 
+     * @param searchTerm string which has been searched
+     * @return totalPages required to display all spaces whose name or description
+     *         matches with the search string in DB
+     */
+    @Override
+    public int getTotalSpaceCount(String searchTerm) {
+        return spaceManager.countBySpaceStatusAndNameOrDescription(SpaceStatus.PUBLISHED, searchTerm);
+    }
+
+    /**
+     * Method to return the total pages sufficient to display all modules whose name
+     * or description matches with the search string
+     *
+     * @param searchTerm string which has been searched
+     * @return totalPages required to display all modules whose name or description
+     *         matches with the search string in DB
+     */
+    @Override
+    public int getTotalModuleCount(String searchTerm) {
+        int totalModuleCount = moduleManager.countByNameOrDescription(searchTerm);
+        return totalModuleCount;
+    }
+
+    /**
+     * Method to return the total pages sufficient to display all slides whose name
+     * or description matches with the search string
+     * 
+     * @param searchTerm string which has been searched
+     * @return totalPages required to display all slides whose text blocks contains
+     *         the search string in DB
+     */
+    @Override
+    public int getTotalSlideCount(String searchTerm) {
+        int totalSlideCount = slideManager.countByNameOrDescription(searchTerm);
+        return totalSlideCount;
+    }
+
+    /**
+     * Method to return the total pages sufficient to display all slides whose text
+     * blocks contains the search string
+     * 
+     * @param searchTerm string which has been searched
+     * @return totalPages required to display all slides whose text blocks contains
+     *         the search string in DB
+     */
+    @Override
+    public int getTotalSlideTextCount(String searchTerm) {
+        return textContentBlockRepo.countByNameOrDescription(searchTerm);
+    }
+    
+    
 }

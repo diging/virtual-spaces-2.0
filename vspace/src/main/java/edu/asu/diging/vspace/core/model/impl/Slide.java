@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -144,7 +145,6 @@ public class Slide extends VSpaceElement implements ISlide {
             Optional<IContentBlock> firstImageBlock = allBlocks.stream()
                     .filter(contentBlock -> contentBlock instanceof ImageBlock).findFirst();
             if (firstImageBlock.isPresent()) {
-                return(ImageBlock) firstImageBlock.get();
                 ImageBlock imageBlock = (ImageBlock) firstImageBlock.get();
                 return imageBlock;
             }

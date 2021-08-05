@@ -1,9 +1,9 @@
 package edu.asu.diging.vspace.web.general.search;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +43,13 @@ public class PublicSearchSlideTextController {
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        HashSet<Slide> slideTextSet = paginationForSlideText(slideTextPagenum, searchTerm);
+        List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
         StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setSlideTextSet(slideTextSet);
+        staffSearch.setSlideTextList(slideTextList);
         
         Map<String, String> slideTextFirstImage = new HashMap<>();
         
-        for (Slide slide : slideTextSet) {
+        for (Slide slide : slideTextList) {
             
             String slideFirstImageId = null;
             
@@ -72,10 +72,10 @@ public class PublicSearchSlideTextController {
      *                         URL.
      * @param searchTerm       This is the search string which is being searched.
      */
-    private HashSet<Slide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
+    private List<Slide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
         Page<Slide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
-        HashSet<Slide> slideTextSet = new LinkedHashSet<>();
+        List<Slide> slideTextList = new ArrayList<>();
         
         for(Slide slide : slideTextPage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
@@ -87,9 +87,9 @@ public class PublicSearchSlideTextController {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
                 slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideTextSet.add(slideWithSpace);
+                slideTextList.add(slideWithSpace);
             }
         }
-        return slideTextSet;
+        return slideTextList;
     }
 }

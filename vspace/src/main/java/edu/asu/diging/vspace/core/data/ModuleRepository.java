@@ -21,5 +21,5 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     
     List<Module> findAllByOrderByCreationDateDesc();
 
-    List<Module> findDistinctByNameContainingOrDescriptionContaining(String name, String description);
+    int countDistinctByNameContainingOrDescriptionContaining(String name, String description);
 }

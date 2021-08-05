@@ -34,5 +34,5 @@ public interface ISlideManager {
     
     Page<Slide> findByNameOrDescription(Pageable requestedPage,String searchText);
 
-    int findByNameOrDescription(String searchTerm);
+    int countByNameOrDescription(String searchTerm);
 }
