@@ -1,12 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.StaffSearch;
+import edu.asu.diging.vspace.core.model.impl.StaffSearchModule;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
 @Controller
@@ -29,32 +26,46 @@ public class StaffSearchModuleController {
     @Autowired
     private IStaffSearchManager staffSearchManager;
 
+    @Autowired
+    private ISequenceManager sequenceManager;
+
     @RequestMapping(value = "/staff/search/module")
-    public ResponseEntity<StaffSearch> searchInVspace(
+    public ResponseEntity<StaffSearchModule> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        HashSet<Module> moduleSet = paginationForModule(modulePagenum, searchTerm);
-        StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setModuleSet(moduleSet);
-        
+        List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
+        StaffSearchModule staffSearch = new StaffSearchModule();
+        staffSearch.setModuleList(moduleList);
+
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        
-        for (Module module : moduleSet) {
-            
-            Slide slide = module.getSlides() != null && !module.getSlides().isEmpty()
-                    ? (Slide) module.getSlides().get(0)
-                    : null;
-            
-            String firstSlideImageId = null;
-            
-            if (slide != null && slide.getFirstImageBlock() != null) {
-                firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+        Map<String, String> showModuleAlertMessage = new HashMap<>();
+
+        for (Module module : moduleList) {
+
+            if (module.getStartSequence() == null) {
+                showModuleAlertMessage.put(module.getId(), "The module has not been configured yet.");
+                moduleFirstSlideImage.put(module.getId(), null);
+            } else {
+                showModuleAlertMessage.put(module.getId(), null);
+                String startSequenceID = module.getStartSequence().getId();
+                List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
+                        ? sequenceManager.getSequence(startSequenceID).getSlides()
+                        : null;
+
+                Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
+
+                String firstSlideImageId = null;
+
+                if (slide != null && slide.getFirstImageBlock() != null) {
+                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+                }
+                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
             }
-            moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
-            staffSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
         }
-        return new ResponseEntity<StaffSearch>(staffSearch, HttpStatus.OK);
+        staffSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
+        staffSearch.setShowModuleAlertMessage(showModuleAlertMessage);
+        return new ResponseEntity<StaffSearchModule>(staffSearch, HttpStatus.OK);
     }
 
     /**
@@ -67,11 +78,9 @@ public class StaffSearchModuleController {
      *                      URL.
      * @param searchTerm    This is the search string which is being searched.
      */
-    private HashSet<Module> paginationForModule(String modulePagenum, String searchTerm) {
+    private List<Module> paginationForModule(String modulePagenum, String searchTerm) {
         Page<Module> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-        HashSet<Module> moduleSet = new LinkedHashSet<>();
-        moduleSet.addAll(modulePage.getContent());
-        return moduleSet;
+        return modulePage.getContent();
     }
 
 }

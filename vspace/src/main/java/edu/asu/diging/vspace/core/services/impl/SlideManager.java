@@ -10,6 +10,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
@@ -22,7 +24,6 @@ import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
@@ -30,8 +31,6 @@ import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 @Service
 public class SlideManager implements ISlideManager {
@@ -167,5 +166,11 @@ public class SlideManager implements ISlideManager {
     public Page<Slide> findByNameOrDescription(Pageable requestedPage, String searchText) {
 
         return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
+    }
+    
+    @Override
+    public int findByNameOrDescription(String searchTerm) {
+
+        return slideRepo.findDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm).size();
     }
 }

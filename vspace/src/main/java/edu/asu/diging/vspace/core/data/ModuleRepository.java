@@ -16,8 +16,10 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
 
     List<Module> findTop5ByOrderByCreationDateDesc();
 
-    public Page<Module> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    Page<Module> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 
     List<Module> findAllByOrderByCreationDateDesc();
+
+    List<Module> findDistinctByNameContainingOrDescriptionContaining(String name, String description);
 }

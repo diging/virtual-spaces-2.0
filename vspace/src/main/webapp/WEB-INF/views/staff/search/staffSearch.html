@@ -4,10 +4,10 @@
 <script th:inline="javascript">
 $(document).ready(function($) {
 	var searchWord = [[${searchWord}]];
-	$("#module").addClass("active");
-	$("#mymodule").addClass("active");
-	$("#mymodule").addClass("show");
-		
+	$("#space").addClass("active");
+	$("#myspace").addClass("active");
+	$("#myspace").addClass("show");
+	
 	var spaceModelAttributeValue = [[${spaceSearchResults}]];
 	if(spaceModelAttributeValue.length != 0) {
        $("#spaceNoResult").hide();
@@ -48,7 +48,7 @@ $(document).ready(function($) {
         $("#slideTextResultDisplay").hide();
         } 
         
-$('#spacepage-selection').bootpag({
+$('.spacepage-selection').bootpag({
 	total: [[${spaceTotalPages}]],
 	page: [[${spaceCurrentPageNumber}]],
 	maxVisible: 10,
@@ -69,15 +69,22 @@ $('#spacepage-selection').bootpag({
 		type: 'GET',
 	    cache : false,
 		contentType : false,
+		processData : false,
+	    beforeSend: function () {
+	    	$(".loader").show();
+	    },
+	    complete: function () {
+	        $(".loader").hide();
+	        },
 		success: function(data) {
-		spaceSet = data['spaceSet'];
+		spaceList = data['spaceList'];
 		$("#spaceResultDisplay").empty();
-		for(let i=0;i<spaceSet.length;i++)
+		for(let i=0;i<spaceList.length;i++)
 		{
 		  var divtag = $("<div></div>");
-		  divtag.attr('id',spaceSet[i].id);
+		  divtag.attr('id',spaceList[i].id);
 		  var anchor = $("<a></a>");
-		  anchor.attr('href',"[(@{'/staff/space/'})]"+spaceSet[i].id);
+		  anchor.attr('href',"[(@{'/staff/space/'})]"+spaceList[i].id);
 		  anchor.attr('class',"textDivStaff tab  btn btn-light");
 		  anchor.css('width','100%');
 		  var span1 = $("<span></span>");
@@ -85,20 +92,17 @@ $('#spacepage-selection').bootpag({
 		  span1.css('white-space',"pre-wrap");
 		  span1.css('line-break',"anywhere");
 		  var img = $("<img></img>");
-		  img.attr('src',"[(@{'/api/image/'})]"+spaceSet[i].image.id);
-		  img.css('border-radius','25px');
-		  img.css('float','left');
-		  img.css('width','150px');
-		  img.css('height','150px');
+		  img.attr('src',"[(@{'/api/image/'})]"+spaceList[i].image.id);
+		  img.attr('class',"searchImg");
 		  span1.append(img);
-		  var span2 = $("<span>"+'  Space:'+"</span>");
+		  var span2 = $("<span>"+'Space:'+"</span>");
 		  span2.css('color','var(--dark-grey)');
 		  span1.append(span2);
-		  span1.append(spaceSet[i].name+'<br>');
-		  var span3 = $("<span>"+'  Description:'+"</span>");
+		  span1.append(spaceList[i].name+'<br>');
+		  var span3 = $("<span>"+'Description:'+"</span>");
 		  span3.css('color','var(--dark-grey)');
 		  span1.append(span3);
-		  span1.append(spaceSet[i].description);
+		  span1.append(spaceList[i].description);
 		  anchor.append(span1);
 		  divtag.append(anchor);
 		  $("#spaceResultDisplay").append(divtag);
@@ -107,7 +111,7 @@ $('#spacepage-selection').bootpag({
 			});
 	    });
         
-$('#modulepage-selection').bootpag({
+$('.modulepage-selection').bootpag({
 	total: [[${moduleTotalPages}]],
 	page: [[${moduleCurrentPageNumber}]],
 	maxVisible: 10,
@@ -128,20 +132,31 @@ $('#modulepage-selection').bootpag({
 		type: 'GET',
 		cache : false,
 		contentType : false,
+		processData : false,
+	    beforeSend: function () {
+	    	$(".loader").show();
+	        },
+	    complete: function () {
+	        $(".loader").hide();
+	        },
 	    success: function(data) {
-		moduleSet = data['moduleSet'];
+		moduleList = data['moduleList'];
 		moduleFirstSlideFirstImage = data['moduleFirstSlideFirstImage'];
+	    showModuleAlertMessage = data['showModuleAlertMessage'];
 		$("#moduleResultDisplay").empty();
-		for(let i=0;i<moduleSet.length;i++)
+		for(let i=0;i<moduleList.length;i++)
 		{
+		 var moduleAlertMessage = showModuleAlertMessage[moduleList[i].id];
+		 if(moduleAlertMessage == null)
+		 {
 		 var divtag = $("<div></div>");
-		 divtag.attr('id',moduleSet[i].id);
+		 divtag.attr('id',moduleList[i].id);
 		 var anchor = $("<a></a>");
-		 anchor.attr('href',"[(@{'/staff/module/'})]"+moduleSet[i].id);
+		 anchor.attr('href',"[(@{'/staff/module/'})]"+moduleList[i].id);
 		 anchor.attr('class',"textDivStaff tab  btn btn-light");
 		 anchor.css('width','100%');
 		 var img = $("<img></img>");
-		 var firstSlideFirstImageId = moduleFirstSlideFirstImage[moduleSet[i].id];
+		 var firstSlideFirstImageId = moduleFirstSlideFirstImage[moduleList[i].id];
 		 if(firstSlideFirstImageId == null)
 		 {
 		  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
@@ -150,32 +165,49 @@ $('#modulepage-selection').bootpag({
 		 {
 		  img.attr('src',"[(@{'/api/image/'})]"+firstSlideFirstImageId);
 		 }
-		img.css('border-radius','25px');
-		img.css('float','left');
-		img.css('width','150px');
-		img.css('height','150px');
+		img.attr('class',"searchImg");
 		anchor.append(img);
 		var span1 = $("<span></span>");
 		span1.attr('class',"card-title");
 		span1.css('white-space',"pre-wrap");
 		span1.css('line-break',"anywhere");
-	    var span2 = $("<span>"+'  Module:'+"</span>");
+	    var span2 = $("<span>"+'Module:'+"</span>");
 		span2.css('color','var(--dark-grey)');
 		span1.append(span2);
-		span1.append(moduleSet[i].name+'<br>');
-		var span3 = $("<span>"+'  Description:'+"</span>");
+		span1.append(moduleList[i].name+'<br>');
+		var span3 = $("<span>"+'Description:'+"</span>");
 		span3.css('color','var(--dark-grey)');
 		span1.append(span3);
-		span1.append(moduleSet[i].description);
+		span1.append(moduleList[i].description);
 		anchor.append(span1);
 		divtag.append(anchor);
 		$("#moduleResultDisplay").append(divtag);
-	}
+		}
+		else
+		{
+		var divtag = $("<div></div>");
+		divtag.attr('id',moduleList[i].id); 
+	    divtag.attr('class',"col-md-12  tab  btn btn-light");
+		var span1 = $("<span></span>");
+		span1.attr('class',"card-title");
+		span1.css('white-space',"pre-wrap");
+		span1.css('line-break',"anywhere");
+		var span2 = $("<span>"+'Module:'+"</span>");
+		span2.css('color','var(--dark-grey)');
+		span1.append(span2);
+		span1.append(moduleList[i].name+'<br>');
+		divtag.append(span1);
+		var span3 = $("<span></span>");
+		span3.append(moduleAlertMessage);
+		divtag.append(span3);
+	    $("#moduleResultDisplay").append(divtag);
+		}
+	 }
 	 }
 	  });
 	});
         
-$('#slidepage-selection').bootpag({
+$('.slidepage-selection').bootpag({
 	total: [[${slideTotalPages}]],
 	page: [[${slideCurrentPageNumber}]],
 	maxVisible: 10,
@@ -196,20 +228,29 @@ $('#slidepage-selection').bootpag({
 		type: 'GET',
 		cache : false,
 		contentType : false,
+		processData : false,
+	    beforeSend: function () {
+	    	$(".loader").show();
+	        },
+	    complete: function () {
+	        $(".loader").hide();
+	        },
 		success: function(data) {
-		slideSet = data['slideSet'];
+		slideList = data['slideList'];
 		slideFirstImage = data['slideFirstImage'];
+		console.log(slideList);
+		console.log(slideFirstImage);
 		$("#slideResultDisplay").empty();
-		for(let i=0;i<slideSet.length;i++)
+		for(let i=0;i<slideList.length;i++)
 		{
 		 var divtag = $("<div></div>");
-		 divtag.attr('id',slideSet[i].id);
+		 divtag.attr('id',slideList[i].id);
 		 var anchor = $("<a></a>");
-		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideSet[i].module.id+'/slide/'+slideSet[i].id);
+		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideList[i].module.id+'/slide/'+slideList[i].id);
 		 anchor.attr('class',"textDivStaff tab  btn btn-light");
 		 anchor.css('width','100%');
 		 var img = $("<img></img>");
-		 var slideFirstImageId = slideFirstImage[slideSet[i].id];
+		 var slideFirstImageId = slideFirstImage[slideList[i].id];
 		 if(slideFirstImageId == null)
 		 {
 		  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
@@ -218,23 +259,20 @@ $('#slidepage-selection').bootpag({
 		 {
 		  img.attr('src',"[(@{'/api/image/'})]"+slideFirstImageId);
 		 }
-		  img.css('border-radius','25px');
-		  img.css('float','left');
-		  img.css('width','150px');
-		  img.css('height','150px');
+		 img.attr('class',"searchImg");
 		  anchor.append(img);
 		  var span1 = $("<span></span>");
 		  span1.attr('class',"card-title");
 		  span1.css('white-space',"pre-wrap");
 		  span1.css('line-break',"anywhere");
-		  var span2 = $("<span>"+'  Slide:'+"</span>");
+		  var span2 = $("<span>"+'Slide:'+"</span>");
 		  span2.css('color','var(--dark-grey)');
 		  span1.append(span2);
-		  span1.append(slideSet[i].name+'<br>');
-		  var span3 = $("<span>"+'  Description:'+"</span>");
+		  span1.append(slideList[i].name+'<br>');
+		  var span3 = $("<span>"+'Description:'+"</span>");
 		  span3.css('color','var(--dark-grey)');
 		  span1.append(span3);
-		  span1.append(slideSet[i].description);
+		  span1.append(slideList[i].description);
 		  anchor.append(span1);
 		  divtag.append(anchor);
 		  $("#slideResultDisplay").append(divtag);
@@ -243,7 +281,7 @@ $('#slidepage-selection').bootpag({
 		  });
 		});
 		  
-$('#slideTextPage-selection').bootpag({
+$('.slideTextPage-selection').bootpag({
 	total: [[${slideTextTotalPages}]],
 	page: [[${slideTextCurrentPageNumber}]],
 	maxVisible: 10,
@@ -264,20 +302,28 @@ $('#slideTextPage-selection').bootpag({
 		type: 'GET',
 		cache : false,
 		contentType : false,
+		processData : false,
+	    beforeSend: function () {
+	    	$(".loader").show();
+	        },
+	    complete: function () {
+	        $(".loader").hide();
+	        },
 		success: function(data) {
-		slideTextSet = data['slideTextSet'];
+		slideTextList = data['slideTextList'];
 		slideTextFirstImage = data['slideTextFirstImage'];
+		slideTextFirstTextBlock = data['slideTextFirstTextBlock'];
 		$("#slideTextResultDisplay").empty();
-		for(let i=0;i<slideTextSet.length;i++)
+		for(let i=0;i<slideTextList.length;i++)
 		{
 		 var divtag = $("<div></div>");
-		 divtag.attr('id',slideTextSet[i].id);
+		 divtag.attr('id',slideTextList[i].id);
 		 var anchor = $("<a></a>");
-		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextSet[i].module.id+'/slide/'+slideTextSet[i].id);
+		 anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextList[i].module.id+'/slide/'+slideTextList[i].id);
 		 anchor.attr('class',"textDivStaff tab  btn btn-light");
 		 anchor.css('width','100%');
 		 var img = $("<img></img>");
-		 var slideTextFirstImageId = slideTextFirstImage[slideTextSet[i].id];
+		 var slideTextFirstImageId = slideTextFirstImage[slideTextList[i].id];
 		 if(slideTextFirstImageId == null)
 		 {
 		  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
@@ -286,23 +332,24 @@ $('#slideTextPage-selection').bootpag({
 		{
 		  img.attr('src',"[(@{'/api/image/'})]"+slideTextFirstImageId);
 		}
-		img.css('border-radius','25px');
-		img.css('float','left');
-	    img.css('width','150px');
-		img.css('height','150px');
+		img.attr('class',"searchImg");
 		anchor.append(img);
 		var span1 = $("<span></span>");
 		span1.attr('class',"card-title");
 		span1.css('white-space',"pre-wrap");
 		span1.css('line-break',"anywhere");
-		var span2 = $("<span>"+'  Slide:'+"</span>");
+		var span2 = $("<span>"+'Slide:'+"</span>");
 		span2.css('color','var(--dark-grey)');
 	    span1.append(span2);
-		span1.append(slideTextSet[i].name+'<br>');
-		var span3 = $("<span>"+'  Description:'+"</span>");
+		span1.append(slideTextList[i].name+'<br>');
+		anchor.append(span1);
+		var span3 = $("<span>"+'Text Block:'+"</span>");
 		span3.css('color','var(--dark-grey)');
-		span1.append(span3);
-		span1.append(slideTextSet[i].description);
+	    span1.append(span3);
+		firstMatchedTextBlock = slideTextFirstTextBlock[slideTextList[i].id];
+		var span4 = $("<span></span>");
+		span4.append(firstMatchedTextBlock);
+		span1.append(span4);
 		anchor.append(span1);
 		divtag.append(anchor);
 		$("#slideTextResultDisplay").append(divtag);
@@ -327,39 +374,45 @@ $('#slideTextPage-selection').bootpag({
 }
 
 a.nav-link.active.show {
-	background: #F2A950;
+	border-color: transparent;
+	border-bottom: 4px solid var(--primary);
+	color: var(--primary) !important;
+	background: transparent;
+	font-weight: 600;
 }
 </style>
 </head>
 <body>
 	<div layout:fragment="content" class="container">
 		<ul class="nav-tabs nav">
-			<li class="nav-item"
-				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
-				<a href="#space" id="myspace" class="nav-link" data-toggle="tab"><font
-					color="#FFFFFF">Space</font></a>
+			<li class="nav-item">
+				<a href="#space" id="myspace" class="nav-link" style="padding: .5rem 2rem" data-toggle="tab">Space<span>([[${spaceCount}]])</span></a>
 			</li>
-			<li class="nav-item"
-				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
-				<a href="#module" id="mymodule" class="nav-link" data-toggle="tab"><font
-					color="#FFFFFF">Module</font></a>
+			<li class="nav-item">
+				<a href="#module" id="mymodule" class="nav-link" style="padding: .5rem 2rem" data-toggle="tab">Module<span>([[${moduleCount}]])</span></a>
 			</li>
-			<li class="nav-item"
-				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
-				<a href="#slide" id="myslide" class="nav-link" data-toggle="tab"><font
-					color="#FFFFFF">Slide</font></a>
+			<li class="nav-item">
+				<a href="#slide" id="myslide" class="nav-link" style="padding: .5rem 2rem" data-toggle="tab">Slide<span>([[${slideCount}]])</span></a>
 			</li>
-			<li class="nav-item"
-				style="background: #A55941; border: 2px solid white; border-radius: 6px;">
-				<a href="#slideText" id="myslideText" class="nav-link"
-				data-toggle="tab"><font color="#FFFFFF">Slide text</font></a>
+			<li class="nav-item">
+				<a href="#slideText" id="myslideText" class="nav-link" style="padding: .5rem 2rem" data-toggle="tab">Slide Content<span>([[${slideTextCount}]])</span></a>
 			</li>
 		</ul>
 		<div class="tab-content container">
 
 			<div class="tab-pane" id="space">
-				<div><h3>Search Results In Spaces</h3>
-					<h5>Keyword:<grey><b>[[${searchWord}]]</b></grey>
+				<br>
+				<div class="spacepage-selection"></div>
+				<div class="loader" style="font-size: 30px; text-align: center;">
+                <span class="icon-spinner" aria-hidden="true"></span>
+                </div>
+				<div>
+				    <h3 th:if= " ${spaceCount<10}" >Found [[${spaceCount}]] result</h3>
+					<h3 th:if= " ${spaceCount>=10}" >Found [[${spaceCount}]] results</h3>
+					<h5>
+						Keyword:
+						<grey>
+						<b>[[${searchWord}]]</b></grey>
 					</h5>
 				</div>
 				<div id="spaceNoResult">
@@ -370,65 +423,93 @@ a.nav-link.active.show {
 				<div id="spaceResultDisplay">
 					<div th:each="contents: ${spaceSearchResults}">
 						<div th:id="${contents.id}">
-							  <a th:href="@{'/staff/space/'+${contents.id}}"
-                            class="textDivStaff tab  btn btn-light"
-                            style="width: 100%"> <span
-                            class="card-title"
-                            style="white-space: pre-wrap; line-break: anywhere;"><img
-                            style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                            th:src="@{'/api/image/'+${contents?.image?.id}}" alt="Space image" /><span 
-                            style="color: var(--dark-grey)">  Space:</span> [[${contents.name}]]<br><span 
-                            style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
-                        </a>
+							<a th:href="@{'/staff/space/'+${contents.id}}"
+								class="textDivStaff tab  btn btn-light" style="width: 100%">
+								<span class="card-title"
+								style="white-space: pre-wrap; line-break: anywhere;"><img  class="searchImg"
+								th:src="@{'/api/image/'+${contents?.image?.id}}" alt="Space image" /><span 
+								style="color: var(--dark-grey)">Space:</span> [[${contents.name}]]<br><span 
+                                style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
+							</a>
 						</div>
 					</div>
 				</div>
 				<br>
-				<div id="spacepage-selection"></div>
+				<div class="spacepage-selection"></div>
 			</div>
 
 			<div class="tab-pane" id="module">
-				<div><h3>Search Results In Modules</h3>
-            <h5>Keyword: <grey><b>[[${searchWord}]]</b></grey></h5></div>
-            <div id="moduleNoResult">
-            <h5><center>No result to display.</center></h5>
-            </div>
+			<br>
+				<div class="modulepage-selection"></div>
+				<div class="loader" style="font-size: 30px;display: none; text-align: center;">
+                <i class="icon-spinner" aria-hidden="true"></i>
+                </div>
+				<div>
+					<h3 th:if= " ${moduleCount<10}" >Found [[${moduleCount}]] result</h3>
+					<h3 th:if= " ${moduleCount>=10}" >Found [[${moduleCount}]] results</h3>
+					<h5>
+						Keyword:
+						<grey>
+						<b>[[${searchWord}]]</b></grey>
+					</h5>
+				</div>
+				<div id="moduleNoResult">
+					<h5>
+						<center>No result to display.</center>
+					</h5>
+				</div>
 				<div id="moduleResultDisplay">
 					<div th:each="contents: ${moduleSearchResults}">
 						<div th:id="${contents.id}">
-							<a th:href="@{'/staff/module/'+${contents.id}}" style="width: 100%"
-                            class="textDivStaff tab  btn btn-light">
-                            <div th:each="slide, counter : ${contents.slides}"
-                            th:unless="${counter.count > 1}">
-                            <div th:if=" ${slide?.firstImageBlock !=null}" th:each="img : ${slide?.firstImageBlock}">
-                            <img
-                            style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                            th:src="@{'/api/image/'+${img?.image?.id}}" alt="Module image" />
-                            </div>
-                            <div th:if=" ${slide?.firstImageBlock ==null}">
-                            <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                 th:src="@{'/resources/images/placeholder.png'}"/>
-                            </div>
-                            </div>
-                             <div th:if=" ${#lists.isEmpty(contents.slides)}">
-                            <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                 th:src="@{'/resources/images/placeholder.png'}"/>
-                            </div>
-                            <span class="card-title"
-                            style="white-space: pre-wrap; line-break: anywhere;"><span 
-                            style="color: var(--dark-grey)">  Module:</span> [[${contents.name}]]<br><span 
-                            style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
-                        </a>
+						<div th:if= " ${contents?.startSequence ==null}" class="col-md-12  tab  btn btn-light" >
+						<span class="card-title"
+                        style="white-space: pre-wrap; line-break: anywhere;"><span 
+                        style="color: var(--dark-grey)">Module:</span> [[${contents.name}]]</span><br>
+						<span>The module has not been configured yet.</span>
+						</div>
+						    <div th:if= " ${contents?.startSequence !=null}">
+							<a th:href="@{'/staff/module/'+${contents.id}}"
+								style="width: 100%" class="textDivStaff tab  btn btn-light">
+								<div th:each="slide, counter : ${contents.slides}"
+									th:unless="${counter.count > 1}">
+									<div th:if=" ${slide?.firstImageBlock !=null}"
+										th:each="img : ${slide?.firstImageBlock}">
+										<img class="searchImg" th:src="@{'/api/image/'+${img?.image?.id}}"
+											alt="Module image" />
+									</div>
+									<div th:if=" ${slide?.firstImageBlock ==null}">
+										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+									</div>
+								</div>
+								<div th:if=" ${#lists.isEmpty(contents.slides)}">
+									<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+								</div>
+								<span class="card-title"
+                           		style="white-space: pre-wrap; line-break: anywhere;"><span 
+                                style="color: var(--dark-grey)">Module:</span> [[${contents.name}]]<br><span 
+                                style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
+							</a>
+							</div>
 						</div>
 					</div>
 				</div>
 				<br>
-				<div id="modulepage-selection"></div>
+				<div class="modulepage-selection"></div>
 			</div>
 
 			<div class="tab-pane" id="slide">
-				<div><h3>Search Results In Slides</h3>
-					<h5>Keyword:<grey><b>[[${searchWord}]]</b></grey>
+			<br>
+				<div class="slidepage-selection"></div>
+				<div class="loader" style="font-size: 30px;display: none; text-align: center;">
+                <i class="icon-spinner" aria-hidden="true"></i>
+                </div>
+				<div>
+					<h3 th:if= " ${slideCount<10}" >Found [[${slideCount}]] result</h3>
+					<h3 th:if= " ${slideCount>=10}" >Found [[${slideCount}]] results</h3>
+					<h5>
+						Keyword:
+						<grey>
+						<b>[[${searchWord}]]</b></grey>
 					</h5>
 				</div>
 				<div id="slideNoResult">
@@ -439,38 +520,47 @@ a.nav-link.active.show {
 				<div id="slideResultDisplay">
 					<div th:each="contents: ${slideSearchResults}">
 						<div th:id="${contents.id}">
-						 <a class="textDivStaff tab  btn btn-light" style="width: 100%"
-                            th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
-                            <div th:if="${not #lists.isEmpty(contents.contents)}">
-                            <div th:if="${contents?.firstImageBlock !=null}">
-                                <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
-                                    style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                    th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}" alt="Slide image" />
-                            </div>
-                             <div th:if="${contents?.firstImageBlock ==null}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                 th:src="@{'/resources/images/placeholder.png'}"/>
-                            </div>
-                            </div>
-                            <div th:if="${#lists.isEmpty(contents.contents)}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                 th:src="@{'/resources/images/placeholder.png'}"/>
-                            </div>
-                            <span class="card-title"
-                            style="white-space: pre-wrap; line-break: anywhere;"><span 
-                            style="color: var(--dark-grey)">  Slide:</span> [[${contents.name}]]<br><span 
-                            style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
-                        </a>
+							<a class="textDivStaff tab  btn btn-light" style="width: 100%"
+								th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
+								<div th:if="${not #lists.isEmpty(contents.contents)}">
+									<div th:if="${contents?.firstImageBlock !=null}">
+										<img
+											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
+											alt="Slide image" />
+									</div>
+									<div th:if="${contents?.firstImageBlock ==null}">
+										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+									</div>
+								</div>
+								<div th:if="${#lists.isEmpty(contents.contents)}">
+									<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+								</div> 
+								<span class="card-title"
+                                style="white-space: pre-wrap; line-break: anywhere;"><span 
+                                style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span 
+                                style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
+							</a>
 						</div>
 					</div>
 				</div>
 				<br>
-				<div id="slidepage-selection"></div>
+				<div class="slidepage-selection"></div>
 			</div>
 
 			<div class="tab-pane" id="slideText">
-				<div><h3>Search Results In Slide's TextBlocks</h3>
-					<h5>Keyword:<grey><b>[[${searchWord}]]</b></grey>
+			<br>
+				<div class="slideTextPage-selection"></div>
+				<div class="loader" style="font-size: 30px;display: none; text-align: center;">
+                <i class="icon-spinner" aria-hidden="true"></i>
+                </div>
+				<div>
+					<h3 th:if= " ${slideCount<10}" >Found [[${slideTextCount}]] result</h3>
+					<h3 th:if= " ${slideCount>=10}" >Found [[${slideTextCount}]] results</h3>
+					<h5>
+						Keyword:
+						<grey>
+						<b>[[${searchWord}]]</b></grey>
 					</h5>
 				</div>
 				<div id="slideTextNoResult">
@@ -482,32 +572,33 @@ a.nav-link.active.show {
 					<div th:each="contents: ${slideTextSearchResults}">
 						<div th:id="${contents.id}">
 							<a class="textDivStaff tab  btn btn-light" style="width: 100%"
-                            th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
-                            <div th:if="${not #lists.isEmpty(contents.contents)}">
-                            <div th:if="${contents?.firstImageBlock !=null}">
-                                <img th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
-                                    style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                    th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}" alt="Slide image" />
-                            </div>
-                            <div th:if="${contents?.firstImageBlock ==null}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                 th:src="@{'/resources/images/placeholder.png'}"/>
-                            </div>
-                            </div>
-                            <div th:if="${#lists.isEmpty(contents.contents)}">
-                                 <img  style="border-radius: 25px; float: left; width: 150px; height: 150px;"
-                                 th:src="@{'/resources/images/placeholder.png'}"/>
-                            </div>
-                            <span class="card-title"
-                            style="white-space: pre-wrap; line-break: anywhere;"><span 
-                            style="color: var(--dark-grey)">  Slide:</span> [[${contents.name}]]<br><span 
-                            style="color: var(--dark-grey)">  Description:</span> [[${contents.description}]]</span>
-                        </a>
+								th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
+								<div th:if="${not #lists.isEmpty(contents.contents)}">
+									<div th:if="${contents?.firstImageBlock !=null}">
+										<img
+											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
+											alt="Slide image" />
+									</div>
+									<div th:if="${contents?.firstImageBlock ==null}">
+										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+									</div>
+								</div>
+								<div th:if="${#lists.isEmpty(contents.contents)}">
+									<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+								</div> 
+								<span class="card-title"
+                                style="white-space: pre-wrap; line-break: anywhere;"><span 
+                                style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span
+                                style="color: var(--dark-grey)">Text Block:</span><span th:if="${not #lists.isEmpty(contents.contents)} AND ${contents?.getFirstMatchedTextBlock(searchWord)!=null}"
+                                > [(${contents?.getFirstMatchedTextBlock(searchWord).text})]</span>
+							    </span>
+							</a>
 						</div>
 					</div>
 				</div>
 				<br>
-				<div id="slideTextPage-selection"></div>
+				<div class="slideTextPage-selection"></div>
 			</div>
 		</div>
 	</div>

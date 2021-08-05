@@ -1,38 +1,42 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class StaffSearch {
-    
-    private HashSet<Space> spaceSet;
 
-    private HashSet<Module> moduleSet;
-    
-    private  Map<String,String> moduleFirstSlideFirstImage;
+    private List<Space> spaceList;
 
-    private HashSet<Slide> slideSet;
-    
+    private List<Module> moduleList;
+
+    private Map<String, String> moduleFirstSlideFirstImage;
+
+    private List<Slide> slideList;
+
     private Map<String, String> slideFirstImage;
 
-    private HashSet<Slide> slideTextSet;
+    private List<Slide> slideTextList;
+
+    private Map<String,String> slideTextFirstImage;
     
-    private Map<String, String> slideTextFirstImage;
+    private Map<String, String> slideTextFirstTextBlock;
 
-    public HashSet<Space> getSpaceSet() {
-        return spaceSet;
+    private Map<String, String> showModuleAlertMessage;
+
+    public List<Space> getSpaceList() {
+        return spaceList;
     }
 
-    public void setSpaceSet(HashSet<Space> spaceSet) {
-        this.spaceSet = spaceSet;
+    public void setSpaceList(List<Space> spaceList) {
+        this.spaceList = spaceList;
     }
 
-    public HashSet<Module> getModuleSet() {
-        return moduleSet;
+    public List<Module> getModuleList() {
+        return moduleList;
     }
 
-    public void setModuleSet(HashSet<Module> moduleSet) {
-        this.moduleSet = moduleSet;
+    public void setModuleList(List<Module> moduleList) {
+        this.moduleList = moduleList;
     }
 
     public Map<String, String> getModuleFirstSlideFirstImage() {
@@ -43,12 +47,12 @@ public class StaffSearch {
         this.moduleFirstSlideFirstImage = moduleFirstSlideFirstImage;
     }
 
-    public HashSet<Slide> getSlideSet() {
-        return slideSet;
+    public List<Slide> getSlideList() {
+        return slideList;
     }
 
-    public void setSlideSet(HashSet<Slide> slideSet) {
-        this.slideSet = slideSet;
+    public void setSlideList(List<Slide> slideList) {
+        this.slideList = slideList;
     }
 
     public Map<String, String> getSlideFirstImage() {
@@ -59,12 +63,12 @@ public class StaffSearch {
         this.slideFirstImage = slideFirstImage;
     }
 
-    public HashSet<Slide> getSlideTextSet() {
-        return slideTextSet;
+    public List<Slide> getSlideTextList() {
+        return slideTextList;
     }
 
-    public void setSlideTextSet(HashSet<Slide> slideTextSet) {
-        this.slideTextSet = slideTextSet;
+    public void setSlideTextList(List<Slide> slideTextList) {
+        this.slideTextList = slideTextList;
     }
 
     public Map<String, String> getSlideTextFirstImage() {
@@ -75,4 +79,19 @@ public class StaffSearch {
         this.slideTextFirstImage = slideTextFirstImage;
     }
 
+    public Map<String, String> getSlideTextFirstTextBlock() {
+        return slideTextFirstTextBlock;
+    }
+
+    public void setSlideTextFirstTextBlock(Map<String, String> slideTextFirstTextBlock) {
+        this.slideTextFirstTextBlock = slideTextFirstTextBlock;
+    }
+
+    public Map<String, String> getShowModuleAlertMessage() {
+        return showModuleAlertMessage;
+    }
+
+    public void setShowModuleAlertMessage(Map<String, String> showModuleAlertMessage) {
+        this.showModuleAlertMessage = showModuleAlertMessage;
+    }
 }

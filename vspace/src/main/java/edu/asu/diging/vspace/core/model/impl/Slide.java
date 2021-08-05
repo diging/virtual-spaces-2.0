@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -43,12 +43,6 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
-    
-    /*
-     * @JsonIgnore
-     * 
-     * @Transient private ImageBlock firstImageBlock;
-     */
 
     /*
      * (non-Javadoc)
@@ -146,14 +140,32 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     public ImageBlock getFirstImageBlock() {
         List<IContentBlock> allBlocks = getContents();
-        ImageBlock imageBlock = null;
         if (allBlocks != null) {
             Optional<IContentBlock> firstImageBlock = allBlocks.stream()
                     .filter(contentBlock -> contentBlock instanceof ImageBlock).findFirst();
             if (firstImageBlock.isPresent()) {
-                imageBlock = (ImageBlock) firstImageBlock.get();
+                ImageBlock imageBlock = (ImageBlock) firstImageBlock.get();
+                return imageBlock;
             }
         }
-        return imageBlock;
+        return null;
+    }
+
+    @JsonIgnore
+    public TextBlock getFirstMatchedTextBlock(String searchTerm) {
+        List<IContentBlock> allBlocks = getContents();
+        if (allBlocks != null) {
+            List<IContentBlock> textBlockList = allBlocks.stream()
+                    .filter(contentBlock -> contentBlock instanceof TextBlock).collect(Collectors.toList());
+            if (textBlockList != null) {
+                Optional<IContentBlock> firstMatchedTextBlock = textBlockList.stream()
+                        .filter(contentBlock -> ((TextBlock) contentBlock).getText().contains(searchTerm)).findFirst();
+                if (firstMatchedTextBlock.isPresent()) {
+                    TextBlock textBlock = (TextBlock) firstMatchedTextBlock.get();
+                    return textBlock;
+                }
+            }
+        }
+        return null;
     }
 }

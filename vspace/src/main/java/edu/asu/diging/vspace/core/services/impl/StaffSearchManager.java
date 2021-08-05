@@ -1,7 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +27,8 @@ import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 @Service
 public class StaffSearchManager implements IStaffSearchManager {
 
-    @Value("${page_size}")
-    private int pageSize;
+    // @Value("${page_size}")
+    private int pageSize = 3;
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -57,11 +58,10 @@ public class StaffSearchManager implements IStaffSearchManager {
         if (page < 1) {
             page = 1;
         }
-        Pageable requestedPageForSpace;
-        Page<Space> spacePage;
-        requestedPageForSpace = PageRequest.of(page - 1, pageSize);
-        spacePage = spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        Pageable requestedPageForSpace = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
         int totalSpacePage = spacePage.getTotalPages();
+        /* if page>total pages,last page is returned */
         if (page > totalSpacePage) {
             totalSpacePage = totalSpacePage == 0 ? 1 : totalSpacePage;
             requestedPageForSpace = PageRequest.of(totalSpacePage - 1, pageSize);
@@ -85,11 +85,10 @@ public class StaffSearchManager implements IStaffSearchManager {
         if (page < 1) {
             page = 1;
         }
-        Pageable requestedPageForModule;
-        Page<Module> modulePage;
-        requestedPageForModule = PageRequest.of(page - 1, pageSize);
-        modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
+        Page<Module> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         int totalModulePage = modulePage.getTotalPages();
+        /* if page>total pages,last page is returned */
         if (page > totalModulePage) {
             totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
             requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
@@ -113,11 +112,10 @@ public class StaffSearchManager implements IStaffSearchManager {
         if (page < 1) {
             page = 1;
         }
-        Pageable requestedPageForSlide;
-        Page<Slide> slidePage;
-        requestedPageForSlide = PageRequest.of(page - 1, pageSize);
-        slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
+        Page<Slide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
         int totalSlidePage = slidePage.getTotalPages();
+        /* if page>total pages,last page is returned */
         if (page > totalSlidePage) {
             totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
             requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
@@ -141,11 +139,11 @@ public class StaffSearchManager implements IStaffSearchManager {
         if (page < 1) {
             page = 1;
         }
-        Pageable requestedPageForSlideText;
-        Page<Slide> slidetextPage;
-        requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
-        slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
+        Page<Slide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+                searchTerm);
         int totalSlideTextPage = slidetextPage.getTotalPages();
+        /* if page>total pages,last page is returned */
         if (page > totalSlideTextPage) {
             totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;
             requestedPageForSlideText = PageRequest.of(totalSlideTextPage - 1, pageSize);
@@ -155,58 +153,50 @@ public class StaffSearchManager implements IStaffSearchManager {
     }
 
     /**
-     * Method to return the total pages sufficient to display all spaces whose name
-     * or description matches with the search string
+     * Method to return total count of spaces whose name or description contains the
+     * search string
      * 
      * @param searchTerm string which has been searched
-     * @return totalPages required to display all spaces whose name or description
-     *         matches with the search string in DB
      */
     @Override
-    public long getTotalSpacePages(String searchTerm) {
-        Pageable requestedPageForSpace = PageRequest.of(0, pageSize);
-        return spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm).getTotalPages();
+    public int getTotalSpaceCount(String searchTerm) {
+        int totalSpaceCount = spaceManager.findByNameOrDescription(searchTerm);
+        return totalSpaceCount;
     }
 
     /**
-     * Method to return the total pages sufficient to display all modules whose name
-     * or description matches with the search string
-     *
-     * @param searchTerm string which has been searched
-     * @return totalPages required to display all modules whose name or description
-     *         matches with the search string in DB
-     */
-    @Override
-    public long getTotalModulePages(String searchTerm) {
-        Pageable requestedPageForModule = PageRequest.of(0, pageSize);
-        return moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm).getTotalPages();
-    }
-
-    /**
-     * Method to return the total pages sufficient to display all slides whose name
-     * or description matches with the search string
+     * Method to return total count of modules whose name or description contains the
+     * search string
      * 
      * @param searchTerm string which has been searched
-     * @return totalPages required to display all slides whose text blocks contains
-     *         the search string in DB
      */
     @Override
-    public long getTotalSlidePages(String searchTerm) {
-        Pageable requestedPageForSlide = PageRequest.of(0, pageSize);
-        return slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm).getTotalPages();
+    public int getTotalModuleCount(String searchTerm) {
+        int totalModuleCount = moduleManager.findByNameOrDescription(searchTerm);
+        return totalModuleCount;
     }
-
+    
     /**
-     * Method to return the total pages sufficient to display all slides whose text
-     * blocks contains the search string
+     * Method to return total count of slides whose name or description contains the
+     * search string
      * 
      * @param searchTerm string which has been searched
-     * @return totalPages required to display all slides whose text blocks contains
-     *         the search string in DB
      */
     @Override
-    public long getTotalSlideTextPages(String searchTerm) {
-        Pageable requestedPageForSlideText = PageRequest.of(0, pageSize);
-        return textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm).getTotalPages();
+    public int getTotalSlideCount(String searchTerm) {
+        int totalSlideCount = slideManager.findByNameOrDescription(searchTerm);
+        return totalSlideCount;
+    }
+    
+    /**
+     * Method to return total count of slides whose whose text blocks contains the
+     * search string
+     * 
+     * @param searchTerm string which has been searched
+     */
+    @Override
+    public int getTotalSlideTextCount(String searchTerm) {
+        List<Slide> totalSlideTextList = textContentBlockRepo.findWithNameOrDescription(searchTerm);
+        return totalSlideTextList.size();
     }
 }

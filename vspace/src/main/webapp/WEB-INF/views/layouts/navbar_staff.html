@@ -1,6 +1,13 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 	<head>
+	<style>
+		.searchInput {
+			display: flex !important;
+		    background: var(--base-grey) !important;
+		    border-radius: 5px !important;
+		}
+	</style>
 	</head>
 	
 	<body>
@@ -68,8 +75,8 @@
 			
 			<nav class="nav-bar">
 		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
-              <div>
-                <input type="text" id="searchField" placeholder="Search..."><a id="searchLink"><button style="height:30px" type="submit" id="searchButton" disabled><span class="icon-search"></span></button></a>
+              <div class="searchInput">
+                <input class="form-control" style="background: none; margin-right: 4px" type="text" id="searchField" placeholder="Search..." th:value="${searchWord}"><a id="searchLink"><button class="btn primary-btn" type="submit" id="searchButton"><span class="icon-search"></span></button></a>
               </div>
               <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
@@ -89,6 +96,8 @@
 		      </div>
 		    </nav> 
             <script>
+	            
+            	
                  $(document).on('input', '#searchField', function(e){
                 	 if($("#searchField").val().trim()) {
                           $('#searchButton').removeAttr('disabled');
@@ -103,11 +112,12 @@
                 		 $("#searchLink").attr('href','');
                 	 }
                 });
-                 $(document).on('keydown', function(e) { 
+                $(document).on('keydown', function(e) { 
                      if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
                          $("#searchButton").trigger('click');
                      }
-                 })
+                 }) 
+				
             </script>
           </div>
 	</body>
