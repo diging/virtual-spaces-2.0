@@ -34,4 +34,4 @@ public class StaffSearchModule {
     public void setShowModuleAlertMessage(Map<String, String> showModuleAlertMessage) {
         this.showModuleAlertMessage = showModuleAlertMessage;
     }
-   }
+}

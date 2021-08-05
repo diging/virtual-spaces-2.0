@@ -292,6 +292,6 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public int findByNameOrDescription(String searchTerm)
     {
-        return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm).size();
+        return spaceRepo.countDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm);
     }
 }

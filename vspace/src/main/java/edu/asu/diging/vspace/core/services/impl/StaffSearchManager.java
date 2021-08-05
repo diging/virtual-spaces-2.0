@@ -197,7 +197,7 @@ public class StaffSearchManager implements IStaffSearchManager {
      */
     @Override
     public int getTotalSlideTextCount(String searchTerm) {
-        List<Slide> totalSlideTextList = textContentBlockRepo.findWithNameOrDescription(searchTerm);
-        return totalSlideTextList.size();
+        int totalSlideTextCount = textContentBlockRepo.findWithNameOrDescription(searchTerm);
+        return totalSlideTextCount;
     }
 }

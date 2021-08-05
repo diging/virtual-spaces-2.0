@@ -92,6 +92,6 @@ public class ModuleManager implements IModuleManager {
     
     @Override
     public int findByNameOrDescription(String searchTerm) {
-        return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm).size(); 
+        return moduleRepo.countDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm); 
     }
 }

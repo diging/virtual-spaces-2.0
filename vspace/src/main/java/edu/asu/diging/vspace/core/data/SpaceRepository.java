@@ -24,5 +24,5 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
     Page<Space> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 
-    List<Space> findDistinctByNameContainingOrDescriptionContaining(String name, String description);
+    int countDistinctByNameContainingOrDescriptionContaining(String name, String description);
 }
