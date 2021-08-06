@@ -297,7 +297,7 @@ public class StaffSearchManagerTest {
     public void test_getTotalSlideTextCount_success() {
         
         String search = "space";
-        when(textContentBlockRepo.findWithNameOrDescription(search)).thenReturn(2);
+        when(textContentBlockRepo.countDistinctNameOrDescription(search)).thenReturn(2);
         int totalSlideTextCount = serviceToTest.getTotalSlideTextCount(search);
         assertEquals(2,totalSlideTextCount);
     }
