@@ -1,5 +1,9 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -8,11 +12,19 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 
 public class ContentBlockManagerTest {
+    
+    @Mock
+    private ContentBlockRepository contentBlockRepository;
+    
     @Mock
     private TextContentBlockRepository textBlockRepo;
 
@@ -22,15 +34,20 @@ public class ContentBlockManagerTest {
     @InjectMocks
     private ContentBlockManager managerToTest;
 
+    private ContentBlock contentBlock;
+    
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
+        contentBlock = new ContentBlock();
+        contentBlock.setContentOrder(1);
     }
 
     @Test
     public void test_deleteTextBlockById_success() throws BlockDoesNotExistException {
         String textBlockId = "2";
+        Optional<ContentBlock> ContentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("2")).thenReturn(ContentBlockOptional);
         managerToTest.deleteTextBlockById(textBlockId,null);
         Mockito.verify(textBlockRepo).deleteById(textBlockId);
     }
@@ -38,6 +55,8 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteTextBlockById_forNonExistentId() throws BlockDoesNotExistException {
         String textBlockId = "notARealId";
+        Optional<ContentBlock> ContentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("notARealId")).thenReturn(ContentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(textBlockRepo).deleteById(textBlockId);
         managerToTest.deleteTextBlockById(textBlockId,null);
     }
@@ -52,6 +71,8 @@ public class ContentBlockManagerTest {
     @Test
     public void test_deleteImageBlockById_success() throws BlockDoesNotExistException {
         String imageBlockId = "2";
+        Optional<ContentBlock> ContentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("2")).thenReturn(ContentBlockOptional);
         managerToTest.deleteImageBlockById(imageBlockId,null);
         Mockito.verify(imageBlockRepo).deleteById(imageBlockId);
     }
@@ -59,6 +80,8 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteImageBlockById_forNonExistentId() throws BlockDoesNotExistException {
         String imageBlockId = "notARealId";
+        Optional<ContentBlock> ContentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("notARealId")).thenReturn(ContentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(imageBlockRepo).deleteById(imageBlockId);
         managerToTest.deleteImageBlockById(imageBlockId,null);
     }
