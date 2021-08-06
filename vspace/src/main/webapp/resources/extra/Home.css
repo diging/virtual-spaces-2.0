@@ -730,6 +730,13 @@
     text-align: justify;
 }
 
+.textDivPublic {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
+
 .choiceDiv {
     position: relative;
     top: 0px;

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
-import edu.asu.diging.vspace.core.model.impl.StaffSearch;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
@@ -39,13 +38,13 @@ public class PublicSearchSlideTextController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/exhibit/search/slideText")
-    public ResponseEntity<StaffSearch> searchInVspace(HttpServletRequest request,
+    public ResponseEntity<PublicSearchSlideText> searchInVspace(HttpServletRequest request,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-        StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setSlideTextList(slideTextList);
+        PublicSearchSlideText publicSearchSlideText = new PublicSearchSlideText();
+        publicSearchSlideText.setSlideTextList(slideTextList);
         
         Map<String, String> slideTextFirstImage = new HashMap<>();
         
@@ -57,16 +56,17 @@ public class PublicSearchSlideTextController {
                 slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
             }
             slideTextFirstImage.put(slide.getId(), slideFirstImageId);
-            staffSearch.setSlideTextFirstImage(slideTextFirstImage);
+            publicSearchSlideText.setSlideTextFirstImage(slideTextFirstImage);
         }
-        return new ResponseEntity<StaffSearch>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<PublicSearchSlideText>(publicSearchSlideText, HttpStatus.OK);
     }
 
     /**
      * This method is used to search the searched string specified in the input
      * parameter(searchTerm) in ContentBlock table and return the slides
      * corresponding to the page number specified in the input
-     * parameter(spacePagenum) whose text block contains the search string
+     * parameter(spacePagenum) whose text block contains the search string.
+     * This also filters Slides from modules which are linked to the spaces.
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.

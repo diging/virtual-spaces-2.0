@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.web.general.search;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 
 @Controller
-public class ExhibitionPublicSearchController {
+public class PublicSearchController {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,25 +44,21 @@ public class ExhibitionPublicSearchController {
             @RequestParam(value = "tab", defaultValue = "module") String tab) {
 
         paginationForSpace(spacePagenum, model, searchTerm);
-
         paginationForModule(modulePagenum, model, searchTerm);
-
         paginationForSlide(slidePagenum, model, searchTerm);
-
         paginationForSlideText(slideTextPagenum, model, searchTerm);
 
         model.addAttribute("searchWord", searchTerm);
-        model.addAttribute("spaceCount", publicSearchManager.getTotalSpaceCount(searchTerm));
-        model.addAttribute("moduleCount", publicSearchManager.getTotalModuleCount(searchTerm));
-        model.addAttribute("slideCount", publicSearchManager.getTotalSlideCount(searchTerm));
+        
+        
+        
         model.addAttribute("slideTextCount", publicSearchManager.getTotalSlideTextCount(searchTerm));
-//        model.addAttribute("activeTab", tab);
         return "exhibition/search/publicSearch";
     }
     
     /**
      * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in space table and return the spaces corresponding to
+     * parameter(searchTerm) in space table and return the published spaces corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string.
      * 
@@ -74,16 +70,15 @@ public class ExhibitionPublicSearchController {
         Page<Space> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
         model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
-        HashSet<Space> spaceSet = new LinkedHashSet<>();
-        spaceSet.addAll(spacePage.getContent());
-        model.addAttribute("spaceSearchResults", spaceSet);
+        model.addAttribute("spaceSearchResults", spacePage.getContent());
+        model.addAttribute("spaceCount", spacePage.getTotalElements());
     }
 
     /**
      * This method is used to search the searched string specified in the input
      * parameter(searchTerm) in module table and return the module corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * description contains the search string. This also filters modules which are linked to the spaces.
      * 
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
@@ -94,7 +89,7 @@ public class ExhibitionPublicSearchController {
         Page<Module> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
-        HashSet<ModuleWithSpace> moduleSet = new LinkedHashSet<>();
+        List<ModuleWithSpace> moduleList = new ArrayList<>();
         
         //Adding space info for each module
         for(Module module : modulePage.getContent()) {
@@ -107,17 +102,19 @@ public class ExhibitionPublicSearchController {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
                 modWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                moduleSet.add(modWithSpace);
+                moduleList.add(modWithSpace);
             }
         }
-        model.addAttribute("moduleSearchResults", moduleSet);
+        model.addAttribute("moduleSearchResults", moduleList);
+        model.addAttribute("moduleCount", moduleList.size());
     }
 
     /**
      * This method is used to search the searched string specified in the input
      * parameter(searchTerm) in slide table and return the slides corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * description contains the search string. This also filters Slides from modules 
+     * which are linked to the spaces.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param model        This the object of Model attribute in spring spring MVC.
@@ -127,7 +124,7 @@ public class ExhibitionPublicSearchController {
         Page<Slide> slidePage = publicSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
-        HashSet<Slide> slideSet = new LinkedHashSet<>();
+        List<Slide> slideList = new ArrayList<>();
         
        //Adding space info for each slide
         for(Slide slide : slidePage.getContent()) {
@@ -140,17 +137,19 @@ public class ExhibitionPublicSearchController {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
                 slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideSet.add(slideWithSpace);
+                slideList.add(slideWithSpace);
             }
         }
-        model.addAttribute("slideSearchResults", slideSet);
+        model.addAttribute("slideSearchResults", slideList);
+        model.addAttribute("slideCount", slideList.size());
     }
 
     /**
      * This method is used to search the searched string specified in the input
      * parameter(searchTerm) in ContentBlock table and return the slides
      * corresponding to the page number specified in the input
-     * parameter(spacePagenum) whose text block contains the search string
+     * parameter(spacePagenum) whose text block contains the search string.
+     * This also filters Slides from modules which are linked to the spaces.
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
@@ -163,7 +162,7 @@ public class ExhibitionPublicSearchController {
                 Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
-        HashSet<Slide> slideTextSet = new LinkedHashSet<>();
+        List<Slide> slideTextList = new ArrayList<>();
         
         //Adding space info for each slide
         for(Slide slide : slideTextPage.getContent()) {
@@ -176,10 +175,10 @@ public class ExhibitionPublicSearchController {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
                 slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideTextSet.add(slideWithSpace);
+                slideTextList.add(slideWithSpace);
             }
         }
-        model.addAttribute("slideTextSearchResults", slideTextSet);
+        model.addAttribute("slideTextSearchResults", slideTextList);
     }
     
 }

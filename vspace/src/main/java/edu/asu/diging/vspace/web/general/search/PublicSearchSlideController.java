@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
-import edu.asu.diging.vspace.core.model.impl.StaffSearch;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
@@ -37,13 +36,13 @@ public class PublicSearchSlideController {
     private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(value = "/exhibit/search/slide")
-    public ResponseEntity<StaffSearch> searchInVspace(
+    public ResponseEntity<PublicSearchSlide> searchInVspace(
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<Slide> slideList = paginationForSlide(slidePagenum, searchTerm);
-        StaffSearch staffSearch = new StaffSearch();
-        staffSearch.setSlideList(slideList);
+        PublicSearchSlide publicSearchSlide = new PublicSearchSlide();
+        publicSearchSlide.setSlideList(slideList);
         
         Map<String, String> slideFirstImage = new HashMap<>();
         
@@ -55,16 +54,17 @@ public class PublicSearchSlideController {
                 slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
             }
             slideFirstImage.put(slide.getId(), slideFirstImageId);
-            staffSearch.setSlideFirstImage(slideFirstImage);
+            publicSearchSlide.setSlideFirstImage(slideFirstImage);
         }
-        return new ResponseEntity<StaffSearch>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<PublicSearchSlide>(publicSearchSlide, HttpStatus.OK);
     }
 
     /**
      * This method is used to search the searched string specified in the input
      * parameter(searchTerm) in slide table and return the slides corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * description contains the search string. This also filters Slides from modules 
+     * which are linked to the spaces.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
