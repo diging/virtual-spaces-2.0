@@ -4,13 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 public class StaffSearchSlideTextBlock {
+    
+    private List<Slide> slidesWithMatchedTextBlock;
 
-    public List<Slide> getSlideTextList() {
-        return slideTextList;
+    private Map<String, String> slideTextFirstImage;
+
+    private Map<String, String> slideTextFirstTextBlock;
+
+    public List<Slide> getSlidesWithMatchedTextBlock() {
+        return slidesWithMatchedTextBlock;
     }
 
-    public void setSlideTextList(List<Slide> slideTextList) {
-        this.slideTextList = slideTextList;
+    public void setSlidesWithMatchedTextBlock(List<Slide> slidesWithMatchedTextBlock) {
+        this.slidesWithMatchedTextBlock = slidesWithMatchedTextBlock;
     }
 
     public Map<String, String> getSlideTextFirstImage() {
@@ -28,11 +34,4 @@ public class StaffSearchSlideTextBlock {
     public void setSlideTextFirstTextBlock(Map<String, String> slideTextFirstTextBlock) {
         this.slideTextFirstTextBlock = slideTextFirstTextBlock;
     }
-
-    private List<Slide> slideTextList;
-
-    private Map<String, String> slideTextFirstImage;
-
-    private Map<String, String> slideTextFirstTextBlock;
-
 }

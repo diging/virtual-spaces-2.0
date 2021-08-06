@@ -1,9 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,12 +45,19 @@ public class StaffSearchManager implements IStaffSearchManager {
      * search string
      * 
      * @param searchTerm string which has been searched
-     * @param page.      The page number starts from 1. if page<1, 1st page is
-     *                   returned, if page>total pages,last page is returned
+     * @param page.      Spring will just return an empty dataset if a page that is
+     *                   greater than the total number of pages is returned. So, the
+     *                   page given (except when it's < 1, then set it to 1) and
+     *                   then checking if the total page count is smaller than the
+     *                   given one (if so, make another request). In most cases the
+     *                   page number will be within the range of pages, so we would
+     *                   need only one db call. Only in cases where the page number
+     *                   is wrong, would a second one be needed.The page number
+     *                   starts from 1. if page<1, 1st page is returned, if
+     *                   page>total pages,last page is returned.
      * @return set of spaces whose name or description contains the search string in
      *         the requested page.
      */
-
     @Override
     public Page<Space> searchInSpaces(String searchTerm, int page) {
         if (page < 1) {
@@ -76,8 +80,16 @@ public class StaffSearchManager implements IStaffSearchManager {
      * search string
      * 
      * @param searchTerm string which has been searched
-     * @param page.      The page number starts from 1.if page<1, 1st page is
-     *                   returned, if page>total pages,last page is returned
+     * @param page.      Spring will just return an empty dataset if a page that is
+     *                   greater than the total number of pages is returned. So, the
+     *                   page given (except when it's < 1, then set it to 1) and
+     *                   then checking if the total page count is smaller than the
+     *                   given one (if so, make another request). In most cases the
+     *                   page number will be within the range of pages, so we would
+     *                   need only one db call. Only in cases where the page number
+     *                   is wrong, would a second one be needed.The page number
+     *                   starts from 1. if page<1, 1st page is returned, if
+     *                   page>total pages,last page is returned.
      * @return set of modules whose name or description contains the search string
      *         in the requested page.
      */
@@ -103,8 +115,16 @@ public class StaffSearchManager implements IStaffSearchManager {
      * search string
      * 
      * @param searchTerm string which has been searched
-     * @param page.      The page number starts from 1.if page<1, 1st page is
-     *                   returned, if page>total pages,last page is returned
+     * @param page.      Spring will just return an empty dataset if a page that is
+     *                   greater than the total number of pages is returned. So, the
+     *                   page given (except when it's < 1, then set it to 1) and
+     *                   then checking if the total page count is smaller than the
+     *                   given one (if so, make another request). In most cases the
+     *                   page number will be within the range of pages, so we would
+     *                   need only one db call. Only in cases where the page number
+     *                   is wrong, would a second one be needed.The page number
+     *                   starts from 1. if page<1, 1st page is returned, if
+     *                   page>total pages,last page is returned.
      * @return set of slides whose name or description contains the search string in
      *         the requested page.
      */
@@ -130,8 +150,16 @@ public class StaffSearchManager implements IStaffSearchManager {
      * string
      * 
      * @param searchTerm string which has been searched
-     * @param page.      The page number starts from 1.if page<1, 1st page is
-     *                   returned, if page>total pages,last page is returned
+     * @param page.      Spring will just return an empty dataset if a page that is
+     *                   greater than the total number of pages is returned. So, the
+     *                   page given (except when it's < 1, then set it to 1) and
+     *                   then checking if the total page count is smaller than the
+     *                   given one (if so, make another request). In most cases the
+     *                   page number will be within the range of pages, so we would
+     *                   need only one db call. Only in cases where the page number
+     *                   is wrong, would a second one be needed.The page number
+     *                   starts from 1. if page<1, 1st page is returned, if
+     *                   page>total pages,last page is returned.
      * @return list of slides whose text blocks contains the search string in the
      *         requested page.
      */
@@ -151,53 +179,5 @@ public class StaffSearchManager implements IStaffSearchManager {
             slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
         }
         return slidetextPage;
-    }
-
-    /**
-     * Method to return total count of spaces whose name or description contains the
-     * search string
-     * 
-     * @param searchTerm string which has been searched
-     */
-    @Override
-    public int getTotalSpaceCount(String searchTerm) {
-        int totalSpaceCount = spaceManager.findByNameOrDescription(searchTerm);
-        return totalSpaceCount;
-    }
-
-    /**
-     * Method to return total count of modules whose name or description contains the
-     * search string
-     * 
-     * @param searchTerm string which has been searched
-     */
-    @Override
-    public int getTotalModuleCount(String searchTerm) {
-        int totalModuleCount = moduleManager.findByNameOrDescription(searchTerm);
-        return totalModuleCount;
-    }
-    
-    /**
-     * Method to return total count of slides whose name or description contains the
-     * search string
-     * 
-     * @param searchTerm string which has been searched
-     */
-    @Override
-    public int getTotalSlideCount(String searchTerm) {
-        int totalSlideCount = slideManager.findByNameOrDescription(searchTerm);
-        return totalSlideCount;
-    }
-    
-    /**
-     * Method to return total count of slides whose whose text blocks contains the
-     * search string
-     * 
-     * @param searchTerm string which has been searched
-     */
-    @Override
-    public int getTotalSlideTextCount(String searchTerm) {
-        int totalSlideTextCount = textContentBlockRepo.countDistinctNameOrDescription(searchTerm);
-        return totalSlideTextCount;
     }
 }

@@ -77,7 +77,7 @@ $('.spacepage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 		success: function(data) {
-		spaceList = data['spaceList'];
+		spaceList = data['space'];
 		$("#spaceResultDisplay").empty();
 		
 for(let i=0;i<spaceList.length;i++)
@@ -141,14 +141,14 @@ $('.modulepage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 	    success: function(data) {
-		moduleList = data['moduleList'];
+		moduleList = data['module'];
 		moduleFirstSlideFirstImage = data['moduleFirstSlideFirstImage'];
-	    showModuleAlertMessage = data['showModuleAlertMessage'];
+		moduleAlertMessage = data['moduleAlertMessage'];
         $("#moduleResultDisplay").empty();
 for(let i=0;i<moduleList.length;i++)
 {
-var moduleAlertMessage = showModuleAlertMessage[moduleList[i].id];
-if(moduleAlertMessage == null)
+var showModuleAlertMessage = moduleAlertMessage[moduleList[i].id];
+if(!showModuleAlertMessage)
 {
 var divtag = $("<div></div>");
 divtag.attr('id',moduleList[i].id);
@@ -199,7 +199,7 @@ span1.append(span2);
 span1.append(moduleList[i].name+'<br>');
 divtag.append(span1);
 var span3 = $("<span></span>");
-span3.append(moduleAlertMessage);
+span3.append("The module has not been configured yet.");
 divtag.append(span3);
 $("#moduleResultDisplay").append(divtag);
 }
@@ -237,7 +237,7 @@ $('.slidepage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 		success: function(data) {
-		slideList = data['slideList'];
+		slideList = data['slide'];
 		slideFirstImage = data['slideFirstImage'];
 		console.log(slideList);
 		console.log(slideFirstImage);
@@ -311,7 +311,7 @@ $('.slideTextPage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 		success: function(data) {
-		slideTextList = data['slideTextList'];
+		slideTextList = data['slidesWithMatchedTextBlock'];
 		slideTextFirstImage = data['slideTextFirstImage'];
 		slideTextFirstTextBlock = data['slideTextFirstTextBlock'];
 		$("#slideTextResultDisplay").empty();

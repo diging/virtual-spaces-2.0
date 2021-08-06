@@ -36,14 +36,6 @@ public class StaffSearchController {
 
         model.addAttribute("searchWord", searchTerm);
         
-        model.addAttribute("spaceCount", staffSearchManager.getTotalSpaceCount(searchTerm));
-        
-        model.addAttribute("moduleCount", staffSearchManager.getTotalModuleCount(searchTerm));
-        
-        model.addAttribute("slideCount", staffSearchManager.getTotalSlideCount(searchTerm));
-        
-        model.addAttribute("slideTextCount", staffSearchManager.getTotalSlideTextCount(searchTerm));
-        
         return "/staff/search/staffSearch";
     }
 
@@ -62,6 +54,7 @@ public class StaffSearchController {
         model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
         model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
         model.addAttribute("spaceSearchResults", spacePage.getContent());
+        model.addAttribute("spaceCount",spacePage.getTotalElements());
     }
 
     /**
@@ -80,6 +73,7 @@ public class StaffSearchController {
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
         model.addAttribute("moduleSearchResults", modulePage.getContent());
+        model.addAttribute("moduleCount",modulePage.getTotalElements());
     }
 
     /**
@@ -97,6 +91,7 @@ public class StaffSearchController {
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         model.addAttribute("slideSearchResults", slidePage.getContent());
+        model.addAttribute("slideCount", slidePage.getTotalElements());
     }
 
     /**
@@ -117,5 +112,6 @@ public class StaffSearchController {
         model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
         model.addAttribute("slideTextSearchResults", slideTextPage.getContent());
+        model.addAttribute("slideTextCount", slideTextPage.getTotalElements());
     }
 }

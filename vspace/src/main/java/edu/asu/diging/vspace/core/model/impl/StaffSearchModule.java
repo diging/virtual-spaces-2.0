@@ -5,18 +5,18 @@ import java.util.Map;
 
 public class StaffSearchModule {
 
-    private List<Module> moduleList;
+    private List<Module> module;
 
     private Map<String, String> moduleFirstSlideFirstImage;
 
-    private Map<String, String> showModuleAlertMessage;
+    private Map<String, Boolean> moduleAlertMessage;
 
-    public List<Module> getModuleList() {
-        return moduleList;
+    public List<Module> getModule() {
+        return module;
     }
 
-    public void setModuleList(List<Module> moduleList) {
-        this.moduleList = moduleList;
+    public void setModule(List<Module> module) {
+        this.module = module;
     }
 
     public Map<String, String> getModuleFirstSlideFirstImage() {
@@ -27,11 +27,11 @@ public class StaffSearchModule {
         this.moduleFirstSlideFirstImage = moduleFirstSlideFirstImage;
     }
 
-    public Map<String, String> getShowModuleAlertMessage() {
-        return showModuleAlertMessage;
+    public Map<String, Boolean> getModuleAlertMessage() {
+        return moduleAlertMessage;
     }
 
-    public void setShowModuleAlertMessage(Map<String, String> showModuleAlertMessage) {
-        this.showModuleAlertMessage = showModuleAlertMessage;
+    public void setModuleAlertMessage(Map<String, Boolean> moduleAlertMessage) {
+        this.moduleAlertMessage = moduleAlertMessage;
     }
 }

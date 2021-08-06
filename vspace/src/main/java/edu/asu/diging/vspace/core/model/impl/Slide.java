@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -144,8 +143,7 @@ public class Slide extends VSpaceElement implements ISlide {
             Optional<IContentBlock> firstImageBlock = allBlocks.stream()
                     .filter(contentBlock -> contentBlock instanceof ImageBlock).findFirst();
             if (firstImageBlock.isPresent()) {
-                ImageBlock imageBlock = (ImageBlock) firstImageBlock.get();
-                return imageBlock;
+                return (ImageBlock) firstImageBlock.get();
             }
         }
         return null;
@@ -155,15 +153,11 @@ public class Slide extends VSpaceElement implements ISlide {
     public TextBlock getFirstMatchedTextBlock(String searchTerm) {
         List<IContentBlock> allBlocks = getContents();
         if (allBlocks != null) {
-            List<IContentBlock> textBlockList = allBlocks.stream()
-                    .filter(contentBlock -> contentBlock instanceof TextBlock).collect(Collectors.toList());
-            if (textBlockList != null) {
-                Optional<IContentBlock> firstMatchedTextBlock = textBlockList.stream()
-                        .filter(contentBlock -> ((TextBlock) contentBlock).getText().contains(searchTerm)).findFirst();
-                if (firstMatchedTextBlock.isPresent()) {
-                    TextBlock textBlock = (TextBlock) firstMatchedTextBlock.get();
-                    return textBlock;
-                }
+            Optional<IContentBlock> firstMatchedTextBlock = allBlocks.stream()
+                    .filter(contentBlock -> contentBlock instanceof TextBlock)
+                    .filter(contentBlock -> ((TextBlock) contentBlock).getText().contains(searchTerm)).findFirst();
+            if (firstMatchedTextBlock.isPresent()) {
+                return (TextBlock) firstMatchedTextBlock.get();
             }
         }
         return null;

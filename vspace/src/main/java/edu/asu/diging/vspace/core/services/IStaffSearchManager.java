@@ -15,12 +15,4 @@ public interface IStaffSearchManager {
     Page<Slide> searchInSlides(String searchTerm, int page);
 
     Page<Slide> searchInSlideTexts(String searchTerm, int page);
-    
-    int getTotalSpaceCount(String searchTerm);
-
-    int getTotalModuleCount(String searchTerm);
-
-    int getTotalSlideCount(String searchTerm);
-
-    int getTotalSlideTextCount(String searchTerm);
 }

@@ -89,9 +89,4 @@ public class ModuleManager implements IModuleManager {
     public Page<Module> findByNameOrDescription(Pageable requestedPage,String searchText) {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
-    
-    @Override
-    public int findByNameOrDescription(String searchTerm) {
-        return moduleRepo.countDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm); 
-    }
 }

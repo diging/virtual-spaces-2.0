@@ -5,16 +5,16 @@ import java.util.Map;
 
 public class StaffSearchSlide {
     
-    private List<Slide> slideList;
+    private List<Slide> slide;
 
     private Map<String, String> slideFirstImage;
 
-    public List<Slide> getSlideList() {
-        return slideList;
+    public List<Slide> getSlide() {
+        return slide;
     }
 
-    public void setSlideList(List<Slide> slideList) {
-        this.slideList = slideList;
+    public void setSlide(List<Slide> slide) {
+        this.slide = slide;
     }
 
     public Map<String, String> getSlideFirstImage() {

@@ -262,43 +262,5 @@ public class StaffSearchManagerTest {
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
         verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
     }
-    
-    @Test
-    public void test_getTotalSpaceCount_success() {
-        
-        String search = "space";
-        when(spaceManager.findByNameOrDescription(search)).thenReturn(6);
-        int totalSpaceCount = serviceToTest.getTotalSpaceCount(search);
-        assertEquals(6,totalSpaceCount);
-        verify(spaceManager).findByNameOrDescription(search);
-    }
-    
-    @Test
-    public void test_getTotalModuleCount_success() {
-        
-        String search = "module";
-        when(moduleManager.findByNameOrDescription(search)).thenReturn(6);
-        int totalModuleCount = serviceToTest.getTotalModuleCount(search);
-        assertEquals(6,totalModuleCount);
-        verify(moduleManager).findByNameOrDescription(search);
-    }
-    
-    @Test
-    public void test_getTotalSlideCount_success() {
-        
-        String search = "slide";
-        when(slideManager.findByNameOrDescription(search)).thenReturn(6);
-        int totalSlideCount = serviceToTest.getTotalSlideCount(search);
-        assertEquals(6,totalSlideCount);
-        verify(slideManager).findByNameOrDescription(search);
-    }
-    
-    @Test
-    public void test_getTotalSlideTextCount_success() {
-        
-        String search = "space";
-        when(textContentBlockRepo.countDistinctNameOrDescription(search)).thenReturn(2);
-        int totalSlideTextCount = serviceToTest.getTotalSlideTextCount(search);
-        assertEquals(2,totalSlideTextCount);
-    }
+   
 }

@@ -30,7 +30,7 @@ public class StaffSearchSlideController {
 
         List<Slide> slideSet = paginationForSlide(slidePagenum, searchTerm);
         StaffSearchSlide staffSearch = new StaffSearchSlide();
-        staffSearch.setSlideList(slideSet);
+        staffSearch.setSlide(slideSet);
 
         Map<String, String> slideFirstImage = new HashMap<>();
 
