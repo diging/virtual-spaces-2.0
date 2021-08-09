@@ -19,13 +19,10 @@ public class SpaceOverviewDataFormatter {
             Map<String, List<String>> spacesToToSpacesAndModulesMap) throws JsonProcessingException {
 
         String nodesJson = spaceOverviewJsonFormat.createNodes(contextPath);
-
         String linksJson = spaceOverviewJsonFormat.createEdges(spacesToToSpacesAndModulesMap);
 
         Map<String, String> jsonFormatMap = new HashMap<>();
-
         jsonFormatMap.put("nodesJson", nodesJson);
-
         jsonFormatMap.put("linksJson", linksJson);
 
         return jsonFormatMap;

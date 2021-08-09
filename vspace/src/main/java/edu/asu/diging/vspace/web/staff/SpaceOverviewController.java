@@ -44,13 +44,8 @@ public class SpaceOverviewController {
         Map<String, String> jsonFormatMap = spaceOverviewDataFormatter.getJsonFormat(request.getContextPath(),
                 spacesToSpacesAndModulesMap);
 
-        String nodesJson = jsonFormatMap.get("nodesJson");
-
-        String linksJson = jsonFormatMap.get("linksJson");
-
-        model.addAttribute("overviewNode", nodesJson);
-        model.addAttribute("overviewLink", linksJson);
-
+        model.addAttribute("jsonFormatMap",jsonFormatMap);
+        
         return "staff/spaces/graph";
     }
 }

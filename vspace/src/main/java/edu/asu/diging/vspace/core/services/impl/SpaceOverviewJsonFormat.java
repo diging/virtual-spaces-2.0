@@ -40,11 +40,8 @@ public class SpaceOverviewJsonFormat {
 
         List<SpaceOverview> spaceVertexList = new ArrayList<>();
         if (spaceNodeList != null) {
-            StringBuilder linkPathBuilder = new StringBuilder();
-            StringBuilder imagePathBuilder = new StringBuilder();
             for (Space spaceNode : spaceNodeList) {
-                SpaceOverview spaceOverview = createSpaceNode(linkPathBuilder, imagePathBuilder, spaceNode,
-                        contextPath);
+                SpaceOverview spaceOverview = createSpaceNode(spaceNode, contextPath);
                 spaceVertexList.add(spaceOverview);
             }
         }
@@ -65,11 +62,8 @@ public class SpaceOverviewJsonFormat {
         List<SpaceOverview> moduleVertexList = new ArrayList<>();
 
         if (moduleNodeList != null) {
-            StringBuilder linkPathBuilder = new StringBuilder();
-            StringBuilder imagePathBuilder = new StringBuilder();
             for (Module moduleNode : moduleNodeList) {
-                SpaceOverview spaceOverview = createModuleNode(linkPathBuilder, imagePathBuilder, moduleNode,
-                        contextPath);
+                SpaceOverview spaceOverview = createModuleNode(moduleNode,contextPath);
                 moduleVertexList.add(spaceOverview);
             }
         }
@@ -79,27 +73,22 @@ public class SpaceOverviewJsonFormat {
     /**
      * Populating space node in the spaceoverview graph
      * 
-     * @param linkPathBuilder  StringBuilder object to create the URL link for space
-     *                         in staff side
-     * @param imagePathBuilder StringBuilder object to create the URL link for image
-     *                         in staff side
      * @param space            passing the space object
      * 
      * @param contextPath      This variable holds the contextpath of the
      *                         application
      */
-    private SpaceOverview createSpaceNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, Space space,
-            String contextPath) {
+    private SpaceOverview createSpaceNode(Space space, String contextPath) {
 
         SpaceOverview spaceOverview = new SpaceOverview();
         spaceOverview.setName(space.getName());
         spaceOverview.setId(space.getId());
-        linkPathBuilder.setLength(0);
+        StringBuilder linkPathBuilder = new StringBuilder();
         linkPathBuilder.append(contextPath);
         linkPathBuilder.append(SpaceController.STAFF_SPACE_PATH);
         linkPathBuilder.append(space.getId());
         spaceOverview.setLink(linkPathBuilder.toString());
-        imagePathBuilder.setLength(0);
+        StringBuilder imagePathBuilder = new StringBuilder();
         imagePathBuilder.append(contextPath);
         imagePathBuilder.append(ImageApiController.API_IMAGE_PATH);
         imagePathBuilder.append(space.getImage().getId());
@@ -121,22 +110,17 @@ public class SpaceOverviewJsonFormat {
     /**
      * Populating module node in the spaceoverview graph
      * 
-     * @param linkPathBuilder  StringBuilder object to create the URL link for
-     *                         module in staff side
-     * @param imagePathBuilder StringBuilder object to create the URL link for image
-     *                         in staff side
      * @param module           module model object
      * 
      * @param contextPath      This variable holds the contextpath of the
      *                         application
      */
-    private SpaceOverview createModuleNode(StringBuilder linkPathBuilder, StringBuilder imagePathBuilder, Module module,
-            String contextPath) {
+    private SpaceOverview createModuleNode(Module module,String contextPath) {
 
         SpaceOverview spaceOverview = new SpaceOverview();
         spaceOverview.setName(module.getName());
         spaceOverview.setId(module.getId());
-        linkPathBuilder.setLength(0);
+        StringBuilder linkPathBuilder = new StringBuilder();
         linkPathBuilder.append(contextPath);
         linkPathBuilder.append(ModuleController.STAFF_MODULE_PATH);
         linkPathBuilder.append(module.getId());

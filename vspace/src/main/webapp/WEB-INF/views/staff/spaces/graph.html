@@ -1,8 +1,7 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:inline="javascript">
-var strNodeVal = [[${overviewNode}]],
- strlinkVal = [[${overviewLink}]];
+var jsonMap = [[${jsonFormatMap}]];
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <style>
@@ -30,8 +29,8 @@ width: 100%;
 <svg></svg>
 </div>
 <script>
-var nodeJson = JSON.parse(strNodeVal);
-var linkJson = JSON.parse(strlinkVal);
+var nodeJson = JSON.parse(jsonMap['nodesJson']);
+var linkJson = JSON.parse(jsonMap['linksJson']);
 var w = window,
 d = document,
 e = d.documentElement,
