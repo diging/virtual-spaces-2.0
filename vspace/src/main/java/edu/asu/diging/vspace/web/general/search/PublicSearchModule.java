@@ -10,6 +10,8 @@ public class PublicSearchModule {
     private List<Module> moduleList;
     
     private  Map<String,String> moduleFirstSlideFirstImage;
+    
+    private Map<String, Boolean> moduleAlertMessage;
 
     public List<Module> getModuleList() {
         return moduleList;
@@ -27,5 +29,12 @@ public class PublicSearchModule {
         this.moduleFirstSlideFirstImage = moduleFirstSlideFirstImage;
     }
 
+    public Map<String, Boolean> getModuleAlertMessage() {
+        return moduleAlertMessage;
+    }
+
+    public void setModuleAlertMessage(Map<String, Boolean> moduleAlertMessage) {
+        this.moduleAlertMessage = moduleAlertMessage;
+    }
     
 }

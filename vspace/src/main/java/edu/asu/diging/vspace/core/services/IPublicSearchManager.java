@@ -15,12 +15,4 @@ public interface IPublicSearchManager {
 
     Page<Slide> searchInSlideTexts(String search, int page);
     
-    int getTotalSpaceCount(String searchTerm);
-
-    int getTotalModuleCount(String searchTerm);
-
-    int getTotalSlideCount(String searchTerm);
-
-    int getTotalSlideTextCount(String searchTerm);
-
 }

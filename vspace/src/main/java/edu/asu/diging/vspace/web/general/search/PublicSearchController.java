@@ -47,12 +47,7 @@ public class PublicSearchController {
         paginationForModule(modulePagenum, model, searchTerm);
         paginationForSlide(slidePagenum, model, searchTerm);
         paginationForSlideText(slideTextPagenum, model, searchTerm);
-
         model.addAttribute("searchWord", searchTerm);
-        
-        
-        
-        model.addAttribute("slideTextCount", publicSearchManager.getTotalSlideTextCount(searchTerm));
         return "exhibition/search/publicSearch";
     }
     
@@ -179,6 +174,7 @@ public class PublicSearchController {
             }
         }
         model.addAttribute("slideTextSearchResults", slideTextList);
+        model.addAttribute("slideTextCount", slideTextList.size());
     }
     
 }

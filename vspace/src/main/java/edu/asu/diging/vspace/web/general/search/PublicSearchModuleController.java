@@ -18,12 +18,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.ModuleWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
 
 @Controller
 public class PublicSearchModuleController {
@@ -35,6 +37,9 @@ public class PublicSearchModuleController {
     
     @Autowired
     private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private ISequenceManager sequenceManager;
 
     @RequestMapping(value = "/exhibit/search/module")
     public ResponseEntity<PublicSearchModule> searchInVspace(
@@ -46,20 +51,32 @@ public class PublicSearchModuleController {
         publicSearchModule.setModuleList(moduleList);
         
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
+        Map<String, Boolean> moduleAlertMessage = new HashMap<>();
         
         for (Module module : moduleList) {
-            
-            Slide slide = module.getSlides() != null && !module.getSlides().isEmpty()
-                    ? (Slide) module.getSlides().get(0) : null;
-            
-            String firstSlideImageId = null;
-            
-            if (slide != null && slide.getFirstImageBlock() != null) {
-                firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+            if (module.getStartSequence() == null) {
+                moduleAlertMessage.put(module.getId(), true);
+                moduleFirstSlideImage.put(module.getId(), null);
+            } else {
+                moduleAlertMessage.put(module.getId(), false);
+                String startSequenceID = module.getStartSequence().getId();
+                List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
+                        ? sequenceManager.getSequence(startSequenceID).getSlides()
+                        : null;
+
+                Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
+
+                String firstSlideImageId = null;
+
+                if (slide != null && slide.getFirstImageBlock() != null) {
+                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+                }
+                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
             }
-            moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
-            publicSearchModule.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
+            
         }
+        publicSearchModule.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
+        publicSearchModule.setModuleAlertMessage(moduleAlertMessage);
         return new ResponseEntity<PublicSearchModule>(publicSearchModule, HttpStatus.OK);
     }
 

@@ -10,6 +10,8 @@ public class PublicSearchSlideText {
     private List<Slide> slideTextList;
     
     private Map<String, String> slideTextFirstImage;
+    
+    private Map<String, String> slideTextFirstTextBlock;
 
     public List<Slide> getSlideTextList() {
         return slideTextList;
@@ -25,6 +27,14 @@ public class PublicSearchSlideText {
 
     public void setSlideTextFirstImage(Map<String, String> slideTextFirstImage) {
         this.slideTextFirstImage = slideTextFirstImage;
+    }
+
+    public Map<String, String> getSlideTextFirstTextBlock() {
+        return slideTextFirstTextBlock;
+    }
+
+    public void setSlideTextFirstTextBlock(Map<String, String> slideTextFirstTextBlock) {
+        this.slideTextFirstTextBlock = slideTextFirstTextBlock;
     }
     
 }

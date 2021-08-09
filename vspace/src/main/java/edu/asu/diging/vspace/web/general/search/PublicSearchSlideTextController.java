@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
@@ -46,18 +47,27 @@ public class PublicSearchSlideTextController {
         PublicSearchSlideText publicSearchSlideText = new PublicSearchSlideText();
         publicSearchSlideText.setSlideTextList(slideTextList);
         
-        Map<String, String> slideTextFirstImage = new HashMap<>();
+        Map<String, String> slideTextFirstImageMap = new HashMap<>();
+        Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
         
         for (Slide slide : slideTextList) {
-            
             String slideFirstImageId = null;
-            
+
             if (slide != null && slide.getFirstImageBlock() != null) {
                 slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
             }
-            slideTextFirstImage.put(slide.getId(), slideFirstImageId);
-            publicSearchSlideText.setSlideTextFirstImage(slideTextFirstImage);
+            slideTextFirstImageMap.put(slide.getId(), slideFirstImageId);
+
+            TextBlock slideFirstTextBlock = null;
+
+            if (slide != null && slide.getFirstMatchedTextBlock(searchTerm)!= null) {
+                slideFirstTextBlock = slide.getFirstMatchedTextBlock(searchTerm);
+            }
+            slideTextFirstTextBlockMap.put(slide.getId(), slideFirstTextBlock.getText());
+
         }
+        publicSearchSlideText.setSlideTextFirstImage(slideTextFirstImageMap);
+        publicSearchSlideText.setSlideTextFirstTextBlock(slideTextFirstTextBlockMap);
         return new ResponseEntity<PublicSearchSlideText>(publicSearchSlideText, HttpStatus.OK);
     }
 
