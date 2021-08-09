@@ -166,9 +166,5 @@ public class SlideManager implements ISlideManager {
     public Page<Slide> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
-    
-    @Override
-    public int countByNameOrDescription(String searchTerm) {
-        return slideRepo.countDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm);
-    }
+
 }

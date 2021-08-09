@@ -30,7 +30,7 @@ public class StaffSearchSpaceController {
 
         List<Space> spaceList = paginationForSpace(spacePagenum, searchTerm);
         StaffSearchSpace staffSearch = new StaffSearchSpace();
-        staffSearch.setSpaceList(spaceList);
+        staffSearch.setSpace(spaceList);
         return new ResponseEntity<StaffSearchSpace>(staffSearch, HttpStatus.OK);
     }
 

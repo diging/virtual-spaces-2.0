@@ -286,17 +286,8 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
-    public int countByNameOrDescription(String searchTerm){
-        return spaceRepo.countDistinctByNameContainingOrDescriptionContaining(searchTerm,searchTerm);
-    }
-    
-    @Override
     public Page<Space> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchTerm) {
         return spaceRepo.findDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(requestedPage, spaceStatus, searchTerm, searchTerm);
     }
 
-    @Override
-    public int countBySpaceStatusAndNameOrDescription(SpaceStatus spaceStatus, String searchTerm) {
-        return spaceRepo.countDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(spaceStatus, searchTerm, searchTerm);
-    }
 }

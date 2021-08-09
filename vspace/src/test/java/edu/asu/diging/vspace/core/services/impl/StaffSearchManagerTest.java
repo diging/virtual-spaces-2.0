@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -89,7 +87,8 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSpaces_success() {
+    public void test_searchInSpaces_success() {
+        
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "space";
         when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
@@ -102,7 +101,8 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSpaces_pageGreaterThanTotalPages() {
+    public void test_searchInSpaces_pageGreaterThanTotalPages() {
+        
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "space";
         when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
@@ -118,7 +118,8 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSpaces_negativePage() {
+    public void test_searchInSpaces_negativePage() {
+        
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "space";
         when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Space>(spaces));
@@ -131,7 +132,8 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchModules_success() {
+    public void test_searchInModules_success() {
+        
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
@@ -144,7 +146,8 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchModules_pageGreaterThanTotalPages() {
+    public void test_searchInModules_pageGreaterThanTotalPages() {
+        
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
@@ -160,7 +163,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchModules_negativePage() {
+    public void test_searchInModules_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Module>(modules));
@@ -173,7 +176,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSlides_success() {
+    public void test_searchInSlides_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
@@ -186,7 +189,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSlides_pageGreaterThanTotalPages() {
+    public void test_searchInSlides_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
@@ -202,7 +205,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSlides_negativePage() {
+    public void test_searchInSlides_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<Slide>(slides));
@@ -215,7 +218,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSlideTexts_success() {
+    public void test_searchInSlideTexts_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
@@ -229,7 +232,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSlideTexts_pageGreaterThanTotalPages() {
+    public void test_searchInSlideTexts_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
@@ -247,7 +250,7 @@ public class StaffSearchManagerTest {
     }
 
     @Test
-    public void test_searchSlideTexts_negativePage() {
+    public void test_searchInSlideTexts_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
@@ -259,4 +262,5 @@ public class StaffSearchManagerTest {
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
         verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
     }
+   
 }

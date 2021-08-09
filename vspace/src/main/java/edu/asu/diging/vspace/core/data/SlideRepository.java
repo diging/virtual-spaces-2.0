@@ -25,6 +25,4 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     Page<Slide> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 
-    int countDistinctByNameContainingOrDescriptionContaining(String name, String description);
-
 }

@@ -33,6 +33,4 @@ public interface ISlideManager {
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
     Page<Slide> findByNameOrDescription(Pageable requestedPage,String searchText);
-
-    int countByNameOrDescription(String searchTerm);
 }

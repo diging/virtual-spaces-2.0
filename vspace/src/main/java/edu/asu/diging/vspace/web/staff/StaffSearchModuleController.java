@@ -36,18 +36,18 @@ public class StaffSearchModuleController {
 
         List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
         StaffSearchModule staffSearch = new StaffSearchModule();
-        staffSearch.setModuleList(moduleList);
+        staffSearch.setModule(moduleList);
 
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        Map<String, String> showModuleAlertMessage = new HashMap<>();
+        Map<String, Boolean> moduleAlertMessage = new HashMap<>();
 
         for (Module module : moduleList) {
 
             if (module.getStartSequence() == null) {
-                showModuleAlertMessage.put(module.getId(), "The module has not been configured yet.");
+                moduleAlertMessage.put(module.getId(), true);
                 moduleFirstSlideImage.put(module.getId(), null);
             } else {
-                showModuleAlertMessage.put(module.getId(), null);
+                moduleAlertMessage.put(module.getId(), false);
                 String startSequenceID = module.getStartSequence().getId();
                 List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
                         ? sequenceManager.getSequence(startSequenceID).getSlides()
@@ -64,7 +64,7 @@ public class StaffSearchModuleController {
             }
         }
         staffSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
-        staffSearch.setShowModuleAlertMessage(showModuleAlertMessage);
+        staffSearch.setModuleAlertMessage(moduleAlertMessage);
         return new ResponseEntity<StaffSearchModule>(staffSearch, HttpStatus.OK);
     }
 

@@ -33,7 +33,7 @@ public class StaffSearchSlideTextController {
 
         List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
         StaffSearchSlideTextBlock staffSearch = new StaffSearchSlideTextBlock();
-        staffSearch.setSlideTextList(slideTextList);
+        staffSearch.setSlidesWithMatchedTextBlock(slideTextList);
 
         Map<String, String> slideTextFirstImageMap = new HashMap<>();
 
