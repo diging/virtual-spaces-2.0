@@ -18,6 +18,13 @@ import edu.asu.diging.vspace.web.api.ImageApiController;
 import edu.asu.diging.vspace.web.staff.ModuleController;
 import edu.asu.diging.vspace.web.staff.SpaceController;
 
+/**
+ * This class is used to create nodes and edges of the space overview graph in
+ * JSON format.
+ * 
+ * @author abiswa15
+ *
+ */
 @Component
 public class SpaceOverviewJsonFormat {
 
@@ -63,7 +70,7 @@ public class SpaceOverviewJsonFormat {
 
         if (moduleNodeList != null) {
             for (Module moduleNode : moduleNodeList) {
-                SpaceOverview spaceOverview = createModuleNode(moduleNode,contextPath);
+                SpaceOverview spaceOverview = createModuleNode(moduleNode, contextPath);
                 moduleVertexList.add(spaceOverview);
             }
         }
@@ -73,10 +80,9 @@ public class SpaceOverviewJsonFormat {
     /**
      * Populating space node in the spaceoverview graph
      * 
-     * @param space            passing the space object
+     * @param space       passing the space object
      * 
-     * @param contextPath      This variable holds the contextpath of the
-     *                         application
+     * @param contextPath This variable holds the contextpath of the application
      */
     private SpaceOverview createSpaceNode(Space space, String contextPath) {
 
@@ -110,12 +116,11 @@ public class SpaceOverviewJsonFormat {
     /**
      * Populating module node in the spaceoverview graph
      * 
-     * @param module           module model object
+     * @param module      module model object
      * 
-     * @param contextPath      This variable holds the contextpath of the
-     *                         application
+     * @param contextPath This variable holds the contextpath of the application
      */
-    private SpaceOverview createModuleNode(Module module,String contextPath) {
+    private SpaceOverview createModuleNode(Module module, String contextPath) {
 
         SpaceOverview spaceOverview = new SpaceOverview();
         spaceOverview.setName(module.getName());
