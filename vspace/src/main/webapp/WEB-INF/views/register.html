@@ -3,7 +3,7 @@
 </head>
 <body>
     <div class="row justify-content-center" layout:fragment="content">
-        <div class="col-4">
+        <div class="col-12">
             <div class="register-form">
                 <form th:action="@{|/register?${_csrf.parameterName}=${_csrf.token}|}" method="POST" name="f"
                     class="form-horizontal">

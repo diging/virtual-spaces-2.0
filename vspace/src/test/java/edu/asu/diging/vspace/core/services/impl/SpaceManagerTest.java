@@ -167,7 +167,8 @@ public class SpaceManagerTest {
         space.setId(spaceId1);
         spaceLink.setId(spaceLinkId1);
         spaceLink.setTargetSpace(space);
-        Mockito.when(spaceLinkRepo.getLinkedFromSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
+        Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(Optional.of(space));
+        Mockito.when(spaceLinkRepo.findByTargetSpace(space)).thenReturn(Arrays.asList(spaceLink));
         managerToTest.deleteSpaceById(spaceId1);
         Assert.assertEquals(spaceLink.getTargetSpace(), null);
         Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);

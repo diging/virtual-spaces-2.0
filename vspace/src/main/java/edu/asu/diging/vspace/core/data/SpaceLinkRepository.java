@@ -28,6 +28,8 @@ public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLin
     @Query("select d from SpaceLink d where d.sourceSpace.id = ?1")
     List<SpaceLink> getLinkedSpaces(String id);
     
-    @Query("select d from SpaceLink d where d.targetSpace.id = ?1")
-    List<SpaceLink> getLinkedFromSpaces(String id);
+//    @Query("select d from SpaceLink d where d.targetSpace.id = ?1")
+//    List<SpaceLink> getLinkedFromSpaces(String id);
+    
+    List<SpaceLink> findByTargetSpace(ISpace space);
 }
