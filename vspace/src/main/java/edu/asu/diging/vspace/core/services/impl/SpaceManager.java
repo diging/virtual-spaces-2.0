@@ -222,13 +222,11 @@ public class SpaceManager implements ISpaceManager {
     public void deleteSpaceById(String id) {
         if (id != null) {
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-
             List<SpaceLink> fromSpaceLinks = new ArrayList<>();
             Optional<Space> space = spaceRepo.findById(id);
             if (space.isPresent()) {
                 fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
-            }
-
+            } 
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
             // To delete links that access to the space getting deleted and replacing it as
