@@ -1,9 +1,10 @@
 /* Custom page CSS
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
-
+* {
+    font-family: 'Raleway', sans-serif;
+}
 body {
-	font-family: 'Montserrat', sans-serif;
 	
 }
 
