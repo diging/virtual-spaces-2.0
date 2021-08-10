@@ -287,14 +287,7 @@ public class SpaceManager implements ISpaceManager {
         Iterator<Space> iterator = spaces.iterator();
         while (iterator.hasNext()) {
             Space space = iterator.next();
-            try {
-                space.setIncomingLinks((spaceLinkRepo.findByTargetSpace(space)).size() > 0 ? true : false);
-            } catch (EntityNotFoundException ex) {
-                // if the data is incomplete this might happen (e.g. spaces used in links
-                // don't exist anymore.
-                space.setIncomingLinks(false);
-                logger.error("Could not load space links.", ex);
-            }
+            space.setIncomingLinks((spaceLinkRepo.findByTargetSpace(space)).size() > 0 ? true : false);
         }
         return spaces;
     }
