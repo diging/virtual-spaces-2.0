@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.config;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class ThymeleafConfig {
         // resource resolution infrastructure, which is highly recommended.
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setCharacterEncoding(Charset.defaultCharset().toString());
+        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
         // HTML is the default value, added here for the sake of clarity.
