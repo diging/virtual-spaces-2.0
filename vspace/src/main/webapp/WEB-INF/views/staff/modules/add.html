@@ -1,9 +1,11 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-	<script>
-		document.getElementById("newModule").addEventListener("click", function() {
-			localStorage.setItem("newModule", true);
-		});
+    <script>
+	    $(document).ready(function(){
+			document.getElementById("newModule").addEventListener("click", function() {
+				localStorage.setItem("newModule", true);
+			});
+	    });
 	</script>
 </head>
 <body>
@@ -26,4 +28,5 @@
         </form>
     </div>
 </body>
+
 </html>

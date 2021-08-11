@@ -167,18 +167,18 @@ function guidedTour() {
 }
 
 
-$(document).ready(function($) {
+$(document).ready(function() {
+	
+	if (localStorage.getItem("newModule") == "true") {
+		guidedTour();
+		localStorage.setItem("newModule", false);
+	}
     
     var dateFormat = 'MM-DD-YYYY hh:mm:ss A';
     var date = document.getElementById('creationDate').value;
     var localDate = moment(moment.utc(date)).local();
     var dateInfo = document.getElementById('dateInfo');
     dateInfo.title="Created on "+ localDate.format(dateFormat) +" by "+ [[${module.createdBy}]];
-    
-    if (localStorage.getItem("newModule") == "true") {
-		guidedTour();
-		localStorage.setItem("newModule", false);
-	}
 	
 	$("#addSlideButton").on("click", function(e) {
 		$("#createSlideAlert").show();
@@ -226,8 +226,8 @@ $(document).ready(function($) {
 	    		</div>
 	    		
 	    		<div class="dropdown">
-					<button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="icon-menu-dots"></span>
+					<button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="icon-caret-down" style="font-size: 16px"></span>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 						<a class="dropdown-item" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"><span class="icon-info-circle"></span>&emsp; Slide info</a>
@@ -236,7 +236,7 @@ $(document).ready(function($) {
 				</div>
 			</div>
 		
-			<div class="startSequence" style="padding-bottom: 10px;" th:if="${sequences.size() > 0}">
+			<div class="startSequence" style="padding-bottom: 10px;">
         <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
