@@ -31,17 +31,17 @@ width: 100%;
 <script>
 var nodeJson = JSON.parse(jsonMap['nodesJson']);
 var linkJson = JSON.parse(jsonMap['linksJson']);
-var w = window,
+/* var w = window,
 d = document,
 e = d.documentElement,
 g = $('body')[0],
 x = w.innerWidth || e.clientWidth || g.clientWidth,
-y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+y = w.innerHeight|| e.clientHeight|| g.clientHeight; */
 
 var svg = d3.select("body")
           .select("svg")
-          .attr("width", x)
-          .attr("height", y);
+          .attr("width", "560")
+          .attr("height", "790");
 
 width = +svg.attr("width"),
 height = +svg.attr("height");
