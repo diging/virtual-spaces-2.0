@@ -11,19 +11,10 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
 @Service
-public class DefaultMetaData implements ReferenceMetadataProvider {
+public class DefaultMetadata implements ReferenceMetadataProvider {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    //These all values are fixed for default metadata 
-    private String urlVersion = "url_ver=Z39.88-2004";
     
-    private String ctxVersion = "ctx_ver=Z39.88-2004";
-    
-    private String rfrId = "info:sid/zotero.org:2";
-    
-    private String rftValFmt = "info:ofi/fmt:kev:mtx:dissertation";
-
     @Override
     public ReferenceMetaDataType getReferenceMetadataType() {
         return ReferenceMetaDataType.DEFAULT;
@@ -31,11 +22,11 @@ public class DefaultMetaData implements ReferenceMetadataProvider {
 
     @Override
     public String getReferenceMetadata(Reference reference) {
-        String urlEncodedReferenceMetaData = urlVersion + "&" + ctxVersion;
+        String urlEncodedReferenceMetaData = ReferenceConstants.defaultUrlVersion + "&" + ReferenceConstants.defaultCtxVersion;
         try {
-            urlEncodedReferenceMetaData += "&rfr_id=" + URLEncoder.encode(rfrId, StandardCharsets.UTF_8.toString());
-            urlEncodedReferenceMetaData += "&rft_val_fmt="
-                    + URLEncoder.encode(rftValFmt, StandardCharsets.UTF_8.toString());
+            urlEncodedReferenceMetaData += ReferenceConstants.rfrIdTag + URLEncoder.encode(ReferenceConstants.defaultRfrId, StandardCharsets.UTF_8.toString());
+            urlEncodedReferenceMetaData += ReferenceConstants.rftValFmtTag
+                    + URLEncoder.encode(ReferenceConstants.defaultRftValFmt, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -54,54 +45,54 @@ public class DefaultMetaData implements ReferenceMetadataProvider {
 
         try {
             if (type != null)
-                urlEncodedReferenceMetaData += ("&rft.degree=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftDegreeTag)
                         + URLEncoder.encode(type, StandardCharsets.UTF_8.toString());
 
             if (title != null)
-                urlEncodedReferenceMetaData += ("&rft.title=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftTitleTag)
                         + URLEncoder.encode(title, StandardCharsets.UTF_8.toString());
 
             if (author != null)
-                urlEncodedReferenceMetaData += ("&rft.au=") + URLEncoder.encode(author, StandardCharsets.UTF_8.toString());
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftAuthorTag) + URLEncoder.encode(author, StandardCharsets.UTF_8.toString());
 
             if (year != null)
-                urlEncodedReferenceMetaData += ("&rft.date=") + URLEncoder.encode(year, StandardCharsets.UTF_8.toString());
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftDateTag) + URLEncoder.encode(year, StandardCharsets.UTF_8.toString());
 
             if (journal != null)
-                urlEncodedReferenceMetaData += ("&rft.jtitle=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftJournalTag)
                         + URLEncoder.encode(journal, StandardCharsets.UTF_8.toString());
 
             if (url != null)
-                urlEncodedReferenceMetaData += ("&rft_id=") + URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftIdTag) + URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
 
             if (volume != null)
-                urlEncodedReferenceMetaData += ("&rft.volume=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftVolumeTag)
                         + URLEncoder.encode(volume, StandardCharsets.UTF_8.toString());
 
             if (issue != null)
-                urlEncodedReferenceMetaData += ("&rft.issue=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftIssueTag)
                         + URLEncoder.encode(issue, StandardCharsets.UTF_8.toString());
 
             if (pages != null) {
-                urlEncodedReferenceMetaData += ("&rft.pages=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftIssueTag)
                         + URLEncoder.encode(pages, StandardCharsets.UTF_8.toString());
                 String[] tokens = pages.split("-", 2);
                 if (tokens.length > 1) {
-                    urlEncodedReferenceMetaData += ("&rft.spage=")
+                    urlEncodedReferenceMetaData += (ReferenceConstants.rftStartPageTag)
                             + URLEncoder.encode(tokens[0], StandardCharsets.UTF_8.toString());
-                    urlEncodedReferenceMetaData += ("&rft.epage=")
+                    urlEncodedReferenceMetaData += (ReferenceConstants.rftEndPageTag)
                             + URLEncoder.encode(tokens[1], StandardCharsets.UTF_8.toString());
                 }
             }
 
             if (editors != null)
-                urlEncodedReferenceMetaData += ("&rft.editors=")
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftEditorTag)
                         + URLEncoder.encode(editors, StandardCharsets.UTF_8.toString());
 
             if (note != null)
-                urlEncodedReferenceMetaData += ("&rft.note=") + URLEncoder.encode(note, StandardCharsets.UTF_8.toString());
+                urlEncodedReferenceMetaData += (ReferenceConstants.rftNoteTag) + URLEncoder.encode(note, StandardCharsets.UTF_8.toString());
 
-            urlEncodedReferenceMetaData += ("&rft.language=en");
+            urlEncodedReferenceMetaData += (ReferenceConstants.rftDefaultLanguage);
 
         } catch (UnsupportedEncodingException e) {
             logger.error("Error while encoding reference metadata. ", e);

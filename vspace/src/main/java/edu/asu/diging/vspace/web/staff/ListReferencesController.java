@@ -26,9 +26,6 @@ public class ListReferencesController {
 
     @Autowired
     private IReferenceManager referenceManager;
-    
-    @Autowired
-    private static ReferenceMetadataRegistry refMetaDataRegistry;
 
     @RequestMapping("/staff/references/list")
     public String listSpacesWithoutNum(Model model,

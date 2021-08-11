@@ -87,10 +87,7 @@ public class ReferenceManager implements IReferenceManager {
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<Reference> references = referenceRepo.findAll(sortByRequestedField);
         
-        List<IReference> results = new ArrayList<>();
-        if(references != null) {
-            references.getContent().forEach(i -> results.add(i));
-        }
+        List<IReference> results = new ArrayList<>(references.getContent());
         return results;
     }
 

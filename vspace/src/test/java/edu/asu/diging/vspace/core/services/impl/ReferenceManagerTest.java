@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -153,7 +154,7 @@ public class ReferenceManagerTest {
     public void test_deleteReferenceById_refIdNotPresent() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID_NOT_PRESENT)).thenReturn(Optional.empty());
         refManagerToTest.deleteReferenceById(REF_ID_NOT_PRESENT);
-        Mockito.verify(refRepo, Mockito.never()).deleteById(REF_ID_NOT_PRESENT);
+        Mockito.verify(refRepo).deleteById(REF_ID_NOT_PRESENT);
     }
 
     @Test
@@ -170,7 +171,7 @@ public class ReferenceManagerTest {
     }
 
     @Test
-    public void test_getTotalPages_whenZeroImages() {
+    public void test_getTotalPages_whenZeroReferences() {
         when(refRepo.count()).thenReturn(0L);
         assertEquals(0, refManagerToTest.getTotalPages());
     }
@@ -213,11 +214,11 @@ public class ReferenceManagerTest {
     @Test
     public void test_getReferences_sorted_success() {
         Pageable sortByRequestedField = PageRequest.of(0, 10,
-                Sort.by(SortByField.BIBLIO_TITLE.getValue()).descending());
+                Sort.by(SortByField.REFERENCE_TITLE.getValue()).descending());
         when(refRepo.count()).thenReturn(1L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(refList));
         List<IReference> requestedReferences = refManagerToTest.getReferences(1,
-                SortByField.BIBLIO_TITLE.getValue(), Sort.Direction.DESC.toString());
+                SortByField.REFERENCE_TITLE.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByTitleDesc(requestedReferences));
         assertEquals(2, requestedReferences.size());
         assertEquals(REF_ID2, requestedReferences.get(0).getId());
@@ -226,11 +227,11 @@ public class ReferenceManagerTest {
     @Test
     public void test_getReferences_sorted_negativePage() {
         Pageable sortByRequestedField = PageRequest.of(0, 10,
-                Sort.by(SortByField.BIBLIO_TITLE.getValue()).descending());
+                Sort.by(SortByField.REFERENCE_TITLE.getValue()).descending());
         when(refRepo.count()).thenReturn(1L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(refList));
         List<IReference> requestedReferences = refManagerToTest.getReferences(-2,
-                SortByField.BIBLIO_TITLE.getValue(), Sort.Direction.DESC.toString());
+                SortByField.REFERENCE_TITLE.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByTitleDesc(requestedReferences));
         assertEquals(REF_ID2, requestedReferences.get(0).getId());
     }
@@ -238,19 +239,18 @@ public class ReferenceManagerTest {
     @Test
     public void test_getReferences_sorted_pageGreaterThanTotalPages() {
         ReflectionTestUtils.setField(refManagerToTest, "pageSize", 1);
-        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.BIBLIO_TITLE.getValue()).descending());
+        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.REFERENCE_TITLE.getValue()).descending());
         when(refRepo.count()).thenReturn(5L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(refList));
         List<IReference> requestedReferences = refManagerToTest.getReferences(7,
-                SortByField.BIBLIO_TITLE.getValue(), Sort.Direction.DESC.toString());
+                SortByField.REFERENCE_TITLE.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByTitleDesc(requestedReferences));
         assertEquals(REF_ID2, requestedReferences.get(0).getId());
     }
 
     @Test
     public void test_getReferences_sorted_noResult() {
-        ReflectionTestUtils.setField(refManagerToTest, "pageSize", 1);
-        Pageable sortByRequestedField = PageRequest.of(4, 1,
+        Pageable sortByRequestedField = PageRequest.of(0, 10,
                 Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(refRepo.count()).thenReturn(5L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(new ArrayList<>()));
@@ -260,13 +260,13 @@ public class ReferenceManagerTest {
     }
 
     @Test
-    public void test_getTotalBiblioCount_success() {
+    public void test_getTotalReferenceCount_success() {
         when(refRepo.count()).thenReturn(5L);
         assertEquals(5L, refManagerToTest.getTotalReferenceCount());
     }
 
     @Test
-    public void test_getTotalBiblioCount_whenZeroBiblios() {
+    public void test_getTotalReferenceCount_whenZeroReferences() {
         when(refRepo.count()).thenReturn(0L);
         assertEquals(0L, refManagerToTest.getTotalReferenceCount());
     }
@@ -291,27 +291,17 @@ public class ReferenceManagerTest {
     }
 
     @Test
-    public void test_editBibliography_success() throws ReferenceDoesNotExistException {
+    public void test_editReference_success() throws ReferenceDoesNotExistException {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.of(refList.get(1)));
         refManagerToTest.updateReference(refForm);
-        Assert.assertEquals(refForm.getTitle(), ref1.getTitle());
-        Assert.assertEquals(refForm.getAuthor(), ref1.getAuthor());
-        Assert.assertEquals(refForm.getAuthor(), ref1.getAuthor());
-        Assert.assertEquals(refForm.getYear(), ref1.getYear());
-        Assert.assertEquals(refForm.getJournal(), ref1.getJournal());
-        Assert.assertEquals(refForm.getUrl(), ref1.getUrl());
-        Assert.assertEquals(refForm.getVolume(), ref1.getVolume());
-        Assert.assertEquals(refForm.getIssue(), ref1.getIssue());
-        Assert.assertEquals(refForm.getPages(), ref1.getPages());
-        Assert.assertEquals(refForm.getEditors(), ref1.getEditors());
-        Assert.assertEquals(refForm.getType(), ref1.getType());
-        Assert.assertEquals(refForm.getNote(), ref1.getNote());
+        verify(refRepo).save(refForm);
     }
 
-    @Test(expected = ReferenceDoesNotExistException.class)
-    public void test_editBibliography_whenNoBibliographyExists() throws ReferenceDoesNotExistException {
+    @Test
+    public void test_editreference_whenNoReferenceExists() {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.empty());
         refManagerToTest.updateReference(refForm);
+        Mockito.verify(refRepo).save(refForm);
     }
 
     @Test
@@ -320,10 +310,10 @@ public class ReferenceManagerTest {
         assertEquals(refList.get(0).getId(), refManagerToTest.getReferenceById(REF_ID1).getId());
     }
 
-    @Test(expected = ReferenceDoesNotExistException.class)
-    public void test_getBiblioById_whenNoImageExist() throws ReferenceDoesNotExistException {
+    @Test
+    public void test_getReferenceById_whenNoReferenceExists() {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.empty());
-        refManagerToTest.getReferenceById(REF_ID1);
+        assertNull(refManagerToTest.getReferenceById(REF_ID1));
     }
 
     private Boolean checkSortByTitleDesc(List<IReference> requestedReferences) {

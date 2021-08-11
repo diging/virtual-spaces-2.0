@@ -45,7 +45,6 @@ public class ContentBlockManagerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
     }
 
     @Test
@@ -127,8 +126,9 @@ public class ContentBlockManagerTest {
         biblioBlock.setSlide(slide);
         
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
-        managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
+        IBiblioBlock resBiblio = managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
         Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
+        
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public enum SortByField {
     CREATION_DATE("creationDate"), FILENAME("filename"), NAME("name"), CREATED_BY("createdBy"), 
-    BIBLIO_TITLE("title"), BIBLIO_AUTHOR("author"), BIBLIO_YEAR("year"), BIBLIO_JOURNAL("journal");
+    REFERENCE_TITLE("title"), REFERENCE_AUTHOR("author"), REFERENCE_YEAR("year"), REFERENCE_JOURNAL("journal");
 
     private final String value;
 
