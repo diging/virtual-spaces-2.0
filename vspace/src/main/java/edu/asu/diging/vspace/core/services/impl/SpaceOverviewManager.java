@@ -56,10 +56,10 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
     }
 
     /**
-     * This method is used to fetch all linked spacelinks corresponding to a space(i.e. a
-     * space connected to other spaces)
+     * This method is used to fetch all linked spacelinks corresponding to a
+     * space(i.e. a space connected to other spaces)
      * 
-     *  @return a Map whose key is spaceId and value is list of spaceLinks connected
+     * @return a Map whose key is spaceId and value is list of spaceLinks connected
      *         with the spaceId.
      */
     @Override
@@ -69,11 +69,17 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
         Iterable<SpaceLinkDisplay> spaceToSpaceLinksList = spaceLinkDisplayRepository.findAll();
         for (SpaceLinkDisplay link : spaceToSpaceLinksList) {
             if (link.getLink() != null && link.getLink().getSourceSpace() != null) {
-                String spaceId = link.getLink().getSourceSpace().getId();
-                if (!spaceToSpaceLinksMap.containsKey(spaceId)) {
-                    spaceToSpaceLinksMap.put(spaceId, new HashSet<>());
+                String targerSpaceId = null;
+                if (link.getLink().getTargetSpace() != null) {
+                    targerSpaceId = link.getLink().getTargetSpace().getId();
                 }
-                spaceToSpaceLinksMap.get(spaceId).add(link);
+                String spaceId = link.getLink().getSourceSpace().getId();
+                if (targerSpaceId != spaceId) {
+                    if (!spaceToSpaceLinksMap.containsKey(spaceId)) {
+                        spaceToSpaceLinksMap.put(spaceId, new HashSet<>());
+                    }
+                    spaceToSpaceLinksMap.get(spaceId).add(link);
+                }
             }
         }
         return spaceToSpaceLinksMap;
