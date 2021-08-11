@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,9 +35,9 @@ public class SpaceOverviewController {
     @RequestMapping("/staff/overview")
     public String spaceOverview(HttpServletRequest request, Model model) throws JsonProcessingException {
 
-        Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap = spaceOverviewManager.getSpaceToModuleLinks();
+        Map<String, Set<ModuleLinkDisplay>> spaceToModuleLinksMap = spaceOverviewManager.getSpaceToModuleLinks();
 
-        Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap = spaceOverviewManager.getSpaceToSpaceLinks();
+        Map<String, Set<SpaceLinkDisplay>> spaceToSpaceLinksMap = spaceOverviewManager.getSpaceToSpaceLinks();
 
         Map<String, List<String>> spacesToSpacesAndModulesMap = spaceOverviewManager
                 .getSpacesToSpacesAndModulesMap(spaceToModuleLinksMap, spaceToSpaceLinksMap);

@@ -2,9 +2,11 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,16 +38,16 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
      *         with the spaceId.
      */
     @Override
-    public Map<String, List<ModuleLinkDisplay>> getSpaceToModuleLinks() {
+    public Map<String, Set<ModuleLinkDisplay>> getSpaceToModuleLinks() {
 
-        Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap = new HashMap<>();
+        Map<String, Set<ModuleLinkDisplay>> spaceToModuleLinksMap = new HashMap<>();
         Iterable<ModuleLinkDisplay> spaceToModuleLinksList = moduleLinkDisplayRepository.findAll();
 
         for (ModuleLinkDisplay link : spaceToModuleLinksList) {
             if (link.getLink() != null && link.getLink().getSpace() != null) {
                 String spaceId = link.getLink().getSpace().getId();
                 if (!spaceToModuleLinksMap.containsKey(spaceId)) {
-                    spaceToModuleLinksMap.put(spaceId, new ArrayList<>());
+                    spaceToModuleLinksMap.put(spaceId, new HashSet<>());
                 }
                 spaceToModuleLinksMap.get(spaceId).add(link);
             }
@@ -61,15 +63,15 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
      *         with the spaceId.
      */
     @Override
-    public Map<String, List<SpaceLinkDisplay>> getSpaceToSpaceLinks() {
+    public Map<String, Set<SpaceLinkDisplay>> getSpaceToSpaceLinks() {
 
-        Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap = new HashMap<>();
+        Map<String, Set<SpaceLinkDisplay>> spaceToSpaceLinksMap = new HashMap<>();
         Iterable<SpaceLinkDisplay> spaceToSpaceLinksList = spaceLinkDisplayRepository.findAll();
         for (SpaceLinkDisplay link : spaceToSpaceLinksList) {
             if (link.getLink() != null && link.getLink().getSourceSpace() != null) {
                 String spaceId = link.getLink().getSourceSpace().getId();
                 if (!spaceToSpaceLinksMap.containsKey(spaceId)) {
-                    spaceToSpaceLinksMap.put(spaceId, new ArrayList<>());
+                    spaceToSpaceLinksMap.put(spaceId, new HashSet<>());
                 }
                 spaceToSpaceLinksMap.get(spaceId).add(link);
             }
@@ -90,15 +92,15 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
      */
     @Override
     public Map<String, List<String>> getSpacesToSpacesAndModulesMap(
-            Map<String, List<ModuleLinkDisplay>> spaceToModuleLinksMap,
-            Map<String, List<SpaceLinkDisplay>> spaceToSpaceLinksMap) {
+            Map<String, Set<ModuleLinkDisplay>> spaceToModuleLinksMap,
+            Map<String, Set<SpaceLinkDisplay>> spaceToSpaceLinksMap) {
 
         Map<String, List<String>> spaceLinkMap = new LinkedHashMap<>();
         Iterable<Space> allSpacesList = spaceRepo.findAll();
         if (allSpacesList != null) {
             for (Space space : allSpacesList) {
-                List<ModuleLinkDisplay> spaceToModulelinksList = spaceToModuleLinksMap.get(space.getId());
-                List<SpaceLinkDisplay> spaceToSpaceLinksList = spaceToSpaceLinksMap.get(space.getId());
+                Set<ModuleLinkDisplay> spaceToModulelinksList = spaceToModuleLinksMap.get(space.getId());
+                Set<SpaceLinkDisplay> spaceToSpaceLinksList = spaceToSpaceLinksMap.get(space.getId());
                 List<String> listOfSpaceIdAndModuleIds = new ArrayList<>();
 
                 if (spaceToModulelinksList != null) {

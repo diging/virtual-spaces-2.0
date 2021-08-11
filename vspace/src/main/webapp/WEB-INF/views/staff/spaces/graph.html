@@ -32,6 +32,7 @@ width: 100%;
 //# sourceURL=graph.js
 var nodeJson = JSON.parse(jsonMap['nodesJson']);
 var linkJson = JSON.parse(jsonMap['linksJson']);
+console.log(linkJson);
 var w = window,
 d = document,
 e = d.documentElement,
@@ -63,11 +64,11 @@ force = d3.layout.force()
    for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
      n = _ref2[_j];
      if (typeof(l) != "undefined" && typeof(l.source) != "undefined" && typeof(n) != "undefined" && typeof(n.id) != "undefined" && l.source === n.id) {
-       l.source = n;
+       l.source = _j;
        continue;
      }
      if (typeof(l) != "undefined" && typeof(l.target) != "undefined" && typeof(n) != "undefined" && typeof(n.id) != "undefined" && l.target === n.id) {
-       l.target = n;
+       l.target = _j;
        continue;
      }
    }
