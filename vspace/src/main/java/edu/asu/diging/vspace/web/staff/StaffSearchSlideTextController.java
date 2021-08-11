@@ -15,9 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.StaffSearchSlideTextBlock;
-import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
 @Controller
@@ -48,7 +48,7 @@ public class StaffSearchSlideTextController {
             }
             slideTextFirstImageMap.put(slide.getId(), slideFirstImageId);
 
-            TextBlock slideFirstTextBlock = null;
+            ITextBlock slideFirstTextBlock = null;
 
             if (slide != null && slide.getFirstMatchedTextBlock(searchTerm)!= null) {
                 slideFirstTextBlock = slide.getFirstMatchedTextBlock(searchTerm);

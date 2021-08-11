@@ -5,33 +5,35 @@ import java.util.Map;
 
 public class StaffSearchModule {
 
-    private List<Module> module;
+    private List<Module> modules;
 
-    private Map<String, String> moduleFirstSlideFirstImage;
+    private Map<String, String> firstImageOfFirstSlideForModule;
 
-    private Map<String, Boolean> moduleAlertMessage;
+    private Map<String, Boolean> moduleAlertMessages;
 
-    public List<Module> getModule() {
-        return module;
+    public List<Module> getModules() {
+        return modules;
     }
 
-    public void setModule(List<Module> module) {
-        this.module = module;
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
     }
 
-    public Map<String, String> getModuleFirstSlideFirstImage() {
-        return moduleFirstSlideFirstImage;
+    public Map<String, String> getFirstImageOfFirstSlideForModule() {
+        return firstImageOfFirstSlideForModule;
     }
 
-    public void setModuleFirstSlideFirstImage(Map<String, String> moduleFirstSlideFirstImage) {
-        this.moduleFirstSlideFirstImage = moduleFirstSlideFirstImage;
+    public void setFirstImageOfFirstSlideForModule(Map<String, String> firstImageOfFirstSlideForModule) {
+        this.firstImageOfFirstSlideForModule = firstImageOfFirstSlideForModule;
     }
 
-    public Map<String, Boolean> getModuleAlertMessage() {
-        return moduleAlertMessage;
+    public Map<String, Boolean> getModuleAlertMessages() {
+        return moduleAlertMessages;
     }
 
-    public void setModuleAlertMessage(Map<String, Boolean> moduleAlertMessage) {
-        this.moduleAlertMessage = moduleAlertMessage;
+    public void setModuleAlertMessages(Map<String, Boolean> moduleAlertMessages) {
+        this.moduleAlertMessages = moduleAlertMessages;
     }
+
+   
 }

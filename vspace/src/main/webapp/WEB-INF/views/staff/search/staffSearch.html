@@ -108,9 +108,9 @@ anchor.append(span1);
 divtag.append(anchor);
 $("#spaceResultDisplay").append(divtag);
 }
-}
-});
-});
+ }
+  });
+    });
         
 $('.modulepage-selection').bootpag({
 	total: [[${moduleTotalPages}]],
@@ -141,13 +141,13 @@ $('.modulepage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 	    success: function(data) {
-		moduleList = data['module'];
-		moduleFirstSlideFirstImage = data['moduleFirstSlideFirstImage'];
-		moduleAlertMessage = data['moduleAlertMessage'];
+		moduleList = data['modules'];
+		moduleFirstSlideFirstImage = data['firstImageOfFirstSlideForModule'];
+		moduleAlertMessages = data['moduleAlertMessages'];
         $("#moduleResultDisplay").empty();
 for(let i=0;i<moduleList.length;i++)
 {
-var showModuleAlertMessage = moduleAlertMessage[moduleList[i].id];
+var showModuleAlertMessage = moduleAlertMessages[moduleList[i].id];
 if(!showModuleAlertMessage)
 {
 var divtag = $("<div></div>");
@@ -203,10 +203,10 @@ span3.append("The module has not been configured yet.");
 divtag.append(span3);
 $("#moduleResultDisplay").append(divtag);
 }
-}
-}
-});
-});
+ }
+  }
+   });
+    });
         
 $('.slidepage-selection').bootpag({
 	total: [[${slideTotalPages}]],
@@ -237,10 +237,8 @@ $('.slidepage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 		success: function(data) {
-		slideList = data['slide'];
-		slideFirstImage = data['slideFirstImage'];
-		console.log(slideList);
-		console.log(slideFirstImage);
+		slideList = data['slides'];
+		firstImageOfSlide = data['firstImageOfSlide'];
 		$("#slideResultDisplay").empty();
 for(let i=0;i<slideList.length;i++)
 {
@@ -251,7 +249,7 @@ anchor.attr('href',"[(@{'/staff/module/'})]"+slideList[i].module.id+'/slide/'+sl
 anchor.attr('class',"textDivStaff tab  btn btn-light");
 anchor.css('width','100%');
 var img = $("<img></img>");
-var slideFirstImageId = slideFirstImage[slideList[i].id];
+var slideFirstImageId = firstImageOfSlide[slideList[i].id];
 if(slideFirstImageId == null)
 {
 img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
@@ -278,9 +276,9 @@ anchor.append(span1);
 divtag.append(anchor);
 $("#slideResultDisplay").append(divtag);
 }
-}
-});
-});
+ }
+  });
+   });
 		  
 $('.slideTextPage-selection').bootpag({
 	total: [[${slideTextTotalPages}]],
@@ -344,9 +342,6 @@ span2.css('color','var(--dark-grey)');
 span1.append(span2);
 span1.append(slideTextList[i].name+'<br>');
 anchor.append(span1);
-var span3 = $("<span>"+'Text Block:'+"</span>");
-span3.css('color','var(--dark-grey)');
-span1.append(span3);
 firstMatchedTextBlock = slideTextFirstTextBlock[slideTextList[i].id];
 var span4 = $("<span></span>");
 span4.append(firstMatchedTextBlock);
@@ -355,10 +350,10 @@ anchor.append(span1);
 divtag.append(anchor);
 $("#slideTextResultDisplay").append(divtag);
 }
-}
-});
-});
-});
+ }
+  });
+   });
+    });
 </script>
 <style>
 .pagination>li>a {
@@ -590,9 +585,9 @@ a.nav-link.active.show {
 								</div> 
 								<span class="card-title"
                                 style="white-space: pre-wrap; line-break: anywhere;"><span 
-                                style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span
-                                style="color: var(--dark-grey)">Text Block:</span><span th:if="${not #lists.isEmpty(contents.contents)} AND ${contents?.getFirstMatchedTextBlock(searchWord)!=null}"
-                                > [(${contents?.getFirstMatchedTextBlock(searchWord).text})]</span>
+                                style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span 
+                                th:if="${not #lists.isEmpty(contents.contents)} AND ${contents?.getFirstMatchedTextBlock(searchWord)!=null}"
+                                >[(${contents?.getFirstMatchedTextBlock(searchWord).text})]</span>
 							    </span>
 							</a>
 						</div>

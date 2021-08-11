@@ -36,7 +36,7 @@ public class StaffSearchModuleController {
 
         List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
         StaffSearchModule staffSearch = new StaffSearchModule();
-        staffSearch.setModule(moduleList);
+        staffSearch.setModules(moduleList);
 
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
         Map<String, Boolean> moduleAlertMessage = new HashMap<>();
@@ -54,7 +54,6 @@ public class StaffSearchModuleController {
                         : null;
 
                 Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
-
                 String firstSlideImageId = null;
 
                 if (slide != null && slide.getFirstImageBlock() != null) {
@@ -63,8 +62,8 @@ public class StaffSearchModuleController {
                 moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
             }
         }
-        staffSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
-        staffSearch.setModuleAlertMessage(moduleAlertMessage);
+        staffSearch.setFirstImageOfFirstSlideForModule(moduleFirstSlideImage);
+        staffSearch.setModuleAlertMessages(moduleAlertMessage);
         return new ResponseEntity<StaffSearchModule>(staffSearch, HttpStatus.OK);
     }
 

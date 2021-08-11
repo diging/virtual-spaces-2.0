@@ -5,23 +5,23 @@ import java.util.Map;
 
 public class StaffSearchSlide {
     
-    private List<Slide> slide;
+    private List<Slide> slides;
 
-    private Map<String, String> slideFirstImage;
+    private Map<String, String> firstImageOfSlide;
 
-    public List<Slide> getSlide() {
-        return slide;
+    public List<Slide> getSlides() {
+        return slides;
     }
 
-    public void setSlide(List<Slide> slide) {
-        this.slide = slide;
+    public void setSlides(List<Slide> slides) {
+        this.slides = slides;
     }
 
-    public Map<String, String> getSlideFirstImage() {
-        return slideFirstImage;
+    public Map<String, String> getFirstImageOfSlide() {
+        return firstImageOfSlide;
     }
 
-    public void setSlideFirstImage(Map<String, String> slideFirstImage) {
-        this.slideFirstImage = slideFirstImage;
+    public void setFirstImageOfSlide(Map<String, String> firstImageOfSlide) {
+        this.firstImageOfSlide = firstImageOfSlide;
     }
 }

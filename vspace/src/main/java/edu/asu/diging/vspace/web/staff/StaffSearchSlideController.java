@@ -28,13 +28,13 @@ public class StaffSearchSlideController {
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Slide> slideSet = paginationForSlide(slidePagenum, searchTerm);
+        List<Slide> slideList = paginationForSlide(slidePagenum, searchTerm);
         StaffSearchSlide staffSearch = new StaffSearchSlide();
-        staffSearch.setSlide(slideSet);
+        staffSearch.setSlides(slideList);
 
         Map<String, String> slideFirstImage = new HashMap<>();
 
-        for (Slide slide : slideSet) {
+        for (Slide slide : slideList) {
 
             String slideFirstImageId = null;
 
@@ -43,7 +43,7 @@ public class StaffSearchSlideController {
             }
             slideFirstImage.put(slide.getId(), slideFirstImageId);
         }
-        staffSearch.setSlideFirstImage(slideFirstImage);
+        staffSearch.setFirstImageOfSlide(slideFirstImage);
         return new ResponseEntity<StaffSearchSlide>(staffSearch, HttpStatus.OK);
     }
 
