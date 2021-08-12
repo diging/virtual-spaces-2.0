@@ -39,12 +39,12 @@ public class PublicSearchSlideTextController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/exhibit/search/slideText")
-    public ResponseEntity<PublicSearchSlideText> searchInVspace(HttpServletRequest request,
+    public ResponseEntity<PublicSearchSlideTextBlock> searchInVspace(HttpServletRequest request,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-        PublicSearchSlideText publicSearchSlideText = new PublicSearchSlideText();
+        PublicSearchSlideTextBlock publicSearchSlideText = new PublicSearchSlideTextBlock();
         publicSearchSlideText.setSlideTextList(slideTextList);
         
         Map<String, String> slideTextFirstImageMap = new HashMap<>();
@@ -68,7 +68,7 @@ public class PublicSearchSlideTextController {
         }
         publicSearchSlideText.setSlideTextFirstImage(slideTextFirstImageMap);
         publicSearchSlideText.setSlideTextFirstTextBlock(slideTextFirstTextBlockMap);
-        return new ResponseEntity<PublicSearchSlideText>(publicSearchSlideText, HttpStatus.OK);
+        return new ResponseEntity<PublicSearchSlideTextBlock>(publicSearchSlideText, HttpStatus.OK);
     }
 
     /**

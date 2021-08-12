@@ -5,7 +5,7 @@ import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
-public class PublicSearchSlideText {
+public class PublicSearchSlideTextBlock {
     
     private List<Slide> slideTextList;
     

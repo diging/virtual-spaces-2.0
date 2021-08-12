@@ -52,13 +52,13 @@ public class PublicSearchController {
     }
     
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in space table and return the published spaces corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) in spaces and return the published spaces corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string.
      * 
      * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param model        This the object of Model attribute in spring spring MVC.
+     * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
@@ -70,14 +70,14 @@ public class PublicSearchController {
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in module table and return the module corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) in modules and return the module corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string. This also filters modules which are linked to the spaces.
      * 
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
-     * @param model         This the object of Model attribute in spring spring MVC.
+     * @param model         This the object of Model attribute in spring MVC.
      * @param searchTerm    This is the search string which is being searched.
      */
     private void paginationForModule(String modulePagenum, Model model, String searchTerm) {
@@ -105,14 +105,14 @@ public class PublicSearchController {
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in slide table and return the slides corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) in slides and return the slides corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string. This also filters Slides from modules 
      * which are linked to the spaces.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
-     * @param model        This the object of Model attribute in spring spring MVC.
+     * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSlide(String slidePagenum, Model model, String searchTerm) {
@@ -140,16 +140,15 @@ public class PublicSearchController {
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in ContentBlock table and return the slides
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) in contentBlocks and return the slides
      * corresponding to the page number specified in the input
      * parameter(spacePagenum) whose text block contains the search string.
      * This also filters Slides from modules which are linked to the spaces.
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
-     * @param model            This the object of Model attribute in spring spring
-     *                         MVC.
+     * @param model            This the object of Model attribute in spring MVC.
      * @param searchTerm       This is the search string which is being searched.
      */
     private void paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
