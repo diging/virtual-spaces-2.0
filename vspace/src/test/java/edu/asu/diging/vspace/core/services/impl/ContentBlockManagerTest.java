@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -122,13 +123,20 @@ public class ContentBlockManagerTest {
         biblioBlock.setBiblioTitle("TestTitle");
         biblioBlock.setDescription("Test Description");
         
+        IBiblioBlock biblioBlockWithId = new BiblioBlock();
+        biblioBlockWithId.setId("CON00000001");
+        biblioBlockWithId.setBiblioTitle("TestTitle");
+        biblioBlockWithId.setDescription("Test Description");
+        
         biblioBlock.setContentOrder(contentOrder);
         biblioBlock.setSlide(slide);
         
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
+        when(biblioBlockRepo.save((BiblioBlock)biblioBlock)).thenReturn((BiblioBlock) biblioBlockWithId);
         IBiblioBlock resBiblio = managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
-        Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
-        
+        assertEquals(resBiblio.getId(), biblioBlockWithId.getId());
+        assertEquals(resBiblio.getBiblioTitle(), biblioBlockWithId.getBiblioTitle());
+        assertEquals(resBiblio.getDescription(), biblioBlockWithId.getDescription());
     }
 
 }
