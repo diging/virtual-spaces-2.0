@@ -29,6 +29,7 @@ public class SpaceLink extends VSpaceElement implements ISpaceLink {
     @JsonIgnore
     @ManyToOne(targetEntity=Space.class)
     @JoinColumn(name = "source_space_id")
+    @NotFound(action=NotFoundAction.IGNORE)
     private ISpace sourceSpace;
 
     @ManyToOne(targetEntity=Space.class)
