@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.config;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -59,7 +57,7 @@ public class ThymeleafConfig {
     public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
-        viewResolver.setCharacterEncoding(Charset.defaultCharset().toString());
+        viewResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         return viewResolver;
     }
 }
