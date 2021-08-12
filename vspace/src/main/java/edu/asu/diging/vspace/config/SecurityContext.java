@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.config;
 
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 
@@ -24,6 +28,11 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding(StandardCharsets.UTF_8.name());
+        filter.setForceEncoding(true);
+        http.addFilterBefore(filter,CsrfFilter.class);
+        
         http.formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
