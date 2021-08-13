@@ -115,5 +115,29 @@ public class ContentBlockManagerTest {
         Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
 
     }
+    
+    @Test
+    public void test_adjustContentOrder_success() throws BlockDoesNotExistException {
+        String contentBlockId = "contentBlockId_2";
+        Optional<ContentBlock> contentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("contentBlockId_2")).thenReturn(contentBlockOptional);
+        managerToTest.adjustContentOrder(contentBlockId,Integer.valueOf(2));
+        assertEquals(Integer.valueOf(2), contentBlockOptional.get().getContentOrder());
+        Mockito.verify(contentBlockRepository).save(contentBlockOptional.get());
+    }
+
+    @Test(expected = BlockDoesNotExistException.class)
+    public void test_adjustContentOrder_forNonExistentId() throws BlockDoesNotExistException {
+        String contentBlockId = "notARealId";
+        Mockito.doThrow(BlockDoesNotExistException.class).when(contentBlockRepository).findById(contentBlockId);
+        managerToTest.adjustContentOrder(contentBlockId,Integer.valueOf(2));
+    }
+
+    @Test
+    public void test_adjustContentOrder_whenIdIsNull() throws BlockDoesNotExistException {
+        String contentBlockId = null;
+        managerToTest.adjustContentOrder(contentBlockId,Integer.valueOf(2));
+        Mockito.verify(contentBlockRepository, Mockito.never()).findById(contentBlockId);
+    }
 
 }

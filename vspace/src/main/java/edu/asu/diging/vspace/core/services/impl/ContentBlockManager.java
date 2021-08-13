@@ -320,7 +320,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * 
      *  @param blockId - id of block whose content order needs to be adjusted.
      *  @param contentOrder - value with which contentOrder of block needs to be updated.
-     *           functions returns nothing.
+     *  
      */
 
     @Override
@@ -328,12 +328,14 @@ public class ContentBlockManager implements IContentBlockManager {
         if (blockId == null) {
             return;
         }
-        try {
-            contentBlockRepository.adjustContentOrder(blockId, contentOrder);        
-        } catch (EmptyResultDataAccessException e) {
-            throw new BlockDoesNotExistException(e);
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            ContentBlock contentBlockObj = contentBlock.get();
+            contentBlockObj.setContentOrder(contentOrder);
+            contentBlockRepository.save(contentBlockObj);
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
         }
-
     }
     
     /**
