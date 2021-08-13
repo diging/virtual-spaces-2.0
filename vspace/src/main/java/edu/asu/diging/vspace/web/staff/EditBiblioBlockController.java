@@ -21,10 +21,11 @@ public class EditBiblioBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/edit", method = RequestMethod.POST)
-    public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestBody BiblioBlock biblioBlockData) throws IOException {
-        IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(biblioBlockData.getId());
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/edit", method = RequestMethod.POST)
+    public ResponseEntity<String> editBiblioBlock(@PathVariable("id") String slideId,
+            @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId,
+            @RequestBody BiblioBlock biblioBlockData) throws IOException {
+        IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(biblioId);
         biblioBlock.setBiblioTitle(biblioBlockData.getBiblioTitle());
         biblioBlock.setDescription(biblioBlockData.getDescription());
         contentBlockManager.updateBiblioBlock((BiblioBlock) biblioBlock);

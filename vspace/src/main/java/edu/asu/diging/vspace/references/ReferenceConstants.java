@@ -2,47 +2,44 @@ package edu.asu.diging.vspace.references;
 
 public interface ReferenceConstants {
     
-    String defaultUrlVersion = "url_ver=Z39.88-2004";
+    String DEFAULT_URL_VERSION = "url_ver=Z39.88-2004";
     
-    String defaultCtxVersion = "ctx_ver=Z39.88-2004";
+    String DEFAULT_CTX_VERSION = "ctx_ver=Z39.88-2004";
     
-    String defaultRfrId = "info:sid/zotero.org:2";
+    String DEFAULT_RFR_ID = "info:sid/zotero.org:2";
     
-    String defaultRftValFmt = "info:ofi/fmt:kev:mtx:dissertation";
+    String DEFAULT_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:dissertation";
     
-    String rfrIdTag = "&rfr_id=";
+    String RFR_ID_TAG = "&rfr_id=";
     
-    String rftValFmtTag = "&rft_val_fmt=";
+    String RFT_VAL_FMT_TAG = "&rft_val_fmt=";
     
-    String rftDegreeTag = "&rft.degree=";
+    String RFT_DEGREE_TAG = "&rft.degree=";
     
-    String rftTitleTag = "&rft.title=";
+    String RFT_TITLE_TAG = "&rft.title=";
     
-    String rftAuthorTag = "&rft.au=";
+    String RFT_AUTHOR_TAG = "&rft.au=";
     
-    String rftDateTag = "&rft.date=";
+    String RFT_DATE_TAG = "&rft.date=";
     
-    String rftJournalTag = "&rft.jtitle=";
+    String RFT_JOURNAL_TAG = "&rft.jtitle=";
     
-    String rftIdTag = "&rft_id=";
+    String RFT_ID_TAG = "&rft_id=";
     
-    String rftVolumeTag = "&rft.volume=";
+    String RFT_VOLUME_TAG = "&rft.volume=";
     
-    String rftIssueTag = "&rft.issue=";
+    String RFT_ISSUE_TAG = "&rft.issue=";
     
-    String rftPagesTag = "&rft.pages=";
+    String RFT_PAGES_TAG = "&rft.pages=";
     
-    String rftStartPageTag = "&rft.spage=";
+    String RFT_START_PAGE_TAG = "&rft.spage=";
     
-    String rftEndPageTag = "&rft.epage=";
+    String RFT_END_PAGE_TAG = "&rft.epage=";
     
-    String rftEditorTag = "&rft.editors=";
+    String RFT_EDITOR_TAG = "&rft.editors=";
     
-    String rftNoteTag = "&rft.note=";
+    String RFT_NOTE_TAG = "&rft.note=";
     
-    String rftDefaultLanguage = "&rft.language=en";
-    
-    
-    
+    String RFT_DEFAULT_LANGUAGE = "&rft.language=en";
     
 }

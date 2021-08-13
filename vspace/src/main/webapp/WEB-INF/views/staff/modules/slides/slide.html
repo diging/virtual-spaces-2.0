@@ -1032,7 +1032,7 @@ $(document).ready(function() {
         var token =  $('input[name="_csrf"]').attr('value');
         
         $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/edit'})]",
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'+ ${blockId}+'/edit'})]",
             type: 'POST',
             cache       : false,
             contentType : 'application/json; charset=utf-8',

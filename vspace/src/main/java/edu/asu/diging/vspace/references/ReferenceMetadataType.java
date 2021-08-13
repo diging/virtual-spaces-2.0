@@ -1,5 +1,5 @@
 package edu.asu.diging.vspace.references;
 
-public enum ReferenceMetaDataType {
+public enum ReferenceMetadataType {
     DEFAULT;
 }

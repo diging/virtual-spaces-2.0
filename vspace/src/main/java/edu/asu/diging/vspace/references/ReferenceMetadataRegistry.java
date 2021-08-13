@@ -15,7 +15,7 @@ public class ReferenceMetadataRegistry {
     @Autowired
     private List<ReferenceMetadataProvider> referenceMetadataProviders;
     
-    private Map<ReferenceMetaDataType, ReferenceMetadataProvider> map = new HashMap<>();
+    private Map<ReferenceMetadataType, ReferenceMetadataProvider> map = new HashMap<>();
     
     @PostConstruct
     public void init() {
@@ -24,13 +24,12 @@ public class ReferenceMetadataRegistry {
         }
     }
     
-    public ReferenceMetadataProvider getProvider(ReferenceMetaDataType refMetaDataType) {
+    public ReferenceMetadataProvider getProvider(ReferenceMetadataType refMetaDataType) {
         return map.get(refMetaDataType);
     }
     
-    public ReferenceMetadataProvider getProvider(String metaDataType) {
-        metaDataType = metaDataType.toUpperCase();
-        ReferenceMetaDataType refMetaDataType = ReferenceMetaDataType.valueOf(metaDataType);
+    public ReferenceMetadataProvider getProvider(String metadataType) {
+        ReferenceMetadataType refMetaDataType = ReferenceMetadataType.valueOf(metadataType.toUpperCase());
         return getProvider(refMetaDataType);
     }
     

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
@@ -29,14 +28,13 @@ public class AddReferenceController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/biblio/{biblioId}/reference/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
+    public ResponseEntity<Reference> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
             @RequestBody Reference reference, Model model) throws JsonProcessingException {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.saveReference(biblio, reference);
-        ObjectMapper mapper = new ObjectMapper();
-        return new ResponseEntity<>(mapper.writeValueAsString(ref), HttpStatus.OK);
+        return new ResponseEntity<Reference>((Reference) ref, HttpStatus.OK);
     }
 
 }

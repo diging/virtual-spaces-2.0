@@ -8,7 +8,7 @@
         <h1>Edit Reference: [[${referenceData.title}]]</h1>
         
         <form method="POST"
-        	th:action='@{|/staff/reference/${referenceId}/edit|}' th:object="${referenceData}"
+        	th:action='@{|/staff/reference/${referenceData.id}/edit|}' th:object="${referenceData}"
         	style="margin-top: 40px">
             
             <div class="form-group row">
@@ -68,7 +68,7 @@
 			</div>
 
             <button class="btn primary-btn" type="submit" value="submit">Save Reference</button>
-            <a th:href="@{|/staff/display/reference/${referenceId}|}" class="btn btn-light">Cancel</a>
+            <a th:href="@{|/staff/display/reference/${referenceData.id}|}" class="btn btn-light">Cancel</a>
         </form>
     </div>
 </body>

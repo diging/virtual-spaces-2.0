@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
-import edu.asu.diging.vspace.references.ReferenceMetadataRegistry;
 
 @Controller
 public class ListReferencesController {
@@ -34,19 +33,19 @@ public class ListReferencesController {
         return String.format("redirect:/staff/references/list/1?sort=%s&order=%s",sortedBy,order);
     }
 
-    @RequestMapping("/staff/references/list/{page}")
+    @RequestMapping("/staff/references/list/{page}?sort=%s&order=%s")
     public String listSpaces(@PathVariable(required = false) String page,
             @RequestParam(value = "sort", required = false) String sortedBy,
             @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
-        int pageNo;
+        
         page = StringUtils.isEmpty(page) ? "1" : page;
+        int pageNo;
         try {
             pageNo = referenceManager.validatePageNumber(Integer.parseInt(page));
         } catch (NumberFormatException numberFormatException){
             pageNo = 1;
         }
-        List<IReference> references;
-        references = referenceManager.getReferences(pageNo, sortedBy, order);
+        List<IReference> references = referenceManager.getReferences(pageNo, sortedBy, order);
         
         model.addAttribute("totalPages", referenceManager.getTotalPages());
         model.addAttribute("currentPageNumber", pageNo);
