@@ -59,6 +59,36 @@
     }
 }
 
+.imgResizeDiv {
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 90%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.imgResizeDiv:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
 .barPosition {
     top: 25px;
 }
@@ -131,9 +161,51 @@
 </head>
 
 <body>
-    <div layout:fragment="content">
+    <div id="mainDivContent" layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
+			
+		function toggleImgSize(isClicked){
+			var maxImgWidth = $(window).width();
+			var spaceWidth = $("#bgImage").css("width");
+			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isClicked) {
+				isResizeImgBtnClicked = -isResizeImgBtnClicked;
+				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
+			}
+			// resize the image to max width
+			var spaceImg = $("#space");
+			if (isResizeImgBtnClicked == 1) {
+				$("#toggleImgClass").attr('class', "icon-collapse secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$("#space").remove();
+					$("#mainDivContent").append(spaceImg);
+					$(".spaceClass").css("display", ""); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", maxImgWidth);
+					$(".spaceClass").css("height", "");
+					$("#Module_1").css("height", "");
+					$("#Module_1").css("min-height", "0");
+					$("#Module_1").css("margin-bottom", "0px");
+				}
+        		}
+			else {
+				$("#toggleImgClass").attr('class', "icon-expand secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$("#space").remove();
+					$(".spaceClass").children().first().append(spaceImg);
+					$(".spaceClass").css("display", "flex"); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", spaceWidth);
+					$('#bgImage').width('100%');
+					$(".spaceClass").css("height", "800px");
+					$("#Module_1").css("margin-bottom", "60px");
+				}
+			}
+			$("#space a").remove();        
+			drawLinks();
+		}
 
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
@@ -172,14 +244,41 @@
 		    }
 		}
 		
+		function setCookie(name,value,days) {
+		    var expires = "";
+		    if (days) {
+		        var date = new Date();
+		        date.setTime(date.getTime() + (days*24*60*60*1000));
+		        expires = "; expires=" + date.toUTCString();
+		    }
+		    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+		}
+		
+		function getCookie(name) {
+		    var nameEq = name + "=";
+		    var cookieArray = document.cookie.split(';');
+		    for(var i=0;i < cookieArray.length;i++) {
+		        var currCookie = cookieArray[i].trim();
+		        if (currCookie.startsWith(nameEq)) {
+		        	return currCookie.substring(nameEq.length,currCookie.length);
+		        }
+		    }
+		    return null;
+		}
+		
 		$(window).on("load", function() {
-		    let spaceHeight = $("#bgImage").css("height");
-		    $("#Module_1").css("height",spaceHeight);
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isResizeImgBtnClicked == "") {
+				setCookie('isResizeImgBtnClicked', -1, null);
+			}
+		    	let spaceHeight = $("#bgImage").css("height");
+		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
 				$("#space a").remove();
+		    		drawLinks();
+		    	});
 		    	drawLinks();
-		    });
-		    drawLinks();
+		    	toggleImgSize(false);
 		});
 		
 		function drawLinks() {
@@ -291,6 +390,14 @@
             })
 		}
 		</script>
+		<div class="imgResizeDiv">
+                <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+                    onclick="toggleImgSize(true)">
+                    <span class="icon-expand secondary"
+                        id="toggleImgClass" style="left: -4px;"></span> <span
+                        class="tooltiptext">Resize Image</span>
+                </button>
+            </div>
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -299,7 +406,7 @@
                 <h6
                     th:if="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.customMessage}]]</h6>
                 <h6
-                    th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode.value}]]</h6>
+                    th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
                 <div id="mySidenav" class="sidenav">
@@ -314,7 +421,7 @@
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; margin-top: -50px; display: flex; justify-content: center; padding-top: 10px;">
+                    style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
@@ -361,7 +468,7 @@
                                 <span class="icon-grid-dots moduleBarPosition"></span>
                             </div>
                         </div>
-                        <div class="text-Div">
+                        <div class="text-Div" >
                             <h3 class="spaceName">
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"
