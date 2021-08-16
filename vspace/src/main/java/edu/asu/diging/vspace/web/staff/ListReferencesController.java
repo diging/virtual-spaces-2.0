@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,14 +26,7 @@ public class ListReferencesController {
     private IReferenceManager referenceManager;
 
     @RequestMapping("/staff/references/list")
-    public String listSpacesWithoutNum(Model model,
-            @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order) {
-        return String.format("redirect:/staff/references/list/1?sort=%s&order=%s",sortedBy,order);
-    }
-
-    @RequestMapping("/staff/references/list/{page}?sort=%s&order=%s")
-    public String listSpaces(@PathVariable(required = false) String page,
+    public String listSpaces(@RequestParam(value = "page", required = false) String page,
             @RequestParam(value = "sort", required = false) String sortedBy,
             @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
         

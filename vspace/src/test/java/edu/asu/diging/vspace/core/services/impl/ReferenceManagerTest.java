@@ -298,7 +298,7 @@ public class ReferenceManagerTest {
     }
 
     @Test
-    public void test_editreference_whenNoReferenceExists() {
+    public void test_editReference_whenNoReferenceExists() {
         Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.empty());
         refManagerToTest.updateReference(refForm);
         Mockito.verify(refRepo).save(refForm);

@@ -43,19 +43,19 @@ public class DeleteBiblioBlockController {
 
         if(slide==null) {
             logger.warn("Slide Id does not exist, bad request.");
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         
         if(module==null) {
             logger.warn("Module Id does not exist, bad request.");
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         
         try {
             contentBlockManager.deleteBiblioBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Biblio Id does not exist, bad request.", e);
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);

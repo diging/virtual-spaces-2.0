@@ -73,6 +73,8 @@ function onDoubleClick(e){
     	
     	   var title = $("div.open p span:eq(0)").text();
     	   var desc = $("div.open p span:eq(1)").text();  
+    	   var refListDiv = $(".open div").html();
+    	   
     	    //showing the edit bibliography form with all the respective values
     	    $("#editBiblioAlert").show();
     	
@@ -82,10 +84,11 @@ function onDoubleClick(e){
     	    formDataCancel = new FormData();
     	    formDataCancel.append('biblioTitle', title);
     	    formDataCancel.append('description', desc);
+    	    formDataCancel.append('refListDiv', refListDiv);
     	    //remove card border
           $(".open").css('display', 'none');
           $(".open").css('overflow-y', 'scroll');
-          $(".open").css('max-height', '200px');	
+          	
     } else if(divName.includes("referenceDivStaff")){
 	   $(e.target).closest('.referenceDivStaff').addClass("open");
 	   var description = $("div.open p:eq(0)").text();
@@ -731,7 +734,7 @@ $(document).ready(function() {
             	data = JSON.parse(data);
             	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span>'
                 		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;">' +
-                		+ '<a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                		+ '<a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><i style="color: var(--error);" class="icon-trash error"></i></a></p></div>');
 
             	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             
@@ -815,7 +818,7 @@ $(document).ready(function() {
 						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
 						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
 						+ 'Note: <span>' + data.note + '</span>'
-                		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="icon-trash error"></i></a></p></div>');
 
             	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             	var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -926,8 +929,10 @@ $(document).ready(function() {
         // clear biblio box and buttons
         $(".open").empty();
        	$(".open").append('<p class="col-md-10">Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, Description: <span>' + formData.get('description')
-       			+ '</span></p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+       			+ '</span></p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><i style="color: var(--error);" class="icon-trash error"></i></a>');
 
+       	$(".open").append('<div id="referenceSpace" class="col-md-10">'+formData.get('refListDiv')) + '</div>';
+		
        	//reset border of the card
         //rebind event handlers
         $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1024,6 +1029,7 @@ $(document).ready(function() {
         formData.append('biblioTitle', title);
         formData.append('description', desc);
         formData.append('id', blockId);
+        
         $("#editBiblioAlert").hide();
         
         var object = {};
@@ -1031,8 +1037,10 @@ $(document).ready(function() {
         var jsonData = JSON.stringify(object);
         var token =  $('input[name="_csrf"]').attr('value');
         
+        var refListDiv = $(".open div:eq(0)").html();
+        formData.append('refListDiv', refListDiv);
         $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'+ ${blockId}+'/edit'})]",
+            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + blockId + ['/edit'],
             type: 'POST',
             cache       : false,
             contentType : 'application/json; charset=utf-8',
@@ -1074,7 +1082,7 @@ $(document).ready(function() {
       var editors = $("#editEditorsRef").val();
       var type = $("#editTypeRef").val();
       var note = $("#editNoteRef").val();
-      var blockId = $(".open").attr("id");
+      var refBlockId = $(".open").attr("id");
       
       formData.append('title', title);
       formData.append('author', author);
@@ -1087,7 +1095,7 @@ $(document).ready(function() {
       formData.append('editors', editors);
       formData.append('type', type);
       formData.append('note', note);
-      formData.append('id', blockId);
+      
       $("#editReferenceAlert").hide();
       var biblioBlockId = $('#currentBiblioId').attr('value');
       
@@ -1097,7 +1105,7 @@ $(document).ready(function() {
       var token =  $('input[name="_csrf"]').attr('value');
       
       $.ajax({
-          url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/edit'],
+          url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId + ['/edit'],
           type: 'POST',
           cache       : false,
           contentType : 'application/json; charset=utf-8',
@@ -1108,7 +1116,7 @@ $(document).ready(function() {
           data: jsonData,
           success: function(data) {
               //replace Reference box with new values
-              updateReferenceBox(blockId, formData)
+              updateReferenceBox(refBlockId, formData)
               $(".open").removeClass("open");
          },
          error: function(data) {
@@ -1129,8 +1137,6 @@ $(window).on('load', function () {
 	var divWindow = $(".valueDiv");
 	$(".deleteText").css('position', 'absolute');
 	$(".deleteText").css('right', '0');
-	$(".deleteBiblio").css('position', 'absolute');
-	$(".deleteBiblio").css('right', '0px');
 	var images = $(".imgDiv");
 	resizeImage(images);
 	
@@ -1845,7 +1851,7 @@ $(window).on('load', function () {
 						Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, Description: <span>[[${contents.description}]]</span>
 					</p>
 					<input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
-					<a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
+					<a class="btn deleteBiblio col-md-1" href="javascript:;" style="position:absolute; right:2.3%;"> <span
 						class="icon-trash error"></span>
 					</a>
 					<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
