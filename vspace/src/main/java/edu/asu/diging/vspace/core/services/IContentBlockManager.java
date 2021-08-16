@@ -8,6 +8,7 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
+import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -41,5 +42,5 @@ public interface IContentBlockManager {
     
     Integer findMaxContentOrder(String slideId);
     
-    void adjustContentOrder(String blockId, Integer contentOrder) throws BlockDoesNotExistException;
+    void adjustContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
 }

@@ -162,43 +162,55 @@ function uploadImage() {
 }
 
 $(document).ready(function() {
-	$('#slideSpace').sortable({
-		update: function(event,ui)
-		{
-			$(this).children().each(function(index,element){
-				var blockId;
-				if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined")
-					{
-					blockId=$(element).attr('id');
-					} 
-				else
-					{
-					blockId = $(element.innerHTML).filter('div').attr('id');
-					}
-				if($(element.innerHTML).filter('div').attr('data-position') != index)
-					{
-					 var formData = new FormData();
-				     formData.append('contentOrder', index);
-				      $.ajax({
-				        enctype: 'multipart/form-data',
-				     // ------------- adjusting content order of blocks if their position changed after dragging ----------
-				        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/adjustContentOrder/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-				        type: 'POST',
-				        cache       : false,
-				        contentType : false,
-				        processData : false,
-				        data: formData,
-				        success: function(data) {
-				        },
-				        error: function(data) {
-				        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		                	$('.error').append(alert);
-				        }
-				    });
-					}
-			});
-		}
-	});
+$('#slideSpace').sortable({
+update: function(event,ui)
+{
+var jsonObj = [];
+var blockId;
+$(this).children().each(function(index,element){
+if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined")
+{
+blockId=$(element).attr('id');
+} 
+else
+{
+blockId = $(element.innerHTML).filter('div').attr('id');
+}
+if($(element.innerHTML).filter('div').attr('data-position') != index)
+{
+item = {}
+item ["id"] = blockId;
+item ["contentOrder"] = index;
+jsonObj.push(item);
+}
+});
+var jsonData = JSON.stringify(jsonObj);
+var token = $('input[name="_csrf"]').attr('value');
+$.ajax({
+// ------------- adjusting content order of blocks if their position changed after dragging ----------
+url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/adjustContentOrder'})]",
+type: 'POST',
+cache       : false,
+contentType: 'application/json; charset=utf-8',
+processData :false,
+headers:{
+'X-CSRF-Token':token
+},
+data: jsonData,
+success: function(data) {
+for(let i=0;i<data.length;i++)
+{
+$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+}
+},
+error: function(data) {
+var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+$('.error').append(alert);
+}
+});
+}
+});
+	
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
 		$('#choiceSpace').show();

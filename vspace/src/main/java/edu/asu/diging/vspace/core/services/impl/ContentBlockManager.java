@@ -324,17 +324,28 @@ public class ContentBlockManager implements IContentBlockManager {
      */
 
     @Override
-    public void adjustContentOrder(String blockId, Integer contentOrder) throws BlockDoesNotExistException {
-        if (blockId == null) {
-            return;
-        }
-        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
-        if (contentBlock.isPresent()) {
-            ContentBlock contentBlockObj = contentBlock.get();
-            contentBlockObj.setContentOrder(contentOrder);
-            contentBlockRepository.save(contentBlockObj);
-        } else {
-            throw new BlockDoesNotExistException("Block Id not present");
+    public void adjustContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
+        
+        if(contentBlockList!=null)
+        {
+            List<ContentBlock> contentBlocks = new ArrayList<>();
+            for(ContentBlock eachBlock:contentBlockList )
+            {
+                String blockId = eachBlock.getId();
+                int contentOrder = eachBlock.getContentOrder();
+                if (blockId == null) { 
+                    return;
+                }
+                Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+                if (contentBlock.isPresent()) {
+                    ContentBlock contentBlockObj = contentBlock.get();
+                    contentBlockObj.setContentOrder(contentOrder);
+                    contentBlocks.add(contentBlockObj);  
+                } else {
+                    throw new BlockDoesNotExistException("Block Id not present");
+                }
+            }
+            contentBlockRepository.saveAll(contentBlocks);
         }
     }
     
