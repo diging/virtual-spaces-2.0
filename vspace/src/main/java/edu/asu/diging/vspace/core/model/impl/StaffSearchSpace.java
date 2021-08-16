@@ -4,13 +4,13 @@ import java.util.List;
 
 public class StaffSearchSpace {
     
-    private List<Space> space;
+    private List<Space> spaces;
 
-    public List<Space> getSpace() {
-        return space;
+    public List<Space> getSpaces() {
+        return spaces;
     }
 
-    public void setSpace(List<Space> space) {
-        this.space = space;
+    public void setSpaces(List<Space> spaces) {
+        this.spaces = spaces;
     }
 }

@@ -35,18 +35,18 @@ public class StaffSearchController {
         paginationForSlideText(slideTextPagenum, model, searchTerm);
 
         model.addAttribute("searchWord", searchTerm);
-        
+
         return "/staff/search/staffSearch";
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in space table and return the spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the spaces corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string.
      * 
      * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param model        This the object of Model attribute in spring spring MVC.
+     * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
@@ -54,18 +54,18 @@ public class StaffSearchController {
         model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
         model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
         model.addAttribute("spaceSearchResults", spacePage.getContent());
-        model.addAttribute("spaceCount",spacePage.getTotalElements());
+        model.addAttribute("spaceCount", spacePage.getTotalElements());
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in module table and return the module corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the module corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string.
      * 
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
-     * @param model         This the object of Model attribute in spring spring MVC.
+     * @param model         This the object of Model attribute in spring MVC.
      * @param searchTerm    This is the search string which is being searched.
      */
     private void paginationForModule(String modulePagenum, Model model, String searchTerm) {
@@ -73,17 +73,17 @@ public class StaffSearchController {
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
         model.addAttribute("moduleSearchResults", modulePage.getContent());
-        model.addAttribute("moduleCount",modulePage.getTotalElements());
+        model.addAttribute("moduleCount", modulePage.getTotalElements());
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in slide table and return the slides corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
-     * @param model        This the object of Model attribute in spring spring MVC.
+     * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSlide(String slidePagenum, Model model, String searchTerm) {
@@ -95,15 +95,15 @@ public class StaffSearchController {
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in ContentBlock table and return the slides
-     * corresponding to the page number specified in the input
-     * parameter(spacePagenum) whose text block contains the search string
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose text block contains the
+     * search string
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
-     * @param model            This the object of Model attribute in spring spring
-     *                         MVC.
+     * @param model            This the object of Model attribute in spring MVC.
+     * 
      * @param searchTerm       This is the search string which is being searched.
      */
     private void paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {

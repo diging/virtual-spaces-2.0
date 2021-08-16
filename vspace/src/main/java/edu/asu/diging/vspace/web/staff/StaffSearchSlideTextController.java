@@ -56,14 +56,14 @@ public class StaffSearchSlideTextController {
             slideTextFirstTextBlockMap.put(slide.getId(), slideFirstTextBlock.getText());
 
         }
-        staffSearch.setSlideTextFirstImage(slideTextFirstImageMap);
-        staffSearch.setSlideTextFirstTextBlock(slideTextFirstTextBlockMap);
+        staffSearch.setSlideToFirstImageMap(slideTextFirstImageMap);
+        staffSearch.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
         return new ResponseEntity<StaffSearchSlideTextBlock>(staffSearch, HttpStatus.OK);
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in ContentBlock table and return the slides
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides
      * corresponding to the page number specified in the input
      * parameter(spacePagenum) whose text block contains the search string
      * 

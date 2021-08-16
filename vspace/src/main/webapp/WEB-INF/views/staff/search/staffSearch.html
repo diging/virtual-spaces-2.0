@@ -77,7 +77,7 @@ $('.spacepage-selection').bootpag({
 	        $(".loader").hide();
 	        },
 		success: function(data) {
-		spaceList = data['space'];
+		spaceList = data['spaces'];
 		$("#spaceResultDisplay").empty();
 		
 for(let i=0;i<spaceList.length;i++)
@@ -108,9 +108,9 @@ anchor.append(span1);
 divtag.append(anchor);
 $("#spaceResultDisplay").append(divtag);
 }
- }
-  });
-    });
+}
+});
+});
         
 $('.modulepage-selection').bootpag({
 	total: [[${moduleTotalPages}]],
@@ -142,7 +142,7 @@ $('.modulepage-selection').bootpag({
 	        },
 	    success: function(data) {
 		moduleList = data['modules'];
-		moduleFirstSlideFirstImage = data['firstImageOfFirstSlideForModule'];
+		moduleImageIdMap = data['moduleImageIdMap'];
 		moduleAlertMessages = data['moduleAlertMessages'];
         $("#moduleResultDisplay").empty();
 for(let i=0;i<moduleList.length;i++)
@@ -157,7 +157,7 @@ anchor.attr('href',"[(@{'/staff/module/'})]"+moduleList[i].id);
 anchor.attr('class',"textDivStaff tab  btn btn-light");
 anchor.css('width','100%');
 var img = $("<img></img>");
-var firstSlideFirstImageId = moduleFirstSlideFirstImage[moduleList[i].id];
+var firstSlideFirstImageId = moduleImageIdMap[moduleList[i].id];
 if(firstSlideFirstImageId == null)
 {
 img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
@@ -203,10 +203,10 @@ span3.append("The module has not been configured yet.");
 divtag.append(span3);
 $("#moduleResultDisplay").append(divtag);
 }
- }
-  }
-   });
-    });
+}
+}
+});
+});
         
 $('.slidepage-selection').bootpag({
 	total: [[${slideTotalPages}]],
@@ -276,9 +276,9 @@ anchor.append(span1);
 divtag.append(anchor);
 $("#slideResultDisplay").append(divtag);
 }
- }
-  });
-   });
+}
+});
+});
 		  
 $('.slideTextPage-selection').bootpag({
 	total: [[${slideTextTotalPages}]],
@@ -310,8 +310,8 @@ $('.slideTextPage-selection').bootpag({
 	        },
 		success: function(data) {
 		slideTextList = data['slidesWithMatchedTextBlock'];
-		slideTextFirstImage = data['slideTextFirstImage'];
-		slideTextFirstTextBlock = data['slideTextFirstTextBlock'];
+		slideToFirstImageMap = data['slideToFirstImageMap'];
+		slideToFirstTextBlockMap = data['slideToFirstTextBlockMap'];
 		$("#slideTextResultDisplay").empty();
 for(let i=0;i<slideTextList.length;i++)
 {
@@ -322,7 +322,7 @@ var anchor = $("<a></a>");
 anchor.attr('class',"textDivStaff tab  btn btn-light");
 anchor.css('width','100%');
 var img = $("<img></img>");
-var slideTextFirstImageId = slideTextFirstImage[slideTextList[i].id];
+var slideTextFirstImageId = slideToFirstImageMap[slideTextList[i].id];
 if(slideTextFirstImageId == null)
 {
  img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
@@ -342,7 +342,7 @@ span2.css('color','var(--dark-grey)');
 span1.append(span2);
 span1.append(slideTextList[i].name+'<br>');
 anchor.append(span1);
-firstMatchedTextBlock = slideTextFirstTextBlock[slideTextList[i].id];
+firstMatchedTextBlock = slideToFirstTextBlockMap[slideTextList[i].id];
 var span4 = $("<span></span>");
 span4.append(firstMatchedTextBlock);
 span1.append(span4);
@@ -350,10 +350,10 @@ anchor.append(span1);
 divtag.append(anchor);
 $("#slideTextResultDisplay").append(divtag);
 }
- }
-  });
-   });
-    });
+}
+});
+});
+});
 </script>
 <style>
 .pagination>li>a {

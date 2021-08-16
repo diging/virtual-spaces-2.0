@@ -30,13 +30,13 @@ public class StaffSearchSpaceController {
 
         List<Space> spaceList = paginationForSpace(spacePagenum, searchTerm);
         StaffSearchSpace staffSearch = new StaffSearchSpace();
-        staffSearch.setSpace(spaceList);
+        staffSearch.setSpaces(spaceList);
         return new ResponseEntity<StaffSearchSpace>(staffSearch, HttpStatus.OK);
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in space table and return the spaces corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the spaces corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string.
      * 

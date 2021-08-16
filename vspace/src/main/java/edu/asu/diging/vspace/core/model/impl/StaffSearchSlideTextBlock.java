@@ -7,9 +7,9 @@ public class StaffSearchSlideTextBlock {
     
     private List<Slide> slidesWithMatchedTextBlock;
 
-    private Map<String, String> slideTextFirstImage;
+    private Map<String, String> slideToFirstImageMap;
 
-    private Map<String, String> slideTextFirstTextBlock;
+    private Map<String, String> slideToFirstTextBlockMap;
 
     public List<Slide> getSlidesWithMatchedTextBlock() {
         return slidesWithMatchedTextBlock;
@@ -19,19 +19,19 @@ public class StaffSearchSlideTextBlock {
         this.slidesWithMatchedTextBlock = slidesWithMatchedTextBlock;
     }
 
-    public Map<String, String> getSlideTextFirstImage() {
-        return slideTextFirstImage;
+    public Map<String, String> getSlideToFirstImageMap() {
+        return slideToFirstImageMap;
     }
 
-    public void setSlideTextFirstImage(Map<String, String> slideTextFirstImage) {
-        this.slideTextFirstImage = slideTextFirstImage;
+    public void setSlideToFirstImageMap(Map<String, String> slideToFirstImageMap) {
+        this.slideToFirstImageMap = slideToFirstImageMap;
     }
 
-    public Map<String, String> getSlideTextFirstTextBlock() {
-        return slideTextFirstTextBlock;
+    public Map<String, String> getSlideToFirstTextBlockMap() {
+        return slideToFirstTextBlockMap;
     }
 
-    public void setSlideTextFirstTextBlock(Map<String, String> slideTextFirstTextBlock) {
-        this.slideTextFirstTextBlock = slideTextFirstTextBlock;
+    public void setSlideToFirstTextBlockMap(Map<String, String> slideToFirstTextBlockMap) {
+        this.slideToFirstTextBlockMap = slideToFirstTextBlockMap;
     }
 }

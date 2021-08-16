@@ -39,15 +39,15 @@ public class StaffSearchModuleController {
         staffSearch.setModules(moduleList);
 
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        Map<String, Boolean> moduleAlertMessage = new HashMap<>();
+        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
 
         for (Module module : moduleList) {
 
             if (module.getStartSequence() == null) {
-                moduleAlertMessage.put(module.getId(), true);
+                isModuleConfiguredMap.put(module.getId(), true);
                 moduleFirstSlideImage.put(module.getId(), null);
             } else {
-                moduleAlertMessage.put(module.getId(), false);
+                isModuleConfiguredMap.put(module.getId(), false);
                 String startSequenceID = module.getStartSequence().getId();
                 List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
                         ? sequenceManager.getSequence(startSequenceID).getSlides()
@@ -62,14 +62,14 @@ public class StaffSearchModuleController {
                 moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
             }
         }
-        staffSearch.setFirstImageOfFirstSlideForModule(moduleFirstSlideImage);
-        staffSearch.setModuleAlertMessages(moduleAlertMessage);
+        staffSearch.setModuleImageIdMap(moduleFirstSlideImage);
+        staffSearch.setModuleAlertMessages(isModuleConfiguredMap);
         return new ResponseEntity<StaffSearchModule>(staffSearch, HttpStatus.OK);
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in module table and return the module corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the module corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string.
      * 

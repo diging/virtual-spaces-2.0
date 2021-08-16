@@ -7,7 +7,7 @@ public class StaffSearchModule {
 
     private List<Module> modules;
 
-    private Map<String, String> firstImageOfFirstSlideForModule;
+    private Map<String, String> moduleImageIdMap;
 
     private Map<String, Boolean> moduleAlertMessages;
 
@@ -19,12 +19,12 @@ public class StaffSearchModule {
         this.modules = modules;
     }
 
-    public Map<String, String> getFirstImageOfFirstSlideForModule() {
-        return firstImageOfFirstSlideForModule;
+    public Map<String, String> getModuleImageIdMap() {
+        return moduleImageIdMap;
     }
 
-    public void setFirstImageOfFirstSlideForModule(Map<String, String> firstImageOfFirstSlideForModule) {
-        this.firstImageOfFirstSlideForModule = firstImageOfFirstSlideForModule;
+    public void setModuleImageIdMap(Map<String, String> moduleImageIdMap) {
+        this.moduleImageIdMap = moduleImageIdMap;
     }
 
     public Map<String, Boolean> getModuleAlertMessages() {
@@ -34,6 +34,4 @@ public class StaffSearchModule {
     public void setModuleAlertMessages(Map<String, Boolean> moduleAlertMessages) {
         this.moduleAlertMessages = moduleAlertMessages;
     }
-
-   
 }

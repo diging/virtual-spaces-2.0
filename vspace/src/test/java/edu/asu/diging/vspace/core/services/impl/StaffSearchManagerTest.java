@@ -55,6 +55,7 @@ public class StaffSearchManagerTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        
         Space space1 = new Space();
         space1.setId("SPACE_ID_1");
         Space space2 = new Space();
@@ -62,6 +63,7 @@ public class StaffSearchManagerTest {
         spaces = new ArrayList<>();
         spaces.add(space1);
         spaces.add(space2);
+        
         Module module1 = new Module();
         module1.setId("MODULE_ID_1");
         Module module2 = new Module();
@@ -69,6 +71,7 @@ public class StaffSearchManagerTest {
         modules = new ArrayList<>();
         modules.add(module1);
         modules.add(module2);
+        
         Slide slide1 = new Slide();
         slide1.setId("SLIDE_ID_1");
         Slide slide2 = new Slide();
@@ -76,6 +79,7 @@ public class StaffSearchManagerTest {
         slides = new ArrayList<>();
         slides.add(slide1);
         slides.add(slide2);
+        
         Slide slideText1 = new Slide();
         slideText1.setId("SLIDETEXT_ID_1");
         Slide slideText2 = new Slide();
@@ -83,6 +87,7 @@ public class StaffSearchManagerTest {
         slideTexts = new ArrayList<>();
         slideTexts.add(slideText1);
         slideTexts.add(slideText2);
+        
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 10);
     }
 
