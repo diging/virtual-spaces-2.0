@@ -1,6 +1,9 @@
 package edu.asu.diging.vspace.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +23,18 @@ public class HomeController {
 
     @RequestMapping(value = "/")
     public String home(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!setupManager.isSetup()) {
             return "setup";
         }
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null && exhibition.getStartSpace() != null) {
-            return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
+            if(!(authentication instanceof AnonymousAuthenticationToken)) {
+                return "redirect:/staff/dashboard/";
+            }else {
+                return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
+            }                
         }
         return "home";
     }
