@@ -24,13 +24,13 @@ public interface IContentBlockManager {
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 
-    void deleteTextBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteTextBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
 
-    void deleteImageBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteImageBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
     
     void deleteBiblioBlockById(String blockid) throws BlockDoesNotExistException;
 
-    void deleteChoiceBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteChoiceBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
 
     void updateTextBlock(TextBlock textBlock);
     
@@ -44,9 +44,10 @@ public interface IContentBlockManager {
 
     IChoiceBlock getChoiceBlock(String choiceBlockId);
 
-    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
             throws ImageCouldNotBeStoredException;
 
     IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll);   
-
+    
+    Integer findMaxContentOrder(String slideId);
 }
