@@ -52,7 +52,7 @@ public class DeleteBiblioBlockController {
         }
         
         try {
-            contentBlockManager.deleteBiblioBlockById(blockId);
+            contentBlockManager.deleteBiblioBlockById(blockId, slideId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Biblio Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);

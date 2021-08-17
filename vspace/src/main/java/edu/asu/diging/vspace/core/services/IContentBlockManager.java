@@ -20,7 +20,7 @@ public interface IContentBlockManager {
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
     
-    IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData);
+    IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData, Integer contentOrder);
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 
@@ -28,7 +28,7 @@ public interface IContentBlockManager {
 
     void deleteImageBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
     
-    void deleteBiblioBlockById(String blockid) throws BlockDoesNotExistException;
+    void deleteBiblioBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
 
     void deleteChoiceBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
 

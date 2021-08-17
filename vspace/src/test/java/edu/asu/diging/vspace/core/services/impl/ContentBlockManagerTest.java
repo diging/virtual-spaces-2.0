@@ -137,21 +137,30 @@ public class ContentBlockManagerTest {
     @Test
     public void test_deleteBiblioBlockById_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = "CON000000002";
-        managerToTest.deleteBiblioBlockById(biblioBlockId);
+        Optional<ContentBlock> contentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("CON000000002")).thenReturn(contentBlockOptional);
+        when(contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan("slideId_1",Integer.valueOf(1))).thenReturn(contentBlockList);
+        managerToTest.deleteBiblioBlockById(biblioBlockId,"slideId_1");
         Mockito.verify(biblioBlockRepo).deleteById(biblioBlockId);
+        List<Integer> contentOrderList = contentBlockList.stream().map(contentBlock -> contentBlock.getContentOrder()).collect(Collectors.toList());
+        assertEquals(Integer.valueOf(1), contentOrderList.get(0));
+        assertEquals(Integer.valueOf(2), contentOrderList.get(1));
+        Mockito.verify(contentBlockRepository).saveAll(contentBlockList);
     }
     
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteBiblioBlockById_forNonExistentId() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = "notARealId";
+        Optional<ContentBlock> contentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(biblioBlockRepo).deleteById(biblioBlockId);
-        managerToTest.deleteBiblioBlockById(biblioBlockId);
+        managerToTest.deleteBiblioBlockById(biblioBlockId, "slideId_1");
     }
 
     @Test
     public void test_deleteBiblioBlockById_whenIdIsNull() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = null;
-        managerToTest.deleteBiblioBlockById(null);
+        managerToTest.deleteBiblioBlockById(null, "slideId_1");
         Mockito.verify(biblioBlockRepo, Mockito.never()).deleteById(biblioBlockId);
     }
     
@@ -177,7 +186,7 @@ public class ContentBlockManagerTest {
         
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
         when(biblioBlockRepo.save((BiblioBlock)biblioBlock)).thenReturn((BiblioBlock) biblioBlockWithId);
-        IBiblioBlock resBiblio = managerToTest.createBiblioBlock(slide.getId(), biblioBlock);
+        IBiblioBlock resBiblio = managerToTest.createBiblioBlock(slide.getId(), biblioBlock, contentOrder);
         assertEquals(resBiblio.getId(), biblioBlockWithId.getId());
         assertEquals(resBiblio.getBiblioTitle(), biblioBlockWithId.getBiblioTitle());
         assertEquals(resBiblio.getDescription(), biblioBlockWithId.getDescription());

@@ -326,20 +326,29 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblio) {
+    public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblio, Integer contentOrder) {
         ISlide slide = slideManager.getSlide(slideId);
         biblio.setSlide(slide);
+        biblio.setContentOrder(contentOrder);
         return biblioBlockRepo.save((BiblioBlock) biblio);
     }
 
     @Override
-    public void deleteBiblioBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteBiblioBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
+        }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
         }
         
         try {
-            biblioBlockRepo.deleteById(id);         
+            biblioBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         } 
