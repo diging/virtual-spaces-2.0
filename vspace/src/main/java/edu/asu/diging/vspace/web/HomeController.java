@@ -30,10 +30,11 @@ public class HomeController {
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null && exhibition.getStartSpace() != null) {
-            if(!(authentication instanceof AnonymousAuthenticationToken))
+            if(!(authentication instanceof AnonymousAuthenticationToken)) {
                 return "redirect:/staff/dashboard/";
-            else
+            } else {
                 return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
+            }                
         }
         return "home";
     }
