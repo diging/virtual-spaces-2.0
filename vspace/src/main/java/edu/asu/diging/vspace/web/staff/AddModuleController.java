@@ -33,8 +33,8 @@ public class AddModuleController {
 	public String addModule(Model model, @ModelAttribute ModuleForm moduleForm, Principal principal) {
 	    IModule module = moduleFactory.createModule(moduleForm);
 	    moduleManager.storeModule(module);
-	    String moduleId;
-	    moduleId = module.getId();
-	    return "redirect:/staff/module/" + moduleId;
+        String moduleId;
+        moduleId = module.getId();
+        return "redirect:/staff/module/" + moduleId;
 	}
 }
