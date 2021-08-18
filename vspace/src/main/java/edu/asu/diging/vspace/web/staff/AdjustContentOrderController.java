@@ -23,11 +23,11 @@ public class AdjustContentOrderController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/adjustContentOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/blocks/order/update", method = RequestMethod.POST)
     public ResponseEntity<List<ContentBlock>> adjustContentOrder(@RequestBody List<ContentBlock> contentBlockList) {
 
         try {
-            contentBlockManager.adjustContentOrder(contentBlockList);
+            contentBlockManager.updateContentOrder(contentBlockList);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Block Id does not exist, bad request.", e);
             return new ResponseEntity<List<ContentBlock>>(HttpStatus.BAD_REQUEST);

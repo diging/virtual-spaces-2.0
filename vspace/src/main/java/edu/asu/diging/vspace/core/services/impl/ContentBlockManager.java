@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
@@ -40,7 +37,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
-@Transactional
+@Transactional(rollbackFor = { Exception.class })
 @Service
 public class ContentBlockManager implements IContentBlockManager {
 
@@ -316,31 +313,27 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
-     * Adjusting the content order of the blocks of slide once it is dragged and changed position
+     * Adjusting the content order of the blocks of slide once it is dragged and
+     * changed position.
      * 
-     *  @param blockId - id of block whose content order needs to be adjusted.
-     *  @param contentOrder - value with which contentOrder of block needs to be updated.
-     *  
+     * @param contentBlockList - The list contains the blocks and the updated
+     *                         content order corresponding to each blocks.
      */
-
     @Override
-    public void adjustContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
-        
-        if(contentBlockList!=null)
-        {
+    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
+
+        if (contentBlockList == null) {
+            return;
+        } else {
             List<ContentBlock> contentBlocks = new ArrayList<>();
-            for(ContentBlock eachBlock:contentBlockList )
-            {
+            for (ContentBlock eachBlock : contentBlockList) {
                 String blockId = eachBlock.getId();
                 int contentOrder = eachBlock.getContentOrder();
-                if (blockId == null) { 
-                    return;
-                }
                 Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
                 if (contentBlock.isPresent()) {
                     ContentBlock contentBlockObj = contentBlock.get();
                     contentBlockObj.setContentOrder(contentOrder);
-                    contentBlocks.add(contentBlockObj);  
+                    contentBlocks.add(contentBlockObj);
                 } else {
                     throw new BlockDoesNotExistException("Block Id not present");
                 }
@@ -348,7 +341,7 @@ public class ContentBlockManager implements IContentBlockManager {
             contentBlockRepository.saveAll(contentBlocks);
         }
     }
-    
+
     /**
      * Decreasing content order by 1 of the slide's block which are after the
      * specified contentOrder

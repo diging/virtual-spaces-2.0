@@ -38,7 +38,7 @@ public class ContentBlockManagerTest {
 
     private ContentBlock contentBlock;
 
-    private ContentBlock contentBlock_1;
+    private ContentBlock contentBlock1;
 
     private List<ContentBlock> contentBlockList;
 
@@ -47,8 +47,9 @@ public class ContentBlockManagerTest {
         MockitoAnnotations.initMocks(this);
         contentBlock = new ContentBlock();
         contentBlock.setContentOrder(1);
-        contentBlock_1 = new ContentBlock();
-        contentBlock_1.setContentOrder(2);
+
+        contentBlock1 = new ContentBlock();
+        contentBlock1.setContentOrder(2);
 
         ContentBlock contentBlock1 = new ContentBlock();
         contentBlock1.setContentOrder(2);
@@ -125,38 +126,44 @@ public class ContentBlockManagerTest {
     }
 
     @Test
-    public void test_adjustContentOrder_success() throws BlockDoesNotExistException {
-        ContentBlock contentBlock_1 = new ContentBlock();
-        contentBlock_1.setId("contentBlockId_1");
-        contentBlock_1.setContentOrder(Integer.valueOf(3));
-        ContentBlock contentBlock_2 = new ContentBlock();
-        contentBlock_2.setId("contentBlockId_2");
-        contentBlock_2.setContentOrder(Integer.valueOf(4));
+    public void test_updateContentOrder_success() throws BlockDoesNotExistException {
+        ContentBlock firstContentBlock = new ContentBlock();
+        firstContentBlock.setId("contentBlockId1");
+        firstContentBlock.setContentOrder(Integer.valueOf(3));
+
+        ContentBlock secondContentBlock = new ContentBlock();
+        secondContentBlock.setId("contentBlockId2");
+        secondContentBlock.setContentOrder(Integer.valueOf(4));
+
         List<ContentBlock> contentBlocks = new ArrayList<>();
-        contentBlocks.add(contentBlock_1);
-        contentBlocks.add(contentBlock_2);
-        Optional<ContentBlock> contentBlockOptional_1 = Optional.of(contentBlock);
-        Optional<ContentBlock> contentBlockOptional_2 = Optional.of(contentBlock_1);
-        when(contentBlockRepository.findById("contentBlockId_1")).thenReturn(contentBlockOptional_1);
-        when(contentBlockRepository.findById("contentBlockId_2")).thenReturn(contentBlockOptional_2);
-        managerToTest.adjustContentOrder(contentBlocks);
-        assertEquals(Integer.valueOf(3), contentBlockOptional_1.get().getContentOrder());
-        assertEquals(Integer.valueOf(4), contentBlockOptional_2.get().getContentOrder());
+        contentBlocks.add(firstContentBlock);
+        contentBlocks.add(secondContentBlock);
+
+        when(contentBlockRepository.findById("contentBlockId1")).thenReturn(Optional.of(contentBlock));
+        when(contentBlockRepository.findById("contentBlockId2")).thenReturn(Optional.of(contentBlock1));
+
+        managerToTest.updateContentOrder(contentBlocks);
+        assertEquals(Integer.valueOf(3), contentBlock.getContentOrder());
+        assertEquals(Integer.valueOf(4), contentBlock1.getContentOrder());
+
         List<ContentBlock> contentBlockList = new ArrayList<>();
-        contentBlockList.add(contentBlockOptional_1.get());
-        contentBlockList.add(contentBlockOptional_2.get());
+        contentBlockList.add(contentBlock);
+        contentBlockList.add(contentBlock1);
+
         Mockito.verify(contentBlockRepository).saveAll(contentBlockList);
     }
 
     @Test(expected = BlockDoesNotExistException.class)
-    public void test_adjustContentOrder_forNonExistentId() throws BlockDoesNotExistException {
-        ContentBlock contentBlock_1 = new ContentBlock();
-        contentBlock_1.setId("notARealId");
-        contentBlock_1.setContentOrder(Integer.valueOf(1));
+    public void test_updateContentOrder_forNonExistentId() throws BlockDoesNotExistException {
+        ContentBlock contentBlock1 = new ContentBlock();
+        contentBlock1.setId("notARealId");
+        contentBlock1.setContentOrder(Integer.valueOf(1));
+        
         List<ContentBlock> contentBlocks = new ArrayList<>();
-        contentBlocks.add(contentBlock_1);
-        Mockito.doThrow(BlockDoesNotExistException.class).when(contentBlockRepository).findById("notARealId");
-        managerToTest.adjustContentOrder(contentBlocks);
+        contentBlocks.add(contentBlock1);
+        
+        when(contentBlockRepository.findById("notARealId")).thenReturn(Optional.empty());
+        managerToTest.updateContentOrder(contentBlocks);
     }
 
 }
