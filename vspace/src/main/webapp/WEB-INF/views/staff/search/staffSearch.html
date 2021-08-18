@@ -80,35 +80,34 @@ $('.spacepage-selection').bootpag({
 		spaceList = data['spaces'];
 		$("#spaceResultDisplay").empty();
 		
-for(let i=0;i<spaceList.length;i++)
-{
-var divtag = $("<div></div>");
-divtag.attr('id',spaceList[i].id);
-var anchor = $("<a></a>");
-anchor.attr('href',"[(@{'/staff/space/'})]"+spaceList[i].id);
-anchor.attr('class',"textDivStaff tab  btn btn-light");
-anchor.css('width','100%');
-var span1 = $("<span></span>");
-span1.attr('class',"card-title");
-span1.css('white-space',"pre-wrap");
-span1.css('line-break',"anywhere");
-var img = $("<img></img>");
-img.attr('src',"[(@{'/api/image/'})]"+spaceList[i].image.id);
-img.attr('class',"searchImg");
-span1.append(img);
-var span2 = $("<span>"+'Space:'+"</span>");
-span2.css('color','var(--dark-grey)');
-span1.append(span2);
-span1.append(spaceList[i].name+'<br>');
-var span3 = $("<span>"+'Description:'+"</span>");
-span3.css('color','var(--dark-grey)');
-span1.append(span3);
-span1.append(spaceList[i].description);
-anchor.append(span1);
-divtag.append(anchor);
-$("#spaceResultDisplay").append(divtag);
-}
-}
+		for(let i=0;i<spaceList.length;i++) {
+			var divtag = $("<div></div>");
+			divtag.attr('id',spaceList[i].id);
+			var anchor = $("<a></a>");
+			anchor.attr('href',"[(@{'/staff/space/'})]"+spaceList[i].id);
+			anchor.attr('class',"textDivStaff tab  btn btn-light");
+			anchor.css('width','100%');
+			var span1 = $("<span></span>");
+			span1.attr('class',"card-title");
+			span1.css('white-space',"pre-wrap");
+			span1.css('line-break',"anywhere");
+			var img = $("<img></img>");
+			img.attr('src',"[(@{'/api/image/'})]"+spaceList[i].image.id);
+			img.attr('class',"searchImg");
+			span1.append(img);
+			var span2 = $("<span>"+'Space:'+"</span>");
+			span2.css('color','var(--dark-grey)');
+			span1.append(span2);
+			span1.append(spaceList[i].name+'<br>');
+			var span3 = $("<span>"+'Description:'+"</span>");
+			span3.css('color','var(--dark-grey)');
+			span1.append(span3);
+			span1.append(spaceList[i].description);
+			anchor.append(span1);
+			divtag.append(anchor);
+			$("#spaceResultDisplay").append(divtag);
+		}
+  }
 });
 });
         
@@ -145,65 +144,65 @@ $('.modulepage-selection').bootpag({
 		moduleImageIdMap = data['moduleImageIdMap'];
 		moduleAlertMessages = data['moduleAlertMessages'];
         $("#moduleResultDisplay").empty();
-for(let i=0;i<moduleList.length;i++)
-{
-var showModuleAlertMessage = moduleAlertMessages[moduleList[i].id];
-if(!showModuleAlertMessage)
-{
-var divtag = $("<div></div>");
-divtag.attr('id',moduleList[i].id);
-var anchor = $("<a></a>");
-anchor.attr('href',"[(@{'/staff/module/'})]"+moduleList[i].id);
-anchor.attr('class',"textDivStaff tab  btn btn-light");
-anchor.css('width','100%');
-var img = $("<img></img>");
-var firstSlideFirstImageId = moduleImageIdMap[moduleList[i].id];
-if(firstSlideFirstImageId == null)
-{
-img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
-}
-else
-{
-img.attr('src',"[(@{'/api/image/'})]"+firstSlideFirstImageId);
-}
-img.attr('class',"searchImg");
-anchor.append(img);
-var span1 = $("<span></span>");
-span1.attr('class',"card-title");
-span1.css('white-space',"pre-wrap");
-span1.css('line-break',"anywhere");
-var span2 = $("<span>"+'Module:'+"</span>");
-span2.css('color','var(--dark-grey)');
-span1.append(span2);
-span1.append(moduleList[i].name+'<br>');
-var span3 = $("<span>"+'Description:'+"</span>");
-span3.css('color','var(--dark-grey)');
-span1.append(span3);
-span1.append(moduleList[i].description);
-anchor.append(span1);
-divtag.append(anchor);
-$("#moduleResultDisplay").append(divtag);
-}
-else
-{
-var divtag = $("<div></div>");
-divtag.attr('id',moduleList[i].id); 
-divtag.attr('class',"col-md-12  tab  btn btn-light");
-var span1 = $("<span></span>");
-span1.attr('class',"card-title");
-span1.css('white-space',"pre-wrap");
-span1.css('line-break',"anywhere");
-var span2 = $("<span>"+'Module:'+"</span>");
-span2.css('color','var(--dark-grey)');
-span1.append(span2);
-span1.append(moduleList[i].name+'<br>');
-divtag.append(span1);
-var span3 = $("<span></span>");
-span3.append("The module has not been configured yet.");
-divtag.append(span3);
-$("#moduleResultDisplay").append(divtag);
-}
-}
+		for(let i=0;i<moduleList.length;i++)
+		{
+			var showModuleAlertMessage = moduleAlertMessages[moduleList[i].id];
+			if(!showModuleAlertMessage)
+			{
+				var divtag = $("<div></div>");
+				divtag.attr('id',moduleList[i].id);
+				var anchor = $("<a></a>");
+				anchor.attr('href',"[(@{'/staff/module/'})]"+moduleList[i].id);
+				anchor.attr('class',"textDivStaff tab  btn btn-light");
+				anchor.css('width','100%');
+				var img = $("<img></img>");
+				var firstSlideFirstImageId = moduleImageIdMap[moduleList[i].id];
+				if(firstSlideFirstImageId == null)
+				{
+					img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+				}
+				else
+				{
+					img.attr('src',"[(@{'/api/image/'})]"+firstSlideFirstImageId);
+				}
+				img.attr('class',"searchImg");
+				anchor.append(img);
+				var span1 = $("<span></span>");
+				span1.attr('class',"card-title");
+				span1.css('white-space',"pre-wrap");
+				span1.css('line-break',"anywhere");
+				var span2 = $("<span>"+'Module:'+"</span>");
+				span2.css('color','var(--dark-grey)');
+				span1.append(span2);
+				span1.append(moduleList[i].name+'<br>');
+				var span3 = $("<span>"+'Description:'+"</span>");
+				span3.css('color','var(--dark-grey)');
+				span1.append(span3);
+				span1.append(moduleList[i].description);
+				anchor.append(span1);
+				divtag.append(anchor);
+				$("#moduleResultDisplay").append(divtag);
+			}
+			else
+			{
+				var divtag = $("<div></div>");
+				divtag.attr('id',moduleList[i].id); 
+				divtag.attr('class',"col-md-12  tab  btn btn-light");
+				var span1 = $("<span></span>");
+				span1.attr('class',"card-title");
+				span1.css('white-space',"pre-wrap");
+				span1.css('line-break',"anywhere");
+				var span2 = $("<span>"+'Module:'+"</span>");
+				span2.css('color','var(--dark-grey)');
+				span1.append(span2);
+				span1.append(moduleList[i].name+'<br>');
+				divtag.append(span1);
+				var span3 = $("<span></span>");
+				span3.append("The module has not been configured yet.");
+				divtag.append(span3);
+				$("#moduleResultDisplay").append(divtag);
+			}
+		}
 }
 });
 });
@@ -240,42 +239,42 @@ $('.slidepage-selection').bootpag({
 		slideList = data['slides'];
 		firstImageOfSlide = data['firstImageOfSlide'];
 		$("#slideResultDisplay").empty();
-for(let i=0;i<slideList.length;i++)
-{
-var divtag = $("<div></div>");
-divtag.attr('id',slideList[i].id);
-var anchor = $("<a></a>");
-anchor.attr('href',"[(@{'/staff/module/'})]"+slideList[i].module.id+'/slide/'+slideList[i].id);
-anchor.attr('class',"textDivStaff tab  btn btn-light");
-anchor.css('width','100%');
-var img = $("<img></img>");
-var slideFirstImageId = firstImageOfSlide[slideList[i].id];
-if(slideFirstImageId == null)
-{
-img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
-}
-else
-{
-img.attr('src',"[(@{'/api/image/'})]"+slideFirstImageId);
-}
-img.attr('class',"searchImg");
-anchor.append(img);
-var span1 = $("<span></span>");
-span1.attr('class',"card-title");
-span1.css('white-space',"pre-wrap");
-span1.css('line-break',"anywhere");
-var span2 = $("<span>"+'Slide:'+"</span>");
-span2.css('color','var(--dark-grey)');
-span1.append(span2);
-span1.append(slideList[i].name+'<br>');
-var span3 = $("<span>"+'Description:'+"</span>");
-span3.css('color','var(--dark-grey)');
-span1.append(span3);
-span1.append(slideList[i].description);
-anchor.append(span1);
-divtag.append(anchor);
-$("#slideResultDisplay").append(divtag);
-}
+		for(let i=0;i<slideList.length;i++)
+		{
+			var divtag = $("<div></div>");
+			divtag.attr('id',slideList[i].id);
+			var anchor = $("<a></a>");
+			anchor.attr('href',"[(@{'/staff/module/'})]"+slideList[i].module.id+'/slide/'+slideList[i].id);
+			anchor.attr('class',"textDivStaff tab  btn btn-light");
+			anchor.css('width','100%');
+			var img = $("<img></img>");
+			var slideFirstImageId = firstImageOfSlide[slideList[i].id];
+			if(slideFirstImageId == null)
+			{
+				img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+			}
+			else
+			{
+				img.attr('src',"[(@{'/api/image/'})]"+slideFirstImageId);
+			}
+			img.attr('class',"searchImg");
+			anchor.append(img);
+			var span1 = $("<span></span>");
+			span1.attr('class',"card-title");
+			span1.css('white-space',"pre-wrap");
+			span1.css('line-break',"anywhere");
+			var span2 = $("<span>"+'Slide:'+"</span>");
+			span2.css('color','var(--dark-grey)');
+			span1.append(span2);
+			span1.append(slideList[i].name+'<br>');
+			var span3 = $("<span>"+'Description:'+"</span>");
+			span3.css('color','var(--dark-grey)');
+			span1.append(span3);
+			span1.append(slideList[i].description);
+			anchor.append(span1);
+			divtag.append(anchor);
+			$("#slideResultDisplay").append(divtag);
+		}
 }
 });
 });
@@ -313,43 +312,43 @@ $('.slideTextPage-selection').bootpag({
 		slideToFirstImageMap = data['slideToFirstImageMap'];
 		slideToFirstTextBlockMap = data['slideToFirstTextBlockMap'];
 		$("#slideTextResultDisplay").empty();
-for(let i=0;i<slideTextList.length;i++)
-{
-var divtag = $("<div></div>");
-divtag.attr('id',slideTextList[i].id);
-var anchor = $("<a></a>");
- anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextList[i].module.id+'/slide/'+slideTextList[i].id);
-anchor.attr('class',"textDivStaff tab  btn btn-light");
-anchor.css('width','100%');
-var img = $("<img></img>");
-var slideTextFirstImageId = slideToFirstImageMap[slideTextList[i].id];
-if(slideTextFirstImageId == null)
-{
- img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
-}
-else
-{
- img.attr('src',"[(@{'/api/image/'})]"+slideTextFirstImageId);
-}
-img.attr('class',"searchImg");
-anchor.append(img);
-var span1 = $("<span></span>");
-span1.attr('class',"card-title");
-span1.css('white-space',"pre-wrap");
-span1.css('line-break',"anywhere");
-var span2 = $("<span>"+'Slide:'+"</span>");
-span2.css('color','var(--dark-grey)');
-span1.append(span2);
-span1.append(slideTextList[i].name+'<br>');
-anchor.append(span1);
-firstMatchedTextBlock = slideToFirstTextBlockMap[slideTextList[i].id];
-var span4 = $("<span></span>");
-span4.append(firstMatchedTextBlock);
-span1.append(span4);
-anchor.append(span1);
-divtag.append(anchor);
-$("#slideTextResultDisplay").append(divtag);
-}
+		for(let i=0;i<slideTextList.length;i++)
+		{
+			var divtag = $("<div></div>");
+			divtag.attr('id',slideTextList[i].id);
+			var anchor = $("<a></a>");
+			 anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextList[i].module.id+'/slide/'+slideTextList[i].id);
+			anchor.attr('class',"textDivStaff tab  btn btn-light");
+			anchor.css('width','100%');
+			var img = $("<img></img>");
+			var slideTextFirstImageId = slideToFirstImageMap[slideTextList[i].id];
+			if(slideTextFirstImageId == null)
+			{
+				img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+			}
+			else
+			{
+				img.attr('src',"[(@{'/api/image/'})]"+slideTextFirstImageId);
+			}
+			img.attr('class',"searchImg");
+			anchor.append(img);
+			var span1 = $("<span></span>");
+			span1.attr('class',"card-title");
+			span1.css('white-space',"pre-wrap");
+			span1.css('line-break',"anywhere");
+			var span2 = $("<span>"+'Slide:'+"</span>");
+			span2.css('color','var(--dark-grey)');
+			span1.append(span2);
+			span1.append(slideTextList[i].name+'<br>');
+			anchor.append(span1);
+			firstMatchedTextBlock = slideToFirstTextBlockMap[slideTextList[i].id];
+			var span4 = $("<span></span>");
+			span4.append(firstMatchedTextBlock);
+			span1.append(span4);
+			anchor.append(span1);
+			divtag.append(anchor);
+			$("#slideTextResultDisplay").append(divtag);
+		}
 }
 });
 });
