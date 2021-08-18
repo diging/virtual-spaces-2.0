@@ -167,7 +167,7 @@ function drawLinks(){
     
     $.ajax({
         type: "GET",
-        url: "[(@{'/staff/space/'+${space.id}+'/links'})]",
+        url: "[(@{'/staff/space/'+${space?.id}+'/links'})]",
         cache       : false,
         contentType : false,
         processData : false,
@@ -641,8 +641,8 @@ function resetHighlighting() {
 
 $(function(){
     $("#deleteSpace").click(function(){
-        var spaceId = "${space.id}";
-        checkSpaceLinkPresent('[(${space.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'));
+        var spaceId = "${space?.id}";
+        checkSpaceLinkPresent('[(${space?.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'));
     });
 
         $( document ).ready(function() {
@@ -768,7 +768,7 @@ $(function(){
             var spaceLinkInfo = createSpaceLinkInfo();
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/'+${space.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/'+${space?.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache       : false,
                 contentType : false,
                 processData : false,
@@ -844,7 +844,7 @@ $(function(){
             $.ajax({
                 type: "POST",
 
-                url: "[(@{'/staff/space/'+${space.id}+'/modulelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/'+${space?.id}+'/modulelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache       : false,
                 contentType : false,
                 processData : false,
@@ -892,7 +892,7 @@ $(function(){
             var moduleLinkInfo = editModuleLinkInfo();
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/link/module/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/link/module/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -941,7 +941,7 @@ $(function(){
             var spaceLinkInfo = editSpaceLinkInfo();
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/link/space/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/link/space/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache: false,
                 contentType : false,
                 processData : false,
@@ -990,7 +990,7 @@ $(function(){
             var externalLinkInfo = editExternalLinkInfo();
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/link/external/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/link/external/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache: false,
                 contentType : false,
                 processData : false,
@@ -1062,7 +1062,7 @@ $(function(){
 
             $.ajax({
                 type: "POST",
-                url: "[(@{'/staff/space/'+${space.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                url: "[(@{'/staff/space/'+${space?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                 cache       : false,
                 contentType : false,
                 processData : false,
@@ -1100,7 +1100,7 @@ $(function(){
         $("#deleteSpaceLinkButton").click(function() {
             var linkId = $("#spaceLinkIdValueEdit").val();
             $.ajax({
-                url: "[(@{'/staff/space/'+${space.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                url: "[(@{'/staff/space/'+${space?.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
                 beforeSend: function () {
                     $(".saveLoader").show();
@@ -1130,7 +1130,7 @@ $(function(){
         $("#deleteModuleLinkButton").click(function() {
             var linkId = $("#moduleLinkIdValueEdit").val();
             $.ajax({
-                url: "[(@{'/staff/space/'+${space.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                url: "[(@{'/staff/space/'+${space?.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
                 beforeSend: function () {
                     $(".saveLoader").show();
@@ -1150,7 +1150,7 @@ $(function(){
         $("#deleteExternalLinkButton").click(function() {
             var linkId = $("#externalLinkIdValueEdit").val();
             $.ajax({
-                url: "[(@{'/staff/space/'+${space.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                url: "[(@{'/staff/space/'+${space?.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
                 method: "DELETE",
                 beforeSend: function () {
                     $(".saveLoader").show();
@@ -1341,7 +1341,7 @@ $(function(){
 		            <span style="color: var(--dark-grey)">Space:</span> [[${space.name}]]
 		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
 						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
-		            <a th:href="@{'/staff/space/'+${space.id}+'/edit'}"><span class="icon-edit"></span></a>
+		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
 		        </h2>
 		        <p>[[${space.description}]]</p>
 		        <div class="flex-spacing">
@@ -1352,8 +1352,8 @@ $(function(){
 					  <div class="dropdown-menu" aria-labelledby="incominglinks">
 					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
 			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
-			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace.id}}" style="padding: .25rem; color: var(--secondary);"
-			                    th:id="${spaceLinks.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+			                    th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
                             th:if="${#strings.equals(spaceLinks.sourceSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
 			            </div>
 					  </div>
@@ -1366,9 +1366,9 @@ $(function(){
 					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
 					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
 			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
-		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace.id}}" style="padding: .25rem; color: var(--secondary);"
+		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
 		                        th:if="${spaceLinks.targetSpace != null}"
-		                        th:id="${spaceLinks.id}"><small>[[${spaceLinks.targetSpace.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+		                        th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
                             th:if="${#strings.equals(spaceLinks.targetSpace.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
 						</div>
 					  </div>
@@ -1379,7 +1379,7 @@ $(function(){
 	    	</div>
 	    	<div>
                 <label style="margin-right: 10px;">Space Status</label> 
-                <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/status'}">
+                <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/status'}">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
                     <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
                         <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
@@ -1390,7 +1390,7 @@ $(function(){
                     </p>
                 </form>
                 <label style="margin-right: 10px;">Show Links to Unpublished Spaces</label>
-                <form method="POST" th:action="@{'/staff/space/'+${space.id}+'/showSpaceLinks'}" name="f">
+                <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/showSpaceLinks'}" name="f">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
                     <select class="form-control-sm" name="showSpaceLinksParam" style="width: 200px; display: inline;">
                         <option th:id="No" th:value=false th:selected="${!space.showUnpublishedLinks}">No</option>
@@ -1419,7 +1419,7 @@ $(function(){
             &nbsp;
         </div>
         <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
-        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image.id}}" />
+        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" />
         <div id="errorAlert"
             class="alert alert-danger alert-dismissible fade show"
             role="alert"
@@ -1488,7 +1488,7 @@ $(function(){
 	                    <div class="col-sm-8">
 	                        <select id="linkedSpace" name="linkedSpace" class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
 	                            <option th:selected>Choose...</option>
-	                            <option th:each="space : ${spaces}" th:value="${space.id}">[[${space.name}]]
+	                            <option th:each="space : ${spaces}" th:value="${space?.id}">[[${space.name}]]
 	                                <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
 	                        </select>
 	                    </div>
@@ -1558,7 +1558,7 @@ $(function(){
 	                    <div class="col-sm-8">
 	                        <select id="linkedModule" name="linkedModule" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
 	                            <option th:selected>Choose...</option>
-	                            <option th:value="${module.id}"
+	                            <option th:value="${module?.id}"
 	                                th:each="module : ${moduleList}">[[${module.name}]]</option>
 	                        </select>
 	                    </div>
@@ -1708,7 +1708,7 @@ $(function(){
 	                    <div class="col-sm-8">
 	                        <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control-sm spacelink-targetEdit"
 	                            style="width: inherit; background: var(--base-grey)">
-	                            <option th:each=" space : ${spaces}" th:value="${space.id}">[[${space.name}]]
+	                            <option th:each=" space : ${spaces}" th:value="${space?.id}">[[${space.name}]]
 	                            	<span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
 	                           	</option>
 	
@@ -1798,7 +1798,7 @@ $(function(){
                                 style="width: inherit; background: var(--base-grey)">
                                 <option
                                     th:each=" module : ${moduleList}"
-                                    th:value="${module.id}">[[${module.name}]]</option>
+                                    th:value="${module?.id}">[[${module.name}]]</option>
                             </select>
                         </div>
                     </div>
@@ -1900,7 +1900,7 @@ $(function(){
         </div>
         </div>
         <form method="post"
-            th:action="@{|/staff/space/update/${space.id}?${_csrf.parameterName}=${_csrf.token}|}"
+            th:action="@{|/staff/space/update/${space?.id}?${_csrf.parameterName}=${_csrf.token}|}"
             enctype="multipart/form-data">
             <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <div id="changeBgImgAlert" class="alert alert-secondary"
@@ -1956,7 +1956,7 @@ $(function(){
             <div id="loader" style="position: absolute; font-size: 30px;">
                 <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
             </div>
-            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image.id}}" />
+            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image?.id}}" />
         </div>
         <p class="text-right" style="margin-top: 50px">
             <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
