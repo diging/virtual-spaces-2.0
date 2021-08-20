@@ -41,17 +41,6 @@
     font-size: 30px;
 }
 
-.spaceClass {
-    /* text-align: center; */
-    height: 800px;
-    /* width: 800px; */
-    /* width: 57%;
-    max-width: 57%;
-    margin: auto;
-    background-size: cover;
-    border-radius: 13px; */
-}
-
 .nav-bar {
     position: relative;
     width: 100%;
@@ -239,7 +228,7 @@
 
 .register-form {	
     padding: 48px;	
-    width: 30%;	
+    width: 50%;	
     margin: auto;	
     border-radius: 10px;	
     background: #f2f2f2;	

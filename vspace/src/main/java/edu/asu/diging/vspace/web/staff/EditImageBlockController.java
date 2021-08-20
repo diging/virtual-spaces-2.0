@@ -60,7 +60,7 @@ public class EditImageBlockController {
                 byte[] image = file.getBytes();
                 String filename = file.getOriginalFilename();
                 try {
-                    contentBlockManager.updateImageBlock(imageBlock, image, filename, contentOrder);
+                    contentBlockManager.updateImageBlock(imageBlock, image, filename);
                 } catch (ImageCouldNotBeStoredException e) {
                     ObjectMapper mapper = new ObjectMapper();
                     ObjectNode node = mapper.createObjectNode();

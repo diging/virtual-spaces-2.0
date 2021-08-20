@@ -4,14 +4,14 @@
 	</head>
 	
 	<body>
-		<div th:fragment="navbar">   
+		<div th:fragment="navbar"> 
 		    <div id="mySidenav" class="sidenav">
 				<ul class="side-list" style="padding:1px;display: table;margin: 0 auto;padding-top:35px">
 		            <li class="nav-link alert alert-warning"
 						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
 						th:if="${exhibition}"
 		                style="text-align: center;"
-		                th:style="${#strings.equals(exhibition.mode,'ACTIVE') ? 'display: none' : 'display: block'}">
+		                th:style="${#strings.equals(exhibition.mode,'ACTIVE') or #strings.equals(exhibition.mode,null) ? 'display: none' : 'display: block'}">
 		                <span><span class="icon-warning secondary"></span></span>
 		                <span th:if="${exhibition.mode == 'MAINTENANCE'}">Exhibition under maintenance</span> 
 		                <span th:if="${exhibition.mode == 'OFFLINE'}">Exhibition is offline</span>
