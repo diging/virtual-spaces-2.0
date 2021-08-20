@@ -28,7 +28,7 @@ import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
 public class EditImageBlockController {
-
+    
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -40,8 +40,7 @@ public class EditImageBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image/{imageBlockId}", method = RequestMethod.POST)
     public ResponseEntity<String> editImageBlock(@PathVariable("id") String slideId,
             @PathVariable("imageBlockId") String blockId, @PathVariable("moduleId") String moduleId,
-            @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam("contentOrder") Integer contentOrder, Principal principal,
+            @RequestParam(value = "file", required = false) MultipartFile file, Principal principal,
             @RequestParam(value = "imageId", required = false) String imageId, RedirectAttributes attributes)
             throws IOException {
 
@@ -52,7 +51,7 @@ public class EditImageBlockController {
                 image = imageService.getImageById(imageId);
             } catch (ImageDoesNotExistException e) {
                 logger.error("Image does not exist.", e);
-                return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             contentBlockManager.updateImageBlock(imageBlock, image);
         } else {

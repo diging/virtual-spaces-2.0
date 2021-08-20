@@ -37,28 +37,31 @@ public class AddImageBlockController {
 
     @Autowired
     private IImageService imageService;
-
+    
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/image", method = RequestMethod.POST)
     public ResponseEntity<String> addImageBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId,
-            @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam("contentOrder") Integer contentOrder, Principal principal,
+            @RequestParam(value = "file", required = false) MultipartFile file, Principal principal,
             @RequestParam(value = "imageId", required = false) String imageId, RedirectAttributes attributes)
             throws IOException {
 
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        
         IVSpaceElement imageBlock;
+        String imageBlockId = null;
         if (imageId != null && !imageId.trim().isEmpty()) {
             IVSImage image;
             try {
                 image = imageService.getImageById(imageId);
             } catch (ImageDoesNotExistException e) {
                 logger.error("Image does not exist.", e);
-                return new ResponseEntity<>(imageId, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
                     contentOrder);
             imageBlock = imageBlockReturnValue.getElement();
-            imageId = imageBlock.getId();
+            imageBlockId = imageBlock.getId();
         } else {
             if (file != null) {
                 byte[] image = file.getBytes();
@@ -73,9 +76,9 @@ public class AddImageBlockController {
                     node.put("errorMessage", "Image Content block cannot be stored.");
                     return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                imageId = imageBlock.getId();
+                imageBlockId = imageBlock.getId();
             }
         }
-        return new ResponseEntity<>(imageId, HttpStatus.OK);
+        return new ResponseEntity<>(imageBlockId, HttpStatus.OK);
     }
 }

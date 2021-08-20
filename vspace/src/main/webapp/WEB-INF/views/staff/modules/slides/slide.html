@@ -17,9 +17,9 @@
 </style>
 <script th:inline="javascript">
 //# sourceURL=click.js
-var contentCount = [[${#lists.size(slideContents)}]];
 var markDown = null;
 var defaultValue;
+var imgBlockID = '';
 
 $(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
@@ -75,9 +75,9 @@ function onDoubleClick(e){
         $(".open").css('height', '400px');
     } else {
     	// store image ID selected by the user to replace, onDoubleClick
-    	var imgID = $(e.target).attr('id'); 
-    	if(imgID != ''){
-        	$("#uploadImage").data('value', imgID); // sets image ID value
+    	imgBlockID = $(e.target).attr('id'); 
+    	if(imgBlockID != ''){
+        	$("#uploadImage").data('value', imgBlockID); // sets image ID value
         	$("#addImgAlert").show();
     	}
 	
@@ -93,9 +93,7 @@ function uploadImage() {
 	if (typeof(file) != "undefined"){
 		chooseFromExisting = false;
 		formData.append('file', file);
-		formData.append('content', file.name);
 	}
-	formData.append('contentOrder', contentCount);
 	var imageSource = $('#selectedImage').find('img').attr('src');
 	var imageId = "";
 	if(typeof(imageSource) != "undefined"){
@@ -103,64 +101,63 @@ function uploadImage() {
 	}
 	var imageblock = "";
 	var oldImageBlock = "";
-		    
+			    
 	// Ashmi changes for Story VSPC-64
-		    
+			    
 	// checks if image ID is present to replace
 	if (imgBlockID != '') {
-		oldImageBlock = $("#" + imgBlockID);
-		var imageBlockId = imgBlockID;
-		formData.append('imageBlockId',imageBlockId);
-		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-		if(!chooseFromExisting){
-			reader.onload = function (theFile)
-			{
-				var image = new Image();
-				image.src = theFile.target.result;
-				image.onload = function ()
+			oldImageBlock = $("#" + imgBlockID);
+			var imageBlockId = imgBlockID;
+			formData.append('imageBlockId',imageBlockId);
+			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+			if(!chooseFromExisting){
+				reader.onload = function (theFile)
 				{
-					imageblock = createImageBlock(reader, this.width);
-					$("#" + imageBlockId).replaceWith(imageblock);	
-					$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-				};
+					var image = new Image();
+					image.src = theFile.target.result;
+					image.onload = function ()
+					{
+						imageblock = createImageBlock(reader, this.width);
+						$("#" + imageBlockId).replaceWith(imageblock);	
+						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+					};
+				}
 			}
-		}
-		else{
-			var image = new Image();
-			image.src = $('#selectedImage').find('img').attr('src');
-			formData.append('imageId',imageId);
-			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
-			$("#" + imageBlockId).replaceWith(imageblock);	
-			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-		}
-		// Reset data-attribute to get current selected image ID
-		$("#uploadImage").data('value', '');
+			else{
+				var image = new Image();
+				image.src = $('#selectedImage').find('img').attr('src');
+				formData.append('imageId',imageId);
+				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
+				$("#" + imageBlockId).replaceWith(imageblock);	
+				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+			}
+			// Reset data-attribute to get current selected image ID
+			$("#uploadImage").data('value', '');
 	}
 	else {
 		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
 		if(!chooseFromExisting){
 			reader.onload = function (theFile) 
 			{        	
-				var image = new Image();
-				image.src = theFile.target.result;
-				image.onload = function() 
-				{
-					imageblock = createImageBlock(reader, this.width);  
-					$('#slideSpace').append(imageblock); 
-					$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-				};          
+			var image = new Image();
+			image.src = theFile.target.result;
+			image.onload = function() 
+			{
+				imageblock = createImageBlock(reader, this.width);  
+				$('#slideSpace').append(imageblock); 
+				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+			};          
 			} 
 		}
 		else
 		{
-		var image = new Image();
-		image.src = $('#selectedImage').find('img').attr('src');
-		formData.append('imageId',imageId);
-		imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
-		$('#slideSpace').append(imageblock); 
-		$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+			var image = new Image();
+			image.src = $('#selectedImage').find('img').attr('src');
+			formData.append('imageId',imageId);
+			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
+			$('#slideSpace').append(imageblock); 
+			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 		}
-		++contentCount; 
 	}
 	if (!chooseFromExisting)
 	{
@@ -184,21 +181,21 @@ function uploadImage() {
 				$("#current").attr('id', data);
 			}
 			else{
-				img.attr('id', imgID);
-				$("#current").find('#deleteImageId').val(imgID);
-				$("#current").attr('id', imgID);
+				img.attr('id', imgBlockID);
+				$("#current").find('#deleteImageId').val(imgBlockID);
+				$("#current").attr('id', imgBlockID);
 			}
 		},
 		error: function(data) {
-			if (imgID == '') {
-				$("#current").remove();
-			}
-			else {
-				$("#current").replaceWith(oldImageBlock);
-			}
-			if (data.status == 403) {
-				$("#loginAlert").show();
-			}
+		if (imgBlockID == '') {
+			$("#current").remove();
+		}
+		else {
+			$("#current").replaceWith(oldImageBlock);
+		}
+		if (data.status == 403) {
+			$("#loginAlert").show();
+		}
 		}
 	});
 	// Reset the image file name 
@@ -513,8 +510,6 @@ $(document).ready(function() {
         var formData = new FormData();
         var text = markDown.value();
         formData.append('content', text);
-        ++contentCount;
-        formData.append('contentOrder', contentCount);
         markDown.value('');
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -565,8 +560,6 @@ $(document).ready(function() {
         }
         var formData = new FormData();
         formData.append('selectedChoices', selectedChoice);
-        ++contentCount;
-        formData.append('contentOrder', contentCount);
         formData.append('showsAll', showsAll);
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -944,11 +937,11 @@ $(window).on('load', function () {
 							    <select id="imageId" name="imageId"
 									class="form-control-xs target"
 									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
+										<option selected value="">Choose from existing</option>
 							    </select>
 							</div>
 							<div>
-							     <span id="selectedImage" width="200px"></span>
+							    <span id="selectedImage" width="200px"></span>
 							</div>
                         </div>
                         <div class="modal-footer">
