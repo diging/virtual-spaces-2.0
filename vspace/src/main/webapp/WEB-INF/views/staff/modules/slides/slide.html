@@ -86,136 +86,128 @@ function onDoubleClick(e){
     
 function uploadImage() {
 	var imgBlockID = $("#uploadImage").data('value') // gets image ID
-    var file = $('#file')[0].files[0];
-    var reader  = new FileReader();
-    var formData = new FormData();
-    var chooseFromExisting = true;
-    if (typeof(file) != "undefined")
-	 {
-   	   chooseFromExisting = false;
-   	   formData.append('file', file);
-	   formData.append('content', file.name);
-	 }
-    formData.append('contentOrder', contentCount);
-    var imageSource = $('#selectedImage').find('img').attr('src');
-    var imageId = "";
-    if(typeof(imageSource) != "undefined")
-     {
-       imageId = imageSource.split("/").pop().split(".")[0];
-     }
-    var imageblock = "";
- 	var oldImageBlock = "";
-    
-    // Ashmi changes for Story VSPC-64
-    
+	var file = $('#file')[0].files[0];
+	var reader  = new FileReader();
+	var formData = new FormData();
+	var chooseFromExisting = true;
+	if (typeof(file) != "undefined"){
+		chooseFromExisting = false;
+		formData.append('file', file);
+		formData.append('content', file.name);
+	}
+	formData.append('contentOrder', contentCount);
+	var imageSource = $('#selectedImage').find('img').attr('src');
+	var imageId = "";
+	if(typeof(imageSource) != "undefined"){
+		imageId = imageSource.split("/").pop().split(".")[0];
+	}
+	var imageblock = "";
+	var oldImageBlock = "";
+		    
+	// Ashmi changes for Story VSPC-64
+		    
 	// checks if image ID is present to replace
-if (imgBlockID != '') {
-    	oldImageBlock = $("#" + imgBlockID);
-    	var imageBlockId = imgBlockID;
-    	formData.append('imageBlockId',imageBlockId);
-        var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
- if(!chooseFromExisting)
-  {
-    reader.onload = function (theFile)
-    {  
-	 var image = new Image();
-	 image.src = theFile.target.result;
-	 image.onload = function ()
-	 {
-	 imageblock = createImageBlock(reader, this.width);
-	 $("#" + imageBlockId).replaceWith(imageblock);	
-	 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-    };
-   }
-  }
- else
- {
-  var image = new Image();
-  image.src = $('#selectedImage').find('img').attr('src');
-  formData.append('imageId',imageId);
-  imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
-  $("#" + imageBlockId).replaceWith(imageblock);	
-  $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-}
-// Reset data-attribute to get current selected image ID
-$("#uploadImage").data('value', '');
-}
-else {
- var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
- if(!chooseFromExisting)
- {
-  reader.onload = function (theFile) 
-  {        	
-    var image = new Image();
-    image.src = theFile.target.result;
-    image.onload = function() 
-    {
-     imageblock = createImageBlock(reader, this.width);  
-     $('#slideSpace').append(imageblock); 
-     $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-    };          
-  } 
- }
-else
-{
- var image = new Image();
- image.src = $('#selectedImage').find('img').attr('src');
- formData.append('imageId',imageId);
- imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
- $('#slideSpace').append(imageblock); 
- $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
- }
-        ++contentCount; 
-}
-  	
-if (!chooseFromExisting)
-{
-  reader.readAsDataURL(file)
-}
-    $.ajax({
-        enctype: 'multipart/form-data',
-        // ------------- creating image content blocks ------------
-        url: url,
-        type: 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        
-        success: function(data) {
-            $(".open").removeClass("open");
-           	var img = imageblock.find('img');
-           	if(data != ''){
-           		img.attr('id', data);
-           		$("#current").find('#deleteImageId').val(data);
-           		$("#current").attr('id', data);
-           	}
-           	else{
-           		img.attr('id', imgID);
-           		$("#current").find('#deleteImageId').val(imgID);
-           		$("#current").attr('id', imgID);
-           	}
-        },
-        error: function(data) {
-        	if (imgID == '') {
-        		$("#current").remove();
-        	}
-        	else {
-        		$("#current").replaceWith(oldImageBlock);
-        	}
-        	if (data.status == 403) {
-        		$("#loginAlert").show();
-        	}
-        }
-    });
-    // Reset the image file name 
-$('#file').val('');
-if(chooseFromExisting)
- {
-  $("#selectedImage").empty();
-  $('#imageId').prop('selectedIndex',0).trigger( "change" );
- }
-$("#imageId").attr("disabled", false);
+	if (imgBlockID != '') {
+		oldImageBlock = $("#" + imgBlockID);
+		var imageBlockId = imgBlockID;
+		formData.append('imageBlockId',imageBlockId);
+		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+		if(!chooseFromExisting){
+			reader.onload = function (theFile)
+			{
+				var image = new Image();
+				image.src = theFile.target.result;
+				image.onload = function ()
+				{
+					imageblock = createImageBlock(reader, this.width);
+					$("#" + imageBlockId).replaceWith(imageblock);	
+					$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+				};
+			}
+		}
+		else{
+			var image = new Image();
+			image.src = $('#selectedImage').find('img').attr('src');
+			formData.append('imageId',imageId);
+			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
+			$("#" + imageBlockId).replaceWith(imageblock);	
+			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+		}
+		// Reset data-attribute to get current selected image ID
+		$("#uploadImage").data('value', '');
+	}
+	else {
+		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+		if(!chooseFromExisting){
+			reader.onload = function (theFile) 
+			{        	
+				var image = new Image();
+				image.src = theFile.target.result;
+				image.onload = function() 
+				{
+					imageblock = createImageBlock(reader, this.width);  
+					$('#slideSpace').append(imageblock); 
+					$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+				};          
+			} 
+		}
+		else
+		{
+		var image = new Image();
+		image.src = $('#selectedImage').find('img').attr('src');
+		formData.append('imageId',imageId);
+		imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
+		$('#slideSpace').append(imageblock); 
+		$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+		}
+		++contentCount; 
+	}
+	if (!chooseFromExisting)
+	{
+		reader.readAsDataURL(file)
+	}
+	$.ajax({
+		enctype: 'multipart/form-data',
+		// ------------- creating image content blocks ------------
+		url: url,
+		type: 'POST',
+		cache       : false,
+		contentType : false,
+		processData : false,
+		data: formData,    
+		success: function(data) {
+			$(".open").removeClass("open");
+			var img = imageblock.find('img');
+			if(data != ''){
+				img.attr('id', data);
+				$("#current").find('#deleteImageId').val(data);
+				$("#current").attr('id', data);
+			}
+			else{
+				img.attr('id', imgID);
+				$("#current").find('#deleteImageId').val(imgID);
+				$("#current").attr('id', imgID);
+			}
+		},
+		error: function(data) {
+			if (imgID == '') {
+				$("#current").remove();
+			}
+			else {
+				$("#current").replaceWith(oldImageBlock);
+			}
+			if (data.status == 403) {
+				$("#loginAlert").show();
+			}
+		}
+	});
+	// Reset the image file name 
+	$('#file').val('');
+	if(chooseFromExisting)
+	{
+		$("#selectedImage").empty();
+		$('#imageId').prop('selectedIndex',0).trigger( "change" );
+	}
 }
 
 $(document).ready(function() {
@@ -500,7 +492,6 @@ $(document).ready(function() {
     });
 	
     $("#cancelImageBtn").click(function() {
-    	$("#imageId").attr("disabled", false);
     	$("#selectedImage").empty();
     	$('#imageId').prop('selectedIndex',0).trigger( "change" );
     	// Initialize selected image ID to blank, on clicking cancel button
@@ -512,7 +503,6 @@ $(document).ready(function() {
     $("#file").click(function() {
     	$("#selectedImage").empty();
     	$('#imageId').prop('selectedIndex',0).trigger( "change" );
-    	$("#imageId").attr("disabled", true);
     });
     
     $("#submitText").on("click", function(e) {
@@ -940,7 +930,7 @@ $(window).on('load', function () {
                     </div>
                     <form name="photoForm" id="imageUploadForm"
                         enctype="multipart/form-data" method="post">
-                        <div class="modal-body">
+                    	<div class="modal-body">
                             <h6>
                                 <small>Upload Image: </small>
                             </h6>
@@ -948,17 +938,17 @@ $(window).on('load', function () {
                                 name="file" rows="5" cols="500"
                                 id="file" />
                             <div>
-                            <h6>
-                                <small>Or choose an existing image: </small>
-                            </h6>
-							  <select id="imageId" name="imageId"
+                           	    <h6>
+                                    <small>Or choose an existing image: </small>
+                                </h6>
+							    <select id="imageId" name="imageId"
 									class="form-control-xs target"
 									style="height: 50px; width: 200px;">
-								<option selected value="">Choose from existing</option>
-							   </select>
+									<option selected value="">Choose from existing</option>
+							    </select>
 							</div>
 							<div>
-							  <span id="selectedImage" width="200px"></span>
+							    <span id="selectedImage" width="200px"></span>
 							</div>
                         </div>
                         <div class="modal-footer">
