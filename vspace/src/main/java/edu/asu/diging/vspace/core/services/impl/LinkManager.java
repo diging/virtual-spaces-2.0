@@ -38,12 +38,13 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
 
     @Override
     public U createLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
+            int rotation, String linkedId, String linkLabel, String linkDesc, DisplayType displayType, byte[] linkImage,
             String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException{
 
         L link = createLinkObject(title, id);
         T target = getTarget(linkedId);
         link.setName(linkLabel);
+        link.setDescription(linkDesc);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
         setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
@@ -53,7 +54,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
 
     @Override
     public U updateLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
+            int rotation, String linkedId, String linkLabel, String linkDesc, String linkId, String linkDisplayId,
             DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
 
         validateSpace(id);
@@ -61,6 +62,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         L link =  getLink(linkId);
         T target = getTarget(linkedId);
         link.setName(title);
+        link.setDescription(linkDesc);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
         setDisplayProperties(displayLink, id, positionX,positionY,rotation, displayType, linkImage, imageFilename);

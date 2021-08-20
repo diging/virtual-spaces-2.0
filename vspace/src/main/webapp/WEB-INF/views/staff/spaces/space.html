@@ -97,7 +97,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
             spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
         }
         else{
-            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.description+'</span></p></span>');
         }
         setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal);
         $(divId).append(spaceLink);
@@ -106,7 +106,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
             $('#'+spanId+link.link.id).css('cursor', 'pointer');
             $('#'+spanId+link.link.id).click(function(e) {
                 var linkData = $('#'+spanId+link.link.id).data();
-                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+                makeSpaceLinksEditable(linkData["linklabel"], link.link.description, link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
             });
         }
     }
@@ -123,7 +123,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
             moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" src="'+moduleImageURL+'" />');
         }
         else{
-            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.description+'</span></p></span>');
         }
         setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal);
         $(divId).append(moduleLink);
@@ -131,7 +131,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
             $('#'+spanId+link.link.id).css('cursor', 'pointer');
             $('#'+spanId+link.link.id).click(function(e) {
                 var linkData = $('#'+spanId+link.link.id).data();
-                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
+                makeModuleLinksEditable(linkData["linklabel"], link.link.description, link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
             });
         }
     }
@@ -144,7 +144,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
             var imageURL = [[@{/api/image/}]]+link.image.id;
             externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
         }else{
-            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.description+'</span></p></span>');
         }
         setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
         $(divId).append(externalLink);
@@ -152,7 +152,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
             $('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
             $('#'+spanId+link.externalLink.id).click(function(e) {
                 var linkData = $('#'+spanId+link.externalLink.id).data();
-                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.description, link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
             });
         }
     }
@@ -225,12 +225,12 @@ function drawLinks(){
 
 //--------- show links functions --------------
 function showSpaceLink(spaceLink, show, x, y) {
-    $("#space_label").remove();
+    $("#space_desc").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var space_label = $("<p id='space_label' class='tooltiptext'></p>");
-    space_label.text(spaceLink["spaceLinkLabel"]);
+    var space_desc = $("<p id='space_desc' class='tooltiptext'></p>");
+    space_desc.text(spaceLink["spaceLinkDesc"]);
 
     var link;
     if (spaceLink["type"] == "ALERT") {
@@ -238,7 +238,7 @@ function showSpaceLink(spaceLink, show, x, y) {
     } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
         link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
     } else {
-        $(space_label).css({
+        $(space_desc).css({
             'font-size': "12px",
             'transform': 'rotate(0deg)',
             'color': 'grey'
@@ -270,35 +270,35 @@ function showSpaceLink(spaceLink, show, x, y) {
         link.css('cursor', 'pointer');
         link.css('color', 'rgba(128,128,128,1)');
         link.click(function(e) {
-            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
+            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["spaceLinkDesc"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
         });
 
-        space_label.attr("data-link-id", spaceLink["id"]);
-        space_label.attr("class", "tooltiptext label-"+spaceLink["id"]);
-        space_label.css('cursor', 'pointer');
-        space_label.click(function(e) {
-            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
+        space_desc.attr("data-link-id", spaceLink["id"]);
+        space_desc.attr("class", "tooltiptext label-"+spaceLink["id"]);
+        space_desc.css('cursor', 'pointer');
+        space_desc.click(function(e) {
+            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["spaceLinkDesc"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
         });
     }
 
     $("#space").append(link);
     $("#space").append(unpublishedSpaceElement);
-    $("#link").append(space_label);
+    $("#link").append(space_desc);
 }
 
 function showModuleLink(moduleLink, show, x, y) {
-    $("#module_label").remove();
+    $("#module_desc").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var module_label = $("<p id='module_label' class='tooltiptext'></p>");
-    module_label.text(moduleLink["moduleLinkLabel"]);
+    var module_desc = $("<p id='module_desc' class='tooltiptext'></p>");
+    module_desc.text(moduleLink["moduleLinkDesc"]);
 
     var link;
     if (moduleLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
     }else{ 
-        $(module_label).css({
+        $(module_desc).css({
             'position': 'absolute',
             'font-size': "10px",
             'transform': 'rotate(0deg)',
@@ -324,16 +324,16 @@ function showModuleLink(moduleLink, show, x, y) {
         link.click(function(e) {
             makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
         });
-        module_label.attr("data-link-id", moduleLink["id"]);
-        module_label.css('cursor', 'pointer');
-        module_label.attr("class", "tooltiptext label-"+moduleLink["id"]);
-        module_label.click(function(e) {
+        module_desc.attr("data-link-id", moduleLink["id"]);
+        module_desc.css('cursor', 'pointer');
+        module_desc.attr("class", "tooltiptext label-"+moduleLink["id"]);
+        module_desc.click(function(e) {
             makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
         });
     }
 
     $("#space").append(link);
-    $("#link").append(module_label);
+    $("#link").append(module_desc);
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
@@ -341,7 +341,7 @@ function showModuleLinkEdit(moduleLink, show, posX, posY) {
     moduleLink["y"]=storeY;
     var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
     var selectedLabelClass = '.label-'+selectedModuleLinkId;
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"]);
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"], moduleLink["moduleLinkDesc"]);
 }
 
 function showSpaceLinkEdit(spaceLink, show, posX, posY) {
@@ -368,7 +368,7 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
     $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
     $(selectedUnpublishedIconClass).css({ 'left': posX - displaceUnpublishedOnXModal});
     $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnYModal});
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"], spaceLink["spaceLinkDesc"]);
 }
 
 function showExternalLinkEdit(externalLink, show, posX, posY) {
@@ -376,10 +376,10 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
     externalLink["y"]=storeY;
     var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
     var selectedLabelClass = '.label-'+selectedExternalLinkId;
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"], externalLink["externalLinkDesc"]);
 }
 
-function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
+function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel,linkDesc, show){
     var posX, posY;
     if(show) {
         posx = $("#main-bgImage").position().left;
@@ -394,7 +394,7 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     $(selectedLinkClass).css({ 'left': x + posX});
     $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass+' span').remove();
-    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
+    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkDesc + '</span>');
     feather.replace();    
 }
 
@@ -468,6 +468,7 @@ function createSpaceLinkInfo() {
     info["rotation"] = $("#spaceLinkRotation").val();
     info["linkedSpace"] = $("#linkedSpace").val();
     info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+    info["spaceLinkDesc"] = $("#spaceLinkDesc").val();
     info["type"] = $("#type").val();
     return info;
 }
@@ -478,6 +479,7 @@ function createExternalLinkInfo() {
     info["y"] = storeY;
     info["type"] = $("#extType").val();
     info["externalLinkLabel"] = $("#externalLinkLabel").val();
+    info["externalLinkDesc"] = $("#externalLinkDesc").val();
     info["externalLinkURL"] = $("#externalLink").val();
     return info;
 }
@@ -489,6 +491,7 @@ function createModuleLinkInfo() {
     info["rotation"] = $("#moduleLinkRotation").val();
     info["linkedModule"] = $("#linkedModule").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
+    info["moduleLinkDesc"] = $("#moduleLinkDesc").val();
     info["type"] = $("#type").val();
     return info;
 }
@@ -500,6 +503,7 @@ function editModuleLinkInfo() {
     info["rotation"] = $("#moduleLinkRotationEdit").val();
     info["linkedModule"] = $("#moduleLinkIdEdit").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
+    info["moduleLinkDesc"] = $("#moduleLinkDescEdit").val();
     info["type"] = $("#typeEdit").val();
     return info;
 }
@@ -511,6 +515,7 @@ function editSpaceLinkInfo() {
     info["rotation"] = $("#spaceLinkRotationEdit").val();
     info["linkedSpace"] = $("#spaceLinkIdEdit").val();
     info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
+    info["spaceLinkDesc"] = $("#spaceLinkDescEdit").val();
     info["type"] = $("#typeSpaceEdit").val();
     return info;
 }
@@ -521,11 +526,12 @@ function editExternalLinkInfo() {
     info["y"] = storeY;
     info["type"] = $("#extTypeEdit").val();
     info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+    info["externalLinkDesc"] = $("#externalLinkDescEdit").val();
     info["externalLinkURL"] = $("#externalLinkURLEdit").val();
     return info;
 }
 
-function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
+function makeSpaceLinksEditable(spaceLinkName, spaceLinkDesc, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
     $("#spaceLinkInfoLabel").text(spaceLinkName);
     $("#spaceLinkId").val(spaceLinkId);
     selectedSpaceLinkId=spaceLinkId;
@@ -535,6 +541,7 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     $("#spaceLinkDisplayId").val(displayLinkId);
     $("#spaceLinkInfoLabelEdit").text(spaceLinkName);
     $("#spaceLinkLabelEdit").val(spaceLinkName);
+    $("#spaceLinkDescEdit").val(spaceLinkDesc);
     $("#spaceLinkId").val(spaceLinkId);
     $("#spaceLinkIdValueEdit").val(spaceLinkId);
     $("#spaceLinkRotationEdit").val(rotation);
@@ -564,7 +571,7 @@ function displayForms(formToShow){
     $(formToShow).css("display", "flex");
 }
 
-function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
+function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
 
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
@@ -573,6 +580,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     $("#moduleLinkDisplayId").val(displayLinkId);
     $("#moduleLinkInfoLabelEdit").text(moduleLinkName);
     $("#moduleLinkLabelEdit").val(moduleLinkName);
+    $("#moduleLinkDescEdit").val(moduleLinkDesc);
     $("#moduleLinkId").val(moduleLinkId);
     $("#moduleLinkIdValueEdit").val(moduleLinkId);
     $("#moduleLinkRotationEdit").val(rotation);
@@ -596,7 +604,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     displayForms("#editModuleLinkInfo");
 }
 
-function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
+function makeExternalLinksEditable(linkName, linkDesc, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
     selectedExternalLinkId=linkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -605,6 +613,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     $("#externalLinkDisplayId").val(displayLinkId);
     $("#externalLinkInfoLabelEdit").text(linkName);
     $("#externalLinkLabelEdit").val(linkName);
+    $("#externalLinkDescEdit").val(linkDesc);
     $("#externalLinkIdValueEdit").val(linkId);
     $("#externalLinkURLEdit").val(externalLinkURL);
     $('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
@@ -663,7 +672,7 @@ $(function(){
             $("#bgImage").on("click", function(e){
                 e.preventDefault();
                 $("#external-arrow").remove();
-                $("#space_label").remove();
+                $("#space_desc").remove();
                 $("#link").remove();
                 var icon;
                 var posX = $(this).position().left;
@@ -682,7 +691,7 @@ $(function(){
             $("#bgImage").on("click", function(e){
                 e.preventDefault();
                 $("#external-arrow").remove();
-                $("#module_label").remove();
+                $("#module_desc").remove();
                 $("#link").remove();
                 var icon;
                 var posX = $(this).position().left;
@@ -730,6 +739,7 @@ $(function(){
             e.preventDefault();
             $('#errorAlert').hide();
             var label = $("#spaceLinkLabel").val();
+            var desc = $("#spaceLinkDesc").val();
             var spaceName = $("#linkedSpace option:selected").text();
             var type = $("#type option:selected").text();
 
@@ -762,6 +772,7 @@ $(function(){
 
             var form = $("#createSpaceLinkForm");
             var label = $("#spaceLinkLabel").val();
+            var desc = $("#spaceLinkDesc").val();
             var spaceName = $("#linkedSpace option:selected").text();
             var spaceId = $("#linkedSpace option:selected").val(); 
             var formData = new FormData(form[0]);
@@ -789,7 +800,7 @@ $(function(){
                     spaceLinkInfo["y"]=linkData["y"];
                     spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
                     showSpaceLink(spaceLinkInfo, true);
-                    $("#space_label").attr("id","");
+                    $("#space_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createSpaceLinkAlert").hide();  
                     $("#errorMsg").text("");
@@ -820,6 +831,7 @@ $(function(){
 
             var linkedModules = $("#linkedModule").val();
             var moduleLabel = $("#moduleLinkLabel").val();
+            var moduleDesc = $("#moduleLinkDesc").val();
 
             if (moduleLabel == undefined || moduleLabel == "") {
                 $("#errorMsg").text("Please enter the label for module.")
@@ -864,7 +876,7 @@ $(function(){
                     moduleLinkInfo["x"]=linkData["x"];
                     moduleLinkInfo["y"]=linkData["y"];
                     showModuleLink(moduleLinkInfo, true);
-                    $("#module_label").attr("id","");
+                    $("#module_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
@@ -1033,8 +1045,8 @@ $(function(){
 
             var externalLink = $("#externalLink").val();
             var externalLinkLabel = $("#externalLinkLabel").val();
+            var externalLinkDesc = $("#externalLinkDesc").val();
             var type = $("#extType option:selected").text();
-
 
             if (externalLink == undefined || externalLink == "") {
                 $("#errorMsg").text("Please provide the link to the external link.")
@@ -1237,7 +1249,7 @@ $(function(){
             storeY = null;
             $("#link").remove();
 
-            $("#space_label").remove();
+            $("#space_desc").remove();
             $("#space").hide();
             $("#createSpaceLinkAlert").hide(); 
             $('#errorAlert').hide();
@@ -1248,7 +1260,7 @@ $(function(){
             storeX = null;
             storeY = null;
             $("#link").remove();
-            $("#module_label").remove();
+            $("#module_desc").remove();
             $("#space").hide();
             $("#createModuleLinkAlert").hide();  
             $('#errorAlert').hide();
@@ -1466,6 +1478,15 @@ $(function(){
 	                        <input class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
 	                    </div>
 	                </div>
+	                
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                    	<label>Description</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<textarea class="form-control-sm target" rows="5" name="spaceLinkDesc" id="spaceLinkDesc" style="background: var(--base-grey); width: inherit;"></textarea>
+						</div>
+					</div>
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -1550,6 +1571,15 @@ $(function(){
 	                            name="moduleLinkLabel" id="moduleLinkLabel">
 	                    </div>
 	                </div>
+	                
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                    	<label>Description</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<textarea class="form-control-sm modulelink-target" rows="5" name="moduleLinkDesc" id="moduleLinkDesc" style="background: var(--base-grey); width: inherit;"></textarea>
+						</div>
+					</div>
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -1599,6 +1629,15 @@ $(function(){
 	                			 name="externalLinkLabel" id="externalLinkLabel">	
 	                	</div>
 	                </div>
+	                
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                    	<label>Description</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<textarea class="form-control-sm extlink-target" rows="5" name="externalLinkDesc" id="externalLinkDesc" style="background: var(--base-grey); width: inherit;"></textarea>
+						</div>
+					</div>
 	                 
 	                <div class="row">
 	                	<div class="col-sm-4">
@@ -1686,6 +1725,15 @@ $(function(){
 	                            id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
 	                    </div>
 	                </div>
+	                
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                    	<label>Description</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<textarea class="form-control-sm spacelink-targetEdit" rows="5" name="spaceLinkDesc" id="spaceLinkDescEdit" style="background: var(--base-grey); width: inherit;"></textarea>
+						</div>
+					</div>
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -1787,6 +1835,14 @@ $(function(){
                         </div>
                     </div>
                     <div class="row">
+	                    <div class="col-sm-4">
+	                    	<label>Description:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<textarea class="form-control-sm modulelink-targetEdit" rows="5" name="moduleLinkDesc" id="moduleLinkDescEdit" style="background: var(--base-grey); width: inherit;"></textarea>
+						</div>
+					</div>
+                    <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
                             <label>Linked
                                     Modules:</label>
@@ -1851,6 +1907,15 @@ $(function(){
                                 style="width: inherit; background: var(--base-grey)"><br>
                         </div>
                     </div>
+                    
+                    <div class="row">
+	                    <div class="col-sm-4">
+	                    	<label>Description:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<textarea class="form-control-sm externallink-targetEdit" rows="5" name="externalLinkDesc" id="externalLinkDescEdit" style="background: var(--base-grey); width: inherit;"></textarea>
+						</div>
+					</div>
 
                     <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">

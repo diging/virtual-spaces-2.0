@@ -37,8 +37,9 @@ public class AddSpaceLinkController {
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("spaceLinkLabel") String title,
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel,
-            @RequestParam("type") String displayType, @RequestParam("spaceLinkImage") MultipartFile file)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
+            @RequestParam("spaceLinkDesc") String spaceLinkDesc, @RequestParam("type") String displayType, 
+            @RequestParam("spaceLinkImage") MultipartFile file)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -63,7 +64,7 @@ public class AddSpaceLinkController {
         ISpaceLinkDisplay display;
         try {
             display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
+                    new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkDesc, type, linkImage, filename);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
