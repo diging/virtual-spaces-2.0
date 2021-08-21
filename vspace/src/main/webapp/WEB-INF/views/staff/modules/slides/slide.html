@@ -208,6 +208,22 @@ function uploadImage() {
 }
 
 $(document).ready(function() {
+	
+	$('#imageId').prop("disabled",true);	
+    
+	$('#chooseFromLocal').click(function() {
+		$("#selectedImage").empty();
+		$('#imageId').prop('selectedIndex',0).trigger( "change" );
+		$('#imageId').prop("disabled",true);
+		$('#file').prop("disabled",false);
+		
+	  });
+	
+	$('#chooseFromExisting').click(function() {
+		$('#file').val('');
+		$('#file').prop("disabled",true);
+		$('#imageId').prop("disabled",false);
+	  });
     
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
@@ -329,6 +345,8 @@ $(document).ready(function() {
     $("#uploadImage").click(function(e) {
         e.preventDefault();
             $("#addImgAlert").hide();
+            $('#file').prop("disabled",false);
+        	$('#imageId').prop("disabled",true);
             uploadImage();
     });
     
@@ -491,6 +509,8 @@ $(document).ready(function() {
     $("#cancelImageBtn").click(function() {
     	$("#selectedImage").empty();
     	$('#imageId').prop('selectedIndex',0).trigger( "change" );
+    	$('#file').prop("disabled",false);
+    	$('#imageId').prop("disabled",true);
     	// Initialize selected image ID to blank, on clicking cancel button
     	$("#uploadImage").data('value', '');
         $("#addImgAlert").hide();
@@ -924,12 +944,14 @@ $(window).on('load', function () {
                     <form name="photoForm" id="imageUploadForm"
                         enctype="multipart/form-data" method="post">
                     	<div class="modal-body">
+                    	   <input type="radio" id="chooseFromLocal" name ="uploadRadioBtn" checked/>
                             <h6>
                                 <small>Upload Image: </small>
                             </h6>
                             <input class="form-control" type="file"
                                 name="file" rows="5" cols="500"
                                 id="file" />
+                            <input type="radio" id="chooseFromExisting" name ="uploadRadioBtn" />       
                             <div>
                            	    <h6>
                                     <small>Or choose an existing image: </small>
