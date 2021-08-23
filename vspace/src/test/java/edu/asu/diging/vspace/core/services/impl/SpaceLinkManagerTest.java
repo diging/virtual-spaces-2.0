@@ -105,9 +105,10 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceDisplayLink)).thenReturn((SpaceLinkDisplay)spaceDisplayLink);
 
-        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link", DisplayType.ARROW, null, null);
+        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link", "New Space Link Desc", DisplayType.ARROW, null, null);
         Assert.assertEquals(spaceDisplayLink.getId(), savedSpaceLinkDisplay.getId());
         Assert.assertEquals(spaceDisplayLink.getName(), savedSpaceLinkDisplay.getName());
+        Assert.assertEquals(spaceDisplayLink.getDescription(), savedSpaceLinkDisplay.getDescription());
         Assert.assertEquals(new Double(spaceDisplayLink.getPositionX()), new Double(savedSpaceLinkDisplay.getPositionX()));
         Assert.assertEquals(new Double(spaceDisplayLink.getPositionY()), new Double(savedSpaceLinkDisplay.getPositionY()));
         Assert.assertEquals(spaceDisplayLink.getRotation(), savedSpaceLinkDisplay.getRotation());
@@ -218,9 +219,10 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceLinkDisplay)).thenReturn((SpaceLinkDisplay)spaceLinkDisplayUpdated);
 
-        ISpaceLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestSpaceEdited", spaceId1, 100, 300, 180, spaceId3, "TestSpaceEdited", "SPL002", "SPLD001", DisplayType.ALERT, null, null);
+        ISpaceLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestSpaceEdited", spaceId1, 100, 300, 180, spaceId3, "TestSpaceEdited", "TestSpaceEdited Desc", "SPL002", "SPLD001", DisplayType.ALERT, null, null);
         Assert.assertEquals(spaceLinkDisplayUpdated.getId(), actualUpdatedLink.getId());
         Assert.assertEquals(spaceLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
+        Assert.assertEquals(spaceLinkDisplayUpdated.getDescription(), actualUpdatedLink.getDescription());
         Assert.assertEquals(new Double(spaceLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
         Assert.assertEquals(new Double(spaceLinkDisplayUpdated.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
         Assert.assertEquals(spaceLinkDisplayUpdated.getLink().getTargetSpace(), actualUpdatedLink.getLink().getTargetSpace());
