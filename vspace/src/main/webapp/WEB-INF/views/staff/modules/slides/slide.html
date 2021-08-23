@@ -725,10 +725,9 @@ $(document).ready(function() {
            	},
             data: jsonData,
             success: function(data) {
-            	data = JSON.parse(data);
-            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;">' +
-                		+ '<a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><i style="color: var(--error);" class="icon-trash error"></i></a></p></div>');
+            	var biblioblock = $('<div><div id="'+ data.id +'" class="biblioDivStaff tab row"><p class="col-md-10"> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span></p>'
+                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><span class="icon-trash error"></span></a>' +
+                		+ '<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><div id="referenceSpace" class="col-md-10"></div></div></div>');
 
             	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             
@@ -805,14 +804,13 @@ $(document).ready(function() {
            	},
             data: jsonData,
             success: function(data) {
-            	data = JSON.parse(data);
             	var referenceblock = $('<div id="'+ data.id +'" class="referenceDivStaff tab row"><p class="col-md-10" > Reference Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
                 		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
                 		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
 						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
 						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
-						+ 'Note: <span>' + data.note + '</span>'
-                		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="icon-trash error"></i></a></p></div>');
+						+ 'Note: <span>' + data.note + '</span></p>'
+                		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference col-md-1" href="javascript:;"><span class="icon-trash error"></span></a></div>');
 
             	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             	var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -1419,25 +1417,15 @@ $(window).on('load', function () {
 					</div>
 					<form name="sendBiblioForm" id="sendBiblioForm">
 						<div class="modal-body">
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Title: </label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="titleBiblio" name="titleBiblio" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Title: </label>
+							<input type="text" class="form-control col-md-8"
+											id="titleBiblio" name="titleBiblio" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Description: </label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="descriptionBiblio" name="descriptionBiblio" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Description: </label>
+										<textarea rows="3" class="form-control col-md-8"
+											id="descriptionBiblio" name="descriptionBiblio" ></textarea>
 							</div>
 							
 						</div>
@@ -1462,115 +1450,49 @@ $(window).on('load', function () {
 					</div>
 					<form name="sendReferenceForm" id="sendReferenceForm">
 						<div class="modal-body">
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Title:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="titleRef" name="titleRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Title:</label>
+								<input type="text" class="form-control col-md-8" id="titleRef" name="titleRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Author:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="authorRef" name="authorRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Author:</label>
+								<input type="text" class="form-control col-md-8" id="authorRef" name="authorRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Year:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="yearRef" name="yearRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Year:</label>
+								<input type="text" class="form-control col-md-8" id="yearRef" name="yearRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Journal:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="journalRef" name="journalRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Journal:</label>
+								<input type="text" class="form-control col-md-8" id="journalRef" name="journalRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Url:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="urlRef" name="urlRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Url:</label>
+								<input type="text" class="form-control col-md-8" id="urlRef" name="urlRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Volume:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="volumeRef" name="volumeRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Volume:</label>
+								<input type="text" class="form-control col-md-8" id="volumeRef" name="volumeRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Issue:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="issueRef" name="issueRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Issue:</label>
+								<input type="text" class="form-control col-md-8" id="issueRef" name="issueRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Pages:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="pagesRef" name="pagesRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Pages:</label>
+								<input type="text" class="form-control col-md-8" id="pagesRef" name="pagesRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Editors:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editorsRef" name="editorsRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Editors:</label>
+								<input type="text" class="form-control col-md-8" id="editorsRef" name="editorsRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Type:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="typeRef" name="typeRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Type:</label>
+								<input type="text" class="form-control col-md-8" id="typeRef" name="typeRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Note:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="noteRef" name="noteRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Note:</label>
+								<input type="text" class="form-control col-md-8" id="noteRef" name="noteRef" />
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -1593,25 +1515,13 @@ $(window).on('load', function () {
 					</div>
 					<form name="sendBiblioForm" id="sendEditBiblioForm">
 						<div class="modal-body">
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Title:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editTitleBiblio" name="editTitleBiblio" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Title:</label>
+								<input type="text" class="form-control col-md-8" id="editTitleBiblio" name="editTitleBiblio" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Description:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editDescBiblio" name="editDescBiblio" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Description:</label>
+								<textarea type="text" rows="3" class="form-control col-md-8" id="editDescBiblio" name="editDescBiblio" ></textarea>
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -1635,115 +1545,49 @@ $(window).on('load', function () {
 					</div>
 					<form name="sendReferenceForm" id="sendEditReferenceForm">
 						<div class="modal-body">
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Title:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editTitleRef" name="ediTitleRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Title:</label>
+								<input type="text" class="form-control col-md-8" id="editTitleRef" name="ediTitleRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Author:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editAuthorRef" name="editAuthorRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Author:</label>
+								<input type="text" class="form-control col-md-8" id="editAuthorRef" name="editAuthorRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Year:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editYearRef" name="editYearRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Year:</label>
+								<input type="text" class="form-control col-md-8" id="editYearRef" name="editYearRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Journal:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editJournalRef" name="editJournalRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Journal:</label>
+								<input type="text" class="form-control col-md-8" id="editJournalRef" name="editJournalRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Url:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editUrlRef" name="editUrlRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Url:</label>
+								<input type="text" class="form-control col-md-8" id="editUrlRef" name="editUrlRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Volume:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editVolumeRef" name="editVolumeRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Volume:</label>
+								<input type="text" class="form-control col-md-8" id="editVolumeRef" name="editVolumeRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Issue:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editIssueRef" name="editIssueRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Issue:</label>
+								<input type="text" class="form-control col-md-8" id="editIssueRef" name="editIssueRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Pages:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editPagesRef" name="editPagesRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Pages:</label>
+								<input type="text" class="form-control col-md-8" id="editPagesRef" name="editPagesRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Editors:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editEditorsRef" name="editEditorsRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Editors:</label>
+								<input type="text" class="form-control col-md-8" id="editEditorsRef" name="editEditorsRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Type:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editTypeRef" name="editTypeRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Type:</label>
+								<input type="text" class="form-control col-md-8" id="editTypeRef" name="editTypeRef" />
 							</div>
-							<div class="form-group">
-								<table>
-									<tr>
-										<td><label for="name" class="col-form-label">Note:</label>
-										</td>
-										<td><input type="text" class="form-control"
-											id="editNoteRef" name="editNoteRef" /></td>
-									</tr>
-								</table>
+							<div class="form-group row">
+								<label for="name" class="col-md-3 col-form-label">Note:</label>
+								<input type="text" class="form-control col-md-8" id="editNoteRef" name="editNoteRef" />
 							</div>
 						</div>
 						<div class="modal-footer">
