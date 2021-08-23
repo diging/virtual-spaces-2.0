@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
-public class AdjustContentOrderController {
+public class UpdateContentOrderController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
