@@ -142,12 +142,12 @@ $('.modulepage-selection').bootpag({
 	    success: function(data) {
 		moduleList = data['modules'];
 		moduleImageIdMap = data['moduleImageIdMap'];
-		moduleAlertMessages = data['moduleAlertMessages'];
+		isModuleConfiguredMap = data['moduleAlertMessages'];
         $("#moduleResultDisplay").empty();
 		for(let i=0;i<moduleList.length;i++)
 		{
-			var showModuleAlertMessage = moduleAlertMessages[moduleList[i].id];
-			if(!showModuleAlertMessage)
+			var isModuleConfigured = isModuleConfiguredMap[moduleList[i].id];
+			if(isModuleConfigured)
 			{
 				var divtag = $("<div></div>");
 				divtag.attr('id',moduleList[i].id);
@@ -186,8 +186,11 @@ $('.modulepage-selection').bootpag({
 			else
 			{
 				var divtag = $("<div></div>");
-				divtag.attr('id',moduleList[i].id); 
-				divtag.attr('class',"col-md-12  tab  btn btn-light");
+				divtag.attr('id',moduleList[i].id);
+				var anchor = $("<a></a>");
+				anchor.attr('href',"[(@{'/staff/module/'})]"+moduleList[i].id);
+				anchor.attr('class',"textDivStaff tab  btn btn-light");
+				anchor.css('width','100%');
 				var span1 = $("<span></span>");
 				span1.attr('class',"card-title");
 				span1.css('white-space',"pre-wrap");
@@ -195,11 +198,13 @@ $('.modulepage-selection').bootpag({
 				var span2 = $("<span>"+'Module:'+"</span>");
 				span2.css('color','var(--dark-grey)');
 				span1.append(span2);
-				span1.append(moduleList[i].name+'<br>');
-				divtag.append(span1);
+				span1.append(moduleList[i].name);
+				anchor.append(span1);
+				anchor.append('<br>');
 				var span3 = $("<span></span>");
 				span3.append("The module has not been configured yet.");
-				divtag.append(span3);
+				anchor.append(span3);
+				divtag.append(anchor);
 				$("#moduleResultDisplay").append(divtag);
 			}
 		}
@@ -456,11 +461,14 @@ a.nav-link.active.show {
 				<div id="moduleResultDisplay">
 					<div th:each="contents: ${moduleSearchResults}">
 						<div th:id="${contents.id}">
-						<div th:if= " ${contents?.startSequence ==null}" class="col-md-12  tab  btn btn-light" >
+						<div th:if= " ${contents?.startSequence ==null}">
+						<a th:href="@{'/staff/module/'+${contents.id}}"
+								style="width: 100%" class="textDivStaff tab  btn btn-light">
 						<span class="card-title"
                         style="white-space: pre-wrap; line-break: anywhere;"><span 
                         style="color: var(--dark-grey)">Module:</span> [[${contents.name}]]</span><br>
 						<span>The module has not been configured yet.</span>
+						</a>
 						</div>
 						    <div th:if= " ${contents?.startSequence !=null}">
 							<a th:href="@{'/staff/module/'+${contents.id}}"

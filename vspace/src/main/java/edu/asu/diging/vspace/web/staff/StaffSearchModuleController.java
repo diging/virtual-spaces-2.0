@@ -44,10 +44,10 @@ public class StaffSearchModuleController {
         for (Module module : moduleList) {
 
             if (module.getStartSequence() == null) {
-                isModuleConfiguredMap.put(module.getId(), true);
+                isModuleConfiguredMap.put(module.getId(), false);
                 moduleFirstSlideImage.put(module.getId(), null);
             } else {
-                isModuleConfiguredMap.put(module.getId(), false);
+                isModuleConfiguredMap.put(module.getId(), true);
                 String startSequenceID = module.getStartSequence().getId();
                 List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
                         ? sequenceManager.getSequence(startSequenceID).getSlides()

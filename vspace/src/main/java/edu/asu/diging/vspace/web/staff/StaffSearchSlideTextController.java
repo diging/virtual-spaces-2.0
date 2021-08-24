@@ -42,18 +42,19 @@ public class StaffSearchSlideTextController {
         for (Slide slide : slideTextList) {
 
             String slideFirstImageId = null;
-
-            if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
-            }
-            slideTextFirstImageMap.put(slide.getId(), slideFirstImageId);
-
             ITextBlock slideFirstTextBlock = null;
 
-            if (slide != null && slide.getFirstMatchedTextBlock(searchTerm)!= null) {
-                slideFirstTextBlock = slide.getFirstMatchedTextBlock(searchTerm);
+            if (slide != null) {
+                if (slide.getFirstImageBlock() != null) {
+                    slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
+                }
+                slideTextFirstImageMap.put(slide.getId(), slideFirstImageId);
+
+                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
+                    slideFirstTextBlock = slide.getFirstMatchedTextBlock(searchTerm);
+                }
+                slideTextFirstTextBlockMap.put(slide.getId(), slideFirstTextBlock.getText());
             }
-            slideTextFirstTextBlockMap.put(slide.getId(), slideFirstTextBlock.getText());
 
         }
         staffSearch.setSlideToFirstImageMap(slideTextFirstImageMap);
@@ -63,9 +64,9 @@ public class StaffSearchSlideTextController {
 
     /**
      * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the slides
-     * corresponding to the page number specified in the input
-     * parameter(spacePagenum) whose text block contains the search string
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose text block contains the
+     * search string
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
