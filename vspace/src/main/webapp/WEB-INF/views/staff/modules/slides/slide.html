@@ -191,7 +191,7 @@ function guidedTour() {
 	
 	tour.addStep({
 	  title: 'Easy navigation',
-	  text: `Keep track of your location in the module or navigate back up the order.`,
+	  text: `Keep track of your location in the module or navigate back.`,
 	  attachTo: {
 	    element: '.breadcrumb',
 	    on: 'bottom'
@@ -217,7 +217,7 @@ function guidedTour() {
 	
 	tour.addStep({
 	  title: 'Adding content',
-	  text: `Looks like your slide is empty. Add a text block/image. `,
+	  text: `Add content to your slide. The content will be shown in the exhibition in the order you define here.`,
 	  attachTo: {
 	    element: '.content-btns',
 	    on: 'bottom'
@@ -247,7 +247,7 @@ function guidedTour() {
 
 $(document).ready(function() {	
 	
-	if (localStorage.getItem("newSlide") == "true") {
+	if (localStorage.getItem("newSlide") == null) {
 		guidedTour();
 		localStorage.setItem("newSlide", false);
 	}

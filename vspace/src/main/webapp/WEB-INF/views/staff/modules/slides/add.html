@@ -9,10 +9,6 @@
 $(document).ready(function(){
 	var vals = []
 	var choices = []
-	
-	document.getElementById("newSlide").addEventListener("click", function() {
-		localStorage.setItem("newSlide", true);
-	});
 		
 	$('select[id="type"]').change(function(){
 	    if ($(this).val() == "BRANCHING_POINT"){

@@ -88,7 +88,7 @@ function guidedTour() {
 	
 	tour.addStep({
 	  title: 'Slide board',
-	  text: `Create slides you want to show in your Module.`,
+	  text: `Create slides you want to show in your Module. You can create two types of slides: slides and branching points. A slide is like a power point slide, it can contain images, texts, and other content. A branching point is a slide that can link to other sequences in the module giving the user options what to look at next.`,
 	  attachTo: {
 	    element: '.slides',
 	    on: 'bottom'
@@ -114,7 +114,7 @@ function guidedTour() {
 	
 	tour.addStep({
 	  title: 'Sequence board',
-	  text: `Add or remove existing slides in your sequence. You can change the order of slides too.`,
+	  text: `Create sequences to set the order of slides. You can add or remove existing slides or you can change their order in a sequence.`,
 	  attachTo: {
 	    element: '.sequences',
 	    on: 'bottom'
@@ -169,7 +169,7 @@ function guidedTour() {
 
 $(document).ready(function() {
 	
-	if (localStorage.getItem("newModule") == "true") {
+	if (localStorage.getItem("newModule") == null) {
 		guidedTour();
 		localStorage.setItem("newModule", false);
 	}

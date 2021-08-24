@@ -12,7 +12,7 @@
 	    var vals = []
 		var slides = []
 	    
-	    if (localStorage.getItem("newSequence") == "true") {
+	    if (localStorage.getItem("newSequence") == null) {
 			guidedTour();
 			localStorage.setItem("newSequence", false);
 		}
@@ -227,7 +227,7 @@
 		
 		tour.addStep({
 		  title: 'Easy navigation',
-		  text: `Keep track of your location in the module or navigate back up the order.`,
+		  text: `Keep track of your location in the module or navigate back.`,
 		  attachTo: {
 		    element: '.breadcrumb',
 		    on: 'bottom'

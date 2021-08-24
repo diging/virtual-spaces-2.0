@@ -10,10 +10,6 @@ $(document).ready(function() {
 	var vals = []
 	var slides = []
 	
-	document.getElementById("newSequence").addEventListener("click", function() {
-		localStorage.setItem("newSequence", true);
-	});
-	
 	$('#ordered-slides').multiSelect({
 		keepOrder : true,
 		dblClick : true,
