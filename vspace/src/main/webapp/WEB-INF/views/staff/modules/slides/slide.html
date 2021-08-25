@@ -284,7 +284,7 @@ $(document).ready(function() {
 	        error: function(data) {
 	            $(".open").removeClass("open");
 	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	                $('.error').append(alert);
+	                $('.errorMsg').append(alert);
 	        }
          });       
       });
@@ -335,7 +335,7 @@ $(document).ready(function() {
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
+                $('.errorMsg').append(alert);
             }
         });
       });
@@ -499,9 +499,9 @@ $(document).ready(function() {
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.error').append(alert); 
-				$(".error").delay(4000).slideUp(500, function(){
-				    $(".error").empty();
+				$('.errorMsg').append(alert); 
+				$(".errorMsg").delay(4000).slideUp(500, function(){
+				    $(".errorMsg").empty();
 				});
 			}
 		});
@@ -532,9 +532,9 @@ $(document).ready(function() {
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.error').append(alert); 
-				$(".error").delay(4000).slideUp(500, function(){
-				    $(".error").empty();
+				$('.errorMsg').append(alert); 
+				$(".errorMsg").delay(4000).slideUp(500, function(){
+				    $(".errorMsg").empty();
 				});
 			}
 		});
@@ -568,9 +568,9 @@ $(document).ready(function() {
 		    },
 			error: function(data) {
 				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.error').append(alert); 
-				$(".error").delay(4000).slideUp(500, function(){
-				    $(".error").empty();
+				$('.errorMsg').append(alert); 
+				$(".errorMsg").delay(4000).slideUp(500, function(){
+				    $(".errorMsg").empty();
 				});
 			}
 		});
@@ -588,9 +588,9 @@ $(document).ready(function() {
 		var blockId = $('#deleteImageId').attr('value');
 		if(blockId == null || blockId == ''){
 			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.error').append(alert); 
-			$(".error").delay(4000).slideUp(500, function(){
-			    $(".error").empty();
+			$('.errorMsg').append(alert); 
+			$(".errorMsg").delay(4000).slideUp(500, function(){
+			    $(".errorMsg").empty();
 			});
 		} else{
 			$('#deleteImageId').remove()
@@ -603,9 +603,9 @@ $(document).ready(function() {
 			    },
 				error: function(data) {
 					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.error').append(alert); 
-					$(".error").delay(4000).slideUp(500, function(){
-					    $(".error").empty();
+					$('.errorMsg').append(alert); 
+					$(".errorMsg").delay(4000).slideUp(500, function(){
+					    $(".errorMsg").empty();
 					});
 				}
 			});
@@ -622,9 +622,9 @@ $(document).ready(function() {
 		var blockId = $('#deleteChoiceBlockId').attr('value');
 		if(blockId == null || blockId == ''){
 			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.error').append(alert); 
-			$(".error").delay(4000).slideUp(500, function(){
-			    $(".error").empty();
+			$('.errorMsg').append(alert); 
+			$(".errorMsg").delay(4000).slideUp(500, function(){
+			    $(".errorMsg").empty();
 			});
 		} else{
 			$('#deleteChoiceBlockId').remove()
@@ -637,9 +637,9 @@ $(document).ready(function() {
 			    },
 				error: function(data) {
 					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.error').append(alert); 
-					$(".error").delay(4000).slideUp(500, function(){
-					    $(".error").empty();
+					$('.errorMsg').append(alert); 
+					$(".errorMsg").delay(4000).slideUp(500, function(){
+					    $(".errorMsg").empty();
 					});
 				}
 			});
@@ -687,7 +687,7 @@ $(document).ready(function() {
             	}
             	else {
                 	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                	$('.error').append(alert);
+                	$('.errorMsg').append(alert);
             	}
             }
         });
@@ -726,7 +726,7 @@ $(document).ready(function() {
             data: jsonData,
             success: function(data) {
             	var biblioblock = $('<div><div id="'+ data.id +'" class="biblioDivStaff tab row"><p class="col-md-10"> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span></p>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><span class="icon-trash error"></span></a>' +
+                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><span class="icon-trash error"></span></a>'
                 		+ '<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><div id="referenceSpace" class="col-md-10"></div></div></div>');
 
             	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -738,7 +738,7 @@ $(document).ready(function() {
             	}
             	else {
                 	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                	$('.error').append(alert);
+                	$('.errorMsg').append(alert);
             	}
             }
             
@@ -822,7 +822,7 @@ $(document).ready(function() {
             	}
             	else {
                 	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                	$('.error').append(alert);
+                	$('.errorMsg').append(alert);
             	}
             }
             
@@ -886,7 +886,7 @@ $(document).ready(function() {
             },
             error: function(data) {
                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.error').append(alert);
+                $('.errorMsg').append(alert);
             }
         });
         $('#choiceForm')[0].reset();
@@ -1001,7 +1001,7 @@ $(document).ready(function() {
            		}
            		else {
                		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-               		$('.error').append(alert);
+               		$('.errorMsg').append(alert);
            		}
            }
        });
@@ -1050,7 +1050,7 @@ $(document).ready(function() {
 	       }
 	       else {
 	           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	           $('.error').append(alert);
+	           $('.errorMsg').append(alert);
 	       }
            }
        });
@@ -1115,7 +1115,7 @@ $(document).ready(function() {
 	       }
 	       else {
 	           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	           $('.error').append(alert);
+	           $('.errorMsg').append(alert);
 	       }
          }
      });
@@ -1158,7 +1158,7 @@ $(window).on('load', function () {
             <li class="breadcrumb-item active">[[${slide.name}]]</li>
         </ol>
         
-        <div class="error"></div>
+        <div class="errorMsg"></div>
         
 		<div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
         	<button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
