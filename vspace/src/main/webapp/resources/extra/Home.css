@@ -770,3 +770,35 @@
 	height: 150px;
 	margin-right: 15px !important;
 }
+
+.shepherd-button {
+	background-color: var(--primary) !important;
+	color: white !important;
+	text-transform: none !important;
+}
+
+.shepherd-button-secondary {
+	background-color: var(--base-grey) !important;
+	color: #121212 !important;
+	text-transform: none !important;
+}
+
+.shepherd-button:hover {
+	background-color: var(--primary);
+	opacity: 80%;
+}
+
+.shepherd-header {
+	background: var(--base-grey) !important;
+}
+
+.shepherd-title {
+	color: #121212 !important;
+	text-align: left;
+	font-weight: 600 !important;
+}
+
+.shepherd-text {
+	color: #121212;
+	text-align: left;
+}
