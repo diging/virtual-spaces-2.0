@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -47,13 +48,17 @@ public class AddSlideController {
 
         IModule module = moduleManager.getModule(moduleId);
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
+        String slideId;
         if(type.equals(SlideType.BRANCHING_POINT)) {
             IBranchingPoint branchingPoint = slideManager.createBranchingPoint(module, slideForm, type);
             IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(branchingPoint.getId(), null, 0, true);
-        } else {
-            slideManager.createSlide(module, slideForm, type);
+            slideId = branchingPoint.getId();
+        } 
+        else {
+            ISlide slide = slideManager.createSlide(module, slideForm, type);
+            slideId = slide.getId();
         }
-
-        return "redirect:/staff/module/{moduleId}";
+        
+        return "redirect:/staff/module/{moduleId}/slide/" + slideId;
     }
 }

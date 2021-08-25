@@ -390,9 +390,18 @@
             })
 		}
 		</script>
+		
+		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
+		  <span class="icon-warning secondary"></span> You are viewing the public page. Go to the staff home 
+		  	<span class="icon-home secondary"></span> to make changes.
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
-                    onclick="toggleImgSize(true)">
+                    onclick="toggleImgSize(1)">
                     <span class="icon-expand secondary"
                         id="toggleImgClass" style="left: -4px;"></span> <span
                         class="tooltiptext">Resize Image</span>

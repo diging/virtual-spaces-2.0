@@ -51,7 +51,7 @@
     padding: 0 20px;
     background: white;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.08);
-    z-index: 1;
+    z-index: 99;
     top: 0;
     height:8%;
 }
@@ -228,7 +228,7 @@
 
 .register-form {	
     padding: 48px;	
-    width: 30%;	
+    width: 50%;	
     margin: auto;	
     border-radius: 10px;	
     background: #f2f2f2;	
@@ -755,4 +755,31 @@
 
 .circle-btn:hover {
 	background: #f2f2f2;
+}
+
+.shepherd-button {
+	background-color: var(--primary) !important;
+	color: white !important;
+	text-transform: none !important;
+}
+.shepherd-button-secondary {
+	background-color: var(--base-grey) !important;
+	color: #121212 !important;
+	text-transform: none !important;
+}
+.shepherd-button:hover {
+	background-color: var(--primary);
+	opacity: 80%;
+}
+.shepherd-header {
+	background: var(--base-grey) !important;
+}
+.shepherd-title {
+	color: #121212 !important;
+	text-align: left;
+	font-weight: 600 !important;
+}
+.shepherd-text {
+	color: #121212;
+	text-align: left;
 }
