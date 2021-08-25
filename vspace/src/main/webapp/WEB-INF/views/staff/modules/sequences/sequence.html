@@ -11,6 +11,12 @@
 	$(document).ready(function() {
 	    var vals = []
 		var slides = []
+	    
+	    if (localStorage.getItem("newSequence") == null) {
+			guidedTour();
+			localStorage.setItem("newSequence", false);
+		}
+	    
 		$('#ordered-slides').multiSelect({
 			keepOrder : true,
 			dblClick : true,
@@ -192,6 +198,87 @@
 	  
 	    });
 	});
+	
+	function guidedTour() {
+		const tour = new Shepherd.Tour({
+			  defaultStepOptions: {
+			    cancelIcon: {
+			      enabled: true
+			    },
+			    classes: '',
+			    scrollTo: { behavior: 'smooth', block: 'center' },
+			  },
+			  useModalOverlay: true,
+			});
+
+		tour.addStep({
+		  title: 'Welcome to the Sequence editor!',
+		  text: `Add or edit the content you want to show in your module.`,
+		  buttons: [
+		    {
+		      action() {
+		        return this.next();
+		      },
+		      text: 'Next'
+		    }
+		  ],
+		  id: 'creating1'
+		});
+		
+		tour.addStep({
+		  title: 'Easy navigation',
+		  text: `Keep track of your location in the module or navigate back.`,
+		  attachTo: {
+		    element: '.breadcrumb',
+		    on: 'bottom'
+		  },
+		  buttons: [
+		    {
+		      action() {
+		        return this.back();
+		      },
+		      classes: 'shepherd-button-secondary',
+		      text: 'Back'
+		    },
+		    {
+		      action() {
+		        return this.next();
+		      },
+		      classes: 'btn primary-btn',
+		      text: 'Next'
+		    }
+		  ],
+		  id: 'creating2'
+		});
+		
+		tour.addStep({
+		  title: 'Select the slides in your sequence.',
+		  text: `Choose the slides you want in the sequence by double clicking the slide title. Drag to reorder. `,
+		  attachTo: {
+		    element: '.form-group',
+		    on: 'bottom'
+		  },
+		  buttons: [
+		    {
+		      action() {
+		        return this.back();
+		      },
+		      classes: 'shepherd-button-secondary',
+		      text: 'Back'
+		    },
+		    {
+		      action() {
+		        return this.next();
+		      },
+		      text: 'Done'
+		    }
+		  ],
+		  id: 'creating4'
+		});
+		
+		
+		tour.start();
+	}
 	</script>
 </head>
 
@@ -205,11 +292,29 @@
 		</ol>
 		
 		<div class ="blur">
-			<div class="row align-items-center">
-				<h2 id="title" style="margin-bottom: 0%; margin-left: 1%;"
-					>Sequence: [[${sequence.name}]]</h2>
-				<a id="editTitle" class="btn" href="#"
-					style="float: left; margin-right: 1%;"><span class="icon-edit"></span></a>
+			<div style="display: flex; margin-bottom: 20px">
+				<div>		
+					<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Sequence:</span> [[${sequence.name}]]</h2>
+					<p id="description"> [[${sequence.description}]]</p>
+					<button id="submitDescription" type="button"
+						class="btn primary-btn btn-sm"
+						style="margin-top: 1%; margin-bottom: 1%;">Save</button>
+					<button id="cancelEditDescription" type="button"
+						class="btn primary-btn btn-sm"
+						style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
+				</div>				
+					
+				<div class="dropdown">
+					<button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="icon-caret-down" style="font-size: 16px"></span>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a id="editTitle" class="dropdown-item" href="#"><span class="icon-edit"></span>&emsp; Edit slide title</a>
+						<a id="editDescription" class="dropdown-item" href="#"><span class="icon-edit"></span>&emsp; Edit slide description</a>
+						<a class="dropdown-item" style="cursor: pointer" th:onclick="guidedTour()"><span class="icon-map"></span>&emsp; Start tour</a>
+					</div>
+				</div>
+					
 				<button id="submitTitle" type="button" class="btn primary-btn"
 					style="float: left; margin-right: 1%;">Save</button>
 				<button id="cancelEditTitle" type="button" class="btn primary-btn"
@@ -222,25 +327,10 @@
 			</div>
 		</div>
 		
-		<!-- description -->
-		<div style="margin-left: .1%;" class="blur row align-items-center">
-			<h4 style="margin-bottom: 0;">Description:</h4>
-			<a id="editDescription" class="btn" href="#"
-				style="font-size: .66rem; border-radius: .15rem; padding-top: .5%;"><span class="icon-edit"></span></a>
-			<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"
-				>[[${sequence.description}]]</p>
-			<button id="submitDescription" type="button"
-				class="btn primary-btn btn-sm"
-				style="margin-top: 1%; margin-bottom: 1%;">Save</button>
-			<button id="cancelEditDescription" type="button"
-				class="btn primary-btn btn-sm"
-				style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
-		</div>
-		
 		<div id="slideSpace" class="blur">
 			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
-				<div class="form-group row">
-					<label for="Slides" class="col-md-2 col-form-label">Select
+				<div class="form-group row" style="width: fit-content; margin-left: 0">
+					<label for="Slides" style="margin-right: 15px">Select
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
 					<select multiple="multiple" id="ordered-slides" name="selectSequence">
