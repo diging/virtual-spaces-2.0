@@ -27,13 +27,12 @@
 
 @keyframes rotation {
 		from {
-			transform: rotate(359deg);
-		}
-		to {
 			transform: rotate(0deg);
 		}
+		to {
+			transform: rotate(359deg);
+		}
 }
-
 .icon-newspaper:before {
   content: "\e9bb";
 }
@@ -63,9 +62,9 @@
 }
 .icon-spinner:before {
   content: "\e9b8";
-  animation: rotation 2s linear infinite;
+  animation: rotation 2s ease-out infinite;
+  display: inline-block;
 }
-
 .icon-invoice:before {
   content: "\e9c1";
 }
