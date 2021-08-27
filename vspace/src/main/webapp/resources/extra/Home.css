@@ -148,7 +148,7 @@
 }
 
 .form-control-sm {
-	border: none;
+	border: 1px solid #e4dfde;;
 }
 
 #wrapper_module {
@@ -235,7 +235,7 @@
 }	
 
 .form-control {
-	border: 1px solid #e4dfde;
+	border: none;
 }	
 
 .form_icon {	
@@ -762,24 +762,29 @@
 	color: white !important;
 	text-transform: none !important;
 }
+
 .shepherd-button-secondary {
 	background-color: var(--base-grey) !important;
 	color: #121212 !important;
 	text-transform: none !important;
 }
+
 .shepherd-button:hover {
 	background-color: var(--primary);
 	opacity: 80%;
 }
+
 .shepherd-header {
 	background: var(--base-grey) !important;
 }
+
 .shepherd-title {
 	color: #121212 !important;
 	text-align: left;
 	font-weight: 600 !important;
 }
-.shepherd-text {	
+
+.shepherd-text {
 	color: #121212;
 	text-align: left;
 }

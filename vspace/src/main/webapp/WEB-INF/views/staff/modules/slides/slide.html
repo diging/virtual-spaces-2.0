@@ -607,7 +607,7 @@ $(document).ready(function() {
 		$("#confirmDeleteBiblioAlert").hide();
 		var blockId = $('#deleteBiblioId').attr('value');
 		$('#deleteBiblioId').remove();
-		var token =  $('input[name="_csrf"]').attr('value');
+		var token = [[${_csrf.token}]];
 		
 		// ------------- delete Bibliography content blocks ------------
 		$.ajax({
@@ -643,7 +643,7 @@ $(document).ready(function() {
 		var biblioBlockId = $('#currentBiblioId').attr('value');
 		$('#currentBiblioId').remove();
 		
-		var token =  $('input[name="_csrf"]').attr('value');
+		var token = [[${_csrf.token}]];
 		
 		// ------------- delete Reference ------------
 		$.ajax({
@@ -801,7 +801,7 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-        var token =  $('input[name="_csrf"]').attr('value');
+        var token = [[${_csrf.token}]];
         
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography'})]",
@@ -880,7 +880,7 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-        var token =  $('input[name="_csrf"]').attr('value');
+        var token = [[${_csrf.token}]];
         
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/add'],
@@ -1114,7 +1114,7 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-        var token =  $('input[name="_csrf"]').attr('value');
+        var token =  [[${_csrf.token}]];
         
         var refListDiv = $(".open div:eq(0)").html();
         formData.append('refListDiv', refListDiv);
@@ -1181,7 +1181,7 @@ $(document).ready(function() {
       var object = {};
       formData.forEach((value, key) => object[key] = value);
       var jsonData = JSON.stringify(object);
-      var token =  $('input[name="_csrf"]').attr('value');
+      var token = [[${_csrf.token}]];
       
       $.ajax({
           url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId + ['/edit'],
