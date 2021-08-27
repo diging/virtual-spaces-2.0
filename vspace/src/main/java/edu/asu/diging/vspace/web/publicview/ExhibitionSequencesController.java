@@ -65,7 +65,7 @@ public class ExhibitionSequencesController {
 
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         if (slides.size() == 0) {
-        	model.addAttribute("showAlert", true);
+            model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, slides haven't been added to this module yet.");
             return "/exhibition/module";
         }
