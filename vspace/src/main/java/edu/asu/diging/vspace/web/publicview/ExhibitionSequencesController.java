@@ -65,7 +65,9 @@ public class ExhibitionSequencesController {
 
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         if (slides.size() == 0) {
-            throw new SlidesInSequenceNotFoundException();
+        	model.addAttribute("showAlert", true);
+            model.addAttribute("message", "Sorry, slides haven't been added to this module yet.");
+            return "/exhibition/module";
         }
         String firstSlideId = slides.get(0).getId();
         if(sequenceHistory.hasHistory()){
