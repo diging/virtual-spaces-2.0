@@ -12,6 +12,17 @@
     overflow-y: scroll;
     height: 400px;
 }
+
+.request-overlay {
+  opacity:    0.5; 
+  background: #000; 
+  width:      100%;
+  height:     100%; 
+  z-index:    10;
+  top:        0; 
+  left:       0; 
+  position:   fixed; 
+}
 </style>
 <script th:inline="javascript">
 //# sourceURL=click.js
@@ -162,6 +173,8 @@ function uploadImage() {
 }
 
 $(document).ready(function() {
+	var currentlyWaiting = false;
+	var toClearTimeout;
 	$('#slideSpace').sortable({
 		update: function(event,ui) {
 			var jsonObj = [];
@@ -181,27 +194,71 @@ $(document).ready(function() {
 			});
 			var jsonData = JSON.stringify(jsonObj);
 			var token = [[${_csrf.token}]];
-			$.ajax({
-			// ------------- adjusting content order of blocks if their position changed after dragging ----------
-				url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-				type: 'POST',
-				cache       : false,
-				contentType: 'application/json; charset=utf-8',
-				processData :false,
-				headers:{
-					'X-CSRF-Token':token
-				},
-				data: jsonData,
-				success: function(data) {
-					for(let i=0;i<data.length;i++) {
-						$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+			if (jsonObj.length != 0){
+				if (!currentlyWaiting){
+					toClearTimeout = setTimeout($.ajax({
+				// ------------- adjusting content order of blocks if their position changed after dragging ----------
+					url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+					type: 'POST',
+					beforeSend: function(){
+						currentlyWaiting = true;
+						},
+			        complete: function(){
+			        	currentlyWaiting = false;
+			        	},
+					cache       : false,
+					contentType: 'application/json; charset=utf-8',
+					processData :false,
+					headers:{
+						'X-CSRF-Token':token
+					},
+					data: jsonData,
+					success: function(data) {
+						for(let i=0;i<data.length;i++) {
+							$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+						}
+						/* var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Successfully Saved.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						$('.error').append(alert); */
+					},
+					error: function(data) {
+						/* var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						$('.error').append(alert); */
 					}
-				},
-				error: function(data) {
-					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.error').append(alert);
-				}
-			});
+				}), 1000);
+			}
+			else{
+				clearTimeout(toClearTimeout);
+				toClearTimeout = setTimeout($.ajax({
+					// ------------- adjusting content order of blocks if their position changed after dragging ----------
+						url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+						type: 'POST',
+						beforeSend: function(){
+							currentlyWaiting = true;
+							},
+				        complete: function(){
+				        	currentlyWaiting = false;
+				        	},
+						cache       : false,
+						contentType: 'application/json; charset=utf-8',
+						processData :false,
+						headers:{
+							'X-CSRF-Token':token
+						},
+						data: jsonData,
+						success: function(data) {
+							for(let i=0;i<data.length;i++) {
+								$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+							}
+							/* var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Successfully Saved.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.error').append(alert); */
+						},
+						error: function(data) {
+							/* var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.error').append(alert); */
+						}
+					}), 1000);
+			}
+			}
 		}
 	});
 	
