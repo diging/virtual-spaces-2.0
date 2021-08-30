@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/diging-icon-pack.eot?3whofe');
-  src:  url('fonts/diging-icon-pack.eot?3whofe#iefix') format('embedded-opentype'),
-    url('fonts/diging-icon-pack.ttf?3whofe') format('truetype'),
-    url('fonts/diging-icon-pack.woff?3whofe') format('woff'),
-    url('fonts/diging-icon-pack.svg?3whofe#icomoon') format('svg');
+  src:  url('fonts/diging-icon-pack.eot?fszp5s');
+  src:  url('fonts/diging-icon-pack.eot?fszp5s#iefix') format('embedded-opentype'),
+    url('fonts/diging-icon-pack.ttf?fszp5s') format('truetype'),
+    url('fonts/diging-icon-pack.woff?fszp5s') format('woff'),
+    url('fonts/diging-icon-pack.svg?fszp5s#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,62 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@keyframes rotation {
+		from {
+			transform: rotate(359deg);
+		}
+		to {
+			transform: rotate(0deg);
+		}
+}
+
+.icon-newspaper:before {
+  content: "\e9bb";
+}
+.icon-firefox:before {
+  content: "\e9bc";
+}
+.icon-brush:before {
+  content: "\e9bd";
+}
+.icon-film-reel:before {
+  content: "\e9be";
+}
+.icon-gavel:before {
+  content: "\e9bf";
+}
+.icon-grad-cap:before {
+  content: "\e9c0";
+}
+.icon-up-down-arrow:before {
+  content: "\e9c4";
+}
+.icon-pen:before {
+  content: "\e9b9";
+}
+.icon-sticky-note:before {
+  content: "\e9ba";
+}
+.icon-spinner:before {
+  content: "\e9b8";
+  animation: rotation 2s ease-out infinite;
+  display: inline-block;
+}
+.icon-invoice:before {
+  content: "\e9c1";
+}
+.icon-user-check:before {
+  content: "\e9c2";
+}
+.icon-stop-circle:before {
+  content: "\e9c3";
+}
+.icon-anchor:before {
+  content: "\e9b6";
+}
+.icon-sync:before {
+  content: "\e9b7";
+}
 .icon-admin-slash:before {
   content: "\e93c";
 }
@@ -310,6 +366,9 @@
 .icon-image-delete:before {
   content: "\e951";
 }
+.icon-img:before {
+  content: "\e9b5";
+}
 .icon-info:before {
   content: "\e953";
 }
@@ -348,17 +407,6 @@
 }
 .icon-multiple-chat .path1:before {
   content: "\e95f";
-  color: rgb(0, 0, 0);
-}
-.icon-multiple-chat .path2:before {
-  content: "\e960";
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
-}
-.icon-multiple-chat .path3:before {
-  content: "\e961";
-  margin-left: -1em;
-  color: rgb(0, 0, 0);
 }
 .icon-multiple-chat-alt:before {
   content: "\e962";

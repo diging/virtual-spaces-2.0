@@ -266,76 +266,61 @@ $(document).ready(function() {
 					jsonObj.push(item);
 				}
 			});
-			var jsonData = JSON.stringify(jsonObj);
 			var token = [[${_csrf.token}]];
 			if (jsonObj.length != 0){
 				if (!currentlyWaiting){
-					toClearTimeout = setTimeout($.ajax({
-				// ------------- adjusting content order of blocks if their position changed after dragging ----------
-					url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-					type: 'POST',
-					beforeSend: function(){
-						currentlyWaiting = true;
-						},
-			        complete: function(){
-			        	currentlyWaiting = false;
-			        	},
-					cache       : false,
-					contentType: 'application/json; charset=utf-8',
-					processData :false,
-					headers:{
-						'X-CSRF-Token':token
-					},
-					data: jsonData,
-					success: function(data) {
-						for(let i=0;i<data.length;i++) {
-							$('#'+data[i].id).attr('data-position',data[i].contentOrder);
-						}
-						/* var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Successfully Saved.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						$('.error').append(alert); */
-					},
-					error: function(data) {
-						/* var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						$('.error').append(alert); */
-					}
-				}), 1000);
+					toClearTimeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
 			}
 			else{
-				clearTimeout(toClearTimeout);
-				toClearTimeout = setTimeout($.ajax({
-					// ------------- adjusting content order of blocks if their position changed after dragging ----------
-						url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-						type: 'POST',
-						beforeSend: function(){
-							currentlyWaiting = true;
-							},
-				        complete: function(){
-				        	currentlyWaiting = false;
-				        	},
-						cache       : false,
-						contentType: 'application/json; charset=utf-8',
-						processData :false,
-						headers:{
-							'X-CSRF-Token':token
-						},
-						data: jsonData,
-						success: function(data) {
-							for(let i=0;i<data.length;i++) {
-								$('#'+data[i].id).attr('data-position',data[i].contentOrder);
-							}
-							/* var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Successfully Saved.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.error').append(alert); */
-						},
-						error: function(data) {
-							/* var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.error').append(alert); */
-						}
-					}), 1000);
-			}
+				if(typeof(toClearTimeout) !="undefined") {
+					clearTimeout(toClearTimeout);
+				}
+				toClearTimeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+				}
 			}
 		}
 	});
-	
+function updateContentOrder(jsonObj,token){	
+	$.ajax({
+		// ------------- adjusting content order of blocks if their position changed after dragging ----------
+			url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+			type: 'POST',
+			beforeSend: function(){
+				$(".loader").remove();
+				for(let i=0;i<jsonObj.length;i++) {
+					$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+				}
+				$(".loader").show();
+				console.log($(".loader").show());
+				currentlyWaiting = true;
+				},
+	        complete: function(){
+	        	$(".loader").hide();
+	        	currentlyWaiting = false;
+	        	},
+			cache       : false,
+			contentType: 'application/json; charset=utf-8',
+			processData :false,
+			headers:{
+				'X-CSRF-Token':token
+			},
+			data: JSON.stringify(jsonObj),
+			success: function(data) {
+				$(".save").remove();
+				for(let i=0;i<data.length;i++) {
+					$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+					$('#'+data[i].id).append($('<div style="height: 50px;margin-left: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert"><p>Successfully Saved.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'));
+				}
+			},
+			error: function(data) {
+				$(".errInSave").remove();
+				for(let i=0;i<data.length;i++) {
+					$('#'+data[i].id).append($('<div style="height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'));
+				}
+			}
+		});
+}
+		
     [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
 		$('#addChoice').show();
 		$('#choiceSpace').show();
