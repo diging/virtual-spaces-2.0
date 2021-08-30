@@ -291,7 +291,6 @@ function updateContentOrder(jsonObj,token){
 					$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
 				}
 				$(".loader").show();
-				console.log($(".loader").show());
 				currentlyWaiting = true;
 				},
 	        complete: function(){
