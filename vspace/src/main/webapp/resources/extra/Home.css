@@ -148,7 +148,7 @@
 }
 
 .form-control-sm {
-	border: 1px solid #e4dfde;;
+	border: 1px solid #e4dfde;
 }
 
 #wrapper_module {
@@ -235,7 +235,7 @@
 }	
 
 .form-control {
-	border: none;
+	border: 1px solid #e4dfde;
 }	
 
 .form_icon {	

@@ -816,7 +816,7 @@ $(document).ready(function() {
             success: function(data) {
             	var biblioblock = $('<div><div id="'+ data.id +'" class="biblioDivStaff tab row"><p class="col-md-10"> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span></p>'
                 		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><span class="icon-trash error"></span></a>'
-                		+ '<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><div id="referenceSpace" class="col-md-10"></div></div></div>');
+                		+ '<a class="btn addReference col-md-1" style="padding-top: 8px;" data-toggle="tooltip" title="Add Reference"><span class="icon-circle-add"></span></a><div id="referenceSpace" class="col-md-10"></div></div></div>');
 
             	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             
@@ -1410,8 +1410,6 @@ $(window).on('load', function () {
             </div>
         </div>
 
-
-
         <div id="addTextAlert" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document" th:draggable="true">
                 <div class="modal-content">
@@ -1589,6 +1587,12 @@ $(window).on('load', function () {
 							</div>
 							<div class="form-group row">
 								<label for="name" class="col-md-3 col-form-label">Type:</label>
+								<select class="form-control" name="spaceParam">
+						             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}"
+						             th:selected="${#strings.equals(space.id,exhibition?.startSpace?.id)}">
+						             	[[${space.name}]]
+						             </option>
+						        </select>
 								<input type="text" class="form-control col-md-8" id="typeRef" name="typeRef" />
 							</div>
 							<div class="form-group row">
@@ -1788,10 +1792,11 @@ $(window).on('load', function () {
 						Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, Description: <span>[[${contents.description}]]</span>
 					</p>
 					<input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
-					<a class="btn deleteBiblio col-md-1" href="javascript:;" style="position:absolute; right:2.3%;"> <span
+					<a class="btn addReference col-md-1" style="padding-top: 8px;" data-toggle="tooltip" title="Add Reference"><span
+						class="icon-circle-add"></span></a>
+					<a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
 						class="icon-trash error"></span>
 					</a>
-					<a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
 					
 					<div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
@@ -1803,6 +1808,8 @@ $(window).on('load', function () {
 									Issue: <span>[[${contentRef.issue}]]</span>, Pages: <span>[[${contentRef.pages}]]</span>,
 									Editors: <span>[[${contentRef.editors}]]</span>, Type: <span>[[${contentRef.type}]]</span>,
 									Note: <span>[[${contentRef.note}]]</span>
+									
+									
 								</p>
 								<input type="hidden" id="deleteReferenceId" th:value="${contentRef.id}" />
 								<a class="btn deleteReference col-md-1" href="javascript:;"> <span

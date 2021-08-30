@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
+import edu.asu.diging.vspace.references.ReferenceType;
 
 @Controller
 public class ListReferencesController {
@@ -43,6 +45,7 @@ public class ListReferencesController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalReferenceCount", referenceManager.getTotalReferenceCount());
         model.addAttribute("references", references);
+        model.addAttribute("referenceTypes", ReferenceType.values());
         model.addAttribute("sortProperty",
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
         model.addAttribute("order",

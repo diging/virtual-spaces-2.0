@@ -86,7 +86,7 @@ function rowClicked(value) {
                     <th scope="col" sort-prop="year"><a href="#">Year</a></th>
                     <th scope="col" sort-prop="journal"><a href="#">Journal</a></th>
                     <th scope="col" sort-prop="creationDate"><a href="#">Created Date</a></th>
-                    <th scope="col" >. . . . . .</th>
+                    <th scope="col" >......</th>
                 </tr>
             </thead>
             <tbody class="tableBody">
@@ -95,8 +95,8 @@ function rowClicked(value) {
                     <td>[[${reference.author}]]</td>
                     <td>[[${reference.year}]]</td>
                     <td>[[${reference.journal}]]</td>
-                    <td>[[${reference.creationDate}]]</td>
-                    <td>. . . . . .</td>
+                    <td><span class="date">[[${reference.creationDate}]]</span></td>
+                    <td><a class="viewReference col-md-1" data-toggle="tooltip" title="View Reference"><span class="icon-enter"></span></a></td>
                 </tr>
             </tbody>
         </table>
