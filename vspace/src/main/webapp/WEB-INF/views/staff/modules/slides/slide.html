@@ -424,9 +424,8 @@
                 $("#uploadImage").click(function(e) {
                     e.preventDefault();
                     $("#addImgAlert").hide();
-                    $('#file').prop("disabled",false);
-                	$('#imageId').prop("disabled",true);
                     uploadImage();
+                    $('#chooseFromLocal').trigger( "click" );
                 });
                 
                 $("#addChoice").click(function() {
@@ -581,10 +580,7 @@
                 });
             	
                 $("#cancelImageBtn").click(function() {
-                	$("#selectedImage").empty();
-                	$('#imageId').prop('selectedIndex',0).trigger( "change" );
-                	$('#file').prop("disabled",false);
-                	$('#imageId').prop("disabled",true);
+                	$('#chooseFromLocal').trigger( "click" );
                 	// Initialize selected image ID to blank, on clicking cancel button
                 	$("#uploadImage").data('value', '');
                     $("#addImgAlert").hide();
