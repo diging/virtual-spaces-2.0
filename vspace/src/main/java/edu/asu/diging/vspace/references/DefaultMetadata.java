@@ -6,12 +6,14 @@ import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
 @Service
+@PropertySource({"classpath:config_reference.properties"})
 public class DefaultMetadata implements ReferenceMetadataProvider {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());

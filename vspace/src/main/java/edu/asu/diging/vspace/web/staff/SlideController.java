@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.references.ReferenceType;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 @Transactional
@@ -46,6 +47,7 @@ public class SlideController {
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
         model.addAttribute("slideContents", slideContents);
+        model.addAttribute("referenceTypes", ReferenceType.values());
         model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());

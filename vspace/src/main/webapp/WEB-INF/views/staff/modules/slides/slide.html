@@ -1587,13 +1587,13 @@ $(window).on('load', function () {
 							</div>
 							<div class="form-group row">
 								<label for="name" class="col-md-3 col-form-label">Type:</label>
-								<select class="form-control" name="spaceParam">
-						             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}"
-						             th:selected="${#strings.equals(space.id,exhibition?.startSpace?.id)}">
-						             	[[${space.name}]]
+								<select class="form-control col-md-8" name="referenceType" id="typeRef">
+						             <option th:each="refType: ${referenceTypes}" th:value="${refType}"
+						             th:selected="${referenceTypes[0]}">
+						             	[[${@environment.getProperty('reference_type_'
+                                    + refType)}]]
 						             </option>
 						        </select>
-								<input type="text" class="form-control col-md-8" id="typeRef" name="typeRef" />
 							</div>
 							<div class="form-group row">
 								<label for="name" class="col-md-3 col-form-label">Note:</label>
@@ -1688,7 +1688,12 @@ $(window).on('load', function () {
 							</div>
 							<div class="form-group row">
 								<label for="name" class="col-md-3 col-form-label">Type:</label>
-								<input type="text" class="form-control col-md-8" id="editTypeRef" name="editTypeRef" />
+								<select class="form-control col-md-8" name="editTypeRef" id="editTypeRef">
+						             <option th:each="refType: ${referenceTypes}" th:value="${refType}"
+						             	th:selected="${referenceTypes[0]}">
+						             	[[${@environment.getProperty('reference_type_' + refType)}]]
+						             </option>
+						        </select>
 							</div>
 							<div class="form-group row">
 								<label for="name" class="col-md-3 col-form-label">Note:</label>
@@ -1801,16 +1806,7 @@ $(window).on('load', function () {
 					<div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
 							<div th:id="${contentRef.id}" class="referenceDivStaff tab row">
-								<p class="col-md-10">
-									Reference Title: <span>[[${contentRef.title}]]</span>, Author: <span>[[${contentRef.author}]]</span>,
-									Year: <span>[[${contentRef.year}]]</span>, Journal: <span>[[${contentRef.journal}]]</span>,
-									Url: <span>[[${contentRef.url}]]</span>, Volume: <span>[[${contentRef.volume}]]</span>,
-									Issue: <span>[[${contentRef.issue}]]</span>, Pages: <span>[[${contentRef.pages}]]</span>,
-									Editors: <span>[[${contentRef.editors}]]</span>, Type: <span>[[${contentRef.type}]]</span>,
-									Note: <span>[[${contentRef.note}]]</span>
-									
-									
-								</p>
+								<p class="col-md-10" th:text='${@referenceDisplayProvider.getReferenceDisplayText(contentRef)}'></p>
 								<input type="hidden" id="deleteReferenceId" th:value="${contentRef.id}" />
 								<a class="btn deleteReference col-md-1" href="javascript:;"> <span
 									class="icon-trash error"></span>
