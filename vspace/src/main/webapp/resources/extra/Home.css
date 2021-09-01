@@ -758,9 +758,9 @@
 }
 
 .searchInput {
-	display: flex;
-    background: var(--base-grey);
-    border-radius: 5px;
+	display: flex !important;
+	background: var(--base-grey) !important;
+	border-radius: 5px !important;
 }
 
 .searchImg {

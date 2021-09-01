@@ -12,10 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.StaffSearchSlide;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
 
 @Controller
 public class StaffSearchSlideController {
@@ -24,27 +23,23 @@ public class StaffSearchSlideController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search/slide")
-    public ResponseEntity<StaffSearchSlide> searchInVspace(
+    public ResponseEntity<StaffSearchSlideResults> searchInVspace(
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<Slide> slideList = paginationForSlide(slidePagenum, searchTerm);
-        StaffSearchSlide staffSearch = new StaffSearchSlide();
+        StaffSearchSlideResults staffSearch = new StaffSearchSlideResults();
         staffSearch.setSlides(slideList);
 
         Map<String, String> slideFirstImage = new HashMap<>();
 
         for (Slide slide : slideList) {
-
-            String slideFirstImageId = null;
-
             if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
+                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
             }
-            slideFirstImage.put(slide.getId(), slideFirstImageId);
         }
         staffSearch.setFirstImageOfSlide(slideFirstImage);
-        return new ResponseEntity<StaffSearchSlide>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<StaffSearchSlideResults>(staffSearch, HttpStatus.OK);
     }
 
     /**

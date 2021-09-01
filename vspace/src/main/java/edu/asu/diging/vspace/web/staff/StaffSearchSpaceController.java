@@ -10,12 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.StaffSearchSpace;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
 
 @Controller
 public class StaffSearchSpaceController {
@@ -24,14 +22,14 @@ public class StaffSearchSpaceController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search/space")
-    public ResponseEntity<StaffSearchSpace> searchInVspace(
+    public ResponseEntity<StaffSearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
         List<Space> spaceList = paginationForSpace(spacePagenum, searchTerm);
-        StaffSearchSpace staffSearch = new StaffSearchSpace();
+        StaffSearchSpaceResults staffSearch = new StaffSearchSpaceResults();
         staffSearch.setSpaces(spaceList);
-        return new ResponseEntity<StaffSearchSpace>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
     }
 
     /**

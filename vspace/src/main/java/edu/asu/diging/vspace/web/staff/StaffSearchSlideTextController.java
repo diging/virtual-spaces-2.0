@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,11 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.StaffSearchSlideTextBlock;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
 
 @Controller
 public class StaffSearchSlideTextController {
@@ -27,12 +24,12 @@ public class StaffSearchSlideTextController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search/slideText")
-    public ResponseEntity<StaffSearchSlideTextBlock> searchInVspace(HttpServletRequest request,
+    public ResponseEntity<StaffSearchSlideTextBlockResults> searchInVspace(HttpServletRequest request,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-        StaffSearchSlideTextBlock staffSearch = new StaffSearchSlideTextBlock();
+        StaffSearchSlideTextBlockResults staffSearch = new StaffSearchSlideTextBlockResults();
         staffSearch.setSlidesWithMatchedTextBlock(slideTextList);
 
         Map<String, String> slideTextFirstImageMap = new HashMap<>();
@@ -40,26 +37,18 @@ public class StaffSearchSlideTextController {
         Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
 
         for (Slide slide : slideTextList) {
-
-            String slideFirstImageId = null;
-            ITextBlock slideFirstTextBlock = null;
-
             if (slide != null) {
                 if (slide.getFirstImageBlock() != null) {
-                    slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
+                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
                 }
-                slideTextFirstImageMap.put(slide.getId(), slideFirstImageId);
-
                 if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
-                    slideFirstTextBlock = slide.getFirstMatchedTextBlock(searchTerm);
+                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).getText());
                 }
-                slideTextFirstTextBlockMap.put(slide.getId(), slideFirstTextBlock.getText());
             }
-
         }
         staffSearch.setSlideToFirstImageMap(slideTextFirstImageMap);
         staffSearch.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
-        return new ResponseEntity<StaffSearchSlideTextBlock>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<StaffSearchSlideTextBlockResults>(staffSearch, HttpStatus.OK);
     }
 
     /**

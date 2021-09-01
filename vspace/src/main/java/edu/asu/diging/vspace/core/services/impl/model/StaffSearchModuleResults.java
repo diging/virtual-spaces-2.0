@@ -1,9 +1,10 @@
-package edu.asu.diging.vspace.core.model.impl;
+package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 import java.util.Map;
+import edu.asu.diging.vspace.core.model.impl.Module;
 
-public class StaffSearchModule {
+public class StaffSearchModuleResults {
 
     private List<Module> modules;
 

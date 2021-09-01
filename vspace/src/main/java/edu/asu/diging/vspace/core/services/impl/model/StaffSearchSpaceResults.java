@@ -1,8 +1,10 @@
-package edu.asu.diging.vspace.core.model.impl;
+package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 
-public class StaffSearchSpace {
+import edu.asu.diging.vspace.core.model.impl.Space;
+
+public class StaffSearchSpaceResults {
     
     private List<Space> spaces;
 
