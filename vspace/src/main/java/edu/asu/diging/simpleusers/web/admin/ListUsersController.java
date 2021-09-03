@@ -1,14 +1,9 @@
 package edu.asu.diging.simpleusers.web.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -39,5 +34,4 @@ public class ListUsersController extends AbstractController {
         model.setViewName(configProvider.getUserListView());
         return model;
     }
-    
 }
