@@ -40,11 +40,4 @@ public class ListUsersController extends AbstractController {
         return model;
     }
     
-    public static Boolean getRoleAsListOfStrings(Set<SimpleGrantedAuthority> userRoles, String role) {
-        List<String> roleAsString = new ArrayList<String>();
-        for (SimpleGrantedAuthority roleKey : userRoles) {
-            if(roleKey.toString().equals(role)) return true;  
-        }
-        return false;
-    }
 }

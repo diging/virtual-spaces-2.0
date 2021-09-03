@@ -27,11 +27,11 @@
                     <button style="padding:0" class="btn btn-link"><span class="icon-admin-slash"></span> Remove Admin Role</button>
                     </form>
                     
-                    <form th:if="${!T(edu.asu.diging.simpleusers.web.admin.ListUsersController).getRoleAsListOfStrings(user.roles, 'ROLE_STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/add?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
+                    <form th:if="${!T(edu.asu.diging.simpleusers.web.admin.UsersUtility).checkUserRoleExists(user.roles, 'ROLE_STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/add?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
                         <button style="padding:0" class="btn btn-link"><span class="icon-user"></span>Make Staff</button>
                     </form>
                     
-                    <form th:if="${T(edu.asu.diging.simpleusers.web.admin.ListUsersController).getRoleAsListOfStrings(user.roles, 'ROLE_STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/remove?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
+                    <form th:if="${T(edu.asu.diging.simpleusers.web.admin.UsersUtility).checkUserRoleExists(user.roles, 'ROLE_STAFF')}" th:action="@{'/staff/user/'+${user.username}+'/role/remove?roles=ROLE_STAFF'}" th:object="${url}" method="POST">
                         <button style="padding:0" class="btn btn-link"><span class="icon-user"></span> Remove Staff Role</button>
                     </form>
                 
