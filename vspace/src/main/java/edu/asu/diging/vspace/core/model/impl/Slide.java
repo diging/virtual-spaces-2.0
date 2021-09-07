@@ -23,7 +23,6 @@ import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
 public class Slide extends VSpaceElement implements ISlide {
@@ -152,7 +151,7 @@ public class Slide extends VSpaceElement implements ISlide {
     }
 
     @JsonIgnore
-    public ITextBlock getFirstMatchedTextBlock(String searchTerm) {
+    public TextBlock getFirstMatchedTextBlock(String searchTerm) {
         List<IContentBlock> allBlocks = getContents();
         if (allBlocks != null) {
             Optional<IContentBlock> firstMatchedTextBlock = allBlocks.stream()

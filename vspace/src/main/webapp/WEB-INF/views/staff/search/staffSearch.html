@@ -594,7 +594,7 @@ a.nav-link.active.show {
                                 style="white-space: pre-wrap; line-break: anywhere;"><span 
                                 style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span 
                                 th:if="${not #lists.isEmpty(contents.contents)} AND ${contents?.getFirstMatchedTextBlock(searchWord)!=null}"
-                                >[(${contents?.getFirstMatchedTextBlock(searchWord).text})]</span>
+                                >[(${contents?.getFirstMatchedTextBlock(searchWord).htmlRenderedText()})]</span>
 							    </span>
 							</a>
 						</div>

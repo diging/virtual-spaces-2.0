@@ -42,7 +42,7 @@ public class StaffSearchSlideTextController {
                     slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
                 }
                 if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
-                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).getText());
+                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
                 }
             }
         }
