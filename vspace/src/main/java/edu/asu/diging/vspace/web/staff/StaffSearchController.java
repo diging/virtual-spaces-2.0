@@ -43,7 +43,7 @@ public class StaffSearchController {
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the spaces corresponding to the page number
      * specified in the input parameter(spacePagenum) whose name or description
-     * contains the search string.The spacePagenum is starting from 1. 
+     * contains the search string. The spacePagenum is starting from 1. 
      * 
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param model        This the object of Model attribute in spring MVC.
@@ -61,7 +61,7 @@ public class StaffSearchController {
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the module corresponding to the page number
      * specified in the input parameter(spacePagenum) whose name or description
-     * contains the search string.The modulePagenum is starting from 1.
+     * contains the search string. The modulePagenum is starting from 1.
      * 
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
@@ -80,7 +80,7 @@ public class StaffSearchController {
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the slides corresponding to the page number
      * specified in the input parameter(spacePagenum) whose name or description
-     * contains the search string.The slidePagenum is starting from 1.
+     * contains the search string. The slidePagenum is starting from 1.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param model        This the object of Model attribute in spring MVC.
@@ -98,7 +98,7 @@ public class StaffSearchController {
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the slides corresponding to the page number
      * specified in the input parameter(spacePagenum) whose text block contains the
-     * search string.The slideTextPagenum is starting from 1.
+     * search string. The slideTextPagenum is starting from 1.
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
