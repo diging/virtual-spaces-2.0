@@ -21,7 +21,6 @@ public class UsersUtility {
     * @return      Boolean: True if User is assigned the role, else False.
     */
     public static Boolean checkUserRoleExists(Set<SimpleGrantedAuthority> userRoles, String role) {
-        List<String> roleAsString = new ArrayList<String>();
         for (SimpleGrantedAuthority roleKey : userRoles) {
             if(roleKey.toString().equals(role)) return true;  
         }

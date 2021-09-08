@@ -28,7 +28,7 @@ public class UsersUtilityTest {
     }
     
     @Test
-    public void test_checkUserRoleExists_RoleNotExists() {
+    public void test_checkUserRoleExists_roleNotExists() {
         Assert.assertEquals(usersUtility.checkUserRoleExists(roles, "ROLE_USER"), false);
     }
 
