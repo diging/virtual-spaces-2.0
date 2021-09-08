@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.asu.diging.vspace.core.model.impl.Space;
+
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
 
@@ -26,7 +28,7 @@ public class StaffSearchSpaceController {
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
-        List<Space> spaceList = paginationForSpace(spacePagenum, searchTerm);
+        List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);
         StaffSearchSpaceResults staffSearch = new StaffSearchSpaceResults();
         staffSearch.setSpaces(spaceList);
         return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
@@ -41,8 +43,8 @@ public class StaffSearchSpaceController {
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private List<Space> paginationForSpace(String spacePagenum, String searchTerm) {
-        Page<Space> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+    private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
+        Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         return spacePage.getContent();
     }
 }

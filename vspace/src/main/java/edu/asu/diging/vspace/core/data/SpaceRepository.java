@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
@@ -21,6 +22,6 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
 
     List<Space> findAllByImageId(String imageId);
 
-    Page<Space> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    Page<ISpace> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 }

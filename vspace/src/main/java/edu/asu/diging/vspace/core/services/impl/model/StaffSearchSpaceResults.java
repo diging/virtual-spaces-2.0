@@ -2,17 +2,18 @@ package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.ISpace;
 
 public class StaffSearchSpaceResults {
     
-    private List<Space> spaces;
+    private List<ISpace> spaces;
 
-    public List<Space> getSpaces() {
+    public List<ISpace> getSpaces() {
         return spaces;
     }
 
-    public void setSpaces(List<Space> spaces) {
+    public void setSpaces(List<ISpace> spaces) {
         this.spaces = spaces;
     }
+
 }

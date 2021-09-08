@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import edu.asu.diging.vspace.core.model.impl.Slide;
+
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
 
@@ -28,7 +30,7 @@ public class StaffSearchSlideTextController {
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
+        List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
         StaffSearchSlideTextBlockResults staffSearch = new StaffSearchSlideTextBlockResults();
         staffSearch.setSlidesWithMatchedTextBlock(slideTextList);
 
@@ -36,7 +38,7 @@ public class StaffSearchSlideTextController {
 
         Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
 
-        for (Slide slide : slideTextList) {
+        for (ISlide slide : slideTextList) {
             if (slide != null) {
                 if (slide.getFirstImageBlock() != null) {
                     slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
@@ -61,8 +63,8 @@ public class StaffSearchSlideTextController {
      *                         URL.
      * @param searchTerm       This is the search string which is being searched.
      */
-    private List<Slide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<Slide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
+    private List<ISlide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
+        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
         return slideTextPage.getContent();
     }

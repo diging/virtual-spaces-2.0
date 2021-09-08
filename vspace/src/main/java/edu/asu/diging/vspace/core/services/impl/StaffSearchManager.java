@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
-import edu.asu.diging.vspace.core.model.impl.Module;
-import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -51,13 +51,13 @@ public class StaffSearchManager implements IStaffSearchManager {
      *         the requested page.
      */
     @Override
-    public Page<Space> searchInSpaces(String searchTerm, int page) {
+    public Page<ISpace> searchInSpaces(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSpace = PageRequest.of(page - 1, pageSize);
-        Page<Space> spacePage = spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        Page<ISpace> spacePage = spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
         int totalSpacePage = spacePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -86,13 +86,13 @@ public class StaffSearchManager implements IStaffSearchManager {
      *         in the requested page.
      */
     @Override
-    public Page<Module> searchInModules(String searchTerm, int page) {
+    public Page<IModule> searchInModules(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
-        Page<Module> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         int totalModulePage = modulePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -121,13 +121,13 @@ public class StaffSearchManager implements IStaffSearchManager {
      *         the requested page.
      */
     @Override
-    public Page<Slide> searchInSlides(String searchTerm, int page) {
+    public Page<ISlide> searchInSlides(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
-        Page<Slide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
         int totalSlidePage = slidePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -156,13 +156,13 @@ public class StaffSearchManager implements IStaffSearchManager {
      *         requested page.
      */
     @Override
-    public Page<Slide> searchInSlideTexts(String searchTerm, int page) {
+    public Page<ISlide> searchInSlideTexts(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
-        Page<Slide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
                 searchTerm);
         int totalSlideTextPage = slidetextPage.getTotalPages();
         /*

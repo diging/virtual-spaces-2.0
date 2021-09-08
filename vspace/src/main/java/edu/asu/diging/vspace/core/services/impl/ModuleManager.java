@@ -86,7 +86,7 @@ public class ModuleManager implements IModuleManager {
     }
     
     @Override
-    public Page<Module> findByNameOrDescription(Pageable requestedPage,String searchText) {
+    public Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText) {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
 }

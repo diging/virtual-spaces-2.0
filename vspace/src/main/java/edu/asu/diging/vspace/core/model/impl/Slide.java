@@ -135,7 +135,7 @@ public class Slide extends VSpaceElement implements ISlide {
      * This Method will retrieve the first ImageBlock of a slide if the ImageBlock
      * is present
      * 
-     * @return ImageBlock
+     * @return IImageBlock
      */
     @JsonIgnore
     public IImageBlock getFirstImageBlock() {
@@ -150,6 +150,13 @@ public class Slide extends VSpaceElement implements ISlide {
         return null;
     }
 
+    /**
+     * This Method will return the first Text block whose content has searchTerm in
+     * it.
+     * 
+     * @param searchTerm the search string which is being searched.
+     * @return TextBlock
+     */
     @JsonIgnore
     public TextBlock getFirstMatchedTextBlock(String searchTerm) {
         List<IContentBlock> allBlocks = getContents();

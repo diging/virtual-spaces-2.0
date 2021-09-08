@@ -12,8 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
@@ -33,14 +34,14 @@ public class StaffSearchModuleController {
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
+        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);
         StaffSearchModuleResults staffSearch = new StaffSearchModuleResults();
         staffSearch.setModules(moduleList);
 
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
         Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
 
-        for (Module module : moduleList) {
+        for (IModule module : moduleList) {
             if (module.getStartSequence() == null) {
                 isModuleConfiguredMap.put(module.getId(), false);
                 moduleFirstSlideImage.put(module.getId(), null);
@@ -73,8 +74,8 @@ public class StaffSearchModuleController {
      *                      URL.
      * @param searchTerm    This is the search string which is being searched.
      */
-    private List<Module> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<Module> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+    private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
+        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         return modulePage.getContent();
     }
 

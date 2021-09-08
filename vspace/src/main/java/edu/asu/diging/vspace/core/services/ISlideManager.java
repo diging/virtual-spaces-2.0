@@ -32,5 +32,5 @@ public interface ISlideManager {
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
-    Page<Slide> findByNameOrDescription(Pageable requestedPage,String searchText);
+    Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
 }

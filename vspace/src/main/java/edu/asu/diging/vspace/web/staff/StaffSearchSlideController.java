@@ -12,7 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import edu.asu.diging.vspace.core.model.impl.Slide;
+
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
 
@@ -27,13 +28,13 @@ public class StaffSearchSlideController {
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Slide> slideList = paginationForSlide(slidePagenum, searchTerm);
+        List<ISlide> slideList = paginationForSlide(slidePagenum, searchTerm);
         StaffSearchSlideResults staffSearch = new StaffSearchSlideResults();
         staffSearch.setSlides(slideList);
 
         Map<String, String> slideFirstImage = new HashMap<>();
 
-        for (Slide slide : slideList) {
+        for (ISlide slide : slideList) {
             if (slide != null && slide.getFirstImageBlock() != null) {
                 slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
             }
@@ -51,8 +52,8 @@ public class StaffSearchSlideController {
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private List<Slide> paginationForSlide(String slidePagenum, String searchTerm) {
-        Page<Slide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+    private List<ISlide> paginationForSlide(String slidePagenum, String searchTerm) {
+        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         return slidePage.getContent();
     }
 }

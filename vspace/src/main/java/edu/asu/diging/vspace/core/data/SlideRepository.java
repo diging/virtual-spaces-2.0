@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
@@ -22,7 +23,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     @Query("SELECT d.sequence FROM Slide d WHERE d.id = ?1")
     public List<Sequence> getSequencesForSlide(String slideId);
 
-    Page<Slide> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    Page<ISlide> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 
 }

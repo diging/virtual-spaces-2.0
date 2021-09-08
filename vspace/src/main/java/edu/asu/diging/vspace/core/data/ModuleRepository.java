@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.impl.Module;
 
 @Repository
@@ -16,7 +17,7 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
 
     List<Module> findTop5ByOrderByCreationDateDesc();
 
-    Page<Module> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
+    Page<IModule> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
 
     List<Module> findAllByOrderByCreationDateDesc();

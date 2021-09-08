@@ -2,21 +2,22 @@ package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 import java.util.Map;
-import edu.asu.diging.vspace.core.model.impl.Module;
+
+import edu.asu.diging.vspace.core.model.IModule;
 
 public class StaffSearchModuleResults {
 
-    private List<Module> modules;
+    private List<IModule> modules;
 
     private Map<String, String> moduleImageIdMap;
 
     private Map<String, Boolean> moduleAlertMessages;
 
-    public List<Module> getModules() {
+    public List<IModule> getModules() {
         return modules;
     }
 
-    public void setModules(List<Module> modules) {
+    public void setModules(List<IModule> modules) {
         this.modules = modules;
     }
 

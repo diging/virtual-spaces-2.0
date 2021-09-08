@@ -7,6 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -50,7 +53,7 @@ public class StaffSearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
-        Page<Space> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+        Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
         model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
         model.addAttribute("spaceSearchResults", spacePage.getContent());
@@ -69,7 +72,7 @@ public class StaffSearchController {
      * @param searchTerm    This is the search string which is being searched.
      */
     private void paginationForModule(String modulePagenum, Model model, String searchTerm) {
-        Page<Module> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
         model.addAttribute("moduleSearchResults", modulePage.getContent());
@@ -87,7 +90,7 @@ public class StaffSearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSlide(String slidePagenum, Model model, String searchTerm) {
-        Page<Slide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         model.addAttribute("slideSearchResults", slidePage.getContent());
@@ -107,7 +110,7 @@ public class StaffSearchController {
      * @param searchTerm       This is the search string which is being searched.
      */
     private void paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
-        Page<Slide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
+        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());

@@ -3,19 +3,19 @@ package edu.asu.diging.vspace.core.services.impl.model;
 import java.util.List;
 import java.util.Map;
 
-import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.ISlide;
 
 public class StaffSearchSlideResults {
     
-    private List<Slide> slides;
+    private List<ISlide> slides;
 
     private Map<String, String> firstImageOfSlide;
 
-    public List<Slide> getSlides() {
+    public List<ISlide> getSlides() {
         return slides;
     }
 
-    public void setSlides(List<Slide> slides) {
+    public void setSlides(List<ISlide> slides) {
         this.slides = slides;
     }
 

@@ -3,21 +3,22 @@ package edu.asu.diging.vspace.core.services.impl.model;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
 public class StaffSearchSlideTextBlockResults {
     
-    private List<Slide> slidesWithMatchedTextBlock;
+    private List<ISlide> slidesWithMatchedTextBlock;
 
     private Map<String, String> slideToFirstImageMap;
 
     private Map<String, String> slideToFirstTextBlockMap;
 
-    public List<Slide> getSlidesWithMatchedTextBlock() {
+    public List<ISlide> getSlidesWithMatchedTextBlock() {
         return slidesWithMatchedTextBlock;
     }
 
-    public void setSlidesWithMatchedTextBlock(List<Slide> slidesWithMatchedTextBlock) {
+    public void setSlidesWithMatchedTextBlock(List<ISlide> slidesWithMatchedTextBlock) {
         this.slidesWithMatchedTextBlock = slidesWithMatchedTextBlock;
     }
 
