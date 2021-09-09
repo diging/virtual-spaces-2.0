@@ -61,8 +61,13 @@
 			        </li>
 		        </ul>
 		        <div class="footer">
+		        
 		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
 		        		Virtual Spaces 2.0</a> <span class="icon-copyright"></span> DigInG 2020
+		        		<div class="d-flex justify-content-left" style="padding:10px">
+					<span style="padding-right:3px">Version</span>
+					<span th:text="${#strings.defaultString(@environment.getProperty('buildNum'),'')}"></span> 
+					</div>
 		        </div>
 			</div>  
 			
