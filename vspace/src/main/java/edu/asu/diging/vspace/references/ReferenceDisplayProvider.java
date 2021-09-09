@@ -28,7 +28,7 @@ public class ReferenceDisplayProvider {
         }
         
         if(year!=null && !year.equals("")) {
-            referenceDisplayText += "("+ year + ").";
+            referenceDisplayText += "("+ year + "). ";
         }
         
         if(title!=null && !title.equals("")) {

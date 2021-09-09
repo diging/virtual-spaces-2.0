@@ -24,7 +24,7 @@
         <p><b>Issue:</b> [[${reference.issue}]] </p>
         <p><b>Pages:</b> [[${reference.pages}]] </p>
         <p><b>Editors:</b> [[${reference.editors}]] </p>
-        <p><b>Type:</b> [[${reference.type}]] </p>
+        <p><b>Type:</b> [[${@environment.getProperty('reference_type_' + reference.type)}]] </p>
         <p><b>Note:</b> [[${reference.note}]] </p>
         
 	<a th:href="@{'/staff/reference/'+${reference.id}+'/edit'}"

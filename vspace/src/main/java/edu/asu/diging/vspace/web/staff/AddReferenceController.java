@@ -15,8 +15,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.model.impl.ReferenceBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
+import edu.asu.diging.vspace.references.ReferenceDisplayProvider;
 
 @Controller
 public class AddReferenceController {
@@ -26,15 +28,20 @@ public class AddReferenceController {
     
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private ReferenceDisplayProvider referenceDisplayProvider;
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/biblio/{biblioId}/reference/add", method = RequestMethod.POST)
-    public ResponseEntity<Reference> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
+    public ResponseEntity<ReferenceBlock> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
             @RequestBody Reference reference, Model model) throws JsonProcessingException {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.saveReference(biblio, reference);
-        return new ResponseEntity<Reference>((Reference) ref, HttpStatus.OK);
+        String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
+        ReferenceBlock refBlock = new ReferenceBlock((Reference) ref, refDisplayText);
+        return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
     }
 
 }

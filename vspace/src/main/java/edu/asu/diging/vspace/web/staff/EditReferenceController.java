@@ -18,7 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.model.impl.ReferenceBlock;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
+import edu.asu.diging.vspace.references.ReferenceDisplayProvider;
+import edu.asu.diging.vspace.references.ReferenceType;
 
 @Controller
 public class EditReferenceController {
@@ -28,10 +31,14 @@ public class EditReferenceController {
     @Autowired
     private IReferenceManager referenceManager;
     
+    @Autowired
+    private ReferenceDisplayProvider referenceDisplayProvider;
+    
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.GET)
     public String show(Model model, @PathVariable("referenceId") String referenceId, RedirectAttributes attributes) {
         IReference reference = referenceManager.getReferenceById(referenceId);
         model.addAttribute("referenceData", reference);
+        model.addAttribute("referenceTypes", ReferenceType.values());
         return "staff/references/edit";
     }
     
@@ -48,14 +55,20 @@ public class EditReferenceController {
     }
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}/edit", method = RequestMethod.POST)
-    public ResponseEntity<String> editReference(@PathVariable("id") String slideId,
+    public ResponseEntity<ReferenceBlock> editReference(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
-            @PathVariable("refId") String refId, @RequestBody Reference ref) throws IOException {
+            @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
         IReference reference = referenceManager.getReference(refId);
         if(reference!=null) {
             ref.setId(reference.getId());
+            ref.setBiblios(reference.getBiblios());
             referenceManager.updateReference(ref);
-            return new ResponseEntity<String>(HttpStatus.OK);
+            String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
+            ReferenceBlock refBlock = new ReferenceBlock((Reference) ref, refDisplayText);
+            attributes.addAttribute("alertType", "success");
+            attributes.addAttribute("message", "Reference successfully updated!");
+            attributes.addAttribute("showAlert", "true");
+            return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

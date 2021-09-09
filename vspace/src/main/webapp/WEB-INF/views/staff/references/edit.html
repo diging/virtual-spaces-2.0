@@ -58,8 +58,12 @@
 			</div>
 			<div class="form-group row">
                 <label for="type" class="col-md-2 col-form-label">Type:</label>
-                <textarea class="form-control col-md-10" id="type" rows="1" cols="30"
-                	name="type">[[${referenceData.type}]]</textarea>
+                <select class="form-control col-md-10" name="editTypeRef" id="editTypeRef" rows="1" cols="30">
+		             <option th:each="refType: ${referenceTypes}" th:value="${refType}"
+		             	th:selected="${referenceData.type}">
+		             	[[${@environment.getProperty('reference_type_' + referenceData.type)}]]
+		             </option>
+		        </select>
 			</div>
 			<div class="form-group row">
                 <label for="note" class="col-md-2 col-form-label">Note:</label>

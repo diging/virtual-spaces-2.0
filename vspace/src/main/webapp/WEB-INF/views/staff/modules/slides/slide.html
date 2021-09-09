@@ -95,49 +95,48 @@ function onDoubleClick(e){
 	   $(e.target).closest('.referenceDivStaff').addClass("open");
 	   var description = $("div.open p:eq(0)").text();
     	   defaultValue = description;
-    	
-    	   var title = $("div.open p span:eq(0)").text();
-           var author = $("div.open p span:eq(1)").text();
-           var year = $("div.open p span:eq(2)").text();
-           var journal = $("div.open p span:eq(3)").text();
-           var url = $("div.open p span:eq(4)").text();
-           var volume = $("div.open p span:eq(5)").text();
-           var issue = $("div.open p span:eq(6)").text();
-           var pages = $("div.open p span:eq(7)").text();
-           var editors = $("div.open p span:eq(8)").text();
-           var type = $("div.open p span:eq(9)").text();
-           var note = $("div.open p span:eq(10)").text(); 
-    	
-    	    //showing the edit bibliography form with all the respective values
-    	    $("#editReferenceAlert").show();
-    	    var alert = $('<input type="hidden" id="currentBiblioId">');
-    		$(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-    		$('.modal-footer').append(alert); 
-    	
-    	    $("#editTitleRef").val(title);
-            $("#editAuthorRef").val(author);
-            $("#editYearRef").val(year);
-            $("#editJournalRef").val(journal);
-            $("#editUrlRef").val(url);
-            $("#editVolumeRef").val(volume);
-            $("#editIssueRef").val(issue);
-            $("#editPagesRef").val(pages);
-            $("#editEditorsRef").val(editors);
-            $("#editTypeRef").val(type);
-            $("#editNoteRef").val(note);
-            
-            formDataCancel = new FormData();
-            formDataCancel.append('title', title);
-            formDataCancel.append('author', author);
-            formDataCancel.append('year', year);
-            formDataCancel.append('journal', journal);
-            formDataCancel.append('url', url);
-            formDataCancel.append('volume', volume);
-            formDataCancel.append('issue', issue);
-            formDataCancel.append('pages', pages);
-            formDataCancel.append('editors', editors);
-            formDataCancel.append('type', type);
-            formDataCancel.append('note', note);
+    	   var refBlockId = $(".open").attr("id");
+    	   var biblioBlockId = $(e.target).closest('.biblioDivStaff').attr("id");
+    	   
+    	   $.ajax({
+    	          url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId ,
+    	          type: 'GET',
+    	          cache       : false,
+    	          contentType : 'application/json; charset=utf-8',
+    	          processData : false,
+    	          headers: {
+    	              'X-CSRF-Token': [[${_csrf.token}]] 
+    	         	},
+    	          success: function(data) {
+    	        	//showing the edit bibliography form with all the respective values
+    	      	    $("#editReferenceAlert").show();
+    	      	    var alert = $('<input type="hidden" id="currentBiblioId">');
+    	      		$(alert).attr( 'value', biblioBlockId);
+    	      		$('.modal-footer').append(alert); 
+    	      	
+    	      	    $("#editTitleRef").val(data.title);
+	              	$("#editAuthorRef").val(data.author);
+	              	$("#editYearRef").val(data.year);
+	              	$("#editJournalRef").val(data.journal);
+	              	$("#editUrlRef").val(data.url);
+	              	$("#editVolumeRef").val(data.volume);
+	              	$("#editIssueRef").val(data.issue);
+	              	$("#editPagesRef").val(data.pages);
+	              	$("#editEditorsRef").val(data.editors);
+	              	$("#editTypeRef").val(data.type);
+	              	$("#editNoteRef").val(data.note);
+	              
+    	         },
+    	         error: function(data) {
+    		       if (data.status == 403) {
+    		           $("#loginAlert").show();
+    		       }
+    		       else {
+    		           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    		           $('.errorMsg').append(alert);
+    		       }
+    	         }
+    	     });
     	
     	    //remove card border
           $(".open").css('display', 'none');
@@ -607,14 +606,13 @@ $(document).ready(function() {
 		$("#confirmDeleteBiblioAlert").hide();
 		var blockId = $('#deleteBiblioId').attr('value');
 		$('#deleteBiblioId').remove();
-		var token = [[${_csrf.token}]];
 		
 		// ------------- delete Bibliography content blocks ------------
 		$.ajax({
 		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId,
 		    type: 'DELETE',
 		    headers: {
-                'X-CSRF-Token': token 
+                'X-CSRF-Token': [[${_csrf.token}]]
            	},
 		    success: function(result) {
 		        $('#' + blockId).remove();
@@ -643,14 +641,12 @@ $(document).ready(function() {
 		var biblioBlockId = $('#currentBiblioId').attr('value');
 		$('#currentBiblioId').remove();
 		
-		var token = [[${_csrf.token}]];
-		
 		// ------------- delete Reference ------------
 		$.ajax({
 		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refId,
 		    type: 'DELETE',
 		    headers: {
-                'X-CSRF-Token': token 
+                'X-CSRF-Token': [[${_csrf.token}]]
            	},
 		    success: function(result) {
 		        $('#' + refId).remove();
@@ -801,7 +797,6 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-        var token = [[${_csrf.token}]];
         
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography'})]",
@@ -810,7 +805,7 @@ $(document).ready(function() {
             contentType : 'application/json; charset=utf-8',
             processData : false,
             headers: {
-                'X-CSRF-Token': token 
+                'X-CSRF-Token': [[${_csrf.token}]]
            	},
             data: jsonData,
             success: function(data) {
@@ -880,7 +875,6 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-        var token = [[${_csrf.token}]];
         
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/add'],
@@ -889,17 +883,12 @@ $(document).ready(function() {
             contentType : 'application/json; charset=utf-8',
             processData : false,
             headers: {
-                'X-CSRF-Token': token 
+                'X-CSRF-Token': [[${_csrf.token}]] 
            	},
             data: jsonData,
             success: function(data) {
-            	var referenceblock = $('<div id="'+ data.id +'" class="referenceDivStaff tab row"><p class="col-md-10" > Reference Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
-                		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
-                		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
-						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
-						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
-						+ 'Note: <span>' + data.note + '</span></p>'
-                		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference col-md-1" href="javascript:;"><span class="icon-trash error"></span></a></div>');
+            	var referenceblock = $('<div id="'+ data.reference.id +'" class="referenceDivStaff tab row"><p class="col-md-10" >' + data.refDisplayText
+            			+ '</p><input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference col-md-1" href="javascript:;"><span class="icon-trash error"></span></a></div>');
 
             	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
             	var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -1028,15 +1017,11 @@ $(document).ready(function() {
     	updateBiblioBox(blockId, formDataCancel);
     });
  	
-    function updateReferenceBox(blockId, formData) {
+    function updateReferenceBox(blockId, refContent) {
         // clear biblio box and buttons
         $(".open").empty();
-       	$(".open").append('<p class="col-md-10">Reference Title: <span>' + formData.get('title')
-       			+ '</span>, Author: <span>' + formData.get('author') + '</span>, Year: <span>' + formData.get('year') + '</span>, Journal: <span>' + formData.get('journal') 
-       			+ '</span>, Url: <span>' + formData.get('url') + '</span>, Volume: <span>' + formData.get('volume') + '</span>, Issue: <span>' + formData.get('issue') 
-       			+ '</span>, Pages: <span>' + formData.get('pages') + '</span>, Editors: <span>' + formData.get('editors') + '</span>, Type: <span>' + formData.get('type')
-       			+ '</span>, Note: <span>' + formData.get('note')
-       			+ '</span></p><input type="hidden" id="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
+       	$(".open").append('<p class="col-md-10">' + refContent 
+       			+ '</p><input type="hidden" id="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
         
        	//reset border of the card
         //rebind event handlers
@@ -1051,7 +1036,7 @@ $(document).ready(function() {
     	$('#currentBiblioId').remove();
     	$("#editReferenceAlert").hide();
     	var refId = $(".open").attr("id");
-    	updateReferenceBox(refId, formDataCancel);
+    	updateReferenceBox(refId, defaultValue);
     });
 
     $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1114,7 +1099,6 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
-        var token =  [[${_csrf.token}]];
         
         var refListDiv = $(".open div:eq(0)").html();
         formData.append('refListDiv', refListDiv);
@@ -1125,7 +1109,7 @@ $(document).ready(function() {
             contentType : 'application/json; charset=utf-8',
             processData : false,
             headers: {
-                'X-CSRF-Token': token 
+                'X-CSRF-Token': [[${_csrf.token}]] 
            	},
             data: jsonData,
             success: function(data) {
@@ -1181,7 +1165,6 @@ $(document).ready(function() {
       var object = {};
       formData.forEach((value, key) => object[key] = value);
       var jsonData = JSON.stringify(object);
-      var token = [[${_csrf.token}]];
       
       $.ajax({
           url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId + ['/edit'],
@@ -1190,13 +1173,18 @@ $(document).ready(function() {
           contentType : 'application/json; charset=utf-8',
           processData : false,
           headers: {
-              'X-CSRF-Token': token 
+              'X-CSRF-Token': [[${_csrf.token}]] 
          	},
           data: jsonData,
           success: function(data) {
               //replace Reference box with new values
-              updateReferenceBox(refBlockId, formData)
+              updateReferenceBox(refBlockId, data.refDisplayText);
               $(".open").removeClass("open");
+              var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Reference Successfully Updated!</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	          $('.errorMsg').append(alert);
+              $(".errorMsg").delay(4000).slideUp(500, function(){
+            	  $(".errorMsg").empty();
+            	});
          },
          error: function(data) {
 	       if (data.status == 403) {
