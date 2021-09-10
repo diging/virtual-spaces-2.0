@@ -47,8 +47,18 @@ public class EditReferenceController {
             RedirectAttributes attributes) {
         IReference reference = referenceManager.getReferenceById(referenceId);
         if(reference!=null) {
-            refData.setId(reference.getId());
-            referenceManager.updateReference(refData);
+            reference.setTitle(refData.getTitle());
+            reference.setAuthor(refData.getAuthor());
+            reference.setYear(refData.getYear());
+            reference.setJournal(refData.getJournal());
+            reference.setUrl(refData.getUrl());
+            reference.setVolume(refData.getVolume());
+            reference.setIssue(refData.getIssue());
+            reference.setPages(refData.getPages());
+            reference.setEditors(refData.getEditors());
+            reference.setType(refData.getType());
+            reference.setNote(refData.getNote());
+            referenceManager.updateReference(reference);
             return "redirect:/staff/display/reference/{referenceId}";
         }
         return "redirect:/404";
@@ -60,8 +70,17 @@ public class EditReferenceController {
             @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
         IReference reference = referenceManager.getReference(refId);
         if(reference!=null) {
-            ref.setId(reference.getId());
-            ref.setBiblios(reference.getBiblios());
+            reference.setTitle(ref.getTitle());
+            reference.setAuthor(ref.getAuthor());
+            reference.setYear(ref.getYear());
+            reference.setJournal(ref.getJournal());
+            reference.setUrl(ref.getUrl());
+            reference.setVolume(ref.getVolume());
+            reference.setIssue(ref.getIssue());
+            reference.setPages(ref.getPages());
+            reference.setEditors(ref.getEditors());
+            reference.setType(ref.getType());
+            reference.setNote(ref.getNote());            
             referenceManager.updateReference(ref);
             String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
             ReferenceBlock refBlock = new ReferenceBlock((Reference) ref, refDisplayText);

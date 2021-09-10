@@ -58,10 +58,10 @@
 			</div>
 			<div class="form-group row">
                 <label for="type" class="col-md-2 col-form-label">Type:</label>
-                <select class="form-control col-md-10" name="editTypeRef" id="editTypeRef" rows="1" cols="30">
+                <select class="form-control col-md-10" name="type" id="type" rows="1" cols="30">
 		             <option th:each="refType: ${referenceTypes}" th:value="${refType}"
-		             	th:selected="${referenceData.type}">
-		             	[[${@environment.getProperty('reference_type_' + referenceData.type)}]]
+		             	th:selected="${#strings.equals(refType, referenceData.type)}">
+		             	[[${@environment.getProperty('reference_type_' + refType)}]]
 		             </option>
 		        </select>
 			</div>

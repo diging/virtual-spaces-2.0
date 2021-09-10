@@ -20,7 +20,7 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign(".?page="+num+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+        window.location.assign(window.location.pathname + "?page="+num+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
     }); 
 
   $("table.table thead th").each(function(){

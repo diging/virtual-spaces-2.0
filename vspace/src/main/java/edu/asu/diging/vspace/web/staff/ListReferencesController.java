@@ -27,11 +27,17 @@ public class ListReferencesController {
 
     
     @RequestMapping("/staff/references/list")
+    public String listSpacesWithoutNum( @RequestParam(value = "sort", required = false) String sortedBy,
+            @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
+        return String.format("redirect:/staff/references/list?page=1&sort=%s&order=%s",sortedBy,order);
+    }
+    
+    @RequestMapping(value="/staff/references/list", params= {"page", "sort", "order"})
     public String listSpaces(@RequestParam(value = "page", required = false) String page,
             @RequestParam(value = "sort", required = false) String sortedBy,
             @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
         
-        page = StringUtils.isEmpty(page) ? "1" : page;
+//        page = StringUtils.isEmpty(page) ? "1" : page;
         int pageNo;
         try {
             pageNo = referenceManager.validatePageNumber(Integer.parseInt(page));
