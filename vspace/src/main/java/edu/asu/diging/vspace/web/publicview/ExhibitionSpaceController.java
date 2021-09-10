@@ -53,11 +53,16 @@ public class ExhibitionSpaceController {
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
+        Boolean isSpacePublished = true;
         /* (non-Javadoc)
          * Below null check is added to accommodate already existing spaces with null space status
          */
         if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {
+            if(space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
+                isSpacePublished = false;
+            }
+            model.addAttribute("isSpacePublished", isSpacePublished);
             IExhibition exhibition = exhibitManager.getStartExhibition();
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
