@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
