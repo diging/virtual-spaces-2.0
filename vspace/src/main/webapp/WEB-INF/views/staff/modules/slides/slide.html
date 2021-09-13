@@ -619,35 +619,35 @@
 				
 				// ---------- Delete Text Block -------------
 				$("#deleteText").on("click", function(e) {
-				e.preventDefault();
-				$("#confirmDeleteBiblioAlert").find('input').remove();
-				$("#confirmDeleteRefAlert").find('input').remove();
-				$("#confirmDeleteImageAlert").find('input').remove();
-				$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-				$("#confirmDeleteTextAlert").hide();
-				var blockId = $('#deleteTextId').attr('value');
-				$('#deleteTextId').remove()
+					e.preventDefault();
+					$("#confirmDeleteBiblioAlert").find('input').remove();
+					$("#confirmDeleteRefAlert").find('input').remove();
+					$("#confirmDeleteImageAlert").find('input').remove();
+					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+					$("#confirmDeleteTextAlert").hide();
+					var blockId = $('#deleteTextId').attr('value');
+					$('#deleteTextId').remove()
 				
-				// ------------- delete text content blocks ------------
-				$.ajax({
-		    		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-		    		type: 'DELETE',
-		    		success: function(result) {
-		        		$('#' + blockId).remove();
-		    		},
-					error: function(data) {
-						var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						$('.errorMsg').append(alert); 
-						$(".errorMsg").delay(4000).slideUp(500, function(){
-				    		$(".errorMsg").empty();
-						});
-					}
+					// ------------- delete text content blocks ------------
+					$.ajax({
+		    			url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+		    			type: 'DELETE',
+		    			success: function(result) {
+		        			$('#' + blockId).remove();
+		    			},
+						error: function(data) {
+							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.errorMsg').append(alert); 
+							$(".errorMsg").delay(4000).slideUp(500, function(){
+				    			$(".errorMsg").empty();
+							});
+						}
+					});
 				});
-			});
     	
-			// ---------- Delete Bibliography Block -------------
+		// ---------- Delete Bibliography Block -------------
 		
-			$("#deleteBiblio").on("click", function(e) {
+		$("#deleteBiblio").on("click", function(e) {
 			e.preventDefault();
 			$("#confirmDeleteTextAlert").find('input').remove();
 			$("#confirmDeleteImageAlert").find('input').remove();
@@ -1131,7 +1131,7 @@
     });
     
     $("#submitBiblioBlock").on("click", function(e){
-    	  e.preventDefault();
+		e.preventDefault();
         // ------------- editting Bibliography content blocks ------------
         
         var formData = new FormData();
@@ -1179,73 +1179,73 @@
     });
     
     $("#submitRefBlock").on("click", function(e){
-  	  e.preventDefault();
-      // ------------- editting Ref blocks ------------
+		e.preventDefault();
+      	// ------------- editting Ref blocks ------------
       
-      var formData = new FormData();
-      var title = $("#editTitleRef").val();
-      var author = $("#editAuthorRef").val();
-      var year = $("#editYearRef").val();
-      var journal = $("#editJournalRef").val();
-      var url = $("#editUrlRef").val();
-      var volume = $("#editVolumeRef").val();
-      var issue = $("#editIssueRef").val();
-      var pages = $("#editPagesRef").val();
-      var editors = $("#editEditorsRef").val();
-      var type = $("#editTypeRef").val();
-      var note = $("#editNoteRef").val();
-      var refBlockId = $(".open").attr("id");
+		var formData = new FormData();
+		var title = $("#editTitleRef").val();
+		var author = $("#editAuthorRef").val();
+      	var year = $("#editYearRef").val();
+      	var journal = $("#editJournalRef").val();
+      	var url = $("#editUrlRef").val();
+      	var volume = $("#editVolumeRef").val();
+      	var issue = $("#editIssueRef").val();
+      	var pages = $("#editPagesRef").val();
+      	var editors = $("#editEditorsRef").val();
+      	var type = $("#editTypeRef").val();
+      	var note = $("#editNoteRef").val();
+      	var refBlockId = $(".open").attr("id");
       
-      formData.append('title', title);
-      formData.append('author', author);
-      formData.append('year', year);
-      formData.append('journal', journal);
-      formData.append('url', url);
-      formData.append('volume', volume);
-      formData.append('issue', issue);
-      formData.append('pages', pages);
-      formData.append('editors', editors);
-      formData.append('type', type);
-      formData.append('note', note);
+      	formData.append('title', title);
+      	formData.append('author', author);
+      	formData.append('year', year);
+      	formData.append('journal', journal);
+      	formData.append('url', url);
+      	formData.append('volume', volume);
+      	formData.append('issue', issue);
+      	formData.append('pages', pages);
+      	formData.append('editors', editors);
+      	formData.append('type', type);
+      	formData.append('note', note);
       
-      $("#editReferenceAlert").hide();
-      var biblioBlockId = $('#currentBiblioId').attr('value');
+      	$("#editReferenceAlert").hide();
+      	var biblioBlockId = $('#currentBiblioId').attr('value');
       
-      var object = {};
-      formData.forEach((value, key) => object[key] = value);
-      var jsonData = JSON.stringify(object);
+      	var object = {};
+      	formData.forEach((value, key) => object[key] = value);
+      	var jsonData = JSON.stringify(object);
       
-      $.ajax({
-          url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId + ['/edit'],
-          type: 'POST',
-          cache       : false,
-          contentType : 'application/json; charset=utf-8',
-          processData : false,
-          headers: {
-              'X-CSRF-Token': [[${_csrf.token}]] 
+      	$.ajax({
+			url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId + ['/edit'],
+          	type: 'POST',
+          	cache       : false,
+          	contentType : 'application/json; charset=utf-8',
+          	processData : false,
+          	headers: {
+            	'X-CSRF-Token': [[${_csrf.token}]] 
          	},
-          data: jsonData,
-          success: function(data) {
-              //replace Reference box with new values
-              updateReferenceBox(refBlockId, data.refDisplayText);
-              $(".open").removeClass("open");
-              var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Reference Successfully Updated!</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	          $('.errorMsg').append(alert);
-              $(".errorMsg").delay(4000).slideUp(500, function(){
-            	  $(".errorMsg").empty();
+          	data: jsonData,
+          	success: function(data) {
+            	//replace Reference box with new values
+            	updateReferenceBox(refBlockId, data.refDisplayText);
+             	$(".open").removeClass("open");
+              	var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Reference Successfully Updated!</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	          	$('.errorMsg').append(alert);
+              	$(".errorMsg").delay(4000).slideUp(500, function(){
+            		$(".errorMsg").empty();
             	});
-         },
-         error: function(data) {
-	       if (data.status == 403) {
-	           $("#loginAlert").show();
-	       }
-	       else {
-	           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	           $('.errorMsg').append(alert);
-	       }
-         }
-     });
-  });
+         	},
+         	error: function(data) {
+	       		if (data.status == 403) {
+	           		$("#loginAlert").show();
+	       		}
+	       		else {
+	           		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	           		$('.errorMsg').append(alert);
+	       		}
+         	 }
+     	 });
+  	});
     
 });
 
