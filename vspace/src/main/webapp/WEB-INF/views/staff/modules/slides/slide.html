@@ -1,782 +1,831 @@
 <html layout:decorate="~{layouts/main_staff}">
-<head>
-<link rel="stylesheet"
-	href="https://unpkg.com/easymde/dist/easymde.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-
-<style type="text/css">
-	.hova {
-	    background-color: #f2f2f2;
-	}
-	
-	.EasyMDEContainer .CodeMirror-wrap{
-	    overflow-y: scroll;
-	    height: 400px;
-	}
-</style>
-
-<script th:inline="javascript">
-//# sourceURL=click.js
-var contentCount = [[${#lists.size(slideContents)}]];
-var markDown = null;
-var defaultValue;
-var formDataCancel;
-
-$(function () {
-	  $('[data-toggle="tooltip"]').tooltip()
-});
-
-function createImageBlock(reader, width) {
-    var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
-    imageblock.find('img').attr('src', reader.result);
-    if(width > 800)
-    	imageblock.find('img').attr('width', '800px');
-    return imageblock;
-}
-
-function onMouseEnter(e){
-    var target = $( e.target );
-   
-    $(".hova").removeClass("hova");
-    $(e.target).addClass("hova");
-    // This is needed to prevent only the p tag from being highlighted
-    if(target.is('p')){
-        $(e.target).parent().addClass("hova");
-    }
-    //prevent normal hover actions
-    e.preventDefault();
-}
-function onMouseLeave(e) {
-    $(this).removeClass("hova");
-}
-
-function onDoubleClick(e){
-    // get to the nearest divs class attribute
-    $(".EasyMDEContainer").remove();
-    var divName = $(e.target).closest('div').attr('class');
-    //if the div is a text content block 
-    if(divName.includes("textDivStaff")){
-    	$(e.target).closest('.textDivStaff').addClass("open");
-        var description = $("div.open p:eq(0)").text();
-    	defaultValue = description;
-
-        $("#editTextAlert").show();
-        markDown = new EasyMDE({element: $('#editTextBlock')[0]});
-        markDown.value(description.trim());
-        //remove card border
-        $(".open").css('display', 'none');
-        $(".open").css('overflow-y', 'scroll');
-        $(".open").css('height', '400px');
-    } else if(divName.includes("biblioDivStaff")){
-	   $(e.target).closest('.biblioDivStaff').addClass("open");
-	   var description = $("div.open p:eq(0)").text();
-    	   defaultValue = description;
-    	
-    	   var title = $("div.open p span:eq(0)").text();
-    	   var desc = $("div.open p span:eq(1)").text();  
-    	   var refListDiv = $(".open div").html();
-    	   
-    	    //showing the edit bibliography form with all the respective values
-    	    $("#editBiblioAlert").show();
-    	
-    	    $("#editTitleBiblio").val(title);
-    	    $("#editDescBiblio").val(desc);
-    		
-    	    formDataCancel = new FormData();
-    	    formDataCancel.append('biblioTitle', title);
-    	    formDataCancel.append('description', desc);
-    	    formDataCancel.append('refListDiv', refListDiv);
-    	    //remove card border
-          $(".open").css('display', 'none');
-          $(".open").css('overflow-y', 'scroll');
-          	
-    } else if(divName.includes("referenceDivStaff")){
-	   $(e.target).closest('.referenceDivStaff').addClass("open");
-	   var description = $("div.open p:eq(0)").text();
-    	   defaultValue = description;
-    	   var refBlockId = $(".open").attr("id");
-    	   var biblioBlockId = $(e.target).closest('.biblioDivStaff').attr("id");
-    	   
-    	   $.ajax({
-    	          url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId ,
-    	          type: 'GET',
-    	          cache       : false,
-    	          contentType : 'application/json; charset=utf-8',
-    	          processData : false,
-    	          headers: {
-    	              'X-CSRF-Token': [[${_csrf.token}]] 
-    	         	},
-    	          success: function(data) {
-    	        	//showing the edit bibliography form with all the respective values
-    	      	    $("#editReferenceAlert").show();
-    	      	    var alert = $('<input type="hidden" id="currentBiblioId">');
-    	      		$(alert).attr( 'value', biblioBlockId);
-    	      		$('.modal-footer').append(alert); 
-    	      	
-    	      	    $("#editTitleRef").val(data.title);
-	              	$("#editAuthorRef").val(data.author);
-	              	$("#editYearRef").val(data.year);
-	              	$("#editJournalRef").val(data.journal);
-	              	$("#editUrlRef").val(data.url);
-	              	$("#editVolumeRef").val(data.volume);
-	              	$("#editIssueRef").val(data.issue);
-	              	$("#editPagesRef").val(data.pages);
-	              	$("#editEditorsRef").val(data.editors);
-	              	$("#editTypeRef").val(data.type);
-	              	$("#editNoteRef").val(data.note);
-	              
-    	         },
-    	         error: function(data) {
-    		       if (data.status == 403) {
-    		           $("#loginAlert").show();
-    		       }
-    		       else {
-    		           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-    		           $('.errorMsg').append(alert);
-    		       }
-    	         }
-    	     });
-    	
-    	    //remove card border
-          $(".open").css('display', 'none');
-          $(".open").css('overflow-y', 'scroll');
-          $(".open").css('max-height', '200px');
-    }
-    else {
-    	// store image ID selected by the user to replace, onDoubleClick
-    	var imgID = $(e.target).attr('id'); 
-    	if(imgID != ''){
-        	$("#uploadImage").data('value', imgID); // sets image ID value
-        	$("#addImgAlert").show();
-    	}
-    }
-}
-    
-function uploadImage() {
-   	
-	var imgID = $("#uploadImage").data('value') // gets image ID
-    var file = $('#file')[0].files[0];
-	var fileName = file.name;
-    var reader  = new FileReader();
-    var formData = new FormData();
-    formData.append('file', file);
-    var imageblock = "";
- 	var oldImageBlock = "";
-    
-    // Ashmi changes for Story VSPC-64
-    
-	// checks if image ID is present to replace
-    if (imgID != '') {
-    	oldImageBlock = $("#" + imgID);
-    	var imageBlockId = imgID;
-    	formData.append('imageBlockId',imageBlockId);
-        var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-        reader.onload = function (theFile) {
-	        var image = new Image();
-	        image.src = theFile.target.result;
-	        image.onload = function () {
-	            imageblock = createImageBlock(reader, this.width);
-	            $("#" + imageBlockId).replaceWith(imageblock);	
-	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-        	};
-        }
-        // Reset data-attribute to get current selected image ID
-        $("#uploadImage").data('value', '');
-      }
-  	else {
-  	  var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-        reader.onload = function (theFile) {        	
-        	var image = new Image();
-            image.src = theFile.target.result;
-            image.onload = function() {
-            	imageblock = createImageBlock(reader, this.width);  
-            	$('#slideSpace').append(imageblock); 
-                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-            };          
-        }
-        ++contentCount; 
-    }
-  	
-    reader.readAsDataURL(file);
-    $.ajax({
-        enctype: 'multipart/form-data',
-        // ------------- creating image content blocks ------------
-        url: url,
-        type: 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        
-        success: function(data) {
-            $(".open").removeClass("open");
-           	var img = imageblock.find('img');
-           	if(data != ''){
-           		img.attr('id', data);
-           		$("#current").find('#deleteImageId').val(data);
-           		$("#current").attr('id', data);
-           	}
-           	else{
-           		img.attr('id', imgID);
-           		$("#current").find('#deleteImageId').val(imgID);
-           		$("#current").attr('id', imgID);
-           	}
-        },
-        error: function(data) {
-        	if (imgID == '') {
-        		$("#current").remove();
-        	}
-        	else {
-        		$("#current").replaceWith(oldImageBlock);
-        	}
-        	if (data.status == 403) {
-        		$("#loginAlert").show();
-        	}
-        }
-    });
-    // Reset the image file name 
-   	$('#file').val('');
-}
-
-function guidedTour() {
-	const tour = new Shepherd.Tour({
-		  defaultStepOptions: {
-		    cancelIcon: {
-		      enabled: true
-		    },
-		    classes: '',
-		    scrollTo: { behavior: 'smooth', block: 'center' },
-		  },
-		  useModalOverlay: true,
-		});
-
-	tour.addStep({
-	  title: 'Welcome to the slide editor!',
-	  text: `Add or edit the content you want to show on your slides.`,
-	  buttons: [
-	    {
-	      action() {
-	        return this.next();
-	      },
-	      text: 'Next'
-	    }
-	  ],
-	  id: 'creating1'
-	});
-	
-	tour.addStep({
-	  title: 'Easy navigation',
-	  text: `Keep track of your location in the module or navigate back.`,
-	  attachTo: {
-	    element: '.breadcrumb',
-	    on: 'bottom'
-	  },
-	  buttons: [
-	    {
-	      action() {
-	        return this.back();
-	      },
-	      classes: 'shepherd-button-secondary',
-	      text: 'Back'
-	    },
-	    {
-	      action() {
-	        return this.next();
-	      },
-	      classes: 'btn primary-btn',
-	      text: 'Next'
-	    }
-	  ],
-	  id: 'creating2'
-	});
-	
-	tour.addStep({
-	  title: 'Adding content',
-	  text: `Add content to your slide. The content will be shown in the exhibition in the order you define here.`,
-	  attachTo: {
-	    element: '.content-btns',
-	    on: 'bottom'
-	  },
-	  buttons: [
-	    {
-	      action() {
-	        return this.back();
-	      },
-	      classes: 'shepherd-button-secondary',
-	      text: 'Back'
-	    },
-	    {
-	      action() {
-	        return this.next();
-	      },
-	      text: 'Done'
-	    }
-	  ],
-	  id: 'creating3'
-	});
-	
-	
-	tour.start();
-}
-
-
-$(document).ready(function() {	
-	
-	if (localStorage.getItem("newSlide") == null) {
-		guidedTour();
-		localStorage.setItem("newSlide", false);
-	}
-    
-    [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
-		$('#addChoice').show();
-		$('#choiceSpace').show();
-	[/]
-	
-
-    //-------- edit contentblock description --------
-
-    $("#submitDescription").hide()
-    $("#cancelEditDescription").hide()
-    var description = $("#description").text()
-    $("#editDescription").click(function() {
-        $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
-        $("#description").remove()
-        $("#editDescription").hide()
-        $("#submitDescription").show()
-        $("#cancelEditDescription").show()
-        
-    });
-
-    $("#submitDescription").click(function() {
-        var formData = new FormData();
-        formData.append('description', $("#newDescription").val());
-        $.ajax({ 
-	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-	        type: 'POST',
-	        cache       : false,
-	        contentType : false,
-	        processData : false,
-	        data: formData,
-	        enctype: 'multipart/form-data',
-	        success: function(data) {
-	            // replace text box with new description
-	            $("#submitDescription").hide()
-	            $("#cancelEditDescription").hide()
-	            $("#editDescription").show()
-	            var val = $("#newDescription").val();
-	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-	            $("#newDescription").remove();
-	            $("#description").text(val)
-	        },
-	        error: function(data) {
-	            $(".open").removeClass("open");
-	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	                $('.errorMsg').append(alert);
-	        }
-         });       
-      });
-    
-    $("#cancelEditDescription").click(function(){
-        $("#submitDescription").hide()
-        $("#editDescription").show()
-        $("#cancelEditDescription").hide()
-        $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-        $("#newDescription").remove()
-        $("#description").text(description)
-        
-    });
-    
-    //------- edit title --------
-    $("#submitTitle").hide();
-    $("#cancelEditTitle").hide();
-    var getTitleText = $("#title").text().split(": ")[1]
-    $("#editTitle").click(function() {
-        $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-        $('#title').text('Slide: ')
-        $("#newTitle").val(getTitleText)
-        $("#editTitle").hide()
-        $("#submitTitle").show()
-        $("#cancelEditTitle").show()       
-    });
-    
-    $("#submitTitle").click(function() {
-        var formData = new FormData();
-        formData.append('title', $("#newTitle").val());
-        $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-            type: 'POST',
-            cache       : false,
-            contentType : false,
-            processData : false,
-            data: formData,
-            enctype: 'multipart/form-data',
-            success: function(data) {
-                // replace text box with new description
-                $("#submitTitle").hide()
-                $("#cancelEditTitle").hide();
-                $("#editTitle").show()
-                var val = $("#newTitle").val();
-                $("#newTitle").closest('div').remove();
-                $("#title").text("Silde: " + val)
-                
-            },
-            error: function(data) {
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                $('.errorMsg').append(alert);
+    <head>
+        <link rel="stylesheet"
+            href="https://unpkg.com/easymde/dist/easymde.min.css">
+        <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <style type="text/css">
+            .hova {
+            background-color: #f2f2f2;
             }
-        });
-      });
-   $("#cancelEditTitle").click(function(){
-        $("#submitTitle").hide()
-        $("#editTitle").show()
-        $("#cancelEditTitle").hide()
-        $("#newTitle").closest('div').remove();
-        $("#title").text("Silde: " + getTitleText);
-   });
-   
-    $("#addText").click(function() {
-        $(".EasyMDEContainer").remove();
-    	markDown = new EasyMDE({element: $('#textBlockText')[0]});
-        $("#addTextAlert").show();
-    });
-    
-    $("#addImage").click(function() {
-        $("#addImgAlert").show();
-    });
-    
-    $("#uploadImage").click(function(e) {
-        e.preventDefault();
-            $("#addImgAlert").hide();
-            uploadImage();
-    });
-    
-    $("#addChoice").click(function() {
-        $("#addChoiceAlert").show();
-    });
-    
-    $(document).on("click", ".deleteText", function(e) {
-		$("#confirmDeleteTextAlert").show();
-		var alert = $('<input type="hidden" id="deleteTextId">');
-		$(alert).attr( 'value', $(this).siblings('input').val());
-		$('.modal-footer').append(alert); 
-  	});
-  	
-  	$("#addBibliography").click(function() {
-        $("#addBiblioAlert").show();
-    });
-  	
-  	$(document).on("click", ".addReference", function(e) {
-        $("#addReferenceAlert").show();
-        var alert = $('<input type="hidden" id="currentBiblioId">');
-		$(alert).attr( 'value', $(this).closest("div").attr("id"));
-		$('.modal-footer').append(alert); 
-    });
-    
-    $(document).on("click", ".deleteBiblio", function(e) {
-		$("#confirmDeleteBiblioAlert").show();
-		var alert = $('<input type="hidden" id="deleteBiblioId">');
-		$(alert).attr( 'value', $(this).siblings('input').val());
-		$('.modal-footer').append(alert); 
-  	});
-    
-    $(document).on("click", ".deleteReference", function(e) {
-		$("#confirmDeleteRefAlert").show();
-		var alert = $('<input type="hidden" id="deleteReferenceId">');
-		$(alert).attr( 'value', $(this).siblings('input').val());
-		$('.modal-footer').append(alert); 
-		
-		var alert2 = $('<input type="hidden" id="currentBiblioId">');
-		$(alert2).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-		$('.modal-footer').append(alert2); 
-  	});
-	
-	$(document).on("click", ".deleteImage", function(e) {
-		$("#confirmDeleteImageAlert").show();
-		var alert = $('<input type="hidden" id="deleteImageId">');
-		$(alert).attr( 'value', $(this).siblings('input').val());
-		$('.modal-footer').append(alert); 
-  	});
-	
-	$(document).on("click", ".deleteChoiceBlock", function(e) {
-		$("#confirmDeleteChoiceBlockAlert").show();
-		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
-		$(alert).attr( 'value', $(this).siblings('input').val());
-		$('.modal-footer').append(alert); 
-  	});
-    
-    $("#cancelSubmitText").click(function() {
-		$("#addTextAlert").hide();	
-	});
-	
-	$("#cancelDeleteText").click(function() {
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteTextAlert").hide();
-	});
-	
-	$("#cancelDeleteImage").click(function() {
-		$("#confirmDeleteImageAlert").hide();
-	});
-	
-	$("#cancelSubmitBiblio").click(function() {
-		$("#addBiblioAlert").hide();	
-	});
-	
-	$("#cancelSubmitReference").click(function() {
-		$("#addReferenceAlert").hide();	
-	});
-	
-	$("#cancelDeleteBiblio").click(function() {
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").hide();
-	});
-	
-	$("#cancelDeleteReference").click(function() {
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").hide();
-	});
-	
-	$("#cancelDeleteChoiceBlock").click(function() {
-	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-	    $("#confirmDeleteTextAlert").find('input').remove();
-	    $("#confirmDeleteBiblioAlert").find('input').remove();
-	    $("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").hide();
-	});
-	
-	$("#cancelDelete").click(function() {
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").hide();	
-	});
-	
-    	// ---------- Delete Text Block -------------
-	
-		$("#deleteText").on("click", function(e) {
-		e.preventDefault();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteTextAlert").hide();
-		var blockId = $('#deleteTextId').attr('value');
-		$('#deleteTextId').remove()
-		
-		// ------------- delete text content blocks ------------
-		$.ajax({
-		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-		    type: 'DELETE',
-		    success: function(result) {
-		        $('#' + blockId).remove();
-		    },
-			error: function(data) {
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.errorMsg').append(alert); 
-				$(".errorMsg").delay(4000).slideUp(500, function(){
-				    $(".errorMsg").empty();
-				});
-			}
-		});
-	});
+            .EasyMDEContainer .CodeMirror-wrap{
+            overflow-y: scroll;
+            height: 400px;
+            }
+        </style>
+        <script th:inline="javascript">
+            //# sourceURL=click.js
+            var contentCount = [[${#lists.size(slideContents)}]];
+            var markDown = null;
+            var defaultValue;
+            
+            $(function () {
+            	  $('[data-toggle="tooltip"]').tooltip()
+            });
+            
+            function createImageBlock(reader, width) {
+                var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
+                imageblock.find('img').attr('src', reader.result);
+                if(width > 800)
+                	imageblock.find('img').attr('width', '800px');
+                return imageblock;
+            }
+            
+            function createImageBlockWithExistingImage(src, width) {
+                var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
+                imageblock.find('img').attr('src', src);
+                if(width > 800)
+                	imageblock.find('img').attr('width', '800px');
+                return imageblock;
+            }
+            
+            function onMouseEnter(e){
+                var target = $( e.target );
+               
+                $(".hova").removeClass("hova");
+                $(e.target).addClass("hova");
+                // This is needed to prevent only the p tag from being highlighted
+                if(target.is('p')){
+                    $(e.target).parent().addClass("hova");
+                }
+                //prevent normal hover actions
+                e.preventDefault();
+            }
+            function onMouseLeave(e) {
+                $(this).removeClass("hova");
+            }
+            
+            function onDoubleClick(e){
+                // get to the nearest divs class attribute
+                $(".EasyMDEContainer").remove();
+                var divName = $(e.target).closest('div').attr('class');
+                //if the div is a text content block 
+                if(divName.includes("textDivStaff")){
+                	$(e.target).closest('.textDivStaff').addClass("open");
+                    var description = $("div.open p:eq(0)").text();
+                	defaultValue = description;
+            
+                    $("#editTextAlert").show();
+                    markDown = new EasyMDE({element: $('#editTextBlock')[0]});
+                    markDown.value(description.trim());
+                    //remove card border
+                    $(".open").css('display', 'none');
+                    $(".open").css('overflow-y', 'scroll');
+                    $(".open").css('height', '400px');
+                } 
+                else if(divName.includes("biblioDivStaff")){
+                	$(e.target).closest('.biblioDivStaff').addClass("open");
+                	var description = $("div.open p:eq(0)").text();
+                	defaultValue = description;
+                	var title = $("div.open p span:eq(0)").text();
+                	var desc = $("div.open p span:eq(1)").text();
+                	var refListDiv = $(".open div").html();
+                	
+                	//showing the edit bibliography form with all the respective values
+                	$("#editBiblioAlert").show();
+                	$("#editTitleBiblio").val(title);
+                	$("#editDescBiblio").val(desc);
+    		
+					formDataCancel = new FormData();
+					formDataCancel.append('biblioTitle', title);
+					formDataCancel.append('description', desc);
+					formDataCancel.append('refListDiv', refListDiv);
+    	    		//remove card border
+					$(".open").css('display', 'none');
+					$(".open").css('overflow-y', 'scroll');
+          	
+				} else if(divName.includes("referenceDivStaff")){
+					$(e.target).closest('.referenceDivStaff').addClass("open");
+					var description = $("div.open p:eq(0)").text();
+					defaultValue = description;
+					var refBlockId = $(".open").attr("id");
+					var biblioBlockId = $(e.target).closest('.biblioDivStaff').attr("id");
+    	   
+					$.ajax({
+						url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId ,
+						type: 'GET',
+    	          		cache       : false,
+    	          		contentType : 'application/json; charset=utf-8',
+    	          		processData : false,
+    	          		headers: {
+    	              		'X-CSRF-Token': [[${_csrf.token}]] 
+    	         		},
+    	          		success: function(data) {
+    	        		//showing the edit bibliography form with all the respective values
+    	      	    	$("#editReferenceAlert").show();
+    	      	    	var alert = $('<input type="hidden" id="currentBiblioId">');
+    	      			$(alert).attr( 'value', biblioBlockId);
+    	      			$('.modal-footer').append(alert); 
+    	      	
+    	      	    	$("#editTitleRef").val(data.title);
+	              		$("#editAuthorRef").val(data.author);
+	              		$("#editYearRef").val(data.year);
+	              		$("#editJournalRef").val(data.journal);
+	              		$("#editUrlRef").val(data.url);
+	              		$("#editVolumeRef").val(data.volume);
+	              		$("#editIssueRef").val(data.issue);
+	              		$("#editPagesRef").val(data.pages);
+	              		$("#editEditorsRef").val(data.editors);
+	              		$("#editTypeRef").val(data.type);
+	              		$("#editNoteRef").val(data.note);
+	              
+					},
+					error: function(data) {
+						if (data.status == 403) {
+							$("#loginAlert").show();
+						}
+						else {
+							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.errorMsg').append(alert);
+						}
+					}
+					});
     	
-		// ---------- Delete Bibliography Block -------------
-		
-		$("#deleteBiblio").on("click", function(e) {
-		e.preventDefault();
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").hide();
-		var blockId = $('#deleteBiblioId').attr('value');
-		$('#deleteBiblioId').remove();
-		
-		// ------------- delete Bibliography content blocks ------------
-		$.ajax({
-		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId,
-		    type: 'DELETE',
-		    headers: {
-                'X-CSRF-Token': [[${_csrf.token}]]
-           	},
-		    success: function(result) {
-		        $('#' + blockId).remove();
-		    },
-			error: function(data) {
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.errorMsg').append(alert); 
-				$(".errorMsg").delay(4000).slideUp(500, function(){
-				    $(".errorMsg").empty();
-				});
-			}
-		});
-	});
-		
-// ---------- Delete Reference -------------
-		
-		$("#deleteReference").on("click", function(e) {
-		e.preventDefault();
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").hide();
-		var refId = $('#deleteReferenceId').attr('value');
-		$('#deleteReferenceId').remove();
-		var biblioBlockId = $('#currentBiblioId').attr('value');
-		$('#currentBiblioId').remove();
-		
-		// ------------- delete Reference ------------
-		$.ajax({
-		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refId,
-		    type: 'DELETE',
-		    headers: {
-                'X-CSRF-Token': [[${_csrf.token}]]
-           	},
-		    success: function(result) {
-		        $('#' + refId).remove();
-		    },
-			error: function(data) {
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.errorMsg').append(alert); 
-				$(".errorMsg").delay(4000).slideUp(500, function(){
-				    $(".errorMsg").empty();
-				});
-			}
-		});
-	});
-	
-	// ---------- Delete Image Block -----------
-	
-	$("#deleteImage").on("click", function(e) {
-		e.preventDefault();
-		$("#confirmDeleteTextAlert").find('input').remove();
-		$("#confirmDeleteBiblioAlert").find('input').remove();
-		$("#confirmDeleteRefAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		$("#confirmDeleteImageAlert").hide();
-		var blockId = $('#deleteImageId').attr('value');
-		if(blockId == null || blockId == ''){
-			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.errorMsg').append(alert); 
-			$(".errorMsg").delay(4000).slideUp(500, function(){
-			    $(".errorMsg").empty();
-			});
-		} else{
-			$('#deleteImageId').remove()
-			// ------------- delete image content blocks ------------
-			$.ajax({
-			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-			    type: 'DELETE',
-			    success: function(result) {
-			    	$('#' + blockId).remove();
-			    },
-				error: function(data) {
-					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.errorMsg').append(alert); 
-					$(".errorMsg").delay(4000).slideUp(500, function(){
-					    $(".errorMsg").empty();
-					});
-				}
-			});
-		}
-	});
-	
-	$("#deleteChoiceBlock").on("click", function(e) {
-	    e.preventDefault();
-	    $("#confirmDeleteTextAlert").find('input').remove();
-	    $("#confirmDeleteBiblioAlert").find('input').remove();
-	    $("#confirmDeleteRefAlert").find('input').remove();
-	    $("#confirmDeleteImageAlert").find('input').remove();
-		$("#confirmDeleteChoiceBlockAlert").hide();
-		var blockId = $('#deleteChoiceBlockId').attr('value');
-		if(blockId == null || blockId == ''){
-			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			$('.errorMsg').append(alert); 
-			$(".errorMsg").delay(4000).slideUp(500, function(){
-			    $(".errorMsg").empty();
-			});
-		} else{
-			$('#deleteChoiceBlockId').remove()
-			// ------------- delete choices content blocks ------------
-			$.ajax({
-			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choiceBlock/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-			    type: 'DELETE',
-			    success: function(result) {
-			    	$('#' + blockId).remove();
-			    },
-				error: function(data) {
-					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.errorMsg').append(alert); 
-					$(".errorMsg").delay(4000).slideUp(500, function(){
-					    $(".errorMsg").empty();
-					});
-				}
-			});
-		}
-	});
-	
-					
-	$("#cancelSubmitChoice").click(function() {
-        $("#addChoiceAlert").hide();	
-    });
-	
-    $("#cancelImageBtn").click(function() {
-    	// Initialize selected image ID to blank, on clicking cancel button
-    	$("#uploadImage").data('value', '');
-        $("#addImgAlert").hide();
-        $(".open").removeClass("open");
-    });
-    
-    $("#submitText").on("click", function(e) {
-        $("#addTextAlert").hide();
-        e.preventDefault();
-        // ------------- creating text content blocks ------------
-        
-        var formData = new FormData();
-        var text = markDown.value();
-        formData.append('content', text);
-        markDown.value('');
-        $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-            type: 'POST',
-            cache       : false,
-            contentType : false,
-            processData : false,
-            data: formData,
-            enctype: 'multipart/form-data',
-            success: function(data) {
-
-                var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(textblock);             
-            },
-            error: function(data) {
-            	if (data.status == 403){
-            		$("#loginAlert").show();
+					//remove card border
+					$(".open").css('display', 'none');
+					$(".open").css('overflow-y', 'scroll');
+					$(".open").css('max-height', '200px');
+    			}
+                else {
+                	// store image ID selected by the user to replace, onDoubleClick
+                	var imgBlockID = $(e.target).attr('id'); 
+                	if(imgBlockID != ''){
+                    	$("#uploadImage").data('value', imgBlockID); // sets image ID value
+                    	$("#addImgAlert").show();
+                	}
+            	
+                }
+            }
+                
+            function uploadImage() {
+            	var imgBlockID = $("#uploadImage").data('value') // gets image ID
+            	var file = $('#file')[0].files[0];
+            	var reader  = new FileReader();
+            	var formData = new FormData();
+            	var chooseFromExisting = true;
+            	if (typeof(file) != "undefined"){
+            		chooseFromExisting = false;
+            		formData.append('file', file);
+            	}
+            	var imageSource = $('#selectedImage').find('img').attr('src');
+            	var imageId = "";
+            	if(typeof(imageSource) != "undefined"){
+            		imageId = imageSource.split("/").pop().split(".")[0];
+            	}
+            	var imageblock = "";
+            	var oldImageBlock = "";
+            			    
+            	// Ashmi changes for Story VSPC-64
+            			    
+            	// checks if image ID is present to replace
+            	if (imgBlockID != '') {
+            			oldImageBlock = $("#" + imgBlockID);
+            			var imageBlockId = imgBlockID;
+            			formData.append('imageBlockId',imageBlockId);
+            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+            			if(!chooseFromExisting){
+            				reader.onload = function (theFile)
+            				{
+            					var image = new Image();
+            					image.src = theFile.target.result;
+            					image.onload = function ()
+            					{
+            						imageblock = createImageBlock(reader, this.width);
+            						$("#" + imageBlockId).replaceWith(imageblock);	
+            						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            					};
+            				}
+            			}
+            			else{
+            				var image = new Image();
+            				image.src = $('#selectedImage').find('img').attr('src');
+            				formData.append('imageId',imageId);
+            				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
+            				$("#" + imageBlockId).replaceWith(imageblock);	
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			}
+            			// Reset data-attribute to get current selected image ID
+            			$("#uploadImage").data('value', '');
             	}
             	else {
-                	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                	$('.errorMsg').append(alert);
+            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+            		if(!chooseFromExisting){
+            			reader.onload = function (theFile) 
+            			{        	
+            			var image = new Image();
+            			image.src = theFile.target.result;
+            			image.onload = function() 
+            			{
+            				imageblock = createImageBlock(reader, this.width);  
+            				$('#slideSpace').append(imageblock); 
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			};          
+            			} 
+            		}
+            		else
+            		{
+            			var image = new Image();
+            			image.src = $('#selectedImage').find('img').attr('src');
+            			formData.append('imageId',imageId);
+            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
+            			$('#slideSpace').append(imageblock); 
+            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            		}
+            	}
+            	if (!chooseFromExisting)
+            	{
+            		reader.readAsDataURL(file)
+            	}
+            	$.ajax({
+            		enctype: 'multipart/form-data',
+            		// ------------- creating image content blocks ------------
+            		url: url,
+            		type: 'POST',
+            		cache       : false,
+            		contentType : false,
+            		processData : false,
+            		data: formData,    
+            		success: function(data) {
+            			$(".open").removeClass("open");
+            			var img = imageblock.find('img');
+            			if(data != ''){
+            				img.attr('id', data);
+            				$("#current").find('#deleteImageId').val(data);
+            				$("#current").attr('id', data);
+            			}
+            			else{
+            				img.attr('id', imgBlockID);
+            				$("#current").find('#deleteImageId').val(imgBlockID);
+            				$("#current").attr('id', imgBlockID);
+            			}
+            		},
+            		error: function(data) {
+            		if (imgBlockID == '') {
+            			$("#current").remove();
+            		}
+            		else {
+            			$("#current").replaceWith(oldImageBlock);
+            		}
+            		if (data.status == 403) {
+            			$("#loginAlert").show();
+            		}
+            		}
+            	});
+            	// Reset the image file name 
+            	$('#file').val('');
+            	if(chooseFromExisting)
+            	{
+            		$("#selectedImage").empty();
+            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
             	}
             }
-        });
-    });
+            
+            function guidedTour() {
+            	const tour = new Shepherd.Tour({
+            		  defaultStepOptions: {
+            		    cancelIcon: {
+            		      enabled: true
+            		    },
+            		    classes: '',
+            		    scrollTo: { behavior: 'smooth', block: 'center' },
+            		  },
+            		  useModalOverlay: true,
+            		});
+            
+            	tour.addStep({
+            	  title: 'Welcome to the slide editor!',
+            	  text: `Add or edit the content you want to show on your slides.`,
+            	  buttons: [
+            	    {
+            	      action() {
+            	        return this.next();
+            	      },
+            	      text: 'Next'
+            	    }
+            	  ],
+            	  id: 'creating1'
+            	});
+            	
+            	tour.addStep({
+            	  title: 'Easy navigation',
+            	  text: `Keep track of your location in the module or navigate back.`,
+            	  attachTo: {
+            	    element: '.breadcrumb',
+            	    on: 'bottom'
+            	  },
+            	  buttons: [
+            	    {
+            	      action() {
+            	        return this.back();
+            	      },
+            	      classes: 'shepherd-button-secondary',
+            	      text: 'Back'
+            	    },
+            	    {
+            	      action() {
+            	        return this.next();
+            	      },
+            	      classes: 'btn primary-btn',
+            	      text: 'Next'
+            	    }
+            	  ],
+            	  id: 'creating2'
+            	});
+            	
+            	tour.addStep({
+            	  title: 'Adding content',
+            	  text: `Add content to your slide. The content will be shown in the exhibition in the order you define here.`,
+            	  attachTo: {
+            	    element: '.content-btns',
+            	    on: 'bottom'
+            	  },
+            	  buttons: [
+            	    {
+            	      action() {
+            	        return this.back();
+            	      },
+            	      classes: 'shepherd-button-secondary',
+            	      text: 'Back'
+            	    },
+            	    {
+            	      action() {
+            	        return this.next();
+            	      },
+            	      text: 'Done'
+            	    }
+            	  ],
+            	  id: 'creating3'
+            	});
+            	tour.start();
+            }
+
+			$(document).ready(function() {
+            	if (localStorage.getItem("newSlide") == null) {
+            		guidedTour();
+            		localStorage.setItem("newSlide", false);
+            	}
+            	$('#imageId').prop("disabled",true);
+            	$('#chooseFromLocal').click(function() {
+            		$("#selectedImage").empty();
+            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
+            		$('#imageId').prop("disabled",true);
+            		$('#file').prop("disabled",false);
+            		
+            	  });
+            	
+            	$('#chooseFromExisting').click(function() {
+            		$('#file').val('');
+            		$('#file').prop("disabled",true);
+            		$('#imageId').prop("disabled",false);
+            	  });
+                [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
+            		$('#addChoice').show();
+            		$('#choiceSpace').show();
+            	[/]
+            	
+            
+                //-------- edit contentblock description --------
+            
+                $("#submitDescription").hide()
+                $("#cancelEditDescription").hide()
+                var description = $("#description").text()
+                $("#editDescription").click(function() {
+                    $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+                    $("#description").remove()
+                    $("#editDescription").hide()
+                    $("#submitDescription").show()
+                    $("#cancelEditDescription").show()
+                    
+                });
+            
+                $("#submitDescription").click(function() {
+                    var formData = new FormData();
+                    formData.append('description', $("#newDescription").val());
+                    $.ajax({ 
+            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            	        type: 'POST',
+            	        cache       : false,
+            	        contentType : false,
+            	        processData : false,
+            	        data: formData,
+            	        enctype: 'multipart/form-data',
+            	        success: function(data) {
+            	            // replace text box with new description
+            	            $("#submitDescription").hide()
+            	            $("#cancelEditDescription").hide()
+            	            $("#editDescription").show()
+            	            var val = $("#newDescription").val();
+            	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+            	            $("#newDescription").remove();
+            	            $("#description").text(val)
+            	        },
+            	        error: function(data) {
+            	            $(".open").removeClass("open");
+            	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	                $('.error').append(alert);
+            	        }
+                     });       
+                  });
+                
+                $("#cancelEditDescription").click(function(){
+                    $("#submitDescription").hide()
+                    $("#editDescription").show()
+                    $("#cancelEditDescription").hide()
+                    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+                    $("#newDescription").remove()
+                    $("#description").text(description)
+                    
+                });
+                
+                //------- edit title --------
+                $("#submitTitle").hide();
+                $("#cancelEditTitle").hide();
+                var getTitleText = $("#title").text().split(": ")[1]
+                $("#editTitle").click(function() {
+                    $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+                    $('#title').text('Slide: ')
+                    $("#newTitle").val(getTitleText)
+                    $("#editTitle").hide()
+                    $("#submitTitle").show()
+                    $("#cancelEditTitle").show()       
+                });
+                
+                $("#submitTitle").click(function() {
+                    var formData = new FormData();
+                    formData.append('title', $("#newTitle").val());
+                    $.ajax({
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        type: 'POST',
+                        cache       : false,
+                        contentType : false,
+                        processData : false,
+                        data: formData,
+                        enctype: 'multipart/form-data',
+                        success: function(data) {
+                            // replace text box with new description
+                            $("#submitTitle").hide()
+                            $("#cancelEditTitle").hide();
+                            $("#editTitle").show()
+                            var val = $("#newTitle").val();
+                            $("#newTitle").closest('div').remove();
+                            $("#title").text("Silde: " + val)
+                            
+                        },
+                        error: function(data) {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
+                    });
+                  });
+               $("#cancelEditTitle").click(function(){
+                    $("#submitTitle").hide()
+                    $("#editTitle").show()
+                    $("#cancelEditTitle").hide()
+                    $("#newTitle").closest('div').remove();
+                    $("#title").text("Silde: " + getTitleText);
+               });
+               
+                $("#addText").click(function() {
+                    $(".EasyMDEContainer").remove();
+                	markDown = new EasyMDE({element: $('#textBlockText')[0]});
+                    $("#addTextAlert").show();
+                });
+                
+                $("#addImage").click(function() {
+                    $("#addImgAlert").show();
+                });
+                
+                $("#uploadImage").click(function(e) {
+                    e.preventDefault();
+                    $("#addImgAlert").hide();
+                    uploadImage();
+                    $('#chooseFromLocal').trigger( "click" );
+                });
+                
+                $("#addChoice").click(function() {
+                    $("#addChoiceAlert").show();
+                });
+                
+                $(document).on("click", ".deleteText", function(e) {
+            		$("#confirmDeleteTextAlert").show();
+            		var alert = $('<input type="hidden" id="deleteTextId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+            	
+            	$(document).on("click", ".deleteImage", function(e) {
+            		$("#confirmDeleteImageAlert").show();
+            		var alert = $('<input type="hidden" id="deleteImageId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+              	
+              	$("#addBibliography").click(function() {
+              		$("#addBiblioAlert").show();
+              	});
+              	
+              	$(document).on("click", ".addReference", function(e) {
+					$("#addReferenceAlert").show();
+					var alert = $('<input type="hidden" id="currentBiblioId">');
+					$(alert).attr( 'value', $(this).closest("div").attr("id"));
+					$('.modal-footer').append(alert); 
+				});
+				
+				$(document).on("click", ".deleteBiblio", function(e) {
+					$("#confirmDeleteBiblioAlert").show();
+					var alert = $('<input type="hidden" id="deleteBiblioId">');
+					$(alert).attr( 'value', $(this).siblings('input').val());
+					$('.modal-footer').append(alert); 
+				});
+				
+				$(document).on("click", ".deleteReference", function(e) {
+					$("#confirmDeleteRefAlert").show();
+					var alert = $('<input type="hidden" id="deleteReferenceId">');
+					$(alert).attr( 'value', $(this).siblings('input').val());
+					$('.modal-footer').append(alert);
+					var alert2 = $('<input type="hidden" id="currentBiblioId">');
+					$(alert2).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
+					$('.modal-footer').append(alert2);
+				});
+				
+				$(document).on("click", ".deleteChoiceBlock", function(e) {
+            		$("#confirmDeleteChoiceBlockAlert").show();
+            		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+                
+                $("#cancelSubmitText").click(function() {
+            		$("#addTextAlert").hide();	
+            	});
+            	
+            	$("#cancelDeleteText").click(function() {
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteBiblioAlert").find('input').remove();
+					$("#confirmDeleteRefAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteTextAlert").hide();
+            	});
+            	
+            	$("#cancelDeleteImage").click(function() {
+            		$("#confirmDeleteImageAlert").hide();
+            	});
+            	
+            	$("#cancelSubmitBiblio").click(function() {
+					$("#addBiblioAlert").hide();	
+				});
+	
+				$("#cancelSubmitReference").click(function() {
+					$("#addReferenceAlert").hide();	
+				});
+	
+				$("#cancelDeleteBiblio").click(function() {
+					$("#confirmDeleteTextAlert").find('input').remove();
+					$("#confirmDeleteBiblioAlert").find('input').remove();
+					$("#confirmDeleteRefAlert").find('input').remove();
+					$("#confirmDeleteImageAlert").find('input').remove();
+					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+					$("#confirmDeleteBiblioAlert").hide();
+				});
+	
+				$("#cancelDeleteReference").click(function() {
+					$("#confirmDeleteTextAlert").find('input').remove();
+					$("#confirmDeleteBiblioAlert").find('input').remove();
+					$("#confirmDeleteRefAlert").find('input').remove();
+					$("#confirmDeleteImageAlert").find('input').remove();
+					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+					$("#confirmDeleteRefAlert").hide();
+				});
+            	
+            	$("#cancelDeleteChoiceBlock").click(function() {
+            	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            	    $("#confirmDeleteTextAlert").find('input').remove();
+            	    $("#confirmDeleteBiblioAlert").find('input').remove();
+	    			$("#confirmDeleteRefAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").hide();
+            	});
+            	
+            	$("#cancelDelete").click(function() {
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteBiblioAlert").find('input').remove();
+					$("#confirmDeleteRefAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").hide();	
+            	});
+				
+				// ---------- Delete Text Block -------------
+				$("#deleteText").on("click", function(e) {
+				e.preventDefault();
+				$("#confirmDeleteBiblioAlert").find('input').remove();
+				$("#confirmDeleteRefAlert").find('input').remove();
+				$("#confirmDeleteImageAlert").find('input').remove();
+				$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+				$("#confirmDeleteTextAlert").hide();
+				var blockId = $('#deleteTextId').attr('value');
+				$('#deleteTextId').remove()
+				
+				// ------------- delete text content blocks ------------
+				$.ajax({
+		    		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+		    		type: 'DELETE',
+		    		success: function(result) {
+		        		$('#' + blockId).remove();
+		    		},
+					error: function(data) {
+						var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						$('.errorMsg').append(alert); 
+						$(".errorMsg").delay(4000).slideUp(500, function(){
+				    		$(".errorMsg").empty();
+						});
+					}
+				});
+			});
+    	
+			// ---------- Delete Bibliography Block -------------
+		
+			$("#deleteBiblio").on("click", function(e) {
+			e.preventDefault();
+			$("#confirmDeleteTextAlert").find('input').remove();
+			$("#confirmDeleteImageAlert").find('input').remove();
+			$("#confirmDeleteRefAlert").find('input').remove();
+			$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+			$("#confirmDeleteBiblioAlert").hide();
+			var blockId = $('#deleteBiblioId').attr('value');
+			$('#deleteBiblioId').remove();
+		
+			// ------------- delete Bibliography content blocks ------------
+			$.ajax({
+		    	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId,
+		    	type: 'DELETE',
+		    	headers: {
+                	'X-CSRF-Token': [[${_csrf.token}]]
+           		},
+		    	success: function(result) {
+		        	$('#' + blockId).remove();
+		    	},
+				error: function(data) {
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.errorMsg').append(alert); 
+					$(".errorMsg").delay(4000).slideUp(500, function(){
+				    	$(".errorMsg").empty();
+					});
+				}
+			});
+		});
+		
+		// ---------- Delete Reference -------------
+		
+		$("#deleteReference").on("click", function(e) {
+			e.preventDefault();
+			$("#confirmDeleteTextAlert").find('input').remove();
+			$("#confirmDeleteImageAlert").find('input').remove();
+			$("#confirmDeleteBiblioAlert").find('input').remove();
+			$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+			$("#confirmDeleteRefAlert").hide();
+			var refId = $('#deleteReferenceId').attr('value');
+			$('#deleteReferenceId').remove();
+			var biblioBlockId = $('#currentBiblioId').attr('value');
+			$('#currentBiblioId').remove();
+		
+			// ------------- delete Reference ------------
+			$.ajax({
+		    	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refId,
+		    	type: 'DELETE',
+		    	headers: {
+                	'X-CSRF-Token': [[${_csrf.token}]]
+           		},
+		    	success: function(result) {
+		        	$('#' + refId).remove();
+		    	},
+				error: function(data) {
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.errorMsg').append(alert); 
+					$(".errorMsg").delay(4000).slideUp(500, function(){
+				    	$(".errorMsg").empty();
+					});
+				}
+			});
+		});
+		
+		// ---------- Delete Image Block -----------
+	
+		$("#deleteImage").on("click", function(e) {
+			e.preventDefault();
+			$("#confirmDeleteTextAlert").find('input').remove();
+			$("#confirmDeleteBiblioAlert").find('input').remove();
+			$("#confirmDeleteRefAlert").find('input').remove();
+			$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+			$("#confirmDeleteImageAlert").hide();
+			var blockId = $('#deleteImageId').attr('value');
+			if(blockId == null || blockId == ''){
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.errorMsg').append(alert); 
+				$(".errorMsg").delay(4000).slideUp(500, function(){
+			    	$(".errorMsg").empty();
+				});
+			} else{
+				$('#deleteImageId').remove()
+				// ------------- delete image content blocks ------------
+				$.ajax({
+			    	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			    	type: 'DELETE',
+			    	success: function(result) {
+			    		$('#' + blockId).remove();
+			    	},
+					error: function(data) {
+						var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						$('.errorMsg').append(alert); 
+						$(".errorMsg").delay(4000).slideUp(500, function(){
+					    	$(".errorMsg").empty();
+						});
+					}
+				});
+			}
+		});
+	
+		$("#deleteChoiceBlock").on("click", function(e) {
+	    	e.preventDefault();
+	    	$("#confirmDeleteTextAlert").find('input').remove();
+	    	$("#confirmDeleteBiblioAlert").find('input').remove();
+	    	$("#confirmDeleteRefAlert").find('input').remove();
+	    	$("#confirmDeleteImageAlert").find('input').remove();
+			$("#confirmDeleteChoiceBlockAlert").hide();
+			var blockId = $('#deleteChoiceBlockId').attr('value');
+			if(blockId == null || blockId == ''){
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.errorMsg').append(alert); 
+				$(".errorMsg").delay(4000).slideUp(500, function(){
+			    	$(".errorMsg").empty();
+				});
+			} else{
+				$('#deleteChoiceBlockId').remove()
+				// ------------- delete choices content blocks ------------
+				$.ajax({
+			    	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choiceBlock/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			    	type: 'DELETE',
+			    	success: function(result) {
+			    		$('#' + blockId).remove();
+			    	},
+					error: function(data) {
+						var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						$('.errorMsg').append(alert); 
+						$(".errorMsg").delay(4000).slideUp(500, function(){
+					    	$(".errorMsg").empty();
+						});
+					}
+				});
+			}
+		});
+		
+		$("#cancelSubmitChoice").click(function() {
+        	$("#addChoiceAlert").hide();	
+    	});
+	
+    	$("#cancelImageBtn").click(function() {
+    		// Initialize selected image ID to blank, on clicking cancel button
+    		$("#uploadImage").data('value', '');
+        	$("#addImgAlert").hide();
+        	$(".open").removeClass("open");
+    	});
+    
+    	$("#submitText").on("click", function(e) {
+        	$("#addTextAlert").hide();
+        	e.preventDefault();
+        	// ------------- creating text content blocks ------------
+        
+        	var formData = new FormData();
+        	var text = markDown.value();
+        	formData.append('content', text);
+        	markDown.value('');
+        	$.ajax({
+            	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            	type: 'POST',
+            	cache       : false,
+            	contentType : false,
+            	processData : false,
+            	data: formData,
+            	enctype: 'multipart/form-data',
+            	success: function(data) {
+
+                	var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                	$(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                	$('#slideSpace').append(textblock);             
+            	},
+            	error: function(data) {
+            		if (data.status == 403){
+            			$("#loginAlert").show();
+            		}
+            		else {
+                		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                		$('.errorMsg').append(alert);
+            		}
+            	}
+        	});
+    	});
 
     
     $("#submitBiblio").on("click", function(e) {

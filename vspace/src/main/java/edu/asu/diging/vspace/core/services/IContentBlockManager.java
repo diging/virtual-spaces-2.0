@@ -10,6 +10,7 @@ import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -21,6 +22,8 @@ public interface IContentBlockManager {
             throws ImageCouldNotBeStoredException;
     
     IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData, Integer contentOrder);
+
+    CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder);
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 
@@ -47,7 +50,10 @@ public interface IContentBlockManager {
     void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
             throws ImageCouldNotBeStoredException;
 
-    IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll);   
+    void updateImageBlock(IImageBlock imageBlock, IVSImage image);
+
+    IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
+            boolean showsAll);
     
     Integer findMaxContentOrder(String slideId);
 }

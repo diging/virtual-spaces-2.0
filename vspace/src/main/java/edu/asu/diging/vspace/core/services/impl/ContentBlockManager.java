@@ -162,7 +162,27 @@ public class ContentBlockManager implements IContentBlockManager {
         returnValue.setElement(imageBlock);
         return returnValue;
     }
+    
+    /**
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     *      createImageBlock(java.lang.String,
+     *      edu.asu.diging.vspace.core.model.IVSImage, java.lang.Integer)
+     */
+    @Override
+    public CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder) {
 
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        ISlide slide = slideManager.getSlide(slideId);
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, image);
+        imgBlock.setContentOrder(contentOrder);
+        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
+        returnValue.setElement(imageBlock);
+        return returnValue;
+    }
+    
     /**
      * Delete a text block using an id and also decrease content order by 1 of all
      * the slide's block which are after this block
@@ -269,7 +289,13 @@ public class ContentBlockManager implements IContentBlockManager {
         imageBlock.setImage(slideContentImage);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
-
+    
+    @Override
+    public void updateImageBlock(IImageBlock imageBlock, IVSImage image) {
+        imageBlock.setImage(image);
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
+    
     @Override
     public IImageBlock getImageBlock(String imgBlockId) {
         Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
