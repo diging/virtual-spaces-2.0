@@ -37,7 +37,6 @@ public class ListReferencesController {
             @RequestParam(value = "sort", required = false) String sortedBy,
             @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
         
-//        page = StringUtils.isEmpty(page) ? "1" : page;
         int pageNo;
         try {
             pageNo = referenceManager.validatePageNumber(Integer.parseInt(page));

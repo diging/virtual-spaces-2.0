@@ -14,7 +14,7 @@ import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
-import edu.asu.diging.vspace.references.ReferenceDisplayProvider;
+import edu.asu.diging.vspace.references.ReferenceDisplayDefault;
 
 @Controller
 public class ReferenceController {
@@ -26,7 +26,7 @@ public class ReferenceController {
     private IReferenceManager referenceManager;
     
     @Autowired
-    private ReferenceDisplayProvider referenceDisplayProvider;
+    private ReferenceDisplayDefault referenceDisplayProvider;
 
     @RequestMapping("/staff/display/reference/{id}")
     public String showReference(@PathVariable String id, Model model) {

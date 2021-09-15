@@ -18,9 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
-import edu.asu.diging.vspace.core.model.impl.ReferenceBlock;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
-import edu.asu.diging.vspace.references.ReferenceDisplayProvider;
+import edu.asu.diging.vspace.references.ReferenceBlock;
+import edu.asu.diging.vspace.references.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.references.ReferenceType;
 
 @Controller
@@ -32,7 +32,7 @@ public class EditReferenceController {
     private IReferenceManager referenceManager;
     
     @Autowired
-    private ReferenceDisplayProvider referenceDisplayProvider;
+    private ReferenceDisplayDefault referenceDisplayProvider;
     
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.GET)
     public String show(Model model, @PathVariable("referenceId") String referenceId, RedirectAttributes attributes) {
