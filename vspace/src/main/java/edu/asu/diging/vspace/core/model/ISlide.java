@@ -2,8 +2,6 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.TextBlock;
-
 public interface ISlide extends IVSpaceElement {
 
     void setModule(IModule module);
@@ -16,5 +14,5 @@ public interface ISlide extends IVSpaceElement {
     
     IImageBlock getFirstImageBlock();
     
-    TextBlock getFirstMatchedTextBlock(String searchTerm);
+    ITextBlock getFirstMatchedTextBlock(String searchTerm);
 }
