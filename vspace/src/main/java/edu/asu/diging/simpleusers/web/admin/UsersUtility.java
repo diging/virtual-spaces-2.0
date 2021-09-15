@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  * Utility class that contains methods for ListUsersController
+ * @author Glen Dsouza
  */
 public class UsersUtility {
     
@@ -21,9 +22,7 @@ public class UsersUtility {
     * @return      Boolean: True if User is assigned the role, else False.
     */
     public static Boolean checkUserRoleExists(Set<SimpleGrantedAuthority> userRoles, String role) {
-        for (SimpleGrantedAuthority roleKey : userRoles) {
-            if(roleKey.toString().equals(role)) return true;  
-        }
+        userRoles.stream().anyMatch(roleKey -> (roleKey.toString().equals(role)));
         return false;
     }
 }
