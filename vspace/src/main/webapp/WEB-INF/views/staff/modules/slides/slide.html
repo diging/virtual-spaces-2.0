@@ -87,24 +87,24 @@
                 	$("#editTitleBiblio").val(title);
                 	$("#editDescBiblio").val(desc);
     		
-					formDataCancel = new FormData();
-					formDataCancel.append('biblioTitle', title);
-					formDataCancel.append('description', desc);
-					formDataCancel.append('refListDiv', refListDiv);
+			formDataCancel = new FormData();
+			formDataCancel.append('biblioTitle', title);
+			formDataCancel.append('description', desc);
+			formDataCancel.append('refListDiv', refListDiv);
     	    		//remove card border
-					$(".open").css('display', 'none');
-					$(".open").css('overflow-y', 'scroll');
+			$(".open").css('display', 'none');
+			$(".open").css('overflow-y', 'scroll');
           	
-				} else if(divName.includes("referenceDivStaff")){
-					$(e.target).closest('.referenceDivStaff').addClass("open");
-					var description = $("div.open p:eq(0)").text();
-					defaultValue = description;
-					var refBlockId = $(".open").attr("id");
-					var biblioBlockId = $(e.target).closest('.biblioDivStaff').attr("id");
+		} else if(divName.includes("referenceDivStaff")){
+			$(e.target).closest('.referenceDivStaff').addClass("open");
+			var description = $("div.open p:eq(0)").text();
+			defaultValue = description;
+			var refBlockId = $(".open").attr("id");
+			var biblioBlockId = $(e.target).closest('.biblioDivStaff').attr("id");
     	   
-					$.ajax({
-						url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId ,
-						type: 'GET',
+			$.ajax({
+				url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refBlockId ,
+				type: 'GET',
     	          		cache       : false,
     	          		contentType : 'application/json; charset=utf-8',
     	          		processData : false,
@@ -112,41 +112,41 @@
     	              		'X-CSRF-Token': [[${_csrf.token}]] 
     	         		},
     	          		success: function(data) {
-    	        		//showing the edit bibliography form with all the respective values
-    	      	    	$("#editReferenceAlert").show();
-    	      	    	var alert = $('<input type="hidden" id="currentBiblioId">');
-    	      			$(alert).attr( 'value', biblioBlockId);
-    	      			$('.modal-footer').append(alert); 
+    	        			//showing the edit bibliography form with all the respective values
+    	      	    			$("#editReferenceAlert").show();
+    	      	    			var alert = $('<input type="hidden" id="currentBiblioId">');
+    	      				$(alert).attr( 'value', biblioBlockId);
+    	      				$('.modal-footer').append(alert); 
     	      	
-    	      	    	$("#editTitleRef").val(data.title);
-	              		$("#editAuthorRef").val(data.author);
-	              		$("#editYearRef").val(data.year);
-	              		$("#editJournalRef").val(data.journal);
-	              		$("#editUrlRef").val(data.url);
-	              		$("#editVolumeRef").val(data.volume);
-	              		$("#editIssueRef").val(data.issue);
-	              		$("#editPagesRef").val(data.pages);
-	              		$("#editEditorsRef").val(data.editors);
-	              		$("#editTypeRef").val(data.type);
-	              		$("#editNoteRef").val(data.note);
+    	      	    			$("#editTitleRef").val(data.title);
+	              			$("#editAuthorRef").val(data.author);
+					$("#editYearRef").val(data.year);
+					$("#editJournalRef").val(data.journal);
+					$("#editUrlRef").val(data.url);
+					$("#editVolumeRef").val(data.volume);
+					$("#editIssueRef").val(data.issue);
+					$("#editPagesRef").val(data.pages);
+					$("#editEditorsRef").val(data.editors);
+					$("#editTypeRef").val(data.type);
+					$("#editNoteRef").val(data.note);
 	              
-					},
-					error: function(data) {
-						if (data.status == 403) {
-							$("#loginAlert").show();
-						}
-						else {
-							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.errorMsg').append(alert);
-						}
+				},
+				error: function(data) {
+					if (data.status == 403) {
+						$("#loginAlert").show();
 					}
-					});
+					else {
+						var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						$('.errorMsg').append(alert);
+					}
+				}
+			});
     	
-					//remove card border
-					$(".open").css('display', 'none');
-					$(".open").css('overflow-y', 'scroll');
-					$(".open").css('max-height', '200px');
-    			}
+			//remove card border
+			$(".open").css('display', 'none');
+			$(".open").css('overflow-y', 'scroll');
+			$(".open").css('max-height', '200px');
+    		}
                 else {
                 	// store image ID selected by the user to replace, onDoubleClick
                 	var imgBlockID = $(e.target).attr('id'); 
