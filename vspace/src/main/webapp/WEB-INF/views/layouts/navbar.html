@@ -5,9 +5,30 @@
 	
 	<body>
 		<div th:fragment="navbar">
+		<script th:inline="javascript">
+		 function openExhibitionDescription(){
+		    if (window.matchMedia(maxWidth).matches){
+		        $("#rightContent").css("height", "170px");
+		        $("#rightContent").css("width", "260px");
+		    }
+		    else{
+		        $("#rightContent").css("width", "300px");
+		        $("#rightContent").css("height", "300px");
+		    }
+		} 
+		 function closeExhibitionDescription(){
+		    $("#rightContent").css("width", "0");
+		    $("#rightContent").css("height", "0");
+		} 
+	</script>
 			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
+		      <span 
+                                    th:if="${exhibitionConfig!=null && !#strings.isEmpty(exhibitionConfig.title)}"
+                                    class="icon-info-circle navbar-brand"
+                                    style="font-size: 20px; color: rgba(150, 45, 62, 1);"
+                                    th:onclick="openExhibitionDescription()"></span>
 		      <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
 		        	<li class="nav-item active" style="padding-right: 35px;">
@@ -44,6 +65,11 @@
 		        </div>
 		      </div>
 		    </nav>
+		    <div id="rightContent" th:if="${exhibitionConfig!=null && exhibitionConfig.title!=NULL}">
+                        <span class="icon-circle-close closebtn" th:onclick="closeExhibitionDescription()"></span>
+                        <div class="spaceDescription">[[${exhibitionConfig.title}]]</div>
+                        <div class="spaceDescription">[[${exhibitionConfig.customMessage}]]</div>
+               </div>
 	    </div>
 	</body>
 </html>
