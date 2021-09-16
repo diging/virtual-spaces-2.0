@@ -22,7 +22,6 @@ public class UsersUtility {
     * @return      Boolean: True if User is assigned the role, else False.
     */
     public static Boolean checkUserRoleExists(Set<SimpleGrantedAuthority> userRoles, String role) {
-        userRoles.stream().anyMatch(roleKey -> (roleKey.toString().equals(role)));
-        return false;
+        return userRoles.stream().anyMatch(roleKey -> (roleKey.toString().equals(role)));
     }
 }
