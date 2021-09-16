@@ -9,5 +9,7 @@ public interface ITextBlock extends IContentBlock {
     void setId(String id);
 
     String getId();
+    
+    String htmlRenderedText();
 
 }

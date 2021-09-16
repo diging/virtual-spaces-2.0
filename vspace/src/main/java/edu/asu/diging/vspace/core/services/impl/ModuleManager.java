@@ -8,6 +8,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
@@ -81,5 +83,10 @@ public class ModuleManager implements IModuleManager {
     @Override
     public ISequence checkIfSequenceExists(String moduleId, String sequenceId) {
         return sequenceRepo.findSequenceForModuleAndSequence(moduleId,sequenceId);
+    }
+    
+    @Override
+    public Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText) {
+        return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
 }
