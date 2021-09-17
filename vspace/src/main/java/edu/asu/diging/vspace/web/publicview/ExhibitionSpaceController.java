@@ -13,8 +13,10 @@ import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -48,6 +50,9 @@ public class ExhibitionSpaceController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
+    
+    @Autowired
+    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
@@ -59,6 +64,12 @@ public class ExhibitionSpaceController {
         if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {
             IExhibition exhibition = exhibitManager.getStartExhibition();
+            List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
+            ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+            if(exhibitionAboutPage != null) {
+                model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
+                model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText());   
+            }
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));

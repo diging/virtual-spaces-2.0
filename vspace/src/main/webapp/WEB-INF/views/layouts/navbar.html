@@ -27,17 +27,20 @@
 		      <a class="navbar-brand" style="width: 10px" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
 		      <div class="nav" id="navbarCollapse">
-		      <span 
-                                    th:if="${exhibitionConfig!=null && !#strings.isEmpty(exhibitionConfig.title)}"
-                                    class="icon-info-circle navbar-brand"
-                                    style="font-size: 20px;  color: rgba(150, 45, 62, 1);"
-                                    th:onclick="openExhibitionDescription()"></span>
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
 		        	<li class="nav-item active" style="padding-right: 35px;">
 		        		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" style="display: flex; align-items:center">
 					      	<div style="height: 5px; width: 5px; border-radius:50%; background-color: var(--success)"></div>
 					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
+		        	</li>
+		        	<li class="nav-item active" style="padding-right: 35px;">        	
+		        		<span 
+                                    th:if="${aboutPageTitle!=null && !#strings.isEmpty(aboutPageTitle)}"
+                                    th:text="About"
+                                    style="font-size: 15px;  color: rgba(150, 45, 62, 1); cursor: pointer;"
+                                    th:onclick="openExhibitionDescription()">
+                                    </span>
 		        	</li>
 					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
 					        <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
@@ -67,10 +70,10 @@
 		        </div>
 		      </div>
 		    </nav>
-		    <div id="aboutContent" th:if="${exhibitionConfig!=null && exhibitionConfig.title!=NULL}">
+		    <div id="aboutContent" th:if="${aboutPageTitle!=null}">
                         <span class="icon-circle-close closebtn" th:onclick="closeExhibitionDescription()"></span>
-                        <div class="aboutDescription">[[${exhibitionConfig.title}]]</div>
-                        <div class="aboutDescription">[[${exhibitionConfig.customMessage}]]</div>
+                        <div class="aboutDescription">[[${aboutPageTitle}]]</div>
+                        <div th:if="aboutPageText != null &&!#strings.isEmpty(aboutPageText)} " class="aboutDescription">[[${aboutPageText}]]</div>
                </div> 
 	    </div>
 	</body>
