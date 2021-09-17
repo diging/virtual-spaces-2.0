@@ -2,6 +2,9 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
+import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+
 public interface IModule extends IVSpaceElement {
 
     List<ISlide> getSlides();
@@ -15,4 +18,8 @@ public interface IModule extends IVSpaceElement {
     ISequence getStartSequence();
 
     void setStartSequence(ISequence startSequence);
+    
+    void setModuleStatus(ModuleStatus status);
+    ModuleStatus getModuleStatus();
+    
 }
