@@ -19,39 +19,75 @@ public class ReferenceDisplayDefault implements ReferenceDisplayProvider{
         String issue = reference.getIssue();
         String pages = reference.getPages();
         
-        if(author!=null && !author.equals("")) {
-            referenceDisplayText += author + " ";
-        }
-        
-        if(year!=null && !year.equals("")) {
-            referenceDisplayText += "("+ year + "). ";
-        }
-        
-        if(title!=null && !title.equals("")) {
-            referenceDisplayText += title + ". ";
-        }
-        
-        if(journal!=null && !journal.equals("")) {
-            referenceDisplayText += "In: " + journal + ". ";
-        }
-        
-        if(pages!=null && !pages.equals("")) {
-            referenceDisplayText += pages + ". ";
-        }
-        
-        if(volume!=null && !volume.equals("")) {
-            referenceDisplayText += volume + " ";
-        }
-        
-        if(issue!=null && !issue.equals("")) {
-            referenceDisplayText += "("+ issue + ").";
-        }
-        
-        if(url!=null && !url.equals("")) {
-            referenceDisplayText += url;
-        }
+        referenceDisplayText += getRefAuthorDisplayText(author) + getRefYearDisplayText(year) + getRefTitleDisplayText(title)
+            + getRefJournalDisplayText(journal) + getRefPagesDisplayText(pages) + getRefVolumeDisplayText(volume) + getRefIssueDisplayText(issue)
+            + getRefUrlDisplayText(url);
         
         return referenceDisplayText;
+    }
+    
+    String getRefAuthorDisplayText(String author) {
+        if(author==null || author.equals("")) {
+            return "";
+        }
+        
+        return author + " ";
+    }
+    
+    String getRefYearDisplayText(String year) {
+        if(year==null || year.equals("")) {
+            return "";
+        }
+        
+        return "("+ year + "). ";
+    }
+    
+    String getRefTitleDisplayText(String title) {
+        if(title==null || title.equals("")) {
+            return "";
+        }
+        
+        return title + ". ";
+    }
+    
+    String getRefJournalDisplayText(String journal) {
+        if(journal==null || journal.equals("")) {
+            return "";
+        }
+        
+        return "In: " + journal + ". ";
+    }
+    
+    String getRefPagesDisplayText(String pages) {
+        if(pages==null || pages.equals("")) {
+            return "";
+        }
+        
+        return pages + ". ";
+    }
+    
+    String getRefVolumeDisplayText(String volume) {
+        if(volume==null || volume.equals("")) {
+            return "";
+        }
+        
+        return volume + " ";
+    }
+    
+    String getRefIssueDisplayText(String issue) {
+        if(issue==null || issue.equals("")) {
+            return "";
+        }
+        
+        return "("+ issue + ").";
+    }
+    
+    String getRefUrlDisplayText(String url) {
+        if(url==null || url.equals("")) {
+            return "";
+        }
+        
+        return url;
     }
     
 }
