@@ -27,13 +27,12 @@
 
 @keyframes rotation {
 		from {
-			transform: rotate(359deg);
-		}
-		to {
 			transform: rotate(0deg);
 		}
+		to {
+			transform: rotate(359deg);
+		}
 }
-
 .icon-newspaper:before {
   content: "\e9bb";
 }
@@ -407,6 +406,17 @@
 }
 .icon-multiple-chat .path1:before {
   content: "\e95f";
+  color: rgb(0, 0, 0);
+}
+.icon-multiple-chat .path2:before {
+  content: "\e960";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.icon-multiple-chat .path3:before {
+  content: "\e961";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
 }
 .icon-multiple-chat-alt:before {
   content: "\e962";

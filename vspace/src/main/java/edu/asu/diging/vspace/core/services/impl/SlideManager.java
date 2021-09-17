@@ -10,6 +10,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
@@ -29,7 +31,6 @@ import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
-
 
 @Service
 public class SlideManager implements ISlideManager {
@@ -56,33 +57,39 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
-        ISlide slide = slideFactory.createSlide(module, slideForm, type);     
+        ISlide slide = slideFactory.createSlide(module, slideForm, type);
         return slideRepo.save((Slide) slide);
     }
 
     @Override
     public IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type) {
-        ISlide branchingPoint = slideFactory.createSlide(module, slideForm, type);                 
+        ISlide branchingPoint = slideFactory.createSlide(module, slideForm, type);
         return bpointRepo.save((BranchingPoint) branchingPoint);
     }
 
     @Override
     public void updateBranchingPoint(IBranchingPoint branchingPoint, List<String> editedChoiceSequenceIds) {
-        List<IChoice> existingChoices=branchingPoint.getChoices();
-        List<String> existingChoiceSequenceIds=existingChoices.stream().map(choiceSequence -> choiceSequence.getSequence().getId()).collect(Collectors.toList());
-        List<String> deletedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(existingChoiceSequenceIds, editedChoiceSequenceIds);
-        List<String> addedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(editedChoiceSequenceIds,existingChoiceSequenceIds);
+        List<IChoice> existingChoices = branchingPoint.getChoices();
+        List<String> existingChoiceSequenceIds = existingChoices.stream()
+                .map(choiceSequence -> choiceSequence.getSequence().getId()).collect(Collectors.toList());
+        List<String> deletedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(existingChoiceSequenceIds,
+                editedChoiceSequenceIds);
+        List<String> addedChoiceSequenceIds = (List<String>) CollectionUtils.subtract(editedChoiceSequenceIds,
+                existingChoiceSequenceIds);
         List<IChoice> newlyAddedChoices = choiceFactory.createChoices(addedChoiceSequenceIds);
         existingChoices.addAll(newlyAddedChoices);
-        List<IChoice> choicesToDelete = existingChoices.stream().filter(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId())).collect(Collectors.toList());
+        List<IChoice> choicesToDelete = existingChoices.stream()
+                .filter(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId()))
+                .collect(Collectors.toList());
         existingChoices.removeIf(choice -> deletedChoiceSequenceIds.contains(choice.getSequence().getId()));
         branchingPoint.setChoices(existingChoices);
         bpointRepo.save((BranchingPoint) branchingPoint);
         /*
-         * We did not use deleteAll on choiceRepo as choicesToDelete is a list of IChoice 
-         * and cannot be casted into Choice and objects of other type can also implement IChoice
+         * We did not use deleteAll on choiceRepo as choicesToDelete is a list of
+         * IChoice and cannot be casted into Choice and objects of other type can also
+         * implement IChoice
          */
-        for(IChoice deletedChoice : choicesToDelete) {
+        for (IChoice deletedChoice : choicesToDelete) {
             choiceRepo.deleteById(deletedChoice.getId());
         }
     }
@@ -112,7 +119,7 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void deleteSlideById(String slideId, String moduleId) {
-        if(slideId == null) {
+        if (slideId == null) {
             logger.error("Slide Id cannot be null.");
             return;
         }
@@ -121,11 +128,11 @@ public class SlideManager implements ISlideManager {
         Slide slideObj = (Slide) getSlide(slideId);
         List<ISlide> slideObjToRemove = new ArrayList<>();
         slideObjToRemove.add(slideObj);
-        if(slideObj == null) {
+        if (slideObj == null) {
             return;
         }
         for (Sequence sequence : sequences) {
-            if(sequence.getSlides().contains(slideObj)) {
+            if (sequence.getSlides().contains(slideObj)) {
                 sequence.getSlides().removeAll(slideObjToRemove);
                 sequenceRepo.save(sequence);
             }
@@ -153,5 +160,11 @@ public class SlideManager implements ISlideManager {
             }
         }
         return sequenceSlides;
+    }
+
+    @Override
+    public Page<ISlide> findByNameOrDescription(Pageable requestedPage, String searchText) {
+
+        return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
 }
