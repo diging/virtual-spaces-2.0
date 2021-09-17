@@ -6,7 +6,9 @@ import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException;
@@ -17,6 +19,9 @@ import edu.asu.diging.vspace.core.model.impl.Reference;
 public class DefaultMetadata implements ReferenceMetadataProvider {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Autowired
+    private Environment env;
     
     @Override
     public ReferenceMetadataType getReferenceMetadataType() {
@@ -34,7 +39,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
             throw new ReferenceMetadataEncodingException(e);
         }
 
-        String type = reference.getType();
+        String type = env.getProperty(reference.getType());
         String title = reference.getTitle();
         String author = reference.getAuthor();
         String year = reference.getYear();
@@ -46,46 +51,163 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         String editors = reference.getEditors();
         String note = reference.getNote();
 
+        urlEncodedReferenceMetaData += getRefTypeEncoded(type) + getRefTitleEncoded(title) + getRefAuthorEncoded(author) + getRefYearEncoded(year)
+            + getRefJournalEncoded(journal) + getRefUrlEncoded(url) + getRefVolumeEncoded(volume) + getRefIssueEncoded(issue) + getRefPagesEncoded(pages)
+            + getRefEditorsEncoded(editors) + getRefNoteEncoded(note);
+
+        urlEncodedReferenceMetaData += ReferenceConstants.RFT_DEFAULT_LANGUAGE;
+
+        return urlEncodedReferenceMetaData;
+    }
+    
+    String getRefTypeEncoded(String type) throws ReferenceMetadataEncodingException {
+        
+        if(type==null) {
+            return "";
+        }
+        
         try {
-            urlEncodedReferenceMetaData += ((type !=null) ? ReferenceConstants.RFT_DEGREE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((title !=null) ? ReferenceConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((author !=null) ? ReferenceConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((year !=null) ? ReferenceConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((journal !=null) ? ReferenceConstants.RFT_JOURNAL_TAG + URLEncoder.encode(journal, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((url !=null) ? ReferenceConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((volume !=null) ? ReferenceConstants.RFT_VOLUME_TAG + URLEncoder.encode(volume, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((issue !=null) ? ReferenceConstants.RFT_ISSUE_TAG + URLEncoder.encode(issue, StandardCharsets.UTF_8.name()) : "");
-
-            if (pages != null) {
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_ISSUE_TAG
+            return ReferenceConstants.RFT_DEGREE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefTitleEncoded(String title) throws ReferenceMetadataEncodingException {
+        
+        if(title==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
+        
+        if(author==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefYearEncoded(String year) throws ReferenceMetadataEncodingException {
+        
+        if(year==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefJournalEncoded(String journal) throws ReferenceMetadataEncodingException {
+        
+        if(journal==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_JOURNAL_TAG + URLEncoder.encode(journal, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefUrlEncoded(String url) throws ReferenceMetadataEncodingException {
+        
+        if(url==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefVolumeEncoded(String volume) throws ReferenceMetadataEncodingException {
+        
+        if(volume==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_VOLUME_TAG + URLEncoder.encode(volume, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefIssueEncoded(String issue) throws ReferenceMetadataEncodingException {
+        
+        if(issue==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_ISSUE_TAG + URLEncoder.encode(issue, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefPagesEncoded(String pages) throws ReferenceMetadataEncodingException {
+        String refPagesEncoded = "";
+        if (pages != null) {
+            try {
+                refPagesEncoded += ReferenceConstants.RFT_ISSUE_TAG
                         + URLEncoder.encode(pages, StandardCharsets.UTF_8.name());
                 String[] tokens = pages.split("-", 2);
                 if (tokens.length > 1) {
-                    urlEncodedReferenceMetaData += ReferenceConstants.RFT_START_PAGE_TAG
+                    refPagesEncoded += ReferenceConstants.RFT_START_PAGE_TAG
                             + URLEncoder.encode(tokens[0], StandardCharsets.UTF_8.name());
-                    urlEncodedReferenceMetaData += ReferenceConstants.RFT_END_PAGE_TAG
+                    refPagesEncoded += ReferenceConstants.RFT_END_PAGE_TAG
                             + URLEncoder.encode(tokens[1], StandardCharsets.UTF_8.name());
                 }
+            } catch (UnsupportedEncodingException e) {
+                throw new ReferenceMetadataEncodingException(e);
             }
-
-            urlEncodedReferenceMetaData += ((editors !=null) ? ReferenceConstants.RFT_EDITOR_TAG + URLEncoder.encode(editors, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ((note !=null) ? ReferenceConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name()) : "");
-
-            urlEncodedReferenceMetaData += ReferenceConstants.RFT_DEFAULT_LANGUAGE;
-
+        }
+        return refPagesEncoded;
+    }
+    
+    String getRefEditorsEncoded(String editors) throws ReferenceMetadataEncodingException {
+        
+        if(editors==null) {
+            return "";
+        }
+        
+        try {
+            return ReferenceConstants.RFT_EDITOR_TAG + URLEncoder.encode(editors, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    String getRefNoteEncoded(String note) throws ReferenceMetadataEncodingException {
+        
+        if(note==null) {
+            return "";
         }
-
-        return urlEncodedReferenceMetaData;
+        
+        try {
+            return ReferenceConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
     }
 
 }

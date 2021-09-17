@@ -79,7 +79,7 @@
 	                	<div th:each="contentRef: ${contents.references}">
 							<li>
 								<div th:id="${contentRef.id}" class="referenceDiv">
-									<p class="col-md-10" th:text='${@referenceDisplayProvider.getReferenceDisplayText(contentRef)}'></p>
+									<p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
 								</div>
 								<span class='Z3988' th:title='${@referenceMetadataRegistry.getProvider("default").getReferenceMetadata(contentRef)}'> </span>
 							</li>
