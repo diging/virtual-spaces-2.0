@@ -47,34 +47,21 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         String note = reference.getNote();
 
         try {
-            if (type != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_DEGREE_TAG
-                        + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((type !=null) ? ReferenceConstants.RFT_DEGREE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name()) : "");
 
-            if (title != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_TITLE_TAG
-                        + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((title !=null) ? ReferenceConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name()) : "");
 
-            if (author != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((author !=null) ? ReferenceConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name()) : "");
 
-            if (year != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((year !=null) ? ReferenceConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name()) : "");
 
-            if (journal != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_JOURNAL_TAG
-                        + URLEncoder.encode(journal, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((journal !=null) ? ReferenceConstants.RFT_JOURNAL_TAG + URLEncoder.encode(journal, StandardCharsets.UTF_8.name()) : "");
 
-            if (url != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((url !=null) ? ReferenceConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name()) : "");
 
-            if (volume != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_VOLUME_TAG
-                        + URLEncoder.encode(volume, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((volume !=null) ? ReferenceConstants.RFT_VOLUME_TAG + URLEncoder.encode(volume, StandardCharsets.UTF_8.name()) : "");
 
-            if (issue != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_ISSUE_TAG
-                        + URLEncoder.encode(issue, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((issue !=null) ? ReferenceConstants.RFT_ISSUE_TAG + URLEncoder.encode(issue, StandardCharsets.UTF_8.name()) : "");
 
             if (pages != null) {
                 urlEncodedReferenceMetaData += ReferenceConstants.RFT_ISSUE_TAG
@@ -88,12 +75,9 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
                 }
             }
 
-            if (editors != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_EDITOR_TAG
-                        + URLEncoder.encode(editors, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((editors !=null) ? ReferenceConstants.RFT_EDITOR_TAG + URLEncoder.encode(editors, StandardCharsets.UTF_8.name()) : "");
 
-            if (note != null)
-                urlEncodedReferenceMetaData += ReferenceConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += ((note !=null) ? ReferenceConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name()) : "");
 
             urlEncodedReferenceMetaData += ReferenceConstants.RFT_DEFAULT_LANGUAGE;
 
