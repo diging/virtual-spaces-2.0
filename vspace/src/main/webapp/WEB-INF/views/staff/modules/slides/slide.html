@@ -343,7 +343,7 @@
 
             	function updateContentOrder(jsonObj,token){
 	            		$.ajax({
-	            		// ------------- adjusting content order of blocks if their position changed after dragging ----------
+	            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
 		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
 		            		type: 'POST',
 		            		beforeSend: function(){
