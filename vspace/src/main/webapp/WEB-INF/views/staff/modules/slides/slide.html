@@ -306,79 +306,87 @@
             		$('#imageId').prop("disabled",false);
             	  });
 				
-				var currentlyWaiting = false;
-	var toClearTimeout;
-	$('#slideSpace').sortable({
-		update: function(event,ui) {
-			var jsonObj = [];
-			var blockId;
-			$(this).children().each(function(index,element){
-				if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
-					blockId=$(element).attr('id');
-				}else {
-					blockId = $(element.innerHTML).filter('div').attr('id');
-				}
-				if($(element.innerHTML).filter('div').attr('data-position') != index){
-					item = {}
-					item ["id"] = blockId;
-					item ["contentOrder"] = index;
-					jsonObj.push(item);
-					$(element.innerHTML).filter('div').attr('data-position',index);
-				}
-			});
-			var token = [[${_csrf.token}]];
-			if (jsonObj.length != 0){
-				if (!currentlyWaiting){
-					toClearTimeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
-			}
-			else{
-				if(typeof(toClearTimeout) !="undefined") {
-					clearTimeout(toClearTimeout);
-				}
-				toClearTimeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
-				}
-			}
-		}
-	});
-function updateContentOrder(jsonObj,token){
-	$.ajax({
-		// ------------- adjusting content order of blocks if their position changed after dragging ----------
-			url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-			type: 'POST',
-			beforeSend: function(){
-				$(".loader").remove();
-				for(let i=0;i<jsonObj.length;i++) {
-					$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
-				}
-				$(".loader").show();
-				currentlyWaiting = true;
-				},
-	        complete: function(){
-	        	$(".loader").hide();
-	        	currentlyWaiting = false;
-	        	},
-			cache       : false,
-			contentType: 'application/json; charset=utf-8',
-			processData :false,
-			headers:{
-				'X-CSRF-Token':token
-			},
-			data: JSON.stringify(jsonObj),
-			success: function(data) {
-				$(".save").remove();
-				for(let i=0;i<data.length;i++) {
-					$('#'+data[i].id).attr('data-position',data[i].contentOrder);
-					$('#'+data[i].id).append($('<div style="width: 250px;height: 50px;margin-left: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert"><p>Successfully Saved.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'));
-				}
-			},
-			error: function(data) {
-				$(".errInSave").remove();
-				for(let i=0;i<data.length;i++) {
-					$('#'+data[i].id).append($('<div style="width: 250px;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'));
-				}
-			}
-		});
-}
+            	var currentlyWaiting = false;
+            	var timeout;
+            	$('#slideSpace').sortable({
+	            	update: function(event,ui) {
+		            	var jsonObj = [];
+		            	var blockId;
+		            	$(this).children().each(function(index,element){
+			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
+			            		blockId=$(element).attr('id');
+			            	}else {
+			            		blockId = $(element.innerHTML).filter('div').attr('id');
+			            	}
+			            	if($(element.innerHTML).filter('div').attr('data-position') != index){
+				            	item = {}
+				            	item ["id"] = blockId;
+				            	item ["contentOrder"] = index;
+				            	jsonObj.push(item);
+				            	$(element.innerHTML).filter('div').attr('data-position',index);
+			            	}
+		            	});
+		            	var token = [[${_csrf.token}]];
+		            	if (jsonObj.length != 0){
+			            	if (!currentlyWaiting){
+			            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+			            	}
+			            	else{
+				            	if(typeof(timeout) !="undefined") {
+				            		clearTimeout(timeout);
+				            	}
+				            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+			            	}
+		            	}
+	            	}
+            	});
+
+            	function updateContentOrder(jsonObj,token){
+	            		$.ajax({
+	            		// ------------- adjusting content order of blocks if their position changed after dragging ----------
+		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+		            		type: 'POST',
+		            		beforeSend: function(){
+			            		$(".loader").remove();
+			            		for(let i=0;i<jsonObj.length;i++) {
+			            			$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+			            		}
+			            		$(".loader").show();
+			            		currentlyWaiting = true;
+		            		},
+		            		complete: function(){
+			            		$(".loader").hide();
+			            		currentlyWaiting = false;
+		            		},
+		            		cache       : false,
+		            		contentType: 'application/json; charset=utf-8',
+		            		processData :false,
+		            		headers:{
+		            			'X-CSRF-Token':token
+		            		},
+		            		data: JSON.stringify(jsonObj),
+		            		success: function(data) {
+			            		$(".save").remove();
+			            		for(let i=0;i<data.length;i++) {
+				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+				            		var successDiv = $('<div style="width: 250px;height: 50px;margin-left: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+				            		successDiv.append('<p>Successfully Saved.</p>');
+				            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+				            		successDiv.append('</div>');
+				            		$('#'+data[i].id).append(successDiv);
+			            		} 
+		            		},
+		            		error: function(data) {
+			            		$(".errInSave").remove();
+			            		for(let i=0;i<data.length;i++) {
+				            		var errorDiv = $('<div style="width: 250px;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+				            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+				            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+				            		errorDiv.append('</div>');
+			            		}
+		            		}
+	            		});
+            		}
                 [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
             		$('#addChoice').show();
             		$('#choiceSpace').show();
