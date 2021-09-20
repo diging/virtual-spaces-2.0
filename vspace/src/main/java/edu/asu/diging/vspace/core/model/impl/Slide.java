@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -20,9 +19,11 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
+import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
 public class Slide extends VSpaceElement implements ISlide {
@@ -135,10 +136,11 @@ public class Slide extends VSpaceElement implements ISlide {
      * This Method will retrieve the first ImageBlock of a slide if the ImageBlock
      * is present
      * 
-     * @return ImageBlock
+     * @return IImageBlock
      */
+    @Override
     @JsonIgnore
-    public ImageBlock getFirstImageBlock() {
+    public IImageBlock getFirstImageBlock() {
         List<IContentBlock> allBlocks = getContents();
         if (allBlocks != null) {
             Optional<IContentBlock> firstImageBlock = allBlocks.stream()
@@ -150,8 +152,16 @@ public class Slide extends VSpaceElement implements ISlide {
         return null;
     }
 
+    /**
+     * This Method will return the first Text block whose content has searchTerm in
+     * it.
+     * 
+     * @param searchTerm the search string which is being searched.
+     * @return TextBlock
+     */
+    @Override
     @JsonIgnore
-    public TextBlock getFirstMatchedTextBlock(String searchTerm) {
+    public ITextBlock getFirstMatchedTextBlock(String searchTerm) {
         List<IContentBlock> allBlocks = getContents();
         if (allBlocks != null) {
             Optional<IContentBlock> firstMatchedTextBlock = allBlocks.stream()

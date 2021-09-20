@@ -12,7 +12,7 @@
         <org.slf4j-version>1.7.5</org.slf4j-version>
         <spring.version>5.0.19.RELEASE</spring.version>
         <spring-data.version>Kay-SR8</spring-data.version>
-        <spring-security-version>5.3.3.RELEASE</spring-security-version>
+        <spring-security-version>5.3.10.RELEASE</spring-security-version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <javers.version>5.11.1</javers.version>
         <simple-users-version>0.5</simple-users-version>
@@ -23,11 +23,11 @@
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC</db.url>
+        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
         <uploaded.files.path></uploaded.files.path>
-        
+
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -38,7 +38,7 @@
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
         <tomcat.server.id>TomcatServer</tomcat.server.id>
-        
+
         <hibernate.show_sql></hibernate.show_sql>
     </properties>
 
@@ -186,35 +186,55 @@
             </exclusions>
             <scope>runtime</scope>
         </dependency>
-        
+
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.4.0-b180830.0359</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-core -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-impl -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+
         <!-- MarkDown -->
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.15.0</version>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5 -->
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf-spring5</artifactId>
-			<version>${thymeleaf.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>${thymeleaf.version}</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
-		<dependency>
-			<groupId>nz.net.ultraq.thymeleaf</groupId>
-			<artifactId>thymeleaf-layout-dialect</artifactId>
-			<version>2.4.0</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+            <version>2.4.0</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-			<version>3.0.3.RELEASE</version>
-		</dependency>
-		
+        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <version>3.0.3.RELEASE</version>
+        </dependency>
+
         <!-- Testing -->
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
@@ -229,8 +249,8 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
-        
+
+
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
         <dependency>
             <groupId>org.mockito</groupId>

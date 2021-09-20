@@ -13,9 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.StaffSearchSlide;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
 
 @Controller
 public class StaffSearchSlideController {
@@ -24,40 +24,36 @@ public class StaffSearchSlideController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search/slide")
-    public ResponseEntity<StaffSearchSlide> searchInVspace(
+    public ResponseEntity<StaffSearchSlideResults> searchInVspace(
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Slide> slideSet = paginationForSlide(slidePagenum, searchTerm);
-        StaffSearchSlide staffSearch = new StaffSearchSlide();
-        staffSearch.setSlide(slideSet);
+        List<ISlide> slideList = paginationForSlide(slidePagenum, searchTerm);
+        StaffSearchSlideResults staffSearch = new StaffSearchSlideResults();
+        staffSearch.setSlides(slideList);
 
         Map<String, String> slideFirstImage = new HashMap<>();
 
-        for (Slide slide : slideSet) {
-
-            String slideFirstImageId = null;
-
+        for (ISlide slide : slideList) {
             if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
+                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
             }
-            slideFirstImage.put(slide.getId(), slideFirstImageId);
         }
-        staffSearch.setSlideFirstImage(slideFirstImage);
-        return new ResponseEntity<StaffSearchSlide>(staffSearch, HttpStatus.OK);
+        staffSearch.setFirstImageOfSlide(slideFirstImage);
+        return new ResponseEntity<StaffSearchSlideResults>(staffSearch, HttpStatus.OK);
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in slide table and return the slides corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private List<Slide> paginationForSlide(String slidePagenum, String searchTerm) {
-        Page<Slide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+    private List<ISlide> paginationForSlide(String slidePagenum, String searchTerm) {
+        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         return slidePage.getContent();
     }
 }

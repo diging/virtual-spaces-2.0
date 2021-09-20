@@ -8,6 +8,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
@@ -43,6 +45,8 @@ import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 @Service
 @PropertySource("classpath:/config.properties")
 public class SpaceManager implements ISpaceManager {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SpaceRepository spaceRepo;
@@ -211,14 +215,19 @@ public class SpaceManager implements ISpaceManager {
     /**
      * Method to delete space based on id
      * 
-     * @param id if id is null throws exception, else delete corresponding space
+     * @param id
+     *            if id is null throws exception, else delete corresponding space
      * @throws SpaceDoesNotExistException
      */
     @Override
     public void deleteSpaceById(String id) {
         if (id != null) {
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-            List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
+            List<SpaceLink> fromSpaceLinks = new ArrayList<>();
+            Optional<Space> space = spaceRepo.findById(id);
+            if (space.isPresent()) {
+                fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
+            } 
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
             // To delete links that access to the space getting deleted and replacing it as
@@ -252,8 +261,12 @@ public class SpaceManager implements ISpaceManager {
 
     @Override
     public List<SpaceLink> getIncomingLinks(String id) {
-
-        return spaceLinkRepo.getLinkedFromSpaces(id);
+        Optional<Space> space = spaceRepo.findById(id);
+        if (space.isPresent()) {
+            return spaceLinkRepo.findByTargetSpace(space.get());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -275,19 +288,18 @@ public class SpaceManager implements ISpaceManager {
         Iterator<Space> iterator = spaces.iterator();
         while (iterator.hasNext()) {
             Space space = iterator.next();
-            space.setIncomingLinks((spaceLinkRepo.getLinkedFromSpaces(space.getId())).size() > 0 ? true : false);
+            space.setIncomingLinks((spaceLinkRepo.findByTargetSpace(space)).size() > 0 ? true : false);
         }
         return spaces;
     }
-
+    
     @Override
-    public Page<Space> findByNameOrDescription(Pageable requestedPage, String searchText) {
+    public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
     
     @Override
-    public Page<Space> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchTerm) {
+    public Page<ISpace> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchTerm) {
         return spaceRepo.findDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(requestedPage, spaceStatus, searchTerm, searchTerm);
     }
-
 }

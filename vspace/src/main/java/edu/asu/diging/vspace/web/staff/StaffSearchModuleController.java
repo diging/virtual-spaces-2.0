@@ -13,12 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.StaffSearchModule;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
 
 @Controller
 public class StaffSearchModuleController {
@@ -30,24 +30,23 @@ public class StaffSearchModuleController {
     private ISequenceManager sequenceManager;
 
     @RequestMapping(value = "/staff/search/module")
-    public ResponseEntity<StaffSearchModule> searchInVspace(
+    public ResponseEntity<StaffSearchModuleResults> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
-        StaffSearchModule staffSearch = new StaffSearchModule();
-        staffSearch.setModule(moduleList);
+        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);
+        StaffSearchModuleResults staffSearch = new StaffSearchModuleResults();
+        staffSearch.setModules(moduleList);
 
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        Map<String, Boolean> moduleAlertMessage = new HashMap<>();
+        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
 
-        for (Module module : moduleList) {
-
+        for (IModule module : moduleList) {
             if (module.getStartSequence() == null) {
-                moduleAlertMessage.put(module.getId(), true);
+                isModuleConfiguredMap.put(module.getId(), false);
                 moduleFirstSlideImage.put(module.getId(), null);
             } else {
-                moduleAlertMessage.put(module.getId(), false);
+                isModuleConfiguredMap.put(module.getId(), true);
                 String startSequenceID = module.getStartSequence().getId();
                 List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
                         ? sequenceManager.getSequence(startSequenceID).getSlides()
@@ -55,31 +54,28 @@ public class StaffSearchModuleController {
 
                 Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
 
-                String firstSlideImageId = null;
-
                 if (slide != null && slide.getFirstImageBlock() != null) {
-                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+                    moduleFirstSlideImage.put(module.getId(), slide.getFirstImageBlock().getImage().getId());
                 }
-                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
             }
         }
-        staffSearch.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
-        staffSearch.setModuleAlertMessage(moduleAlertMessage);
-        return new ResponseEntity<StaffSearchModule>(staffSearch, HttpStatus.OK);
+        staffSearch.setModuleImageIdMap(moduleFirstSlideImage);
+        staffSearch.setModuleAlertMessages(isModuleConfiguredMap);
+        return new ResponseEntity<StaffSearchModuleResults>(staffSearch, HttpStatus.OK);
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in module table and return the module corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the module corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string.
      * 
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
      * @param searchTerm    This is the search string which is being searched.
      */
-    private List<Module> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<Module> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+    private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
+        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         return modulePage.getContent();
     }
 

@@ -22,9 +22,11 @@ public class AddTextBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST)
     public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("content") String content,
-            @RequestParam("contentOrder") Integer contentOrder) throws IOException {
+            @PathVariable("moduleId") String moduleId, @RequestParam("content") String content) throws IOException {
 
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        
         ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
 
         return new ResponseEntity<>(textBlock.getId(), HttpStatus.OK);

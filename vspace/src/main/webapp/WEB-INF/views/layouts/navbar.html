@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html layout:decorate="~{layouts/main}">
 	<head>
 	
@@ -63,4 +64,54 @@
             </script>
 	    </div>
 	</body>
+=======
+<html layout:decorate="~{layouts/main}">
+	<head>
+	
+	</head>
+	
+	<body>
+		<div th:fragment="navbar">
+			<nav class="nav-bar" style="height:48px">
+		      <a class="navbar-brand" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
+		      [[${exhibition?.title}]]</a>
+		      <div class="nav" id="navbarCollapse">
+		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
+		        	<li class="nav-item active" style="padding-right: 35px;">
+		        		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" style="display: flex; align-items:center">
+					      	<div style="height: 5px; width: 5px; border-radius:50%; background-color: var(--success)"></div>
+					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
+					    </div>
+		        	</li>
+					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
+					        <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
+			                	<span class="sr-only">(current)</span>
+			                </a>
+			        </li> 
+					<li sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
+					<a class="nav-link" th:href="@{/staff/dashboard}" title="Staff Dashboard"><span class="icon-home secondary"></span>
+						<span class="sr-only">(current)</span>
+					</a>
+					 </li>
+                  
+                 <!--  <li class="nav-item active" style="padding: 15px;">
+                    <a class="nav-link" th:href="@{/}"><i class="far fa-play-circle secondary"></i></a>
+                  </li> 
+                  <li class="nav-item active" style="padding: 15px;">
+                    <a class="nav-link" th:href="@{/staff/exhibit/config}"><i class="fa fa-cog secondary"></i></a>
+                  </li>  -->
+                  
+		        </ul>
+		        <div class="form-inline mt-2 mt-md-0">
+		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
+		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+		  				<button style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout" ><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
+		         	</form>
+		         	<a class="btn nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"><span class="icon-sign-in"></span></a>
+		        </div>
+		      </div>
+		    </nav>
+	    </div>
+	</body>
+>>>>>>> origin/develop
 </html>
