@@ -1,18 +1,18 @@
 package edu.asu.diging.vspace.core.services;
 import org.springframework.data.domain.Page;
 
-import edu.asu.diging.vspace.core.model.impl.Module;
-import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 
 public interface IPublicSearchManager {
 
-    Page<Space> searchInSpaces(String search, int page);
+    Page<ISpace> searchInSpaces(String search, int page);
 
-    Page<Module> searchInModules(String search, int page);
+    Page<IModule> searchInModules(String search, int page);
 
-    Page<Slide> searchInSlides(String search, int page);
+    Page<ISlide> searchInSlides(String search, int page);
 
-    Page<Slide> searchInSlideTexts(String search, int page);
+    Page<ISlide> searchInSlideTexts(String search, int page);
     
 }

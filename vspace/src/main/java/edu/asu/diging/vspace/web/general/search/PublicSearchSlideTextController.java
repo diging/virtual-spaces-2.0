@@ -20,10 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
-import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
@@ -39,55 +38,48 @@ public class PublicSearchSlideTextController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/exhibit/search/slideText")
-    public ResponseEntity<PublicSearchSlideTextBlock> searchInVspace(HttpServletRequest request,
+    public ResponseEntity<PublicSearchSlideTextBlockResults> searchInVspace(HttpServletRequest request,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Slide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-        PublicSearchSlideTextBlock publicSearchSlideText = new PublicSearchSlideTextBlock();
-        publicSearchSlideText.setSlideTextList(slideTextList);
+        List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
+        PublicSearchSlideTextBlockResults publicSearch = new PublicSearchSlideTextBlockResults();
+        publicSearch.setSlidesWithMatchedTextBlock(slideTextList);
         
         Map<String, String> slideTextFirstImageMap = new HashMap<>();
         Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
         
-        for (Slide slide : slideTextList) {
-            String slideFirstImageId = null;
-
-            if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
+        for (ISlide slide : slideTextList) {
+            if (slide != null) {
+                if (slide.getFirstImageBlock() != null) {
+                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
+                }
+                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
+                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
+                }
             }
-            slideTextFirstImageMap.put(slide.getId(), slideFirstImageId);
-
-            TextBlock slideFirstTextBlock = null;
-
-            if (slide != null && slide.getFirstMatchedTextBlock(searchTerm)!= null) {
-                slideFirstTextBlock = slide.getFirstMatchedTextBlock(searchTerm);
-            }
-            slideTextFirstTextBlockMap.put(slide.getId(), slideFirstTextBlock.getText());
-
         }
-        publicSearchSlideText.setSlideTextFirstImage(slideTextFirstImageMap);
-        publicSearchSlideText.setSlideTextFirstTextBlock(slideTextFirstTextBlockMap);
-        return new ResponseEntity<PublicSearchSlideTextBlock>(publicSearchSlideText, HttpStatus.OK);
+        publicSearch.setSlideToFirstImageMap(slideTextFirstImageMap);
+        publicSearch.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
+        return new ResponseEntity<PublicSearchSlideTextBlockResults>(publicSearch, HttpStatus.OK);
     }
 
     /**
      * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in ContentBlock table and return the slides
-     * corresponding to the page number specified in the input
-     * parameter(spacePagenum) whose text block contains the search string.
-     * This also filters Slides from modules which are linked to the spaces.
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose text block contains the
+     * search string
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
      * @param searchTerm       This is the search string which is being searched.
      */
-    private List<Slide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<Slide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
+    private List<ISlide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
+        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
-        List<Slide> slideTextList = new ArrayList<>();
+        List<ISlide> slideTextList = new ArrayList<>();
         
-        for(Slide slide : slideTextPage.getContent()) {
+        for(ISlide slide : slideTextPage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
                 SlideWithSpace slideWithSpace = new SlideWithSpace();

@@ -18,8 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
@@ -36,27 +36,23 @@ public class PublicSearchSlideController {
     private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(value = "/exhibit/search/slide")
-    public ResponseEntity<PublicSearchSlide> searchInVspace(
+    public ResponseEntity<PublicSearchSlideResults> searchInVspace(
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Slide> slideList = paginationForSlide(slidePagenum, searchTerm);
-        PublicSearchSlide publicSearchSlide = new PublicSearchSlide();
-        publicSearchSlide.setSlideList(slideList);
+        List<ISlide> slideList = paginationForSlide(slidePagenum, searchTerm);
+        PublicSearchSlideResults publicSearch = new PublicSearchSlideResults();
+        publicSearch.setSlides(slideList);
         
         Map<String, String> slideFirstImage = new HashMap<>();
         
-        for (Slide slide : slideList) {
-            
-            String slideFirstImageId = null;
-            
+        for (ISlide slide : slideList) {
             if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImageId = slide.getFirstImageBlock().getImage().getId();
+                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
             }
-            slideFirstImage.put(slide.getId(), slideFirstImageId);
-            publicSearchSlide.setSlideFirstImage(slideFirstImage);
         }
-        return new ResponseEntity<PublicSearchSlide>(publicSearchSlide, HttpStatus.OK);
+        publicSearch.setFirstImageOfSlide(slideFirstImage);
+        return new ResponseEntity<PublicSearchSlideResults>(publicSearch, HttpStatus.OK);
     }
 
     /**
@@ -69,11 +65,11 @@ public class PublicSearchSlideController {
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private List<Slide> paginationForSlide(String slidePagenum, String searchTerm) {
-        Page<Slide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
-        List<Slide> slideList = new ArrayList<>();
+    private List<ISlide> paginationForSlide(String slidePagenum, String searchTerm) {
+        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+        List<ISlide> slideList = new ArrayList<>();
         
-        for(Slide slide : slidePage.getContent()) {
+        for(ISlide slide : slidePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
                 SlideWithSpace slideWithSpace = new SlideWithSpace();

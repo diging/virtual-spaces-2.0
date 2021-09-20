@@ -10,6 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -49,12 +52,12 @@ public class PublicSearchManager implements IPublicSearchManager{
      */
 
     @Override
-    public Page<Space> searchInSpaces(String searchTerm, int page) {
+    public Page<ISpace> searchInSpaces(String searchTerm, int page) {
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSpace = PageRequest.of(page - 1, pageSize);
-        Page<Space> spacePage = spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
+        Page<ISpace> spacePage = spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
         int totalSpacePage = spacePage.getTotalPages();
         /* if page>total pages,last page is returned */
         if (page > totalSpacePage) {
@@ -76,12 +79,12 @@ public class PublicSearchManager implements IPublicSearchManager{
      *         in the requested page.
      */
     @Override
-    public Page<Module> searchInModules(String searchTerm, int page) {
+    public Page<IModule> searchInModules(String searchTerm, int page) {
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
-        Page<Module> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         int totalModulePage = modulePage.getTotalPages();
         if (page > totalModulePage) {
             totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
@@ -102,12 +105,12 @@ public class PublicSearchManager implements IPublicSearchManager{
      *         the requested page.
      */
     @Override
-    public Page<Slide> searchInSlides(String searchTerm, int page) {
+    public Page<ISlide> searchInSlides(String searchTerm, int page) {
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
-        Page<Slide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
         int totalSlidePage = slidePage.getTotalPages();
         if (page > totalSlidePage) {
             totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
@@ -128,12 +131,12 @@ public class PublicSearchManager implements IPublicSearchManager{
      *         requested page.
      */
     @Override
-    public Page<Slide> searchInSlideTexts(String searchTerm, int page) {
+    public Page<ISlide> searchInSlideTexts(String searchTerm, int page) {
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
-        Page<Slide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
         int totalSlideTextPage = slidetextPage.getTotalPages();
         if (page > totalSlideTextPage) {
             totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;

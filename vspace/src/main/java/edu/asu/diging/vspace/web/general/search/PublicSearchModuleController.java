@@ -18,8 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.ModuleWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -42,23 +42,23 @@ public class PublicSearchModuleController {
     private ISequenceManager sequenceManager;
 
     @RequestMapping(value = "/exhibit/search/module")
-    public ResponseEntity<PublicSearchModule> searchInVspace(
+    public ResponseEntity<PublicSearchModuleResults> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<Module> moduleList = paginationForModule(modulePagenum, searchTerm);
-        PublicSearchModule publicSearchModule = new PublicSearchModule();
-        publicSearchModule.setModuleList(moduleList);
+        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);
+        PublicSearchModuleResults publicSearchModule = new PublicSearchModuleResults();
+        publicSearchModule.setModules(moduleList);
         
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        Map<String, Boolean> moduleAlertMessage = new HashMap<>();
+        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
         
-        for (Module module : moduleList) {
+        for (IModule module : moduleList) {
             if (module.getStartSequence() == null) {
-                moduleAlertMessage.put(module.getId(), true);
+                isModuleConfiguredMap.put(module.getId(), true);
                 moduleFirstSlideImage.put(module.getId(), null);
             } else {
-                moduleAlertMessage.put(module.getId(), false);
+                isModuleConfiguredMap.put(module.getId(), false);
                 String startSequenceID = module.getStartSequence().getId();
                 List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
                         ? sequenceManager.getSequence(startSequenceID).getSlides()
@@ -75,9 +75,9 @@ public class PublicSearchModuleController {
             }
             
         }
-        publicSearchModule.setModuleFirstSlideFirstImage(moduleFirstSlideImage);
-        publicSearchModule.setModuleAlertMessage(moduleAlertMessage);
-        return new ResponseEntity<PublicSearchModule>(publicSearchModule, HttpStatus.OK);
+        publicSearchModule.setModuleImageIdMap(moduleFirstSlideImage);
+        publicSearchModule.setModuleAlertMessages(isModuleConfiguredMap);
+        return new ResponseEntity<PublicSearchModuleResults>(publicSearchModule, HttpStatus.OK);
     }
 
     /**
@@ -90,11 +90,11 @@ public class PublicSearchModuleController {
      *                      URL.
      * @param searchTerm    This is the search string which is being searched.
      */
-    private List<Module> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<Module> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-        List<Module> moduleList = new ArrayList<>();
+    private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
+        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        List<IModule> moduleList = new ArrayList<>();
         
-        for(Module module : modulePage.getContent()) {
+        for(IModule module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
             if(moduleLink!=null) {
                 ModuleWithSpace modWithSpace = new ModuleWithSpace();

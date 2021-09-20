@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.ModuleWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
-import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 
@@ -62,7 +63,7 @@ public class PublicSearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
-        Page<Space> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+        Page<ISpace> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
         model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
         model.addAttribute("spaceSearchResults", spacePage.getContent());
@@ -81,13 +82,13 @@ public class PublicSearchController {
      * @param searchTerm    This is the search string which is being searched.
      */
     private void paginationForModule(String modulePagenum, Model model, String searchTerm) {
-        Page<Module> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
         List<ModuleWithSpace> moduleList = new ArrayList<>();
         
         //Adding space info for each module
-        for(Module module : modulePage.getContent()) {
+        for(IModule module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
             if(moduleLink!=null) {
                 ModuleWithSpace modWithSpace = new ModuleWithSpace();
@@ -116,13 +117,13 @@ public class PublicSearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private void paginationForSlide(String slidePagenum, Model model, String searchTerm) {
-        Page<Slide> slidePage = publicSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+        Page<ISlide> slidePage = publicSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         List<Slide> slideList = new ArrayList<>();
         
        //Adding space info for each slide
-        for(Slide slide : slidePage.getContent()) {
+        for(ISlide slide : slidePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
                 SlideWithSpace slideWithSpace = new SlideWithSpace();
@@ -152,14 +153,14 @@ public class PublicSearchController {
      * @param searchTerm       This is the search string which is being searched.
      */
     private void paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
-        Page<Slide> slideTextPage = publicSearchManager.searchInSlideTexts(searchTerm,
+        Page<ISlide> slideTextPage = publicSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
         List<Slide> slideTextList = new ArrayList<>();
         
         //Adding space info for each slide
-        for(Slide slide : slideTextPage.getContent()) {
+        for(ISlide slide : slideTextPage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
                 SlideWithSpace slideWithSpace = new SlideWithSpace();
