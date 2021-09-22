@@ -765,15 +765,9 @@
 }
 
 .searchInput {
-<<<<<<< HEAD
-	display: flex;
-    background: var(--base-grey);
-    border-radius: 5px;
-=======
 	display: flex !important;
 	background: var(--base-grey) !important;
 	border-radius: 5px !important;
->>>>>>> origin/develop
 }
 
 .searchImg {
@@ -782,8 +776,6 @@
 	width: 150px;
 	height: 150px;
 	margin-right: 15px !important;
-<<<<<<< HEAD
-=======
 }
 
 .shepherd-button {
@@ -816,5 +808,4 @@
 .shepherd-text {
 	color: #121212;
 	text-align: left;
->>>>>>> origin/develop
 }

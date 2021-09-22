@@ -55,10 +55,10 @@ public class PublicSearchModuleController {
         
         for (IModule module : moduleList) {
             if (module.getStartSequence() == null) {
-                isModuleConfiguredMap.put(module.getId(), true);
+                isModuleConfiguredMap.put(module.getId(), false);
                 moduleFirstSlideImage.put(module.getId(), null);
             } else {
-                isModuleConfiguredMap.put(module.getId(), false);
+                isModuleConfiguredMap.put(module.getId(), true);
                 String startSequenceID = module.getStartSequence().getId();
                 List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
                         ? sequenceManager.getSequence(startSequenceID).getSlides()
@@ -95,17 +95,17 @@ public class PublicSearchModuleController {
         List<IModule> moduleList = new ArrayList<>();
         
         for(IModule module : modulePage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-            if(moduleLink!=null) {
+//            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
+//            if(moduleLink!=null) {
                 ModuleWithSpace modWithSpace = new ModuleWithSpace();
                 try {
                     BeanUtils.copyProperties(modWithSpace, module);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
-                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                modWithSpace.setSpaceId("asdeed");
                 moduleList.add(modWithSpace);
-            }
+//            }
         }
         
         return moduleList;

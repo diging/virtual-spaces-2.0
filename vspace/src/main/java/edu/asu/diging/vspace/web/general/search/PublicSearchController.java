@@ -90,16 +90,16 @@ public class PublicSearchController {
         //Adding space info for each module
         for(IModule module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-            if(moduleLink!=null) {
+//            if(moduleLink!=null) {
                 ModuleWithSpace modWithSpace = new ModuleWithSpace();
                 try {
                     BeanUtils.copyProperties(modWithSpace, module);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
-                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                modWithSpace.setSpaceId("asdeed");
                 moduleList.add(modWithSpace);
-            }
+//            }
         }
         model.addAttribute("moduleSearchResults", moduleList);
         model.addAttribute("moduleCount", moduleList.size());
