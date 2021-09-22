@@ -124,4 +124,16 @@ public class Module extends VSpaceElement implements IModule {
     public void setStartSequence(ISequence startSequence) {
         this.startSequence = startSequence;
     }
+
+    @Override
+    public void setModuleStatus(ModuleStatus status) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public ModuleStatus getModuleStatus() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
