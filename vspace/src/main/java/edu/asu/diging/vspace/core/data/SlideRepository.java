@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.data;
 
 import java.util.List;
+import java.util.Set;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
@@ -25,5 +26,8 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
 
     Page<ISlide> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
+    
+    @Query(value="SELECT d.Slide_Id FROM Sequence_Slides d, Module m WHERE d.Sequence_Id = m.startSequence_id", nativeQuery = true)
+    Set<ISlide> findAllSlidesFromStartSequences();
 
 }

@@ -237,8 +237,8 @@ $('.slidepage-selection').bootpag({
 	        $(".loader").hide();
 	    },
 		success: function(data) {
-		slideList = data['slideList'];
-		slideFirstImage = data['slideFirstImage'];
+		slideList = data['slides'];
+		firstImageOfSlide = data['firstImageOfSlide'];
 		$("#slideResultDisplay").empty();
 		for(let i=0;i<slideList.length;i++) {
 			var divtag = $("<div></div>");
@@ -248,7 +248,7 @@ $('.slidepage-selection').bootpag({
 		 	anchor.attr('class',"textDivPublic tab  btn btn-light");
 		 	anchor.css('width','100%');
 		 	var img = $("<img></img>");
-		 	var slideFirstImageId = slideFirstImage[slideList[i].id];
+		 	var slideFirstImageId = firstImageOfSlide[slideList[i].id];
 		 	if(slideFirstImageId == null) {
 		  		img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
 		 	}

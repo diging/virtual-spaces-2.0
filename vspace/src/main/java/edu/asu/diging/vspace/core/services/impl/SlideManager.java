@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -166,5 +167,10 @@ public class SlideManager implements ISlideManager {
     public Page<ISlide> findByNameOrDescription(Pageable requestedPage, String searchText) {
 
         return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
+    }
+    
+    @Override
+    public Set<ISlide> getAllSlidesFromStartSequences() {
+        return slideRepo.findAllSlidesFromStartSequences();
     }
 }

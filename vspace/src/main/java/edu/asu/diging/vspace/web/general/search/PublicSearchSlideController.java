@@ -3,8 +3,10 @@ package edu.asu.diging.vspace.web.general.search;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -18,10 +20,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
 @Controller
@@ -34,6 +41,15 @@ public class PublicSearchSlideController {
     
     @Autowired
     private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private IModuleManager moduleManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
+    
+    @Autowired
+    private ISequenceManager sequenceManager;
 
     @RequestMapping(value = "/exhibit/search/slide")
     public ResponseEntity<PublicSearchSlideResults> searchInVspace(
@@ -56,11 +72,10 @@ public class PublicSearchSlideController {
     }
 
     /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in slide table and return the slides corresponding to
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string. This also filters Slides from modules 
-     * which are linked to the spaces.
+     * description contains the search string.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
@@ -68,18 +83,21 @@ public class PublicSearchSlideController {
     private List<ISlide> paginationForSlide(String slidePagenum, String searchTerm) {
         Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         List<ISlide> slideList = new ArrayList<>();
+        Set<ISlide> slideSet = slideManager.getAllSlidesFromStartSequences();
         
         for(ISlide slide : slidePage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-            if(moduleLink!=null) {
-                SlideWithSpace slideWithSpace = new SlideWithSpace();
-                try {
-                    BeanUtils.copyProperties(slideWithSpace, slide);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
+            if(slideSet.contains(slide.getId())) {
+                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+                if(moduleLink!=null) {
+                    SlideWithSpace slideWithSpace = new SlideWithSpace();
+                    try {
+                        BeanUtils.copyProperties(slideWithSpace, slide);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        logger.error("Could not create moduleWithSpace.", e);
+                    }
+                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideList.add(slideWithSpace);
                 }
-                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideList.add(slideWithSpace);
             }
         }
         return slideList;

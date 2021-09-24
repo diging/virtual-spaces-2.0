@@ -59,4 +59,9 @@ public class SequenceManager implements ISequenceManager {
     public void updateSequence(ISequence sequence) {
         sequenceRepo.save((Sequence) sequence);
     }
+
+    @Override
+    public List<ISequence> getAllSequencesForModules() {
+        return sequenceRepo.getAllSequencesForModules();
+    }
 }

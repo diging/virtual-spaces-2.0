@@ -21,4 +21,6 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
             String description);
 
     List<Module> findAllByOrderByCreationDateDesc();
-}
+    
+    List<IModule> findAllByStartSequenceNotNull();
+} 

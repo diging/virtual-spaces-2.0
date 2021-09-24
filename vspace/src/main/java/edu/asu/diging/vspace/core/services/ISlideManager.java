@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +34,6 @@ public interface ISlideManager {
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
     Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
+    
+    Set<ISlide> getAllSlidesFromStartSequences();
 }

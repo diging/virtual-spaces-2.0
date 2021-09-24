@@ -16,7 +16,7 @@ public interface IModuleManager {
     IModule getModule(String id);
     
     List<IModule> getAllModules();
-
+    
     List<ISlide> getModuleSlides(String moduleId);
     
     List<ISequence> getModuleSequences(String moduleId);
@@ -24,4 +24,5 @@ public interface IModuleManager {
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
     
     Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText);
+    
 }

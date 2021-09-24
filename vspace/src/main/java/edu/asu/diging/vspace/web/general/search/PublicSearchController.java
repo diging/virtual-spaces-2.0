@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.general.search;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
 public class PublicSearchController {
@@ -34,6 +37,9 @@ public class PublicSearchController {
     
     @Autowired
     private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
     
     @RequestMapping(value = "/exhibit/search", method=RequestMethod.GET)
     public String getAllSearchedElements(
@@ -120,20 +126,23 @@ public class PublicSearchController {
         Page<ISlide> slidePage = publicSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
-        List<Slide> slideList = new ArrayList<>();
+        List<ISlide> slideList = new ArrayList<>();
+        Set<ISlide> slideSet = slideManager.getAllSlidesFromStartSequences();
         
        //Adding space info for each slide
         for(ISlide slide : slidePage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-            if(moduleLink!=null) {
-                SlideWithSpace slideWithSpace = new SlideWithSpace();
-                try {
-                    BeanUtils.copyProperties(slideWithSpace, slide);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
+            if(slideSet.contains(slide.getId())) {
+                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+                if(moduleLink!=null) {
+                    SlideWithSpace slideWithSpace = new SlideWithSpace();
+                    try {
+                        BeanUtils.copyProperties(slideWithSpace, slide);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        logger.error("Could not create moduleWithSpace.", e);
+                    }
+                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideList.add(slideWithSpace);
                 }
-                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideList.add(slideWithSpace);
             }
         }
         model.addAttribute("slideSearchResults", slideList);
