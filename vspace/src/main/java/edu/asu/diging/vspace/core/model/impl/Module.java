@@ -127,14 +127,12 @@ public class Module extends VSpaceElement implements IModule {
 
     @Override
     public void setModuleStatus(ModuleStatus status) {
-        // TODO Auto-generated method stub
         this.moduleStatus = status;
         
     }
 
     @Override
     public ModuleStatus getModuleStatus() {
-        // TODO Auto-generated method stub
         return moduleStatus;
     }
 }
