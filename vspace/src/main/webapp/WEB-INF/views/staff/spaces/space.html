@@ -126,7 +126,6 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
 }
 
 function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	console.log(link);
     if(link != null){
         var moduleLink;
         if(link.type=="ALERT"){
@@ -195,8 +194,6 @@ function drawLinks(){
             var spaceLinks = data['spaceLinks'];
             var externalLinks = data['externalLinks'];
             var moduleLinks = data['moduleLinks'];
-            console.log('module links are');
-            console.log(moduleLinks);
             var posXModal = $("#bgImage").position().left;
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
