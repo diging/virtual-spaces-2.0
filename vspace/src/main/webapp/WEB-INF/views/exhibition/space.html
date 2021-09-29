@@ -59,6 +59,36 @@
     }
 }
 
+.imgResizeDiv {
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 90%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.imgResizeDiv:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
 .barPosition {
     top: 25px;
 }
@@ -131,14 +161,56 @@
 </head>
 
 <body>
-    <div layout:fragment="content">
+    <div id="mainDivContent" layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
+			
+		function toggleImgSize(isClicked){
+			var maxImgWidth = $(window).width();
+			var spaceWidth = $("#bgImage").css("width");
+			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isClicked) {
+				isResizeImgBtnClicked = -isResizeImgBtnClicked;
+				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
+			}
+			// resize the image to max width
+			var spaceImg = $("#space");
+			if (isResizeImgBtnClicked == 1) {
+				$("#toggleImgClass").attr('class', "icon-collapse secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$("#space").remove();
+					$("#mainDivContent").append(spaceImg);
+					$(".spaceClass").css("display", ""); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", maxImgWidth);
+					$(".spaceClass").css("height", "");
+					$("#Module_1").css("height", "");
+					$("#Module_1").css("min-height", "0");
+					$("#Module_1").css("margin-bottom", "0px");
+				}
+        		}
+			else {
+				$("#toggleImgClass").attr('class', "icon-expand secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$("#space").remove();
+					$(".spaceClass").children().first().append(spaceImg);
+					$(".spaceClass").css("display", "flex"); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", spaceWidth);
+					$('#bgImage').width('100%');
+					$(".spaceClass").css("height", "800px");
+					$("#Module_1").css("margin-bottom", "60px");
+				}
+			}
+			$("#space a").remove();        
+			drawLinks();
+		}
 
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
-			$("#mySidenav").css("width", "250px");
-        }
+		  $("#mySidenav").css("width", "250px");
+		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
 		}
@@ -172,14 +244,41 @@
 		    }
 		}
 		
+		function setCookie(name,value,days) {
+		    var expires = "";
+		    if (days) {
+		        var date = new Date();
+		        date.setTime(date.getTime() + (days*24*60*60*1000));
+		        expires = "; expires=" + date.toUTCString();
+		    }
+		    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+		}
+		
+		function getCookie(name) {
+		    var nameEq = name + "=";
+		    var cookieArray = document.cookie.split(';');
+		    for(var i=0;i < cookieArray.length;i++) {
+		        var currCookie = cookieArray[i].trim();
+		        if (currCookie.startsWith(nameEq)) {
+		        	return currCookie.substring(nameEq.length,currCookie.length);
+		        }
+		    }
+		    return null;
+		}
+		
 		$(window).on("load", function() {
-		    let spaceHeight = $("#bgImage").css("height");
-		    $("#Module_1").css("height",spaceHeight);
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isResizeImgBtnClicked == "") {
+				setCookie('isResizeImgBtnClicked', -1, null);
+			}
+		    	let spaceHeight = $("#bgImage").css("height");
+		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
 				$("#space a").remove();
+		    		drawLinks();
+		    	});
 		    	drawLinks();
-		    });
-		    drawLinks();
+		    	toggleImgSize(false);
 		});
 		
 		function drawLinks() {
@@ -188,7 +287,7 @@
 			var externalLinks = [[${externalLinkList}]];
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
-			let relativeHeight = ([(${display.width})]/width)*height;
+			let relativeHeight = ([(${display?.width})]/width)*height;
 		    spaceLinks.forEach(function(link,index){
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
@@ -210,7 +309,7 @@
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosX=(width*link.positionX)/[(${display?.width})];
     		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
@@ -231,14 +330,14 @@
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var moduleLink = $('<a></a>');
-    		        var moduleLinkURL = [[@{|/exhibit/${space.id}/module/|}]]+link.link.module.id;
+    		        var moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
     		        moduleLink.attr("href", moduleLinkURL);
     		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosX=(width*link.positionX)/[(${display?.width})];
     		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
@@ -274,7 +373,7 @@
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosX=(width*link.positionX)/[(${display?.width})];
     		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
@@ -291,6 +390,23 @@
             })
 		}
 		</script>
+		
+		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
+		  <span class="icon-warning secondary"></span> You are viewing the public page. Go to the staff home 
+		  	<span class="icon-home secondary"></span> to make changes.
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		
+		<div class="imgResizeDiv">
+                <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+                    onclick="toggleImgSize(1)">
+                    <span class="icon-expand secondary"
+                        id="toggleImgClass" style="left: -4px;"></span> <span
+                        class="tooltiptext">Resize Image</span>
+                </button>
+            </div>
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -299,7 +415,7 @@
                 <h6
                     th:if="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.customMessage}]]</h6>
                 <h6
-                    th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode.value}]]</h6>
+                    th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
                 <div id="mySidenav" class="sidenav">
@@ -307,14 +423,14 @@
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
+                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a>
                         </li>
                     </ul>
                 </div>
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; margin-top: -50px; display: flex; justify-content: center; padding-top: 10px;">
+                    style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
@@ -327,11 +443,11 @@
                                         <li
                                             th:if="${!#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -361,7 +477,7 @@
                                 <span class="icon-grid-dots moduleBarPosition"></span>
                             </div>
                         </div>
-                        <div class="text-Div">
+                        <div class="text-Div" >
                             <h3 class="spaceName">
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"
@@ -369,7 +485,7 @@
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></span>
                                 <a sec:authorize="isAuthenticated()"
-                                    th:href="@{|/staff/space/${space.id}|}"><span
+                                    th:href="@{|/staff/space/${space?.id}|}"><span
                                     style="display: inline-block; color: rgba(150, 45, 62, 1);">
                                     <span class="icon-esit" style="display: inline-block;"></span></span></a>
                             </h3>
@@ -378,8 +494,8 @@
                         <div id="space">
 
                             <img
-                                th:style="|max-width: ${space.image.width}px; border-radius: 13px; width: 100%;|"
-                                id="bgImage" th:src="@{'/api/image/'+${space.image.id}}"/>
+                                th:style="|max-width: ${space.image?.width}px; border-radius: 13px; width: 100%;|"
+                                id="bgImage" th:src="@{'/api/image/'+${space.image?.id}}"/>
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">

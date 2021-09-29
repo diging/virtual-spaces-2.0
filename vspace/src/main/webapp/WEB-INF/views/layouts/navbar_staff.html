@@ -1,17 +1,14 @@
 
 <html layout:decorate="~{layouts/main_staff}">
-	<head>
-	</head>
-	
 	<body>
-		<div th:fragment="navbar">   
+		<div th:fragment="navbar"> 
 		    <div id="mySidenav" class="sidenav">
 				<ul class="side-list" style="padding:1px;display: table;margin: 0 auto;padding-top:35px">
 		            <li class="nav-link alert alert-warning"
 						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
 						th:if="${exhibition}"
 		                style="text-align: center;"
-		                th:style="${#strings.equals(exhibition.mode,'ACTIVE') ? 'display: none' : 'display: block'}">
+		                th:style="${#strings.equals(exhibition.mode,'ACTIVE') or #strings.equals(exhibition.mode,null) ? 'display: none' : 'display: block'}">
 		                <span><span class="icon-warning secondary"></span></span>
 		                <span th:if="${exhibition.mode == 'MAINTENANCE'}">Exhibition under maintenance</span> 
 		                <span th:if="${exhibition.mode == 'OFFLINE'}">Exhibition is offline</span>
@@ -59,7 +56,7 @@
 			               <span class="icon-info secondary"></span><span class="custom_Text">&nbsp;About Page</span>
 			            </a>
 			        </li>
-			         <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+					<li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'graph' ? 'active' : '' }"
 			               th:href="@{/staff/overview}">
@@ -67,31 +64,64 @@
 			            </a>
 			        </li>
 		        </ul>
-		        <div class="footer" style="word-break:break-word;">
+		        <div class="footer">   
 		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
-		        		Virtual Spaces 2.0</a> <span class="icon-copyright"></span> DigInG 2020
+		        		Virtual Spaces 2.0, Version <span th:text="${#strings.defaultString(@environment.getProperty('buildNum'),'')}"></span></a>
+		        		<div class="d-flex justify-content-center" style="padding:10px">
+					<span class="icon-copyright"></span> DigInG 2020 
+					</div>
 		        </div>
 			</div>  
 			
 			<nav class="nav-bar">
-		      <a class="navbar-brand" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"></a>
+		      <a class="navbar-brand" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace?.id}|}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px"> <b>Staff</b> </a>
+			  <div class="searchInput">
+    			  <input class="form-control" style="background: none; margin-right: 4px" type="text" id="searchField" placeholder="Search..." th:value="${searchWord}"><a id="searchLink"><button class="btn primary-btn" type="submit" id="searchButton"><span class="icon-search"></span></button></a>
+			  </div>
 		      <div class="nav" id="navbarCollapse">
 		        <ul style="list-style: none; display:contents">
-		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span></a>
-		          </li> 
-		          <li class="nav-item active" style="padding: 5px 15px;">
-		            <a class="nav-link" th:href="@{/staff/exhibit/config}" title="Exhibition Configuration"><span class="icon-gear secondary"></span></a>
-		          </li> 				  
+		        	<li class="nav-item active" style="padding-right: 20px;">
+		        		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" style="display: flex; align-items:center">
+					      	<div style="height: 5px; width: 5px; border-radius:50%; background-color: var(--success)"></div>
+					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
+					    </div>
+		        	</li>
+					<li class="nav-item active" style="padding: 5px 15px;">
+						<a class="nav-link" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace?.id}|}"><span class="icon-play-circle secondary"></span></a>
+					</li> 
+					<li class="nav-item active" style="padding: 5px 15px;">
+						<a class="nav-link" th:href="@{/staff/exhibit/config}"><span class="icon-gear secondary"></span></a>
+					</li> 				  
 		        </ul>		        
 		        <div class="form-inline mt-2 mt-md-0">
 		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
 		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  				<button style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout"><span  style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
+		  				<button class="btn nav-link" type="submit" title="Logout"><span class="icon-sign-out"></span></button>
 		         	</form>
 		        </div>
 		      </div>
-		    </nav> 
+		    </nav>
+            <script>
+                 $(document).on('input', '#searchField', function(e){
+                	 if($("#searchField").val().trim()) {
+                          $('#searchButton').removeAttr('disabled');
+                	 }
+                	 else {
+                         $('#searchButton').attr('disabled','true');
+                	 }
+                	 if (!$('#searchButton').attr('disabled') && $("#searchField").val().trim()){
+                			$("#searchLink").attr('href','[[@{/staff/search?searchText=}]]'+$("#searchField").val());
+                	 } 
+                	 else{
+                		 $("#searchLink").attr('href','');
+                	 }
+                });
+                $(document).on('keydown', function(e) { 
+                     if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchField").val().trim()) {
+                         $("#searchButton").trigger('click');
+                     }
+                 }) 
+            </script>
           </div>
 	</body>
 </html>
