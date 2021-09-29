@@ -3,11 +3,13 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.model.SpaceOverview;
@@ -137,43 +139,28 @@ public class SpaceOverviewJsonFormat {
 
     /**
      * @param contextPath This variable holds the contextpath of the application
-     * @return Json corresponding to nodeArray
+     * @param spacesToSpacesAndModulesMap
+     * @return JSON with all nodes
      * @throws JsonProcessingException
      */
-    public String createNodes(String contextPath) throws JsonProcessingException {
+    public String createNodes(String contextPath, Map<String, List<String>> spacesToSpacesAndModulesMap)
+            throws JsonProcessingException {
 
         Iterable<Module> allModulesList = moduleRepo.findAll();
         List<SpaceOverview> moduleVertexList = constructNodesForModules(contextPath, allModulesList);
         Iterable<Space> allSpacesList = spaceRepo.findAll();
         List<SpaceOverview> spaceVertexList = constructNodesForSpaces(contextPath, allSpacesList);
         List<SpaceOverview> allVertexList = new ArrayList<>();
+        for (SpaceOverview spaceVertex : spaceVertexList) {
+            List<String> edges = spacesToSpacesAndModulesMap.get(spaceVertex.getId());
+            if (edges != null) {
+                spaceVertex.setEdges(edges);
+            }
+        }
         allVertexList.addAll(spaceVertexList);
         allVertexList.addAll(moduleVertexList);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(allVertexList);
-    }
-
-    /**
-     * creating json for edge between nodes in the spaceoverview graph
-     * 
-     * @param spacesToToSpacesAndModulesMap List of all links corresponding to each
-     *                                      space
-     * @return Json corresponding to linkArray
-     * @throws JsonProcessingException
-     */
-    public String createEdges(Map<String, List<String>> spacesToToSpacesAndModulesMap) throws JsonProcessingException {
-
-        List<SpaceOverview> edgeList = new ArrayList<>();
-        for (Entry<String, List<String>> entry : spacesToToSpacesAndModulesMap.entrySet()) {
-            for (String value : entry.getValue()) {
-                SpaceOverview spaceOverview = new SpaceOverview();
-                spaceOverview.setTarget(value);
-                spaceOverview.setSource(entry.getKey());
-                edgeList.add(spaceOverview);
-            }
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(edgeList);
     }
 
 }

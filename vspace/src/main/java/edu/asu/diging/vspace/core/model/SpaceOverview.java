@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+
 public class SpaceOverview {
 
     private String name;
@@ -15,10 +17,8 @@ public class SpaceOverview {
     private boolean unpublished;
 
     private boolean hideIncomingLinks;
-
-    private String source;
-
-    private String target;
+    
+    private List<String> edges;
 
     public String getName() {
         return name;
@@ -76,20 +76,11 @@ public class SpaceOverview {
         this.hideIncomingLinks = hideIncomingLinks;
     }
 
-    public String getSource() {
-        return source;
+    public List<String> getEdges() {
+        return edges;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setEdges(List<String> edges) {
+        this.edges = edges;
     }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
 }
