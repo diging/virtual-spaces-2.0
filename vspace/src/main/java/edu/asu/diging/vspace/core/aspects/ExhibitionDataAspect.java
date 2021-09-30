@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.aspects;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
 
 @Component
 @Aspect
@@ -41,6 +44,9 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private AuthenticationFacade authFacade;
+    
+    @Autowired
+    ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {
@@ -61,6 +67,7 @@ public class ExhibitionDataAspect {
                          * Added to show spaces with null status and accommodate existing spaces with null space status
                          */
                         publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
+                        publishedSpaces = exhibitionSpaceOrderUtility.sortSpacesAlphabetically(publishedSpaces);
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                 }

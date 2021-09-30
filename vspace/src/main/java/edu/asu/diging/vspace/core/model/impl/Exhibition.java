@@ -11,6 +11,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
 
 /**
  * Represents an exhibition that can have a default start space.
@@ -33,6 +34,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     @Enumerated(EnumType.STRING)
     private ExhibitionModes mode;
+    
+    @Enumerated(EnumType.STRING)
+    private ExhibitionSpaceOrderMode spaceOrderMode;
 
     private String customMessage;
 
