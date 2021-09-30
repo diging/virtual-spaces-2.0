@@ -35,7 +35,7 @@ public class PublicSearchSpaceController {
 
     /**
      * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) and return the spaces corresponding to
+     * parameter(searchTerm) and return the published spaces corresponding to
      * the page number specified in the input parameter(spacePagenum) whose name or
      * description contains the search string.
      * 

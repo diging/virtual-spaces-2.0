@@ -65,7 +65,6 @@ public class PublicSearchModuleController {
                         : null;
 
                 Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
-
                 String firstSlideImageId = null;
 
                 if (slide != null && slide.getFirstImageBlock() != null) {
@@ -82,9 +81,9 @@ public class PublicSearchModuleController {
 
     /**
      * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) in module table and return the module corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.  This also filters modules which are linked to the spaces.
+     * parameter(searchTerm) and return the module corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string. This also filters modules which are linked to the spaces.
      * 
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
@@ -95,17 +94,17 @@ public class PublicSearchModuleController {
         List<IModule> moduleList = new ArrayList<>();
         
         for(IModule module : modulePage.getContent()) {
-//            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-//            if(moduleLink!=null) {
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
+            if(moduleLink!=null) {
                 ModuleWithSpace modWithSpace = new ModuleWithSpace();
                 try {
                     BeanUtils.copyProperties(modWithSpace, module);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
-                modWithSpace.setSpaceId("asdeed");
+                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
                 moduleList.add(modWithSpace);
-//            }
+            }
         }
         
         return moduleList;

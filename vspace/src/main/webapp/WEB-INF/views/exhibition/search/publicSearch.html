@@ -32,21 +32,21 @@ $(document).ready(function($) {
 	if(slideModelAttributeValue.length != 0) {
        $("#slideNoResult").hide();
        $("#slideResultDisplay").show();
-       }
+    }
     else {
        $("#slideNoResult").show();
        $("#slideResultDisplay").hide();
-       } 
+    } 
         
 	var slideTextModelAttributeValue = [[${slideTextSearchResults}]];
 	if(slideTextModelAttributeValue.length != 0) {
        $("#slideTextNoResult").hide();
        $("#slideTextResultDisplay").show();
-        }
-     else {
-        $("#slideTextNoResult").show();
-        $("#slideTextResultDisplay").hide();
-        } 
+    }
+    else {
+       $("#slideTextNoResult").show();
+       $("#slideTextResultDisplay").hide();
+    } 
         
 $('.spacepage-selection').bootpag({
 	total: [[${spaceTotalPages}]],
@@ -244,7 +244,7 @@ $('.slidepage-selection').bootpag({
 			var divtag = $("<div></div>");
 			divtag.attr('id',slideList[i].id);
 			var anchor = $("<a></a>");
-			anchor.attr('href',"[(@{'/exhibit/'})]"+slideList[i].spaceId+'/module/'+slideList[i].module.id+'/sequence/'+ slideList[i].module.startSequence.id + '/slide/'+slideList[i].id);
+			anchor.attr('href',"[(@{'/exhibit/'})]"+slideList[i].spaceId+'/module/'+slideList[i].module.id+'/sequence/'+ slideList[i].startSequenceId + '/slide/'+slideList[i].id);
 		 	anchor.attr('class',"textDivPublic tab  btn btn-light");
 		 	anchor.css('width','100%');
 		 	var img = $("<img></img>");
@@ -255,7 +255,7 @@ $('.slidepage-selection').bootpag({
 		 	else {
 		  		img.attr('src',"[(@{'/api/image/'})]"+slideFirstImageId);
 		 	}
-		  	img.css('class',"searchImg");
+		  	img.attr('class',"searchImg");
 		  	anchor.append(img);
 		  	var span1 = $("<span></span>");
 		  	span1.attr('class',"card-title");
@@ -306,26 +306,26 @@ $('.slideTextPage-selection').bootpag({
 	        $(".loader").hide();
 	    },
 		success: function(data) {
-		slideTextList = data['slideTextList'];
-		slideTextFirstImage = data['slideTextFirstImage'];
-		slideTextFirstTextBlock = data['slideTextFirstTextBlock'];
+		slideTextList = data['slidesWithMatchedTextBlock'];
+		slideToFirstImageMap = data['slideToFirstImageMap'];
+		slideToFirstTextBlockMap = data['slideToFirstTextBlockMap'];
 		$("#slideTextResultDisplay").empty();
 		for(let i=0;i<slideTextList.length;i++) {
 			var divtag = $("<div></div>");
 			divtag.attr('id',slideTextList[i].id);
 			var anchor = $("<a></a>");
-			anchor.attr('href',"[(@{'/exhibit/'})]"+slideTextList[i].spaceId+'/module/'+slideTextList[i].module.id+'/sequence/'+ slideTextList[i].module.startSequence.id + '/slide/'+slideTextList[i].id);
+			anchor.attr('href',"[(@{'/exhibit/'})]"+slideTextList[i].spaceId+'/module/'+slideTextList[i].module.id+'/sequence/'+ slideTextList[i].startSequenceId + '/slide/'+slideTextList[i].id);
 			anchor.attr('class',"textDivPublic tab  btn btn-light");
 			anchor.css('width','100%');
 			var img = $("<img></img>");
-			var slideTextFirstImageId = slideTextFirstImage[slideTextList[i].id];
+			var slideTextFirstImageId = slideToFirstImageMap[slideTextList[i].id];
 		 	if(slideTextFirstImageId == null) {
 		  		img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
 		 	}
 			else {
 		  		img.attr('src',"[(@{'/api/image/'})]"+slideTextFirstImageId);
 			}
-			img.css('class',"searchImg");
+			img.attr('class',"searchImg");
 			anchor.append(img);
 			var span1 = $("<span></span>");
 			span1.attr('class',"card-title");
@@ -336,10 +336,7 @@ $('.slideTextPage-selection').bootpag({
 		    span1.append(span2);
 			span1.append(slideTextList[i].name+'<br>');
 			anchor.append(span1);
-			var span3 = $("<span>"+'Text Block:'+"</span>");
-			span3.css('color','var(--dark-grey)');
-			span1.append(span3);
-			firstMatchedTextBlock = slideTextFirstTextBlock[slideTextList[i].id];	
+			firstMatchedTextBlock = slideToFirstTextBlockMap[slideTextList[i].id];	
 			var span4 = $("<span></span>");	
 			span4.append(firstMatchedTextBlock);	
 			span1.append(span4);	
@@ -614,8 +611,8 @@ a.nav-link.active.show {
 									<span class="card-title"
 		                                style="white-space: pre-wrap; line-break: anywhere;"><span 
 		                                style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span
-		                                style="color: var(--dark-grey)">Text Block:</span><span th:if="${not #lists.isEmpty(contents.contents)} AND ${contents?.getFirstMatchedTextBlock(searchWord)!=null}"
-		                                > [(${contents?.getFirstMatchedTextBlock(searchWord).text})]</span>
+		                                th:if="${not #lists.isEmpty(contents.contents)} AND ${contents?.getFirstMatchedTextBlock(searchWord)!=null}"
+                                		>[(${contents?.getFirstMatchedTextBlock(searchWord).htmlRenderedText()})]</span>
 							    	</span>
 								</a>	
 							</div>

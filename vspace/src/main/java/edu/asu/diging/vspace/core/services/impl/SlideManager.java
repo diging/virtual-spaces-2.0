@@ -170,7 +170,7 @@ public class SlideManager implements ISlideManager {
     }
     
     @Override
-    public Set<ISlide> getAllSlidesFromStartSequences() {
+    public Set<String> getAllSlidesFromStartSequences() {
         return slideRepo.findAllSlidesFromStartSequences();
     }
 }

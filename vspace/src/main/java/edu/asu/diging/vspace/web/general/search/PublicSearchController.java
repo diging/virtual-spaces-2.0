@@ -24,7 +24,6 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
-import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
@@ -60,9 +59,9 @@ public class PublicSearchController {
     
     /**
      * This method is used to search the search string specified in the input
-     * parameter(searchTerm) in spaces and return the published spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
+     * parameter(searchTerm) and return the spaces corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string. The spacePagenum is starting from 1. 
      * 
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param model        This the object of Model attribute in spring MVC.
@@ -78,12 +77,12 @@ public class PublicSearchController {
 
     /**
      * This method is used to search the search string specified in the input
-     * parameter(searchTerm) in modules and return the module corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string. This also filters modules which are linked to the spaces.
+     * parameter(searchTerm) and return the module corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string. The modulePagenum is starting from 1. 
+     * This also filters modules which are linked to the spaces.
      * 
-     * @param modulePagenum current page number sent as request parameter in the
-     *                      URL.
+     * @param modulePagenum current page number sent as request parameter in the URL.
      * @param model         This the object of Model attribute in spring MVC.
      * @param searchTerm    This is the search string which is being searched.
      */
@@ -96,27 +95,27 @@ public class PublicSearchController {
         //Adding space info for each module
         for(IModule module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-//            if(moduleLink!=null) {
+            if(moduleLink!=null) {
                 ModuleWithSpace modWithSpace = new ModuleWithSpace();
                 try {
                     BeanUtils.copyProperties(modWithSpace, module);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
-                modWithSpace.setSpaceId("asdeed");
+                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
                 moduleList.add(modWithSpace);
-//            }
+            }
         }
         model.addAttribute("moduleSearchResults", moduleList);
-        model.addAttribute("moduleCount", moduleList.size());
+        model.addAttribute("moduleCount", modulePage.getTotalElements());
     }
 
     /**
      * This method is used to search the search string specified in the input
-     * parameter(searchTerm) in slides and return the slides corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string. This also filters Slides from modules 
-     * which are linked to the spaces.
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string. The slidePagenum is starting from 1. 
+     * This also filters Slides from modules which are linked to the spaces.
      * 
      * @param slidePagenum current page number sent as request parameter in the URL.
      * @param model        This the object of Model attribute in spring MVC.
@@ -127,7 +126,7 @@ public class PublicSearchController {
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         List<ISlide> slideList = new ArrayList<>();
-        Set<ISlide> slideSet = slideManager.getAllSlidesFromStartSequences();
+        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
         
        //Adding space info for each slide
         for(ISlide slide : slidePage.getContent()) {
@@ -141,19 +140,20 @@ public class PublicSearchController {
                         logger.error("Could not create moduleWithSpace.", e);
                     }
                     slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
                     slideList.add(slideWithSpace);
                 }
             }
         }
         model.addAttribute("slideSearchResults", slideList);
-        model.addAttribute("slideCount", slideList.size());
+        model.addAttribute("slideCount", slidePage.getTotalElements());
     }
 
     /**
      * This method is used to search the search string specified in the input
-     * parameter(searchTerm) in contentBlocks and return the slides
-     * corresponding to the page number specified in the input
-     * parameter(spacePagenum) whose text block contains the search string.
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose text block contains the
+     * search string. The slideTextPagenum is starting from 1.
      * This also filters Slides from modules which are linked to the spaces.
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
@@ -167,23 +167,27 @@ public class PublicSearchController {
         model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
         model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
         List<Slide> slideTextList = new ArrayList<>();
+        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
         
         //Adding space info for each slide
         for(ISlide slide : slideTextPage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-            if(moduleLink!=null) {
-                SlideWithSpace slideWithSpace = new SlideWithSpace();
-                try {
-                    BeanUtils.copyProperties(slideWithSpace, slide);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
+            if(slideSet.contains((String)slide.getId())) {
+                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+                if(moduleLink!=null) {
+                    SlideWithSpace slideWithSpace = new SlideWithSpace();
+                    try {
+                        BeanUtils.copyProperties(slideWithSpace, slide);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        logger.error("Could not create moduleWithSpace.", e);
+                    }
+                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
+                    slideTextList.add(slideWithSpace);
                 }
-                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideTextList.add(slideWithSpace);
             }
         }
         model.addAttribute("slideTextSearchResults", slideTextList);
-        model.addAttribute("slideTextCount", slideTextList.size());
+        model.addAttribute("slideTextCount", slideTextPage.getTotalElements());
     }
     
 }

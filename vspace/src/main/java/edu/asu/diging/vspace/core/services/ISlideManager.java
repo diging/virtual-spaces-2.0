@@ -35,5 +35,5 @@ public interface ISlideManager {
     
     Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
     
-    Set<ISlide> getAllSlidesFromStartSequences();
+    Set<String> getAllSlidesFromStartSequences();
 }

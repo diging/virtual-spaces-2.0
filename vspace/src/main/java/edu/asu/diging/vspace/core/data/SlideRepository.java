@@ -28,6 +28,6 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
             String description);
     
     @Query(value="SELECT d.Slide_Id FROM Sequence_Slides d, Module m WHERE d.Sequence_Id = m.startSequence_id", nativeQuery = true)
-    Set<ISlide> findAllSlidesFromStartSequences();
+    Set<String> findAllSlidesFromStartSequences();
 
 }

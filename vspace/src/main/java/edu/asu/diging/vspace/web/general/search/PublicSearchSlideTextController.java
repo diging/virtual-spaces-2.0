@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +25,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 
 @Controller
@@ -36,6 +38,9 @@ public class PublicSearchSlideTextController {
 
     @Autowired
     private IStaffSearchManager staffSearchManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
 
     @RequestMapping(value = "/exhibit/search/slideText")
     public ResponseEntity<PublicSearchSlideTextBlockResults> searchInVspace(HttpServletRequest request,
@@ -68,7 +73,7 @@ public class PublicSearchSlideTextController {
      * This method is used to search the searched string specified in the input
      * parameter(searchTerm) and return the slides corresponding to the page number
      * specified in the input parameter(spacePagenum) whose text block contains the
-     * search string
+     * search string. This also filters Slides from modules which are linked to the spaces.
      * 
      * @param slideTextPagenum current page number sent as request parameter in the
      *                         URL.
@@ -78,18 +83,22 @@ public class PublicSearchSlideTextController {
         Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
         List<ISlide> slideTextList = new ArrayList<>();
+        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
         
         for(ISlide slide : slideTextPage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-            if(moduleLink!=null) {
-                SlideWithSpace slideWithSpace = new SlideWithSpace();
-                try {
-                    BeanUtils.copyProperties(slideWithSpace, slide);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
+            if(slideSet.contains(slide.getId())) {
+                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+                if(moduleLink!=null) {
+                    SlideWithSpace slideWithSpace = new SlideWithSpace();
+                    try {
+                        BeanUtils.copyProperties(slideWithSpace, slide);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        logger.error("Could not create moduleWithSpace.", e);
+                    }
+                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
+                    slideTextList.add(slideWithSpace);
                 }
-                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideTextList.add(slideWithSpace);
             }
         }
         return slideTextList;
