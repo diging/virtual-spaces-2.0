@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model;
 
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
+
 public interface IExhibition extends IVSpaceElement {
 
     /*
@@ -21,5 +23,9 @@ public interface IExhibition extends IVSpaceElement {
     void setTitle(String title);
 
     String getTitle();
+    
+    ExhibitionSpaceOrderMode getSpaceOrderMode();
+    
+    void setSpaceOrderMode(ExhibitionSpaceOrderMode exhibitionSpaceOrderMode);
 
 }

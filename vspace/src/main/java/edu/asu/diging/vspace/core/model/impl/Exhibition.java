@@ -34,11 +34,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     @Enumerated(EnumType.STRING)
     private ExhibitionModes mode;
+
+    private String customMessage;
     
     @Enumerated(EnumType.STRING)
     private ExhibitionSpaceOrderMode spaceOrderMode;
-
-    private String customMessage;
 
     /*
      * (non-Javadoc)
@@ -106,6 +106,16 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     public void setCustomMessage(String customMessage) {
         this.customMessage = customMessage;
+    }
+    
+    @Override
+    public ExhibitionSpaceOrderMode getSpaceOrderMode() {
+        return spaceOrderMode;
+    }
+
+    @Override
+    public void setSpaceOrderMode(ExhibitionSpaceOrderMode spaceOrderMode) {
+        this.spaceOrderMode = spaceOrderMode;
     }
 
 }

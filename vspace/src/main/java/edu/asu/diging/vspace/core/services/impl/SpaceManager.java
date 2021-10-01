@@ -27,6 +27,7 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
@@ -40,6 +41,8 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
 
 @Transactional
 @Service
@@ -78,6 +81,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    @Autowired
+    private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -297,4 +303,11 @@ public class SpaceManager implements ISpaceManager {
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
+
+    @Override
+    public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {
+        IExhibition exhibitition = exhibitionManager.findAll().get(0);
+        return exhibitionSpaceOrderUtility.retrieveSpacesListInGivenOrder(publishedSpaces, exhibitition.getSpaceOrderMode());
+    }
+
 }
