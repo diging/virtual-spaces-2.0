@@ -14,7 +14,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
-public class CustomOrderingController {
+public class SpacesCustomOrderingController {
     
     @Autowired
     private ISpaceManager spaceManager;
