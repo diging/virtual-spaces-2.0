@@ -13,44 +13,24 @@
 </head>
 
 <body>
-  <div layout:fragment="content" class="main-content">
-        <h2>Images</h2>
-        <div style="padding-bottom: 20px;">This virtual exhibition
-            contains the following images.</div>
-             <form id="changeOrderForm"
-                           
-                            method="post">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col" sort-prop="filename"><a
-                        href="#">Space Name</a></th>
-                    <th scope="col" sort-prop="creationDate"><a
-                        href="#">Created Date</a></th>
-                    <th scope="col" sort-prop="tag">Order
-                     </th>
-                </tr>
-            </thead>
-            <tbody class="tableBody">
-                <tr th:each="space:${spaces}" >
-                    <td>[[${space.name}]]</td>
-                    <td>[[${space.createdBy}]]</td>
-                    <td><span class="date">[[${space.creationDate}]]</span></td>
-                    <td>
-                    </span>
-                       <!--  <form id="changeOrderForm"
-                            th:action="@{'/staff/spaceordering/changeorder/'"
-                            method="post"> -->
-                            <input  name="imageID"
-                                th:value="${space.order}" id="spaceOrder" />
-                        <!-- </form> -->
-                        </td>
-                </tr>
-            </tbody>
-        </table>
-        <input type="submit" value="Submit">
-        </form>
-        <div id="page-selection"></div>
-    </div>
+  <body>
+    <div id="slideSpace" class="blur">
+			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
+				<div class="form-group row" style="width: fit-content; margin-left: 0">
+					<label for="Slides" style="margin-right: 15px">Select
+						Spaces: <br> <small>(Double click to select and drag to reorder)</small>
+					</label> 
+					<select multiple="multiple" id="ordered-slides" name="selectSequence">
+						<option th:each="space: ${spaces}"   th:value="${space.id}" th:id="${space.id}">[[${space.name}]]</option>
+
+						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
+					</select>
+					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
+				</div>
+				<button class="btn primary-btn btn-sm" type="submit" value="submit">Save Changes</button>
+			</form>
+		</div>
+	</div>
+</body>
 </body>
 </html>
