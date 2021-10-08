@@ -10,4 +10,6 @@ public interface ISpacesCustomOrder extends IVSpaceElement {
 
     void setCustomOrder(Integer customOrder);
 
+    ISpace getSpace();
+
 }

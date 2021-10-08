@@ -11,7 +11,6 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 
 @Entity
@@ -25,10 +24,15 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne(targetEntity = Space.class)
+    @OneToOne
     private ISpace space;
 
     private Integer customOrder;
+    
+    public SpacesCustomOrder(ISpace space, Integer customOrder) {
+        this.space = space;
+        this.customOrder= customOrder;
+    }
 
     /*
      * (non-Javadoc)
@@ -59,6 +63,11 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
     @Override
     public void setCustomOrder(Integer customOrder) {
         this.customOrder=customOrder;
+    }
+    
+    @Override
+    public ISpace getSpace() {
+        return space;
     }
 
 }
