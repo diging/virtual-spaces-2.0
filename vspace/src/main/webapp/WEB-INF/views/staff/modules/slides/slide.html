@@ -305,9 +305,7 @@
             		$('#file').prop("disabled",true);
             		$('#imageId').prop("disabled",false);
             	  });
-				
-            	var currentlyWaiting = false;
-            	var timeout;
+            	var timeout=null;
             	$('#slideSpace').sortable({
 	            	update: function(event,ui) {
 		            	var jsonObj = [];
@@ -318,24 +316,20 @@
 			            	}else {
 			            		blockId = $(element.innerHTML).filter('div').attr('id');
 			            	}
-			            	if($(element.innerHTML).filter('div').attr('data-position') != index){
-				            	item = {}
-				            	item ["id"] = blockId;
-				            	item ["contentOrder"] = index;
-				            	jsonObj.push(item);
-				            	$(element.innerHTML).filter('div').attr('data-position',index);
-			            	}
+			            	item = {}
+			            	item ["id"] = blockId;
+			            	item ["contentOrder"] = index;
+			            	jsonObj.push(item);
+			            	$(element.innerHTML).filter('div').attr('data-position',index);
 		            	});
 		            	var token = [[${_csrf.token}]];
 		            	if (jsonObj.length != 0){
-			            	if (!currentlyWaiting){
+			            	if (timeout == null){
 			            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
 			            	}
 			            	else{
-				            	if(typeof(timeout) !="undefined") {
-				            		clearTimeout(timeout);
-				            	}
-				            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+			            		clearTimeout(timeout);
+			            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
 			            	}
 		            	}
 	            	}
@@ -352,11 +346,10 @@
 			            			$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
 			            		}
 			            		$(".loader").show();
-			            		currentlyWaiting = true;
 		            		},
 		            		complete: function(){
 			            		$(".loader").hide();
-			            		currentlyWaiting = false;
+			            		timeout = null;
 		            		},
 		            		cache       : false,
 		            		contentType: 'application/json; charset=utf-8',
