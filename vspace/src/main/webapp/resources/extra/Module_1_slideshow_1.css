@@ -171,8 +171,8 @@ a, a:hover, a:focus {
     position: relative;
     max-width: 57%;
     top: 0px;
-    overflow: visible;
     margin: 1%;
+    overflow: visible;
     display: block;
 }
 
@@ -186,12 +186,12 @@ a, a:hover, a:focus {
 }
 
 .biblioDiv {
-    position: relative;
-    width: 57%;
-    top: 0px;
-    overflow: visible;
-    text-align: justify;
-    margin: auto;
+	position: relative;
+	width: 57%;
+	top: 0px;
+	overflow: visible;
+	text-align: justify;
+	margin: auto;
 }
 
 .slideNumberClass {
