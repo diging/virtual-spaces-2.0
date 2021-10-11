@@ -81,7 +81,13 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     
     @Override
     public void updateStatusChangeToPublished(ISpace space) {
-        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
+        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
+        if(!spaceCustomOrderOptional.isPresent()) {
+            int order = spacesCustomOrderRepository.findMaxCustomOrder() + 1;
+            SpacesCustomOrder spaceCustomOrder = new SpacesCustomOrder(space, order);
+            spaceCustomOrder.setCustomOrder(order);
+            spacesCustomOrderRepository.save(spaceCustomOrder);
+        }
         
     }
     

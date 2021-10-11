@@ -5,7 +5,89 @@
 
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
     data-auto-replace-svg="nest"></script>
-
+    
+<script th:inline="javascript">
+  //# sourceURL=click.js
+  var contentCount = [[${#lists.size(slideContents)}]];
+  var markDown = null;
+  var defaultValue;
+  $(document).ready(function() {
+  	
+  	var timeout=null;
+  	$('#spaceOrder').sortable({
+      	update: function(event,ui) {
+          	var jsonObj = [];
+          	var blockId;
+          	$(this).children().each(function(index,element){
+	            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
+	            		blockId=$(element).attr('id');
+	            	}else {
+	            		blockId = $(element.innerHTML).filter('div').attr('id');
+	            	}
+	            	item = {}
+	            	item ["id"] = blockId;
+	            	item ["contentOrder"] = index;
+	            	jsonObj.push(item);
+	            	$(element.innerHTML).filter('div').attr('data-position',index);
+          	});
+          	var token = [[${_csrf.token}]];
+          	if (jsonObj.length != 0){
+	            	if (timeout == null){
+	            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+	            	}
+	            	else{
+	            		clearTimeout(timeout);
+	            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+	            	}
+          	}
+      	}
+  	});
+  	
+  	function updateContentOrder(jsonObj,token){
+		$.ajax({
+		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
+    		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+    		type: 'POST',
+    		beforeSend: function(){
+        		$(".loader").remove();
+        		for(let i=0;i<jsonObj.length;i++) {
+        			$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+        		}
+        		$(".loader").show();
+    		},
+    		complete: function(){
+        		$(".loader").hide();
+        		timeout = null;
+    		},
+    		cache       : false,
+    		contentType: 'application/json; charset=utf-8',
+    		processData :false,
+    		headers:{
+    			'X-CSRF-Token':token
+    		},
+    		data: JSON.stringify(jsonObj),
+    		success: function(data) {
+        		$(".save").remove();
+        		for(let i=0;i<data.length;i++) {
+            		$('#'+data[i].id).attr('data-position',data[i].customOrder);
+            		var successDiv = $('<div style="width: 250px;height: 50px;margin-left: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+            		successDiv.append('<p>Successfully Saved.</p>');
+            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+            		successDiv.append('</div>');
+            		$('#'+data[i].id).append(successDiv);
+        		} 
+    		},
+    		error: function(data) {
+        		$(".errInSave").remove();
+        		for(let i=0;i<data.length;i++) {
+            		var errorDiv = $('<div style="width: 250px;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+            		errorDiv.append('</div>');
+        		}
+    		}
+		});
+	}
 </script>
 <style>
 
@@ -14,22 +96,15 @@
 
 <body>
   <body>
-    <div id="slideSpace" class="blur">
-			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
-				<div class="form-group row" style="width: fit-content; margin-left: 0">
-					<label for="Slides" style="margin-right: 15px">Select
-						Spaces: <br> <small>(Double click to select and drag to reorder)</small>
-					</label> 
-					<select multiple="multiple" id="ordered-slides" name="selectSequence">
-						<option th:each="space: ${spaces}"   th:value="${space.id}" th:id="${space.id}">[[${space.name}]]</option>
-
-						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
-					</select>
-					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
-				</div>
-				<button class="btn primary-btn btn-sm" type="submit" value="submit">Save Changes</button>
-			</form>
-		</div>
+    <div id="spaceOrder" class="blur">
+    	<div th:each="contents: ${spacesCustomOrder}">
+	    	<div th:attr="data-position=${contents.customOrder}" th:id="${contents.id}" class="valueDiv tab row" >
+	            <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
+	            <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
+	            <span class="icon-trash error"></span>
+	            </a>
+		    </div>
+    	</div>
 	</div>
 </body>
 </body>

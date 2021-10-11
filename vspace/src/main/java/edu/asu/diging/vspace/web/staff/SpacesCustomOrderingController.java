@@ -27,18 +27,13 @@ public class SpacesCustomOrderingController {
     @RequestMapping("/staff/spaceordering")
     public String displayCurrentOrderLanding(Model model) {
         spacesCustomOrderManager.persistPublishedSpacesToSpacesCustomOrder();
-        
-        return "redirect:/staff/spaceordering/display";
-    }
-    @RequestMapping("/staff/spaceordering/display")
-    public String displayCurrentOrder(Model model) {
         List<SpacesCustomOrder> spaces = spacesCustomOrderManager.findAll();
         model.addAttribute("spaces", spaces);
         
         return "/staff/spaces/customordering";
     }
     
-    @RequestMapping(value = "/staff/spaceordering/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/spaceordering/updateOrder", method = RequestMethod.POST)
     public ResponseEntity<List<SpacesCustomOrder>> adjustContentOrder(@RequestBody List<SpacesCustomOrder> spacesCustomOrderList) {
         spacesCustomOrderManager.updateCustomOrder(spacesCustomOrderList);
         return new ResponseEntity<List<SpacesCustomOrder>>(spacesCustomOrderList,HttpStatus.OK);

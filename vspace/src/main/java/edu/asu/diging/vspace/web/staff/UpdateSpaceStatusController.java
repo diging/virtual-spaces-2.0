@@ -29,9 +29,7 @@ public class UpdateSpaceStatusController {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setSpaceStatus(status);
         spaceManager.storeSpace(space, null,null);
-        if(status == SpaceStatus.UNPUBLISHED) {
-            spaceCustomOrderManager.updateStatusChange(space, status);   
-        }
+        spaceCustomOrderManager.updateStatusChange(space, status);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Status successfully updated!");
         attributes.addAttribute("showAlert", "true");
