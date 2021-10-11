@@ -24,27 +24,12 @@ public class ReferenceController {
     
     @Autowired
     private IReferenceManager referenceManager;
-    
-    @Autowired
-    private ReferenceDisplayDefault referenceDisplayProvider;
 
     @RequestMapping("/staff/display/reference/{id}")
     public String showReference(@PathVariable String id, Model model) {
         IReference reference = referenceRepo.findById(id).get();
         model.addAttribute("reference", reference);
         return "staff/references/reference";
-    }
-    
-    @RequestMapping("/staff/module/reference/displaytext/{id}")
-    public ResponseEntity<String> referenceDisplaytext(@PathVariable String id, Model model) {
-        IReference reference = referenceRepo.findById(id).get();
-        String refDisplayText = "";
-        if(reference!=null) { 
-            refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)reference);
-            return new ResponseEntity<String>(refDisplayText, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        
     }
     
     @RequestMapping("/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}")

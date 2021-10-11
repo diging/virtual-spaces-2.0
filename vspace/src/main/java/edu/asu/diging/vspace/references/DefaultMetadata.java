@@ -60,7 +60,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         return urlEncodedReferenceMetaData;
     }
     
-    String getRefTypeEncoded(String type) throws ReferenceMetadataEncodingException {
+    private String getRefTypeEncoded(String type) throws ReferenceMetadataEncodingException {
         
         if(type==null) {
             return "";
@@ -73,7 +73,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefTitleEncoded(String title) throws ReferenceMetadataEncodingException {
+    private String getRefTitleEncoded(String title) throws ReferenceMetadataEncodingException {
         
         if(title==null) {
             return "";
@@ -86,7 +86,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
+    private String getRefAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
         
         if(author==null) {
             return "";
@@ -99,7 +99,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefYearEncoded(String year) throws ReferenceMetadataEncodingException {
+    private String getRefYearEncoded(String year) throws ReferenceMetadataEncodingException {
         
         if(year==null) {
             return "";
@@ -112,7 +112,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefJournalEncoded(String journal) throws ReferenceMetadataEncodingException {
+    private String getRefJournalEncoded(String journal) throws ReferenceMetadataEncodingException {
         
         if(journal==null) {
             return "";
@@ -125,7 +125,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefUrlEncoded(String url) throws ReferenceMetadataEncodingException {
+    private String getRefUrlEncoded(String url) throws ReferenceMetadataEncodingException {
         
         if(url==null) {
             return "";
@@ -138,7 +138,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefVolumeEncoded(String volume) throws ReferenceMetadataEncodingException {
+    private String getRefVolumeEncoded(String volume) throws ReferenceMetadataEncodingException {
         
         if(volume==null) {
             return "";
@@ -151,7 +151,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefIssueEncoded(String issue) throws ReferenceMetadataEncodingException {
+    private String getRefIssueEncoded(String issue) throws ReferenceMetadataEncodingException {
         
         if(issue==null) {
             return "";
@@ -164,7 +164,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefPagesEncoded(String pages) throws ReferenceMetadataEncodingException {
+    private String getRefPagesEncoded(String pages) throws ReferenceMetadataEncodingException {
         String refPagesEncoded = "";
         if (pages != null) {
             try {
@@ -184,7 +184,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         return refPagesEncoded;
     }
     
-    String getRefEditorsEncoded(String editors) throws ReferenceMetadataEncodingException {
+    private String getRefEditorsEncoded(String editors) throws ReferenceMetadataEncodingException {
         
         if(editors==null) {
             return "";
@@ -197,7 +197,7 @@ public class DefaultMetadata implements ReferenceMetadataProvider {
         }  
     }
     
-    String getRefNoteEncoded(String note) throws ReferenceMetadataEncodingException {
+    private String getRefNoteEncoded(String note) throws ReferenceMetadataEncodingException {
         
         if(note==null) {
             return "";
