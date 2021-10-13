@@ -20,29 +20,27 @@
             {
             width: 100%;
             }
+            .container
+             {  
+             display: flex;  
+             justify-content: center;
+             }
         </style>
     </head>
     <body>
         <div layout:fragment="content">
-            <div>
-                <center>
-                    <p>Double Click On Space's Image or Module Icon to go to the respective Space or Module's Page</p>
-                </center>
-            </div>
+        <div class="container">
             <div id="graph"></div>
             <script>
                 var nodeJson = JSON.parse(jsonMap['nodesJson']);
                 // Some constants controlling the graph appearance
                 const PADDING_BUBBLE = 15 // distance between edge end and bubble
                 const PADDING_LABEL = 30 // distance between edge end and engineer id
-                const BUBBLE_SIZE_MIN = 10
-                const BUBBLE_SIZE_MAX = 10
                 
-                var diameter = 1260,
+                var diameter = 660,
                     radius = diameter / 2,
                     innerRadius = radius - 170; // between center and edge end
                 
-                // The 'cluster' function takes 1 argument as input. It also has methods (??) like cluster.separation(), cluster.size() and cluster.nodeSize()
                 var cluster = d3.cluster()
                     .size([360, innerRadius]);
                 
@@ -217,6 +215,7 @@
                     return edges;
                 }
             </script>
+        </div>
         </div>
     </body>
 </html>

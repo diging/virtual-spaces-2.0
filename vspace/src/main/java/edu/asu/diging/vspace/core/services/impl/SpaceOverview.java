@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.model;
+package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.List;
 

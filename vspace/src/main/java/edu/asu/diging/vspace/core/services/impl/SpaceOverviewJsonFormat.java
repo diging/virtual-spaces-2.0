@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.model.SpaceOverview;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -138,7 +137,8 @@ public class SpaceOverviewJsonFormat {
     }
 
     /**
-     * @param contextPath This variable holds the contextpath of the application
+     * @param contextPath                 This variable holds the contextpath of the
+     *                                    application
      * @param spacesToSpacesAndModulesMap
      * @return JSON with all nodes
      * @throws JsonProcessingException

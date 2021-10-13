@@ -69,12 +69,12 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
         Iterable<SpaceLinkDisplay> spaceToSpaceLinksList = spaceLinkDisplayRepository.findAll();
         for (SpaceLinkDisplay link : spaceToSpaceLinksList) {
             if (link.getLink() != null && link.getLink().getSourceSpace() != null) {
-                String targerSpaceId = null;
+                String targetSpaceId = null;
                 if (link.getLink().getTargetSpace() != null) {
-                    targerSpaceId = link.getLink().getTargetSpace().getId();
+                    targetSpaceId = link.getLink().getTargetSpace().getId();
                 }
                 String spaceId = link.getLink().getSourceSpace().getId();
-                if (targerSpaceId != spaceId) {
+                if (targetSpaceId != spaceId) {
                     if (!spaceToSpaceLinksMap.containsKey(spaceId)) {
                         spaceToSpaceLinksMap.put(spaceId, new HashSet<>());
                     }
