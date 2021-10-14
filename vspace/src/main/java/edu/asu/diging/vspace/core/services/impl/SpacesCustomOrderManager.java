@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 @Service
@@ -22,7 +25,9 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     SpacesCustomOrderRepository spacesCustomOrderRepository;
     
     @Autowired
-    SpaceManager spaceManager;
+    ISpaceManager spaceManager;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Override
     public Integer findMaxCustomOrder(String spaceId) {
@@ -55,11 +60,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         List<ISpace> spaces = (List<ISpace>) spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
         spaces.addAll(spaceManager.getSpacesWithStatus(null));
         List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
+        int customOrder = 0;
+        if(spacesCustomOrderRepository.findMaxCustomOrder() != null) {
+            customOrder = spacesCustomOrderRepository.findMaxCustomOrder();
+        }
         for(ISpace space : spaces) {
             Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-            int customOrder = spacesCustomOrderRepository.findMaxCustomOrder() + 1;
             if(!spaceCustomOrderOptional.isPresent()) {
-                spacesCustomOrderNewList.add(new SpacesCustomOrder(space, customOrder++));
+                spacesCustomOrderNewList.add(new SpacesCustomOrder(space, ++customOrder));
+                logger.info("custom order is {}", customOrder);
             }
         }
         spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);

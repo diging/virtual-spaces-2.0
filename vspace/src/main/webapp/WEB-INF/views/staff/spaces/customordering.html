@@ -1,14 +1,23 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-<link rel="stylesheet" type="text/css" id="applicationStylesheet"
-    th:href="@{/resources/extra/Home.css}" />
-
-<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
-    data-auto-replace-svg="nest"></script>
+<link rel="stylesheet"
+            href="https://unpkg.com/easymde/dist/easymde.min.css">
+        <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <style type="text/css">
+            .hova {
+            background-color: #f2f2f2;
+            }
+            .EasyMDEContainer .CodeMirror-wrap{
+            overflow-y: scroll;
+            height: 400px;
+            }
+        </style>
     
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script th:inline="javascript">
   //# sourceURL=click.js
-  var contentCount = [[${#lists.size(slideContents)}]];
   var markDown = null;
   var defaultValue;
   $(document).ready(function() {
@@ -43,69 +52,20 @@
       	}
   	});
   	
-  	function updateContentOrder(jsonObj,token){
-		$.ajax({
-		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
-    		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-    		type: 'POST',
-    		beforeSend: function(){
-        		$(".loader").remove();
-        		for(let i=0;i<jsonObj.length;i++) {
-        			$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
-        		}
-        		$(".loader").show();
-    		},
-    		complete: function(){
-        		$(".loader").hide();
-        		timeout = null;
-    		},
-    		cache       : false,
-    		contentType: 'application/json; charset=utf-8',
-    		processData :false,
-    		headers:{
-    			'X-CSRF-Token':token
-    		},
-    		data: JSON.stringify(jsonObj),
-    		success: function(data) {
-        		$(".save").remove();
-        		for(let i=0;i<data.length;i++) {
-            		$('#'+data[i].id).attr('data-position',data[i].customOrder);
-            		var successDiv = $('<div style="width: 250px;height: 50px;margin-left: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
-            		successDiv.append('<p>Successfully Saved.</p>');
-            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-            		successDiv.append('</div>');
-            		$('#'+data[i].id).append(successDiv);
-        		} 
-    		},
-    		error: function(data) {
-        		$(".errInSave").remove();
-        		for(let i=0;i<data.length;i++) {
-            		var errorDiv = $('<div style="width: 250px;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
-            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
-            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-            		errorDiv.append('</div>');
-        		}
-    		}
-		});
-	}
+  });
 </script>
 <style>
 
 </style>
 </head>
 
-<body>
   <body>
-    <div id="spaceOrder" class="blur">
-    	<div th:each="contents: ${spacesCustomOrder}">
+    <div id="slideSpace"  class="main-content" layout:fragment="content">
+    	<div th:each="contents: ${spaces}">
 	    	<div th:attr="data-position=${contents.customOrder}" th:id="${contents.id}" class="valueDiv tab row" >
-	            <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
-	            <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
-	            <span class="icon-trash error"></span>
-	            </a>
+	             <p class="col-md-10">[[${contents.id}]]</p>
 		    </div>
     	</div>
 	</div>
-</body>
 </body>
 </html>

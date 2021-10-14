@@ -27,10 +27,11 @@ public class SpacesCustomOrderingController {
     @RequestMapping("/staff/spaceordering")
     public String displayCurrentOrderLanding(Model model) {
         spacesCustomOrderManager.persistPublishedSpacesToSpacesCustomOrder();
+        logger.info("before spaces are added");
         List<SpacesCustomOrder> spaces = spacesCustomOrderManager.findAll();
         model.addAttribute("spaces", spaces);
-        
-        return "/staff/spaces/customordering";
+        logger.info("spaces are added");
+        return "staff/spaces/customordering";
     }
     
     @RequestMapping(value = "/staff/spaceordering/updateOrder", method = RequestMethod.POST)
