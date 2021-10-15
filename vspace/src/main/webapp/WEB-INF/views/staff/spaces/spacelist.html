@@ -62,7 +62,15 @@
         <div>
             This virtual exhibition contains the following spaces. 
             <span class="icon-play-circle secondary"></span> indicates the start space.
-        </div>            
+        </div> 
+        <div>
+        Select how you want to arrange this in the exhibition navigation bar
+        <select th:href="@{/staff/space/spaceordermode}" name="SpaceOrdering" id="spaceOrdering" style="float: center;">
+		  <option value="Alphabetical">Alphabetical</option>
+		  <option value="Creation Date">Creation Date</option>
+		  <option value="Custom">Custom</option>
+		</select>
+        </div>           
         
         <div style="text-align: right">
         	<button class="btn" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">

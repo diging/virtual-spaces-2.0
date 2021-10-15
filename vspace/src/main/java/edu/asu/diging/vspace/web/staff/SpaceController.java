@@ -75,4 +75,10 @@ public class SpaceController {
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
     
+    @RequestMapping(value = "/staff/space/spaceordermode", method = RequestMethod.POST)
+    public ResponseEntity<SpaceLink>updateSpaceOrderMode(String mode) {
+        List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
 }

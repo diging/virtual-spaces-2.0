@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
 
 @Transactional
 @Service
@@ -65,5 +66,14 @@ public class ExhibitionManager implements IExhibitionManager {
             return exhibitions.get(0);
         }
         return null;
+    }
+    
+    @Override
+    public IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode) {
+        // for now we just take the first one created, there shouldn't be more than one
+        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        Exhibition exhibition = exhibitions.get(0);
+        exhibition.setSpaceOrderMode(mode);
+        return exhibitRepo.save(exhibition);
     }
 }

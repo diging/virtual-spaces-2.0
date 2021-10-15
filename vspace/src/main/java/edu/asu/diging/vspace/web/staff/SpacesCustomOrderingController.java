@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Comparator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ public class SpacesCustomOrderingController {
         spacesCustomOrderManager.persistPublishedSpacesToSpacesCustomOrder();
         logger.info("before spaces are added");
         List<SpacesCustomOrder> spaces = spacesCustomOrderManager.findAll();
+        Collections.sort(spaces, Comparator.comparing(SpacesCustomOrder::getCustomOrder));
         model.addAttribute("spaces", spaces);
         logger.info("spaces are added");
         return "staff/spaces/customordering";
