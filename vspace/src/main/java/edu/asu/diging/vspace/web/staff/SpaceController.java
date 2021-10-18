@@ -4,28 +4,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.web.staff.forms.SpaceOrderTypeForm;
 
 @Controller
 public class SpaceController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private ISpaceManager spaceManager;
 
@@ -43,6 +52,9 @@ public class SpaceController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
+    
+    @Autowired
+    IExhibitionManager exhibitionManager;
 
     @RequestMapping("/staff/space/{id}")
     public String showSpace(@PathVariable String id, Model model) {
@@ -76,9 +88,17 @@ public class SpaceController {
     }
     
     @RequestMapping(value = "/staff/space/spaceordermode", method = RequestMethod.POST)
-    public ResponseEntity<SpaceLink>updateSpaceOrderMode(String mode) {
-        List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public String updateSpaceOrderMode(String mode, @RequestParam String spaceOrderMode) {
+        logger.info("{}", spaceOrderMode);
+        IExhibition exhibition;
+        if(spaceOrderMode.equalsIgnoreCase("ALPHABETICAL")) {
+           exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.ALPHABETICAL);
+        } else if(spaceOrderMode.equalsIgnoreCase("CREATION_DATE")) {
+            exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CREATION_DATE);
+        } else if(spaceOrderMode.equalsIgnoreCase("CUSTOM")) {
+            exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CUSTOM);
+         }
+        return "redirect:/staff/space/list";
     }
     
 }

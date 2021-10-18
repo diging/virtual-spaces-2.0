@@ -65,11 +65,14 @@
         </div> 
         <div>
         Select how you want to arrange this in the exhibition navigation bar
-        <select th:href="@{/staff/space/spaceordermode}" name="SpaceOrdering" id="spaceOrdering" style="float: center;">
-		  <option value="Alphabetical">Alphabetical</option>
-		  <option value="Creation Date">Creation Date</option>
-		  <option value="Custom">Custom</option>
+        <form th:action="@{/staff/space/spaceordermode}" method="POST" name="f" class="form-horizontal">
+         <select name="spaceOrderMode" id="spaceOrderMode" style="float: center;">
+		  <option value="ALPHABETICAL">Alphabetical</option>
+		  <option value="CREATION_DATE">Creation Date</option>
+		  <option value="CUSTOM">Custom</option>
 		</select>
+		<button type="submit" id="changeOrder" class="btn primary-btn">Change Order</button>
+        </form>
         </div>           
         
         <div style="text-align: right">
