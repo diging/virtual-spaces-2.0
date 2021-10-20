@@ -35,6 +35,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
 
 public class SpaceManagerTest {
 
@@ -73,6 +74,9 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+    
+    @Mock
+    private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
 
     @InjectMocks
@@ -84,6 +88,7 @@ public class SpaceManagerTest {
     private String spaceId1, spaceId2;
     private String spaceLinkId1;
     private SpaceLink spaceLink;
+    List<ISpace> publishedSpaces = new ArrayList<ISpace>();
 
     @Before
     public void setUp() {
@@ -91,6 +96,7 @@ public class SpaceManagerTest {
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000001";
         spaceLinkId1 = "SPL000000001";
+        
 
     }
 
@@ -301,5 +307,15 @@ public class SpaceManagerTest {
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
+    
+    @Test
+    public void test_sortPublishedSpacesByGivenOrder_Default(){
+        Space space=new Space();
+        space.setId(spaceId1);
+        publishedSpaces.add(space);
+        Mockito.when(exhibitionSpaceOrderUtility.retrieveSpacesListInGivenOrder(publishedSpaces, null)).thenReturn(publishedSpaces);
+        Assert.assertEquals(space, space);
+    }
+    
 
 }

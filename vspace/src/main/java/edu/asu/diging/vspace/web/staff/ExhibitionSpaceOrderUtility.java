@@ -63,7 +63,7 @@ public class ExhibitionSpaceOrderUtility {
     }
     
     public List<ISpace> retrieveSpacesListInGivenOrder(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
-        if(mode == ExhibitionSpaceOrderMode.ALPHABETICAL) {
+        if(mode == null || mode == ExhibitionSpaceOrderMode.ALPHABETICAL) {
             return sortSpacesAlphabetically(publishedSpaces);
         }
         else if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
