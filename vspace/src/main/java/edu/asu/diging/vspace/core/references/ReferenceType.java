@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.references;
+package edu.asu.diging.vspace.core.references;
 
 public enum ReferenceType {
     BLOG_POST, BOOK, BOOK_SECTION, CONFERENCE_PAPER, JOURNAL_ARTICLE, PATENT, PODCAST, PRESENTATION, PROJECT_DELIVERABLE, PROJECT_MILESTONE, 

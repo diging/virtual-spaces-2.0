@@ -15,10 +15,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.references.ReferenceBlock;
+import edu.asu.diging.vspace.core.references.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
-import edu.asu.diging.vspace.references.ReferenceBlock;
-import edu.asu.diging.vspace.references.ReferenceDisplayDefault;
 
 @Controller
 public class AddReferenceController {

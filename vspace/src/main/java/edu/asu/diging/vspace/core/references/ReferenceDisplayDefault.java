@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.references;
+package edu.asu.diging.vspace.core.references;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class ReferenceDisplayDefault implements ReferenceDisplayProvider{
         ReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
         refFormatter.addAuthors(author).addYear(year).addTitle(title).addJournal(journal).addPages(pages).addVolume(volume).addIssue(issue).addUrl(url);
         
-        return refFormatter.referenceDisplayText;
+        return refFormatter.getReferenceDisplayText();
     }
     
 }

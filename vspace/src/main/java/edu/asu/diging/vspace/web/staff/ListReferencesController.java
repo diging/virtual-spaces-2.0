@@ -28,14 +28,14 @@ public class ListReferencesController {
     
     @RequestMapping("/staff/references/list")
     public String listSpacesWithoutNum( @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
+            @RequestParam(value = "order", required = false) String order, Model model) {
         return String.format("redirect:/staff/references/list?page=1&sort=%s&order=%s",sortedBy,order);
     }
     
     @RequestMapping(value="/staff/references/list", params= {"page", "sort", "order"})
     public String listSpaces(@RequestParam(value = "page", required = false) String page,
             @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order, Model model, RedirectAttributes attributes) {
+            @RequestParam(value = "order", required = false) String order, Model model) {
         
         int pageNo;
         try {

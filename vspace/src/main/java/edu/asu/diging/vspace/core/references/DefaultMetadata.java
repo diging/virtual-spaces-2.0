@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.references;
+package edu.asu.diging.vspace.core.references;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

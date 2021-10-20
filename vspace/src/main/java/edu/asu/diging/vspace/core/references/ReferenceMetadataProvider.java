@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.references;
+package edu.asu.diging.vspace.core.references;
 
 import edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException;
 import edu.asu.diging.vspace.core.model.impl.Reference;

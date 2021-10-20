@@ -18,10 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.references.ReferenceBlock;
+import edu.asu.diging.vspace.core.references.ReferenceDisplayDefault;
+import edu.asu.diging.vspace.core.references.ReferenceType;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
-import edu.asu.diging.vspace.references.ReferenceBlock;
-import edu.asu.diging.vspace.references.ReferenceDisplayDefault;
-import edu.asu.diging.vspace.references.ReferenceType;
 
 @Controller
 public class EditReferenceController {
@@ -59,6 +59,9 @@ public class EditReferenceController {
             reference.setType(refData.getType());
             reference.setNote(refData.getNote());
             referenceManager.updateReference(reference);
+            attributes.addAttribute("alertType", "success");
+            attributes.addAttribute("message", "Reference successfully updated!");
+            attributes.addAttribute("showAlert", "true");
             return "redirect:/staff/display/reference/{referenceId}";
         }
         return "redirect:/404";

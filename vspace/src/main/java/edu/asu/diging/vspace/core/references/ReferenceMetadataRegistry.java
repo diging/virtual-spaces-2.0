@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.references;
+package edu.asu.diging.vspace.core.references;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReferenceMetadataRegistry {
+public class ReferenceMetadataRegistry implements IReferenceMetadataRegistry {
     
     @Autowired
     private List<ReferenceMetadataProvider> referenceMetadataProviders;

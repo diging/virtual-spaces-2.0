@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.references.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
-import edu.asu.diging.vspace.references.ReferenceDisplayDefault;
 
 @Controller
 public class ReferenceController {
