@@ -24,9 +24,10 @@ public class ListSpacesController {
 
     @RequestMapping("/staff/space/list")
     public String listSpaces(Model model) {
-
-        model.addAttribute("spaces", spaceManager.addIncomingLinkInfoToSpaces(spaceRepo.findAll()));
         IExhibition startExhibition = exhibitionManager.getStartExhibition();
+        ExhibitionSpaceOrderMode currentMode = startExhibition.getSpaceOrderMode();
+        model.addAttribute("spaces", spaceManager.addIncomingLinkInfoToSpaces(spaceRepo.findAll()));
+        model.addAttribute("currentMode", currentMode);
         if(startExhibition!=null) {
             model.addAttribute("startSpace", startExhibition.getStartSpace());
         }

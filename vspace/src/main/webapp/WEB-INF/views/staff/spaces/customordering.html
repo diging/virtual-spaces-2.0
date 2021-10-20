@@ -115,7 +115,7 @@
     	<div id="slideSpace"  class="main-content">
     	<div th:each="contents: ${spaces}" >
 	    	<div style="cursor: pointer;" th:draggable="true" th:attr="data-position=${contents.customOrder}" th:id="${contents.id}" class="valueDiv tab row" >
-	             <p class="col-md-10">[[${contents.id}]]</p>
+	             <p class="col-md-10">[[${contents.getSpace().getName()}]]</p>
 		    </div>
     	</div>
 	</div>

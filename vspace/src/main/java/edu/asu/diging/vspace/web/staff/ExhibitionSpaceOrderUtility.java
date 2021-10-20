@@ -14,14 +14,14 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.SpaceManager;
-import edu.asu.diging.vspace.core.services.impl.SpacesCustomOrderManager;
 
 @Component
 public class ExhibitionSpaceOrderUtility {
     
     @Autowired
-    SpacesCustomOrderManager spacesCustomOrderManager;
+    ISpacesCustomOrderManager spacesCustomOrderManager;
     
     private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
         //TO Do sort alphabetically
