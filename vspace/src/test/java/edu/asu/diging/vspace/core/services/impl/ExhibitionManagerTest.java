@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -16,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
 
 public class ExhibitionManagerTest {
 
@@ -50,6 +53,21 @@ public class ExhibitionManagerTest {
         IExhibition exhibitionTest = serviceToTest.getExhibitionById(id);
         assertEquals(exhibitionTest, exhibition);
         verify(exhibitRepo).findById(id);
+    }
+    
+    @Test
+    public void test_updateSpaceOrderMode_success() {
+        Exhibition exhibition = new Exhibition();
+        ExhibitionSpaceOrderMode mode = ExhibitionSpaceOrderMode.CUSTOM;
+        exhibition.setSpaceOrderMode(mode);
+        List<Exhibition> exhibitionList = new ArrayList<Exhibition>();
+        exhibitionList.add(exhibition);
+        when(exhibitRepo.findAllByOrderByIdAsc()).thenReturn(exhibitionList);
+        when(exhibitRepo.save(exhibition)).thenReturn(exhibition);
+        
+        IExhibition exhibitionTest = serviceToTest.updateSpaceOrderMode(mode);
+        assertEquals(exhibitionTest, exhibition);
+        
     }
 
 }
