@@ -24,10 +24,6 @@ public class ExhibitionSpaceOrderUtility {
     ISpacesCustomOrderManager spacesCustomOrderManager;
     
     private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
-        //TO Do sort alphabetically
-        /* (non-Javadoc)
-         * Published spaces to be shown alphabetically by default
-         */
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {

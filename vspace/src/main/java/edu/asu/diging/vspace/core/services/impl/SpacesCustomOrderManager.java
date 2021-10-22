@@ -43,7 +43,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         }
         List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
         for (SpacesCustomOrder eachSpace : spacesCustomOrderCurrentList) {
-            logger.info("custom order is{}",eachSpace.getCustomOrder());
+            logger.info("custom order is {}", eachSpace.getCustomOrder());
             String spaceId = eachSpace.getId();
             int customOrder = eachSpace.getCustomOrder();
             Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findById(spaceId);

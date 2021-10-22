@@ -21,19 +21,15 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Controller
 public class SpacesCustomOrderingController {
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
     @RequestMapping("/staff/spaceordering")
     public String displayCurrentOrderLanding(Model model) {
         spacesCustomOrderManager.persistPublishedSpacesToSpacesCustomOrder();
-        logger.info("before spaces are added");
         List<SpacesCustomOrder> spaces = spacesCustomOrderManager.findAll();
         Collections.sort(spaces, Comparator.comparing(SpacesCustomOrder::getCustomOrder));
         model.addAttribute("spaces", spaces);
-        logger.info("spaces are added");
         return "staff/spaces/customordering";
     }
     
