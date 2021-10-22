@@ -17,6 +17,13 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
+/**
+ * SpacesCustomOrderManager is the manager
+ * to allow custom ordering of spaces
+ * @author Glen D'souza
+ *
+ */
+
 @Service
 @Transactional(rollbackFor = { Exception.class })
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
@@ -35,6 +42,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         return spacesCustomOrderRepository.findMaxCustomOrder(spaceId);
     }
     
+    /**
+     * This method updates the current custom order of spaces in the exhibition
+     * @param spacesCustomOrderCurrentList
+     */
     @Override
     public void updateCustomOrder(List<SpacesCustomOrder> spacesCustomOrderCurrentList) {
 
@@ -56,6 +67,11 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
     }
     
+    /**
+     * This method persists all the published spaces into the SpacesCustomOrder table 
+     * This method is called every time we go to custom order tab as that will 
+     * ensure the table is populated with latest published spaces before changing the order
+     */    
     @Override
     public void persistPublishedSpacesToSpacesCustomOrder() {
         List<ISpace> spaces = (List<ISpace>) spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
@@ -88,7 +104,11 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
             updateStatusChangeToUnpublished(space);
         }
     }
-    
+   
+    /**
+     * This method updates the custom order of newly published space to the max order
+     * @param space
+     */
     @Override
     public void updateStatusChangeToPublished(ISpace space) {
         Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
@@ -101,6 +121,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         
     }
     
+    /**
+     * This method updates the custom order of existing spaces when a space is changed to unpublished
+     * @param space
+     */
     @Override
     public void updateStatusChangeToUnpublished(ISpace space) {
         Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());

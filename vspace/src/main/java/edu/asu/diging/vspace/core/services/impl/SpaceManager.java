@@ -304,6 +304,11 @@ public class SpaceManager implements ISpaceManager {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
 
+    /**
+     * Method to sort published spaces based on the given order, i.e Alphabetical,
+     * Creation Date, or, Custom
+     * @param publishedSpaces
+     */
     @Override
     public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {
         IExhibition exhibitition = exhibitionManager.findAll().get(0);

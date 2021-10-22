@@ -18,12 +18,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
+/**
+ * SpacesCustomOrderingController is the controller
+ * to allow custom ordering of spaces
+ * @author Glen D'souza
+ *
+ */
+
 @Controller
 public class SpacesCustomOrderingController {
     
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
+    /**
+     * This method displays the current custom ordering of spaces in the exhibition
+     */
     @RequestMapping("/staff/spaceordering")
     public String displayCurrentOrderLanding(Model model) {
         spacesCustomOrderManager.persistPublishedSpacesToSpacesCustomOrder();
@@ -33,6 +43,9 @@ public class SpacesCustomOrderingController {
         return "staff/spaces/customordering";
     }
     
+    /**
+     * This method is the controller to update the custom order of spaces
+     */
     @RequestMapping(value = "/staff/spaceordering/updateOrder", method = RequestMethod.POST)
     public ResponseEntity<List<SpacesCustomOrder>> adjustContentOrder(@RequestBody List<SpacesCustomOrder> spacesCustomOrderList) {
         spacesCustomOrderManager.updateCustomOrder(spacesCustomOrderList);

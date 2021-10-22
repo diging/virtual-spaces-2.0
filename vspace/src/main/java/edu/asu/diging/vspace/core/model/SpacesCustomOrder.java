@@ -38,23 +38,12 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         this.space = space;
         this.customOrder= customOrder;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.IContentBlock#getId()
-     */
+    
     @Override
     public String getId() {
         return id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.IContentBlock#setId(java.lang.String)
-     */
     @Override
     public void setId(String id) {
         this.id = id;
