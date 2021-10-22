@@ -380,19 +380,18 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
 }
 
 function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
-    var posX, posY;
+    var posX;
+    
     if(show) {
         posx = $("#main-bgImage").position().left;
-        posY = $("#main-bgImage").position().top;
     }
     else{
-        posX = $("#bgImage").position().left;
-        posY = $("#bgImage").position().top;
+        posX = $("#bgImage").position().left;        
     }
     $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
     $(selectedLinkClass).css({ 'position': 'absolute'});
     $(selectedLinkClass).css({ 'left': x + posX});
-    $(selectedLinkClass).css({ 'top': y + posY});
+    $(selectedLinkClass).css({ 'top': y});
     $(selectedLabelClass+' span').remove();
     $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
     feather.replace();    
@@ -585,6 +584,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
 
     $("#bgImage").on("click", function(e){
+    	debugger;
         e.preventDefault();
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
