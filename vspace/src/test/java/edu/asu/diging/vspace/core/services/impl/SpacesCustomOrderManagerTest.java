@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -16,7 +17,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 public class SpacesCustomOrderManagerTest{
@@ -74,5 +78,48 @@ public class SpacesCustomOrderManagerTest{
 
        Mockito.verify(spacesCustomOrderRepository).saveAll(SpacesCustomList);
    }
+   
+   @Test
+   public void test_persistPublishedSpacesToSpacesCustomOrder_success() {
+       SpacesCustomOrder firstSpaceCustomOrder = new SpacesCustomOrder();
+       firstSpaceCustomOrder.setId("SPAC01");
+       firstSpaceCustomOrder.setCustomOrder(Integer.valueOf(3));
+       ISpace space1 = new Space();
+       space1.setId("space1");
+       space1.setSpaceStatus(SpaceStatus.PUBLISHED);
+       ISpace space2 = new Space();
+       space2.setId("space2");
+       List<ISpace> spaces = new ArrayList<ISpace>();
+       spaces.add(space1);
+       spaces.add(space2);
+       when(spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED)).thenReturn(spaces);
+       when(spaceManager.getSpacesWithStatus(null)).thenReturn(spaces);
+       
+       when(spacesCustomOrderRepository.findBySpace_Id(Mockito.anyString())).thenReturn(Optional.of(firstSpaceCustomOrder));
+
+       when(spacesCustomOrderRepository.findMaxCustomOrder()).thenReturn(null);
+       
+       serviceToTest.persistPublishedSpacesToSpacesCustomOrder();
+   }
+   
+   @Test
+   public void test_updateStatusChangeToUnpublished_success() {
+       String space1Id="Space1";
+       ISpace space = new Space();
+       space.setId(space1Id);
+       SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
+       spacesCustomOrder.setCustomOrder(1);
+       SpacesCustomOrder spacesCustomOrder2 = new SpacesCustomOrder();
+       spacesCustomOrder2.setCustomOrder(2);
+       List<SpacesCustomOrder> spacesCustomOrderList = new ArrayList<SpacesCustomOrder>();
+       spacesCustomOrderList.add(spacesCustomOrder2);
+       when(spacesCustomOrderRepository.findBySpace_Id(space1Id)).thenReturn(Optional.of(spacesCustomOrder));
+       when(spacesCustomOrderRepository.findBySpace_IdAndCustomOrderGreaterThan(space1Id,1)).thenReturn(spacesCustomOrderList);
+       doNothing().when(spacesCustomOrderRepository).delete(spacesCustomOrder);
+       
+       assertEquals(Integer.valueOf(2), spacesCustomOrder2.getCustomOrder());
+       serviceToTest.updateStatusChangeToUnpublished(space);    
+   }
+   
     
 }
