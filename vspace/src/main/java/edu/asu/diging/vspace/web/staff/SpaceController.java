@@ -89,16 +89,15 @@ public class SpaceController {
     
     @RequestMapping(value = "/staff/space/spaceordermode", method = RequestMethod.POST)
     public String updateSpaceOrderMode(String mode, @RequestParam String spaceOrderMode) {
-        logger.info("{}", spaceOrderMode);
         IExhibition exhibition;
         if(spaceOrderMode.equalsIgnoreCase("ALPHABETICAL")) {
-           exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.ALPHABETICAL);
+            exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.ALPHABETICAL);
         } else if(spaceOrderMode.equalsIgnoreCase("CREATION_DATE")) {
             exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CREATION_DATE);
         } else if(spaceOrderMode.equalsIgnoreCase("CUSTOM")) {
             exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CUSTOM);
-         }
+        }
         return "redirect:/staff/space/list";
     }
-    
+
 }
