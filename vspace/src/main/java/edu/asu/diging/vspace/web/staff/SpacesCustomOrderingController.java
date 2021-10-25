@@ -47,7 +47,7 @@ public class SpacesCustomOrderingController {
      * This method is the controller to update the custom order of spaces
      */
     @RequestMapping(value = "/staff/spaceordering/updateOrder", method = RequestMethod.POST)
-    public ResponseEntity<List<SpacesCustomOrder>> adjustContentOrder(@RequestBody List<SpacesCustomOrder> spacesCustomOrderList) {
+    public ResponseEntity<List<SpacesCustomOrder>> adjustCustomOrder(@RequestBody List<SpacesCustomOrder> spacesCustomOrderList) {
         spacesCustomOrderManager.updateCustomOrder(spacesCustomOrderList);
         return new ResponseEntity<List<SpacesCustomOrder>>(spacesCustomOrderList,HttpStatus.OK);
     }
