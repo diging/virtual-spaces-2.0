@@ -261,7 +261,7 @@ function showSpaceLink(spaceLink, show, x, y) {
 
     link.css('position', 'absolute');
     link.css('left', spaceLink["x"] + posX);
-    link.css('top', spaceLink["y"] + posY);
+    link.css('top', spaceLink["y"]);
     link.css('color', 'rgba(128,128,128,1)');
     link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
     link.css('font-size', "12px");
@@ -287,6 +287,7 @@ function showSpaceLink(spaceLink, show, x, y) {
 }
 
 function showModuleLink(moduleLink, show, x, y) {
+	debugger;
     $("#module_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -302,8 +303,6 @@ function showModuleLink(moduleLink, show, x, y) {
             'position': 'absolute',
             'font-size': "10px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - displaceLableOnX,
-            'top': y + posY + displaceLableOnY,
             'color': 'red'
         });
         link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
@@ -313,7 +312,7 @@ function showModuleLink(moduleLink, show, x, y) {
     }
     link.css('position', 'absolute');
     link.css('left', moduleLink["x"] + posX);
-    link.css('top', moduleLink["y"] + posY);
+    link.css('top', moduleLink["y"] );
     link.css('color', 'red');
     link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
     link.css('font-size', "12px");
@@ -381,7 +380,7 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
 
 function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
     var posX;
-    
+    debugger;
     if(show) {
         posx = $("#main-bgImage").position().left;
     }
@@ -424,8 +423,6 @@ function showExternalLinks(externalLink, show, x, y) {
             'position': 'absolute',
             'font-size': "12px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - displaceLableOnX,
-            'top': y + posY + displaceLableOnY,
             'color': 'blue'
         });
         link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
@@ -433,7 +430,7 @@ function showExternalLinks(externalLink, show, x, y) {
 
     link.css('position', 'absolute');
     link.css('left', externalLink["x"] + posX);
-    link.css('top', externalLink["y"] + posY);
+    link.css('top', externalLink["y"]);
     link.css('color', 'blue');
     link.css('font-size', "12px");
 
@@ -482,6 +479,7 @@ function createExternalLinkInfo() {
 }
 
 function createModuleLinkInfo() {
+	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
@@ -584,7 +582,6 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
 
     $("#bgImage").on("click", function(e){
-    	debugger;
         e.preventDefault();
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
@@ -679,6 +676,7 @@ $(function(){
         $("#addModuleLinkButton").click(function(e) {
             $("#createModuleLinkAlert").hide();
             $("#bgImage").off("click");
+            debugger;
             $("#bgImage").on("click", function(e){
                 e.preventDefault();
                 $("#external-arrow").remove();
