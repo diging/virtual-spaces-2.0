@@ -217,7 +217,7 @@ $(document).ready(function() {
 <body>
     <div class="main-content" layout:fragment="content">
   
-    	<div class="flex-spacing" style="margin-bottom: 40px;"> 
+    	<div class="flex-spacing" style="margin-bottom: 10px;"> 
 	    	<div style="display: flex">
 	    		<div style="margin-right: 20px">
 	    			<h2>
@@ -248,8 +248,9 @@ $(document).ready(function() {
 				</form>
 			</div>
     	</div>
-    	<div class="flex-right"> 
-    		<label style="display: flex-right; margin-right: 10px;">Module Status</label>
+    	<div class="flex-spacing" style="justify-content: right; margin-top:0px;"> 
+    	<div style="display:flex-right;">
+    	<label style="text-align: right;">Module Status</label>
                 <form method="POST" th:action="@{'/staff/module/'+${module?.id}+'/status'}">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
                     <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
@@ -259,6 +260,7 @@ $(document).ready(function() {
                     <p style="display: inline; padding-left: 10px;">
                         <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
                     </p>
+    	</div>
             </div>
     	<div class="tab sequences" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
