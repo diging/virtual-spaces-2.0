@@ -30,6 +30,7 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
@@ -103,6 +104,15 @@ public class ContentBlockManager implements IContentBlockManager {
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
         return textBlock;
+    }
+    
+    @Override
+    public ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder) {
+        ISlide slide = slideManager.getSlide(slideId);
+        ISpaceBlock spaceBlock = spaceBlockFactory.createSpaceBlock(slide, title);
+        spaceBlock.setContentOrder(contentOrder);
+        spaceBlock = spaceBlockRepo.save((SpaceBlock) spaceBlock);
+        return spaceBlock;
     }
 
     private IVSImage saveImage(byte[] image, String filename) {

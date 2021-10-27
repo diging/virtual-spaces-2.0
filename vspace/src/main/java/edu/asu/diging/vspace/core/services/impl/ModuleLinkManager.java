@@ -103,5 +103,14 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     protected void deleteLinkRepo(IModuleLink link) {
         moduleLinkRepo.delete((ModuleLink) link);
     }
+    
+    @Override
+    public ModuleLink getModuleLinkByModuleId(String moduleId) {
+        Optional<ModuleLink> moduleLinkOptional = moduleLinkRepo.findByModule_Id(moduleId);
+        if(moduleLinkOptional.isPresent()) {
+            return moduleLinkOptional.get();
+        }
+        return null;
+    }
 
 }

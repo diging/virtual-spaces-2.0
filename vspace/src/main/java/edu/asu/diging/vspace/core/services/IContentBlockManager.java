@@ -7,6 +7,7 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
@@ -46,4 +47,6 @@ public interface IContentBlockManager {
             boolean showsAll);
     
     Integer findMaxContentOrder(String slideId);
+
+    ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder);
 }
