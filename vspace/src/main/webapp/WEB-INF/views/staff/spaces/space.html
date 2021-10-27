@@ -287,7 +287,6 @@ function showSpaceLink(spaceLink, show, x, y) {
 }
 
 function showModuleLink(moduleLink, show, x, y) {
-	debugger;
     $("#module_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -380,7 +379,6 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
 
 function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
     var posX;
-    debugger;
     if(show) {
         posx = $("#main-bgImage").position().left;
     }
@@ -479,7 +477,6 @@ function createExternalLinkInfo() {
 }
 
 function createModuleLinkInfo() {
-	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
@@ -676,7 +673,6 @@ $(function(){
         $("#addModuleLinkButton").click(function(e) {
             $("#createModuleLinkAlert").hide();
             $("#bgImage").off("click");
-            debugger;
             $("#bgImage").on("click", function(e){
                 e.preventDefault();
                 $("#external-arrow").remove();
