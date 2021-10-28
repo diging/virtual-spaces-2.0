@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface ISpaceBlock {
+public interface ISpaceBlock extends IContentBlock {
     
     void setTitle(String text);
 

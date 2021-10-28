@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.SpaceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -23,6 +24,7 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceBlockFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -30,12 +32,14 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
+import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
@@ -53,6 +57,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private ITextBlockFactory textBlockFactory;
+    
+    @Autowired
+    private ISpaceBlockFactory spaceBlockFactory;
 
     @Autowired
     private IImageBlockFactory imageBlockFactory;
@@ -65,6 +72,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private TextContentBlockRepository textBlockRepo;
+    
+    @Autowired
+    private SpaceContentBlockRepository spaceBlockRepo;
 
     @Autowired
     private ImageContentBlockRepository imageBlockRepo;
@@ -107,9 +117,10 @@ public class ContentBlockManager implements IContentBlockManager {
     }
     
     @Override
-    public ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder) {
+    public ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder,
+            ISpace space) {
         ISlide slide = slideManager.getSlide(slideId);
-        ISpaceBlock spaceBlock = spaceBlockFactory.createSpaceBlock(slide, title);
+        ISpaceBlock spaceBlock = spaceBlockFactory.createSpaceBlock(slide, title, space);
         spaceBlock.setContentOrder(contentOrder);
         spaceBlock = spaceBlockRepo.save((SpaceBlock) spaceBlock);
         return spaceBlock;

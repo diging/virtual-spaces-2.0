@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IModuleLink;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 
@@ -30,7 +31,10 @@ public class AddSpaceBlockController {
             @PathVariable("moduleId") String moduleId){
         
         IModuleLink moduleLink = moduleLinkManager.getModuleLinkByModuleId(moduleId);
-        moduleLink.getSpace();
+        ISpace space = moduleLink.getSpace();
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        contentBlockManager.createSpaceBlock(slideId, moduleId, contentOrder, space);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

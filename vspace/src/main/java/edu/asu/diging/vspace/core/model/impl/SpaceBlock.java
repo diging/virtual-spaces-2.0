@@ -1,11 +1,15 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 
+@Entity
 public class SpaceBlock extends ContentBlock implements ISpaceBlock {
+    @Lob
     private String title;
     
     @ManyToOne(targetEntity = Space.class)
