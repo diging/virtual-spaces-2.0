@@ -297,7 +297,9 @@ function showModuleLink(moduleLink, show, x, y) {
     var link;
     if (moduleLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-    }else{ 
+    } else if(moduleLink["type"] == "IMAGE" && linkIcon) {
+        link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
+    } else{ 
         $(module_label).css({
             'position': 'absolute',
             'font-size': "10px",
@@ -337,6 +339,7 @@ function showModuleLink(moduleLink, show, x, y) {
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
+	debugger;
     moduleLink["x"]=storeX;
     moduleLink["y"]=storeY;
     var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
@@ -489,18 +492,19 @@ function createModuleLinkInfo() {
     info["rotation"] = $("#moduleLinkRotation").val();
     info["linkedModule"] = $("#linkedModule").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
-    info["type"] = $("#type").val();
+    info["type"] = $("#moduleType").val();
     return info;
 }
 
 function editModuleLinkInfo() {
+	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
     info["rotation"] = $("#moduleLinkRotationEdit").val();
     info["linkedModule"] = $("#moduleLinkIdEdit").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
-    info["type"] = $("#typeEdit").val();
+    info["type"] = $("#moduleTypeEdit").val();
     return info;
 }
 
@@ -565,7 +569,7 @@ function displayForms(formToShow){
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
-
+	debugger;
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -576,7 +580,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     $("#moduleLinkId").val(moduleLinkId);
     $("#moduleLinkIdValueEdit").val(moduleLinkId);
     $("#moduleLinkRotationEdit").val(rotation);
-    $('#typeEdit option[value="'+linkType+'"]').attr("selected", "selected");
+    $('#moduleTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
     $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
     resetHighlighting();     
     $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
@@ -811,7 +815,8 @@ $(function(){
 
         $("#createModuleLinkBtn").click(function(e) {
             e.preventDefault();
-
+            $('#errorAlert').hide();
+            
             if (storeX == undefined || storeY == undefined) {
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
                 $('#errorAlert').show();
@@ -820,7 +825,8 @@ $(function(){
 
             var linkedModules = $("#linkedModule").val();
             var moduleLabel = $("#moduleLinkLabel").val();
-
+            var type = $("#moduleType option:selected").text();
+            
             if (moduleLabel == undefined || moduleLabel == "") {
                 $("#errorMsg").text("Please enter the label for module.")
                 $('#errorAlert').show();
@@ -829,6 +835,12 @@ $(function(){
 
             if (linkedModules == undefined || linkedModules == "Choose...") {
                 $("#errorMsg").text("Please select linked modules.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
                 $('#errorAlert').show();
                 return;
             }
@@ -1528,7 +1540,6 @@ $(function(){
 	
 	                <input type="hidden" name="x" id="moduleLinkX" /> 
 	                <input type="hidden" name="y" id="moduleLinkY" />
-	                <input type="hidden" name="type" value="MODULE" />
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -1550,7 +1561,20 @@ $(function(){
 	                            name="moduleLinkLabel" id="moduleLinkLabel">
 	                    </div>
 	                </div>
-	
+					
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="moduleType" name="moduleType" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                
 	                <div class="row">
 	                    <div class="col-sm-4">
 	                        <label>Linked Modules</label>
@@ -1561,6 +1585,16 @@ $(function(){
 	                            <option th:value="${module?.id}"
 	                                th:each="module : ${moduleList}">[[${module?.name}]]</option>
 	                        </select>
+	                    </div>
+	                </div>
+	                
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -1757,7 +1791,6 @@ $(function(){
                         </div>
                     </div>
                     <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
-                    <input type="hidden" name="type" value="MODULE" />
                     <input type="hidden" name="x" id="moduleLinkXEdit" />
                     <input type="hidden" name="y" id="moduleLinkYEdit" />
                     <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
@@ -1787,6 +1820,18 @@ $(function(){
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-4">
+                            <label>Type:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="moduleTypeEdit" name="type"
+                                class="form-control-sm modulelink-targetEdit">
+                                <option th:value="IMAGE">Image</option>
+                                <option th:value="ARROW">Link</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
                             <label>Linked
                                     Modules:</label>
@@ -1802,6 +1847,17 @@ $(function(){
                             </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-3" style="padding-right: 0;">
+                            <label>Image:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control-sm"
+                                name="moduleLinkImage"
+                                id="moduleLinkImageEdit" style="width: inherit" />
+                        </div>
+                    </div>
+                    
                     
                     <p class="mt-5 text-center">
                         <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
