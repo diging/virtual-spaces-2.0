@@ -419,7 +419,7 @@
                 
                 $("#addSpace").click(function() {
                     $(".EasyMDEContainer").remove();
-                	markDown = new EasyMDE({element: $('#textBlockText')[0]});
+                	markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
                     $("#addSpaceAlert").show();
                 });
                 
@@ -647,7 +647,7 @@
                     formData.append('content', text);
                     markDown.value('');
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/SpaceBlockContent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
@@ -656,7 +656,7 @@
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteSpace" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
@@ -1034,15 +1034,18 @@
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form name="textForm" id="textUploadForm"
+                        <form name="spaceForm" id="spaceUploadForm"
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
                                 <h6>
                                     <small>Enter title : </small>
                                 </h6>
                                 <textarea class="form-control"
-                                    id="textBlockText" rows="3"></textarea>
+                                    id="spaceBlockText" rows="3"></textarea>
                             </div>
+                            <select name="spaceLink" id="spaceLink">
+                            <option th:each="space: ${spaces}" th:value="${space.id}">[[${space.name}]]</option>
+							</select>
                             <div class="modal-footer">
                                 <button id="cancelSpaceText" type="reset"
                                     class="btn light">Cancel</button>

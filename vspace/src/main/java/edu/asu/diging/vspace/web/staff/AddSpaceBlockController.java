@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class AddSpaceBlockController {
@@ -25,14 +27,15 @@ public class AddSpaceBlockController {
     private IContentBlockManager contentBlockManager;
     
     @Autowired
-    private IModuleLinkManager moduleLinkManager;
+    private ISpaceManager spaceManager;
     
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/images", method = RequestMethod.POST)
+    @Autowired
+    private IModuleLinkManager moduleLinkManager;
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/{spaceId}/SpaceBlockContent", method = RequestMethod.POST)
     ResponseEntity<String> addSpaceBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId){
+            @PathVariable("moduleId") String moduleId, @PathVariable("SpaceId") String spaceId){
         
-        IModuleLink moduleLink = moduleLinkManager.getModuleLinkByModuleId(moduleId);
-        ISpace space = moduleLink.getSpace();
+        ISpace space = spaceManager.getSpace(spaceId);
         Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
         contentOrder = contentOrder == null ? 0 : contentOrder + 1;
         ISpaceBlock spaceBlock = contentBlockManager.createSpaceBlock(slideId, moduleId, contentOrder, space);

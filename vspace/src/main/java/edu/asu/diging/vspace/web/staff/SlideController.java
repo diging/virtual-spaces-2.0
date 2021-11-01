@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -15,10 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -36,11 +45,19 @@ public class SlideController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private SpaceRepository spaceRepo;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
-    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
+    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) throws JsonProcessingException {
 
         ISlide slide = slideManager.getSlide(id);
+        List<ISpace> spaces = new ArrayList<ISpace>();
+        spaceRepo.findAll().forEach(s -> {
+            spaces.add(s);
+        });
+        model.addAttribute("spaces", spaces);
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
