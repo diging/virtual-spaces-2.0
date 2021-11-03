@@ -63,7 +63,7 @@ public class AddModuleLinkController {
         IModuleLinkDisplay display;
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, null, null);
+                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, linkImage, filename);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
