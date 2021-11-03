@@ -644,6 +644,7 @@
                     
                     var formData = new FormData();
                     var text = markDown.value();
+                    console.log(text);
                     formData.append('content', text);
                     markDown.value('');
                     $.ajax({
@@ -1035,15 +1036,16 @@
                             </button>
                         </div>
                         <form name="spaceForm" id="spaceUploadForm"
-                            enctype="multipart/form-data" method="post">
+                            enctype="multipart/form-data" method="post"
+                            th:object="${spaceContentBlockForm}">
                             <div class="modal-body">
                                 <h6>
                                     <small>Enter title : </small>
                                 </h6>
                                 <textarea class="form-control"
-                                    id="spaceBlockText" rows="3"></textarea>
+                                    id="title" rows="3"></textarea>
                             </div>
-                            <select name="spaceLink" id="spaceLink">
+                            <select name="spaceName" id="spaceName">
                             <option th:each="space: ${spaces}" th:value="${space.id}">[[${space.name}]]</option>
 							</select>
                             <div class="modal-footer">
