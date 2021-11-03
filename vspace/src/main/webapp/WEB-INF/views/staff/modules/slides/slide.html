@@ -34,10 +34,18 @@ function createImageBlock(reader, width) {
 }
 
 function createVideoBlock(reader, videoSrc, title) {
-	var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><div><h3><strong></strong></h3><br/><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
-	videoBlock.find('iframe').attr('src', videoSrc);
-	videoBlock.find('h3 strong').html(title);
-	return videoBlock;
+	if (videoSrc.includes("www.")) {
+		var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><div><h3><strong></strong></h3><br/><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a><div><input type="hidden" id="editVideoId" /></div><a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"><span class="icon-edit"></span></a></div>');
+		videoBlock.find('iframe').attr('src', videoSrc);
+		videoBlock.find('h3 strong').html(title);
+		return videoBlock;
+	}
+	else{
+		var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><div><h3><strong></strong></h3><br/><video width="800" height="530" controls /><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a><div><input type="hidden" id="editVideoId" /></div><a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"><span class="icon-edit"></span></a></div>');
+		videoBlock.find('video').attr('src', videoSrc);
+		videoBlock.find('h3 strong').html(title);
+		return videoBlock;	
+	}
 }
 
 function onMouseEnter(e){
@@ -81,25 +89,6 @@ function onDoubleClick(e){
         	$("#uploadImage").data('value', imgID); // sets image ID value
         	$("#addImgAlert").show();
     	}
-    }
-    else {
-        var vidId = $(e.target).attr('id');
-        var title = $(e.target).find('h3 strong').html();
-        if (vidId != '') {
-            var url = $(e.target).find('iframe').attr('src');
-            if (url.includes("www.")) {
-                $("#saveVideo").data('url', url);
-                $("#videoLink").val(url);
-                $("#videoTitle").val(title);
-                $("#urlTab").addClass("active");
-                $("#urlLink").addClass("active");
-                $("#uploadTab").removeClass("active");
-                $("#uploadLink").removeClass("active");
-            }
-            
-            $("#saveVideo").data('value', vidId);
-            $("#addVideoAlert").show();
-        }
     }
 }
     
@@ -240,7 +229,7 @@ function uploadImage() {
         // Reset data-attribute to get current selected image ID
         $("#videoFile").val('');
         $("#videoLink").val('');
-        $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+        $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
         if (vidFile) {
             reader.readAsDataURL(vidFile);
         }
@@ -749,7 +738,7 @@ $(document).ready(function() {
     });
     
     $("#urlLink").on("click", function (e) {
-        if ($("#videoFile").val()) {
+      /*   if ($("#videoFile").val()) {
             $("#videoTitle").prop('disabled', true);
             $("#videoLink").prop('disabled', true);
             $("#saveVideo").prop('disabled', true);
@@ -761,14 +750,14 @@ $(document).ready(function() {
         }
         if (!$("#videoLink").val()) {
             $("#saveVideo").prop('disabled', true);
-        }
+        } */
         $("#urlLink").addClass("active show");
         $("#uploadLink").removeClass("active show");
         $("#saveVideo").html("Embed Video");
     });
 
     $("#uploadLink").on("click", function (e) {
-        if ($("#videoLink").val()) {
+       /*  if ($("#videoLink").val()) {
             $("#videoTitle").prop('disabled', true);
             $("#videoFile").prop('disabled', true);
             $("#saveVideo").prop('disabled', true);
@@ -780,13 +769,13 @@ $(document).ready(function() {
         }
         if (!$("#videoFile").val()) {
             $("#saveVideo").prop('disabled', true);
-        }
+        } */
         $("#urlLink").removeClass("active show");
         $("#uploadLink").addClass("active show");
         $("#saveVideo").html("Upload Video");
     });
     
-    $("#videoLink").on("input", function (e) {
+/*     $("#videoLink").on("input", function (e) {
         if (!$("#videoLink").val()) {
             $("#saveVideo").prop('disabled', true);
         }
@@ -808,7 +797,7 @@ $(document).ready(function() {
         if ($("#videoFile").val() || $("#videoLink").val()) {
         $("#saveVideo").prop('disabled', false);
         }
-    });
+    }); */
     
     function updateTextBox(blockId, text) {
         // clear text box and buttons
@@ -891,7 +880,34 @@ $(window).on('load', function () {
 		}
 	}
 });
-
+// editing video block
+$(document).on("click", ".editVideo", function(e) {
+	var id = $(this).siblings('input').val();
+	   var vidId = $('div#'+id).attr('id');
+       var title = $('div#'+id).find('h3 strong').html();
+       console.log(title);
+     if (vidId != '') {
+       	var url="";
+       	if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
+       			&& $('div#'+id).find('iframe').attr('src')!=null && typeof($('div#'+id).find('iframe').attr('src')) != "undefined")
+       		{
+           url = $('div#'+id).find('iframe').attr('src');
+       		}
+           if (url.includes("www.")) {
+               $("#saveVideo").data('url', url);
+               $("#videoLink").val(url);
+               $("#videoTitle").val(title);
+               $("#urlTab").addClass("active");
+               $("#urlLink").addClass("active");
+               $("#uploadTab").removeClass("active");
+               $("#uploadLink").removeClass("active");
+           }
+           
+           $("#saveVideo").data('value', vidId);
+           $("#addVideoAlert").show();
+       } 
+	  });
+	  
 </script>
 </head>
 <body>
@@ -1216,14 +1232,17 @@ $(window).on('load', function () {
                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
 						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowfullscreen ></iframe>
-					<iframe th:id="${contents.id}"  width="800" height="530" th:if="${contents.video.url == null}"
-						th:src="@{'/api/video/'+${contents.video.id}}" frameborder="0"
-						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowfullscreen ></iframe>
+					<video width="800" height="530" th:if="${contents.video.url == null}" controls >
+						  <source th:src="@{'/api/video/'+${contents.video.id}}" />
+						</video>
                         </div>
                     <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
                     <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <span class="icon-trash error"></span>
+                    </a>
+                    <input type="hidden" id="editVideoId" th:value="${contents.id}" />
+                    <a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"> 
+                        <span class="icon-edit"></span>
                     </a>
                 </div>
                 <div th:id="${contents.id}" class="tab textDiv row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}" style="align-items: center">
