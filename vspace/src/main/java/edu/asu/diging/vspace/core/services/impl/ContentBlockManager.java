@@ -13,6 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
+import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
@@ -39,6 +40,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSVideo;
 import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
+import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -56,7 +58,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private IImageFactory imageFactory;
-
+    
     @Autowired
     private IVideoFactory videoFactory;
 
@@ -65,7 +67,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private IImageBlockFactory imageBlockFactory;
-
+    
     @Autowired
     private IVideoBlockFactory videoBlockFactory;
 
@@ -74,7 +76,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private ImageRepository imageRepo;
-
+    
     @Autowired
     private VideoRepository videoRepo;
 
@@ -83,7 +85,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private ImageContentBlockRepository imageBlockRepo;
-
+    
     @Autowired
     private VideoContentBlockRepository videoBlockRepo;
 
@@ -92,6 +94,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private IStorageEngine storage;
+
+    @Autowired
+    private ContentBlockRepository contentBlockRepository;
 
     /*
      * (non-Javadoc)
@@ -108,7 +113,8 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
      * lang.String, java.lang.String)
      */
     @Override
@@ -131,7 +137,7 @@ public class ContentBlockManager implements IContentBlockManager {
         return null;
     }
 
-    private IVSVideo saveVideoWithUrl(String url, String title) {
+   private IVSVideo saveVideoWithUrl(String url, String title) {
         IVSVideo vidContent = videoFactory.createVideo(url);
         vidContent.setTitle(title);
         return videoRepo.save((VSVideo) vidContent);
@@ -148,7 +154,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-
+    
     private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
             throws ImageCouldNotBeStoredException {
         if (slideContentImage != null) {
@@ -162,8 +168,8 @@ public class ContentBlockManager implements IContentBlockManager {
             imageRepo.save((VSImage) slideContentImage);
         }
     }
-
-    private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename)
+    
+     private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename)
             throws VideoCouldNotBeStoredException {
         if (slideContentVideo != null) {
             String relativePath = null;
@@ -199,8 +205,28 @@ public class ContentBlockManager implements IContentBlockManager {
         returnValue.setElement(imageBlock);
         return returnValue;
     }
+    
+    /**
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
+     *      createImageBlock(java.lang.String,
+     *      edu.asu.diging.vspace.core.model.IVSImage, java.lang.Integer)
+     */
+    @Override
+    public CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder) {
 
-    /*
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        ISlide slide = slideManager.getSlide(slideId);
+        IImageBlock imgBlock = imageBlockFactory.createImageBlock(slide, image);
+        imgBlock.setContentOrder(contentOrder);
+        ImageBlock imageBlock = imageBlockRepo.save((ImageBlock) imgBlock);
+        returnValue.setElement(imageBlock);
+        return returnValue;
+    }
+    
+        /*
      * (non-Javadoc)
      * 
      * @see edu.asu.diging.vspace.core.services.impl.IContentBlockManager#
@@ -238,22 +264,33 @@ public class ContentBlockManager implements IContentBlockManager {
         
         return slideContentVideo;
     }
-
+    
     /**
-     * Delete a text block using an id
+     * Delete a text block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the
-     *           functions returns nothing.
-     *
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the text block with blockId is
+     *                present.
+     * 
      */
 
     @Override
-    public void deleteTextBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteTextBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
-            textBlockRepo.deleteById(id);         
+            textBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -261,25 +298,37 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
-     * Delete an image block using an id
+     * Delete an image block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the
-     *           function deletes nothing.
-     *
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the Image block with blockId is
+     *                present.
      */
+
     @Override
-    public void deleteImageBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteImageBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
-            imageBlockRepo.deleteById(id);
+            imageBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
 
     }
-    /**
+    
+      /**
      * Delete an video block using an id
      * 
      * @param id - id of resource to be deleted. If the id is null then the
@@ -298,21 +347,32 @@ public class ContentBlockManager implements IContentBlockManager {
             throw new BlockDoesNotExistException(e);
         }
     }
+
     /**
-     * Delete a choices block using an id
+     * Delete a choices block using an id and also decrease content order by 1 of
+     * all the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the
-     *           functions returns nothing.
-     *
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the choice block with blockId is
+     *                present.
      */
 
     @Override
-    public void deleteChoiceBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteChoiceBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
-            choiceBlockRepo.deleteById(id);         
+            choiceBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -324,14 +384,20 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename, Integer contentOrder)
+    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
             throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = saveImage(image, filename);
         storeImageFile(image, slideContentImage, filename);
         imageBlock.setImage(slideContentImage);
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
-
+    
+    @Override
+    public void updateImageBlock(IImageBlock imageBlock, IVSImage image) {
+        imageBlock.setImage(image);
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
+    
     @Override
     public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, Integer contentOrder, String title)
             throws VideoCouldNotBeStoredException {
@@ -340,7 +406,7 @@ public class ContentBlockManager implements IContentBlockManager {
         videoBlock.setVideo(slideContentVideo);
         videoBlockRepo.save((VideoBlock) videoBlock);
     }
-
+    
     @Override
     public IImageBlock getImageBlock(String imgBlockId) {
         Optional<ImageBlock> imgBlock = imageBlockRepo.findById(imgBlockId);
@@ -349,7 +415,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         return null;
     }
-
+    
     @Override
     public IVideoBlock getVideoBlock(String videoBlockId) {
         Optional<VideoBlock> videoBlock = videoBlockRepo.findById(videoBlockId);
@@ -380,17 +446,49 @@ public class ContentBlockManager implements IContentBlockManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
+     * @see
+     * edu.asu.diging.vspace.core.services.impl.IChoiceBlock#createTextBlock(java.
      * lang.String, java.lang.String, java.lang.Integer)
      */
     @Override
-    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll) {
+    public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
+            boolean showsAll) {
         List<IChoice> choices = new ArrayList<IChoice>();
-        if(!showsAll) {
-            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice)).collect(Collectors.toList());
+        if (!showsAll) {
+            choices = selectedChoices.stream().map(choice -> slideManager.getChoice(choice))
+                    .collect(Collectors.toList());
         }
-        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder, choices, showsAll);
-        return choiceBlockRepo.save((ChoiceBlock)choiceBlock);
+        IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(slideManager.getSlide(slideId), contentOrder,
+                choices, showsAll);
+        return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 
+    /**
+     * Retrieving the maximum content order for a slide
+     */
+    @Override
+    public Integer findMaxContentOrder(String slideId) {
+        return contentBlockRepository.findMaxContentOrder(slideId);
+    }
+
+    /**
+     * Decreasing content order by 1 of the slide's block which are after the
+     * specified contentOrder
+     * 
+     * @param slideId      The Id of the slide for which content orders will be
+     *                     updated
+     * @param contentOrder The content orders of the slides which are greater than
+     *                     contentOrder will be updated
+     */
+    private void updateContentOrder(String slideId, Integer contentOrder) {
+
+        List<ContentBlock> contentBlockList = contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId,
+                contentOrder);
+        if (contentBlockList != null) {
+            for (ContentBlock eachContentBlock : contentBlockList) {
+                eachContentBlock.setContentOrder(eachContentBlock.getContentOrder() - 1);
+            }
+            contentBlockRepository.saveAll(contentBlockList);
+        }
+    }
 }
