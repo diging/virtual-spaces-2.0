@@ -644,8 +644,11 @@
                     
                     var formData = new FormData();
                     var text = markDown.value();
-                    console.log(text);
-                    formData.append('content', text);
+                	var title = document.getElementById('spaceTitle').value;
+                	var selectedSpace = document.getElementById('spaceName');
+                	var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+                    formData.append('title', title);
+                    formData.append('spaceId', spaceId);
                     markDown.value('');
                     $.ajax({
                         url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/SpaceBlockContent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -657,7 +660,7 @@
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteSpace" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpace" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
@@ -1043,9 +1046,9 @@
                                     <small>Enter title : </small>
                                 </h6>
                                 <textarea class="form-control"
-                                    id="title" rows="3"></textarea>
+                                    id="spaceTitle" rows="3"></textarea>
                             </div>
-                            <select name="spaceName" id="spaceName">
+                            <select name="spacesNames" id="spaceName">
                             <option th:each="space: ${spaces}" th:value="${space.id}">[[${space.name}]]</option>
 							</select>
                             <div class="modal-footer">

@@ -35,16 +35,14 @@ public class AddSpaceBlockController {
     @Autowired
     private IModuleLinkManager moduleLinkManager;
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/SpaceBlockContent", method = RequestMethod.POST)
-    ResponseEntity<String> addSpaceBlock(@ModelAttribute SpaceContentBlockForm spaceUploadForm, @PathVariable("slideId") String slideId,
+    ResponseEntity<String> addSpaceBlock(@RequestParam("title") String title,@RequestParam("spaceId") String spaceId, @PathVariable("slideId") String slideId,
             @PathVariable("moduleId") String moduleId){
-        logger.info("inside space block controller selected space {} {}", spaceUploadForm,spaceUploadForm);
-//        String spaceId = spaceForm.getSpaceName();
-//        ISpace space = spaceManager.getSpace(spaceId);
-//        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
-//        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
-//        ISpaceBlock spaceBlock = contentBlockManager.createSpaceBlock(slideId, moduleId, contentOrder, space);
-//        return new ResponseEntity<>(spaceBlock.getTitle(), HttpStatus.OK);
-        return  new ResponseEntity<>(HttpStatus.OK);
+        logger.info("inside space block controller selected space {} {}", title, spaceId);
+        ISpace space = spaceManager.getSpace(spaceId);
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        ISpaceBlock spaceBlock = contentBlockManager.createSpaceBlock(slideId, title, contentOrder, space);
+        return new ResponseEntity<>(spaceBlock.getId(), HttpStatus.OK);
     }
 
 }
