@@ -11,6 +11,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -50,4 +51,8 @@ public interface IContentBlockManager {
     Integer findMaxContentOrder(String slideId);
 
     ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder, ISpace space);
+
+    ISpaceBlock getSpaceBlock(String spaceBlockId);
+
+    void updateSpaceBlock(SpaceBlock textBlock);
 }

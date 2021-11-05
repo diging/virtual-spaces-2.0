@@ -21,7 +21,7 @@ public class SpaceBlockFactory implements ISpaceBlockFactory {
         spaceBlock.setTitle(title);
         spaceBlock.setSlide(slide);
         spaceBlock.setSpace(space);
-        logger.info("space block is created with values {} {} {}", spaceBlock.getTitle(), spaceBlock.getSlide().getId(), spaceBlock.getSpace().getId());;
+        logger.info("space block is created with values {} {} {}", spaceBlock.getSlide().getContents(), spaceBlock.getSlide().getId(), spaceBlock.getSpace().getId());;
         return spaceBlock;
     }
 }

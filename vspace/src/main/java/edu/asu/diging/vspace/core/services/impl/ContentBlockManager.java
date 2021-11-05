@@ -291,6 +291,11 @@ public class ContentBlockManager implements IContentBlockManager {
     public void updateTextBlock(TextBlock textBlock) {
         textBlockRepo.save((TextBlock) textBlock);
     }
+    
+    @Override
+    public void updateSpaceBlock(SpaceBlock textBlock) {
+        spaceBlockRepo.save((SpaceBlock) textBlock);
+    }
 
     @Override
     public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
@@ -321,6 +326,15 @@ public class ContentBlockManager implements IContentBlockManager {
         Optional<TextBlock> textBlock = textBlockRepo.findById(textBlockId);
         if (textBlock.isPresent()) {
             return textBlock.get();
+        }
+        return null;
+    }
+    
+    @Override
+    public ISpaceBlock getSpaceBlock(String spaceBlockId) {
+        Optional<SpaceBlock> spaceBlock = spaceBlockRepo.findById(spaceBlockId);
+        if (spaceBlock.isPresent()) {
+            return spaceBlock.get();
         }
         return null;
     }
