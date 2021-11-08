@@ -120,7 +120,6 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
 }
 
 function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	debugger;
     if(link != null){
         var moduleLink;
         if(link.type=="ALERT"){
@@ -233,7 +232,6 @@ function drawLinks(){
 
 //--------- show links functions --------------
 function showSpaceLink(spaceLink, show, x, y) {
-	debugger;
     $("#space_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -296,7 +294,6 @@ function showSpaceLink(spaceLink, show, x, y) {
 }
 
 function showModuleLink(moduleLink, show, x, y) {
-	debugger;
     $("#module_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -349,7 +346,6 @@ function showModuleLink(moduleLink, show, x, y) {
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
-	debugger;
     moduleLink["x"]=storeX;
     moduleLink["y"]=storeY;
     var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
@@ -496,7 +492,6 @@ function createExternalLinkInfo() {
 }
 
 function createModuleLinkInfo() {
-	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
@@ -508,7 +503,6 @@ function createModuleLinkInfo() {
 }
 
 function editModuleLinkInfo() {
-	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
@@ -580,7 +574,6 @@ function displayForms(formToShow){
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
-	debugger;
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
