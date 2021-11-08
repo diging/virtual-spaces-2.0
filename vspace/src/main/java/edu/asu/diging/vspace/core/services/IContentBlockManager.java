@@ -55,4 +55,16 @@ public interface IContentBlockManager {
     ISpaceBlock getSpaceBlock(String spaceBlockId);
 
     void updateSpaceBlock(SpaceBlock textBlock);
+
+    /**
+     * Delete a space block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
+     * 
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the text block with blockId is
+     *                present.
+     * 
+     */
+    void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
 }

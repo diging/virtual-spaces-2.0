@@ -225,6 +225,37 @@ public class ContentBlockManager implements IContentBlockManager {
         }
 
     }
+    
+    /**
+     * Delete a space block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
+     * 
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the text block with blockId is
+     *                present.
+     * 
+     */
+    @Override
+    public void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
+            return;
+        }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
+        try {
+            spaceBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
 
     /**
      * Delete an image block using an id and also decrease content order by 1 of all
