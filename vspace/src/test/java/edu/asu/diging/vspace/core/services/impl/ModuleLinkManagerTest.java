@@ -107,7 +107,7 @@ public class ModuleLinkManagerTest {
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleDisplayLink)).thenReturn((ModuleLinkDisplay)moduleDisplayLink);
 
-        IModuleLinkDisplay savedModuleLinkDisplay1 = managerToTest.createLink("New Module Link", spaceId1, 10, 30, 40, "MOD001", "New Module Link", DisplayType.ARROW, null, null);
+        IModuleLinkDisplay savedModuleLinkDisplay1 = managerToTest.createLink("New Module Link", spaceId1, 10, 30, 40, "MOD001", "New Module Link", DisplayType.ARROW, null, null,null);
         Assert.assertEquals(moduleDisplayLink.getId(), savedModuleLinkDisplay1.getId());
         Assert.assertEquals(moduleDisplayLink.getName(), savedModuleLinkDisplay1.getName());
         Assert.assertEquals(new Double(moduleDisplayLink.getPositionX()), new Double(savedModuleLinkDisplay1.getPositionX()));
@@ -177,7 +177,7 @@ public class ModuleLinkManagerTest {
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleLinkDisplay)).thenReturn((ModuleLinkDisplay)moduleLinkDisplayUpdated);
 
-        IModuleLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", "MDLD001", DisplayType.ALERT, null, null);
+        IModuleLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", "MDLD001", DisplayType.ALERT, null, null,null);
         Assert.assertEquals(moduleLinkDisplayUpdated.getId(), actualUpdatedLink.getId());
         Assert.assertEquals(moduleLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));

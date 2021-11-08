@@ -353,12 +353,25 @@
                 }
             })
             externalLinks.forEach(function(link,index){
+            	console.log(link);
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var externalLink = $('<a></a>');
     		        externalLink.attr('href', link.externalLink.externalLink);
-    		        externalLink.attr('target', "_blank");
+    		        if(link.howToOpen == null)
+	    		        {
+    		        	externalLink.attr('target', "_blank");
+	    		        }
+    		        else
+    		        	{
+    		        	  if(link.howToOpen == "NEWWINDOW"){
+    		        		  externalLink.attr('target', "_blank");
+    		        		  }
+    		        	  else{
+    		        		  externalLink.attr('target', "_self"); 
+    		        	  }
+    		        	}
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
     		        }

@@ -22,7 +22,8 @@ import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
-public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U extends ILinkDisplay> implements ILinkManager<L, T, U>{
+public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, U extends ILinkDisplay>
+        implements ILinkManager<L, T, U> {
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -37,40 +38,43 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
     private IStorageEngine storage;
 
     @Override
-    public U createLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage,
-            String imageFilename) throws SpaceDoesNotExistException,ImageCouldNotBeStoredException, SpaceDoesNotExistException{
+    public U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
+            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename, String howToOpen)
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
 
         L link = createLinkObject(title, id);
         T target = getTarget(linkedId);
         link.setName(linkLabel);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
-        return updateLinkAndDisplay(link,displayLink);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename,
+                howToOpen);
+        return updateLinkAndDisplay(link, displayLink);
 
     }
 
     @Override
-    public U updateLink(String title, String id, float positionX, float positionY,
-            int rotation, String linkedId, String linkLabel, String linkId, String linkDisplayId,
-            DisplayType displayType, byte[] linkImage, String imageFilename) throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException{
+    public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
+            String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
+            String imageFilename, String howToOpen)
+            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
 
         validateSpace(id);
 
-        L link =  getLink(linkId);
+        L link = getLink(linkId);
         T target = getTarget(linkedId);
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink, id, positionX,positionY,rotation, displayType, linkImage, imageFilename);
-        return updateLinkAndDisplay(link,displayLink);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename,
+                howToOpen);
+        return updateLinkAndDisplay(link, displayLink);
     }
 
     @Override
-    public void deleteLink(String linkId){
+    public void deleteLink(String linkId) {
         L link = getLink(linkId);
-        removeFromLinkList(link.getSpace(),link);
+        removeFromLinkList(link.getSpace(), link);
         deleteLinkDisplayRepo(link);
         deleteLinkRepo(link);
     }
@@ -93,17 +97,20 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
 
     protected abstract U createDisplayLink(L link);
 
-    protected void validateSpace(String id) throws SpaceDoesNotExistException{
+    protected void validateSpace(String id) throws SpaceDoesNotExistException {
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
         }
     }
 
-    protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
+    protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
+            int rotation, DisplayType displayType, byte[] linkImage, String imageFilename, String howToOpen)
+            throws ImageCouldNotBeStoredException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);
+        linkDisplay.setHowToOpen(howToOpen);
         linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
         if (linkImage != null && linkImage.length > 0) {
             Tika tika = new Tika();

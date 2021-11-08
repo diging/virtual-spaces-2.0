@@ -31,13 +31,12 @@ public class AddModuleLinkController {
     @Autowired
     private IModuleLinkManager moduleLinkManager;
 
-
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
     public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
-            @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-            @RequestParam("type") String displayType)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
+            @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
+            @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("type") String displayType)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -54,8 +53,8 @@ public class AddModuleLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
         try {
-            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, null, null);
+            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
+                    linkedModuleId, moduleLinkLabel, type, null, null, null);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
