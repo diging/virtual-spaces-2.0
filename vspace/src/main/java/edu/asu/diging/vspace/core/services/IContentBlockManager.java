@@ -22,40 +22,39 @@ public interface IContentBlockManager {
             throws ImageCouldNotBeStoredException;
 
     CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder);
-	
-	public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder, String title)
-            throws VideoCouldNotBeStoredException;
+
+    public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url,
+            Integer contentOrder, String title) throws VideoCouldNotBeStoredException;
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 
-    void deleteTextBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
+    void deleteTextBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
 
-    void deleteImageBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
-	
-	void deleteVideoBlockById(String id) throws BlockDoesNotExistException;
+    void deleteImageBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
 
-    void deleteChoiceBlockById(String blockid,String slideId) throws BlockDoesNotExistException;
+    void deleteVideoBlockById(String id) throws BlockDoesNotExistException;
+
+    void deleteChoiceBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
 
     void updateTextBlock(TextBlock textBlock);
 
     IImageBlock getImageBlock(String imgBlockId);
-	
-	IVideoBlock getVideoBlock(String videoBlockId);
+
+    IVideoBlock getVideoBlock(String videoBlockId);
 
     ITextBlock getTextBlock(String textBlockId);
 
     IChoiceBlock getChoiceBlock(String choiceBlockId);
 
-    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
-            throws ImageCouldNotBeStoredException;
+    void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename) throws ImageCouldNotBeStoredException;
 
     void updateImageBlock(IImageBlock imageBlock, IVSImage image);
-	
-	void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, Integer contentOrder, String title)
-            throws VideoCouldNotBeStoredException;
+
+    void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename,
+            Integer contentOrder, String title) throws VideoCouldNotBeStoredException;
 
     IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
             boolean showsAll);
-    
+
     Integer findMaxContentOrder(String slideId);
 }
