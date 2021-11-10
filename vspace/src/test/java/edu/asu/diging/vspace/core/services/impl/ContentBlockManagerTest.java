@@ -18,6 +18,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
+import edu.asu.diging.vspace.core.data.SpaceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
@@ -29,6 +30,9 @@ public class ContentBlockManagerTest {
     
     @Mock
     private TextContentBlockRepository textBlockRepo;
+    
+    @Mock
+    private SpaceContentBlockRepository spaceBlockRepo;
 
     @Mock
     private ImageContentBlockRepository imageBlockRepo;
@@ -76,6 +80,15 @@ public class ContentBlockManagerTest {
         when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(textBlockRepo).deleteById(textBlockId);
         managerToTest.deleteTextBlockById(textBlockId,"slideId_1");
+    }
+    
+    @Test(expected = BlockDoesNotExistException.class)
+    public void test_deleteSpaceBlockById_forNonExistentId() throws BlockDoesNotExistException {
+        String spaceBlockId = "notARealId";
+        Optional<ContentBlock> contentBlockOptional = Optional.of(contentBlock);
+        when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
+        Mockito.doThrow(EmptyResultDataAccessException.class).when(spaceBlockRepo).deleteById(spaceBlockId);
+        managerToTest.deleteSpaceBlockById(spaceBlockId,"slideId_1");
     }
 
     @Test
