@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services;
 
+import java.util.HashMap;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
@@ -67,4 +68,6 @@ public interface IContentBlockManager {
      * 
      */
     void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
+
+    HashMap<String, String> findSelectedSpaceForSpaceBlock(List<IContentBlock> slideContents);
 }

@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -426,5 +427,21 @@ public class ContentBlockManager implements IContentBlockManager {
             }
             contentBlockRepository.saveAll(contentBlockList);
         }
+    }
+    
+    @Override
+    public HashMap<String, String> findSelectedSpaceForSpaceBlock(List<IContentBlock> slideContents){
+        HashMap<String, String> selectedSpaceForSpaceBlock = new HashMap<String, String>();
+        for(IContentBlock slide : slideContents) {
+            if(slide.getClass().getSimpleName().equals("SpaceBlock")) {
+                Optional<SpaceBlock> optionalSpaceBlock = spaceBlockRepo.findById(slide.getId());
+                if(optionalSpaceBlock.isPresent()) {
+                    selectedSpaceForSpaceBlock.put(slide.getId(),optionalSpaceBlock.get().getSpace().getName());
+                }
+            }
+            
+        }
+        return selectedSpaceForSpaceBlock;
+        
     }
 }

@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -62,11 +63,14 @@ public class SlideController {
         model.addAttribute("slide", slide);
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
+        HashMap<String, String> selectedSpaceForSpaceBlock = contentBlockManager.findSelectedSpaceForSpaceBlock(slideContents);
         model.addAttribute("slideContents", slideContents);
+        model.addAttribute("selectedSpaceForSpaceBlock", selectedSpaceForSpaceBlock);
         model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
-        }           
+        }      
+        System.out.println("the map is"+ selectedSpaceForSpaceBlock.get("CON000000007"));
         return "staff/modules/slides/slide";
     }
 
