@@ -24,4 +24,6 @@ public interface IModuleManager {
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
     
     Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText);
+
+    boolean deleteModule(String moduleId);
 }

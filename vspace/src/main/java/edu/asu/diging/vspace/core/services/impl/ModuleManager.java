@@ -89,4 +89,14 @@ public class ModuleManager implements IModuleManager {
     public Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText) {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
+    
+    @Override
+    public boolean deleteModule(String moduleId) {
+        moduleRepo.deleteById(moduleId);
+        Optional<Module> module = moduleRepo.findById(moduleId);
+        if(module.isPresent()) {
+            return false;
+        }
+        return true;
+    }
 }
