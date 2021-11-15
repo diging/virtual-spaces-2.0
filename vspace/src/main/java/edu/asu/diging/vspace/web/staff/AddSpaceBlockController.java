@@ -24,8 +24,6 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceContentBlockForm;
 @Controller
 public class AddSpaceBlockController {
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
     @Autowired
     private IContentBlockManager contentBlockManager;
     
@@ -35,7 +33,6 @@ public class AddSpaceBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/SpaceBlockContent", method = RequestMethod.POST)
     ResponseEntity<String> addSpaceBlock(@RequestParam("title") String title,@RequestParam("spaceId") String spaceId, @PathVariable("slideId") String slideId,
             @PathVariable("moduleId") String moduleId){
-        logger.info("inside space block controller selected space {} {}", title, spaceId);
         ISpace space = spaceManager.getSpace(spaceId);
         Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
         contentOrder = contentOrder == null ? 0 : contentOrder + 1;
