@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -37,8 +38,9 @@ public class AddSpaceLinkController {
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("spaceLinkLabel") String title,
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel,
-            @RequestParam("type") String displayType, @RequestParam("spaceLinkImage") MultipartFile file)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException {
+            @RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file, 
+            @RequestParam("imageId") String imageId)
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageDoesNotExistException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -63,7 +65,7 @@ public class AddSpaceLinkController {
         ISpaceLinkDisplay display;
         try {
             display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
+                    new Integer(rotation), linkedSpaceId, spaceLinkLabel, type, linkImage, filename, imageId);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
