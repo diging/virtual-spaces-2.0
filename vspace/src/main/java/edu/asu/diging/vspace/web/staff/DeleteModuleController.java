@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +20,15 @@ import edu.asu.diging.vspace.web.staff.forms.ModuleForm;
 @Controller
 public class DeleteModuleController {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private IModuleManager moduleManager;
 
-    @RequestMapping(value="/staff/module/{moduleId}/delete", method=RequestMethod.POST)
+    @RequestMapping(value="/staff/module/{moduleId}/delete", method=RequestMethod.DELETE)
     public String deleteModule(@PathVariable("moduleId") String moduleId, Model model) {
         boolean isDeleted = moduleManager.deleteModule(moduleId);
+        logger.info("i have entered delete module");
         return "redirect:/staff/module/" + moduleId;
     }
 }

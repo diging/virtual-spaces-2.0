@@ -22,19 +22,19 @@ function deleteSlide(slideId) {
 
 function deleteModule(moduleId){
 	console.log('deleting module is starting')
-	/* $.ajax({
-		url: "[(@{'/staff/module/'+${module.id}+'/delete/'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	 $.ajax({
+		url: "[(@{'/staff/module/'+${module.id}+'/delete'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 	        type: 'DELETE',
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	            $("#"+slideId).closest('.slide').remove();
+	            console.log('hello')
 	        },
 	        error: function(data) {
 	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 	            $('.error').append(alert);
 	        }
-	    }); */
+	    });
 }
 
 function checkSlideInSequence(slideId) {
@@ -239,7 +239,6 @@ $(document).ready(function() {
 	});
 	
 	$("#deleteModuleButton").on("click", function() {
-		console.log('hello')
 		$('#deleteModuleAlert').modal('show');
 	});
 				

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
@@ -24,6 +25,9 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 @Transactional
 @Service
 public class ModuleManager implements IModuleManager {
+    
+    @Autowired
+    private ModuleLinkRepository moduleLinkRepo;
 
     @Autowired
     private ModuleRepository moduleRepo;
@@ -92,6 +96,8 @@ public class ModuleManager implements IModuleManager {
     
     @Override
     public boolean deleteModule(String moduleId) {
+        //first delete all the module links to this module
+        
         moduleRepo.deleteById(moduleId);
         Optional<Module> module = moduleRepo.findById(moduleId);
         if(module.isPresent()) {
