@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,14 +19,21 @@ import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 
 @Transactional
 @Service
 public class ModuleManager implements IModuleManager {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private ModuleLinkRepository moduleLinkRepo;
@@ -95,14 +104,23 @@ public class ModuleManager implements IModuleManager {
     }
     
     @Override
-    public boolean deleteModule(String moduleId) {
-        //first delete all the module links to this module
-        
-        moduleRepo.deleteById(moduleId);
-        Optional<Module> module = moduleRepo.findById(moduleId);
-        if(module.isPresent()) {
-            return false;
+    public void deleteModule(String id) {
+        if (id != null) {
+            logger.info(" module manager starting to delete module link");
+            List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(id);
+            for (IModuleLink moduleLink: moduleLinks) {
+                 logger.info("Module link id deleting is {}", moduleLink.getId());
+                 moduleLinkRepo.deleteById(moduleLink.getId());
+            }
+            logger.info("deleting module with id {} now", id);
+            if(moduleRepo.findById(id).get()!=null) {
+                logger.info("Found the module {}", moduleRepo.findById(id).get().getId());
+            }
+            moduleRepo.deleteById(id);
+            
+            logger.info("deleting module");
+            
         }
-        return true;
+        return ;
     }
 }

@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -28,8 +29,8 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
     @JoinColumn(name="space_id", nullable=false)
     private ISpace space;
 
-    @ManyToOne(targetEntity=Module.class)
-    @JoinColumn(name="module_id", nullable=false)
+    @ManyToOne(targetEntity=Module.class, cascade= { CascadeType.REMOVE })
+    @JoinColumn(name="module_id")
     private IModule module;
 
     /* (non-Javadoc)

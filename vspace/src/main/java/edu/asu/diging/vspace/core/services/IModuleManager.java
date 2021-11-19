@@ -25,5 +25,5 @@ public interface IModuleManager {
     
     Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText);
 
-    boolean deleteModule(String moduleId);
+    void deleteModule(String moduleId);
 }

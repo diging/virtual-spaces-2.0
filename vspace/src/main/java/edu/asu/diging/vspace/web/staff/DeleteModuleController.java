@@ -27,7 +27,7 @@ public class DeleteModuleController {
 
     @RequestMapping(value="/staff/module/{moduleId}/delete", method=RequestMethod.DELETE)
     public String deleteModule(@PathVariable("moduleId") String moduleId, Model model) {
-        boolean isDeleted = moduleManager.deleteModule(moduleId);
+        moduleManager.deleteModule(moduleId);
         logger.info("i have entered delete module");
         return "redirect:/staff/module/" + moduleId;
     }
