@@ -230,7 +230,7 @@ $(document).ready(function() {
 	
 	$("#deleteModuleButtonConfirm").on("click", function() {
 		$('#deleteModuleAlert').modal('hide');
-		var moduleId = $("#deleteSlideAlert").data('value'); // getter
+		var moduleId=[[${module.id}]]; 
 		deleteModule(moduleId);
 	});
 	

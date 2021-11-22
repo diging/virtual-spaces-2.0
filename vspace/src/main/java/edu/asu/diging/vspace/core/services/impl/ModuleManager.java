@@ -103,16 +103,18 @@ public class ModuleManager implements IModuleManager {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
     
+    @Transactional
     @Override
     public void deleteModule(String id) {
+        logger.info("id is {}", id);
         if (id != null) {
-            logger.info(" module manager starting to delete module link");
             List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(id);
             for (IModuleLink moduleLink: moduleLinks) {
                  logger.info("Module link id deleting is {}", moduleLink.getId());
-                 moduleLinkRepo.deleteById(moduleLink.getId());
+                 moduleLink.setModule(null);
             }
-            logger.info("deleting module with id {} now", id);
+           moduleLinkRepo.saveAll(Iterable<S> moduleLinks);
+           logger.info("deleting module with id {} now", id);
             if(moduleRepo.findById(id).get()!=null) {
                 logger.info("Found the module {}", moduleRepo.findById(id).get().getId());
             }

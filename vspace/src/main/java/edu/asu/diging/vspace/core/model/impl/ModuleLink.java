@@ -29,8 +29,8 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
     @JoinColumn(name="space_id", nullable=false)
     private ISpace space;
 
-    @ManyToOne(targetEntity=Module.class, cascade= { CascadeType.REMOVE })
-    @JoinColumn(name="module_id")
+    @ManyToOne(targetEntity=Module.class, fetch = FetchType.LAZY, cascade= { CascadeType.REMOVE }, optional=true)
+    @JoinColumn(name="module_id",  nullable=true)
     private IModule module;
 
     /* (non-Javadoc)
