@@ -107,21 +107,23 @@ public class ModuleManager implements IModuleManager {
     @Override
     public void deleteModule(String id) {
         logger.info("id is {}", id);
+        List<ModuleLink> moduleLinksToPersist = new ArrayList<ModuleLink>();
         if (id != null) {
             List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(id);
             for (IModuleLink moduleLink: moduleLinks) {
                  logger.info("Module link id deleting is {}", moduleLink.getId());
-                 moduleLink.setModule(null);
-            }
-           moduleLinkRepo.saveAll(Iterable<S> moduleLinks);
-           logger.info("deleting module with id {} now", id);
-            if(moduleRepo.findById(id).get()!=null) {
-                logger.info("Found the module {}", moduleRepo.findById(id).get().getId());
-            }
-            moduleRepo.deleteById(id);
-            
-            logger.info("deleting module");
-            
+                 moduleLink.setModule(null); 
+                 moduleLinksToPersist.add((ModuleLink)moduleLink);
+        }
+        moduleLinkRepo.saveAll(moduleLinksToPersist);
+        logger.info("deleting module with id {} now", id);
+        // if(moduleRepo.findById(id).get()!=null) {
+        //     logger.info("Found the module {}", moduleRepo.findById(id).get().getId());
+        // }
+        moduleRepo.deleteById(id);
+        
+        logger.info("deleting module");
+        
         }
         return ;
     }
