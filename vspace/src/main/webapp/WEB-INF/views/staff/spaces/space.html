@@ -20,6 +20,7 @@ $(window).on("load", function() {
     });
     drawLinks();
 });
+
 //store where a user clicked on an image
 var storeX;
 var storeY;
@@ -38,14 +39,27 @@ var linkIconReader = new FileReader();
 var linkIcon;
 linkIconReader.onload = function(e) {
 	debugger;
+	
     linkIcon = e.target.result;
-    showSpaceLink(createSpaceLinkInfo());
+    var linkId = $("#spaceLinkIdValueEdit").val();
+    if(linkId!=null && linkId!="") {
+    	showSpaceLinkEdit(editSpaceLinkInfo());
+    } else {
+    	showSpaceLink(createSpaceLinkInfo());
+    }
+    
 }
 
 var moduleLinkIconReader = new FileReader();
 var moduleLinkIcon;
 moduleLinkIconReader.onload = function(e) {
 	moduleLinkIcon = e.target.result;
+	var linkId = $("#spaceLinkIdValueEdit").val();
+    if(linkId!=null && linkId!="") {
+    	showSpaceLinkEdit(editSpaceLinkInfo());
+    } else {
+    	showSpaceLink(createSpaceLinkInfo());
+    }
     showModuleLink(createModuleLinkInfo());
 }
 
@@ -117,7 +131,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
             $('#'+spanId+link.link.id).css('cursor', 'pointer');
             $('#'+spanId+link.link.id).click(function(e) {
                 var linkData = $('#'+spanId+link.link.id).data();
-                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"], $('#'+spanId+link.link.id).attr('src'));
             });
         }
     }
@@ -170,6 +184,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 }
 
 function drawLinks(){
+	debugger;
     $(".Info_cz_Class").remove();
     $(".imageLink").remove();
     $(".alertLink").remove();
@@ -248,6 +263,9 @@ function showSpaceLink(spaceLink, show, x, y) {
     if (spaceLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
     } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
+    	if(selectedSpaceLinkId!=null) {
+    		$('#spacelinkModalId-'+selectedSpaceLinkId).css('visbility', 'hidden');
+    	}
         link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
     } else {
         $(space_label).css({
@@ -310,6 +328,9 @@ function showModuleLink(moduleLink, show, x, y) {
     if (moduleLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
     } else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
+    	if(selectedModuleLinkId!=null) {
+    		$('#moduleModallinkId-'+selectedModuleLinkId).css('visbility', 'hidden');
+    	}
         link = $('<div id="link" class="spaceLink-' + moduleLink["id"] + '" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
     } else{ 
         $(module_label).css({
@@ -359,6 +380,7 @@ function showModuleLinkEdit(moduleLink, show, posX, posY) {
 }
 
 function showSpaceLinkEdit(spaceLink, show, posX, posY) {
+	debugger;
     spaceLink["x"]=storeX;
     spaceLink["y"]=storeY;
     var selectedLinkClass = '#spacelinkModalId-'+selectedSpaceLinkId;
@@ -410,6 +432,9 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass+' span').remove();
     $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
+    if(linkIcon!=null) {
+    	$(selectedLinkClass).attr('src', linkIcon);
+    }
     feather.replace();    
 }
 
@@ -520,6 +545,7 @@ function editModuleLinkInfo() {
 }
 
 function editSpaceLinkInfo() {
+	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
@@ -540,7 +566,8 @@ function editExternalLinkInfo() {
     return info;
 }
 
-function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
+function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType, spaceLinkImageId) {
+	debugger;
     $("#spaceLinkInfoLabel").text(spaceLinkName);
     $("#spaceLinkId").val(spaceLinkId);
     selectedSpaceLinkId=spaceLinkId;
@@ -552,6 +579,7 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     $("#spaceLinkLabelEdit").val(spaceLinkName);
     $("#spaceLinkId").val(spaceLinkId);
     $("#spaceLinkIdValueEdit").val(spaceLinkId);
+    $("#spaceLinkImageIdEdit").val(spaceLinkImageId);
     $("#spaceLinkRotationEdit").val(rotation);
     $('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
     $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
@@ -574,12 +602,13 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     displayForms("#editSpaceLinkInfo");
 }
 function displayForms(formToShow){
+	debugger;
     drawLinks();
     $("#space").css("display", "-webkit-box");
     $(formToShow).css("display", "flex");
 }
 
-function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
+function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType, moduleLinkImageId) {
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -589,6 +618,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     $("#moduleLinkLabelEdit").val(moduleLinkName);
     $("#moduleLinkId").val(moduleLinkId);
     $("#moduleLinkIdValueEdit").val(moduleLinkId);
+    $("#moduleLinkImageIdEdit").val(moduleLinkImageId);
     $("#moduleLinkRotationEdit").val(rotation);
     $('#moduleTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
     $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
@@ -667,25 +697,25 @@ $(function(){
             if ($("div#incomingLinks a").length < 2) {
                 $("#noLinksToSpace").show()
             }
-            $('#imageId').prop("disabled",true);
-        	$('#chooseFromLocal').click(function() {
-        		$("#selectedImage").empty();
-        		$('#imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#imageId').prop("disabled",true);
+            $('#imageId-spcLink').prop("disabled",true);
+        	$('#chooseFromLocal-spcLink').click(function() {
+        		$("#selectedImage-spcLink").empty();
+        		$('#imageId-spcLink').prop('selectedIndex',0).trigger( "change" );
+        		$('#imageId-spcLink').prop("disabled",true);
         		$('#spaceLinkImage').prop("disabled",false);
         		linkIcon = null;
         		showSpaceLink(createSpaceLinkInfo());
         	  });
         	
-        	$('#chooseFromExisting').click(function() {
+        	$('#chooseFromExisting-spcLink').click(function() {
         		$('#spaceLinkImage').val('');
         		$('#spaceLinkImage').prop("disabled",true);
-        		$('#imageId').prop("disabled",false);
+        		$('#imageId-spcLink').prop("disabled",false);
         		linkIcon = null;
         		showSpaceLink(createSpaceLinkInfo());
         	  });
         	
-        	$("#imageId").select2({
+        	$("#imageId-spcLink").select2({
         		ajax: {
         		    url: function (params) {
         		  		var imageURL = [[@{|/staff/images/search|}]];
@@ -700,6 +730,41 @@ $(function(){
         		},
         		templateResult: formatImage,
         		templateSelection: formatSelection
+            });
+        	
+        	$('#imageId-spcLinkEdit').prop("disabled",true);
+        	$('#chooseFromLocal-spcLinkEdit').click(function() {
+        		$("#selectedImage-spcLinkEdit").empty();
+        		$('#imageId-spcLinkEdit').prop('selectedIndex',0).trigger( "change" );
+        		$('#imageId-spcLinkEdit').prop("disabled",true);
+        		$('#spaceLinkImageEdit').prop("disabled",false);
+        		linkIcon = $('#spaceLinkImageIdEdit').val();
+        		showSpaceLinkEdit(editSpaceLinkInfo());
+        	  });
+        	
+        	$('#chooseFromExisting-spcLinkEdit').click(function() {
+        		$('#spaceLinkImageEdit').val('');
+        		$('#spaceLinkImageEdit').prop("disabled",true);
+        		$('#imageId-spcLinkEdit').prop("disabled",false);
+        		linkIcon = null;
+        		showSpaceLinkEdit(editSpaceLinkInfo());
+        	  });
+        	
+        	$("#imageId-spcLinkEdit").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelectionEdit
             });
         	
         	function formatImage (image) {
@@ -722,10 +787,130 @@ $(function(){
                 var $image = $(
                     '<span>' + image.text + '</span>'
                 );
-                $("#selectedImage").empty();
-                $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                $("#selectedImage-spcLink").empty();
+                $("#selectedImage-spcLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
                 linkIcon = tbaseUrl + image.id;
                 showSpaceLink(createSpaceLinkInfo());
+                return $image;
+            }
+            
+            function formatSelectionEdit(image) {
+            	debugger;
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                    '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage-spcLinkEdit").empty();
+                $("#selectedImage-spcLinkEdit").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                linkIcon = tbaseUrl + image.id;
+                showSpaceLinkEdit(editSpaceLinkInfo());
+                return $image;
+            }
+            
+            
+            //Module link selection of existing images
+            $('#imageId-modLink').prop("disabled",true);
+        	$('#chooseFromLocal-modLink').click(function() {
+        		$("#selectedImage-modLink").empty();
+        		$('#imageId-modLink').prop('selectedIndex',0).trigger( "change" );
+        		$('#imageId-modLink').prop("disabled",true);
+        		$('#moduleLinkImage').prop("disabled",false);
+        		linkIcon = null;
+        		showModuleLink(createModuleLinkInfo());
+        	  });
+        	
+        	$('#chooseFromExisting-modLink').click(function() {
+        		$('#moduleLinkImage').val('');
+        		$('#moduleLinkImage').prop("disabled",true);
+        		$('#imageId-modLink').prop("disabled",false);
+        		linkIcon = null;
+        		showModuleLink(createModuleLinkInfo());
+        	  });
+        	
+        	$("#imageId-modLink").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelectionModule
+            });
+        	
+        	$('#imageId-modLinkEdit').prop("disabled",true);
+        	$('#chooseFromLocal-modLinkEdit').click(function() {
+        		$("#selectedImage-modLinkEdit").empty();
+        		$('#imageId-modLinkEdit').prop('selectedIndex',0).trigger( "change" );
+        		$('#imageId-modLinkEdit').prop("disabled",true);
+        		$('#moduleLinkImageEdit').prop("disabled",false);
+        		linkIcon = $('#moduleLinkImageIdEdit').val();
+        		showSpaceLinkEdit(editSpaceLinkInfo());
+        	  });
+        	
+        	$('#chooseFromExisting-modLinkEdit').click(function() {
+        		$('#moduleLinkImageEdit').val('');
+        		$('#moduleLinkImageEdit').prop("disabled",true);
+        		$('#imageId-modLinkEdit').prop("disabled",false);
+        		linkIcon = null;
+        		showSpaceLinkEdit(editSpaceLinkInfo());
+        	  });
+        	
+        	$("#imageId-modLinkEdit").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelectionEditModule
+            });
+            
+            function formatSelectionModule(image) {
+            	debugger;
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                    '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage-modLink").empty();
+                $("#selectedImage-modLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                linkIcon = tbaseUrl + image.id;
+                showModuleLink(createModuleLinkInfo());
+                return $image;
+            }
+            
+            function formatSelectionEditModule(image) {
+            	debugger;
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                    '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage-modLinkEdit").empty();
+                $("#selectedImage-modLinkEdit").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                linkIcon = tbaseUrl + image.id;
+                showModuleLinkEdit(editModuleLinkInfo());
                 return $image;
             }
         });
@@ -842,7 +1027,7 @@ $(function(){
             var formData = new FormData(form[0]);
             var spaceLinkInfo = createSpaceLinkInfo();
             
-            var imageSource = $('#selectedImage').find('img').attr('src');
+            var imageSource = $('#selectedImage-spcLink').find('img').attr('src');
         	var imageId = "";
         	if(typeof(imageSource) != "undefined"){
         		imageId = imageSource.split("/").pop().split(".")[0];
@@ -937,6 +1122,14 @@ $(function(){
             var formData = new FormData(form[0]);
 
             var moduleLinkInfo = createModuleLinkInfo();
+            
+            var imageSource = $('#selectedImage-modLink').find('img').attr('src');
+        	var imageId = "";
+        	if(typeof(imageSource) != "undefined"){
+        		imageId = imageSource.split("/").pop().split(".")[0];
+        	}
+        	formData.set('imageId',imageId);
+            formData.delete('uploadRadioBtn');
 
             $.ajax({
                 type: "POST",
@@ -1022,6 +1215,7 @@ $(function(){
         });
 
         $("#editSpaceLinkBtn").click(function(e) {
+        	debugger;
             e.preventDefault();
             var linkId = $("#spaceLinkIdEdit").val();
             if (storeX == undefined || storeY == undefined) {
@@ -1035,6 +1229,7 @@ $(function(){
 
             var form = $("#editSpaceLinkForm");
             var formData = new FormData(form[0]);
+            formData.delete('uploadRadioBtn');
             var spaceLinkInfo = editSpaceLinkInfo();
             $.ajax({
                 type: "POST",
@@ -1066,6 +1261,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedSpaceLinkId=undefined;
+                    
                     drawLinks();
                 }
             });
@@ -1208,6 +1404,7 @@ $(function(){
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     $('[data-link-id="unpublished-' + linkId + '"]').remove();
+                    $('#spaceLinkIdValueEdit').val("");
                     hideLinkInfoTabs();
                     $('a#'+linkId).remove();
                     if ($("div#outgoingLinks a").length < 2) {
@@ -1323,7 +1520,18 @@ $(function(){
             }
         });
         
-        $("#imageId").change(function() {
+        $("#spaceLinkImageEdit").change(function() {
+        	debugger;
+        	var linkId = $("#spaceLinkIdValueEdit").val();
+            if (this.files && this.files[0]) {
+                linkIconReader.readAsDataURL(this.files[0]);
+            }
+            /* $('#spacelinkModalId-' + linkId ).remove(); */
+            console.log(linkIcon);
+            
+        });
+        
+        $("#imageId-spcLink").change(function() {
         	debugger;
         	
         });
@@ -1345,8 +1553,8 @@ $(function(){
             storeX = null;
             storeY = null;
             $("#link").remove();
-            $('#chooseFromLocal').trigger( "click" );
-            $('#imageId').val('');
+            $('#chooseFromLocal-spcLink').trigger( "click" );
+            $('#imageId-spcLink').val('');
             $("#space_label").remove();
             $("#space").hide();
             $("#createSpaceLinkAlert").hide(); 
@@ -1392,6 +1600,8 @@ $(function(){
             resetHighlighting();
             $("#space").hide();
             $("#editModuleLinkInfo").hide();
+            $("#moduleLinkImageIdEdit").val("");
+            moduleLinkIcon=null;
             drawLinks();
         }); 
 
@@ -1403,6 +1613,9 @@ $(function(){
             resetHighlighting();
             $("#space").hide();
             $("#editSpaceLinkInfo").hide();
+            $("#spaceLinkIdValueEdit").val("");
+            $("#spaceLinkImageIdEdit").val("");
+            linkIcon=null;
             drawLinks();
         }); 
 
@@ -1606,25 +1819,25 @@ $(function(){
 	
 	                <div class="row">
 	                    <div class="modal-body">
-                            <input type="radio" id="chooseFromLocal" name="uploadRadioBtn" checked/>
+                            <input type="radio" id="chooseFromLocal-spcLink" name="uploadRadioBtn" checked/>
                             <h6>
                                 <small>Upload Image: </small>
                             </h6>
-                            <input type="file" rows="5" cols="500"
+                            <input class="form-control-sm target" type="file" rows="5" cols="500"
                                 id="spaceLinkImage" name="spaceLinkImage" />
-                            <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" />       
+                            <input type="radio" id="chooseFromExisting-spcLink" name="uploadRadioBtn" />       
                             <div>
                                 <h6>
                                     <small>Or choose an existing image: </small>
                                 </h6>
-                                <select id="imageId" name="imageId"
+                                <select id="imageId-spcLink" name="imageId"
                                     class="form-control-xs "
                                     style="height: 30px; width: 200px;">
                                     <option selected value="">Choose from existing</option>
                                 </select>
                             </div>
                             <div>
-                                <span id="selectedImage" width="200px"></span>
+                                <span class="form-control-sm target" id="selectedImage-spcLink" width="200px"></span>
                             </div>
                         </div>
 	                </div>
@@ -1702,15 +1915,31 @@ $(function(){
 	                    </div>
 	                </div>
 	                
-	
 	                <div class="row">
-	                    <div class="col-sm-4">
-	                        <label>Image</label>
-	                    </div>
-	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
-	                    </div>
+	                    <div class="modal-body">
+                            <input type="radio" id="chooseFromLocal-modLink" name="uploadRadioBtn" checked/>
+                            <h6>
+                                <small>Upload Image: </small>
+                            </h6>
+                            <input class="form-control-sm modulelink-target" type="file" rows="5" cols="500"
+                                id="moduleLinkImage" name="moduleLinkImage" />
+                            <input type="radio" id="chooseFromExisting-modLink" name="uploadRadioBtn" />       
+                            <div>
+                                <h6>
+                                    <small>Or choose an existing image: </small>
+                                </h6>
+                                <select id="imageId-modLink" name="imageId"
+                                    class="form-control-xs "
+                                    style="height: 30px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span class="form-control-sm modulelink-target" id="selectedImage-modLink" width="200px"></span>
+                            </div>
+                        </div>
 	                </div>
+	                
 	                <p class="mt-5 text-center">
 	                    <button type="reset" class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
 	                    <button id="createModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Module Link</button>
@@ -1807,6 +2036,7 @@ $(function(){
 					</div>
 	                
 	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
+	                <input type="hidden" name="spaceLinkImageIdEdit" id="spaceLinkImageIdEdit" />
 	
 	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
 	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
@@ -1865,12 +2095,28 @@ $(function(){
 	                </div>
 	
 	                <div class="row">
-	                    <div class="col-sm-4">
-	                        <label>Image</label>
-	                    </div>
-	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
-	                    </div>
+	                    <div class="modal-body">
+                            <input type="radio" id="chooseFromLocal-spcLinkEdit" name="uploadRadioBtn" checked/>
+                            <h6>
+                                <small>Upload Image: </small>
+                            </h6>
+                            <input type="file" rows="5" cols="500"
+                                id="spaceLinkImageEdit" name="spaceLinkImage" class="spacelink-targetEdit"/>
+                            <input type="radio" id="chooseFromExisting-spcLinkEdit" name="uploadRadioBtn" />       
+                            <div>
+                                <h6>
+                                    <small>Or choose an existing image: </small>
+                                </h6>
+                                <select id="imageId-spcLinkEdit" name="imageId"
+                                    class="form-control-xs "
+                                    style="height: 30px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span class="spacelink-targetEdit" id="selectedImage-spcLinkEdit" width="200px"></span>
+                            </div>
+                        </div>
 	                </div>
 	                
 	                <p class="mt-5 text-center">
@@ -1905,6 +2151,8 @@ $(function(){
                         </div>
                     </div>
                     <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
+                    <input type="hidden" name="moduleLinkImageIdEdit" id="moduleLinkImageIdEdit" />
+                    
                     <input type="hidden" name="x" id="moduleLinkXEdit" />
                     <input type="hidden" name="y" id="moduleLinkYEdit" />
                     <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
@@ -1972,6 +2220,30 @@ $(function(){
                         </div>
                     </div>
                     
+                    <div class="row">
+	                    <div class="modal-body">
+                            <input type="radio" id="chooseFromLocal-spcLinkEdit" name="uploadRadioBtn" checked/>
+                            <h6>
+                                <small>Upload Image: </small>
+                            </h6>
+                            <input type="file" rows="5" cols="500"
+                                id="spaceLinkImageEdit" name="spaceLinkImage" class="spacelink-targetEdit"/>
+                            <input type="radio" id="chooseFromExisting-spcLinkEdit" name="uploadRadioBtn" />       
+                            <div>
+                                <h6>
+                                    <small>Or choose an existing image: </small>
+                                </h6>
+                                <select id="imageId-spcLinkEdit" name="imageId"
+                                    class="form-control-xs "
+                                    style="height: 30px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span class="spacelink-targetEdit" id="selectedImage-spcLinkEdit" width="200px"></span>
+                            </div>
+                        </div>
+	                </div>
                     
                     <p class="mt-5 text-center">
                         <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>

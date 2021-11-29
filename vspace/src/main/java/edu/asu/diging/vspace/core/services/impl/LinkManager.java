@@ -126,7 +126,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
             image.setParentPath(relativePath);
             imageRepo.save((VSImage) image);
         } 
-        else if(existingImageId!=null) {
+        else if(existingImageId!=null && existingImageId.trim()!="") {
             image = imageService.getImageById(existingImageId);
         }
         linkDisplay.setImage(image);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -34,9 +35,9 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("spaceLinkLabel") String title,
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel, 
             @RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit, @RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId, 
-            @RequestParam("type") String displayType, @RequestParam("spaceLinkImage") MultipartFile file)
-                    throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException {
-
+            @RequestParam(value="spaceLinkImageIdEdit", required=false) String spaceLinkImageIdEdit,
+            @RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file, @RequestParam(value="imageId", required=false) String imageId)
+                    throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if(validation!=null) {
@@ -44,13 +45,16 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
         }
         byte[] linkImage = null;
         String filename = null;
-        if (file != null) {
+        if (file != null && !file.isEmpty()) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
+        } else if(imageId==null || imageId.equals("")){
+            String[] token = spaceLinkImageIdEdit.split("/");
+            imageId = token[token.length - 1];
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x), new Float(y),
-                new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId, type, linkImage, filename);
+                new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId, type, linkImage, filename, imageId);
         SpaceStatus targetSpaceStatus=spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
         String linkedSpaceStatus = targetSpaceStatus!=null ? targetSpaceStatus.toString() : null;
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), null, title,displayType,linkedSpaceId, linkedSpaceStatus);
