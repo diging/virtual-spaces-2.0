@@ -34,14 +34,14 @@ public class Module extends VSpaceElement implements IModule {
 
     //-------- @JsonIgnore used as this Slide will be returned in a controller
     @JsonIgnore
-    @OneToMany(targetEntity = Slide.class, mappedBy = "module", cascade= { CascadeType.REMOVE }) //cascade= { CascadeType.REMOVE }
+    @OneToMany(targetEntity = Slide.class, mappedBy = "module") //cascade= { CascadeType.REMOVE }
     private List<ISlide> slides;
 
-    @OneToMany(targetEntity = Sequence.class, cascade= { CascadeType.REMOVE }) //, cascade= { CascadeType.REMOVE }
+    @OneToMany(targetEntity = Sequence.class) //, cascade= { CascadeType.REMOVE }
     private List<ISequence> sequences;
 
     @JsonIgnore
-    @OneToOne(targetEntity = Sequence.class, cascade= { CascadeType.REMOVE })
+    @OneToOne(targetEntity = Sequence.class)
     private ISequence startSequence;
     
 //    @OneToMany(targetEntity=ModuleLink.class, cascade= { CascadeType.REMOVE })

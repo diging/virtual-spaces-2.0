@@ -47,6 +47,9 @@ public class ModuleManager implements IModuleManager {
     @Autowired
     private SequenceRepository sequenceRepo;
     
+    @Autowired
+    private SlideManager slideManager;
+    
     /*
      * (non-Javadoc)
      * 
@@ -103,26 +106,38 @@ public class ModuleManager implements IModuleManager {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
     
-    @Transactional
     @Override
-    public void deleteModule(String id) {
-        logger.info("id is {}", id);
+    public void deleteModule(String moduleId) {
+        logger.info("module id to delete is {}", moduleId);
         List<ModuleLink> moduleLinksToPersist = new ArrayList<ModuleLink>();
-        if (id != null) {
-            List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(id);
+        if (moduleId != null) {
+            List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(moduleId);
             for (IModuleLink moduleLink: moduleLinks) {
                  logger.info("Module link id deleting is {}", moduleLink.getId());
                  moduleLink.setModule(null); 
                  moduleLinksToPersist.add((ModuleLink)moduleLink);
         }
         moduleLinkRepo.saveAll(moduleLinksToPersist);
-        logger.info("deleting module with id {} now", id);
-        // if(moduleRepo.findById(id).get()!=null) {
-        //     logger.info("Found the module {}", moduleRepo.findById(id).get().getId());
-        // }
-        moduleRepo.deleteById(id);
-        
-        logger.info("deleting module");
+        logger.info("deleting module with id {} now", moduleId);
+        //delete all slides
+        Optional<Module> moduleOptional = moduleRepo.findById(moduleId);
+        if(moduleOptional.isPresent()) {
+            Module module = moduleOptional.get();
+            List<ISlide> slides = module.getSlides();
+            for(ISlide slide:slides) {
+                slideManager.deleteSlideById(slide.getId(), moduleId);
+            }
+            logger.info("starting to delete sequences");
+            List<ISequence> sequences = getModuleSequences(moduleId);
+            for (ISequence sequence:sequences) {
+                logger.info("deleting sequence {}", sequence.getId());
+                sequenceRepo.deleteById(sequence.getId());
+                
+            }
+            logger.info("finished deleting sequences");
+                    
+        }
+        moduleRepo.deleteById(moduleId);
         
         }
         return ;
