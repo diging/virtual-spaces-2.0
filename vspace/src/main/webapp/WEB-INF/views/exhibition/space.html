@@ -74,6 +74,38 @@
     visibility: visible;
 }
 
+.imgFullScreen {
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 85%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.img-overlay {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.img-overlay:before {
+  content: ' ';
+  display: block;
+  /* adjust 'height' to position overlay content vertically */
+  height: 50%;
+}
+
+.imgFullScreen:hover .tooltiptext {
+    visibility: visible;
+}
+
+
 .tooltiptext {
     visibility: hidden;
     width: 120px;
@@ -116,6 +148,9 @@
     float: left;
 }
 
+#bgImage:fullscreen{
+ z-index:0;
+}
 .spaceClass {
     position: relative;
     right: 5%;
@@ -205,6 +240,36 @@
 			}
 			$("#space a").remove();        
 			drawLinks();
+		}
+		
+		function imageFullScreen(){
+			   var elem = document.getElementById($("#bgImage").attr('id'));
+			   if (elem.requestFullscreen) {
+				    elem.requestFullscreen();
+				    $("#space").append('<button class="btn circle-btn" style="width: 35px; height: 35px;" onclick="exitFullScreen()"><span class="icon-collapse secondary" style="left:-4px;"></span><span class="tooltiptext">Resize Image</span></button>')
+				  } else if (elem.webkitRequestFullscreen) { 
+				    elem.webkitRequestFullscreen();
+				  } else if (elem.msRequestFullscreen) { 
+				    elem.msRequestFullscreen();
+				  }
+			  $("#space a").remove(); 
+			  drawLinks();
+			  /*console.log(elem);
+			  if (elem.requestFullscreen) {
+				    elem.requestFullscreen();
+				    $("#bgImage").append('<button class="btn circle-btn" style="width: 35px; height: 35px;" onclick="toggleImgSize(1)"><span class="icon-collapse secondary" style="left:-4px;"></span><span class="tooltiptext">Resize Image</span></button>')
+				  } else if (elem.webkitRequestFullscreen) { 
+				    elem.webkitRequestFullscreen();
+				  } else if (elem.msRequestFullscreen) { 
+				    elem.msRequestFullscreen();
+				  }
+			  $("#space a").remove(); 
+			  drawLinks(); */
+			  //elem.requestFullscreen();
+			 /* $("#space").css('position', "relative");
+			  $("#bgImage").css('width','100%');
+			  $("#bgImage").css('height','auto');*/
+			  //$("#bgImage").append('<button type="button" style="z-index:2;">Click me! </button>')
 		}
 
 		let maxWidth='(max-width: 1200px)';
@@ -353,12 +418,25 @@
                 }
             })
             externalLinks.forEach(function(link,index){
+            	console.log(link);
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var externalLink = $('<a></a>');
     		        externalLink.attr('href', link.externalLink.externalLink);
-    		        externalLink.attr('target', "_blank");
+    		        if(link.howToOpen == null)
+	    		        {
+    		        	externalLink.attr('target', "_blank");
+	    		        }
+    		        else
+    		        	{
+    		        	  if(link.howToOpen == "NEWWINDOW"){
+    		        		  externalLink.attr('target', "_blank");
+    		        		  }
+    		        	  else{
+    		        		  externalLink.attr('target', "_self"); 
+    		        	  }
+    		        	}
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
     		        }
@@ -407,6 +485,16 @@
                         class="tooltiptext">Resize Image</span>
                 </button>
             </div>
+        
+        <div class="imgFullScreen">
+                <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+                    onclick="imageFullScreen()">
+                    <span class="icon-expand secondary"
+                         style="float:right;left: -4px;"></span> <span
+                        class="tooltiptext">Full screen option</span>
+                </button>
+            </div>
+            
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
