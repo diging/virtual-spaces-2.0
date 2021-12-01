@@ -85,27 +85,6 @@
     cursor: pointer;
 }
 
-.img-overlay {
-  position: relative;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-
-.img-overlay:before {
-  content: ' ';
-  display: block;
-  /* adjust 'height' to position overlay content vertically */
-  height: 50%;
-}
-
-.imgFullScreen:hover .tooltiptext {
-    visibility: visible;
-}
-
-
 .tooltiptext {
     visibility: hidden;
     width: 120px;
@@ -243,10 +222,11 @@
 		}
 		
 		function imageFullScreen(){
-			   var elem = document.getElementById($("#bgImage").attr('id'));
+			   var elem = document.getElementById("space");
 			   if (elem.requestFullscreen) {
 				    elem.requestFullscreen();
-				    $("#space").append('<button class="btn circle-btn" style="width: 35px; height: 35px;" onclick="exitFullScreen()"><span class="icon-collapse secondary" style="left:-4px;"></span><span class="tooltiptext">Resize Image</span></button>')
+				    $("#bgImage").css("max-width", "100%");
+				    $("#space").append('<button id = "fullscreen" class="btn circle-btn" style="margin-left: 10px;margin-top: 5px;padding: 3px;width: 35px;height: 35px;position: absolute;right: 0;bottom: 0; margin: 0 1rem 1rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary" style="left:-4px;"></span><span class="tooltiptext">Resize Image</span></button>')
 				  } else if (elem.webkitRequestFullscreen) { 
 				    elem.webkitRequestFullscreen();
 				  } else if (elem.msRequestFullscreen) { 
@@ -254,24 +234,19 @@
 				  }
 			  $("#space a").remove(); 
 			  drawLinks();
-			  /*console.log(elem);
-			  if (elem.requestFullscreen) {
-				    elem.requestFullscreen();
-				    $("#bgImage").append('<button class="btn circle-btn" style="width: 35px; height: 35px;" onclick="toggleImgSize(1)"><span class="icon-collapse secondary" style="left:-4px;"></span><span class="tooltiptext">Resize Image</span></button>')
-				  } else if (elem.webkitRequestFullscreen) { 
-				    elem.webkitRequestFullscreen();
-				  } else if (elem.msRequestFullscreen) { 
-				    elem.msRequestFullscreen();
-				  }
-			  $("#space a").remove(); 
-			  drawLinks(); */
-			  //elem.requestFullscreen();
-			 /* $("#space").css('position', "relative");
-			  $("#bgImage").css('width','100%');
-			  $("#bgImage").css('height','auto');*/
-			  //$("#bgImage").append('<button type="button" style="z-index:2;">Click me! </button>')
 		}
 
+		function exitFullScreen()
+		{
+			$("#fullscreen").remove();
+			if (document.exitFullscreen) {
+			    document.exitFullscreen();
+			  } else if (document.webkitExitFullscreen) { /* Safari */
+			    document.webkitExitFullscreen();
+			  } else if (document.msExitFullscreen) { /* IE11 */
+			    document.msExitFullscreen();
+			  }
+		}
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		  $("#mySidenav").css("width", "250px");
