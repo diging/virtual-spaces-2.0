@@ -28,7 +28,12 @@ function deleteModule(moduleId){
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	            console.log('hello')
+	        	var alert = $('<div class="alert alert-dismissible fade show" role="alert"><p>This module has been successfully deleted.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	            $('.error').append(alert);
+	            var element = document.getElementById("makeInvisible");
+	            element.classList.add("content-invisible");
+	            element.remove();
+
 	        },
 	        error: function(data) {
 	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -274,7 +279,7 @@ $(document).ready(function() {
 			</div>
 			</div>
 		
-			<div class="startSequence" style="padding-bottom: 10px;">
+			<div id="makeInvisible" class="startSequence" style="padding-bottom: 10px;">
         <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>

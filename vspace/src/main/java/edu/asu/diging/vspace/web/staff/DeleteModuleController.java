@@ -4,6 +4,8 @@ package edu.asu.diging.vspace.web.staff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +23,15 @@ public class DeleteModuleController {
     private IModuleManager moduleManager;
 
     @RequestMapping(value="/staff/module/{moduleId}/delete", method=RequestMethod.DELETE)
-    public String deleteModule(@PathVariable("moduleId") String moduleId, Model model) {
-        moduleManager.deleteModule(moduleId);
-        logger.info("deleted module");
-        return "redirect:/staff/dashboard/";
+    public ResponseEntity<String> deleteModule(@PathVariable("moduleId") String moduleId, Model model) {
+        try {
+            moduleManager.deleteModule(moduleId);
+        }
+        catch (Exception exception) {
+            logger.error("Could not delete Module.", exception);
+            return new ResponseEntity<String>("Sorry, unable to delete the module.",
+                    HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<String>("Ok", HttpStatus.OK);
     }
 }

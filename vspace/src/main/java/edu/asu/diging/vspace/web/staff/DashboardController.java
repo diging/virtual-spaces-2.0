@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,8 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 
 @Controller
 public class DashboardController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SpaceRepository spaceRepo;
@@ -23,6 +27,7 @@ public class DashboardController {
 
     @RequestMapping("/staff/dashboard")
     public String displayDashboard(Model model) {
+        logger.info("entered display dashboard");
         List<Space> recentSpaces = spaceRepo.findTop5ByOrderByCreationDateDesc();
         List<Module> recentModules = moduleRepo.findTop5ByOrderByCreationDateDesc();
         model.addAttribute("recentSpaces", recentSpaces);
