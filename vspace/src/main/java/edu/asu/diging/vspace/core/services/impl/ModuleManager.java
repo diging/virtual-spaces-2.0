@@ -108,7 +108,6 @@ public class ModuleManager implements IModuleManager {
     
     @Override
     public void deleteModule(String moduleId) {
-        logger.info("module id to delete is {}", moduleId);
         List<ModuleLink> moduleLinksToPersist = new ArrayList<ModuleLink>();
         if (moduleId != null) {
             List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(moduleId);
@@ -118,7 +117,6 @@ public class ModuleManager implements IModuleManager {
                  moduleLinksToPersist.add((ModuleLink)moduleLink);
         }
         moduleLinkRepo.saveAll(moduleLinksToPersist);
-        logger.info("deleting module with id {} now", moduleId);
         //delete all slides
         Optional<Module> moduleOptional = moduleRepo.findById(moduleId);
         if(moduleOptional.isPresent()) {
@@ -127,14 +125,12 @@ public class ModuleManager implements IModuleManager {
             for(ISlide slide:slides) {
                 slideManager.deleteSlideById(slide.getId(), moduleId);
             }
-            logger.info("starting to delete sequences");
             List<ISequence> sequences = getModuleSequences(moduleId);
             for (ISequence sequence:sequences) {
                 logger.info("deleting sequence {}", sequence.getId());
                 sequenceRepo.deleteById(sequence.getId());
                 
             }
-            logger.info("finished deleting sequences");
                     
         }
         moduleRepo.deleteById(moduleId);

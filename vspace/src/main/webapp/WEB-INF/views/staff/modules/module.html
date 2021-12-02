@@ -21,7 +21,6 @@ function deleteSlide(slideId) {
 } 
 
 function deleteModule(moduleId){
-	console.log('deleting module is starting')
 	 $.ajax({
 		url: "[(@{'/staff/module/'+${module.id}+'/delete'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 	        type: 'DELETE',
