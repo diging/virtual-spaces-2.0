@@ -30,10 +30,12 @@ function deleteModule(moduleId){
 	        success: function(data) {
 	        	var alert = $('<div class="alert alert-dismissible fade show" role="alert"><p>This module has been successfully deleted.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 	            $('.error').append(alert);
-	            var element = document.getElementById("makeInvisible");
-	            element.classList.add("content-invisible");
-	            element.remove();
-
+	            var startSequence = document.getElementById("startSequence");
+	            var sequences = document.getElementById("sequences");
+	            var slides = document.getElementById("slides");
+	            startSequence.remove();
+	            sequences.remove();
+	            slides.remove();
 	        },
 	        error: function(data) {
 	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -279,7 +281,7 @@ $(document).ready(function() {
 			</div>
 			</div>
 		
-			<div id="makeInvisible" class="startSequence" style="padding-bottom: 10px;">
+			<div id="startSequence" class="startSequence" style="padding-bottom: 10px;">
         <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select the start sequence of the Module</p>
@@ -291,7 +293,7 @@ $(document).ready(function() {
 				</form>
 			</div>
     	</div>
-    	<div class="tab sequences" style="margin-top: 0;">
+    	<div id="sequences" class="tab sequences" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
 				<a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Sequence</a>				
@@ -309,7 +311,7 @@ $(document).ready(function() {
 			
     	</div>
         
-        <div class="tab slides" style="margin-top: 10px">
+        <div id="slides" class="tab slides" style="margin-top: 10px">
             <div style="display: flex; justify-content: space-between">
                 <h4>All Slides</h4>
                 <!-- Commenting as this is planned for future development -->
