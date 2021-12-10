@@ -66,6 +66,7 @@ moduleLinkIconReader.onload = function(e) {
 var externalLinkIconReader = new FileReader();
 var externalLinkIcon;
 externalLinkIconReader.onload = function(e) {
+	debugger;
     externalLinkIcon = e.target.result;
     var externalLinkId = $("#externalLinkIdValueEdit").val();
     
@@ -162,7 +163,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
             $('#'+spanId+link.link.id).css('cursor', 'pointer');
             $('#'+spanId+link.link.id).click(function(e) {
                 var linkData = $('#'+spanId+link.link.id).data();
-                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
+                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"], $('#'+spanId+link.link.id).attr('src'));
             });
         }
     }
@@ -183,7 +184,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
             $('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
             $('#'+spanId+link.externalLink.id).click(function(e) {
                 var linkData = $('#'+spanId+link.externalLink.id).data();
-                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"], $('#'+spanId+link.externalLink.id).attr('src'));
             });
         }
     }
@@ -466,6 +467,7 @@ function hideLinkInfoTabs(){
 }
 
 function showExternalLinks(externalLink, show, x, y) {
+	debugger;
     $("#ext_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -913,7 +915,7 @@ $(function(){
                 );
                 $("#selectedImage-modLink").empty();
                 $("#selectedImage-modLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                linkIcon = tbaseUrl + image.id;
+                moduleLinkIcon = tbaseUrl + image.id;
                 showModuleLink(createModuleLinkInfo());
                 return $image;
             }
@@ -938,20 +940,22 @@ $(function(){
           //External link selection of existing images
             $('#imageId-extLink').prop("disabled",true);
         	$('#chooseFromLocal-extLink').click(function() {
+        		debugger;
         		$("#selectedImage-extLink").empty();
         		$('#imageId-extLink').prop('selectedIndex',0).trigger( "change" );
         		$('#imageId-extLink').prop("disabled",true);
         		$('#externalLinkImage').prop("disabled",false);
         		externalLinkIcon = null;
-        		showExternalLink(createExternalLinkInfo());
+        		showExternalLinks(createExternalLinkInfo());
         	  });
         	
         	$('#chooseFromExisting-extLink').click(function() {
+        		debugger;
         		$('#externalLinkImage').val('');
         		$('#externalLinkImage').prop("disabled",true);
         		$('#imageId-extLink').prop("disabled",false);
         		externalLinkIcon = null;
-        		showExternalLink(createExternalLinkInfo());
+        		showExternalLinks(createExternalLinkInfo());
         	  });
         	
         	$("#imageId-extLink").select2({
@@ -981,10 +985,10 @@ $(function(){
         		showExternalLinkEdit(editExternalLinkInfo());
         	  });
         	
-        	$('#chooseFromExisting-modLinkEdit').click(function() {
-        		$('#moduleLinkImageEdit').val('');
-        		$('#moduleLinkImageEdit').prop("disabled",true);
-        		$('#imageId-modLinkEdit').prop("disabled",false);
+        	$('#chooseFromExisting-extLinkEdit').click(function() {
+        		$('#externalLinkImageEdit').val('');
+        		$('#externalLinkImageEdit').prop("disabled",true);
+        		$('#imageId-extLinkEdit').prop("disabled",false);
         		externalLinkIcon = null;
         		showExternalLinkEdit(editExternalLinkInfo());
         	  });
@@ -1017,8 +1021,8 @@ $(function(){
                 );
                 $("#selectedImage-extLink").empty();
                 $("#selectedImage-extLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                linkIcon = tbaseUrl + image.id;
-                showExternalLink(createExternalLinkInfo());
+                externalLinkIcon = tbaseUrl + image.id;
+                showExternalLinks(createExternalLinkInfo());
                 return $image;
             }
             
@@ -1663,11 +1667,6 @@ $(function(){
             /* $('#spacelinkModalId-' + linkId ).remove(); */
             console.log(linkIcon);
             
-        });
-        
-        $("#imageId-spcLink").change(function() {
-        	debugger;
-        	
         });
         
         $("#moduleLinkImage").change(function() {
@@ -2489,15 +2488,29 @@ $(function(){
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-3" style="padding-right: 0;">
-                            <label>Image:</label>
+	                    <div class="modal-body">
+                            <input type="radio" id="chooseFromLocal-extLinkEdit" name="uploadRadioBtn" checked/>
+                            <h6>
+                                <small>Upload Image: </small>
+                            </h6>
+                            <input type="file" rows="5" cols="500"
+                                id="externalLinkImageEdit" name="externalLinkImage" class="externallink-targetEdit"/>
+                            <input type="radio" id="chooseFromExisting-extLinkEdit" name="uploadRadioBtn" />       
+                            <div>
+                                <h6>
+                                    <small>Or choose an existing image: </small>
+                                </h6>
+                                <select id="imageId-extLinkEdit" name="imageId"
+                                    class="form-control-xs "
+                                    style="height: 30px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span class="externallink-targetEdit" id="selectedImage-extLinkEdit" width="200px"></span>
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            <input type="file" class="form-control-sm"
-                                name="externalLinkImage"
-                                id="externalLinkImageEdit" style="width: inherit" />
-                        </div>
-                    </div>
+	                </div>
                     
                     <p class="mt-5 text-center">
                         <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
