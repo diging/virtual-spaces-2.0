@@ -109,5 +109,16 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,ISpaceLinkDi
     public List<ISpaceLinkDisplay> getSpaceLinkForGivenOrNullSpaceStatus(String spaceId, SpaceStatus spaceStatus){
         return new ArrayList<>(spaceLinkDisplayRepo.findSpaceLinksForGivenOrNullSpaceStatus(spaceId,spaceStatus));
     }
+    
+    @Override
+    public void deleteSpaceLinksWithSourceAsNull(){
+        spaceLinkRepo.deleteBySourceSpaceId(null);
+    }
+    
+    @Override
+    public List<ISpaceLink> findSpaceLinksWithSourceNull(){
+        return spaceLinkRepo.findBySourceSpaceIsNull();
+    }
+    
 
 }

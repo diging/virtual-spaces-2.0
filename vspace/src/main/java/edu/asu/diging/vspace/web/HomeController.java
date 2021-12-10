@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +25,7 @@ public class HomeController {
 
     @RequestMapping(value = "/")
     public String home(Model model) {
+        Logger logger = LoggerFactory.getLogger(getClass());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!setupManager.isSetup()) {
             return "setup";
@@ -30,6 +33,7 @@ public class HomeController {
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null && exhibition.getStartSpace() != null) {
+            logger.info("I am in home controller");
             if(!(authentication instanceof AnonymousAuthenticationToken)) {
                 return "redirect:/staff/dashboard/";
             } else {

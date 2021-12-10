@@ -1,9 +1,41 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-	<script>
+	<script th:inline="javascript">
+		var authenticatedName = [[${authenticationName}]]
+		var spaceLinksSize = [[${spaceLinksSize}]]
 		$(function () {
 		  $('[data-toggle="tooltip"]').tooltip()
 		});
+		
+	function closeSpaceLinkAlert(){
+		$("#spaceLinkAlert").hide();
+	}
+	
+	function deleteSpaceLinks(){
+		console.log('here');
+		var url = "[(@{'/staff/dashboard/deleteSpaceLinksWithNullSource'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+		$.ajax({
+    		enctype: 'multipart/form-data',
+    		url: url,
+    		type: 'DELETE',
+    		cache       : false,
+    		contentType : false,
+    		processData : false,    
+    		success: function(data) {
+    			console.log('success');
+    		},
+    		error: function(data) {
+    		console.log('not a success')
+    		}
+    	});
+	}
+	
+	$(window).on('load', function () {
+		console.log(spaceLinksSize);
+    	if(authenticatedName=="admin" && spaceLinksSize > 0){
+    		$("#spaceLinkAlert").show();
+    	}
+    });
 	</script>
 </head>
 <body>
@@ -57,7 +89,27 @@
 				<br><a class="add" th:href="@{/staff/module/add}"><span class="icon-circle-add" style="margin: auto; color: var(--med-grey)"></span></a>
 			</div>
 			</div>
-    </div>      
+    </div> 
+    <div id="spaceLinkAlert" class="modal" tabindex="-1" role="dialog"
+                backdrop="static"
+                style="display: none; background-color: rgba(0, 0, 0, 0.5);">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Login</h5>
+                        </div>
+                        <div class="modal-body">
+                            <h6>There are space links with source space as Null. Do you want to delete them?</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-primary" style="color: white;"
+                                onClick="deleteSpaceLinks()">Yes</a>
+                            <a class="btn btn-primary" style="color: white;"
+                           onClick="closeSpaceLinkAlert()">No</a>
+                        </div>
+                    </div>
+                </div>
+            </div>    
 </div>
 </body>
 </html>
