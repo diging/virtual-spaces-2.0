@@ -28,13 +28,10 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -70,7 +67,7 @@ public class SpaceLinkManagerTest {
     @InjectMocks
     private SpaceLinkManager managerToTest = new SpaceLinkManager();
 
-    private String spaceId1, spaceId2, spaceId3, imageId, imageFileName, spcDisplayLinkId;;
+    private String spaceId1, spaceId2, spaceId3, imageId, imageFileName, spcDisplayLinkId;
 
     @Before
     public void init() {
