@@ -18,6 +18,10 @@ public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLin
 
     List<SpaceLink> findBySourceSpace(ISpace space);
     
+    @Modifying
+    @Query("delete from SpaceLink where source_space_id = ?1")
+    void deleteBySourceSpaceId(String id);
+    
     void deleteBySourceSpaceIdIsNull();
     
     @Modifying

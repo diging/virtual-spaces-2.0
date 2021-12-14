@@ -54,7 +54,6 @@ public class DashboardController {
     
     @DeleteMapping(value = "/staff/dashboard/deleteSpaceLinksWithNullSource")
     public ResponseEntity<String> deleteSpaceLinkWithNullSource(){
-        logger.info("entering deleteSpaceLinkWithNullSource");
         try {
            spaceLinkManager.deleteSpaceLinksWithSourceAsNull();
         }
