@@ -11,27 +11,28 @@
 		$("#spaceLinkAlert").hide();
 	}
 	
+	function close(){
+		$("#error").hide();
+	}
+	
 	function deleteSpaceLinks(){
-		console.log('here');
-		var url = "[(@{'/staff/dashboard/deleteSpaceLinksWithNullSource'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+		var url = "[(@{'/staff/dashboard/deleteSpaceLinksWithNullSource?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
 		$.ajax({
-    		enctype: 'multipart/form-data',
     		url: url,
-    		type: 'DELETE',
-    		cache       : false,
-    		contentType : false,
-    		processData : false,    
+    		type: 'DELETE',    
     		success: function(data) {
-    			console.log('success');
+    			//put succesfully deleted 
+    			$("#spaceLinkAlert").hide();
     		},
     		error: function(data) {
-    		console.log('not a success')
+    			//put unable to delete alert message
+    			$("#spaceLinkAlert").hide();
+    			$("#error").show();
     		}
     	});
 	}
 	
 	$(window).on('load', function () {
-		console.log(spaceLinksSize);
     	if(authenticatedName=="admin" && spaceLinksSize > 0){
     		$("#spaceLinkAlert").show();
     	}
@@ -109,7 +110,16 @@
                         </div>
                     </div>
                 </div>
-            </div>    
+            </div>
+     <div id="error" class="modal" tabindex="-1" role="dialog"
+                style="display: none; ">
+        <div class="alert alert-danger alert-dismissible show" role="alert">
+	        <p>We are sorry but something went wrong. Please try again later.</p>
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onClick="close()">
+	        <span aria-hidden="true">&times;</span>
+        </button>
+        </div>        
+     </div>   
 </div>
 </body>
 </html>

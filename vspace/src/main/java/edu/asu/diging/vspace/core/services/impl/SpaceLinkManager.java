@@ -112,7 +112,11 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,ISpaceLinkDi
     
     @Override
     public void deleteSpaceLinksWithSourceAsNull(){
-        spaceLinkRepo.deleteBySourceSpaceId(null);
+        List<ISpaceLink> spaceLinks = spaceLinkRepo.findBySourceSpaceIsNull();
+        for(ISpaceLink spaceLink : spaceLinks) {
+            spaceLinkDisplayRepo.deleteByLink(spaceLink);
+        }
+        spaceLinkRepo.deleteBySourceSpaceIdIsNull();
     }
     
     @Override
