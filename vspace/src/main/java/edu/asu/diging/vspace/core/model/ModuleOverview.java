@@ -7,10 +7,8 @@ public class ModuleOverview{
     private String name;
 
     private String id;
-
-    private String link;
     
-    private List<String> edges;
+    private List<String> edges; //List of sequence ids
 
     public String getName() {
         return name;
@@ -26,14 +24,6 @@ public class ModuleOverview{
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
     
     public List<String> getEdges() {

@@ -281,6 +281,13 @@
 		    	toggleImgSize(false);
 		});
 		
+		function showModuleMapModal(){
+			console.log('hello');
+			$("#moduleOverviewModal").show();
+		}
+		
+		
+		
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
 			var moduleLinks = [[${moduleList}]];
@@ -504,6 +511,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+        	<button onClick="showModuleMapModal()">View Module Map</button>
+        </div>
+        <div id="moduleOverviewModal" class="modal" role="dialog">
+        
+        	hello
+        
         </div>
     </div>
 </body>
