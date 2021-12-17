@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
-import edu.asu.diging.vspace.core.model.ModuleOverview;
+import edu.asu.diging.vspace.core.model.SequenceOverview;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
 
 @Component
 public class SequenceOverviewJsonFormat {
@@ -26,17 +27,28 @@ public class SequenceOverviewJsonFormat {
      * @param SequenceNodeList List of sequences
      * @throws JsonProcessingException
      */
-    private List<ModuleOverview> constructNodesForModules(String contextPath, Iterable<Module> sequenceNodeList)
+    public List<SequenceOverview> constructNodesForSequences(List<Sequence> sequenceNodeList)
             throws JsonProcessingException {
 
-        List<ModuleOverview> moduleVertexList = new ArrayList<>();
+        List<SequenceOverview> sequenceVertexList = new ArrayList<>();
         if (sequenceNodeList != null) {
-            for (Module spaceNode : sequenceNodeList) {
-               // ModuleOverview spaceOverview = createModuleNode(spaceNode, contextPath);
-               // moduleVertexList.add(spaceOverview);
+            for (Sequence sequenceNode : sequenceNodeList) {
+                SequenceOverview sequenceOverview = createSequenceNode(sequenceNode);
+                sequenceVertexList.add(sequenceOverview);
             }
         }
-        return moduleVertexList;
+        return sequenceVertexList;
+    }
+    
+    private SequenceOverview createSequenceNode(Sequence sequence) {
+        
+        SequenceOverview sequenceOverview = new SequenceOverview();
+        sequenceOverview.setName(sequence.getName());
+        sequenceOverview.setId(sequence.getId());
+        sequenceOverview.setSlides(sequence.getSlides());
+        StringBuilder linkPathBuilder = new StringBuilder();
+        
+        return sequenceOverview;  
     }
 
 }

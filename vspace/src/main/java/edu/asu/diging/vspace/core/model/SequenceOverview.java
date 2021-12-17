@@ -2,13 +2,23 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-public class ModuleOverview{
+public class SequenceOverview{
  
     private String name;
 
     private String id;
     
     private List<String> edges; //List of sequence ids
+    
+    private List<ISlide> slides;
+
+    public List<ISlide> getSlides() {
+        return slides;
+    }
+
+    public void setSlides(List<ISlide> slides) {
+        this.slides = slides;
+    }
 
     public String getName() {
         return name;

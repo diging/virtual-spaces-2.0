@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
 @Component
-public class ModuleOverviewManager {
+public class SequenceOverviewManager {
     
     @Autowired
     ModuleRepository moduleRepository;
@@ -34,14 +34,13 @@ public class ModuleOverviewManager {
      * @return a Map whose key is sequenceId and value is list of moduleLinks connected
      *         with the spaceId.
      */
-    public Map<String, List<ISlide>> getSequencesFromModules(String moduleId) {
-        Map<String, List<ISlide>> mapSequenceToSlides = new HashMap<String, List<ISlide>>();
+    public Map<Sequence, List<ISlide>> getSequencesFromModules(String moduleId) {
+        Map<Sequence, List<ISlide>> mapSequenceToSlides = new HashMap<Sequence, List<ISlide>>();
         List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
         
         for(Sequence seq : sequences) {
-            String sequenceId = seq.getId();
             List<ISlide> sequenceSlides = seq.getSlides();
-            mapSequenceToSlides.put(sequenceId, sequenceSlides);
+            mapSequenceToSlides.put(seq, sequenceSlides);
         }
         return mapSequenceToSlides;
         
