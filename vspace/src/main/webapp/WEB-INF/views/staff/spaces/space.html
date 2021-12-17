@@ -711,7 +711,9 @@ $(function(){
         checkSpaceLinkPresent('[(${space?.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'));
     });
 
-        $( document ).ready(function() {
+        $( document ).ready(onLoadFunction);
+        	
+        function onLoadFunction() {
             onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
             if ($("div#outgoingLinks a").length < 2) {
                 $("#noLinksOnSpace").show()
@@ -768,7 +770,7 @@ $(function(){
         		$('#spaceLinkImageEdit').val('');
         		$('#spaceLinkImageEdit').prop("disabled",true);
         		$('#imageId-spcLinkEdit').prop("disabled",false);
-        		linkIcon = null;
+        		linkIcon = $('#spaceLinkImageIdEdit').val();
         		showSpaceLinkEdit(editSpaceLinkInfo());
         	  });
         	
@@ -883,7 +885,7 @@ $(function(){
         		$('#moduleLinkImageEdit').val('');
         		$('#moduleLinkImageEdit').prop("disabled",true);
         		$('#imageId-modLinkEdit').prop("disabled",false);
-        		moduleLinkIcon = null;
+        		moduleLinkIcon = $('#moduleLinkImageIdEdit').val();
         		showModuleLinkEdit(editModuleLinkInfo());
         	  });
         	
@@ -989,7 +991,7 @@ $(function(){
         		$('#externalLinkImageEdit').val('');
         		$('#externalLinkImageEdit').prop("disabled",true);
         		$('#imageId-extLinkEdit').prop("disabled",false);
-        		externalLinkIcon = null;
+        		externalLinkIcon = $('#externalLinkImageIdEdit').val();
         		showExternalLinkEdit(editExternalLinkInfo());
         	  });
         	
@@ -1041,7 +1043,7 @@ $(function(){
                 showExternalLinkEdit(editExternalLinkInfo());
                 return $image;
             }
-        });
+        };
 
         // -------- buttons that open modals (e.g. to create space links) ------
         $("#addSpaceLinkButton").click(function(e) {
@@ -1206,6 +1208,7 @@ $(function(){
                         $("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
                     }
                     $("#space").css("display", "none");
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1290,6 +1293,7 @@ $(function(){
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#space").css("display", "none");
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1337,6 +1341,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedModuleLinkId=undefined;
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1389,7 +1394,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedSpaceLinkId=undefined;
-                    
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1437,6 +1442,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedExternalLinkId=undefined;
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1520,6 +1526,7 @@ $(function(){
                     form[0].reset();
                     $("#external-arrow").attr("id","");
                     $("#space").css("display", "none");
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1551,6 +1558,7 @@ $(function(){
                     }
                     $("#spaceLinkInfo").hide();
                     $("#space").css("display", "none");
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1573,6 +1581,7 @@ $(function(){
                     $('#moduleLinkIdValueEdit').val("");
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    onLoadFunction();
                     drawLinks();
                 }
             });
@@ -1593,6 +1602,7 @@ $(function(){
                     $('[data-link-id="' + linkId + '"]').remove();
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    onLoadFunction();
                     drawLinks();
                 }
             });
