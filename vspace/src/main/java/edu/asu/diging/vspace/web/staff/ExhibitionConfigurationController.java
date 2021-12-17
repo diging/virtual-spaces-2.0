@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +18,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
-import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -41,11 +41,18 @@ public class ExhibitionConfigurationController {
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
-        IExhibition exhibition = exhibitManager.getStartExhibition();
+        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         if(exhibition!=null) {
+        	UUID randomUUID = UUID.randomUUID();
+    		String randomString = randomUUID.toString().replaceAll("-", "");
+    		exhibition.setPreviewId("EXH_PREVIEW_"+randomString.substring(0, 8));
             model.addAttribute("exhibition", exhibition);
         } else {
-            model.addAttribute("exhibition", new Exhibition());
+        	Exhibition exhibitionObj = new Exhibition();
+        	UUID randomUUID = UUID.randomUUID();
+    		String randomString = randomUUID.toString().replaceAll("-", "");
+        	exhibitionObj.setPreviewId("EXH_PREVIEW_"+randomString.substring(0, 8));        	
+            model.addAttribute("exhibition", exhibitionObj);
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());

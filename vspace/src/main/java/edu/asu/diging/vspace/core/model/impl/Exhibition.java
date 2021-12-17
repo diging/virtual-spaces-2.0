@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 /**
@@ -35,7 +36,10 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private ExhibitionModes mode;
 
     private String customMessage;
-
+    
+    private String previewId;
+    
+    //ExhibitionPreview
     /*
      * (non-Javadoc)
      * 
@@ -104,4 +108,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.customMessage = customMessage;
     }
 
+	public String getPreviewId() {
+		return previewId;
+	}
+
+	public void setPreviewId(String previewId) {
+		this.previewId = previewId;
+	}
 }
