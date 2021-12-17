@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +34,7 @@ public class AddReferenceController {
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/biblio/{biblioId}/reference/add", method = RequestMethod.POST)
     public ResponseEntity<ReferenceBlock> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
-            @RequestBody Reference reference, Model model) throws JsonProcessingException {
+            @RequestBody Reference reference) throws JsonProcessingException {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.saveReference(biblio, reference);
