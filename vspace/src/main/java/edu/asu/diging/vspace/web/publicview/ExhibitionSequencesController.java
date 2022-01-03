@@ -44,6 +44,7 @@ public class ExhibitionSequencesController {
             @RequestParam(required = false, name="previousSequenceId") String previousSequenceId,
             @RequestParam(required = false, name="clearHistory") Boolean clearHistory)
                     throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
+    	
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";

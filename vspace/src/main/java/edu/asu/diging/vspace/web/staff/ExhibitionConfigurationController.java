@@ -42,16 +42,16 @@ public class ExhibitionConfigurationController {
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
-        if(exhibition!=null) {
-        	UUID randomUUID = UUID.randomUUID();
-    		String randomString = randomUUID.toString().replaceAll("-", "");
-    		exhibition.setPreviewId("EXH_PREVIEW_"+randomString.substring(0, 8));
+        if (exhibition != null) {
+            UUID randomUUID = UUID.randomUUID();
+            String randomString = randomUUID.toString().replaceAll("-", "");
+            exhibition.setPreviewId("EXH_PREVIEW_" + randomString.substring(0, 8));
             model.addAttribute("exhibition", exhibition);
         } else {
-        	Exhibition exhibitionObj = new Exhibition();
-        	UUID randomUUID = UUID.randomUUID();
-    		String randomString = randomUUID.toString().replaceAll("-", "");
-        	exhibitionObj.setPreviewId("EXH_PREVIEW_"+randomString.substring(0, 8));        	
+            Exhibition exhibitionObj = new Exhibition();
+            UUID randomUUID = UUID.randomUUID();
+            String randomString = randomUUID.toString().replaceAll("-", "");
+            exhibitionObj.setPreviewId("EXH_PREVIEW_" + randomString.substring(0, 8));
             model.addAttribute("exhibition", exhibitionObj);
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
@@ -78,7 +78,7 @@ public class ExhibitionConfigurationController {
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;
-        if(exhibitID==null || exhibitID.isEmpty()) {
+        if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
@@ -86,7 +86,7 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+        if (exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);
         }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);

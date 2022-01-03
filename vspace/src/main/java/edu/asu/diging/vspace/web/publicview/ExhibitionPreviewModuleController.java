@@ -18,36 +18,36 @@ import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 @Controller
 public class ExhibitionPreviewModuleController {
 
-    @Autowired
-    private IModuleManager moduleManager;
+	@Autowired
+	private IModuleManager moduleManager;
 
-    @Autowired
-    private ISpaceManager spaceManager;
-    
-    @Autowired
+	@Autowired
+	private ISpaceManager spaceManager;
+
+	@Autowired
 	private IExhibitionManager exhibitionManager;
 
-    @RequestMapping(value = "/exhibition/preview/{spaceId}/module/{id}")
-    public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
-            throws SpaceNotFoundException, ModuleNotFoundException {
-    	
-    	model.addAttribute("isExhPreview", true);
-    	Exhibition exhibition = (Exhibition)exhibitionManager.getStartExhibition();
-    	model.addAttribute("PreviewId", exhibition.getPreviewId());
-        ISpace space = spaceManager.getSpace(spaceId);
-        if (space == null) {
-            return "/exhibition/badrequest";
-        }
-        IModule module = moduleManager.getModule(id);
-        model.addAttribute("module", module);
-        if (module == null) {
-            return "/exhibition/badrequest";
-        } else if (module.getStartSequence() == null) {
-            model.addAttribute("showAlert", true);
-            model.addAttribute("message", "Sorry, module has not been configured yet.");
-            return "/exhibition/module";
-        }
-        String startSequenceID = module.getStartSequence().getId();
-        return "redirect:/exhibition/preview/{spaceId}/module/" + id + "/sequence/" + startSequenceID;
-    }
+	@RequestMapping(value = "/exhibition/preview/{spaceId}/module/{id}")
+	public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
+			throws SpaceNotFoundException, ModuleNotFoundException {
+
+		model.addAttribute("isExhPreview", true);
+		Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+		model.addAttribute("PreviewId", exhibition.getPreviewId());
+		ISpace space = spaceManager.getSpace(spaceId);
+		if (space == null) {
+			return "/exhibition/badrequest";
+		}
+		IModule module = moduleManager.getModule(id);
+		model.addAttribute("module", module);
+		if (module == null) {
+			return "/exhibition/badrequest";
+		} else if (module.getStartSequence() == null) {
+			model.addAttribute("showAlert", true);
+			model.addAttribute("message", "Sorry, module has not been configured yet.");
+			return "/exhibition/module";
+		}
+		String startSequenceID = module.getStartSequence().getId();
+		return "redirect:/exhibition/preview/{spaceId}/module/" + id + "/sequence/" + startSequenceID;
+	}
 }

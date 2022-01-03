@@ -22,91 +22,91 @@ import edu.asu.diging.vspace.core.model.ISpace;
 @Entity
 public class Exhibition extends VSpaceElement implements IExhibition {
 
-    @Id
-    @GeneratedValue(generator = "exhibit_id_generator")
-    @GenericGenerator(name = "exhibit_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
-    private String id;
+	@Id
+	@GeneratedValue(generator = "exhibit_id_generator")
+	@GenericGenerator(name = "exhibit_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+	private String id;
 
-    @OneToOne(targetEntity = Space.class)
-    private ISpace startSpace;
+	@OneToOne(targetEntity = Space.class)
+	private ISpace startSpace;
 
-    private String title;
+	private String title;
 
-    @Enumerated(EnumType.STRING)
-    private ExhibitionModes mode;
+	@Enumerated(EnumType.STRING)
+	private ExhibitionModes mode;
 
-    private String customMessage;
-    
-    private String previewId;
-    
-    //ExhibitionPreview
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.IVSpaceElement#getId()
-     */
-    @Override
-    public String getId() {
-        return id;
-    }
+	private String customMessage;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.IVSpaceElement#setId(java.lang.String)
-     */
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
+	private String previewId;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.IExhibition#getSpace()
-     */
-    @Override
-    public ISpace getStartSpace() {
-        return this.startSpace;
-    }
+	// ExhibitionPreview
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.diging.vspace.core.model.IVSpaceElement#getId()
+	 */
+	@Override
+	public String getId() {
+		return id;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.IExhibition#setSpace(edu.asu.diging.vspace.
-     * core.model.ISpace)
-     */
-    @Override
-    public void setStartSpace(ISpace space) {
-        this.startSpace = space;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.diging.vspace.core.model.IVSpaceElement#setId(java.lang.String)
+	 */
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    @Override
-    public String getTitle() {
-        return title;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.diging.vspace.core.model.IExhibition#getSpace()
+	 */
+	@Override
+	public ISpace getStartSpace() {
+		return this.startSpace;
+	}
 
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    public ExhibitionModes getMode() {
-        return mode;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.diging.vspace.core.model.IExhibition#setSpace(edu.asu.diging.vspace.
+	 * core.model.ISpace)
+	 */
+	@Override
+	public void setStartSpace(ISpace space) {
+		this.startSpace = space;
+	}
 
-    public void setMode(ExhibitionModes mode) {
-        this.mode = mode;
-    }
+	@Override
+	public String getTitle() {
+		return title;
+	}
 
-    public String getCustomMessage() {
-        return customMessage;
-    }
+	@Override
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setCustomMessage(String customMessage) {
-        this.customMessage = customMessage;
-    }
+	public ExhibitionModes getMode() {
+		return mode;
+	}
+
+	public void setMode(ExhibitionModes mode) {
+		this.mode = mode;
+	}
+
+	public String getCustomMessage() {
+		return customMessage;
+	}
+
+	public void setCustomMessage(String customMessage) {
+		this.customMessage = customMessage;
+	}
 
 	public String getPreviewId() {
 		return previewId;
