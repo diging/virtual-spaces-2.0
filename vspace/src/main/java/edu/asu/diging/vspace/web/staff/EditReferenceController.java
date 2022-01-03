@@ -42,6 +42,9 @@ public class EditReferenceController {
         return "staff/references/edit";
     }
     
+    /**
+     * This method allows updating References when a user is on the reference page accessed from 'References' option from side navbar.
+     */
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.POST)
     public String save(@ModelAttribute Reference refData, @PathVariable("referenceId") String referenceId, 
             RedirectAttributes attributes) {
@@ -59,14 +62,17 @@ public class EditReferenceController {
             reference.setType(refData.getType());
             reference.setNote(refData.getNote());
             referenceManager.updateReference(reference);
-            attributes.addAttribute("alertType", "success");
-            attributes.addAttribute("message", "Reference successfully updated!");
-            attributes.addAttribute("showAlert", "true");
+            attributes.addFlashAttribute("alertType", "success");
+            attributes.addFlashAttribute("message", "Reference successfully updated!");
+            attributes.addFlashAttribute("showAlert", "true");
             return "redirect:/staff/display/reference/{referenceId}";
         }
         return "redirect:/404";
     }
     
+    /**
+     * This method allows updating References when a user is on the slide page.
+     */
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}/edit", method = RequestMethod.POST)
     public ResponseEntity<ReferenceBlock> editReference(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
@@ -87,9 +93,9 @@ public class EditReferenceController {
             referenceManager.updateReference(ref);
             String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
             ReferenceBlock refBlock = new ReferenceBlock((Reference) ref, refDisplayText);
-            attributes.addAttribute("alertType", "success");
-            attributes.addAttribute("message", "Reference successfully updated!");
-            attributes.addAttribute("showAlert", "true");
+            attributes.addFlashAttribute("alertType", "success");
+            attributes.addFlashAttribute("message", "Reference successfully updated!");
+            attributes.addFlashAttribute("showAlert", "true");
             return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
