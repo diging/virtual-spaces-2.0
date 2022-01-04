@@ -45,15 +45,12 @@ public class ExhibitionPreviewController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = "/exhibition/preview/{previewId}")
+    @RequestMapping(value = "/preview/{previewId}")
     public String space(@PathVariable("previewId") String previewId, Model model) {
 
         model.addAttribute("isExhPreview", true);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        if (exhibition.getPreviewId() == null || !exhibition.getPreviewId().equals(previewId)) {
-            return "/exhibition/badrequest";
-        }
-        model.addAttribute("PreviewId", exhibition.getPreviewId());
+        model.addAttribute("previewId",previewId);
         ExhibitionModes exhibitionMode = exhibition.getMode();
         if (!exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
             String id = exhibition.getStartSpace().getId();

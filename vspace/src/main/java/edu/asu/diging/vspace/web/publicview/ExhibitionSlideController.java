@@ -45,16 +45,20 @@ public class ExhibitionSlideController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
+    @RequestMapping(value = { "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
+            "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}" }, method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
-            @RequestParam(required=false, name="back") boolean back,
-            @RequestParam(required = false, name="branchingPoint") String branchingPointId,
-            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId)
-                    throws ModuleNotFoundException, SequenceNotFoundException,
-                    SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
-                    SpaceNotFoundException {
+            @PathVariable(name = "previewId", required = false) String previewId, @RequestParam(required = false, name = "back") boolean back,
+            @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
+            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
+            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
+            SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
+        if (previewId != null) {
+            model.addAttribute("isExhPreview", true);
+            model.addAttribute("previewId", previewId);
+        }
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
@@ -71,8 +75,8 @@ public class ExhibitionSlideController {
         }
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
-        ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
-        if (sequenceExist==null) {
+        ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
+        if (sequenceExist == null) {
             throw new SequenceNotFoundException(sequenceId);
         }
         List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
@@ -99,27 +103,28 @@ public class ExhibitionSlideController {
         if (slideIndex > 0) {
             prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
         }
-        model.addAttribute("sequences",moduleManager.getModuleSequences(moduleId));
-        model.addAttribute("sequence",sequenceExist);
+        model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
+        model.addAttribute("sequence", sequenceExist);
         model.addAttribute("slides", sequenceSlides);
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
 
         model.addAttribute("currentSlideCon", currentSlide);
-        if(currentSlide instanceof BranchingPoint) {
-            model.addAttribute("choices", ((BranchingPoint)currentSlide).getChoices());
-            if(back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
+        if (currentSlide instanceof BranchingPoint) {
+            model.addAttribute("choices", ((BranchingPoint) currentSlide).getChoices());
+            if (back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
                 sequenceHistory.popFromHistory();
             }
         }
-        if(branchingPointId!=null && !branchingPointId.isEmpty()){
-            sequenceHistory.addToHistory(previousSequenceId,branchingPointId);
+        if (branchingPointId != null && !branchingPointId.isEmpty()) {
+            sequenceHistory.addToHistory(previousSequenceId, branchingPointId);
         }
-        if(sequenceHistory.hasHistory()) {
+        if (sequenceHistory.hasHistory()) {
             model.addAttribute("showBackToPreviousChoice", true);
             model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
-            model.addAttribute("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
+            model.addAttribute("previousBranchingPoint",
+                    ((BranchingPoint) slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
 
         model.addAttribute("numOfSlides", sequenceSlides.size());

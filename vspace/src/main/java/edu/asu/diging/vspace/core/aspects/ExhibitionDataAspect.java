@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
@@ -79,13 +80,15 @@ public class ExhibitionDataAspect {
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest();
-        if (request.getRequestURI().contains("/exhibition/preview")) {
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+        Map pathVariables = (Map)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        String previewId= (String) pathVariables.get("previewId");  
+        if (request.getRequestURI().contains("/preview/") && (exhibition.getPreviewId() == null || !exhibition.getPreviewId().equals(previewId))) {
             return jp.proceed();
         }
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int indexOfModel = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         // If there is no exhibition, we go back to root url page.
         if (exhibition == null) {
             return "redirect:/";

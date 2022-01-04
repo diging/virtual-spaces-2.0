@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
@@ -22,9 +24,15 @@ public class ExhibitionModuleController {
     @Autowired
     private ISpaceManager spaceManager;
 
-    @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
-    public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
+    @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{previewId}/{spaceId}/module/{id}" })
+    public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId,
+            @PathVariable(name = "previewId", required = false) String previewId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {
+
+        if (previewId != null) {
+            model.addAttribute("isExhPreview", true);
+            model.addAttribute("previewId", previewId);
+        }
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
@@ -39,6 +47,10 @@ public class ExhibitionModuleController {
             return "/exhibition/module";
         }
         String startSequenceID = module.getStartSequence().getId();
-        return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;
+        if (previewId != null) {
+            return "redirect:/preview/" + previewId + "/" + spaceId + "/module/" + id + "/sequence/" + startSequenceID;
+        } else {
+            return "redirect:/exhibit/" + spaceId + "/module/" + id + "/sequence/" + startSequenceID;
+        }
     }
 }

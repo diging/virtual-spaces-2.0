@@ -49,12 +49,17 @@ public class ExhibitionSpaceController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = "/exhibit/space/{id}")
-    public String space(@PathVariable("id") String id, Model model) {
+    @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{previewId}/space/{id}" })
+    public String space(@PathVariable("id") String id, @PathVariable(name = "previewId", required = false) String previewId, Model model) {
+        if (previewId != null) {
+            model.addAttribute("isExhPreview", true);
+            model.addAttribute("previewId", previewId);
+        }
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
-        /* (non-Javadoc)
-         * Below null check is added to accommodate already existing spaces with null space status
+        /*
+         * (non-Javadoc) Below null check is added to accommodate already existing
+         * spaces with null space status
          */
         if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {

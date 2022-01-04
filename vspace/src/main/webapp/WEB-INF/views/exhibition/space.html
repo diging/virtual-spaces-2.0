@@ -295,7 +295,7 @@
     		        var posY = $("#space").position().top;
     		        var spaceLink = $('<a></a>');
     		        if(isExhPreview=== true){
-    		        	spaceLink.attr("href",[[@{/exhibition/preview/space/}]]+link.link.targetSpace.id);
+    		        	spaceLink.attr("href",[[@{|/preview/${previewId}/space/|}]]+link.link.targetSpace.id);
     		        }
     		        else{
     		        	spaceLink.attr("href", link.link.targetSpace.id);
@@ -339,7 +339,7 @@
     		        var moduleLink = $('<a></a>');
     		        var moduleLinkURL = null;
     		        if(isExhPreview=== true){
-    		        	moduleLinkURL = [[@{|/exhibition/preview/${space?.id}/module/|}]]+link.link.module.id;
+    		        	moduleLinkURL = [[@{|/preview/${previewId}/${space?.id}/module/|}]]+link.link.module.id;
     		        } else{
     		        	 moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
     		        }
@@ -430,7 +430,7 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
-                <div th:if="${isExhPreview} == null OR ${isExhPreview} == false" id="mySidenav" class="sidenav">
+                <div  th:if="${isExhPreview} == null OR ${isExhPreview} == false" id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
@@ -439,8 +439,16 @@
                         </li>
                     </ul>
                 </div>
-                <span th:if="${isExhPreview} == null OR ${isExhPreview} == false" style="font-size: 30px; cursor: pointer"
-                    onclick="openNav()">&#9776;</span>
+                  <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn"
+                        onclick="closeNav()">&times;</a>
+                    <ul th:each="space: ${publishedSpaces}">
+                        <li><a class="dropdown-item"
+                            th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]</a>
+                        </li>
+                    </ul>
+                </div>
+                <span style="font-size: 30px; cursor: pointer" onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
@@ -463,11 +471,11 @@
                                        <li
                                             th:if="${!#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibition/preview/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibition/preview/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>

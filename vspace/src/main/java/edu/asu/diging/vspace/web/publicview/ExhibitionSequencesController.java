@@ -37,14 +37,17 @@ public class ExhibitionSequencesController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}")
+    @RequestMapping(value = { "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}",
+            "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
-            @RequestParam(required = false, name="branchingPoint") String branchingPointId,
-            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId,
-            @RequestParam(required = false, name="clearHistory") Boolean clearHistory)
-                    throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
-    	
+            @PathVariable(name = "previewId", required = false) String previewId,
+            @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
+            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId,
+            @RequestParam(required = false, name = "clearHistory") Boolean clearHistory) throws ModuleNotFoundException,
+            SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
+
+       
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
@@ -57,10 +60,14 @@ public class ExhibitionSequencesController {
         if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, module has not been configured yet.");
+            if (previewId != null) {
+                model.addAttribute("isExhPreview", true);
+                model.addAttribute("previewId", previewId);
+            }
             return "/exhibition/module";
         }
-        ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
-        if (sequenceExist==null) {
+        ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
+        if (sequenceExist == null) {
             throw new SequenceNotFoundException(sequenceId);
         }
 
@@ -68,16 +75,30 @@ public class ExhibitionSequencesController {
         if (slides.size() == 0) {
             model.addAttribute("showAlert", true);
             model.addAttribute("message", "Sorry, module has not been configured yet.");
+            if (previewId != null) {
+                model.addAttribute("isExhPreview", true);
+                model.addAttribute("previewId", previewId);
+            }
             return "/exhibition/module";
         }
         String firstSlideId = slides.get(0).getId();
-        if(sequenceHistory.hasHistory()){
-            if(clearHistory!=null && clearHistory==true) {
+        if (sequenceHistory.hasHistory()) {
+            if (clearHistory != null && clearHistory == true) {
                 sequenceHistory.flushFromHistory();
             }
         }
-        return String.format("redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
-                spaceId,moduleId,sequenceId,firstSlideId,(branchingPointId != null ? branchingPointId : ""),(previousSequenceId != null ? previousSequenceId : ""));
+        if (previewId != null) {
+            return String.format(
+                    "redirect:/preview/%s/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",previewId, spaceId,
+                    moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
+                    (previousSequenceId != null ? previousSequenceId : ""));   
+        }
+        else {
+        return String.format(
+                "redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s", spaceId,
+                moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
+                (previousSequenceId != null ? previousSequenceId : ""));
+        }
 
     }
 }
