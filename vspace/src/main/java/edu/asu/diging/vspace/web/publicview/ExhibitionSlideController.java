@@ -49,7 +49,8 @@ public class ExhibitionSlideController {
             "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}" }, method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = "previewId", required = false) String previewId, @RequestParam(required = false, name = "back") boolean back,
+            @PathVariable(name = "previewId", required = false) String previewId,
+            @RequestParam(required = false, name = "back") boolean back,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
             @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,

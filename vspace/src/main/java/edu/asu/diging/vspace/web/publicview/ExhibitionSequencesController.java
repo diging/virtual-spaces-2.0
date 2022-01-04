@@ -47,7 +47,6 @@ public class ExhibitionSequencesController {
             @RequestParam(required = false, name = "clearHistory") Boolean clearHistory) throws ModuleNotFoundException,
             SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
 
-       
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
@@ -89,15 +88,15 @@ public class ExhibitionSequencesController {
         }
         if (previewId != null) {
             return String.format(
-                    "redirect:/preview/%s/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",previewId, spaceId,
-                    moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
-                    (previousSequenceId != null ? previousSequenceId : ""));   
-        }
-        else {
-        return String.format(
-                "redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s", spaceId,
-                moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
-                (previousSequenceId != null ? previousSequenceId : ""));
+                    "redirect:/preview/%s/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
+                    previewId, spaceId, moduleId, sequenceId, firstSlideId,
+                    (branchingPointId != null ? branchingPointId : ""),
+                    (previousSequenceId != null ? previousSequenceId : ""));
+        } else {
+            return String.format(
+                    "redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
+                    spaceId, moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
+                    (previousSequenceId != null ? previousSequenceId : ""));
         }
 
     }
