@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +8,16 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
@@ -27,6 +33,8 @@ public class SequenceOverviewManager {
     @Autowired
     SequenceRepository sequenceRepo;
     
+    @Autowired
+    SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
     
     /**
      * This method is used to fetch all Sequence and corresponding slides which belong to a module.
@@ -44,6 +52,22 @@ public class SequenceOverviewManager {
         }
         return mapSequenceToSlides;
         
+    }
+    
+    public List<SequenceOverview> showModuleMap(String id) {
+        Map<Sequence,List<ISlide>> mapSequenceToSlides = getSequencesFromModules(id);
+        List<Sequence> sequenceList = new ArrayList<Sequence>();
+        for(Sequence seq : mapSequenceToSlides.keySet()) {
+            sequenceList.add(seq);
+        }
+        List<SequenceOverview> sequenceOverviewJson = null;
+        try {
+            sequenceOverviewJson = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sequenceOverviewJson;
     }
 
 }

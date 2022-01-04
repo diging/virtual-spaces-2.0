@@ -29,7 +29,7 @@ public class SequenceOverviewController {
     @Autowired
     SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
     
-    @RequestMapping(STAFF_MODULE_PATH+"{id}")
+    @RequestMapping(STAFF_MODULE_PATH+"{id}")//id is module id
     public String showModuleMap(@PathVariable String id, Model model) {
         Map<Sequence,List<ISlide>> mapSequenceToSlides = sequenceOverviewManager.getSequencesFromModules(id);
         List<Sequence> sequenceList = new ArrayList<Sequence>();
