@@ -87,6 +87,7 @@ function setLabelPosition(link,id, positionX, positionY){
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+	debugger;
     if(link != null){
         var spaceLink;
         if(link.type == "ALERT"){
@@ -185,7 +186,7 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
-            
+            debugger;
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkModalId-";
                 var divId = "#space"
@@ -261,7 +262,7 @@ function showSpaceLink(spaceLink, show, x, y) {
 
     link.css('position', 'absolute');
     link.css('left', spaceLink["x"] + posX);
-    link.css('top', spaceLink["y"]);
+    link.css('top', spaceLink["y"] + posY);
     link.css('color', 'rgba(128,128,128,1)');
     link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
     link.css('font-size', "12px");
@@ -311,7 +312,7 @@ function showModuleLink(moduleLink, show, x, y) {
     }
     link.css('position', 'absolute');
     link.css('left', moduleLink["x"] + posX);
-    link.css('top', moduleLink["y"] );
+    link.css('top', moduleLink["y"] + posY);
     link.css('color', 'red');
     link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
     link.css('font-size', "12px");
@@ -378,17 +379,19 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
 }
 
 function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
-    var posX;
+    var posX, posY;
     if(show) {
-        posx = $("#main-bgImage").position().left;
+        posX = $("#main-bgImage").position().left;
+        posY = $("#main-bgImage").position().top;
     }
     else{
-        posX = $("#bgImage").position().left;        
+        posX = $("#bgImage").position().left;
+        posY = $("#bgImage").position().top;
     }
     $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
     $(selectedLinkClass).css({ 'position': 'absolute'});
     $(selectedLinkClass).css({ 'left': x + posX});
-    $(selectedLinkClass).css({ 'top': y});
+    $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass+' span').remove();
     $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
     feather.replace();    
@@ -428,7 +431,7 @@ function showExternalLinks(externalLink, show, x, y) {
 
     link.css('position', 'absolute');
     link.css('left', externalLink["x"] + posX);
-    link.css('top', externalLink["y"]);
+    link.css('top', externalLink["y"] + posY);
     link.css('color', 'blue');
     link.css('font-size', "12px");
 
