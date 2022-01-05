@@ -46,8 +46,8 @@ public class ExhibitionSlideController {
     private SequenceHistory sequenceHistory;
 
     @RequestMapping(value = {
-            "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
-            "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}"
+        "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
+        "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}"
         }, method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
