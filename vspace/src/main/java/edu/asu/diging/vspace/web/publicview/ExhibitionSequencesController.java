@@ -37,7 +37,10 @@ public class ExhibitionSequencesController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = { "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}","/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
+    @RequestMapping(value = { 
+        "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}",
+        "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" 
+    })
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
             @PathVariable(name = "previewId", required = false) String previewId,
@@ -80,10 +83,8 @@ public class ExhibitionSequencesController {
             return "/exhibition/module";
         }
         String firstSlideId = slides.get(0).getId();
-        if (sequenceHistory.hasHistory()) {
-            if (clearHistory != null && clearHistory == true) {
-                sequenceHistory.flushFromHistory();
-            }
+        if (sequenceHistory.hasHistory() && (clearHistory != null && clearHistory == true)) {
+            sequenceHistory.flushFromHistory();
         }
         if (previewId != null) {
             return String.format(
@@ -91,12 +92,11 @@ public class ExhibitionSequencesController {
                     previewId, spaceId, moduleId, sequenceId, firstSlideId,
                     (branchingPointId != null ? branchingPointId : ""),
                     (previousSequenceId != null ? previousSequenceId : ""));
-        } else {
-            return String.format(
-                    "redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
-                    spaceId, moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
-                    (previousSequenceId != null ? previousSequenceId : ""));
         }
+        return String.format(
+                "redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
+                spaceId, moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
+                (previousSequenceId != null ? previousSequenceId : ""));
 
     }
 }
