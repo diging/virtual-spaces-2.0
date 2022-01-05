@@ -39,12 +39,11 @@ public class ExhibitionModuleController {
         ISpace space = spaceManager.getSpace(spaceId);
         List<SequenceOverview> sequenceOverview = sequenceOverviewManager.showModuleMap(id);
         if(sequenceOverview != null) {
-            //model.addAttribute("sequenceOverviews", sequenceOverview);
+            model.addAttribute("sequences", sequenceOverview);
             for(SequenceOverview sequence :  sequenceOverview) {
                 logger.info("sequence is {} ", sequence.getName());
             }
         }
-        model.addAttribute("sequenceOverview", sequenceOverview);
         logger.info("sequence overview is {} ", sequenceOverview.get(0).getName());
         if (space == null) {
             return "redirect:/exhibit/404";

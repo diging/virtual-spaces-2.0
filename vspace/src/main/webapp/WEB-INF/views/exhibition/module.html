@@ -2,14 +2,9 @@
    <head>
       <style type="text/css">
       </style>
-      <script th:inline="javascript">
-            //var jsonMaps = [[${sequenceOverview}]];
-            //console.log(jsonMaps);
-        </script>
        <script src="https://d3js.org/d3.v4.js"></script>
       <script th:inline="javascript">
-      	  var jsonMaps = [[${sequenceOverview}]];//[[${sequenceOverview}]];
-	      console.log(jsonMaps);
+      	var json = [[${sequences}]]; //[[${sequenceOverview}]];
          $( document ).ready(function() {
             $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
             $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
@@ -113,13 +108,13 @@
                         </div>
                         <div id="graph" class="modal-body">
                         <script>
-				  		var nodeJson = jsonMaps; //JSON.parse(jsonMap['nodesJson']);
+				  		var nodeJson = json; //JSON.parse(jsonMap['nodesJson']);
 				  		const PADDING_BUBBLE = 15 // distance between edge end and bubble
 				        const PADDING_LABEL = 30 // distance between edge end and engineer id
 				        const BUBBLE_SIZE_MIN = 10
 				        const BUBBLE_SIZE_MAX = 10
 				        
-				        var diameter = 1260,
+				        var diameter = 400,
 				        radius = diameter / 2,
 				        innerRadius = radius - 170; // between center and edge end
 				        
@@ -148,53 +143,56 @@
 				        
 				        // Build an object that gives feature of each leaves
 				        cluster(root);
-				        leaves = root.leaves()
-				    
+				        leaves = root.leaves();
+				        //console.log(leaves);
 				        // Leaves is an array of Objects. 1 item = one leaf. Provides x and y for leaf position in the svg. Also gives details about its parent.
-				        link = link
+				        /* link = link
 				            .data(getEdges(leaves))
 				            .enter().append("path")
 				            .each(function (d) { d.source = d[0], d.target = d[d.length - 1]; })
 				            .attr("class", "link")
 				            .attr("d", line)
 				            .attr("fill", "none")
-				            .attr("stroke", "black")
-				    
+				            .attr("stroke", "black") */
+				            
 				        label = label
 				            .data(leaves)
-				            .enter().append("text")
-				            .attr("class", "label")
-				            .attr("dy", "0.31em")
-				            .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_LABEL) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
+				            .enter().append("circle")
+				            .attr("class", "node")
+				            .attr("dy", "0.7em")
+				            .attr("dx", "0.7em")
+				            .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
 				            .attr("text-anchor", function (d) { return d.x < 180 ? "start" : "end"; })
+				            .attr("r", 20)
+				            .style("fill", "#69b3a2")
 				            .text(function (d) { return d.data.name; });
 				    
-				        bubble = bubble
+				        /* bubble = bubble
 				            .data(leaves)
 				            .enter().append("g")
 				            .attr("class", "bubble")
 				            .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" })
-				           
+				            */
 				            
-				      var modules = bubble.filter(function(d,i){
-				    	  return d.data.module;
+				       var slides = label.filter(function(d,i){
+				    	  return d.data.slides;
 				    	}).append("svg:foreignObject")
 				            .attr("x", function(d) { return -10;})
 				            .attr("y", function(d) { return -10;})
 				            .attr("height", 22)
 				            .attr("width", 22) 
-				            .html('<span class="icon-2x2-grid secondary"></span>');
-				            
-				      var images =  bubble.filter(function(d,i){
+				            .html('<span class="icon-2x2-grid secondary"></span>'); 
+				        console.log(slides); 
+				        var images =  bubble.filter(function(d,i){
 				    	  return !d.data.module;
 				    	}).append("svg:image")
 				              .attr("xlink:href",  function(d) {  return d.data.img;})
 				              .attr("x", function(d) { return -25;})
 				              .attr("y", function(d) { return -25;}) 
 				              .attr("height", 35)
-				              .attr("width", 35);
+				              .attr("width", 35); 
 				      
-				      bubble.filter(function(d,i){
+				       bubble.filter(function(d,i){
 				     	  return !d.data.module && d.data.unpublished;
 				     	}).append("svg:foreignObject")
 				         .attr("x", function(d) { return -25;})
@@ -212,7 +210,7 @@
 				      .attr("width", 24) 
 				      .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
 				      
-				      var setEvents = modules
+				      var setEvents = slides
 				      .on( 'dblclick', function (d) {
 				          location.href = d.data.link;
 				       })
