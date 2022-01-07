@@ -151,8 +151,8 @@
 				        // Build an object that gives feature of each leaves
 				        cluster(root);
 				        leaves = root.leaves();
-				        console.log(leaves);
-				        console.log(moduleLeaf);
+				        /* console.log(leaves);
+				        console.log(moduleLeaf); */
 				        //console.log(leaves);
 				        // Leaves is an array of Objects. 1 item = one leaf. Provides x and y for leaf position in the svg. Also gives details about its parent.
 				        /* link = link
@@ -193,26 +193,32 @@
 				            .attr("class", "bubble")
 				            .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" })
 				            */
+				            let slideArr = [];
 				       sequence.filter(function(d,i){
-				    	  d.data.slides.filter(function(slide,j){
-				    		  var slideArr = [];
+				    	   //var slideArr = [];
+				    	   //slideArr.push(d.data.slides);
+				    	   d.data.slides.filter(function(slide,j){ 
+				    		   slide.id = d.data.id;
 				    		  slideArr.push(slide);
-				    		  var slideArrJson = packageHierarchy(slideArr);
-				    		  cluster(slideArrJson);
-				    		  slides=slides
-				    		  .data(slideArrJson.leaves())
-				    		  .enter().append("circle")
-				    		 .attr("class","slideNode")
-					    	.attr("dy", "0.50em")
-				            .attr("dx", "0.7em")
-				            .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
-				            .attr("text-anchor", function (d) { return d.x < 180 ? "start" : "end"; })
-				            .attr("r", 20)
-				            .style("fill", "blue")
-				            .text(function (dp) {console.log(dp); return dp.name; });
 					    	  }) ;
+				    	   
 				    	  
-				       });  
+				       }); 
+				       console.log(slideArr);
+				       var slideArrJson = packageHierarchy(slideArr);
+			    		  cluster(slideArrJson);
+			    		  console.log(slideArrJson.leaves());
+			    		  slides=slides
+			    		  .data(slideArrJson.leaves())
+			    		  .enter().append("square")
+			    		 .attr("class","slideNode")
+				    	.attr("dy", "0.50em")
+			            .attr("dx", "0.7em")
+			            .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
+			            .attr("text-anchor", function (d) { return d.x < 180 ? "start" : "end"; })
+			            .attr("r", 20)
+			            .style("fill", "blue")
+			            .text(function (dp) {return dp.data.name; });
 				       /*slides = sequence.filter(function(d,i){
 				    	    console.log(d.data.id);
 				    	   console.log(d.data.slides); 
@@ -232,6 +238,7 @@
 				       
 				           function find(id, data) {
 				               var node = map[id], i;
+				               console.log(node);
 				               if (!node) {
 				                   node = map[id] = data || { id: id, children: [] };
 				                   if (id.length) {
