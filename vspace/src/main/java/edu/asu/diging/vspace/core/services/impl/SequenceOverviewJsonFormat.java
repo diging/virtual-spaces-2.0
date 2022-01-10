@@ -46,7 +46,6 @@ public class SequenceOverviewJsonFormat {
         sequenceOverview.setName(sequence.getName());
         sequenceOverview.setId(sequence.getId());
         sequenceOverview.setSlides(sequence.getSlides());
-        StringBuilder linkPathBuilder = new StringBuilder();
         
         return sequenceOverview;  
     }

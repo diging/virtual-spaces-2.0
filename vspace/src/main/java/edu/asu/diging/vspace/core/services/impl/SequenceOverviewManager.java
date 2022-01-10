@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -17,6 +20,8 @@ import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ModuleOverview;
 import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -36,6 +41,8 @@ public class SequenceOverviewManager {
     @Autowired
     SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     /**
      * This method is used to fetch all Sequence and corresponding slides which belong to a module.
      * 
@@ -54,20 +61,22 @@ public class SequenceOverviewManager {
         
     }
     
-    public List<SequenceOverview> showModuleMap(String id) {
+    public ModuleOverview showModuleMap(String id) {
         Map<Sequence,List<ISlide>> mapSequenceToSlides = getSequencesFromModules(id);
         List<Sequence> sequenceList = new ArrayList<Sequence>();
         for(Sequence seq : mapSequenceToSlides.keySet()) {
             sequenceList.add(seq);
         }
         List<SequenceOverview> sequenceOverviewJson = null;
+        ModuleOverview moduleOverviewJson = new ModuleOverview();
         try {
             sequenceOverviewJson = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
+            moduleOverviewJson.setSequenceOverview(sequenceOverviewJson);
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return sequenceOverviewJson;
+        return moduleOverviewJson;
     }
 
 }

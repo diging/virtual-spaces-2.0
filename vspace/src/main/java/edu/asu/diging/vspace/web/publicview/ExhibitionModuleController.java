@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.SequenceOverviewManager;
@@ -29,22 +30,11 @@ public class ExhibitionModuleController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
-    @Autowired
-    private SequenceOverviewManager sequenceOverviewManager;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {
         ISpace space = spaceManager.getSpace(spaceId);
-        List<SequenceOverview> sequenceOverview = sequenceOverviewManager.showModuleMap(id);
-        if(sequenceOverview != null) {
-            model.addAttribute("sequences", sequenceOverview);
-            for(SequenceOverview sequence :  sequenceOverview) {
-                logger.info("sequence is {} ", sequence.getName());
-            }
-        }
-        logger.info("sequence overview is {} ", sequenceOverview.get(0).getName());
         if (space == null) {
             return "redirect:/exhibit/404";
         }
