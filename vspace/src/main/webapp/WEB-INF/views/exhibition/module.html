@@ -117,7 +117,7 @@
                             </button>
                         </div>
                         <div id="graph" class="modal-body">
-                        <svg width="960px" height="600px"></svg>
+                        <svg width="400px" height="400px"></svg>
                         <script>
                         /* var diameter = 400;
                         var radius = 200; */
@@ -151,9 +151,9 @@
 				  		  console.log(module.id); */
 				  		  
 				  		  //modlink.source = modlink.s;
-				  		  modlink.destination = nodeSequence.id;
+				  		  modlink.target = nodeSequence.id;
 				  		  modlink.source = moduleid;
-				  		  modlink.value=10;
+				  		  modlink.value=20;
 				  		  graph.links.push(modlink);
 				  		  modlink={}
 				  		  let sequenceSlides = sequence.slides;
@@ -172,17 +172,18 @@
 					  		  if(index == 0){
 				  				  let slideLink ={};
 				  				  slideLink.source = nodeSequence.id;
-				  				  slideLink.destination = slideNode.id;
+				  				  slideLink.target = slideNode.id;
 				  				  slideLink.value=10;
 				  				  graph.links.push(slideLink);
 					  		  } else {
 					  			  let slideLink = {};
 					  			  slideLink.source = source;
-					  			  slideLink.destination = slideNode.id;
+					  			  slideLink.target = slideNode.id;
 					  			  slideLink.value=10;
 					  			  graph.links.push(slideLink);
 					  		  }
 					  		  source = slideNode.id;
+					  		  index=index+1;
 				  		  }
 				  		}
 				  		console.log('sequences are');
@@ -195,20 +196,20 @@
 				  		//var simulation = d3.ForceSimulation(graph.nodes).force()
 				         
 				  		var svg = d3.select("svg"),
-					    width = +svg.attr("width"),
-					    height = +svg.attr("height");
+					    width = +svg.attr("400px"),
+					    height = +svg.attr("400px");
 				  		
 				  		var color = d3.scaleOrdinal(d3.schemeCategory20);
 				  		
 				  		var simulation = d3.forceSimulation(graph.nodes)
-				  	    .force("link", d3.forceLink().id(function(d){
-				  	    	 console.log('reached here');
+				  	    .force("link", d3.forceLink(graph.links).id(function(d){
+				  	    	 /* console.log('reached here');
 				  	    	console.log(d.id);
-				  	    	console.log('done'); 
+				  	    	console.log('done');  */
 				  	    	return d.id;
-				  	    }).links(graph.links))
-				  	    .force("charge", d3.forceManyBody().strength(-300))
-				  	    .force("center", d3.forceCenter(width / 2, height / 2))
+				  	    }))
+				  	    .force("charge", d3.forceManyBody().strength(-400))
+				  	    .force("center", d3.forceCenter("200", "200"))
 				  	    .on("tick", ticked);
 				  		console.log('reached here');
 				  		  var link = svg.append("g")
@@ -224,15 +225,17 @@
 				  		    .selectAll("circle")
 				  		    .data(graph.nodes)
 				  		    .enter().append("circle")
-				  		      .attr("r", 200)
-				  		      .attr("fill", function(d) { return color(d.group); })
-				  		       .call(d3.drag()
+				  		      .attr("r", 15)
+				  		      .attr("fill", function(d) { return color(d.group); });
+				  		       /* .call(d3.drag()
 				  		          .on("start", dragstarted)
 				  		          .on("drag", dragged)
-				  		          .on("end", dragended)); 
+				  		          .on("end", dragended));  */
 
 				  		  node.append("title")
 				  		      .text(function(d) { return d.id; });
+		  		          node.append("text")
+			  		        .text(function(d) { return d.name; });
  
 				  		     /* simulation
 				  		      .nodes(graph.nodes)
@@ -243,7 +246,7 @@
 				  		    
 				  		   function ticked() {
 				  		    link
-				  		        .attr("x1", function(d) { console.log(d);  return d.source.x; })
+				  		        .attr("x1", function(d) { return d.source.x; })
 				  		        .attr("y1", function(d) { return d.source.y; })
 				  		        .attr("x2", function(d) { return d.target.x; })
 				  		        .attr("y2", function(d) { return d.target.y; });
