@@ -113,10 +113,7 @@ public class ExhibitionSlideController {
 
         model.addAttribute("currentSlideCon", currentSlide);
         if (currentSlide instanceof BranchingPoint) {
-            model.addAttribute("choices", ((BranchingPoint) currentSlide).getChoices());
-            if (back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
-                sequenceHistory.popFromHistory();
-            }
+            currentSlideHavingBranchingPoint(model, slideId, back, currentSlide);
         }
         if (branchingPointId != null && !branchingPointId.isEmpty()) {
             sequenceHistory.addToHistory(previousSequenceId, branchingPointId);
@@ -133,6 +130,13 @@ public class ExhibitionSlideController {
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
         return "exhibition/module";
+    }
+
+    private void currentSlideHavingBranchingPoint(Model model, String slideId, boolean back, ISlide currentSlide) {
+        model.addAttribute("choices", ((BranchingPoint) currentSlide).getChoices());
+        if (back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
+            sequenceHistory.popFromHistory();
+        }
     }
 
     private String moduleNotConfigured(Model model) {
