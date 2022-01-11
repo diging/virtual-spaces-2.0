@@ -72,9 +72,7 @@ public class ExhibitionSlideController {
             return "redirect:/exhibit/404";
         }
         if (module.getStartSequence() == null) {
-            model.addAttribute("showAlert", true);
-            model.addAttribute("message", "Sorry, module has not been configured yet.");
-            return "/exhibition/module";
+            return moduleNotConfigured(model);
         }
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
@@ -135,5 +133,11 @@ public class ExhibitionSlideController {
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
         return "exhibition/module";
+    }
+
+    private String moduleNotConfigured(Model model) {
+        model.addAttribute("showAlert", true);
+        model.addAttribute("message", "Sorry, module has not been configured yet.");
+        return "/exhibition/module";
     }
 }
