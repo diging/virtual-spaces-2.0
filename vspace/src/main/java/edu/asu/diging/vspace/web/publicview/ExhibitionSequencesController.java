@@ -55,13 +55,7 @@ public class ExhibitionSequencesController {
         }
         model.addAttribute("module", module);
         if (module.getStartSequence() == null) {
-            model.addAttribute("showAlert", true);
-            model.addAttribute("message", "Sorry, module has not been configured yet.");
-            if (previewId != null) {
-                model.addAttribute("isExhPreview", true);
-                model.addAttribute("previewId", previewId);
-            }
-            return "/exhibition/module";
+            return moduleNotConfigured(model, previewId);
         }
         ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist == null) {
@@ -70,13 +64,7 @@ public class ExhibitionSequencesController {
 
         List<ISlide> slides = sequenceManager.getSequence(sequenceId).getSlides();
         if (slides.size() == 0) {
-            model.addAttribute("showAlert", true);
-            model.addAttribute("message", "Sorry, module has not been configured yet.");
-            if (previewId != null) {
-                model.addAttribute("isExhPreview", true);
-                model.addAttribute("previewId", previewId);
-            }
-            return "/exhibition/module";
+            return moduleNotConfigured(model, previewId);
         }
         String firstSlideId = slides.get(0).getId();
         if (sequenceHistory.hasHistory() && (clearHistory != null && clearHistory == true)) {
@@ -94,5 +82,15 @@ public class ExhibitionSequencesController {
                 spaceId, moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
                 (previousSequenceId != null ? previousSequenceId : ""));
 
+    }
+
+    private String moduleNotConfigured(Model model, String previewId) {
+        model.addAttribute("showAlert", true);
+        model.addAttribute("message", "Sorry, module has not been configured yet.");
+        if (previewId != null) {
+            model.addAttribute("isExhPreview", true);
+            model.addAttribute("previewId", previewId);
+        }
+        return "/exhibition/module";
     }
 }
