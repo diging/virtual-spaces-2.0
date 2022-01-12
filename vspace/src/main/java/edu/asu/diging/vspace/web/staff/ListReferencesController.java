@@ -23,15 +23,8 @@ public class ListReferencesController {
     @Autowired
     private IReferenceManager referenceManager;
 
-    
-    @RequestMapping("/staff/references/list")
-    public String listSpacesWithoutNum( @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order, Model model) {
-        return String.format("redirect:/staff/references/list?page=1&sort=%s&order=%s",sortedBy,order);
-    }
-    
-    @RequestMapping(value="/staff/references/list", params= {"page", "sort", "order"})
-    public String listSpaces(@RequestParam(value = "page", required = false) String page,
+    @RequestMapping(value="/staff/references/list")
+    public String listReferences(@RequestParam(value = "page", required = false, defaultValue="1") String page,
             @RequestParam(value = "sort", required = false) String sortedBy,
             @RequestParam(value = "order", required = false) String order, Model model) {
         

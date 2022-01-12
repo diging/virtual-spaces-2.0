@@ -19,8 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.references.ReferenceBlock;
-import edu.asu.diging.vspace.core.references.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.references.ReferenceType;
+import edu.asu.diging.vspace.core.references.impl.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
 
 @Controller
@@ -50,18 +50,10 @@ public class EditReferenceController {
             RedirectAttributes attributes) {
         IReference reference = referenceManager.getReferenceById(referenceId);
         if(reference!=null) {
-            reference.setTitle(refData.getTitle());
-            reference.setAuthor(refData.getAuthor());
-            reference.setYear(refData.getYear());
-            reference.setJournal(refData.getJournal());
-            reference.setUrl(refData.getUrl());
-            reference.setVolume(refData.getVolume());
-            reference.setIssue(refData.getIssue());
-            reference.setPages(refData.getPages());
-            reference.setEditors(refData.getEditors());
-            reference.setType(refData.getType());
-            reference.setNote(refData.getNote());
-            referenceManager.updateReference(reference);
+            refData.setId(reference.getId());
+            refData.setCreatedBy(reference.getCreatedBy());
+            refData.setCreationDate(reference.getCreationDate());
+            referenceManager.updateReference(refData);
             attributes.addFlashAttribute("alertType", "success");
             attributes.addFlashAttribute("message", "Reference successfully updated!");
             attributes.addFlashAttribute("showAlert", "true");
@@ -79,20 +71,12 @@ public class EditReferenceController {
             @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
         IReference reference = referenceManager.getReference(refId);
         if(reference!=null) {
-            reference.setTitle(ref.getTitle());
-            reference.setAuthor(ref.getAuthor());
-            reference.setYear(ref.getYear());
-            reference.setJournal(ref.getJournal());
-            reference.setUrl(ref.getUrl());
-            reference.setVolume(ref.getVolume());
-            reference.setIssue(ref.getIssue());
-            reference.setPages(ref.getPages());
-            reference.setEditors(ref.getEditors());
-            reference.setType(ref.getType());
-            reference.setNote(ref.getNote());            
+            ref.setId(reference.getId());
+            ref.setCreatedBy(reference.getCreatedBy());
+            ref.setCreationDate(reference.getCreationDate());
             referenceManager.updateReference(ref);
             String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
-            ReferenceBlock refBlock = new ReferenceBlock((Reference) ref, refDisplayText);
+            ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
             attributes.addFlashAttribute("alertType", "success");
             attributes.addFlashAttribute("message", "Reference successfully updated!");
             attributes.addFlashAttribute("showAlert", "true");

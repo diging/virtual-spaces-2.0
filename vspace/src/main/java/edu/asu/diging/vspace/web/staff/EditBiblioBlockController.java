@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +22,11 @@ public class EditBiblioBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editBiblioBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId,
-            @RequestBody BiblioBlock biblioBlockData) throws IOException {
+            @RequestBody BiblioBlock biblioBlockData) {
         IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(biblioId);
+        if(biblioBlock==null) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
         biblioBlock.setBiblioTitle(biblioBlockData.getBiblioTitle());
         biblioBlock.setDescription(biblioBlockData.getDescription());
         contentBlockManager.updateBiblioBlock((BiblioBlock) biblioBlock);

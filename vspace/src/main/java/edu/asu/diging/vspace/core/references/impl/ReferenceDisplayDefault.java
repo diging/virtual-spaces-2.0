@@ -1,13 +1,15 @@
-package edu.asu.diging.vspace.core.references;
+package edu.asu.diging.vspace.core.references.impl;
 
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
+import edu.asu.diging.vspace.core.references.ReferenceDisplayFormatter;
 
 @Service
-public class ReferenceDisplayDefault implements ReferenceDisplayProvider{
+public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
     
-    public String getReferenceDisplayText(Reference reference) {
+    public String getReferenceDisplayText(IReference reference) {
         
         String title = reference.getTitle();
         String author = reference.getAuthor();

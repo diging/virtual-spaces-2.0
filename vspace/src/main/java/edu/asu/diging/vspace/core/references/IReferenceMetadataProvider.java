@@ -3,7 +3,7 @@ package edu.asu.diging.vspace.core.references;
 import edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
-public interface ReferenceMetadataProvider {
+public interface IReferenceMetadataProvider {
     
     public ReferenceMetadataType getReferenceMetadataType();
     

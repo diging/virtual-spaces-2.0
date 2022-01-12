@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.references;
 
-public interface ReferenceConstants {
+public interface CoinSConstants {
     
     String DEFAULT_URL_VERSION = "url_ver=Z39.88-2004";
     

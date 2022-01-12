@@ -15,7 +15,7 @@ import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.references.ReferenceBlock;
-import edu.asu.diging.vspace.core.references.ReferenceDisplayDefault;
+import edu.asu.diging.vspace.core.references.impl.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
 
@@ -38,8 +38,8 @@ public class AddReferenceController {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.saveReference(biblio, reference);
-        String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
-        ReferenceBlock refBlock = new ReferenceBlock((Reference) ref, refDisplayText);
+        String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
+        ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
         return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
     }
 

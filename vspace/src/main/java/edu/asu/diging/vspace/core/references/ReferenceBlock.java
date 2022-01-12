@@ -1,19 +1,20 @@
 package edu.asu.diging.vspace.core.references;
 
+import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
 public class ReferenceBlock {
     
-    private Reference reference;
+    private IReference reference;
     
     private String refDisplayText;
     
-    public ReferenceBlock(Reference ref, String refDisplayText) {
+    public ReferenceBlock(IReference ref, String refDisplayText) {
         this.reference = ref;
         this.refDisplayText = refDisplayText;
     }
 
-    public Reference getReference() {
+    public IReference getReference() {
         return reference;
     }
 

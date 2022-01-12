@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,6 +17,7 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
 
     private String biblioTitle;
 
+    @Lob
     private String description;
     
     @JsonIgnore    

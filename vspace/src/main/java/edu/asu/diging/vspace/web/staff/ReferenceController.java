@@ -33,11 +33,10 @@ public class ReferenceController {
     
     @RequestMapping("/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}")
     public ResponseEntity<Reference> getReference(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
             @PathVariable("refId") String refId) throws IOException {
         IReference reference = referenceManager.getReference(refId);
         if(reference!=null) { 
-            return new ResponseEntity<Reference>((Reference) reference, HttpStatus.OK);
+            return new ResponseEntity<Reference>((Reference)reference, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
