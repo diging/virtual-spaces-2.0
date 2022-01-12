@@ -10,7 +10,17 @@
 		  stroke: #fff;
 		  stroke-width: 1.5px;
 		}
-      
+      	
+      	.modal-content{
+      	width:800px;
+      	height:800px
+      	}
+      	
+      	.modal-dialog{
+      	width:800px;
+      	height:800px;
+      	}
+      	
       </style>
        <script src="https://d3js.org/d3.v4.min.js"></script>
       <script th:inline="javascript">
@@ -116,8 +126,8 @@
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div id="graph" class="modal-body">
-                        <svg width="400px" height="400px"></svg>
+                        <div id="graph" class="modal-body" style="width:800px;heigh:800px">
+                        <svg width="800px" height="800px"></svg>
                         <script>
                         /* var diameter = 400;
                         var radius = 200; */
@@ -196,23 +206,42 @@
 				  		//var simulation = d3.ForceSimulation(graph.nodes).force()
 				         
 				  		var svg = d3.select("svg"),
-					    width = +svg.attr("400px"),
-					    height = +svg.attr("400px");
+					    width = +svg.attr("800px"),
+					    height = +svg.attr("800px");
 				  		
 				  		var color = d3.scaleOrdinal(d3.schemeCategory20);
 				  		
-				  		var simulation = d3.forceSimulation(graph.nodes)
-				  	    .force("link", d3.forceLink(graph.links).id(function(d){
-				  	    	 /* console.log('reached here');
-				  	    	console.log(d.id);
-				  	    	console.log('done');  */
-				  	    	return d.id;
-				  	    }))
-				  	    .force("charge", d3.forceManyBody().strength(-400))
-				  	    .force("center", d3.forceCenter("200", "200"))
-				  	    .on("tick", ticked);
+				  	/* // Compute the distinct nodes from the links.
+				  		graph.links.forEach(function(link) {
+				  			console.log('link is');
+				  			console.log(link);
+				  		  link.source = graph.nodes[link.source] || (graph.nodes[link.source] = {name: link.source});
+				  		  link.target = graph.nodes[link.target] || (graph.nodes[link.target] = {name: link.target});
+				  		}); */
+				  	
+/* 
+				  		var force = d3.layout.force()
+				  		    .nodes(d3.values(graph.nodes))
+				  		    .links(graph.links)
+				  		    .size(["500", "300"])
+				  		    .linkDistance(100)
+				  		    .charge(-200)
+				  		    .on("tick", tick)
+				  		    .start(); */
+				  		    
+				  		  var simulation = d3.forceSimulation(graph.nodes)
+					  	    .force("link", d3.forceLink(graph.links).id(function(d){
+					  	    	 /* console.log('reached here');
+					  	    	console.log(d.id);
+					  	    	console.log('done');  */
+					  	    	return d.id;
+					  	    }))
+					  	    .force("charge", d3.forceManyBody().strength(-400))
+					  	    .force("center", d3.forceCenter("400", "200"))
+					  	    .on("tick", ticked);
+
 				  		console.log('reached here');
-				  		  var link = svg.append("g")
+				  		  var link = svg
 				  		      .attr("class", "links")
 				  		    .selectAll("line")
 				  		    .data(graph.links)
@@ -220,22 +249,34 @@
 				  		      .attr("stroke-width", function(d) { return 3 })
 				  		      .style("stroke", "pink");
 
-				  		  var node = svg.append("g")
+				  		  var node = svg
 				  		      .attr("class", "nodes")
-				  		    .selectAll("circle")
+				  		    .selectAll(".node")
 				  		    .data(graph.nodes)
-				  		    .enter().append("circle")
-				  		      .attr("r", 15)
-				  		      .attr("fill", function(d) { return color(d.group); });
+				  		    .enter().append("g");
+
+				  		     /*  .attr("r", 15)
+				  		      .attr("fill", function(d) { return color(d.group); }) */
 				  		       /* .call(d3.drag()
 				  		          .on("start", dragstarted)
 				  		          .on("drag", dragged)
 				  		          .on("end", dragended));  */
+				  		   
+				  		    node.append("circle")
+				  		      .attr("r", 15)
+				  		       .attr("fill", function(d) { return "orange"; })
+				  		        .attr("fill", function(d) { return color(d.group); });
+				  		          
+				  		        node.append("text")
+				  		      .attr("x", 12)
+				  		      .attr("dy", ".35em")
+				  		      .text(function(d) { return d.name; });
+ 
 
-				  		  node.append("title")
-				  		      .text(function(d) { return d.id; });
-		  		          node.append("text")
-			  		        .text(function(d) { return d.name; });
+				  		 /*  svg.append("svg:text")
+				  		      .text(function(d) { return d.id; }); */
+		  		          /* node.append("text")
+			  		        .text(function(d) { return d.name; }); */
  
 				  		     /* simulation
 				  		      .nodes(graph.nodes)
@@ -250,29 +291,30 @@
 				  		        .attr("y1", function(d) { return d.source.y; })
 				  		        .attr("x2", function(d) { return d.target.x; })
 				  		        .attr("y2", function(d) { return d.target.y; });
+				  		    
+				  		 /*  node
+			  		        .attr("cx", function(d) { return d.x; })
+			  		        .attr("cy", function(d) { return d.y; });
+				  		      } */
 
-				  		    node
-				  		        .attr("cx", function(d) { return d.x; })
-				  		        .attr("cy", function(d) { return d.y; });
-				  		  } 
+				  		   node
+				  	      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+				  		      }
+				  		  /* text
+			  		        .attr("cx", function(d) { return d.x; })
+			  		        .attr("cy", function(d) { return d.y; }); */
+				  		//  }  
 
-				  		function dragstarted(d) {
-				  		  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-				  		  d.fx = d.x;
-				  		  d.fy = d.y;
-				  		}
+			  		      function dragstarted(d) {
+						  		  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+						  		  d.fx = d.x;
+						  		  d.fy = d.y;
+						  		}
 
-				  		function dragged(d) {
-				  		  d.fx = d3.event.x;
-				  		  d.fy = d3.event.y;
-				  		}
-
-				  		function dragended(d) {
-				  		  if (!d3.event.active) simulation.alphaTarget(0);
-				  		  d.fx = null;
-				  		  d.fy = null;
-				  		} 
-
+						  		function dragged(d) {
+						  		  d.fx = d3.event.x;
+						  		  d.fy = d3.event.y;
+						  		}
 				  		
 				  
 				        
