@@ -1,9 +1,10 @@
 <html layout:decorate="~{layouts/main}">
    <head>
       <style type="text/css">
-		      .links line {
+		      .link  {
 		  stroke: #999;
 		  stroke-opacity: 0.6;
+		  stroke-width: 5px;
 		}
 		
 		.nodes circle {
@@ -22,7 +23,7 @@
       	}
       	
       </style>
-       <script src="https://d3js.org/d3.v4.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
       <script th:inline="javascript">
       var json =[[${overview}]];
       var currentSlide = [[${currentSlideCon}]];
@@ -128,49 +129,53 @@
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div id="graph" class="modal-body" style="width:800px;heigh:800px">
-                        <svg width="800px" height="800px"></svg>
+                        <div id="graph" class="modal-body" style="width:2000px;height:2000px">
+                       <!--  <svg width="1200px" height="1200px"></svg> -->
                         <script>
                         /* var diameter = 400;
                         var radius = 200; */
-                        let graph = {};
-                        graph.nodes = [];
-                        graph.links = [];
-                        let module = {};
+                        let treeData = [];
+                        treeData.children=[];
                         
-                        console.log('the entire json is');
-                        //console.log(json);
-                        module.id = json.id;
-                        console.log(json.id);
-                        let moduleid = json.id;
-                        module.name = json.name;
-                        module.group = "module";
-                        graph.nodes.push(module);
-                        console.log('module is');
-                        console.log(module);
+                        /* let graph = {};
+                        graph.nodes = [];
+                        graph.links = []; */
+                        //let module = {};
+                        
+                        //module.id = json.id;
+                        //let moduleid = json.id;
+                        //module.name = json.name;
+                        //module.group = "module";
+                        //graph.nodes.push(module);
+                        //console.log('module is');
+                        //console.log(module);
 				  		let sequences = json['sequenceOverview'];
 				  		let slides = [];
 				  		
 				  		for (sequence of sequences) {
-				  		  sequence.group = "sequence";
+				  		  //sequence.group = "sequence";
 				  		  let nodeSequence = {};
+				  		  nodeSequence.children=[];
 				  		  nodeSequence.name = sequence.name;
 				  		  nodeSequence.id = sequence.id;
 				  		  nodeSequence.group = "sequence";
-				  		  graph.nodes.push(nodeSequence);
-				  		  let modlink = {};
+				  		  nodeSequence.parent=json.name;
+				  		  //graph.nodes.push(nodeSequence);
+				  		  //let modlink = {};
 				  		  /* console.log('module id is')
 				  		  console.log(module.id); */
 				  		  
 				  		  //modlink.source = modlink.s;
-				  		  modlink.target = nodeSequence.id;
-				  		  modlink.source = moduleid;
-				  		  modlink.value=20;
-				  		  graph.links.push(modlink);
-				  		  modlink={}
+				  		  //modlink.target = nodeSequence.id;
+				  		  //modlink.source = moduleid;
+				  		  //modlink.value=20;
+				  		  //graph.links.push(modlink);
+				  		  //modlink={}
 				  		  let sequenceSlides = sequence.slides;
 				  		  let index = 0;
 				  		  let source = "";
+				  		  var slideNodeTree = [];
+				  		  var prev=null;
 				  		  for(slide of sequenceSlides){
 				  			  
 				  			  let slideNode = {}
@@ -180,118 +185,169 @@
 				  			  slideNode.sequenceId = sequence.id;
 				  			  slideNode.slideId = slide.id;
 				  			  slideNode.id = sequence.id + slide.id;
+				  			  //slideNode.parent=nodeSequence.name;
 				  			  slides.push(slideNode);
-				  			  graph.nodes.push(slideNode);
+				  			  //graph.nodes.push(slideNode);
+				  			  //nodeSequence.children.push(slideNode);
+				  			  slideNode.children=[];
+				  			  
 					  		  if(index == 0){
 				  				  let slideLink ={};
-				  				  slideLink.source = nodeSequence.id;
+				  				  /* slideLink.source = nodeSequence.id;
 				  				  slideLink.target = slideNode.id;
 				  				  slideLink.value=10;
-				  				  graph.links.push(slideLink);
+				  				  graph.links.push(slideLink); */
+				  				  slideNode.parent=nodeSequence.name;
+				  				  nodeSequence.children.push(slideNode);
+				  				  prev=slideNode;
+				  				  
 					  		  } else {
-					  			  let slideLink = {};
+					  			 /*  let slideLink = {};
 					  			  slideLink.source = source;
 					  			  slideLink.target = slideNode.id;
 					  			  slideLink.value=10;
-					  			  graph.links.push(slideLink);
+					  			  graph.links.push(slideLink); */
+					  			  prev.children.push(slideNode);
+					  			  slideNode.parent=prev;
+					  			  prev=slideNode;
 					  		  }
 					  		  source = slideNode.id;
+					  		  
 					  		  index=index+1;
 				  		  }
+				  		treeData.children.push(nodeSequence)
 				  		}
-				  		console.log('sequences are');
-				  		console.log(sequences);
-				  		console.log('slides are');
-				  		console.log(slides);
+				  		treeData.name = json.name;
+				  		console.log('tree data is');
+				  		console.log(treeData);
 				  		//graph.nodes = slides;
-				  		console.log('graph is');
-				  		console.log(graph);
-				  		//var simulation = d3.ForceSimulation(graph.nodes).force()
-				         
-				  		var svg = d3.select("svg"),
-					    width = +svg.attr("800px"),
-					    height = +svg.attr("800px");
+				  		var margin = {top: 20, right: 120, bottom: 20, left: 120},
+				  		width = 960 - margin.right - margin.left,
+				  		height = 500 - margin.top - margin.bottom;
 				  		
-				  		var color = d3.scaleOrdinal(d3.schemeCategory20);
-				  		
-				  	/* // Compute the distinct nodes from the links.
-				  		graph.links.forEach(function(link) {
-				  			console.log('link is');
-				  			console.log(link);
-				  		  link.source = graph.nodes[link.source] || (graph.nodes[link.source] = {name: link.source});
-				  		  link.target = graph.nodes[link.target] || (graph.nodes[link.target] = {name: link.target});
-				  		}); */
-				  	
-/* 
-				  		var force = d3.layout.force()
-				  		    .nodes(d3.values(graph.nodes))
-				  		    .links(graph.links)
-				  		    .size(["500", "300"])
-				  		    .linkDistance(100)
-				  		    .charge(-200)
-				  		    .on("tick", tick)
-				  		    .start(); */
-				  		    
-				  		  var simulation = d3.forceSimulation(graph.nodes)
-					  	    .force("link", d3.forceLink(graph.links).id(function(d){
-					  	    	 /* console.log('reached here');
-					  	    	console.log(d.id);
-					  	    	console.log('done');  */
-					  	    	return d.id;
-					  	    }))
-					  	    .force("charge", d3.forceManyBody().strength(-400))
-					  	    .force("center", d3.forceCenter("400", "200"))
-					  	    .on("tick", ticked);
+				  	var i = 0,
+				  		duration = 750,
+				  		root;
 
-				  		  var link = svg
-				  		      .attr("class", "links")
-				  		    .selectAll("line")
-				  		    .data(graph.links)
-				  		    .enter().append("line")
-				  		      .attr("stroke-width", function(d) { return 3 })
-				  		      .style("stroke", "pink");
+				  	var tree = d3.layout.tree()
+				  		.size([height, width]);
 
-				  		  var node = svg
-				  		      .attr("class", "nodes")
-				  		    .selectAll(".node")
-				  		    .data(graph.nodes)
-				  		    .enter().append("g");
+				  	var diagonal = d3.svg.diagonal()
+				  		.projection(function(d) { return [d.y, d.x]; });
 
-				  		  
-				  		   
-				  		    node.append("circle")
-				  		      .attr("r",function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() ) && (d.slideId.normalize() === currentSlide.id.normalize())) { return 30; } return 15;})
-				  		       .attr("fill", function(d) { return "orange"; })
-				  		        .attr("fill", function(d) { return color(d.group); });
-				  		          
-				  		        node.append("text")
-				  		      .attr("x", 12)
-				  		      .attr("dy", ".35em")
-				  		      .text(function(d) { return d.name; });  
-				  		    
-				  		   function ticked() {
-				  		    link
-				  		        .attr("x1", function(d) { return d.source.x; })
-				  		        .attr("y1", function(d) { return d.source.y; })
-				  		        .attr("x2", function(d) { return d.target.x; })
-				  		        .attr("y2", function(d) { return d.target.y; });
+				  	var svg = d3.select("#graph").append("svg")
+				  		.attr("width", width + margin.right + margin.left)
+				  		.attr("height", height + margin.top + margin.bottom)
+				  	  .append("g")
+				  		.attr("transform", "translate(" + 210 + "," + margin.top + ")");
 
-				  		   node
-				  	      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-				  		      } 
+				  	root = treeData;
+				  	root.x0 = height / 2;
+				  	root.y0 = 0;
+				  	  
+				  	update(root);
 
-			  		      function dragstarted(d) {
-						  		  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-						  		  d.fx = d.x;
-						  		  d.fy = d.y;
-						  		}
+				  	d3.select(self.frameElement).style("height", "500px");
 
-						  		function dragged(d) {
-						  		  d.fx = d3.event.x;
-						  		  d.fy = d3.event.y;
-						  		}
-				  		
-				  
+				  	function update(source) {
+
+				  	  // Compute the new tree layout.
+				  	  var nodes = tree.nodes(root).reverse(),
+				  		  links = tree.links(nodes);
+
+				  	  // Normalize for fixed-depth.
+				  	  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+				  	  // Update the nodes…
+				  	  var node = svg.selectAll("g.node")
+				  		  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+				  	  // Enter any new nodes at the parent's previous position.
+				  	  var nodeEnter = node.enter().append("g")
+				  		  .attr("class", "node")
+				  		  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+				  		  .on("click", click);
+
+				  	  nodeEnter.append("circle")
+				  		  .attr("r", 1e-6)
+				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
+
+				  	  nodeEnter.append("text")
+				  		  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+				  		  .attr("dy", ".35em")
+				  		  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+				  		  .text(function(d) { return d.name; })
+				  		  .style("fill-opacity", 1e-6);
+
+				  	  // Transition nodes to their new position.
+				  	  var nodeUpdate = node.transition()
+				  		  .duration(duration)
+				  		  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+				  	  nodeUpdate.select("circle")
+				  		  .attr("r", 10)
+				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
+
+				  	  nodeUpdate.select("text")
+				  		  .style("fill-opacity", 1);
+
+				  	  // Transition exiting nodes to the parent's new position.
+				  	  var nodeExit = node.exit().transition()
+				  		  .duration(duration)
+				  		  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+				  		  .remove();
+
+				  	  nodeExit.select("circle")
+				  		  .attr("r", 1e-6);
+
+				  	  nodeExit.select("text")
+				  		  .style("fill-opacity", 1e-6);
+
+				  	  // Update the links…
+				  	  var link = svg.selectAll("path.link")
+				  		  .data(links, function(d) { return d.target.id; })
+				  		// link.style("fill", function(d) { return d._children ? "orange" : "orange"; });
+
+				  	  // Enter any new links at the parent's previous position.
+				  	  link.enter().insert("path", "g")
+				  		  .attr("class", "link")
+				  		  .attr("d", function(d) {
+				  			var o = {x: source.x0, y: source.y0};
+				  			return diagonal({source: o, target: o});
+				  		  });
+
+				  	  // Transition links to their new position.
+				  	  link.transition()
+				  		  .duration(duration)
+				  		  .attr("d", diagonal);
+
+				  	  // Transition exiting nodes to the parent's new position.
+				  	  link.exit().transition()
+				  		  .duration(duration)
+				  		  .attr("d", function(d) {
+				  			var o = {x: source.x, y: source.y};
+				  			return diagonal({source: o, target: o});
+				  		  })
+				  		  .remove();
+
+				  	  // Stash the old positions for transition.
+				  	  nodes.forEach(function(d) {
+				  		d.x0 = d.x;
+				  		d.y0 = d.y;
+				  	  });
+				  	}
+
+				  	// Toggle children on click.
+				  	function click(d) {
+				  	  if (d.children) {
+				  		d._children = d.children;
+				  		d.children = null;
+				  	  } else {
+				  		d.children = d._children;
+				  		d._children = null;
+				  	  }
+				  	  update(d);
+				  	}
 				        
 				        
 				       
