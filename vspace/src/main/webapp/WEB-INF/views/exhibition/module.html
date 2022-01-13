@@ -132,45 +132,18 @@
                         <div id="graph" class="modal-body" style="width:2000px;height:2000px">
                        <!--  <svg width="1200px" height="1200px"></svg> -->
                         <script>
-                        /* var diameter = 400;
-                        var radius = 200; */
                         let treeData = [];
                         treeData.children=[];
-                        
-                        /* let graph = {};
-                        graph.nodes = [];
-                        graph.links = []; */
-                        //let module = {};
-                        
-                        //module.id = json.id;
-                        //let moduleid = json.id;
-                        //module.name = json.name;
-                        //module.group = "module";
-                        //graph.nodes.push(module);
-                        //console.log('module is');
-                        //console.log(module);
 				  		let sequences = json['sequenceOverview'];
 				  		let slides = [];
 				  		
 				  		for (sequence of sequences) {
-				  		  //sequence.group = "sequence";
 				  		  let nodeSequence = {};
 				  		  nodeSequence.children=[];
 				  		  nodeSequence.name = sequence.name;
 				  		  nodeSequence.id = sequence.id;
 				  		  nodeSequence.group = "sequence";
 				  		  nodeSequence.parent=json.name;
-				  		  //graph.nodes.push(nodeSequence);
-				  		  //let modlink = {};
-				  		  /* console.log('module id is')
-				  		  console.log(module.id); */
-				  		  
-				  		  //modlink.source = modlink.s;
-				  		  //modlink.target = nodeSequence.id;
-				  		  //modlink.source = moduleid;
-				  		  //modlink.value=20;
-				  		  //graph.links.push(modlink);
-				  		  //modlink={}
 				  		  let sequenceSlides = sequence.slides;
 				  		  let index = 0;
 				  		  let source = "";
@@ -179,34 +152,21 @@
 				  		  for(slide of sequenceSlides){
 				  			  
 				  			  let slideNode = {}
-				  			  slideNode.name = slide.name
-				  			  //slideNode.id = slide.id;
+				  			  slideNode.name = slide.name;
 				  			  slideNode.group = "slide";
 				  			  slideNode.sequenceId = sequence.id;
 				  			  slideNode.slideId = slide.id;
 				  			  slideNode.id = sequence.id + slide.id;
-				  			  //slideNode.parent=nodeSequence.name;
 				  			  slides.push(slideNode);
-				  			  //graph.nodes.push(slideNode);
-				  			  //nodeSequence.children.push(slideNode);
 				  			  slideNode.children=[];
 				  			  
 					  		  if(index == 0){
 				  				  let slideLink ={};
-				  				  /* slideLink.source = nodeSequence.id;
-				  				  slideLink.target = slideNode.id;
-				  				  slideLink.value=10;
-				  				  graph.links.push(slideLink); */
 				  				  slideNode.parent=nodeSequence.name;
 				  				  nodeSequence.children.push(slideNode);
 				  				  prev=slideNode;
 				  				  
 					  		  } else {
-					  			 /*  let slideLink = {};
-					  			  slideLink.source = source;
-					  			  slideLink.target = slideNode.id;
-					  			  slideLink.value=10;
-					  			  graph.links.push(slideLink); */
 					  			  prev.children.push(slideNode);
 					  			  slideNode.parent=prev;
 					  			  prev=slideNode;
@@ -218,9 +178,6 @@
 				  		treeData.children.push(nodeSequence)
 				  		}
 				  		treeData.name = json.name;
-				  		console.log('tree data is');
-				  		console.log(treeData);
-				  		//graph.nodes = slides;
 				  		var margin = {top: 20, right: 120, bottom: 20, left: 120},
 				  		width = 960 - margin.right - margin.left,
 				  		height = 500 - margin.top - margin.bottom;
@@ -239,7 +196,7 @@
 				  		.attr("width", width + margin.right + margin.left)
 				  		.attr("height", height + margin.top + margin.bottom)
 				  	  .append("g")
-				  		.attr("transform", "translate(" + 210 + "," + margin.top + ")");
+				  		.attr("transform", "translate(" + 208 + "," + margin.top + ")");
 
 				  	root = treeData;
 				  	root.x0 = height / 2;
@@ -256,7 +213,7 @@
 				  		  links = tree.links(nodes);
 
 				  	  // Normalize for fixed-depth.
-				  	  nodes.forEach(function(d) { d.y = d.depth * 180; });
+				  	  nodes.forEach(function(d) { d.y = d.depth * 60; });
 
 				  	  // Update the nodes…
 				  	  var node = svg.selectAll("g.node")
@@ -269,7 +226,14 @@
 				  		  .on("click", click);
 
 				  	  nodeEnter.append("circle")
-				  		  .attr("r", 1e-6)
+				  		  .attr("r", function(d){
+				  			if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
+				  					&& (d.slideId.normalize() === currentSlide.id.normalize())){
+				  				return 10;
+				  				}
+				  			return 1e-6;
+				  			}
+				  				)
 				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
 
 				  	  nodeEnter.append("text")
@@ -285,7 +249,12 @@
 				  		  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
 				  	  nodeUpdate.select("circle")
-				  		  .attr("r", 10)
+				  		  .attr("r", function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
+				  					&& (d.slideId.normalize() === currentSlide.id.normalize())){
+				  				return 20;
+				  				}
+				  			return 10;
+				  			})
 				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
 
 				  	  nodeUpdate.select("text")
@@ -348,16 +317,14 @@
 				  	  }
 				  	  update(d);
 				  	}
-				        
-				        
 				       
        				</script>
          </div>
          </div>
          </div>
          </div>
-         <div>
-        	<button onClick="showModuleMapModal()">View Module Map</button>
+         <div style="display:flex; justify-content: center;">
+        	<button style="margin-left:10px" onClick="showModuleMapModal()">View Module Map</button>
         </div>
       </div>
     </body>
