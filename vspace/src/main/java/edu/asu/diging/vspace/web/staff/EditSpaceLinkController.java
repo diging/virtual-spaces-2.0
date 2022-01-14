@@ -52,7 +52,7 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x),
                 new Float(y), new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit,
-                spaceLinkDisplayId, type, linkImage, filename, null);
+                spaceLinkDisplayId, type, linkImage, filename);
         SpaceStatus targetSpaceStatus = spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
         String linkedSpaceStatus = targetSpaceStatus != null ? targetSpaceStatus.toString() : null;
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),

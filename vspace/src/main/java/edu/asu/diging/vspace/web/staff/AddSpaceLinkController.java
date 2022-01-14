@@ -64,7 +64,7 @@ public class AddSpaceLinkController {
         ISpaceLinkDisplay display;
         try {
             display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
-                    linkedSpaceId, spaceLinkLabel, type, linkImage, filename, null);
+                    linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

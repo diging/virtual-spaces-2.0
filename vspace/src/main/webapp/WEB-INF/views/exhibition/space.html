@@ -359,19 +359,17 @@
     		        var posY = $("#space").position().top;
     		        var externalLink = $('<a></a>');
     		        externalLink.attr('href', link.externalLink.externalLink);
-    		        if(link.howToOpen == null)
-	    		        {
-    		        	externalLink.attr('target', "_blank");
-	    		        }
-    		        else
-    		        	{
-    		        	  if(link.howToOpen == "NEWWINDOW"){
-    		        		  externalLink.attr('target', "_blank");
-    		        		  }
-    		        	  else{
-    		        		  externalLink.attr('target', "_self"); 
-    		        	  }
-    		        	}
+    		        if(link.howToOpen == null){
+   		        		externalLink.attr('target', "_blank");
+	    		    }
+    		        else{
+		        		if(link.howToOpen == "NEWWINDOW"){
+		        			externalLink.attr('target', "_blank");
+		        		}
+		        		else{
+		        			externalLink.attr('target', "_self"); 
+		        	  	}
+    		        }
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
     		        }
