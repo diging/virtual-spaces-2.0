@@ -8,8 +8,6 @@ public class SequenceOverview{
 
     private String id;
     
-    private List<String> edges; //List of sequence ids
-    
     private List<ISlide> slides;
 
     public List<ISlide> getSlides() {
@@ -34,14 +32,6 @@ public class SequenceOverview{
 
     public void setId(String id) {
         this.id = id;
-    }
-    
-    public List<String> getEdges() {
-        return edges;
-    }
-
-    public void setEdges(List<String> edges) {
-        this.edges = edges;
     }
     
     

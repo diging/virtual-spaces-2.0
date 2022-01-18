@@ -2,14 +2,9 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 
