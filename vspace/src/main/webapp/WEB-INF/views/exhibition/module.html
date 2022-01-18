@@ -40,6 +40,11 @@
          function closeModuleOverview(){
  			$("#moduleOverviewModal").hide();   
  		}
+         
+        function closeModal(){
+        	console.log("inside close");
+        	$("#moduleOverviewModal").hide();
+        }
       </script>
    </head>
    <body>
@@ -124,8 +129,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Module Map</h5>
-                            <button type="button" class="close"
-                                data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" id ="close"
+                                data-dismiss="modal" aria-label="Close" onClick="closeModal()">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
