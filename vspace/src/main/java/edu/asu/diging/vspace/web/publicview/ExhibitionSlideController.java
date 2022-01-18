@@ -129,8 +129,10 @@ public class ExhibitionSlideController {
         
         ModuleOverview moduleOverview = null;
         moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
-        moduleOverview.setName(module.getName());
-        moduleOverview.setId(module.getId());
+        if(moduleOverview != null) {
+            moduleOverview.setName(module.getName());
+            moduleOverview.setId(module.getId());
+        }
         model.addAttribute("overview", moduleOverview);
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);

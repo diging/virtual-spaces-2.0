@@ -57,10 +57,10 @@ public class SequenceOverviewManager {
         for(Sequence seq : mapSequenceToSlides.keySet()) {
             sequenceList.add(seq);
         }
-        List<SequenceOverview> sequenceOverviewJson = null;
+        List<SequenceOverview> sequenceOverview = null;
         ModuleOverview moduleOverviewJson = new ModuleOverview();
-        sequenceOverviewJson = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
-        moduleOverviewJson.setSequenceOverview(sequenceOverviewJson);
+        sequenceOverview = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
+        moduleOverviewJson.setSequenceOverview(sequenceOverview);
         return moduleOverviewJson;
     }
 

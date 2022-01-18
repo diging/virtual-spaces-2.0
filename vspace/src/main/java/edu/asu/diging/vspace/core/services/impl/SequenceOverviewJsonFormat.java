@@ -18,7 +18,6 @@ public class SequenceOverviewJsonFormat {
      * 
      * @param contextPath   This variable holds the contextpath of the application
      * @param SequenceNodeList List of sequences
-     * @throws JsonProcessingException
      */
     public List<SequenceOverview> constructNodesForSequences(List<Sequence> sequenceNodeList) {
 
