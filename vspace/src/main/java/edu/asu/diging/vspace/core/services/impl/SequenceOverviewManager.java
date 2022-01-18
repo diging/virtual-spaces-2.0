@@ -4,27 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ModuleOverview;
 import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
-import edu.asu.diging.vspace.core.model.impl.Slide;
 
 @Component
 public class SequenceOverviewManager {
@@ -68,13 +59,8 @@ public class SequenceOverviewManager {
         }
         List<SequenceOverview> sequenceOverviewJson = null;
         ModuleOverview moduleOverviewJson = new ModuleOverview();
-        try {
-            sequenceOverviewJson = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
-            moduleOverviewJson.setSequenceOverview(sequenceOverviewJson);
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        sequenceOverviewJson = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
+        moduleOverviewJson.setSequenceOverview(sequenceOverviewJson);
         return moduleOverviewJson;
     }
 

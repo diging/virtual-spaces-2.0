@@ -16,8 +16,6 @@ import edu.asu.diging.vspace.core.model.impl.Sequence;
 @Component
 public class SequenceOverviewJsonFormat {
     
-    @Autowired
-    private ModuleRepository moduleRepo;
     
     /**
      * creating list of SequenceOverview object for sequence nodes in the moduleoverview
@@ -27,8 +25,7 @@ public class SequenceOverviewJsonFormat {
      * @param SequenceNodeList List of sequences
      * @throws JsonProcessingException
      */
-    public List<SequenceOverview> constructNodesForSequences(List<Sequence> sequenceNodeList)
-            throws JsonProcessingException {
+    public List<SequenceOverview> constructNodesForSequences(List<Sequence> sequenceNodeList) {
 
         List<SequenceOverview> sequenceVertexList = new ArrayList<>();
         if (sequenceNodeList != null) {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -126,7 +127,8 @@ public class ExhibitionSlideController {
             model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
             model.addAttribute("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
-        ModuleOverview moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
+        ModuleOverview moduleOverview = null;
+        moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
         moduleOverview.setName(module.getName());
         moduleOverview.setId(module.getId());
         model.addAttribute("overview", moduleOverview);
