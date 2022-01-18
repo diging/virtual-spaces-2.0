@@ -281,12 +281,6 @@
 		    	toggleImgSize(false);
 		});
 		
-		function showModuleMapModal(){
-			$("#moduleOverviewModal").show();
-		}
-		
-		
-		
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
 			var moduleLinks = [[${moduleList}]];
@@ -396,9 +390,7 @@
             })
 		}
 		
-		function closeModuleOverview(){
-			$("#moduleOverviewModal").hide();   
-		}
+
 		</script>
 		
 		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
@@ -516,7 +508,6 @@
             </div>
         </div>
         
-        </div>
     </div>
 </body>
 </html>

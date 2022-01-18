@@ -41,7 +41,6 @@ public class SequenceOverviewManager {
     @Autowired
     SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     /**
      * This method is used to fetch all Sequence and corresponding slides which belong to a module.
