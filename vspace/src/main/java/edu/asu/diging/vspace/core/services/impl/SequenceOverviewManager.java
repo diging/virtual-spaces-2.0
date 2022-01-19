@@ -1,9 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +9,6 @@ import org.springframework.stereotype.Component;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
-import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ModuleOverview;
 import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
@@ -32,33 +28,18 @@ public class SequenceOverviewManager {
     @Autowired
     SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
     
-    
     /**
-     * This method is used to fetch all Sequence and corresponding slides which belong to a module.
-     * 
-     * @return a Map whose key is sequenceId and value is list of moduleLinks connected
-     *         with the spaceId.
+     * This method is used to fetch all Sequence which belong to a module and 
+     * convert this into a SequenceOverview node. The SequenceOverviewNode is added to 
+     * ModuleOverview
+     * @return ModuleOverview which contains the module and the list of sequences and its slides
      */
-    public Map<Sequence, List<ISlide>> getSequencesFromModules(String moduleId) {
-        Map<Sequence, List<ISlide>> mapSequenceToSlides = new HashMap<Sequence, List<ISlide>>();
-        List<Sequence> sequences = sequenceRepo.findSequencesForModule(moduleId);
-        
-        for(Sequence seq : sequences) {
-            List<ISlide> sequenceSlides = seq.getSlides();
-            mapSequenceToSlides.put(seq, sequenceSlides);
-        }
-        return mapSequenceToSlides;
-        
-    }
-    
     public ModuleOverview showModuleMap(String id) {
-        Map<Sequence,List<ISlide>> mapSequenceToSlides = getSequencesFromModules(id);
-        List<Sequence> sequenceList = new ArrayList<Sequence>();
-        for(Sequence seq : mapSequenceToSlides.keySet()) {
-            sequenceList.add(seq);
-        }
         List<SequenceOverview> sequenceOverview = null;
         ModuleOverview moduleOverviewJson = new ModuleOverview();
+        
+        List<Sequence> sequenceList = sequenceRepo.findSequencesForModule(id);
+        
         sequenceOverview = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
         moduleOverviewJson.setSequenceOverview(sequenceOverview);
         return moduleOverviewJson;
