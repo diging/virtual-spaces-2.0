@@ -73,7 +73,7 @@
 		    <div id="aboutContent" th:if="${aboutPageTitle!=null}">
                         <span class="icon-circle-close closebtn" th:onclick="closeExhibitionDescription()"></span>
                         <div class="aboutDescription">[[${aboutPageTitle}]]</div>
-                        <div th:if="aboutPageText != null &&!#strings.isEmpty(aboutPageText)} " class="aboutDescription">[[${aboutPageText}]]</div>
+                        <div th:if="${aboutPageText != null && !#strings.isEmpty(aboutPageText)} " class="aboutDescription">[[${aboutPageText}]]</div>
                </div> 
 	    </div>
 	</body>
