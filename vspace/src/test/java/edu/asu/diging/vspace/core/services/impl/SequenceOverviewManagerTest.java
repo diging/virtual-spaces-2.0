@@ -40,8 +40,6 @@ public class SequenceOverviewManagerTest {
     @InjectMocks
     SequenceOverviewManager serviceToTest;
     
-   // private List<Sequence> sequences;
-    
     private List<ISlide> slides;
     
     private List<SequenceOverview> sequenceOverviewList;
@@ -49,7 +47,6 @@ public class SequenceOverviewManagerTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        
     }
     
     @Test
