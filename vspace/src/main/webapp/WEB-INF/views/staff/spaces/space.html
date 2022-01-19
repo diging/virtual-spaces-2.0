@@ -65,12 +65,15 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
 	var inactiveLinkId;
 	var inactiveLinkClasses;
+	var inactiveLinkTitle;
 	if(link.link.targetSpace==null) {
 	    inactiveLinkId = "deletedSpace-";
-	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";    
+	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
+	    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
     	} else {
 	    inactiveLinkId = "unpublished-";
 	    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
+	    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
     	}
 	var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
     	inactiveSpaceElement.css('position', 'absolute');
@@ -78,6 +81,7 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
 	inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
 	inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
 	inactiveSpaceElement.css('font-size', "24px");
+	inactiveSpaceElement.attr('title', inactiveLinkTitle);
 	if(isModal){
 	    $("#space").append(inactiveSpaceElement);
 	} else{
