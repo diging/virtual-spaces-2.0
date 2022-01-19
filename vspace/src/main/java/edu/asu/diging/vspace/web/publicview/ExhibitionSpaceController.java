@@ -59,7 +59,7 @@ public class ExhibitionSpaceController {
          */
         if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {
-            if(space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
+            if(space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
                 isSpacePublished = false;
             }
             model.addAttribute("isSpacePublished", isSpacePublished);
