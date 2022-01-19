@@ -62,7 +62,7 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.css('font-size', "12px");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
-    if(isSpaceLink && (link.link.targetSpace.spaceStatus=="UNPUBLISHED" || link.link.targetSpace==null)){
+    if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
 	var inactiveLinkId;
 	var inactiveLinkClasses;
 	if(link.link.targetSpace==null) {
