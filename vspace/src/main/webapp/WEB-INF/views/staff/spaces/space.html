@@ -62,33 +62,27 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.css('font-size', "12px");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
-    if(isSpaceLink ){
-    	if(link.link.targetSpace==null) {
-    		var deletedSpaceElement = $('<span data-link-id="deletedSpace-'+link.link.id+'" class="icon-warning secondary deletedSpaceClass deletedClass-'+link.link.id+'"></span>')
-	        deletedSpaceElement.css('position', 'absolute');
-    		deletedSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-    		deletedSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-    		deletedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-    		deletedSpaceElement.css('font-size', "24px");
-	        if(isModal){
-	            $("#space").append(deletedSpaceElement);
-	        }else{
-	            $("#main-space").append(deletedSpaceElement);
-	        }
+    if(isSpaceLink && (link.link.targetSpace.spaceStatus=="UNPUBLISHED" || link.link.targetSpace==null)){
+	var inactiveLinkId;
+	var inactiveLinkClasses;
+	if(link.link.targetSpace==null) {
+	    inactiveLinkId = "deletedSpace-";
+	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";    
+    	} else {
+	    inactiveLinkId = "unpublished-";
+	    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
     	}
-    	else if(link.link.targetSpace.spaceStatus=="UNPUBLISHED") {
-	        var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
-	        unpublishedSpaceElement.css('position', 'absolute');
-	        unpublishedSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-	        unpublishedSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-	        unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-	        unpublishedSpaceElement.css('font-size', "24px");
-	        if(isModal){
-	            $("#space").append(unpublishedSpaceElement);
-	        }else{
-	            $("#main-space").append(unpublishedSpaceElement);
-	        }
-    	}
+	var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
+    	inactiveSpaceElement.css('position', 'absolute');
+	inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+	inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+	inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+	inactiveSpaceElement.css('font-size', "24px");
+	if(isModal){
+	    $("#space").append(inactiveSpaceElement);
+	} else{
+	    $("#main-space").append(inactiveSpaceElement);
+	}
     }
     var linkId = isExternalLink ? link.externalLink.id : link.link.id;
     setLabelPosition(link,linkId,positionX,positionY);
