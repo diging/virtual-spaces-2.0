@@ -70,9 +70,7 @@ public class ExhibitionManager implements IExhibitionManager {
     
     @Override
     public IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode) {
-        // for now we just take the first one created, there shouldn't be more than one
-        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
-        Exhibition exhibition = exhibitions.get(0);
+        Exhibition exhibition = (Exhibition) getStartExhibition();
         exhibition.setSpaceOrderMode(mode);
         return exhibitRepo.save(exhibition);
     }
