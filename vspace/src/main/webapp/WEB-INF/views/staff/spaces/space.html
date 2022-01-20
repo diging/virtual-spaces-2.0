@@ -120,7 +120,6 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
 }
 
 function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	debugger;
     if(link != null){
         var moduleLink;
         if(link.type=="ALERT"){
@@ -233,7 +232,6 @@ function drawLinks(){
 
 //--------- show links functions --------------
 function showSpaceLink(spaceLink, show, x, y) {
-	debugger;
     $("#space_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -578,7 +576,6 @@ function displayForms(formToShow){
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
-	debugger;
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
