@@ -65,10 +65,8 @@ public class ExhibitionSpaceController {
                 || authenticationFacade.getAuthenticatedUser() != null) {
             IExhibition exhibition = exhibitManager.getStartExhibition();
             ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-            if(exhibitionAboutPage != null) {
-                model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-                model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText());   
-            }
+            model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
+            model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
