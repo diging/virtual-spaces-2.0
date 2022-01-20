@@ -32,7 +32,7 @@ public class ExhibitionModuleController {
         }
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
-        if (module == null || module.getModuleStatus() == null || module.getModuleStatus() == ModuleStatus.UNPUBLISHED) {
+        if (module == null || module.getModuleStatus() == ModuleStatus.UNPUBLISHED) {
             return "redirect:/exhibit/404";
         } else if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);

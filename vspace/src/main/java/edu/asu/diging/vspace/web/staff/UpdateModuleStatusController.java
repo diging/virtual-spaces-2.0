@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +19,7 @@ public class UpdateModuleStatusController {
     private IModuleManager moduleManager;
     
     @RequestMapping(value="/staff/module/{moduleId}/status", method=RequestMethod.POST)
-    public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("moduleId") String spaceId, @RequestParam("statusParam") ModuleStatus status) {
+    public String updateStatus(RedirectAttributes attributes, @PathVariable("moduleId") String spaceId, @RequestParam("statusParam") ModuleStatus status) {
         IModule module = moduleManager.getModule(spaceId);
         module.setModuleStatus(status);
         moduleManager.storeModule(module);
