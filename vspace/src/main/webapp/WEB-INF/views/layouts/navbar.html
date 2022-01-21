@@ -34,13 +34,16 @@
 					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
 		        	</li>
-		        	<li class="nav-item active" style="padding-right: 35px;">        	
-		        		<span 
-                                    th:if="${aboutPageTitle!=null && !#strings.isEmpty(aboutPageTitle)}"
-                                    th:text="About"
-                                    style="font-size: 15px;  color: rgba(150, 45, 62, 1); cursor: pointer;"
-                                    th:onclick="openExhibitionDescription()">
-                                    </span>
+		        	<a  href="/vspace/staff/exhibit/aboutPagePublic">
+		        	<span th:if="${aboutPageTitle!=null && !#strings.isEmpty(aboutPageTitle)}" class = "icon-info secondary" />     	
+	        		<span class="custom_Text"
+                                   th:if="${aboutPageTitle!=null && !#strings.isEmpty(aboutPageTitle)}"
+                                   th:text="About"
+                                   style="font-size: 18px; cursor: pointer;
+                                   margin-right:10px; margin-left:-10px; padding-right:10px; margin-top:10px"
+                                   >
+                      </span>
+                      </a>
 		        	</li>
 					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
 					        <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>

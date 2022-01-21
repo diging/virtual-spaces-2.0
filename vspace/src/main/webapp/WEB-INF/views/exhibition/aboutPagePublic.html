@@ -1,0 +1,52 @@
+
+<html layout:decorate="~{layouts/main}">
+<head>
+<link rel="stylesheet"
+	href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+<style type="text/css">
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
+</style>
+</style>
+
+
+</head>
+
+<body>
+
+<div layout:fragment="content" class="main-content">
+<script th:inline="javascript">
+function openNav(){
+	$("#mySidenav").css("width", "250px");
+}
+function closeNav(){
+	$("#mySidenav").css("width", "0");
+}
+</script>
+
+ <div id="mySidenav" class="sidenav">
+                     <a href="javascript:void(0)" class="closebtn"
+                        onclick="closeNav()">&times;</a>
+                    <ul th:each="space: ${publishedSpaces}">
+                        <li><a class="dropdown-item"
+                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a>
+                        </li>
+                    </ul>
+                </div>
+	<div >
+	<div style="padding-left:200px">
+	<h2 th:text="${aboutPageTitle}"/>
+		<div style="padding: 0;">
+				<div style="padding-top: 20px;">
+					<h4 th:text="${aboutPageText}"/>
+				</div>
+		</div>
+	</div>
+		</div>
+	</div>
+</body>
+</html>
