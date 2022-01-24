@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.publicview;
+package edu.asu.diging.vspace.web.exhibit.publicpages;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
@@ -19,14 +18,12 @@ public class ExhibitionPublicAboutPageController {
     @Autowired
     private IExhibitionAboutPageManager aboutPageManager;
     
-    @RequestMapping(value = "/public/exhibit/aboutPage")
+    @RequestMapping(value = "/exhibit/aboutPage")
     public String showPublicAboutPage(Model model) {
-        logger.info("inside public about page");
-        System.out.println("here");
         ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
         model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
         model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
-        return "hello";
+        return "exhibition/aboutPagePublic";
     }
 
 }

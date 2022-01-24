@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.publicview;
+package edu.asu.diging.vspace.web.exhibit.publicview;
 
 import java.util.List;
 import java.util.stream.Collectors;

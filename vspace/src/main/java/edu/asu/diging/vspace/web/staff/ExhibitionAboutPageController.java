@@ -37,15 +37,6 @@ public class ExhibitionAboutPageController {
         model.addAttribute("aboutPage", exhibitionAboutPage);
         return "staff/exhibit/aboutPage";
     }
-    
-    @RequestMapping(value = "/staff/exhibit/aboutPagePublic")
-    public String showPublicAboutPage(Model model) {
-        System.out.println("here");
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-        model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-        model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
-        return "exhibition/aboutPagePublic";
-    }
 
     
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
