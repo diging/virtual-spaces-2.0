@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
@@ -21,6 +23,9 @@ public class ExhibitionModuleController {
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
@@ -29,6 +34,9 @@ public class ExhibitionModuleController {
         if (space == null) {
             return "redirect:/exhibit/404";
         }
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
+        model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
+        model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null) {

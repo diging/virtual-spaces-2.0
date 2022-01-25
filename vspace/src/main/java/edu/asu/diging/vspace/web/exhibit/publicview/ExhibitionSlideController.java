@@ -16,7 +16,9 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
+import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -44,6 +46,9 @@ public class ExhibitionSlideController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
+    
+    @Autowired
+    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
@@ -69,6 +74,9 @@ public class ExhibitionSlideController {
             model.addAttribute("message", "Sorry, module has not been configured yet.");
             return "/exhibition/module";
         }
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
+        model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
+        model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText());
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);

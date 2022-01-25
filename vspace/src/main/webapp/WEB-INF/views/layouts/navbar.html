@@ -5,24 +5,6 @@
 	
 	<body>
 		<div th:fragment="navbar">
-		<script th:inline="javascript">
-		 function openExhibitionDescription(){
-		    if (window.matchMedia(maxWidth).matches){
-		        $("#aboutContent").css("height", "170px");
-		        $("#aboutContent").css("width", "260px");
-		        $("#aboutContent").css("margin", "50px");
-		    }
-		    else{
-		        $("#aboutContent").css("width", "300px");
-		        $("#aboutContent").css("height", "300px");
-		        $("#aboutContent").css("margin", "50px");
-		    }
-		} 
-		 function closeExhibitionDescription(){
-		    $("#aboutContent").css("width", "0");
-		    $("#aboutContent").css("height", "0");
-		} 
-	</script>
 			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
@@ -73,11 +55,6 @@
 		        </div>
 		      </div>
 		    </nav>
-		    <div id="aboutContent" th:if="${aboutPageTitle!=null}">
-                        <span class="icon-circle-close closebtn" th:onclick="closeExhibitionDescription()"></span>
-                        <div class="aboutDescription">[[${aboutPageTitle}]]</div>
-                        <div th:if="${aboutPageText != null && !#strings.isEmpty(aboutPageText)} " class="aboutDescription">[[${aboutPageText}]]</div>
-               </div> 
 	    </div>
 	</body>
 </html>
