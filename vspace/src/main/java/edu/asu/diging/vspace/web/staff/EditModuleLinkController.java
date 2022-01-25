@@ -34,9 +34,14 @@ public class EditModuleLinkController extends EditSpaceLinksController{
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
             @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel, 
             @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit, @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId,
+<<<<<<< HEAD
             @RequestParam("moduleLinkImageIdEdit") String moduleLinkImageIdEdit,
             @RequestParam("type") String displayType, @RequestParam(value="moduleLinkImage", required=false) MultipartFile file, @RequestParam(value="imageId", required=false) String imageId)
                     throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+=======
+            @RequestParam("type") String displayType, @RequestParam("moduleLinkImage") MultipartFile file)
+                    throws NumberFormatException, SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException {
+>>>>>>> origin/develop
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if(validation!=null) {
@@ -47,6 +52,7 @@ public class EditModuleLinkController extends EditSpaceLinksController{
         if (file != null) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
+<<<<<<< HEAD
         } else if(imageId==null || imageId.equals("")){
             String[] token = moduleLinkImageIdEdit.split("/");
             imageId = token[token.length - 1];
@@ -54,6 +60,12 @@ public class EditModuleLinkController extends EditSpaceLinksController{
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type, linkImage, filename, imageId);
+=======
+        }
+        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+        IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x), new Float(y),
+                new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit, moduleLinkDisplayId, type, linkImage, filename);
+>>>>>>> origin/develop
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(),null,title,displayType,linkedModuleId,null);
     }
 
