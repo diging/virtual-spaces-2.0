@@ -14,6 +14,12 @@
             overflow-y: scroll;
             height: 400px;
             }
+            .fixed {
+		    position: fixed;
+		    top:0; left:0;
+		    width: 100%;
+		    z-index:100;
+     		}
         </style>
         <script th:inline="javascript">
             //# sourceURL=click.js
@@ -24,6 +30,14 @@
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
             });
+            
+            $(window).scroll(function(){
+            	  var sticky = $('.sticky'),
+            	      scroll = $(window).scrollTop();
+
+            	  if (scroll >= 100) sticky.addClass('fixed');
+            	  else sticky.removeClass('fixed');
+            	});
             
             function createImageBlock(reader, width) {
                 var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
@@ -324,13 +338,10 @@
 		            	});
 		            	var token = [[${_csrf.token}]];
 		            	if (jsonObj.length != 0){
-			            	if (timeout == null){
-			            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
-			            	}
-			            	else{
+			            	if (timeout != null){
 			            		clearTimeout(timeout);
-			            		timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
 			            	}
+			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
 		            	}
 	            	}
             	});
@@ -342,9 +353,8 @@
 		            		type: 'POST',
 		            		beforeSend: function(){
 			            		$(".loader").remove();
-			            		for(let i=0;i<jsonObj.length;i++) {
-			            			$('#'+jsonObj[i].id).append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
-			            		}
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
 			            		$(".loader").show();
 		            		},
 		            		complete: function(){
@@ -362,21 +372,22 @@
 			            		$(".save").remove();
 			            		for(let i=0;i<data.length;i++) {
 				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
-				            		var successDiv = $('<div style="width: 250px;height: 50px;margin-left: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
-				            		successDiv.append('<p>Successfully Saved.</p>');
-				            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-				            		successDiv.append('</div>');
-				            		$('#'+data[i].id).append(successDiv);
 			            		} 
+			            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+			            		successDiv.append('<p>Successfully Saved.</p>');
+			            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		successDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(successDiv);
 		            		},
 		            		error: function(data) {
 			            		$(".errInSave").remove();
-			            		for(let i=0;i<data.length;i++) {
-				            		var errorDiv = $('<div style="width: 250px;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
-				            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
-				            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-				            		errorDiv.append('</div>');
-			            		}
+			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+			            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		errorDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(errorDiv);
 		            		}
 	            		});
             		}
@@ -945,7 +956,8 @@
                 <button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
                 +&nbsp;<span class="icon-checkmark"></span></button>
             </div>
-            <p style="margin-top: 0.5rem;">Double Click on a Block to Edit it</p>
+            <p style="margin-top: 0.5rem;">Double click on a block to edit it. Drag and drop blocks to change their order.</p>
+            <div class="sticky" id="contOrdUpdStatus"></div>
             <!-- Delete Text Modal -->
             <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
                 role="dialog" th:draggable="true">
