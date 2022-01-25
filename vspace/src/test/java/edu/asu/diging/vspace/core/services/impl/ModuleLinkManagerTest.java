@@ -84,12 +84,7 @@ public class ModuleLinkManagerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, FileStorageException, ImageDoesNotExistException {
-=======
-    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, FileStorageException {
->>>>>>> origin/develop
-
         Space space = new Space();
         space.setId(spaceId1);
         IVSImage spaceImage = new VSImage();
@@ -166,11 +161,7 @@ public class ModuleLinkManagerTest {
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleDisplayLinkImage)).thenReturn((ModuleLinkDisplay)moduleDisplayLinkImage);
 
-<<<<<<< HEAD
         IModuleLinkDisplay savedModuleLinkDisplay2 = managerToTest.createLink("New Module Link", spaceId1, 10, 30, 40, "MOD001", "New Module Link", DisplayType.IMAGE, new byte[20], imageFileName, null);
-=======
-        IModuleLinkDisplay savedModuleLinkDisplay2 = managerToTest.createLink("New Module Link", spaceId1, 10, 30, 40, "MOD001", "New Module Link", DisplayType.IMAGE, new byte[20], imageFileName);
->>>>>>> origin/develop
         Assert.assertEquals(moduleDisplayLinkImage.getId(), savedModuleLinkDisplay2.getId());
         Assert.assertEquals(moduleDisplayLinkImage.getName(), savedModuleLinkDisplay2.getName());
         Assert.assertEquals(new Double(moduleDisplayLinkImage.getPositionX()), new Double(savedModuleLinkDisplay2.getPositionX()));
@@ -244,11 +235,7 @@ public class ModuleLinkManagerTest {
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleLinkDisplay)).thenReturn((ModuleLinkDisplay)moduleLinkDisplayUpdated);
 
-<<<<<<< HEAD
         IModuleLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", modDisplayLinkId, DisplayType.ALERT, null, null, null);
-=======
-        IModuleLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", modDisplayLinkId, DisplayType.ALERT, null, null);
->>>>>>> origin/develop
         Assert.assertEquals(moduleLinkDisplayUpdated.getId(), actualUpdatedLink.getId());
         Assert.assertEquals(moduleLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
@@ -267,11 +254,7 @@ public class ModuleLinkManagerTest {
         moduleLinkDisplay.setImage(modImage);
         moduleLinkDisplayUpdated.setType(DisplayType.ARROW);
         
-<<<<<<< HEAD
         IModuleLinkDisplay actualUpdatedLink2 = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", modDisplayLinkId, DisplayType.ALERT, null, null, null);
-=======
-        IModuleLinkDisplay actualUpdatedLink2 = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "MOL001", modDisplayLinkId, DisplayType.ALERT, null, null);
->>>>>>> origin/develop
         Assert.assertEquals(moduleLinkDisplayUpdated.getId(), actualUpdatedLink2.getId());
         Assert.assertEquals(moduleLinkDisplayUpdated.getName(), actualUpdatedLink2.getName());
         Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink2.getPositionX()));
