@@ -51,7 +51,12 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(linkLabel);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
+        if(existingImageId!=null) {
+            setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
+        }
+        else {
+            setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        }
         return updateLinkAndDisplay(link,displayLink);
     }
 
@@ -67,7 +72,12 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink, id, positionX,positionY,rotation, displayType, linkImage, imageFilename, existingImageId);
+        if(existingImageId!=null) {
+            setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
+        }
+        else {
+            setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        }
         return updateLinkAndDisplay(link,displayLink);
     }
 
@@ -104,18 +114,16 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         }
     }
 
-    protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename, String existingImageId) throws ImageCouldNotBeStoredException, ImageDoesNotExistException {
+    protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename) throws ImageCouldNotBeStoredException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);
         linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
         
-        IVSImage image = null;
-        
         if (linkImage != null && linkImage.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(linkImage);
-            image = imageFactory.createImage(imageFilename, contentType);
+            IVSImage image = imageFactory.createImage(imageFilename, contentType);
             image = imageRepo.save((VSImage) image);
             String relativePath = null;
             try {
@@ -125,12 +133,22 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
             }
             image.setParentPath(relativePath);
             imageRepo.save((VSImage) image);
+            linkDisplay.setImage(image);
         } 
-        else if(existingImageId!=null && existingImageId.trim()!="") {
-            image = imageService.getImageById(existingImageId);
+        
+    }
+    
+    protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename, String existingImageId) throws ImageCouldNotBeStoredException, ImageDoesNotExistException {
+        linkDisplay.setPositionX(positionX);
+        linkDisplay.setPositionY(positionY);
+        linkDisplay.setRotation(rotation);
+        linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
+        
+        if(existingImageId!=null && existingImageId.trim()!="") {
+            IVSImage image = imageService.getImageById(existingImageId);
+            linkDisplay.setImage(image);
         }
-        linkDisplay.setImage(image);
-
+        
     }
 
 }

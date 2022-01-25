@@ -721,6 +721,7 @@ $(function(){
             if ($("div#incomingLinks a").length < 2) {
                 $("#noLinksToSpace").show()
             }
+            $("#selectedImage-spcLink").empty();
             $('#imageId-spcLink').prop("disabled",true);
         	$('#chooseFromLocal-spcLink').click(function() {
         		$("#selectedImage-spcLink").empty();
@@ -1201,6 +1202,7 @@ $(function(){
                     $("#noLinksOnSpace").hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
+                    $('#spaceLinkImageEdit').val('');
                     var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
                     $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
                     if (spaceName == "${space?.name}") {
@@ -1208,7 +1210,7 @@ $(function(){
                         $("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
                     }
                     $("#space").css("display", "none");
-                    onLoadFunction();
+                    $('#chooseFromLocal-spcLink').click();
                     drawLinks();
                 }
             });
@@ -1293,7 +1295,7 @@ $(function(){
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#space").css("display", "none");
-                    onLoadFunction();
+                    $('#chooseFromLocal-modLink').click();
                     drawLinks();
                 }
             });
@@ -1341,7 +1343,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedModuleLinkId=undefined;
-                    onLoadFunction();
+                    $('#chooseFromLocal-modLinkEdit').click();
                     drawLinks();
                 }
             });
@@ -1394,7 +1396,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedSpaceLinkId=undefined;
-                    onLoadFunction();
+                    $('#chooseFromLocal-spcLinkEdit').click();
                     drawLinks();
                 }
             });
@@ -1442,7 +1444,7 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedExternalLinkId=undefined;
-                    onLoadFunction();
+                    $('#chooseFromLocal-extLinkEdit').click();
                     drawLinks();
                 }
             });
@@ -1526,7 +1528,7 @@ $(function(){
                     form[0].reset();
                     $("#external-arrow").attr("id","");
                     $("#space").css("display", "none");
-                    onLoadFunction();
+                    $('#chooseFromLocal-extLink').click();
                     drawLinks();
                 }
             });
@@ -1558,7 +1560,7 @@ $(function(){
                     }
                     $("#spaceLinkInfo").hide();
                     $("#space").css("display", "none");
-                    onLoadFunction();
+                    $('#chooseFromLocal-spcLinkEdit').click();
                     drawLinks();
                 }
             });
@@ -1581,7 +1583,7 @@ $(function(){
                     $('#moduleLinkIdValueEdit').val("");
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
-                    onLoadFunction();
+                    $('#chooseFromLocal-modLinkEdit').click();
                     drawLinks();
                 }
             });
@@ -1602,7 +1604,7 @@ $(function(){
                     $('[data-link-id="' + linkId + '"]').remove();
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
-                    onLoadFunction();
+                    $('#chooseFromLocal-extLinkEdit').click();
                     drawLinks();
                 }
             });
@@ -1759,6 +1761,7 @@ $(function(){
         });
 
         $("#closeEditModuleLinkInfo").click(function(e) {
+        	debugger;
             e.preventDefault();
             selectedModuleLinkId=undefined;
             $("#moduleLinkInfoLabel").text("");
@@ -1769,10 +1772,12 @@ $(function(){
             $("#moduleLinkIdValueEdit").val("");
             $("#moduleLinkImageIdEdit").val("");
             moduleLinkIcon=null;
+            $('#chooseFromLocal-modLinkEdit').click();
             drawLinks();
         }); 
 
         $("#closeEditSpaceLinkInfo").click(function(e) {
+        	debugger;
             e.preventDefault();
             selectedSpaceLinkId=undefined;
             $("#spaceLinkInfoLabel").text("");
@@ -1782,11 +1787,13 @@ $(function(){
             $("#editSpaceLinkInfo").hide();
             $("#spaceLinkIdValueEdit").val("");
             $("#spaceLinkImageIdEdit").val("");
+            $('#chooseFromLocal-spcLinkEdit').click();
             linkIcon=null;
             drawLinks();
         }); 
 
         $("#closeEditExternalLinkInfo").click(function(e) {
+        	debugger;
             e.preventDefault();
             selectedExternalLinkId=undefined;
             $("#externalLinkInfoLabel").text("");
@@ -1794,6 +1801,7 @@ $(function(){
             resetHighlighting();
             $("#space").hide();
             $("#editExternalLinkInfo").hide();
+            $('#chooseFromLocal-extLinkEdit').click();
             drawLinks();
         });
 });
