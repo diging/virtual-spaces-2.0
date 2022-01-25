@@ -20,6 +20,7 @@
 
 <div layout:fragment="content" class="main-content">
 <script th:inline="javascript">
+var aboutPageDescription = [[${aboutPageText}]];
 function openNav(){
 	$("#mySidenav").css("width", "250px");
 }
@@ -27,17 +28,12 @@ function closeNav(){
 	$("#mySidenav").css("width", "0");
 }
 
-$(document).ready(function() {
-	$(".EasyMDEContainer").remove();
-	markDown = new EasyMDE({element : $('#textBlockText')[0],
-		toolbar:false,
-		preview:true,
-		hideIcons:["heading","bold","italic","quote","unordered-list","ordered-list","image","side-by-side","preview","link","fullscreen","guide"]});
-	markDown.codemirror.setOption('readOnly', true);
-	//markDown.codemirror.setOption('preview', true);
-	//markDown.codemirror.setOption('previewToggle', true);
-	console.log(markDown.codemirror);
-});
+
+
+ $(document).ready(function() {
+	 var divElement = document.getElementById("aboutPageDescription"); 
+	 divElement.innerHTML += aboutPageDescription;
+}); 
 </script>
 
 
@@ -55,7 +51,8 @@ $(document).ready(function() {
 	<h2 th:text="${aboutPageTitle}"/>
 		<div style="padding: 0;">
 				<div  style="padding-top: 20px;">
-					<textarea id="textBlockText" th:text="${aboutPageText}"></textarea>
+					<div id ="aboutPageDescription">
+					</div>
 				</div>
 		</div>
 	</div>

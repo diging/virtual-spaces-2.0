@@ -22,7 +22,7 @@ public class ExhibitionPublicAboutPageController {
     public String showPublicAboutPage(Model model) {
         ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
         model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-        model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
+        model.addAttribute("aboutPageText", exhibitionAboutPage.htmlRenderedText()); 
         return "exhibition/aboutPagePublic";
     }
 

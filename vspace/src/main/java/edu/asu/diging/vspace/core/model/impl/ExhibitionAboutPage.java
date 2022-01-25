@@ -6,9 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 /**
  * Model for Exhibition About Page
@@ -52,5 +56,18 @@ public class ExhibitionAboutPage {
     public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
     }
-
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ITextBlock#htmlRenderedText()
+     */
+    @Transient
+    public String htmlRenderedText() {
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(aboutPageText);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(document);
+    }
 }
