@@ -34,10 +34,9 @@
             $(window).scroll(function(){
             	  var sticky = $('.sticky'),
             	      scroll = $(window).scrollTop();
-
             	  if (scroll >= 100) sticky.addClass('fixed');
             	  else sticky.removeClass('fixed');
-            	});
+            });
             
             function createImageBlock(reader, width) {
                 var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
