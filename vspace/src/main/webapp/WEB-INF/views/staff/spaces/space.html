@@ -37,8 +37,6 @@ const displaceLableOnY = 35
 var linkIconReader = new FileReader();
 var linkIcon;
 linkIconReader.onload = function(e) {
-	debugger;
-	
     linkIcon = e.target.result;
     var linkId = $("#spaceLinkIdValueEdit").val();
     if(linkId!=null && linkId!="") {
@@ -46,13 +44,11 @@ linkIconReader.onload = function(e) {
     } else {
     	showSpaceLink(createSpaceLinkInfo());
     }
-    
 }
 
 var moduleLinkIconReader = new FileReader();
 var moduleLinkIcon;
 moduleLinkIconReader.onload = function(e) {
-	debugger;
 	moduleLinkIcon = e.target.result;
 	var moduleLinkId = $("#moduleLinkIdValueEdit").val();
     if(moduleLinkId!=null && moduleLinkId!="") {
@@ -65,7 +61,6 @@ moduleLinkIconReader.onload = function(e) {
 var externalLinkIconReader = new FileReader();
 var externalLinkIcon;
 externalLinkIconReader.onload = function(e) {
-	debugger;
     externalLinkIcon = e.target.result;
     var externalLinkId = $("#externalLinkIdValueEdit").val();
     
@@ -77,7 +72,6 @@ externalLinkIconReader.onload = function(e) {
 }
 
 function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal){
-	debugger;
     modalLink.css('position', 'absolute');
     if(isModal){
         modalLink.css('left',link.positionX + posXModal);
@@ -130,7 +124,6 @@ function setLabelPosition(link,id, positionX, positionY){
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	debugger;
     if(link != null){
         var spaceLink;
         if(link.type == "ALERT"){
@@ -203,7 +196,6 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 }
 
 function drawLinks(){
-	debugger;
     $(".Info_cz_Class").remove();
     $(".imageLink").remove();
     $(".alertLink").remove();
@@ -270,7 +262,6 @@ function drawLinks(){
 
 //--------- show links functions --------------
 function showSpaceLink(spaceLink, show, x, y) {
-	debugger;
     $("#space_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -391,7 +382,6 @@ function showModuleLink(moduleLink, show, x, y) {
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
-	debugger;
     moduleLink["x"]=storeX;
     moduleLink["y"]=storeY;
     var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
@@ -400,7 +390,6 @@ function showModuleLinkEdit(moduleLink, show, posX, posY) {
 }
 
 function showSpaceLinkEdit(spaceLink, show, posX, posY) {
-	debugger;
     spaceLink["x"]=storeX;
     spaceLink["y"]=storeY;
     var selectedLinkClass = '#spacelinkModalId-'+selectedSpaceLinkId;
@@ -436,7 +425,6 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
 }
 
 function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
-	debugger;
     var posX, posY;
     if(show) {
         posx = $("#main-bgImage").position().left;
@@ -479,7 +467,6 @@ function hideLinkInfoTabs(){
 }
 
 function showExternalLinks(externalLink, show, x, y) {
-	debugger;
     $("#ext_label").remove();
     $("#link").remove();
     var posX = $("#bgImage").position().left;
@@ -578,7 +565,6 @@ function editModuleLinkInfo() {
 }
 
 function editSpaceLinkInfo() {
-	debugger;
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
@@ -600,7 +586,6 @@ function editExternalLinkInfo() {
 }
 
 function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType, spaceLinkImageId) {
-	debugger;
     $("#spaceLinkInfoLabel").text(spaceLinkName);
     $("#spaceLinkId").val(spaceLinkId);
     selectedSpaceLinkId=spaceLinkId;
@@ -637,7 +622,6 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     displayForms("#editSpaceLinkInfo");
 }
 function displayForms(formToShow){
-	debugger;
     drawLinks();
     $("#space").css("display", "-webkit-box");
     $(formToShow).css("display", "flex");
@@ -819,7 +803,6 @@ $(function(){
             };
             
             function formatSelection(image) {
-            	debugger;
             	if (!image.id) {
                     return image.text;
                 }
@@ -835,7 +818,6 @@ $(function(){
             }
             
             function formatSelectionEdit(image) {
-            	debugger;
             	if (!image.id) {
                     return image.text;
                 }
@@ -923,7 +905,6 @@ $(function(){
             });
             
             function formatSelectionModule(image) {
-            	debugger;
             	if (!image.id) {
                     return image.text;
                 }
@@ -939,7 +920,6 @@ $(function(){
             }
             
             function formatSelectionEditModule(image) {
-            	debugger;
             	if (!image.id) {
                     return image.text;
                 }
@@ -958,7 +938,6 @@ $(function(){
           //External link selection of existing images
             $('#imageId-extLink').prop("disabled",true);
         	$('#chooseFromLocal-extLink').click(function() {
-        		debugger;
         		$("#selectedImage-extLink").empty();
         		$('#imageId-extLink').prop('selectedIndex',0).trigger( "change" );
         		$('#imageId-extLink').prop("disabled",true);
@@ -968,7 +947,6 @@ $(function(){
         	  });
         	
         	$('#chooseFromExisting-extLink').click(function() {
-        		debugger;
         		$('#externalLinkImage').val('');
         		$('#externalLinkImage').prop("disabled",true);
         		$('#imageId-extLink').prop("disabled",false);
@@ -1029,7 +1007,6 @@ $(function(){
             });
             
             function formatSelectionExternal(image) {
-            	debugger;
             	if (!image.id) {
                     return image.text;
                 }
@@ -1045,7 +1022,6 @@ $(function(){
             }
             
             function formatSelectionEditExternal(image) {
-            	debugger;
             	if (!image.id) {
                     return image.text;
                 }
@@ -1059,7 +1035,7 @@ $(function(){
                 showExternalLinkEdit(editExternalLinkInfo());
                 return $image;
             }
-        };
+        });
 
         // -------- buttons that open modals (e.g. to create space links) ------
         $("#addSpaceLinkButton").click(function(e) {
@@ -1165,7 +1141,6 @@ $(function(){
 
             $("#spaceLinkX").val(storeX);
             $("#spaceLinkY").val(storeY);
-			debugger;
             var form = $("#createSpaceLinkForm");
             var label = $("#spaceLinkLabel").val();
             var spaceName = $("#linkedSpace option:selected").text();
@@ -1361,13 +1336,13 @@ $(function(){
                     $("#space").css("display", "none");
                     selectedModuleLinkId=undefined;
                     $('#chooseFromLocal-modLinkEdit').click();
+                    moduleLinkIcon=null;
                     drawLinks();
                 }
             });
         });
 
         $("#editSpaceLinkBtn").click(function(e) {
-        	debugger;
             e.preventDefault();
             var linkId = $("#spaceLinkIdEdit").val();
             if (storeX == undefined || storeY == undefined) {
@@ -1414,6 +1389,7 @@ $(function(){
                     $("#space").css("display", "none");
                     selectedSpaceLinkId=undefined;
                     $('#chooseFromLocal-spcLinkEdit').click();
+                    linkIcon=null;
                     drawLinks();
                 }
             });
@@ -1462,6 +1438,7 @@ $(function(){
                     $("#space").css("display", "none");
                     selectedExternalLinkId=undefined;
                     $('#chooseFromLocal-extLinkEdit').click();
+                    externalLinkIcon=null;
                     drawLinks();
                 }
             });
@@ -1668,7 +1645,6 @@ $(function(){
         });
 
         $(".modulelink-targetEdit").change(function() {
-        	debugger;
             showModuleLinkEdit(editModuleLinkInfo());
         }); 
 
@@ -1682,14 +1658,12 @@ $(function(){
 
 
         $("#spaceLinkImage").change(function() {
-        	debugger;
             if (this.files && this.files[0]) {
                 linkIconReader.readAsDataURL(this.files[0]);
             }
         });
         
         $("#spaceLinkImageEdit").change(function() {
-        	debugger;
         	var linkId = $("#spaceLinkIdValueEdit").val();
             if (this.files && this.files[0]) {
                 linkIconReader.readAsDataURL(this.files[0]);
@@ -1700,14 +1674,12 @@ $(function(){
         });
         
         $("#moduleLinkImage").change(function() {
-        	debugger;
             if (this.files && this.files[0]) {
                 moduleLinkIconReader.readAsDataURL(this.files[0]);
             }
         });
         
         $("#moduleLinkImageEdit").change(function() {
-        	debugger;
         	var moduleLinkId = $("#moduleLinkIdValueEdit").val();
             if (this.files && this.files[0]) {
             	moduleLinkIconReader.readAsDataURL(this.files[0]);
@@ -1724,7 +1696,6 @@ $(function(){
         });
         
         $("#externalLinkImageEdit").change(function() {
-        	debugger;
         	var externalLinkId = $("#externalLinkIdValueEdit").val();
             if (this.files && this.files[0]) {
             	externalLinkIconReader.readAsDataURL(this.files[0]);
@@ -1783,7 +1754,6 @@ $(function(){
         });
 
         $("#closeEditModuleLinkInfo").click(function(e) {
-        	debugger;
             e.preventDefault();
             selectedModuleLinkId=undefined;
             $("#moduleLinkInfoLabel").text("");
@@ -1799,7 +1769,6 @@ $(function(){
         }); 
 
         $("#closeEditSpaceLinkInfo").click(function(e) {
-        	debugger;
             e.preventDefault();
             selectedSpaceLinkId=undefined;
             $("#spaceLinkInfoLabel").text("");
@@ -1815,7 +1784,6 @@ $(function(){
         }); 
 
         $("#closeEditExternalLinkInfo").click(function(e) {
-        	debugger;
             e.preventDefault();
             selectedExternalLinkId=undefined;
             $("#externalLinkInfoLabel").text("");

@@ -51,7 +51,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(linkLabel);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
-        if(existingImageId!=null) {
+        if(existingImageId!=null && !existingImageId.trim().isEmpty()) {
             setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
         }
         else {
@@ -72,7 +72,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        if(existingImageId!=null) {
+        if(existingImageId!=null && !existingImageId.trim().isEmpty()) {
             setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
         }
         else {
@@ -144,11 +144,10 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         linkDisplay.setRotation(rotation);
         linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
         
-        if(existingImageId!=null && existingImageId.trim()!="") {
+        if(existingImageId!=null && !existingImageId.trim().isEmpty()) {
             IVSImage image = imageService.getImageById(existingImageId);
             linkDisplay.setImage(image);
         }
-        
     }
 
 }
