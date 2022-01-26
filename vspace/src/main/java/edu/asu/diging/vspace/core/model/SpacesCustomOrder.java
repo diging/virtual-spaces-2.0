@@ -1,6 +1,9 @@
 package edu.asu.diging.vspace.core.model;
 
 
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,21 +27,20 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         parameters = @Parameter(name = "prefix", value = "CON"),
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
-    @OneToOne(targetEntity = Space.class)
-    private ISpace space;
-
-    private Integer customOrder;
     
-    public SpacesCustomOrder() {
-        
+    @Column(unique=true)
+    private String customOrderName;
+    
+    public String getCustomOrderName() {
+        return customOrderName;
     }
-    
-    public SpacesCustomOrder(ISpace space, Integer customOrder) {
-        this.space = space;
-        this.customOrder= customOrder;
+
+    public void setCustomOrderName(String customOrderName) {
+        this.customOrderName = customOrderName;
     }
-    
+
+    private List<ISpace> customOrderedSpaces;
+
     @Override
     public String getId() {
         return id;
@@ -49,19 +51,13 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         this.id = id;
     }
     
-    @Override
-    public Integer getCustomOrder() {
-        return customOrder;
+    public List<ISpace> getCustomOrderedSpaces() {
+        return customOrderedSpaces;
     }
 
-    @Override
-    public void setCustomOrder(Integer customOrder) {
-        this.customOrder=customOrder;
+    public void setCustomOrderedSpaces(List<ISpace> customOrderedSpaces) {
+        this.customOrderedSpaces = customOrderedSpaces;
     }
-    
-    @Override
-    public ISpace getSpace() {
-        return space;
-    }
+
 
 }

@@ -11,6 +11,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
 
 /**
@@ -39,6 +40,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Enumerated(EnumType.STRING)
     private ExhibitionSpaceOrderMode spaceOrderMode;
+    
+    @OneToOne(targetEntity = SpacesCustomOrder.class)
+    private String customOrderName;
 
     /*
      * (non-Javadoc)

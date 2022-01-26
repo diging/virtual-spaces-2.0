@@ -22,4 +22,6 @@ public interface ISpacesCustomOrderManager {
     
     void updateStatusChangeToPublished(ISpace space);
 
+    void createNewCustomOrder(String customOrderName);
+
 }

@@ -21,7 +21,7 @@ import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 public class ExhibitionSpaceOrderUtility {
     
     @Autowired
-    ISpacesCustomOrderManager spacesCustomOrderManager;
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
     
     private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {

@@ -311,8 +311,8 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {
-        IExhibition exhibitition = exhibitionManager.findAll().get(0);
-        return exhibitionSpaceOrderUtility.retrieveSpacesListInGivenOrder(publishedSpaces, exhibitition.getSpaceOrderMode());
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        return exhibitionSpaceOrderUtility.retrieveSpacesListInGivenOrder(publishedSpaces, exhibition.getSpaceOrderMode());
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
@@ -29,10 +30,13 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
 
     @Autowired
-    SpacesCustomOrderRepository spacesCustomOrderRepository;
+    private SpacesCustomOrderRepository spacesCustomOrderRepository;
     
     @Autowired
-    ISpaceManager spaceManager;
+    private ISpaceManager spaceManager;
+    
+    @Autowired
+    private SpaceRepository spaceRepo;
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -49,22 +53,33 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     @Override
     public void updateCustomOrder(List<SpacesCustomOrder> spacesCustomOrderCurrentList) {
 
-        if (spacesCustomOrderCurrentList == null) {
-            return;
-        }
-        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
-        for (SpacesCustomOrder eachSpace : spacesCustomOrderCurrentList) {
-            logger.info("custom order is {}", eachSpace.getCustomOrder());
-            String spaceId = eachSpace.getId();
-            int customOrder = eachSpace.getCustomOrder();
-            Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findById(spaceId);
-            if (spaceCustomOrderOptional.isPresent()) {
-                SpacesCustomOrder spaceCustomOrder = spaceCustomOrderOptional.get();
-                spaceCustomOrder.setCustomOrder(customOrder);
-                spacesCustomOrderNewList.add(spaceCustomOrder);
-            }
-        }
-        spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
+//        if (spacesCustomOrderCurrentList == null) {
+//            return;
+//        }
+//        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
+//        for (SpacesCustomOrder eachSpace : spacesCustomOrderCurrentList) {
+//            String spaceId = eachSpace.getId();
+//            int customOrder = eachSpace.getCustomOrder();
+//            Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findById(spaceId);
+//            if (spaceCustomOrderOptional.isPresent()) {
+//                SpacesCustomOrder spaceCustomOrder = spaceCustomOrderOptional.get();
+//                spaceCustomOrder.setCustomOrder(customOrder);
+//                spacesCustomOrderNewList.add(spaceCustomOrder);
+//            }
+//        }
+//        spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
+    }
+    
+    @Override
+    public void createNewCustomOrder(String customOrderName) {
+        SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
+        List<ISpace> spaces = new ArrayList<ISpace>();
+        spacesCustomOrder.setCustomOrderName(customOrderName);// use integrity violation exception
+        spaceRepo.findAll().forEach((space)->spaces.add(space));
+        spacesCustomOrder.setCustomOrderedSpaces(spaces);
+        
+        spacesCustomOrderRepository.save(spacesCustomOrder);
+        return;
     }
     
     /**
@@ -74,21 +89,21 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */    
     @Override
     public void persistPublishedSpacesToSpacesCustomOrder() {
-        List<ISpace> spaces = (List<ISpace>) spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
-        spaces.addAll(spaceManager.getSpacesWithStatus(null));
-        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
-        int customOrder = 0;
-        if(spacesCustomOrderRepository.findMaxCustomOrder() != null) {
-            customOrder = spacesCustomOrderRepository.findMaxCustomOrder();
-        }
-        for(ISpace space : spaces) {
-            Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-            if(!spaceCustomOrderOptional.isPresent()) {
-                spacesCustomOrderNewList.add(new SpacesCustomOrder(space, ++customOrder));
-                logger.info("custom order is {}", customOrder);
-            }
-        }
-        spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
+//        List<ISpace> spaces = (List<ISpace>) spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
+//        spaces.addAll(spaceManager.getSpacesWithStatus(null));
+//        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
+//        int customOrder = 0;
+//        if(spacesCustomOrderRepository.findMaxCustomOrder() != null) {
+//            customOrder = spacesCustomOrderRepository.findMaxCustomOrder();
+//        }
+//        for(ISpace space : spaces) {
+//            Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
+//            if(!spaceCustomOrderOptional.isPresent()) {
+//                spacesCustomOrderNewList.add(new SpacesCustomOrder(space, ++customOrder));
+//                logger.info("custom order is {}", customOrder);
+//            }
+//        }
+//        spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
     }
     
     @Override
@@ -111,13 +126,13 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void updateStatusChangeToPublished(ISpace space) {
-        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-        if(!spaceCustomOrderOptional.isPresent()) {
-            int order = spacesCustomOrderRepository.findMaxCustomOrder() + 1;
-            SpacesCustomOrder spaceCustomOrder = new SpacesCustomOrder(space, order);
-            spaceCustomOrder.setCustomOrder(order);
-            spacesCustomOrderRepository.save(spaceCustomOrder);
-        }
+//        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
+//        if(!spaceCustomOrderOptional.isPresent()) {
+//            int order = spacesCustomOrderRepository.findMaxCustomOrder() + 1;
+//            SpacesCustomOrder spaceCustomOrder = new SpacesCustomOrder(space, order);
+//            spaceCustomOrder.setCustomOrder(order);
+//            spacesCustomOrderRepository.save(spaceCustomOrder);
+//        }
         
     }
     
@@ -127,19 +142,19 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void updateStatusChangeToUnpublished(ISpace space) {
-        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-        if(spaceCustomOrderOptional.isPresent()) {
-            SpacesCustomOrder spaceCustomOrder = spaceCustomOrderOptional.get();
-            int order = spaceCustomOrder.getCustomOrder();
-            List<SpacesCustomOrder> spacesCustomOrderGreaterThan =  spacesCustomOrderRepository.findBySpace_IdAndCustomOrderGreaterThan(space.getId(), order);
-            spacesCustomOrderRepository.delete(spaceCustomOrder);
-            
-            for(SpacesCustomOrder spaceIteration : spacesCustomOrderGreaterThan) {
-                spaceIteration.setCustomOrder(order);
-                order++;
-            }
-            spacesCustomOrderRepository.saveAll(spacesCustomOrderGreaterThan);
-        }
+//        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
+//        if(spaceCustomOrderOptional.isPresent()) {
+//            SpacesCustomOrder spaceCustomOrder = spaceCustomOrderOptional.get();
+//            int order = spaceCustomOrder.getCustomOrder();
+//            List<SpacesCustomOrder> spacesCustomOrderGreaterThan =  spacesCustomOrderRepository.findBySpace_IdAndCustomOrderGreaterThan(space.getId(), order);
+//            spacesCustomOrderRepository.delete(spaceCustomOrder);
+//            
+//            for(SpacesCustomOrder spaceIteration : spacesCustomOrderGreaterThan) {
+//                spaceIteration.setCustomOrder(order);
+//                order++;
+//            }
+//            spacesCustomOrderRepository.saveAll(spacesCustomOrderGreaterThan);
+//        }
     }
 
 }
