@@ -10,7 +10,7 @@ public interface ISpacesCustomOrderManager {
     
     Integer findMaxCustomOrder(String slideId);
 
-    void updateCustomOrder(List<SpacesCustomOrder> spacesCustomOrderCurrentList);
+    void updateCustomOrder(List<ISpace> spaces, String customOrderName);
     
     void persistPublishedSpacesToSpacesCustomOrder();
 
@@ -23,5 +23,9 @@ public interface ISpacesCustomOrderManager {
     void updateStatusChangeToPublished(ISpace space);
 
     void createNewCustomOrder(String customOrderName);
+
+    void addSpaceToCustomOrders(ISpace space);
+
+    void saveCustomOrders(List<SpacesCustomOrder> spacesCustomOrder);
 
 }

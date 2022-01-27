@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.core.services.impl.SpacesCustomOrderManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
@@ -38,6 +39,9 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
+    
+    @Autowired
+    private SpacesCustomOrderManager spacesCustomOrderManager;
 
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
@@ -75,7 +79,10 @@ public class AddSpaceController {
         }else {
             creationValue = spaceManager.storeSpace(space, bgImage, filename);
         }
-
+        
+        //add new space to all custom space orders
+        spacesCustomOrderManager.addSpaceToCustomOrders(space);
+        
         if (creationValue != null) {
             return "redirect:/staff/space/" + creationValue.getElement().getId();
         }

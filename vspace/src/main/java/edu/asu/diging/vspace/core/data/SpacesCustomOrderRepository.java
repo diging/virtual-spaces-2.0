@@ -18,6 +18,8 @@ public interface SpacesCustomOrderRepository extends PagingAndSortingRepository<
     
     @Query("SELECT max(customOrder) FROM SpacesCustomOrder")
     public Integer findMaxCustomOrder();
+    
+    public SpacesCustomOrder findByCustomOrderName(String customOrderName);
 
     public List<SpacesCustomOrder> findBySpace_IdAndCustomOrderGreaterThan(String spaceId,Integer customOrder);
     

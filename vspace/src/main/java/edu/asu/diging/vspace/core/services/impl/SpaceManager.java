@@ -30,6 +30,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -84,6 +85,9 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
+    
+    @Autowired
+    private SpacesCustomOrderManager spacesCustomOrderManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -256,6 +260,18 @@ public class SpaceManager implements ISpaceManager {
             // When space has no other links attached to it
             spaceDisplayRepo.deleteBySpaceId(id);
             spaceRepo.deleteById(id);
+            
+            //To delete all spaces that exist in custom orders
+            if(space.isPresent()) {
+                List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
+                for(SpacesCustomOrder spaceCustomOrder : spacesCustomOrder) {
+                    List<ISpace> customOrderedSpaces = spaceCustomOrder.getCustomOrderedSpaces();
+                    if(customOrderedSpaces.contains(space.get())) {
+                        spaceCustomOrder.getCustomOrderedSpaces().remove(space.get());
+                    }
+                }   
+            }
+            
         }
     }
 

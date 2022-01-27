@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
@@ -17,6 +18,7 @@ import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
+import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 /**
  * SpacesCustomOrderManager is the manager
@@ -51,23 +53,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      * @param spacesCustomOrderCurrentList
      */
     @Override
-    public void updateCustomOrder(List<SpacesCustomOrder> spacesCustomOrderCurrentList) {
+    public void updateCustomOrder(List<ISpace> spacesList, String customOrderName) {
 
-//        if (spacesCustomOrderCurrentList == null) {
-//            return;
-//        }
-//        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
-//        for (SpacesCustomOrder eachSpace : spacesCustomOrderCurrentList) {
-//            String spaceId = eachSpace.getId();
-//            int customOrder = eachSpace.getCustomOrder();
-//            Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findById(spaceId);
-//            if (spaceCustomOrderOptional.isPresent()) {
-//                SpacesCustomOrder spaceCustomOrder = spaceCustomOrderOptional.get();
-//                spaceCustomOrder.setCustomOrder(customOrder);
-//                spacesCustomOrderNewList.add(spaceCustomOrder);
-//            }
-//        }
-//        spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
+        if (spacesList == null) {
+            return;
+        }
+        SpacesCustomOrder spaceCustomOrder = spacesCustomOrderRepository.findByCustomOrderName(customOrderName);
+        spaceCustomOrder.setCustomOrderedSpaces(spacesList);
+        spacesCustomOrderRepository.save(spaceCustomOrder);
+        return;
     }
     
     @Override
@@ -81,6 +75,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         spacesCustomOrderRepository.save(spacesCustomOrder);
         return;
     }
+    
     
     /**
      * This method persists all the published spaces into the SpacesCustomOrder table 
@@ -155,6 +150,26 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
 //            }
 //            spacesCustomOrderRepository.saveAll(spacesCustomOrderGreaterThan);
 //        }
+    }
+    
+    @Override
+    public void saveCustomOrders(List<SpacesCustomOrder> spacesCustomOrder) {
+        spacesCustomOrderRepository.saveAll(spacesCustomOrder);
+        return;
+    }
+
+    /**
+     * This method adds the newly created spaces to all custom orders at the end of the list
+     * @param space
+     */
+    @Override
+    public void addSpaceToCustomOrders(ISpace space) {
+        List<SpacesCustomOrder> spacesCustomOrders = findAll();
+        for(SpacesCustomOrder spaceCustomOrder :  spacesCustomOrders) {
+            spaceCustomOrder.getCustomOrderedSpaces().add(space);
+        }
+        saveCustomOrders(spacesCustomOrders);
+        return; 
     }
 
 }
