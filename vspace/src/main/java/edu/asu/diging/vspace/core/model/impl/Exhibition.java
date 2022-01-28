@@ -39,7 +39,6 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String previewId;
 
-    // ExhibitionPreview
     /*
      * (non-Javadoc)
      * 

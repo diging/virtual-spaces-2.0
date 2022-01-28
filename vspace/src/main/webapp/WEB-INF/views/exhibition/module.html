@@ -11,7 +11,7 @@
    </head>
    <body>
     <div layout:fragment="content">
-        <div th:if="${showAlert == true AND (isExhPreview == null OR isExhPreview == false)}"
+        <div th:if="${showAlert == true AND (isExhPreview != true)}"
             class="alert alert-warning center col-md-12"
             style="text-align: center;">[[${message}]] <a
                 th:href="@{'/exhibit/space/'+${spaceId}}">

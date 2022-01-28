@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.web.publicview.IPreviewConstant;
 
 @Component
 @Aspect
@@ -77,18 +78,10 @@ public class ExhibitionDataAspect {
 
     @Around("execution(public * edu.asu.diging.vspace.web.publicview..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
-
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getRequest();
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
-        Map pathVariables = (Map)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-        String previewId= (String) pathVariables.get("previewId");  
-        if (request.getRequestURI().contains("/preview/") && (exhibition.getPreviewId() == null || !exhibition.getPreviewId().equals(previewId))) {
-            return jp.proceed();
-        }
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
         int indexOfModel = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         // If there is no exhibition, we go back to root url page.
         if (exhibition == null) {
             return "redirect:/";
@@ -97,6 +90,19 @@ public class ExhibitionDataAspect {
         // and aspects.
         if (exhibition.getMode() == null) {
             return jp.proceed();
+        }
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest();
+        Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        String previewId = (String) pathVariables.get(IPreviewConstant.PREVIEW_ID);
+        if (previewId!=null && exhibition.getPreviewId() != null) {
+            if (exhibition.getPreviewId().equals(previewId)) {
+                ((Model) args[indexOfModel]).addAttribute("isExhPreview", true);
+                ((Model) args[indexOfModel]).addAttribute(IPreviewConstant.PREVIEW_ID, previewId);
+                return jp.proceed();
+            } else {
+                return "redirect:/exhibit/404";
+            }
         }
         Map<IdPrefix, String> ids = getIds(args, signature);
         String spaceId = ids.getOrDefault(IdPrefix.SPACEID, "");

@@ -26,13 +26,9 @@ public class ExhibitionModuleController {
 
     @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{previewId}/{spaceId}/module/{id}" })
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = "previewId", required = false) String previewId, Model model)
+            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {
 
-        if (previewId != null) {
-            model.addAttribute("isExhPreview", true);
-            model.addAttribute("previewId", previewId);
-        }
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";

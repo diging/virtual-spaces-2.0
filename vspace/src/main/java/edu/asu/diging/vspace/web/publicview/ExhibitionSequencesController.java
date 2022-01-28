@@ -42,7 +42,7 @@ public class ExhibitionSequencesController {
         "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = "previewId", required = false) String previewId,
+            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
             @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId,
             @RequestParam(required = false, name = "clearHistory") Boolean clearHistory) throws ModuleNotFoundException,
@@ -75,14 +75,13 @@ public class ExhibitionSequencesController {
         }
         if (previewId != null) {
             return String.format(
-                    "redirect:/preview/%s/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
-                    previewId, spaceId, moduleId, sequenceId, firstSlideId,
-                    (branchingPointId != null ? branchingPointId : ""),
+                    "redirect:/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/%s?branchingPoint=%s&previousSequenceId=%s",
+                    firstSlideId,(branchingPointId != null ? branchingPointId : ""),
                     (previousSequenceId != null ? previousSequenceId : ""));
         }
         return String.format(
-                "redirect:/exhibit/%s/module/%s/sequence/%s/slide/%s?branchingPoint=%s&previousSequenceId=%s",
-                spaceId, moduleId, sequenceId, firstSlideId, (branchingPointId != null ? branchingPointId : ""),
+                "redirect:/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/%s?branchingPoint=%s&previousSequenceId=%s",
+                firstSlideId, (branchingPointId != null ? branchingPointId : ""),
                 (previousSequenceId != null ? previousSequenceId : ""));
 
     }
@@ -90,10 +89,6 @@ public class ExhibitionSequencesController {
     private String moduleNotConfigured(Model model, String previewId) {
         model.addAttribute("showAlert", true);
         model.addAttribute("message", "Sorry, module has not been configured yet.");
-        if (previewId != null) {
-            model.addAttribute("isExhPreview", true);
-            model.addAttribute("previewId", previewId);
-        }
         return "/exhibition/module";
     }
 }

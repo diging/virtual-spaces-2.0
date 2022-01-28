@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -18,6 +19,8 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 @Service
 public class ExhibitionManager implements IExhibitionManager {
 
+    public static final String EXH_PREVIEW = "EXH_PREVIEW_";
+    
     @Autowired
     private ExhibitionRepository exhibitRepo;
 
@@ -65,5 +68,14 @@ public class ExhibitionManager implements IExhibitionManager {
             return exhibitions.get(0);
         }
         return null;
+    }
+    
+    @Override
+    public IExhibition addPreviewId() {
+        Exhibition exhibitionObj = new Exhibition();
+        UUID randomUUID = UUID.randomUUID();
+        String randomString = randomUUID.toString().replaceAll("-", "");
+        exhibitionObj.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
+        return exhibitionObj;
     }
 }

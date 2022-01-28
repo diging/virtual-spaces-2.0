@@ -51,17 +51,13 @@ public class ExhibitionSlideController {
         }, method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = "previewId", required = false) String previewId,
+            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId,
             @RequestParam(required = false, name = "back") boolean back,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
             @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
             SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
-        if (previewId != null) {
-            model.addAttribute("isExhPreview", true);
-            model.addAttribute("previewId", previewId);
-        }
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
@@ -113,7 +109,7 @@ public class ExhibitionSlideController {
 
         model.addAttribute("currentSlideCon", currentSlide);
         if (currentSlide instanceof BranchingPoint) {
-            currentSlideHavingBranchingPoint(model, slideId, back, currentSlide);
+            handleBranchingPoint(model, slideId, back, currentSlide);
         }
         if (branchingPointId != null && !branchingPointId.isEmpty()) {
             sequenceHistory.addToHistory(previousSequenceId, branchingPointId);
@@ -132,7 +128,7 @@ public class ExhibitionSlideController {
         return "exhibition/module";
     }
 
-    private void currentSlideHavingBranchingPoint(Model model, String slideId, boolean back, ISlide currentSlide) {
+    private void handleBranchingPoint(Model model, String slideId, boolean back, ISlide currentSlide) {
         model.addAttribute("choices", ((BranchingPoint) currentSlide).getChoices());
         if (back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
             sequenceHistory.popFromHistory();

@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
+import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -49,11 +51,21 @@ public class ExhibitionSpaceController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{previewId}/space/{id}" })
-    public String space(@PathVariable("id") String id, @PathVariable(name = "previewId", required = false) String previewId, Model model) {
+    @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{previewId}/space/{id}", "/preview/{previewId}" })
+    public String space(@PathVariable(name = "id", required = false) String id,
+            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId, Model model) {
+
         if (previewId != null) {
-            model.addAttribute("isExhPreview", true);
-            model.addAttribute("previewId", previewId);
+            Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
+            ExhibitionModes exhibitionMode = exhibition.getMode();
+            if (exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
+                model.addAttribute("modeValue", "This Exhibition is Active.Use this Link for non-active Exhibition");
+                return "/exhibition/maintenance";
+            }
+        }
+        if (id == null) {
+            Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
+            id = exhibition.getStartSpace().getId();
         }
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
