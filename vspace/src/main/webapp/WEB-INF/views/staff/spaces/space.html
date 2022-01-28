@@ -40,6 +40,13 @@ linkIconReader.onload = function(e) {
     showSpaceLink(createSpaceLinkInfo());
 }
 
+var moduleLinkIconReader = new FileReader();
+var moduleLinkIcon;
+moduleLinkIconReader.onload = function(e) {
+	moduleLinkIcon = e.target.result;
+    showModuleLink(createModuleLinkInfo());
+}
+
 var externalLinkIconReader = new FileReader();
 var externalLinkIcon;
 externalLinkIconReader.onload = function(e) {
@@ -62,18 +69,31 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.css('font-size', "12px");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
-    if(isSpaceLink && link.link.targetSpace.spaceStatus=="UNPUBLISHED"){
-        var unpublishedSpaceElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
-        unpublishedSpaceElement.css('position', 'absolute');
-        unpublishedSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-        unpublishedSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-        unpublishedSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-        unpublishedSpaceElement.css('font-size', "24px");
-        if(isModal){
-            $("#space").append(unpublishedSpaceElement);
-        }else{
-            $("#main-space").append(unpublishedSpaceElement);
-        }
+    if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
+	var inactiveLinkId;
+	var inactiveLinkClasses;
+	var inactiveLinkTitle;
+	if(link.link.targetSpace==null) {
+	    inactiveLinkId = "deletedSpace-";
+	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
+	    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
+    	} else {
+	    inactiveLinkId = "unpublished-";
+	    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
+	    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
+    	}
+	var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
+    	inactiveSpaceElement.css('position', 'absolute');
+	inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+	inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+	inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+	inactiveSpaceElement.css('font-size', "24px");
+	inactiveSpaceElement.attr('title', inactiveLinkTitle);
+	if(isModal){
+	    $("#space").append(inactiveSpaceElement);
+	} else{
+	    $("#main-space").append(inactiveSpaceElement);
+	}
     }
     var linkId = isExternalLink ? link.externalLink.id : link.link.id;
     setLabelPosition(link,linkId,positionX,positionY);
@@ -90,14 +110,14 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
     if(link != null){
         var spaceLink;
         if(link.type == "ALERT"){
-            spaceLink = $('<span id="'+spanId+link.link.id+'" class="alert alertLink alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></span>');
+            spaceLink = $('<span id="'+spanId+link.link.id+'" class="alert alertLink alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></span>');
         }
         else if(link.type == "IMAGE" && link.image != null){
             var spaceImageURL = [[@{/api/image/}]]+link.image.id;
-            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
+            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
         }
         else{
-            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
         }
         setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal);
         $(divId).append(spaceLink);
@@ -120,7 +140,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
         }
         else if(link.type=="IMAGE" && link.image != null){
             var moduleImageURL = [[@{/api/image/}]]+link.image.id;
-            moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" src="'+moduleImageURL+'" />');
+            moduleLink = $('<img id="'+spanId+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="' + moduleImageURL+'" />');
         }
         else{
             moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
@@ -142,9 +162,9 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
         var externalLink;
         if(link.type=="IMAGE" && link.image != null){
             var imageURL = [[@{/api/image/}]]+link.image.id;
-            externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+            externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
         }else{
-            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
         }
         setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
         $(divId).append(externalLink);
@@ -152,7 +172,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
             $('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
             $('#'+spanId+link.externalLink.id).click(function(e) {
                 var linkData = $('#'+spanId+link.externalLink.id).data();
-                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"]);
+                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
             });
         }
     }
@@ -164,6 +184,7 @@ function drawLinks(){
     $(".alertLink").remove();
     $(".ellipse_class").remove();
     $(".unpublishedSpaceClass").remove();
+    $(".deletedSpaceClass").remove();
     
     $.ajax({
         type: "GET",
@@ -297,7 +318,9 @@ function showModuleLink(moduleLink, show, x, y) {
     var link;
     if (moduleLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-    }else{ 
+    } else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
+        link = $('<div id="link" class="spaceLink-' + moduleLink["id"] + '" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
+    } else{ 
         $(module_label).css({
             'position': 'absolute',
             'font-size': "10px",
@@ -443,14 +466,14 @@ function showExternalLinks(externalLink, show, x, y) {
         link.css('cursor', 'pointer');
         link.attr('href', externalLink["url"]);
         link.click(function(e) {
-            makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+            makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"]);
         });
 
         ext_label.attr("data-link-id", externalLink["id"]);
         ext_label.css('cursor', 'pointer');
         ext_label.attr("class", "label-"+externalLink["id"]);
         ext_label.click(function(e) {
-            makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+            makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"]);
         });
     }
 
@@ -476,7 +499,7 @@ function createExternalLinkInfo() {
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
-    info["tabOpen"] = $("#extTabOpen").val();
+	info["tabOpen"] = $("#extTabOpen").val();
     info["type"] = $("#extType").val();
     info["externalLinkLabel"] = $("#externalLinkLabel").val();
     info["externalLinkURL"] = $("#externalLink").val();
@@ -490,7 +513,7 @@ function createModuleLinkInfo() {
     info["rotation"] = $("#moduleLinkRotation").val();
     info["linkedModule"] = $("#linkedModule").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
-    info["type"] = $("#type").val();
+    info["type"] = $("#moduleType").val();
     return info;
 }
 
@@ -501,7 +524,7 @@ function editModuleLinkInfo() {
     info["rotation"] = $("#moduleLinkRotationEdit").val();
     info["linkedModule"] = $("#moduleLinkIdEdit").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
-    info["type"] = $("#typeEdit").val();
+    info["type"] = $("#moduleTypeEdit").val();
     return info;
 }
 
@@ -520,7 +543,7 @@ function editExternalLinkInfo() {
     var info = {};
     info["x"] = storeX;
     info["y"] = storeY;
-    info["tabOpen"] = $("#extTabOpenEdit").val();
+	info["tabOpen"] = $("#extTabOpenEdit").val();
     info["type"] = $("#extTypeEdit").val();
     info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
     info["externalLinkURL"] = $("#externalLinkURLEdit").val();
@@ -540,8 +563,10 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     $("#spaceLinkId").val(spaceLinkId);
     $("#spaceLinkIdValueEdit").val(spaceLinkId);
     $("#spaceLinkRotationEdit").val(rotation);
-    $('#typeSpaceEdit option[value="'+linkType+'"]').attr("selected", "selected");
-    $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').attr("selected", "selected");
+    $("#typeSpaceEdit option:selected").prop('selected', false);
+    $('#typeSpaceEdit option[value="'+linkType+'"]').prop("selected", true);
+    $("#spaceLinkIdEdit option:selected").prop('selected', false);
+    $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').prop("selected", true);
     if(linkType != "IMAGE"){
     	resetHighlighting(); 
     }
@@ -567,7 +592,6 @@ function displayForms(formToShow){
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
-
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -578,8 +602,10 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     $("#moduleLinkId").val(moduleLinkId);
     $("#moduleLinkIdValueEdit").val(moduleLinkId);
     $("#moduleLinkRotationEdit").val(rotation);
-    $('#typeEdit option[value="'+linkType+'"]').attr("selected", "selected");
-    $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').attr("selected", "selected");
+    $("#moduleTypeEdit option:selected").prop('selected', false);
+    $('#moduleTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+    $("#moduleLinkIdEdit option:selected").prop('selected', false);
+    $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').prop("selected", true);
     resetHighlighting();     
     $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
     $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
@@ -598,7 +624,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     displayForms("#editModuleLinkInfo");
 }
 
-function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
+function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType) {
     selectedExternalLinkId=linkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -609,7 +635,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     $("#externalLinkLabelEdit").val(linkName);
     $("#externalLinkIdValueEdit").val(linkId);
     $("#externalLinkURLEdit").val(externalLinkURL);
-    $('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
+	$('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
     $('#extTabOpenEdit option[value="'+tabOpenType+'"]').attr("selected", "selected");
     resetHighlighting();
 
@@ -807,6 +833,7 @@ $(function(){
                         $("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
                     }
                     $("#space").css("display", "none");
+                    linkIcon=null;
                     drawLinks();
                 }
             });
@@ -814,7 +841,8 @@ $(function(){
 
         $("#createModuleLinkBtn").click(function(e) {
             e.preventDefault();
-
+            $('#errorAlert').hide();
+            
             if (storeX == undefined || storeY == undefined) {
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
                 $('#errorAlert').show();
@@ -823,7 +851,8 @@ $(function(){
 
             var linkedModules = $("#linkedModule").val();
             var moduleLabel = $("#moduleLinkLabel").val();
-
+            var type = $("#moduleType option:selected").text();
+            
             if (moduleLabel == undefined || moduleLabel == "") {
                 $("#errorMsg").text("Please enter the label for module.")
                 $('#errorAlert').show();
@@ -832,6 +861,12 @@ $(function(){
 
             if (linkedModules == undefined || linkedModules == "Choose...") {
                 $("#errorMsg").text("Please select linked modules.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
                 $('#errorAlert').show();
                 return;
             }
@@ -875,6 +910,7 @@ $(function(){
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#space").css("display", "none");
+                    moduleLinkIcon=null;
                     drawLinks();
                 }
             });
@@ -1094,6 +1130,7 @@ $(function(){
                     form[0].reset();
                     $("#external-arrow").attr("id","");
                     $("#space").css("display", "none");
+                    externalLinkIcon=null;
                     drawLinks();
                 }
             });
@@ -1227,6 +1264,12 @@ $(function(){
                 linkIconReader.readAsDataURL(this.files[0]);
             }
         });
+        
+        $("#moduleLinkImage").change(function() {
+            if (this.files && this.files[0]) {
+                moduleLinkIconReader.readAsDataURL(this.files[0]);
+            }
+        });
 
         $("#externalLinkImage").change(function() {
             if (this.files && this.files[0]) {
@@ -1238,6 +1281,7 @@ $(function(){
         $(".cancelSpaceLinkBtn").click(function() {
             storeX = null;
             storeY = null;
+            linkIcon = null;
             $("#link").remove();
 
             $("#space_label").remove();
@@ -1250,6 +1294,7 @@ $(function(){
         $(".cancelModuleLinkBtn").click(function() {
             storeX = null;
             storeY = null;
+            moduleLinkIcon=null;
             $("#link").remove();
             $("#module_label").remove();
             $("#space").hide();
@@ -1261,6 +1306,7 @@ $(function(){
         $(".cancelExternalLinkBtn").click(function() {
             storeX = null;
             storeY = null;
+            externalLinkIcon=null;
             $("#external-link").remove();
             $("div#link").remove();
             $("#external-arrow").remove();
@@ -1531,7 +1577,6 @@ $(function(){
 	
 	                <input type="hidden" name="x" id="moduleLinkX" /> 
 	                <input type="hidden" name="y" id="moduleLinkY" />
-	                <input type="hidden" name="type" value="MODULE" />
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -1553,7 +1598,20 @@ $(function(){
 	                            name="moduleLinkLabel" id="moduleLinkLabel">
 	                    </div>
 	                </div>
-	
+					
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="moduleType" name="moduleType" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                
 	                <div class="row">
 	                    <div class="col-sm-4">
 	                        <label>Linked Modules</label>
@@ -1564,6 +1622,16 @@ $(function(){
 	                            <option th:value="${module?.id}"
 	                                th:each="module : ${moduleList}">[[${module?.name}]]</option>
 	                        </select>
+	                    </div>
+	                </div>
+	                
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -1612,7 +1680,7 @@ $(function(){
 	                    		size="15" name="url" id="externalLink">	
 	                	</div>
 	                </div>               
-	                  <div class="row">
+					<div class="row">
 	                    <div class="col-sm-4">
 	                        <label>How To Open:</label>
 	                    </div>
@@ -1771,7 +1839,6 @@ $(function(){
                         </div>
                     </div>
                     <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
-                    <input type="hidden" name="type" value="MODULE" />
                     <input type="hidden" name="x" id="moduleLinkXEdit" />
                     <input type="hidden" name="y" id="moduleLinkYEdit" />
                     <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
@@ -1801,6 +1868,18 @@ $(function(){
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-4">
+                            <label>Type:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="moduleTypeEdit" name="type"
+                                class="form-control-sm modulelink-targetEdit">
+                                <option th:value="IMAGE">Image</option>
+                                <option th:value="ARROW" th:selected>Link</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
                             <label>Linked
                                     Modules:</label>
@@ -1816,6 +1895,17 @@ $(function(){
                             </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-3" style="padding-right: 0;">
+                            <label>Image:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control-sm"
+                                name="moduleLinkImage"
+                                id="moduleLinkImageEdit" style="width: inherit" />
+                        </div>
+                    </div>
+                    
                     
                     <p class="mt-5 text-center">
                         <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
@@ -1879,7 +1969,7 @@ $(function(){
                                 style="width: inherit; background: var(--base-grey)">
                         </div>
                     </div>
-                     <div class="row">
+					<div class="row">
 	                    <div class="col-sm-4">
 	                        <label>How To Open:</label>
 	                    </div>
@@ -1958,7 +2048,6 @@ $(function(){
                         </div>
                         <div id="exhibitionMessage">
                             <div class="text-danger">This space is
-                                the start of the exhibition. Deleting it
                                 will make your exhibition unavailable.</div>
                         </div>
                         <div id="finalWarning">
