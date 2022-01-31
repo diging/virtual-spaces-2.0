@@ -5,6 +5,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -41,6 +42,10 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @Enumerated(EnumType.STRING)
     private ExhibitionSpaceOrderMode spaceOrderMode;
     
+    @OneToOne
+    @JoinColumn(name = "Space_Custom_Order_Id", referencedColumnName = "Id")
+    private SpacesCustomOrder spacesCustomOrder;
+
     @OneToOne(targetEntity = SpacesCustomOrder.class)
     private String customOrderName;
 
@@ -120,6 +125,16 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @Override
     public void setSpaceOrderMode(ExhibitionSpaceOrderMode spaceOrderMode) {
         this.spaceOrderMode = spaceOrderMode;
+    }
+    
+    @Override
+    public SpacesCustomOrder getSpacesCustomOrder() {
+        return spacesCustomOrder;
+    }
+
+    @Override
+    public void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder) {
+        this.spacesCustomOrder = spacesCustomOrder;
     }
 
 }

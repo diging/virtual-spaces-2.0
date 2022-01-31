@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -41,6 +42,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
@@ -87,7 +89,10 @@ public class SpaceManager implements ISpaceManager {
     private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
     
     @Autowired
-    private SpacesCustomOrderManager spacesCustomOrderManager;
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
+    
+    @Autowired
+    private SpacesCustomOrderRepository spacesCustomOrderRepo;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -259,7 +264,6 @@ public class SpaceManager implements ISpaceManager {
             }
             // When space has no other links attached to it
             spaceDisplayRepo.deleteBySpaceId(id);
-            spaceRepo.deleteById(id);
             
             //To delete all spaces that exist in custom orders
             if(space.isPresent()) {
@@ -268,9 +272,13 @@ public class SpaceManager implements ISpaceManager {
                     List<ISpace> customOrderedSpaces = spaceCustomOrder.getCustomOrderedSpaces();
                     if(customOrderedSpaces.contains(space.get())) {
                         spaceCustomOrder.getCustomOrderedSpaces().remove(space.get());
+                        spacesCustomOrderRepo.save(spaceCustomOrder);
                     }
                 }   
             }
+            
+            //Delete the space
+            spaceRepo.deleteById(id);
             
         }
     }

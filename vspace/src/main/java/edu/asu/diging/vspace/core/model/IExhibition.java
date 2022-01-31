@@ -28,4 +28,8 @@ public interface IExhibition extends IVSpaceElement {
     
     void setSpaceOrderMode(ExhibitionSpaceOrderMode exhibitionSpaceOrderMode);
 
+    SpacesCustomOrder getSpacesCustomOrder();
+
+    void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder);
+
 }

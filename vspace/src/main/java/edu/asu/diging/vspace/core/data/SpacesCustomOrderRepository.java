@@ -13,15 +13,5 @@ import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 @Repository
 @JaversSpringDataAuditable
 public interface SpacesCustomOrderRepository extends PagingAndSortingRepository<SpacesCustomOrder, String> {
-    @Query("SELECT max(customOrder) FROM SpacesCustomOrder d WHERE d.space.id = ?1")
-    public Integer findMaxCustomOrder(String spaceId);
-    
-    @Query("SELECT max(customOrder) FROM SpacesCustomOrder")
-    public Integer findMaxCustomOrder();
-    
-    public SpacesCustomOrder findByCustomOrderName(String customOrderName);
 
-    public List<SpacesCustomOrder> findBySpace_IdAndCustomOrderGreaterThan(String spaceId,Integer customOrder);
-    
-    public Optional<SpacesCustomOrder> findBySpace_Id(String spaceId);
 }

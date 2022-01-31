@@ -9,11 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 
@@ -39,6 +43,7 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         this.customOrderName = customOrderName;
     }
 
+    @ManyToMany(mappedBy = "spacesCustomOrder", targetEntity = Space.class)
     private List<ISpace> customOrderedSpaces;
 
     @Override

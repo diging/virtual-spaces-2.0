@@ -2,23 +2,16 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
-import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
-import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 /**
  * SpacesCustomOrderManager is the manager
@@ -35,34 +28,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     private SpacesCustomOrderRepository spacesCustomOrderRepository;
     
     @Autowired
-    private ISpaceManager spaceManager;
-    
-    @Autowired
     private SpaceRepository spaceRepo;
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
-    @Override
-    public Integer findMaxCustomOrder(String spaceId) {
-        
-        return spacesCustomOrderRepository.findMaxCustomOrder(spaceId);
-    }
-    
-    /**
-     * This method updates the current custom order of spaces in the exhibition
-     * @param spacesCustomOrderCurrentList
-     */
-    @Override
-    public void updateCustomOrder(List<ISpace> spacesList, String customOrderName) {
-
-        if (spacesList == null) {
-            return;
-        }
-        SpacesCustomOrder spaceCustomOrder = spacesCustomOrderRepository.findByCustomOrderName(customOrderName);
-        spaceCustomOrder.setCustomOrderedSpaces(spacesList);
-        spacesCustomOrderRepository.save(spaceCustomOrder);
-        return;
-    }
     
     @Override
     public void createNewCustomOrder(String customOrderName) {
@@ -75,81 +41,11 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         spacesCustomOrderRepository.save(spacesCustomOrder);
         return;
     }
-    
-    
-    /**
-     * This method persists all the published spaces into the SpacesCustomOrder table 
-     * This method is called every time we go to custom order tab as that will 
-     * ensure the table is populated with latest published spaces before changing the order
-     */    
-    @Override
-    public void persistPublishedSpacesToSpacesCustomOrder() {
-//        List<ISpace> spaces = (List<ISpace>) spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
-//        spaces.addAll(spaceManager.getSpacesWithStatus(null));
-//        List<SpacesCustomOrder> spacesCustomOrderNewList = new ArrayList<>();
-//        int customOrder = 0;
-//        if(spacesCustomOrderRepository.findMaxCustomOrder() != null) {
-//            customOrder = spacesCustomOrderRepository.findMaxCustomOrder();
-//        }
-//        for(ISpace space : spaces) {
-//            Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-//            if(!spaceCustomOrderOptional.isPresent()) {
-//                spacesCustomOrderNewList.add(new SpacesCustomOrder(space, ++customOrder));
-//                logger.info("custom order is {}", customOrder);
-//            }
-//        }
-//        spacesCustomOrderRepository.saveAll(spacesCustomOrderNewList);
-    }
+
     
     @Override
     public List<SpacesCustomOrder> findAll(){
         return (List<SpacesCustomOrder>) spacesCustomOrderRepository.findAll();
-    }
-    
-    @Override
-    public void updateStatusChange(ISpace space, SpaceStatus status) {
-        if(status == SpaceStatus.PUBLISHED || status == null) {
-            updateStatusChangeToPublished(space);
-        }else {
-            updateStatusChangeToUnpublished(space);
-        }
-    }
-   
-    /**
-     * This method updates the custom order of newly published space to the max order
-     * @param space
-     */
-    @Override
-    public void updateStatusChangeToPublished(ISpace space) {
-//        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-//        if(!spaceCustomOrderOptional.isPresent()) {
-//            int order = spacesCustomOrderRepository.findMaxCustomOrder() + 1;
-//            SpacesCustomOrder spaceCustomOrder = new SpacesCustomOrder(space, order);
-//            spaceCustomOrder.setCustomOrder(order);
-//            spacesCustomOrderRepository.save(spaceCustomOrder);
-//        }
-        
-    }
-    
-    /**
-     * This method updates the custom order of existing spaces when a space is changed to unpublished
-     * @param space
-     */
-    @Override
-    public void updateStatusChangeToUnpublished(ISpace space) {
-//        Optional<SpacesCustomOrder> spaceCustomOrderOptional = spacesCustomOrderRepository.findBySpace_Id(space.getId());
-//        if(spaceCustomOrderOptional.isPresent()) {
-//            SpacesCustomOrder spaceCustomOrder = spaceCustomOrderOptional.get();
-//            int order = spaceCustomOrder.getCustomOrder();
-//            List<SpacesCustomOrder> spacesCustomOrderGreaterThan =  spacesCustomOrderRepository.findBySpace_IdAndCustomOrderGreaterThan(space.getId(), order);
-//            spacesCustomOrderRepository.delete(spaceCustomOrder);
-//            
-//            for(SpacesCustomOrder spaceIteration : spacesCustomOrderGreaterThan) {
-//                spaceIteration.setCustomOrder(order);
-//                order++;
-//            }
-//            spacesCustomOrderRepository.saveAll(spacesCustomOrderGreaterThan);
-//        }
     }
     
     @Override

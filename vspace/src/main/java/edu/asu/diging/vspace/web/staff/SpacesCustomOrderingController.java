@@ -45,13 +45,13 @@ public class SpacesCustomOrderingController {
         spacesCustomOrderManager.createNewCustomOrder(customOrderName);
     }
     
-    /**
-     * This method is the controller to update the custom order of spaces
-     */
-    @RequestMapping(value = "/staff/spaceordering/updateOrder/{customOrderName}", method = RequestMethod.POST)
-    public ResponseEntity<List<ISpace>> adjustCustomOrder(@RequestBody List<ISpace> spaces, @PathVariable("customOrderName") String customOrderName) {
-        spacesCustomOrderManager.updateCustomOrder(spaces, customOrderName);
-        return new ResponseEntity<List<ISpace>>(spaces, HttpStatus.OK);
-    }
+//    /**
+//     * This method is the controller to update the custom order of spaces
+//     */
+//    @RequestMapping(value = "/staff/spaceordering/updateOrder/{customOrderName}", method = RequestMethod.POST)
+//    public ResponseEntity<List<ISpace>> adjustCustomOrder(@RequestBody List<ISpace> spaces, @PathVariable("customOrderName") String customOrderName) {
+//        spacesCustomOrderManager.updateCustomOrder(spaces, customOrderName);
+//        return new ResponseEntity<List<ISpace>>(spaces, HttpStatus.OK);
+//    }
     
 }
