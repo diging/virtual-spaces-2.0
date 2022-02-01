@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 
@@ -30,19 +33,32 @@ public class SpacesCustomOrderingController {
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
+    @Autowired
+    private ISpaceManager spaceManager;
+    
+    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderingController.class);
+    
     /**
      * This method fetches all spaces
      */
-    @RequestMapping(value = "/staff/spaceordering", method = RequestMethod.GET)
-    public String displayAllSpaceCustomOrders(Model model) {
-        List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
-        model.addAttribute("spacesCustomOrder", spacesCustomOrder);
-        return "staff/spaces/customordering";
+    @RequestMapping(value = "/staff/spaceordering/add", method = RequestMethod.GET)
+    public String addSpacesCustomOrders(Model model) {
+        logger.info("inside add spaces custom order");
+        List<ISpace> spaces = spaceManager.getAllSpaces();
+        model.addAttribute("spaces", spaces);
+        return "staff/spaces/customorder/add";
     }
     
-    @RequestMapping(value = "/staff/spaceordering/customorder/{customOrderName}", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/spaceordering/customorder", method = RequestMethod.POST)
     public void createCustomOrder(@PathVariable("customOrderName") String customOrderName) {
         spacesCustomOrderManager.createNewCustomOrder(customOrderName);
+    }
+    
+    @RequestMapping(value = "/staff/spaceordering", method = RequestMethod.GET)
+    public String displayCustomOrders(Model model) {
+        List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
+        model.addAttribute("customSpaceOrders", spacesCustomOrder);
+        return "/staff/spaces/customorder/customordering";
     }
     
 //    /**

@@ -1,0 +1,34 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<script>
+</script>
+</head>
+<body>
+    <div class="main-content" layout:fragment="content">
+        <h2>Add New Custom Order</h2>
+        <form th:action="@{'/staff/spaceordering/customorder'}" method="POST" name="f" style="margin-top:40px">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="name">Order Name</label>
+                <input placeholder="Name" class="form-control col-md-10" type="text" id="name" name="name" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="description">Order Description</label>
+                <textarea placeholder="Description" rows="5" class="form-control col-md-10" id="description" name="description"></textarea>
+            </div>
+            <div class="form-group row">
+                <label for="Slides">Select Spaces<br>(Double click to select &nbsp; <br>and drag to reorder)</label> 
+                <select multiple="multiple" id="ordered-slides">
+                    <option th:each="space: ${spaces}" th:value=${space.id} th:id=${space.id}>[[${space.name}]]</option>
+                </select> 
+                <input type="hidden" id="orderedSpaces" name="orderedSpaces"></input>
+            </div>
+            <button type="submit" id="newSequence" class="btn primary-btn">Create Custom Order</button>
+        </form>
+    </div>
+</body>
+</html>
