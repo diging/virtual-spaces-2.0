@@ -45,8 +45,8 @@
 			</div>
       <div id="list" style="margin-top: 0">
             <ul class="list-group list-group-flush" th:each="order: ${customSpaceOrders}">
-               <li class="list-group-item"><a th:href="@{'/staff/spaces/customorder/'+${order.id}}">
-                   <span class="icon-2x2-grid"></span>&emsp;[[${order.name}]]</a>
+               <li class="list-group-item"><a th:href="@{'/staff/spaceordering/'+${order.id}}">
+                   <span class="icon-2x2-grid"></span>&emsp;[[${order.customOrderName}]]</a>
                </li>
             </ul>
         </div>

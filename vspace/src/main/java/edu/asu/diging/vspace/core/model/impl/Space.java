@@ -62,10 +62,7 @@ public class Space extends VSpaceElement implements ISpace {
     @Transient
     private Boolean incomingLinks;
     
-    @ManyToMany(targetEntity = SpacesCustomOrder.class)
-    @JoinTable(name = "spaces_custom_orders",
-            joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
-            inverseJoinColumns = @JoinColumn(name = "SpacesCustomOrder_Id", referencedColumnName="id"))
+    @ManyToMany(mappedBy="customOrderedSpaces",targetEntity = SpacesCustomOrder.class)
     private List<SpacesCustomOrder> spacesCustomOrder;
 
     /*

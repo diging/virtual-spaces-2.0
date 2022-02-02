@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -43,7 +44,10 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         this.customOrderName = customOrderName;
     }
 
-    @ManyToMany(mappedBy = "spacesCustomOrder", targetEntity = Space.class)
+    @ManyToMany(targetEntity = Space.class)
+    @JoinTable(name = "spaces_custom_orders",
+    joinColumns = @JoinColumn(name = "SpacesCustomOrder_Id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"))
     private List<ISpace> customOrderedSpaces;
 
     @Override

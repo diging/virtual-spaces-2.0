@@ -6,6 +6,50 @@
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <script>
+$(document).ready(function() {
+	var vals = []
+	var spaces = []
+	
+	$('#ordered-spaces').multiSelect({
+		keepOrder : true,
+		dblClick : true,
+		afterInit : function(container) {
+			$("#ordered-spaces").find("option").each(function() {
+				vals.push($(this).val());
+			});
+			$(".ms-selection ul").find("li").each(function(index) {
+				$(this).attr('value', vals[index]);
+			});
+		},
+		afterSelect : function(value) {
+			spaces = [];
+			$('.ms-selection ul li.ms-selected').each(function(index, value) {
+				spaces.push($(this).attr('value'));					
+			});
+			$("#orderedSpaces").val(spaces);
+		},
+		afterDeselect : function(value, text) {
+			for (var i=spaces.length-1; i>=0; i--) {
+    			if (String(spaces[i]) === String(value)) {
+    				spaces.splice(i, 1);
+    				break;
+        		}
+    		}
+			$("#orderedSpaces").val(spaces); 
+		}
+	})
+	$('.ms-selection ul').sortable({
+		distance : 5,
+		stop : function(event, ui) {
+			var new_val = []
+			$('.ms-selection ul li.ms-selected').each(function(index, value) {
+				new_val.push($(this).attr('value'));					
+			});
+			$("#orderedSpaces").val(new_val);
+		}
+	});
+	
+});
 </script>
 </head>
 <body>
@@ -22,12 +66,12 @@
             </div>
             <div class="form-group row">
                 <label for="Slides">Select Spaces<br>(Double click to select &nbsp; <br>and drag to reorder)</label> 
-                <select multiple="multiple" id="ordered-slides">
+                <select multiple="multiple" id="ordered-spaces">
                     <option th:each="space: ${spaces}" th:value=${space.id} th:id=${space.id}>[[${space.name}]]</option>
                 </select> 
                 <input type="hidden" id="orderedSpaces" name="orderedSpaces"></input>
             </div>
-            <button type="submit" id="newSequence" class="btn primary-btn">Create Custom Order</button>
+            <button type="submit" id="newSpaceOrder" class="btn primary-btn">Create Custom Order</button>
         </form>
     </div>
 </body>
