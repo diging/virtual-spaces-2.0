@@ -12,13 +12,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -51,6 +55,15 @@ public class ModuleLinkManagerTest {
 
     @Mock
     private IModuleLinkFactory moduleLinkFactory;
+    
+    @Mock
+    private IImageFactory imageFactory;
+    
+    @Mock
+    private ImageRepository imageRepo;
+    
+    @Mock
+    private IStorageEngine storage;
 
     @Mock
     private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
@@ -58,16 +71,19 @@ public class ModuleLinkManagerTest {
     @InjectMocks
     private ModuleLinkManager managerToTest = new ModuleLinkManager();
 
-    private String spaceId1;
+    private String spaceId1, imageId, imageFileName, modDisplayLinkId;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
         spaceId1 = "SPA000000014";
+        imageId = "IMG00000001";
+        imageFileName = "Module Image 1";
+        modDisplayLinkId = "MDLD001";
     }
 
     @Test
-    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException {
+    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, FileStorageException {
 
         Space space = new Space();
         space.setId(spaceId1);
@@ -94,7 +110,7 @@ public class ModuleLinkManagerTest {
         moduleLink.setTarget(target);
 
         IModuleLinkDisplay moduleDisplayLink = new ModuleLinkDisplay();
-        moduleDisplayLink.setId("MDLD001");
+        moduleDisplayLink.setId(modDisplayLinkId);
         moduleDisplayLink.setPositionX(10);
         moduleDisplayLink.setPositionY(30);
         moduleDisplayLink.setRotation(40);
@@ -186,6 +202,25 @@ public class ModuleLinkManagerTest {
         Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
         Assert.assertEquals(moduleLinkDisplayUpdated.getLink().getTarget(), actualUpdatedLink.getLink().getTarget());
         Assert.assertEquals(moduleLinkDisplayUpdated.getType(), actualUpdatedLink.getType());
+        
+        //For moduleLink as Image
+        IVSImage modImage = new VSImage();
+        modImage.setId(imageId);
+        modImage.setFilename(imageFileName);
+        modImage.setHeight(200);
+        modImage.setWidth(400);
+        
+        moduleLinkDisplay.setType(DisplayType.IMAGE);
+        moduleLinkDisplay.setImage(modImage);
+        moduleLinkDisplayUpdated.setType(DisplayType.ARROW);
+        
+        IModuleLinkDisplay actualUpdatedLink2 = managerToTest.updateLink("TestModuleEdited", spaceId1, 100, 300, 180, "MOD002", "TestModuleEdited", "TestModuleEdited Desc", "MOL001", modDisplayLinkId, DisplayType.ALERT, null, null);
+        Assert.assertEquals(moduleLinkDisplayUpdated.getId(), actualUpdatedLink2.getId());
+        Assert.assertEquals(moduleLinkDisplayUpdated.getName(), actualUpdatedLink2.getName());
+        Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink2.getPositionX()));
+        Assert.assertEquals(new Double(moduleLinkDisplayUpdated.getPositionY()), new Double(actualUpdatedLink2.getPositionY()));
+        Assert.assertEquals(moduleLinkDisplayUpdated.getLink().getTarget(), actualUpdatedLink2.getLink().getTarget());
+        Assert.assertEquals(moduleLinkDisplayUpdated.getType(), actualUpdatedLink2.getType());
     }
 
     @Test
@@ -205,7 +240,7 @@ public class ModuleLinkManagerTest {
         target.setId("MOD005");
         moduleLink.setTarget(target);
 
-        moduleLinkDisplay.setId("MDLD001");
+        moduleLinkDisplay.setId(modDisplayLinkId);
         moduleLinkDisplay.setLink(moduleLink);
 
         moduleLinkDisplay.setName("TestModule");
