@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -37,8 +38,9 @@ public class AddModuleLinkController {
     public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
             @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-            @RequestParam("moduleLinkDesc") String moduleLinkDesc, @RequestParam("moduleType") String displayType, @RequestParam("moduleLinkImage") MultipartFile file)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+            @RequestParam("moduleLinkDesc") String moduleLinkDesc, @RequestParam("moduleType") String displayType, @RequestParam(value="moduleLinkImage", required = false) MultipartFile file,
+            @RequestParam(value="imageId", required=false) String imageId)
+                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -63,7 +65,7 @@ public class AddModuleLinkController {
         IModuleLinkDisplay display;
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename);
+                    new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename, imageId);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

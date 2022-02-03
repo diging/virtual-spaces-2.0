@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -33,8 +34,10 @@ public class EditExternalLinkController extends EditSpaceLinksController{
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title, @RequestParam("externalLinkDesc") String desc,
             @RequestParam("url") String externalLink,
             @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit, @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
-            @RequestParam("type") String displayType, @RequestParam("externalLinkImage") MultipartFile file)
-                    throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException {
+            @RequestParam(value="externalLinkImageIdEdit", required=false) String externalLinkImageIdEdit,
+            @RequestParam("type") String displayType, @RequestParam(value="externalLinkImage", required=false) MultipartFile file,
+            @RequestParam(value="imageId", required=false) String imageId)
+                    throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if(validation!=null) {
@@ -47,7 +50,7 @@ public class EditExternalLinkController extends EditSpaceLinksController{
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x), new Float(y), 0, externalLink, title, desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename);        
+        IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x), new Float(y), 0, externalLink, title, desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename, imageId);        
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,displayType,null,null);
 
     }
