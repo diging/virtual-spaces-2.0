@@ -2,58 +2,37 @@
 <head>
 <link th:href="@{/resources/multiselect/css/multiselect.css}"
     type="text/css" rel="stylesheet">
+    <link rel="stylesheet"
+            href="https://unpkg.com/easymde/dist/easymde.min.css">
+             <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <link th:href="@{/resources/extra/Sequence.css}"
     type="text/css" rel="stylesheet">
-<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<style type="text/css">
+            .hova {
+            background-color: #f2f2f2;
+            }
+            .EasyMDEContainer .CodeMirror-wrap{
+            overflow-y: scroll;
+            height: 400px;
+            }
+        </style>
 
 <script th:inline="javascript">
-$(document).ready(function() {
-	var vals = []
-	var spacesCustomOrder = []
-$('#ordered-spaces').multiSelect({
-	keepOrder : true,
-	dblClick : true,
-	afterInit : function(container) {
-		$("#ordered-spaces").find("option").each(function() {
-			//vals.push($(this).val());
-		});
-		/* $(".ms-selection ul").find("li").each(function(index) {
-			$(this).attr('value', vals[index]);
-		});
-		$('.ms-selection ul li.ms-selected').each(function(index, value) {
-			spacesCustomOrder.push($(this).attr('value'));					
-		});
-		$("#orderedSpaces").val(spacesCustomOrder); */
-	},
-	/* afterSelect : function(value) {
-		spacesCustomOrder = [];
-		$('.ms-selection ul li.ms-selected').each(function(index, value) {
-			spacesCustomOrder.push($(this).attr('value'));					
-		});
-		$("#orderedSpaces").val(spacesCustomOrder);
-	}, */
-	/* afterDeselect : function(value, text) {
-		for (var i=spacesCustomOrder.length-1; i>=0; i--) {
-			if (String(spacesCustomOrder[i]) === String(value)) {
-				spacesCustomOrder.splice(i, 1);
-				break;
-    		}
-		}
-		$("#orderedSpaces").val(spacesCustomOrder); 
-	} */
-}) 
-$('.ms-selection ul').sortable({
-	distance : 5,
-	stop : function(event, ui) {
-		var new_val = []
-		$('.ms-selection ul li.ms-selected').each(function(index, value) {
-			new_val.push($(this).attr('value'));					
-		});
-		$("#orderedSpaces").val(new_val);
-	}
-});
-
+let spaceDivs=[];
+ $(document).ready(function() {
+ spaceDivs = document.getElementById('sortableSpaces').children;
+var spaceIds = [];
+let index =0;
+//console.log(elements);
+ for(ele of spaceDivs){
+	spaceIds.push(spaceDivs[index].children[0].id);
+	index++;
+} 
+ console.log(spaceIds);
+	
 //-------- edit contentblock description custom order Space starts --------
 $("#submitDescription").hide()
 $("#cancelEditDescription").hide()	
@@ -177,20 +156,79 @@ $("#submitTitle").click(function() {
     });
             
   });
-});
-
-
-// ------  Edit Title Space Custom Order ------
-
+  
 $("#cancelEditTitle").click(function(){
+	console.log('hello');
     $("#submitTitle").hide()
     $("#editTitle").show()
+    $("#editSpaceCustomOrderTitle").hide()
     $("#cancelEditTitle").hide()
     var spaceCustomOrderTitle = $("#title").text()  // gets value
     $("#editSequenceTitle").remove()
     $("#title").text(spaceCustomOrderTitle)
+    
+    });
+$("#sortableSpaces").sortable({
+  	update: function(event,ui) {
+  		spaceDivs = [];
+      	$(this).children().each(function(index,element){
+      		spaceDivs.push(element.children[0].id);
+            	//updatedSpaceOrder.push(item);
+      	});
+  	}
+	});
+	
+//save order
+$("#saveOrder").click(function() {
+	var formData = new FormData();
+    formData.append('spaceOrders', spaceDivs);
+    $.ajax({
+        url: "[(@{'/staff/spaceordering/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+        type: 'POST',
+        cache       : false,
+        contentType : false,
+        processData : false,
+        data: formData,
+        enctype: 'multipart/form-data',
+        beforeSend: function(){
+        	$(".blur").css("filter","blur(3px)");
+        	$("#spinner").show();
+        },
+        complete: function(){
+        	$("#spinner").hide();
+        	$(".blur").css("filter","none");
+        },
+        success: function(data) {
+            // replace text box with new description
+            $("#submitTitle").hide()
+            $("#cancelEditTitle").hide();
+            $("#editTitle").show()
+            var val = $("#newTitle").val();
+            $("#editSpaceCustomOrderTitle").remove()
+            $("#title").text("SpaceCustomOrder: " + val)
+            $("#title").data('value', val)  // sets value
+        },
+        error: function(data) {
+            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.error').append(alert);
+        }
+    });
+            
+  });
 
+	
 });
+ 
+
+  
+
+
+
+// ------  Edit Title Space Custom Order ------
+
+
+
+
 
 	</script>
 </head>
@@ -232,21 +270,16 @@ $("#cancelEditTitle").click(function(){
 				by [[${customSpaceOrder.modifiedBy}]].
 			</div>
 		</div>
+		<div id="sortableSpaces">
+		<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
+	    	<div  style="cursor: pointer;" th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row" >
+	             <p class="col-md-10">[[${selectedSpace.name}]]</p>
+		    </div>
+    	</div>
+		</div>
+		<button id="saveOrder" type="button" class="btn primary-btn"
+					style="float: left; margin-right: 1%;">Save Order</button>
 		
-		<div id="space" class="blur">
-			<form th:action="@{|/staff/spaceordering/${customSpaceOrder.id}/edit/customSpaceOrder?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${CustomSpaceOrderForm}">
-				<div class="form-group row" style="width: fit-content; margin-left: 0">
-					<label for="Slides" style="margin-right: 15px">Select
-						Spaces: <br> <small>(Double click to select and drag to reorder)</small>
-					</label> 
-					<select  id="ordered-spaces" name="selectSpace">
-
-						<option th:each="selectedSpace: ${selectedSpaces}"  th:value='${selectedSpace.id}' th:id="${selectedSpace.id}" selected="selected">[[${selectedSpace.name}]]</option>
-					</select>
-					<input type="hidden" id="orderedSpaces" name="orderedSpaces"/>
-				</div>
-				<button class="btn primary-btn btn-sm" type="submit" value="submit">Save Changes</button>
-			</form>
 		</div>
 	</div>
 </body>
