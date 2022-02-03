@@ -152,6 +152,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
 }
 
 function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+	debugger;
     if(link != null){
         var moduleLink;
         var moduleLinkTooltip
@@ -160,7 +161,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
         }
         else if(link.type=="IMAGE" && link.image != null){
             var moduleImageURL = [[@{/api/image/}]]+link.image.id;
-            moduleLink = $('<img id="'+link.image.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"src="'+moduleImageURL+'" />');
+            moduleLink = $('<img id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"src="'+moduleImageURL+'" />');
         }
         else{
         	moduleLinkTooltip = link.link.name + (link.link.description!=null && link.link.description!=''? ' : '+link.link.description : "");
@@ -646,7 +647,8 @@ function displayForms(formToShow){
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType, moduleLinkImageId) {
-    selectedModuleLinkId=moduleLinkId;
+    debugger;
+	selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
     $("#moduleLinkInfoLabel").text(moduleLinkName);
@@ -1317,6 +1319,7 @@ $(function(){
             });
         });
         $("#editModuleLinkBtn").click(function(e) {
+        	debugger;
             e.preventDefault();
             var moduleLabel = $("#moduleLinkLabelEdit").val();
 
@@ -1338,6 +1341,10 @@ $(function(){
             var form = $("#editModuleLinkForm");
             var formData = new FormData(form[0]);
             var moduleLinkInfo = editModuleLinkInfo();
+            for(var pair of formData.entries()) {
+         	   console.log(pair[0]+ ', '+ pair[1]);
+         	}
+            formData.delete('uploadRadioBtn');
             $.ajax({
                 type: "POST",
                 url: "[(@{'/staff/space/link/module/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1456,6 +1463,7 @@ $(function(){
             $("#externalLinkYEdit").val(storeY);
             var form = $("#editExternalLinkForm");
             var formData = new FormData(form[0]);
+            formData.delete('uploadRadioBtn');
             var externalLinkInfo = editExternalLinkInfo();
             $.ajax({
                 type: "POST",
@@ -2089,7 +2097,6 @@ $(function(){
 	
 	                <input type="hidden" name="x" id="moduleLinkX" /> 
 	                <input type="hidden" name="y" id="moduleLinkY" />
-	                <input type="hidden" name="type" value="MODULE" />
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -2418,7 +2425,6 @@ $(function(){
                     </div>
                     <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
                     <input type="hidden" name="moduleLinkImageIdEdit" id="moduleLinkImageIdEdit" />
-                    <input type="hidden" name="type" value="MODULE" />
                     <input type="hidden" name="x" id="moduleLinkXEdit" />
                     <input type="hidden" name="y" id="moduleLinkYEdit" />
                     <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
