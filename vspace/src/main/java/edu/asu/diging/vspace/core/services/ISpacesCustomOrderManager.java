@@ -4,14 +4,10 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
-import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.web.staff.forms.SpacesCustomOrderForm;
 
 public interface ISpacesCustomOrderManager {
 
     List<SpacesCustomOrder> findAll();
-
-    SpacesCustomOrder createNewCustomOrder(SpacesCustomOrderForm spacesCustomOrderForm);
 
     void addSpaceToCustomOrders(ISpace space);
 
@@ -19,6 +15,16 @@ public interface ISpacesCustomOrderManager {
 
     SpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId);
 
-    void updateSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder);
+    void updateSpacesCustomOrderName(String spacesCustomOrderId, String name);
+    
+    void updateSpacesCustomOrderDescription(String spacesCustomOrderId, String name);
+
+    void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spaceOrders);
+
+    SpacesCustomOrder createNewCustomOrder(List<String> spaceOrders, String name, String description);
+
+    void setExhibitionSpacesCustomOrder(String customOrderId);
+
+    SpacesCustomOrder getExhibitionCurrentSpacesCustomOrder();
 
 }

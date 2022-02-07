@@ -26,23 +26,20 @@ public class EditSpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description, @PathVariable("customOrderId") String spacesCustomOrderId) {
-        SpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.getSpaceCustomOrderById(spacesCustomOrderId);
-        spacesCustomOrder.setDescription(description);
-        spacesCustomOrderManager.updateSpacesCustomOrder(spacesCustomOrder);
+        spacesCustomOrderManager.updateSpacesCustomOrderDescription(spacesCustomOrderId, description);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/title", method = RequestMethod.POST)
     public ResponseEntity<String> saveTitle(@RequestParam("title") String name, @PathVariable("customOrderId") String spacesCustomOrderId) {
-        SpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.getSpaceCustomOrderById(spacesCustomOrderId);
-        spacesCustomOrder.setCustomOrderName(name);
-        spacesCustomOrderManager.updateSpacesCustomOrder(spacesCustomOrder);
+        spacesCustomOrderManager.updateSpacesCustomOrderName(spacesCustomOrderId, name);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
     
     @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/spaceorders", method = RequestMethod.POST)
-    public ResponseEntity<String> saveOrder(@RequestParam("spaceOrder") List<String> spaceOrders) {
+    public ResponseEntity<String> saveOrder(@PathVariable("customOrderId") String spacesCustomOrderId, @RequestParam("spaceOrder") List<String> spaceOrders) {
         logger.info("space order is {}", spaceOrders.get(0));
+        spacesCustomOrderManager.editSpacesCustomOrder(spacesCustomOrderId, spaceOrders);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

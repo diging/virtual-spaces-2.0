@@ -10,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
-import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
-import edu.asu.diging.vspace.web.staff.SpacesCustomOrderingController;
-import edu.asu.diging.vspace.web.staff.forms.SpacesCustomOrderForm;
 
 /**
  * SpacesCustomOrderManager is the manager
@@ -35,20 +33,27 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     private SpacesCustomOrderRepository spacesCustomOrderRepository;
     
     @Autowired
-    private SpaceRepository spaceRepo;
+    private ISpaceManager spaceManager;
     
     @Autowired
-    private ISpaceManager spaceManager;
+    private IExhibitionManager exhibitionManager;
     
     private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderManager.class);
     
     @Override
-    public SpacesCustomOrder createNewCustomOrder(SpacesCustomOrderForm spacesCustomorderForm) {
-        //TODO add description to spacescustomorder
+    public SpacesCustomOrder createNewCustomOrder(List<String> spaceOrders,
+            String name,
+            String description) throws IllegalStateException {
+        SpacesCustomOrder spacesCustomOrderRepoValue = spacesCustomOrderRepository.
+                findByCustomOrderName(name).get(0);
+        if(spacesCustomOrderRepoValue!=null) {
+            throw new IllegalStateException("Order present");
+        }
         List<ISpace> orderedSpaces= new ArrayList<ISpace>();
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
-        spacesCustomOrder.setCustomOrderName(spacesCustomorderForm.getName());// use integrity violation exception
-        for(String spaceId : spacesCustomorderForm.getOrderedSpaces()) {
+        spacesCustomOrder.setCustomOrderName(name);
+        spacesCustomOrder.setDescription(description);
+        for(String spaceId : spaceOrders) {
             orderedSpaces.add(spaceManager.getSpace(spaceId));
         }
         spacesCustomOrder.setCustomOrderedSpaces(orderedSpaces);
@@ -89,8 +94,48 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     }
     
     @Override
-    public void updateSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder) {
-        spacesCustomOrderRepository.save((SpacesCustomOrder) spacesCustomOrder);
+    public void updateSpacesCustomOrderName(String spacesCustomOrderId, String name) {
+        SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+        spaceCustomOrder.setCustomOrderName(name);
+        spacesCustomOrderRepository.save(spaceCustomOrder);
+        return;
+    }
+    
+    @Override
+    public void updateSpacesCustomOrderDescription(String spacesCustomOrderId, String name) {
+        SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+        spaceCustomOrder.setDescription(name);
+        spacesCustomOrderRepository.save(spaceCustomOrder);
+        return;
+    }
+
+
+    @Override
+    public void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spacesIds) {
+        List<ISpace> spaces = new ArrayList<ISpace>();
+        for(String id : spacesIds) {
+            spaces.add(spaceManager.getSpace(id));
+        }
+        SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+        spaceCustomOrder.setCustomOrderedSpaces(spaces);
+        spacesCustomOrderRepository.save(spaceCustomOrder);
+        return;
+        
+    }
+    
+    @Override
+    public void setExhibitionSpacesCustomOrder(String customOrderId) {
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
+                .findById(customOrderId);
+        exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
+        return;
+    }
+    
+    @Override
+    public SpacesCustomOrder getExhibitionCurrentSpacesCustomOrder() {
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        return exhibition.getSpacesCustomOrder();
     }
 
 }

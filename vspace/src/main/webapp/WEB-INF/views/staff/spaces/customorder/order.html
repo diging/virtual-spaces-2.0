@@ -24,14 +24,14 @@
 let spaceDivs=[];
  $(document).ready(function() {
  spaceDivs = document.getElementById('sortableSpaces').children;
-var spaceIds = [];
-let index =0;
-//console.log(elements);
- for(ele of spaceDivs){
-	spaceIds.push(spaceDivs[index].children[0].id);
-	index++;
-} 
- console.log(spaceIds);
+	var spaceIds = [];
+	let index =0;
+	 for(ele of spaceDivs){
+		spaceIds.push(spaceDivs[index].children[0].id);
+		index++;
+	} 
+	 spaceDivs=[];
+	 spaceDivs = spaceIds;
 	
 //-------- edit contentblock description custom order Space starts --------
 $("#submitDescription").hide()
@@ -158,7 +158,6 @@ $("#submitTitle").click(function() {
   });
   
 $("#cancelEditTitle").click(function(){
-	console.log('hello');
     $("#submitTitle").hide()
     $("#editTitle").show()
     $("#editSpaceCustomOrderTitle").hide()
@@ -173,7 +172,6 @@ $("#sortableSpaces").sortable({
   		spaceDivs = [];
       	$(this).children().each(function(index,element){
       		spaceDivs.push(element.children[0].id);
-            	//updatedSpaceOrder.push(item);
       	});
   	}
 	});
@@ -181,7 +179,7 @@ $("#sortableSpaces").sortable({
 //save order
 $("#saveOrder").click(function() {
 	var formData = new FormData();
-    formData.append('spaceOrders', spaceDivs);
+    formData.append('spaceOrder', spaceDivs);
     $.ajax({
         url: "[(@{'/staff/spaceordering/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'POST',
@@ -199,14 +197,6 @@ $("#saveOrder").click(function() {
         	$(".blur").css("filter","none");
         },
         success: function(data) {
-            // replace text box with new description
-            $("#submitTitle").hide()
-            $("#cancelEditTitle").hide();
-            $("#editTitle").show()
-            var val = $("#newTitle").val();
-            $("#editSpaceCustomOrderTitle").remove()
-            $("#title").text("SpaceCustomOrder: " + val)
-            $("#title").data('value', val)  // sets value
         },
         error: function(data) {
             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -270,6 +260,7 @@ $("#saveOrder").click(function() {
 				by [[${customSpaceOrder.modifiedBy}]].
 			</div>
 		</div>
+		<span>Drag and drop to arrange spaces</span>
 		<div id="sortableSpaces">
 		<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
 	    	<div  style="cursor: pointer;" th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row" >
@@ -279,6 +270,8 @@ $("#saveOrder").click(function() {
 		</div>
 		<button id="saveOrder" type="button" class="btn primary-btn"
 					style="float: left; margin-right: 1%;">Save Order</button>
+            <button type="button" id="deleteOrder"  class="btn primary-btn "><i class="fa fa-trash"></i>&emsp;Delete Order</button>
+        
 		
 		</div>
 	</div>

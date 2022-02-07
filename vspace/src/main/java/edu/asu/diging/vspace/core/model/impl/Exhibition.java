@@ -42,12 +42,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @Enumerated(EnumType.STRING)
     private ExhibitionSpaceOrderMode spaceOrderMode;
     
-    @OneToOne
-    @JoinColumn(name = "Space_Custom_Order_Id", referencedColumnName = "Id")
-    private SpacesCustomOrder spacesCustomOrder;
-
     @OneToOne(targetEntity = SpacesCustomOrder.class)
-    private String customOrderName;
+    @JoinColumn(name = "Space_Custom_Order_Id", referencedColumnName = "id")
+    private SpacesCustomOrder spacesCustomOrder;
 
     /*
      * (non-Javadoc)

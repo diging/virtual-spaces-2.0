@@ -38,6 +38,17 @@
         	<button class="btn btn-sm" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
         		<span class="icon-grid-block"></span></button>
         </div>
+        <div class="startSequence" style="padding-bottom: 10px;">
+        <form th:action="@{'/staff/spaceordering/setDefault'}" method ="POST" name="f" style="text-align: right;">
+          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<p>Select Custom Order to be used.</p>
+					<select class="form-control col-md-8" name="selectedCustomOrderId" style="display: inline-block !important; height:auto;">
+						  <option th:value="Select" th:text="Select"></option>
+              <option th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
+          </select>
+          <button type="submit" class="btn primary-btn btn-sm">Submit</button>
+				</form>
+    	</div>
         <div class="tab sequences" style="margin-top: 0;">
         
         <div style="display: flex; justify-content: space-between">

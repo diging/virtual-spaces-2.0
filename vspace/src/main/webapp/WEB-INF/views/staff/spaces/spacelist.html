@@ -72,14 +72,29 @@
         </div> 
         <div>
         Select how you want to arrange this in the exhibition navigation bar
-        <form th:action="@{/staff/space/spaceordermode}" method="POST" name="f" class="form-horizontal">
-         <select name="spaceOrderMode" id="spaceOrderMode" style="float: center;">
+        <div class="startSequence" style="padding-bottom: 10px;">
+        <form th:action="@{/staff/space/spaceordermode}" method ="POST" name="f" style="text-align: right;">
+          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<p>Select spaces display order.</p>
+					<select class="form-control col-md-4" id="spaceOrderMode" name="spaceOrderMode" style="display: inline-block !important; height:auto;">
+						  <option value="ALPHABETICAL">Alphabetical</option>
+						  <option value="CREATION_DATE">Creation Date</option>
+						  <option value="CUSTOM">Custom</option>
+          </select>
+          <button type="submit" id="changeOrder" class="btn primary-btn btn-sm">Change Order</button>
+				</form>
+    	</div>
+        <!-- <div class = "addSequence">
+        <form th:action="@{/staff/space/spaceordermode}" method="POST" name="f" class="form-control col-md-8">
+         <select name="spaceOrderMode" id="spaceOrderMode" style="display: inline-block; height:auto;">
 		  <option value="ALPHABETICAL">Alphabetical</option>
 		  <option value="CREATION_DATE">Creation Date</option>
 		  <option value="CUSTOM">Custom</option>
 		</select>
 		<button type="submit" id="changeOrder" class="btn primary-btn">Change Order</button>
         </form>
+        </div> -->
+        
         </div>           
         
         <div style="text-align: right">
