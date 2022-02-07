@@ -13,5 +13,7 @@ import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 @Repository
 @JaversSpringDataAuditable
 public interface SpacesCustomOrderRepository extends PagingAndSortingRepository<SpacesCustomOrder, String> {
+    
+    List<SpacesCustomOrder> findByCustomOrderName(String name);
 
 }
