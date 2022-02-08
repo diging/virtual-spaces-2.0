@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -11,6 +12,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 
@@ -43,10 +45,21 @@ public class ExhibitionSpaceOrderUtility {
         return publishedSpaces;
     }
     
-    public List<ISpace> getCustomSpaceOrder(){
+    public List<ISpace> getCustomSpaceOrder(List<ISpace> publishedSpaces){
         IExhibition exhibition  = exhibitionManager.getStartExhibition();
         SpacesCustomOrder spacesCustomOrder = exhibition.getSpacesCustomOrder();
-        return spacesCustomOrder.getCustomOrderedSpaces();
+        if(spacesCustomOrder == null) {
+            return sortSpacesAlphabetically(publishedSpaces);
+        }
+        List<ISpace> allSpaces = spacesCustomOrder.getCustomOrderedSpaces();
+        List<ISpace> spacesToPublish = new ArrayList<ISpace>();
+        //only show published spaces
+        for(ISpace space : allSpaces) {
+            if(space.getSpaceStatus() == SpaceStatus.PUBLISHED) {
+                spacesToPublish.add(space);
+            }
+        }
+        return spacesToPublish;
     }
     
     public List<ISpace> retrieveSpacesListInGivenOrder(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
@@ -56,7 +69,7 @@ public class ExhibitionSpaceOrderUtility {
         else if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
             return sortSpacesOnCreationDate(publishedSpaces);
         }else {
-            return getCustomSpaceOrder();
+            return getCustomSpaceOrder(publishedSpaces);
         }
     }
 }

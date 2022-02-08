@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 @Controller
@@ -22,7 +21,7 @@ public class EditSpacesCustomOrderController {
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
-    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderingController.class);
+    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderController.class);
     
     @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description, @PathVariable("customOrderId") String spacesCustomOrderId) {

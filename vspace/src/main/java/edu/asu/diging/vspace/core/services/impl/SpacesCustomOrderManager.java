@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
@@ -136,6 +137,18 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     public SpacesCustomOrder getExhibitionCurrentSpacesCustomOrder() {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         return exhibition.getSpacesCustomOrder();
+    }
+    
+    @Override
+    public void deleteSpacesCustomOrderById(String id) {
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        SpacesCustomOrder spaceCustomOrder = exhibition
+                .getSpacesCustomOrder();
+        if(spaceCustomOrder!=null && spaceCustomOrder.getId().equals(id)) {
+            exhibition.setSpacesCustomOrder(null);
+            exhibitionManager.storeExhibition((Exhibition)exhibition);
+        }
+        spacesCustomOrderRepository.deleteById(id);
     }
 
 }

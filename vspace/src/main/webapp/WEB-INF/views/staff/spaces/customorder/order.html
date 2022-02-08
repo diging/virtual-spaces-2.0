@@ -23,6 +23,8 @@
 <script th:inline="javascript">
 let spaceDivs=[];
  $(document).ready(function() {
+	 $("#errorMsgDelete").hide();
+	 $("#errorMsgSave").hide();
  spaceDivs = document.getElementById('sortableSpaces').children;
 	var spaceIds = [];
 	let index =0;
@@ -197,6 +199,48 @@ $("#saveOrder").click(function() {
         	$(".blur").css("filter","none");
         },
         success: function(data) {
+        	$("#errorMsgSave").show();
+        	},
+        error: function(data) {
+            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.error').append(alert);
+        }
+    });
+            
+  });
+  
+  
+//save order
+$("#deleteOrder").click(function() {
+	var formData = new FormData();
+    $.ajax({
+        url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+        type: 'DELETE',
+        cache       : false,
+        contentType : false,
+        processData : false,
+        data: formData,
+        enctype: 'multipart/form-data',
+        beforeSend: function(){
+        	$(".blur").css("filter","blur(3px)");
+        	$("#spinner").show();
+        },
+        complete: function(){
+        	$("#spinner").hide();
+        	$(".blur").css("filter","none");
+        },
+        success: function(data) {
+        	$("#title").hide();
+        	$("#description").hide();
+        	$("#sortableSpaces").hide();
+        	$("#saveOrder").hide();
+        	$("#deleteOrder").hide();
+        	$("#createdDates").hide();
+        	$("#draganddrop").hide();
+        	$("#dropdowns").hide();
+        	$("#errorMsgDelete").show();
+        	
+        	
         },
         error: function(data) {
             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -205,7 +249,6 @@ $("#saveOrder").click(function() {
     });
             
   });
-
 	
 });
  
@@ -225,7 +268,12 @@ $("#saveOrder").click(function() {
 
 <body>
 	<div layout:fragment="content" class="main-content">
-		
+		<div id="errorMsgDelete" class="alert customWindow alert-success">
+		"Custom Order has been deleted"
+		</div>
+		<div id="errorMsgSave" class="alert customWindow alert-success">
+		"Custom Order has been Saved"
+		</div>
 		<div class ="blur">
 			<div style="display: flex; margin-bottom: 20px">
 				<div>		
@@ -239,7 +287,7 @@ $("#saveOrder").click(function() {
 						style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
 				</div>				
 					
-				<div class="dropdown">
+				<div id="dropdowns" class="dropdown">
 					<button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span class="icon-caret-down" style="font-size: 16px"></span>
 					</button>
@@ -254,13 +302,15 @@ $("#saveOrder").click(function() {
 				<button id="cancelEditTitle" type="button" class="btn primary-btn"
 					style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
 			</div>
-			<div class="alert alert-light" role="alert">
+			<div id="createdDates" class="alert alert-light" role="alert">
 				Created on <span class="date">[[${customSpaceOrder.creationDate}]]</span> by
 				[[${customSpaceOrder.createdBy}]].<br> Modified on <span class="date">[[${customSpaceOrder.modificationDate}]]</span>
 				by [[${customSpaceOrder.modifiedBy}]].
 			</div>
 		</div>
+		<div id="draganddrop">
 		<span>Drag and drop to arrange spaces</span>
+		</div>
 		<div id="sortableSpaces">
 		<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
 	    	<div  style="cursor: pointer;" th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row" >

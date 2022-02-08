@@ -23,7 +23,9 @@ $(document).ready(function() {
 	$("#createOrder").click(function() {
 		var formData = new FormData();
 		var name = $("#name").val();
-		var descripton = $("#description").val();
+		//console.log(document.getElementById("description").val());
+		var descriptonText = $("#description").val();
+		console.log(descriptonText);
 	    formData.append('spaceOrder', spaceDivs);
 	    formData.append('name', name);
 	    formData.append('description', description);
@@ -37,14 +39,12 @@ $(document).ready(function() {
 	        data: formData,
 	        enctype: 'multipart/form-data',
 	        beforeSend: function(){
-	        	console.log('hello');
 	        },
 	        complete: function(){
 	        },
 	        success: function(data) {
 	        },
 	        error: function(data) {
-	        	console.log('not successful');
 	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>The custom order name is already in use</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 	            $('.error').append(alert);
 	        }
@@ -60,7 +60,6 @@ $(document).ready(function() {
 	      		
 	            	//updatedSpaceOrder.push(item);
 	      	});
-	      	console.log(spaceDivs);
 	  	}
 		});
 	

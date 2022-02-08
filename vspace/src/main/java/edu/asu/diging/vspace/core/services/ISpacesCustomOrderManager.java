@@ -27,4 +27,6 @@ public interface ISpacesCustomOrderManager {
 
     SpacesCustomOrder getExhibitionCurrentSpacesCustomOrder();
 
+    void deleteSpacesCustomOrderById(String id);
+
 }
