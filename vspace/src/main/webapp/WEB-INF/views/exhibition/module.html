@@ -1,12 +1,69 @@
 <html layout:decorate="~{layouts/main}">
    <head>
       <style type="text/css">
+      .imgFullScreen {
+    position:relative;
+    left: 95%;
+    top: -1%;
+}
+.imgFullScreen:hover .tooltiptext {
+    visibility: visible;
+}
+
+.exitfullscreen:hover .tooltiptextForExitFullscreen {
+    visibility: visible;
+}
+
+.tooltiptextForExitFullscreen {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -138px;
+    top: -15px;
+    background: rgba(0, 0, 0, 0.6);
+}
+      
       </style>
       <script th:inline="javascript">
          $( document ).ready(function() {
             $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
             $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
          });
+         
+         function imageFullScreen(){
+			   var elem = document.getElementById("Module_1");
+			   $(".imgFullScreen").hide();
+			   $("#Module_1").css('overflow-y','scroll');
+			   $("#Module_1").css('background-color','white');
+			   if (elem.requestFullscreen) {
+				    elem.requestFullscreen();
+				    $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
+				  } else if (elem.webkitRequestFullscreen) { 
+				    elem.webkitRequestFullscreen();
+				  } else if (elem.msRequestFullscreen) { 
+				    elem.msRequestFullscreen();
+				  }
+		}
+
+		function exitFullScreen()
+		{
+			$(".exitfullscreen").remove();
+			$(".imgFullScreen").show();
+			$("#Module_1").css('overflow-y','hidden')
+			if (document.exitFullscreen) {
+			    document.exitFullscreen();
+			  } else if (document.webkitExitFullscreen) { /* Safari */
+			    document.webkitExitFullscreen();
+			  } else if (document.msExitFullscreen) { /* IE11 */
+			    document.msExitFullscreen();
+			  }
+		}
       </script>
    </head>
    <body>
@@ -26,6 +83,13 @@
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
         </div>
+          <div class="imgFullScreen">
+                <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+                    onclick="imageFullScreen()">
+                    <span class="icon-pan secondary"></span> 
+                    <span class="tooltiptext">Full screen option</span>
+                </button>
+            </div>
          <div class="Group_7_Class" >
             <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
                <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
