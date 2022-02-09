@@ -46,7 +46,7 @@ public class ExhibitionDataAspect {
     private AuthenticationFacade authFacade;
     
     @Autowired
-    ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
+    private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {
