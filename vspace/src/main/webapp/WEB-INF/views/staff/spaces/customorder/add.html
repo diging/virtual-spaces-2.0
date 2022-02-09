@@ -8,6 +8,8 @@
 <script th:inline="javascript">
 var spaceDivs = []
 $(document).ready(function() {
+	$("#errorMsgFailed").hide();
+	 $("#errorMsgAdded").hide();
 	var vals = []
 	
 	spaceDivs = document.getElementById('sortableSpaces').children;
@@ -39,14 +41,22 @@ $(document).ready(function() {
 	        data: formData,
 	        enctype: 'multipart/form-data',
 	        beforeSend: function(){
+	        	$("#errorMsgAdded").hide();
+	        	$("#errorMsgFailed").hide();
 	        },
 	        complete: function(){
+	        	
 	        },
 	        success: function(data) {
+	        	$("#errorMsgAdded").show();
+	        	document.getElementById("name").value = "";
+	        	document.getElementById("description").value = "";
+	        	
 	        },
 	        error: function(data) {
-	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>The custom order name is already in use</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	            $('.error').append(alert);
+	        	console.log(data);
+	        	$("#errorMsgFailed").show();
+	        	
 	        }
 	    });
 	            
@@ -63,13 +73,34 @@ $(document).ready(function() {
 	  	}
 		});
 	
+	$("#closeAlertAdded").click(function() {
+		$("#errorMsgAdded").hide();
+	});
+
+	$("#closeAlertFailed").click(function() {
+		$("#errorMsgFailed").hide();
+	});
+	
 });
 </script>
 </head>
 <body>
-<div id="error">
-</div>
     <div class="main-content" layout:fragment="content">
+	    <div id="errorMsgFailed" class="alert customWindow alert-danger">
+	    <button type="button" class="close" id="closeAlertFailed"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+			"Custom order name already exists, try another name."
+			
+			</div>
+			<div id="errorMsgAdded" class="alert customWindow alert-success">
+			<button type="button" class="close" id="closeAlertAdded"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+			"Custom Order has been Added"
+		</div>
         <h2>Add New Custom Order</h2>
         <div class="form-group row">
                 <label class="col-md-2 col-form-label" for="name">Order Name</label>

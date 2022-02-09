@@ -249,6 +249,14 @@ $("#deleteOrder").click(function() {
     });
             
   });
+  
+$("#closeAlertDelete").click(function() {
+    $('#errorMsgDelete').hide();
+});
+
+$("#closeAlertSave").click(function() {
+    $('#errorMsgSave').hide();
+});
 	
 });
  
@@ -270,9 +278,17 @@ $("#deleteOrder").click(function() {
 	<div layout:fragment="content" class="main-content">
 		<div id="errorMsgDelete" class="alert customWindow alert-success">
 		"Custom Order has been deleted"
+		 <button type="button" class="close" id="closeAlertDelete"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
 		</div>
 		<div id="errorMsgSave" class="alert customWindow alert-success">
 		"Custom Order has been Saved"
+		<button type="button" class="close" id="closeAlertSave"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
 		</div>
 		<div class ="blur">
 			<div style="display: flex; margin-bottom: 20px">

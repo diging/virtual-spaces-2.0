@@ -41,18 +41,17 @@ public class AddSpacesCustomOrderController {
     public ResponseEntity<String> createCustomOrder(Model model, @RequestParam("spaceOrder") List<String> spaceOrders,
             @RequestParam("name") String name,
             @RequestParam("description") String description) {
-        logger.info("creating custom order");
-        logger.info("name {}", name);
-        logger.info("description {}", description);
+        if(name == null || name.isEmpty()) {
+            return new ResponseEntity<String>("Cannot leave the name field empty", HttpStatus.BAD_REQUEST);
+        }
         SpacesCustomOrder spacesCustomOrder = null;
         try {
             spacesCustomOrder = spacesCustomOrderManager.createNewCustomOrder(spaceOrders, name, description);
         }
         catch(IllegalStateException ex) {
             model.addAttribute("showAlert", true);
-            return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<String>("Change the name as it already exists", HttpStatus.BAD_REQUEST);
         }
-        model.addAttribute("showAlert", false);
         return new ResponseEntity<String>(spacesCustomOrder.getId(), HttpStatus.OK);
     }
 
