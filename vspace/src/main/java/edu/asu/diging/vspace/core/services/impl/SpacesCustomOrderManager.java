@@ -48,7 +48,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         List<SpacesCustomOrder> spacesCustomOrderRepoValue = spacesCustomOrderRepository.
                 findByCustomOrderName(name);
         if(!spacesCustomOrderRepoValue.isEmpty()) {
-            throw new IllegalStateException("Order present");
+            throw new IllegalStateException("Order with same name present");
         }
         List<ISpace> orderedSpaces= new ArrayList<ISpace>();
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
@@ -58,7 +58,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
             orderedSpaces.add(spaceManager.getSpace(spaceId));
         }
         spacesCustomOrder.setCustomOrderedSpaces(orderedSpaces);
-        logger.info("spaces list is {}", spacesCustomOrder.getCustomOrderedSpaces().get(0).getId());
         return spacesCustomOrderRepository.save(spacesCustomOrder);
     }
 

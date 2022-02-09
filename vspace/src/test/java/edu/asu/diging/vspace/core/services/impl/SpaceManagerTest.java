@@ -308,14 +308,5 @@ public class SpaceManagerTest {
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
     
-    @Test
-    public void test_sortPublishedSpacesByGivenOrder_Default(){
-        Space space=new Space();
-        space.setId(spaceId1);
-        publishedSpaces.add(space);
-        Mockito.when(exhibitionSpaceOrderUtility.retrieveSpacesListInGivenOrder(publishedSpaces, null)).thenReturn(publishedSpaces);
-        Assert.assertEquals(space, space);
-    }
-    
 
 }

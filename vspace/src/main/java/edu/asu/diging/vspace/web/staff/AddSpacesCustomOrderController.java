@@ -31,7 +31,6 @@ public class AddSpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/spaceordering/add", method = RequestMethod.GET)
     public String addSpacesCustomOrders(Model model) {
-        logger.info("inside add spaces custom order");
         List<ISpace> spaces = spaceManager.getAllSpaces();
         model.addAttribute("spaces", spaces);
         return "staff/spaces/customorder/add";

@@ -26,7 +26,7 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
     @Id
     @GeneratedValue(generator = "customorder_id_generator")
     @GenericGenerator(name = "customorder_id_generator",
-        parameters = @Parameter(name = "prefix", value = "CON"),
+        parameters = @Parameter(name = "prefix", value = "SPC"),
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     

@@ -15,21 +15,16 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
-
 @Controller
 public class UpdateSpaceStatusController {
     @Autowired
     private ISpaceManager spaceManager;
     
-    @Autowired
-    private ISpacesCustomOrderManager spaceCustomOrderManager;
-    
     @RequestMapping(value="/staff/space/{spaceId}/status", method=RequestMethod.POST)
     public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("statusParam") SpaceStatus status) {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setSpaceStatus(status);
-        spaceManager.storeSpace(space, null,null);
-        //spaceCustomOrderManager.updateStatusChange(space, status);
+        spaceManager.storeSpace(space, null,null);;
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Status successfully updated!");
         attributes.addAttribute("showAlert", "true");
