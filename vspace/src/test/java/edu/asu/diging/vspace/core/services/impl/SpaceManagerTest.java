@@ -35,7 +35,6 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
 
 public class SpaceManagerTest {
 
@@ -75,8 +74,6 @@ public class SpaceManagerTest {
     @Mock
     private ExhibitionManager exhibitionManager;
     
-    @Mock
-    private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
 
     @InjectMocks
