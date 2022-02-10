@@ -43,8 +43,8 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
 
     @ManyToMany(targetEntity = Space.class)
     @JoinTable(name = "spaces_custom_orders",
-    joinColumns = @JoinColumn(name = "SpacesCustomOrder_Id", referencedColumnName="id"),
-    inverseJoinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"))
+               joinColumns = @JoinColumn(name = "SpacesCustomOrder_Id", referencedColumnName="id"),
+               inverseJoinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"))
     private List<ISpace> customOrderedSpaces;
 
     @Override

@@ -24,7 +24,7 @@ public class UpdateSpaceStatusController {
     public String updateStatus(HttpServletRequest request,RedirectAttributes attributes, @PathVariable("spaceId") String spaceId, @RequestParam("statusParam") SpaceStatus status) {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setSpaceStatus(status);
-        spaceManager.storeSpace(space, null,null);;
+        spaceManager.storeSpace(space, null,null);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Status successfully updated!");
         attributes.addAttribute("showAlert", "true");
