@@ -540,14 +540,14 @@ function editSpaceLinkInfo() {
 }
 
 function editExternalLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
+	var info = {};
+	info["x"] = storeX;
+	info["y"] = storeY;
 	info["tabOpen"] = $("#extTabOpenEdit").val();
-    info["type"] = $("#extTypeEdit").val();
-    info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
-    info["externalLinkURL"] = $("#externalLinkURLEdit").val();
-    return info;
+	info["type"] = $("#extTypeEdit").val();
+	info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+	info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+	return info;
 }
 
 function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {

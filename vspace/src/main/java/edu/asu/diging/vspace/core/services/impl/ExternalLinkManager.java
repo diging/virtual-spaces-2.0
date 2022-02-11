@@ -129,14 +129,10 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
             String howToOpen)
             throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
 
-        IExternalLink link = createLinkObject(title, id);
-        ExternalLinkValue target = getTarget(linkedId);
-        link.setName(linkLabel);
-        link.setTarget(target);
-        IExternalLinkDisplay displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename,
-                howToOpen);
-        return updateLinkAndDisplay(link, displayLink);
+        IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
+                linkLabel, displayType, linkImage, imageFilename);
+        externalLinkDisplay.setHowToOpen(howToOpen);
+        return externalLinkDisplay;
 
     }
 
@@ -146,41 +142,10 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
             byte[] linkImage, String imageFilename, String howToOpen)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
 
-        validateSpace(id);
-
-        IExternalLink link = getLink(linkId);
-        ExternalLinkValue target = getTarget(linkedId);
-        link.setName(title);
-        link.setTarget(target);
-        IExternalLinkDisplay displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename,
-                howToOpen);
-        return updateLinkAndDisplay(link, displayLink);
+        IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
+                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
+        externalLinkDisplay.setHowToOpen(howToOpen);
+        return externalLinkDisplay;
     }
 
-    protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
-            int rotation, DisplayType displayType, byte[] linkImage, String imageFilename, String howToOpen)
-            throws ImageCouldNotBeStoredException {
-        linkDisplay.setPositionX(positionX);
-        linkDisplay.setPositionY(positionY);
-        linkDisplay.setRotation(rotation);
-        linkDisplay.setHowToOpen(howToOpen);
-        linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
-        if (linkImage != null && linkImage.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(linkImage);
-            IVSImage image = imageFactory.createImage(imageFilename, contentType);
-            image = imageRepo.save((VSImage) image);
-            String relativePath = null;
-            try {
-                relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
-            } catch (FileStorageException e) {
-                throw new ImageCouldNotBeStoredException(e);
-            }
-            image.setParentPath(relativePath);
-            imageRepo.save((VSImage) image);
-            linkDisplay.setImage(image);
-        }
-
-    }
 }
