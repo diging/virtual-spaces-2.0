@@ -16,6 +16,6 @@ import edu.asu.diging.vspace.core.model.IModuleLink;
 public interface ModuleLinkRepository extends PagingAndSortingRepository<ModuleLink, String> {
     
     @Query("select moduleLink from ModuleLink moduleLink where module_id = ?1")
-    List<IModuleLink> findModuleLinkByModuleId(String moduleId);
+    List<IModuleLink> findModuleLinksByModuleId(String moduleId);
 
 }

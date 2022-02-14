@@ -103,28 +103,29 @@ public class ModuleManager implements IModuleManager {
     @Override
     public void deleteModule(String moduleId) {
         List<ModuleLink> moduleLinksToPersist = new ArrayList<ModuleLink>();
-        if(moduleId != null) {
-            List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinkByModuleId(moduleId);
-            for(IModuleLink moduleLink: moduleLinks) {
-                moduleLink.setModule(null);
-                moduleLinksToPersist.add((ModuleLink)moduleLink);
-            }
-            moduleLinkRepo.saveAll(moduleLinksToPersist);
-            //delete all slides
-            Optional<Module> moduleOptional = moduleRepo.findById(moduleId);
-            if(moduleOptional.isPresent()) {
-                Module module = moduleOptional.get();
-                List<ISlide> slides = module.getSlides();
-                for(ISlide slide: slides) {
-                    slideManager.deleteSlideById(slide.getId(), moduleId);
-                }
-                List<ISequence> sequences = getModuleSequences(moduleId);
-                for(ISequence sequence:sequences) {
-                    sequenceRepo.deleteById(sequence.getId());
-                }
-            }
-            moduleRepo.deleteById(moduleId);
+        if(moduleId == null) {
+            return;
         }
+        List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinksByModuleId(moduleId);
+        for(IModuleLink moduleLink: moduleLinks) {
+            moduleLink.setModule(null);
+            moduleLinksToPersist.add((ModuleLink)moduleLink);
+        }
+        moduleLinkRepo.saveAll(moduleLinksToPersist);
+        //delete all slides
+        Optional<Module> moduleOptional = moduleRepo.findById(moduleId);
+        if(moduleOptional.isPresent()) {
+            Module module = moduleOptional.get();
+            List<ISlide> slides = module.getSlides();
+            for(ISlide slide: slides) {
+                slideManager.deleteSlideById(slide.getId(), moduleId);
+            }
+            List<ISequence> sequences = getModuleSequences(moduleId);
+            for(ISequence sequence:sequences) {
+                sequenceRepo.deleteById(sequence.getId());
+            }
+        }
+        moduleRepo.deleteById(moduleId);
         return;
     }
 }
