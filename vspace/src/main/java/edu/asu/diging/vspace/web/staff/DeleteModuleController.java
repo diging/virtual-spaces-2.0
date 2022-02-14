@@ -27,7 +27,7 @@ public class DeleteModuleController {
         try {
             moduleManager.deleteModule(moduleId);
         }
-        catch (Exception exception) {
+        catch (IllegalStateException exception) {
             logger.error("Could not delete Module.", exception);
             return new ResponseEntity<String>("Sorry, unable to delete the module.",
                     HttpStatus.NOT_FOUND);

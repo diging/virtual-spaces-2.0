@@ -5,19 +5,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.model.IModule;
-import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
@@ -100,30 +99,31 @@ public class ModuleManager implements IModuleManager {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
     
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteModule(String moduleId) {
-        List<ModuleLink> moduleLinksToPersist = new ArrayList<ModuleLink>();
+    public void deleteModule(String moduleId) throws IllegalStateException {
         if(moduleId == null) {
             return;
         }
-        List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinksByModuleId(moduleId);
-        for(IModuleLink moduleLink: moduleLinks) {
-            moduleLink.setModule(null);
-            moduleLinksToPersist.add((ModuleLink)moduleLink);
-        }
-        moduleLinkRepo.saveAll(moduleLinksToPersist);
+        moduleLinkRepo.findModuleLinksByModuleId(moduleId).forEach(
+                moduleLink -> {
+                    moduleLink.setModule(null);
+                    moduleLinkRepo.save((ModuleLink)moduleLink);
+                });
         //delete all slides
         Optional<Module> moduleOptional = moduleRepo.findById(moduleId);
         if(moduleOptional.isPresent()) {
             Module module = moduleOptional.get();
-            List<ISlide> slides = module.getSlides();
-            for(ISlide slide: slides) {
-                slideManager.deleteSlideById(slide.getId(), moduleId);
-            }
-            List<ISequence> sequences = getModuleSequences(moduleId);
-            for(ISequence sequence:sequences) {
-                sequenceRepo.deleteById(sequence.getId());
-            }
+            module.getSlides().forEach(
+                    slide -> {
+                        slideManager.deleteSlideById(slide.getId(), moduleId);
+                    });
+            module.getSequences().forEach(
+                    sequence -> {
+                        sequenceRepo.deleteById(sequence.getId());
+                    });
+        } else {
+            throw new IllegalStateException("Module not found");
         }
         moduleRepo.deleteById(moduleId);
         return;
