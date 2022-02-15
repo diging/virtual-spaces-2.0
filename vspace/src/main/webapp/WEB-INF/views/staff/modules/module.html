@@ -27,14 +27,10 @@ function deleteModule(moduleId){
 	        cache       : false,
 	        contentType : false,
 	        success: function(data) {
-	        	var alert = $('<div class="alert alert-dismissible fade show" role="alert"><p>This module has been successfully deleted.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	            $('.error').append(alert);
-	            var startSequence = document.getElementById("startSequence");
-	            var sequences = document.getElementById("sequences");
-	            var slides = document.getElementById("slides");
-	            startSequence.remove();
-	            sequences.remove();
-	            slides.remove();
+	        	let index = window.location.href.lastIndexOf("/");
+	        	let url = window.location.href.substring(0,index);
+	        	let redirectURL = url.replace("module","module/list");
+	        	window.location.href=redirectURL;
 	        },
 	        error: function(data) {
 	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -191,7 +187,6 @@ function guidedTour() {
 
 
 $(document).ready(function() {
-	
 	if (localStorage.getItem("newModule") == null) {
 		guidedTour();
 		localStorage.setItem("newModule", false);

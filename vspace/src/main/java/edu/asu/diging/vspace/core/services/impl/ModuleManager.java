@@ -118,7 +118,7 @@ public class ModuleManager implements IModuleManager {
                     slide -> {
                         slideManager.deleteSlideById(slide.getId(), moduleId);
                     });
-            module.getSequences().forEach(
+            getModuleSequences(moduleId).forEach(
                     sequence -> {
                         sequenceRepo.deleteById(sequence.getId());
                     });
