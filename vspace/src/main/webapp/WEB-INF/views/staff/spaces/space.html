@@ -374,6 +374,7 @@ function showModuleLink(moduleLink, show, x, y) {
     link.css('font-size', "12px");
 
     if (moduleLink["id"]) {
+    	link.attr("class", moduleLink["id"]);
         link.attr("data-link-id", moduleLink["id"]);
         link.css('cursor', 'pointer');
         link.click(function(e) {
@@ -513,6 +514,7 @@ function showExternalLinks(externalLink, show, x, y) {
 
     if (externalLink["id"]) {
         link.attr("data-link-id", externalLink["id"]);
+        link.attr("class", externalLink["id"]);
         link.css('cursor', 'pointer');
         link.attr('href', externalLink["url"]);
         link.click(function(e) {
