@@ -18,10 +18,10 @@ import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ModuleOverview;
-import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
+import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
 
 public class SequenceOverviewManagerTest {
     

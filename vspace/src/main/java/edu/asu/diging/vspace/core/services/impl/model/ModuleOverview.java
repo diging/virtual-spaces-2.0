@@ -1,8 +1,8 @@
-package edu.asu.diging.vspace.core.model;
+package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 
-public class ModuleOverview{
+public class ModuleOverview {
     
     private String name;
     private String id;

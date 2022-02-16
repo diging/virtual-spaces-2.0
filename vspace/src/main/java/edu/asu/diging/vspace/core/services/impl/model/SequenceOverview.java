@@ -1,8 +1,10 @@
-package edu.asu.diging.vspace.core.model;
+package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 
-public class SequenceOverview{
+import edu.asu.diging.vspace.core.model.ISlide;
+
+public class SequenceOverview {
  
     private String name;
 

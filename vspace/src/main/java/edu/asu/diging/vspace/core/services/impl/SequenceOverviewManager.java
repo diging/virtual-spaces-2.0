@@ -1,32 +1,22 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
-import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
-import edu.asu.diging.vspace.core.model.ModuleOverview;
-import edu.asu.diging.vspace.core.model.SequenceOverview;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
+import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
 
 @Component
 public class SequenceOverviewManager {
     
     @Autowired
-    ModuleRepository moduleRepository;
-    
-    @Autowired
-    ModuleLinkDisplayRepository moduleDisplayLinkRepository;
-    
-    @Autowired
-    SequenceRepository sequenceRepo;
-    
-    @Autowired
-    SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
+    private SequenceRepository sequenceRepo;
     
     /**
      * This method is used to fetch all Sequence which belong to a module and 
@@ -40,9 +30,38 @@ public class SequenceOverviewManager {
         
         List<Sequence> sequenceList = sequenceRepo.findSequencesForModule(id);
         
-        sequenceOverview = sequenceOverviewJsonFormat.constructNodesForSequences(sequenceList);
+        sequenceOverview = constructNodesForSequences(sequenceList);
         moduleOverviewJson.setSequenceOverview(sequenceOverview);
         return moduleOverviewJson;
+    }
+    
+    /**
+     * creating list of SequenceOverview object for sequence nodes in the moduleoverview
+     * graph
+     * 
+     * @param contextPath   This variable holds the contextpath of the application
+     * @param SequenceNodeList List of sequences
+     */
+    public List<SequenceOverview> constructNodesForSequences(List<Sequence> sequenceNodeList) {
+
+        List<SequenceOverview> sequenceVertexList = new ArrayList<>();
+        if (sequenceNodeList != null) {
+            sequenceNodeList.forEach((sequenceNode)->{
+                SequenceOverview sequenceOverview = createSequenceNode(sequenceNode);
+                sequenceVertexList.add(sequenceOverview);
+            });
+        }
+        return sequenceVertexList;
+    }
+    
+    private SequenceOverview createSequenceNode(Sequence sequence) {
+        
+        SequenceOverview sequenceOverview = new SequenceOverview();
+        sequenceOverview.setName(sequence.getName());
+        sequenceOverview.setId(sequence.getId());
+        sequenceOverview.setSlides(sequence.getSlides());
+        
+        return sequenceOverview;  
     }
 
 }
