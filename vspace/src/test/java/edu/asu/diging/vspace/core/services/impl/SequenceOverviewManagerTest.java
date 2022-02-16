@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
+import edu.asu.diging.vspace.web.SequenceOverviewManager;
 
 public class SequenceOverviewManagerTest {
     

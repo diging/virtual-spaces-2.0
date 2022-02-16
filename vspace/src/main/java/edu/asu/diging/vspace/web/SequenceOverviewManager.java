@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.services.impl;
+package edu.asu.diging.vspace.web;
 
 import java.util.ArrayList;
 import java.util.List;
