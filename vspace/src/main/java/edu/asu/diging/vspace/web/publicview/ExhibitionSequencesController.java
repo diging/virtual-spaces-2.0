@@ -42,7 +42,7 @@ public class ExhibitionSequencesController {
         "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId,
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
             @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId,
             @RequestParam(required = false, name = "clearHistory") Boolean clearHistory) throws ModuleNotFoundException,

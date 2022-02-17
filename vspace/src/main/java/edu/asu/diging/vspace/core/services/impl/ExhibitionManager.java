@@ -71,7 +71,7 @@ public class ExhibitionManager implements IExhibitionManager {
     }
     
     @Override
-    public IExhibition addPreviewId() {
+    public IExhibition createExhibitionWithPreviewId() {
         Exhibition exhibitionObj = new Exhibition();
         UUID randomUUID = UUID.randomUUID();
         String randomString = randomUUID.toString().replaceAll("-", "");

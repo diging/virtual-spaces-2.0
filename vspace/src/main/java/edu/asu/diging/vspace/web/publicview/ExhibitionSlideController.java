@@ -51,7 +51,7 @@ public class ExhibitionSlideController {
         }, method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId,
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,
             @RequestParam(required = false, name = "back") boolean back,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
             @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)

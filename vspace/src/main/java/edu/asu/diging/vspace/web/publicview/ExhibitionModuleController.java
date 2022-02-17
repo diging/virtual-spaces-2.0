@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
@@ -26,7 +24,7 @@ public class ExhibitionModuleController {
 
     @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{previewId}/{spaceId}/module/{id}" })
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId,
-            @PathVariable(name = IPreviewConstant.PREVIEW_ID, required = false) String previewId, Model model)
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {
 
         ISpace space = spaceManager.getSpace(spaceId);

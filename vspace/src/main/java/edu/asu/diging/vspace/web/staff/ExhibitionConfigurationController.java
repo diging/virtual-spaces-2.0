@@ -43,7 +43,7 @@ public class ExhibitionConfigurationController {
         // for now we assume there is just one exhibition
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         if (exhibition == null) {
-            Exhibition exhibitionObj = (Exhibition) exhibitManager.addPreviewId();
+            Exhibition exhibitionObj = (Exhibition) exhibitManager.createExhibitionWithPreviewId();
             model.addAttribute("exhibition", exhibitionObj);
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
