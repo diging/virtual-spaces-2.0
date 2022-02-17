@@ -28,8 +28,8 @@ public class DeleteSpaceBlockController {
             contentBlockManager.deleteSpaceBlockById(blockId,slideId);
 
         } catch (BlockDoesNotExistException e) {
-            logger.warn("Text Id does not exist, bad request.", e);
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            logger.warn("Block Id does not exist, bad request.", e);
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);

@@ -54,11 +54,7 @@ public class SlideController {
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) throws JsonProcessingException {
 
         ISlide slide = slideManager.getSlide(id);
-        List<ISpace> spaces = new ArrayList<ISpace>();
-        spaceRepo.findAll().forEach(s -> {
-            spaces.add(s);
-        });
-        model.addAttribute("spaces", spaces);
+        model.addAttribute("spaces", spaceRepo.findAll());
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
@@ -69,8 +65,7 @@ public class SlideController {
         model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
-        }      
-        System.out.println("the map is"+ selectedSpaceForSpaceBlock.get("CON000000007"));
+        }
         return "staff/modules/slides/slide";
     }
 
