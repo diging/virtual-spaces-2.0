@@ -19,7 +19,9 @@
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
-            var selectedSpaceForSpaceBlock = [[${selectedSpaceForSpaceBlock}]]
+            var spaces = [[${spaces}]];
+            var slideContents = [[${slideContents}]];
+            console.log(slideContents);
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
@@ -566,7 +568,7 @@
                 		var blockId = $('#deleteSpaceId').attr('value');
                 		$('#deleteSpaceId').remove()
                 		
-                		// ------------- delete text content blocks ------------
+                		// ------------- delete space content blocks ------------
                 		$.ajax({
                 		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
                 		    type: 'DELETE',
@@ -706,7 +708,7 @@
                 $("#submitSpace").on("click", function(e) {
                     $("#addSpaceAlert").hide();
                     e.preventDefault();
-                    // ------------- creating text content blocks ------------
+                    // ------------- creating space content blocks ------------
                     
                     var formData = new FormData();
                     var text = markDown.value();
@@ -1426,7 +1428,7 @@
                      <div style="word-break:break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
                         <p class="col-md-10"> [[${contents.title}]]</p>
                         <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
-                        <a class="btn deleteText col-md-1" href="javascript:;"> 
+                        <a class="btn deleteSpace col-md-1" href="javascript:;"> 
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
