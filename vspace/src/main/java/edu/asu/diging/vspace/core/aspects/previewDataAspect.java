@@ -28,7 +28,7 @@ public class previewDataAspect {
     @Autowired
     private IExhibitionManager exhibitionManager;
 
-    @Around("execution(public * *..*Controller.*(..))")
+    @Around("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public Object checkPreview(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
