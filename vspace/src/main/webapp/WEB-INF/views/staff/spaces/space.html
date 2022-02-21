@@ -275,7 +275,7 @@ function showSpaceLink(spaceLink, show, x, y) {
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var space_label_desc = $("<p id='space_label_desc' class='tooltiptext'></p>");
-    var linkTooltip = spaceLink["spaceLinkLabel"]+ '\n' + (spaceLink["spaceLinkDesc"]!=null ? spaceLink["spaceLinkDesc"] : "");
+    var linkTooltip = spaceLink["spaceLinkLabel"] + (spaceLink["spaceLinkDesc"]!=null && spaceLink["spaceLinkDesc"]!='' ? ' : ' + spaceLink["spaceLinkDesc"] : "");
     space_label_desc.text();
 
     var link;
@@ -341,7 +341,7 @@ function showModuleLink(moduleLink, show, x, y) {
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var module_label_desc = $("<p id='module_label_desc' class='tooltiptext'></p>");
-    var linkTootip = moduleLink["moduleLinkLabel"] + '\n' + (moduleLink["moduleLinkDesc"]!=null ? moduleLink["moduleLinkDesc"] : "");
+    var linkTootip = moduleLink["moduleLinkLabel"] + (moduleLink["moduleLinkDesc"]!=null && moduleLink["moduleLinkDesc"]!='' ? ' : ' + moduleLink["moduleLinkDesc"] : "");
     module_label_desc.text(linkTootip);
 
     var link;
@@ -451,7 +451,7 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     $(selectedLinkClass).css({ 'left': x + posX});
     $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass+' span').remove();
-    linkTooltip = linkLabel+'\n'+ (linkDesc!=null ? linkDesc : "");
+    linkTooltip = linkLabel+ (linkDesc!=null && linkDesc!="" ? " : " + linkDesc : "");
     $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkTooltip + '</span>');
     if(linkIcon!=null && linkIcon!="") {
     	$(selectedLinkClass).attr('src', linkIcon);
@@ -485,7 +485,7 @@ function showExternalLinks(externalLink, show, x, y) {
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var ext_label_desc = $("<p id='ext_label_desc' class='tooltiptext'></p>");
-    var linkTooltip = externalLink["externalLinkLabel"] + '\n' + (externalLink["externalLinkDesc"]!=null ? externalLink["externalLinkDesc"] : "");
+    var linkTooltip = externalLink["externalLinkLabel"] + (externalLink["externalLinkDesc"]!=null && externalLink["externalLinkDesc"]!='' ? " : " + externalLink["externalLinkDesc"] : "");
     ext_label_desc.text(linkTooltip);
 
     var link;
@@ -623,11 +623,15 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkDesc, spaceLinkId, rotat
     $("#spaceLinkRotationEdit").val(rotation);
     $("#typeSpaceEdit option:selected").prop('selected', false);
     $('#typeSpaceEdit option[value="'+linkType+'"]').prop("selected", true);
+    $('#imageOptionsSpaceEdit *').prop('disabled', false);
     $("#spaceLinkIdEdit option:selected").prop('selected', false);
     $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').prop("selected", true);
+    
     if(linkType != "IMAGE"){
     	resetHighlighting(); 
+    	$('#imageOptionsSpaceEdit *').prop('disabled', true);
     }
+    
     $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
     $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
     $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
@@ -664,9 +668,15 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, r
     $("#moduleLinkRotationEdit").val(rotation);
     $("#moduleTypeEdit option:selected").prop('selected', false);
     $('#moduleTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+    $('#imageOptionsModuleEdit *').prop('disabled', false);
     $("#moduleLinkIdEdit option:selected").prop('selected', false);
     $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').prop("selected", true);
-    resetHighlighting();     
+    resetHighlighting(); 
+    
+    if(linkType!='IMAGE') {
+	    $('#imageOptionsModuleEdit *').prop('disabled', true);
+    }
+    
     $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
     $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
     $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
@@ -699,8 +709,13 @@ function makeExternalLinksEditable(linkName, linkDesc, linkId, externalLinkURL, 
     $("#externalLinkURLEdit").val(externalLinkURL);
     $("#extTypeEdit option:selected").prop('selected', false);
     $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+    $('#imageOptionsExternalEdit *').prop('disabled', false);
     resetHighlighting();
-
+	
+    if(linkType!='IMAGE') {
+    	$('#imageOptionsExternalEdit *').prop('disabled', true);
+    }
+    
     $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
     $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
     $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
@@ -744,6 +759,7 @@ $(function(){
             if ($("div#incomingLinks a").length < 2) {
                 $("#noLinksToSpace").show()
             }
+            
             $("#selectedImage-spcLink").empty();
             $('#imageId-spcLink').prop("disabled",true);
         	$('#chooseFromLocal-spcLink').click(function() {
@@ -1080,6 +1096,13 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createSpaceLinkAlert");
+            
+            var spaceLinkType = $("#type").val();
+            if (spaceLinkType=='IMAGE') {
+            	$('#imageOptionsSpace *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsSpace *').prop('disabled', true);
+            }
         });
 
         $("#addModuleLinkButton").click(function(e) {
@@ -1100,6 +1123,13 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createModuleLinkAlert");
+            
+            var moduleLinkType = $("#moduleType").val();
+            if (moduleLinkType=='IMAGE') {
+            	$('#imageOptionsModule *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsModule *').prop('disabled', true);
+            }
         }); 
 
         $("#addExternalLinkButton").click(function(e) {
@@ -1121,6 +1151,13 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createExternalLinkAlert");
+            
+            var extLinkType = $("#extType").val();
+            if (extLinkType=='IMAGE') {
+            	$('#imageOptionsExternal *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsExternal *').prop('disabled', true);
+            }
         });
 
         $('#changeBgImgButton').click(function(file) {
@@ -1683,14 +1720,13 @@ $(function(){
         // ------------- adjust links on background image (e.g. when inputs are changed) ------------
         // external links
         $(".extlink-target").change(function() {
-            var externalLink = {};
-            externalLink["x"] = storeX;
-            externalLink["y"] = storeY;
-            externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
-            externalLink["externalLinkDesc"] = $("#externalLinkDesc").val();
-            externalLink["url"] = $("#externalLink").val();
-            externalLink["type"] = $("#extType").val();
-            showExternalLinks(externalLink);
+            showExternalLinks(createExternalLinkInfo());
+            var linkType = $("#extType").val();
+            if (linkType=='IMAGE') {
+            	$('#imageOptionsExternal *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsExternal *').prop('disabled', true);
+            }
         });     
 
         // space links  
@@ -1699,12 +1735,24 @@ $(function(){
         });
 
         $(".target").change(function() {
-            showSpaceLink(createSpaceLinkInfo());
+        	showSpaceLink(createSpaceLinkInfo());
+            var linkType = $("#type").val();
+            if (linkType=='IMAGE') {
+            	$('#imageOptionsSpace *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsSpace *').prop('disabled', true);
+            }
         }); 
 
         $(".modulelink-target").change(function() {
             showModuleLink(createModuleLinkInfo());
-        }); 
+            var linkType = $("#moduleType").val();
+            if (linkType=='IMAGE') {
+            	$('#imageOptionsModule *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsModule *').prop('disabled', true);
+            }
+        });
 
         // link icons for space links
 
@@ -1718,16 +1766,33 @@ $(function(){
 
         $(".modulelink-targetEdit").change(function() {
             showModuleLinkEdit(editModuleLinkInfo());
+            var linkType = $("#moduleTypeEdit").val();
+            if (linkType=='IMAGE') {
+            	$('#imageOptionsModuleEdit *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsModuleEdit *').prop('disabled', true);
+            }
         }); 
 
         $(".spacelink-targetEdit").change(function() {
             showSpaceLinkEdit(editSpaceLinkInfo());
+            var linkType = $("#typeSpaceEdit").val();
+            if (linkType=='IMAGE') {
+            	$('#imageOptionsSpaceEdit *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsSpaceEdit *').prop('disabled', true);
+            }
         });
 
         $(".externallink-targetEdit").change(function() {
             showExternalLinkEdit(editExternalLinkInfo());
+            var linkType = $("#extTypeEdit").val();
+            if (linkType=='IMAGE') {
+            	$('#imageOptionsExternalEdit *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsExternalEdit *').prop('disabled', true);
+            }
         });
-
 
         $("#spaceLinkImage").change(function() {
             if (this.files && this.files[0]) {
@@ -2065,7 +2130,7 @@ $(function(){
 	                    </div>
 	                </div>
 	
-	                <div class="row">
+	                <div class="row" id="imageOptionsSpace">
 	                    <div class="modal-body">
                             <input type="radio" id="chooseFromLocal-spcLink" name="uploadRadioBtn" checked/>
                             <h6>
@@ -2173,7 +2238,7 @@ $(function(){
 	                </div>
 	                
 	
-	                <div class="row">
+	                <div class="row" id="imageOptionsModule">
 	                    <div class="modal-body">
                             <input type="radio" id="chooseFromLocal-modLink" name="uploadRadioBtn" checked/>
                             <h6>
@@ -2266,7 +2331,7 @@ $(function(){
 	                    </div>
 	                </div>
 	
-	                <div class="row">
+	                <div class="row" id="imageOptionsExternal">
 	                    <div class="modal-body">
                             <input type="radio" id="chooseFromLocal-extLink" name="uploadRadioBtn" checked/>
                             <h6>
@@ -2385,7 +2450,7 @@ $(function(){
 	                    </div>
 	                </div>
 	
-	                <div class="row">
+	                <div class="row" id="imageOptionsSpaceEdit">
 	                    <div class="modal-body">
                             <input type="radio" id="chooseFromLocal-spcLinkEdit" name="uploadRadioBtn" checked/>
                             <h6>
@@ -2507,7 +2572,7 @@ $(function(){
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id=imageOptionsModuleEdit>
 	                    <div class="modal-body">
                             <input type="radio" id="chooseFromLocal-modLinkEdit" name="uploadRadioBtn" checked/>
                             <h6>
@@ -2619,7 +2684,7 @@ $(function(){
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" id="imageOptionsExternalEdit">
 	                    <div class="modal-body">
                             <input type="radio" id="chooseFromLocal-extLinkEdit" name="uploadRadioBtn" checked/>
                             <h6>
