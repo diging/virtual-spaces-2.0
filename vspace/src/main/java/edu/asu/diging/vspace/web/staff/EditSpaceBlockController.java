@@ -22,6 +22,8 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Controller
 public class EditSpaceBlockController {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private IContentBlockManager contentBlockManager;
     
@@ -33,6 +35,7 @@ public class EditSpaceBlockController {
             @RequestParam("spaceBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("spaceBlockTitle") String spaceBlockTitle,
             @RequestParam("spaceId") String spaceId) throws IOException {
+        logger.info("spaceId is {}", spaceId);
         ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
         ISpace space = spaceManager.getSpace(spaceId);
         spaceBlock.setTitle(spaceBlockTitle);

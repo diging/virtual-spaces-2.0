@@ -60,6 +60,7 @@
             }
             
             function onDoubleClick(e){
+            	console.log('hello');
                 // get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
@@ -82,10 +83,6 @@
                 	defaultValue = description;
             		var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
             		var blockId = $(this).closest("div").attr("id");
-            		console.log('block id is'+ blockId)
-            		var selectedSpace = selectedSpaceForSpaceBlock[blockId]
-            		console.log('selected space is '+selectedSpace)
-            		document.getElementById("selectedSpace").innerText = selectedSpace
                     $("#editSpaceAlert").show();
                     markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
                     markDown.value(description.trim());
@@ -728,7 +725,7 @@
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
@@ -899,11 +896,13 @@
                 	var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
                     var formData = new FormData();
                     var text = markDown.value();
+                    console.log(spaceId);
                     markDown.value('');
                     var formData = new FormData();
                     var blockId = $(".open").attr("id");
                     formData.append('spaceBlockId', blockId);
                     formData.append('spaceId', spaceId);
+                    formData.append('spaceBlockTitle', text);
                 	$("#editSpaceAlert").hide();
                     $.ajax({
                         url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -916,7 +915,6 @@
                         success: function(data) {
                             // replace space box with new description
                            updateSpaceBox(blockId, text)
-                           selectedSpaceForSpaceBlock[blockId] = spaceId
                            $(".open").removeClass("open");
                        },
                        error: function(data) {
