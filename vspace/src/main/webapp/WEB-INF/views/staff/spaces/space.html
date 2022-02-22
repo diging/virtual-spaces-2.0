@@ -152,7 +152,6 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
 }
 
 function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-    console.log("In here");
 	if(link != null){
         var moduleLink;
         var moduleLinkTooltip
@@ -393,7 +392,6 @@ function showModuleLink(moduleLink, show, x, y) {
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
-	console.log("showModLinkEdit lo")
     moduleLink["x"]=storeX;
     moduleLink["y"]=storeY;
     var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
@@ -872,7 +870,6 @@ $(function(){
                 return $image;
             }
             
-            
             //Module link selection of existing images
             $('#imageId-modLink').prop("disabled",true);
         	$('#chooseFromLocal-modLink').click(function() {
@@ -1218,12 +1215,7 @@ $(function(){
         		imageId = imageSource.split("/").pop().split(".")[0];
         	}
         	formData.set('imageId',imageId);
-            /* formData.append('imageId',imageId); */
-            
             formData.delete('uploadRadioBtn');
-            for(var pair of formData.entries()) {
-            	   console.log(pair[0]+ ', '+ pair[1]);
-            	}
             
             $.ajax({
                 type: "POST",
@@ -1380,9 +1372,6 @@ $(function(){
             var form = $("#editModuleLinkForm");
             var formData = new FormData(form[0]);
             var moduleLinkInfo = editModuleLinkInfo();
-            for(var pair of formData.entries()) {
-         	   console.log(pair[0]+ ', '+ pair[1]);
-         	}
             formData.delete('uploadRadioBtn');
             $.ajax({
                 type: "POST",
@@ -1805,9 +1794,6 @@ $(function(){
             if (this.files && this.files[0]) {
                 linkIconReader.readAsDataURL(this.files[0]);
             }
-            /* $('#spacelinkModalId-' + linkId ).remove(); */
-            console.log(linkIcon);
-            
         });
         
         $("#moduleLinkImage").change(function() {
@@ -1821,9 +1807,6 @@ $(function(){
             if (this.files && this.files[0]) {
             	moduleLinkIconReader.readAsDataURL(this.files[0]);
             }
-            /* $('#spacelinkModalId-' + linkId ).remove(); */
-            console.log(moduleLinkId);
-            
         });
 
         $("#externalLinkImage").change(function() {
@@ -1837,9 +1820,6 @@ $(function(){
             if (this.files && this.files[0]) {
             	externalLinkIconReader.readAsDataURL(this.files[0]);
             }
-            /* $('#spacelinkModalId-' + linkId ).remove(); */
-            console.log(externalLinkId);
-            
         });
 
         // ------------ Cancel buttons -----------------

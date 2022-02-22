@@ -53,7 +53,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
         if(existingImageId!=null && !existingImageId.trim().isEmpty()) {
-            setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
+            setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, existingImageId);
         }
         else {
             setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
@@ -75,7 +75,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
         if(existingImageId!=null && !existingImageId.trim().isEmpty()) {
-            setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename, existingImageId);
+            setDisplayProperties(displayLink, positionX, positionY, rotation, displayType, existingImageId);
         }
         else {
             setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
@@ -140,7 +140,7 @@ public abstract class LinkManager<L extends ILink<T>,T extends IVSpaceElement, U
         
     }
     
-    protected void setDisplayProperties(ILinkDisplay linkDisplay,String id, float positionX,float positionY,int rotation, DisplayType displayType, byte[] linkImage, String imageFilename, String existingImageId) throws ImageCouldNotBeStoredException, ImageDoesNotExistException {
+    protected void setDisplayProperties(ILinkDisplay linkDisplay, float positionX,float positionY,int rotation, DisplayType displayType, String existingImageId) throws ImageCouldNotBeStoredException, ImageDoesNotExistException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);
