@@ -5,14 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
@@ -46,7 +43,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
-@Transactional
+@Transactional(rollbackFor = { Exception.class })
 @Service
 public class ContentBlockManager implements IContentBlockManager {
 
@@ -406,6 +403,35 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public Integer findMaxContentOrder(String slideId) {
         return contentBlockRepository.findMaxContentOrder(slideId);
+    }
+
+    /**
+     * Adjusting the content order of the blocks of slide once it is dragged and
+     * changed position.
+     * 
+     * @param contentBlockList - The list contains the blocks and the updated
+     *                         content order corresponding to each blocks.
+     */
+    @Override
+    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
+
+        if (contentBlockList == null) {
+            return;
+        }
+        List<ContentBlock> contentBlocks = new ArrayList<>();
+        for (ContentBlock eachBlock : contentBlockList) {
+            String blockId = eachBlock.getId();
+            int contentOrder = eachBlock.getContentOrder();
+            Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+            if (contentBlock.isPresent()) {
+                ContentBlock contentBlockObj = contentBlock.get();
+                contentBlockObj.setContentOrder(contentOrder);
+                contentBlocks.add(contentBlockObj);
+            } else {
+                throw new BlockDoesNotExistException("Block Id not present");
+            }
+        }
+        contentBlockRepository.saveAll(contentBlocks);
     }
 
     /**
