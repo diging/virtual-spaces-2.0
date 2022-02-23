@@ -68,6 +68,4 @@ public interface IContentBlockManager {
      * 
      */
     void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
-
-    HashMap<String, String> findSelectedSpaceForSpaceBlock(List<IContentBlock> slideContents);
 }
