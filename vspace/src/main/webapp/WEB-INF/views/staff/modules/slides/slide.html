@@ -16,6 +16,7 @@
         </style>
         <script th:inline="javascript">
             //# sourceURL=click.js
+            let currentSelectedSpace="";
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
@@ -60,7 +61,6 @@
             }
             
             function onDoubleClick(e){
-            	console.log('hello');
                 // get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
@@ -80,12 +80,14 @@
                 } else if(divName.includes("SpaceDivStaff")){
                 	$(e.target).closest('.SpaceDivStaff').addClass("open");
                     var description = $("div.open p:eq(0)").text();
+                    currentSelectedSpace = $("div.open p:eq(1)").text();
                 	defaultValue = description;
             		var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
             		var blockId = $(this).closest("div").attr("id");
                     $("#editSpaceAlert").show();
                     markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
                     markDown.value(description.trim());
+                    document.getElementById("selectedSpace").innerHTML=currentSelectedSpace;
                     //remove card border
                     $(".open").css('display', 'none');
                     $(".open").css('overflow-y', 'scroll');
@@ -896,7 +898,6 @@
                 	var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
                     var formData = new FormData();
                     var text = markDown.value();
-                    console.log(spaceId);
                     markDown.value('');
                     var formData = new FormData();
                     var blockId = $(".open").attr("id");
@@ -1286,7 +1287,7 @@
                             <select name="editSpacesNames" id="editSpaceName">
                             <option th:each="space: ${spaces}" th:value="${space.id}">[[${space.name}]]</option>
 							</select>
-							<p>Current selected space is <span id="selectedSpace" ></span></p>
+							<p>Current selected space is <span id="selectedSpace" >[[${currentSelectedSpaceBlock}]]</span></p>
                             <div class="modal-footer">
                                 <button id="cancelSpaceBlock" type="reset"
                                     class="btn light">Cancel</button>
@@ -1422,6 +1423,7 @@
                     </div>
                      <div style="word-break:break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
                         <p class="col-md-10"> [[${contents.title}]]</p>
+                        <p hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
                         <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
                         <a class="btn deleteSpace col-md-1" href="javascript:;"> 
                         <span class="icon-trash error"></span>
