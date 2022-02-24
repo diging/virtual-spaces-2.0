@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 @Controller
 public class ExhibitionPublicAboutPageController {
     
-    Logger logger = LoggerFactory.getLogger(ExhibitionPublicAboutPageController.class);
+    private Logger logger = LoggerFactory.getLogger(ExhibitionPublicAboutPageController.class);
     
     @Autowired
     private IExhibitionAboutPageManager aboutPageManager;

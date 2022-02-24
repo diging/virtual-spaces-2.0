@@ -63,7 +63,6 @@ public class ExhibitionAboutPage {
      * @see
      * edu.asu.diging.vspace.core.model.impl.ITextBlock#htmlRenderedText()
      */
-    @Transient
     public String htmlRenderedText() {
         Parser parser = Parser.builder().build();
         Node document = parser.parse(aboutPageText);

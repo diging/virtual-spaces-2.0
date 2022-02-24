@@ -44,8 +44,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Override
     public ExhibitionAboutPage getExhibitionAboutPage() {
         List<ExhibitionAboutPage> aboutPageList = findAll();
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        return exhibitionAboutPage;
+        return aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
     }
     
 }
