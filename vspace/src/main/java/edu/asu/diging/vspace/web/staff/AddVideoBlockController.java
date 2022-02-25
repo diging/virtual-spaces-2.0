@@ -57,7 +57,7 @@ public class AddVideoBlockController {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Video Content block cannot be stored."); 
-            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST); 
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR); 
         }
 
         return new ResponseEntity<>(videoId, HttpStatus.OK);

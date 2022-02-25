@@ -41,19 +41,62 @@
                 	imageblock.find('img').attr('width', '800px');
                 return imageblock;
             }
-            function createVideoBlock(reader, videoSrc, title) {
-				if (videoSrc.includes("www.")) {
-					var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><div><h3><strong></strong></h3><br/><iframe width="800" height="530" src="#" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a><div><input type="hidden" id="editVideoId" /></div><a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"><span class="icon-edit"></span></a></div>');
-					videoBlock.find('iframe').attr('src', videoSrc);
-					videoBlock.find('h3 strong').html(title);
-					return videoBlock;
+            function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
+				var videoBlock = $("<div></div>");
+				videoBlock.attr('id',"currentVideo");
+				videoBlock.attr('class',"tab vidDiv row");
+				videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
+				var innerDiv1 = $("<div></div>");
+				var heading = $("<h3></h3>");
+				heading.append($("<strong></strong>"));
+				innerDiv1.append(heading);
+				if (isUrlProvided) {
+					var iframe = $("<iframe></iframe>");	
+					iframe.attr('width',"800");
+					iframe.attr('height',"530");
+					iframe.attr('src',videoSrc);
+					iframe.attr('frameborder',"0");
+					iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
+					iframe.attr('allowFullScreen', '');
+					innerDiv1.append(iframe);
+				}else{
+					var video = $("<video></video>");
+					video.attr('width',"800");
+					video.attr('height',"530");
+					video.attr('controls', '');
+					video.attr('src', videoSrc);
+					innerDiv1.append(video);
 				}
-				else{
-					var videoBlock = $('<div id="currentVideo" style="border: 1px solid rgba(0, 0, 0, 0.125);" class="tab vidDiv row"><div><h3><strong></strong></h3><br/><video width="800" height="530" controls /><input type="hidden" id="deleteVideoId" /></div><a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a><div><input type="hidden" id="editVideoId" /></div><a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"><span class="icon-edit"></span></a></div>');
-					videoBlock.find('video').attr('src', videoSrc);
-					videoBlock.find('h3 strong').html(title);
-					return videoBlock;	
-				}
+				videoBlock.append(innerDiv1);
+				var input1 = $("<input></input>");
+				input1.attr('id',"deleteVideoId");
+				input1.attr('type',"hidden");
+				videoBlock.append(input1);
+				var anchor1 = $("<a></a>");
+				anchor1.attr('href',"javascript:;");
+				anchor1.attr('class',"btn deleteVideo col-md-1");
+				anchor1.css('position','absolute');
+				anchor1.css('right','25px');
+				var span1 = $("<span></span>");
+				span1.attr('class',"icon-trash error");
+				anchor1.append(span1);
+				videoBlock.append(anchor1);
+				var input2 = $("<input></input>");
+				input2.attr('id',"editVideoId");
+				input2.attr('type',"hidden");
+				videoBlock.append(input2);
+				var anchor2 = $("<a></a>");
+				anchor2.attr('href',"javascript:;");
+				anchor2.attr('class',"btn editVideo col-md-1");
+				anchor2.css('position','absolute');
+				anchor2.css('top','60px');
+				anchor2.css('right','25px');
+				var span2 = $("<span></span>");
+				span2.attr('class',"icon-edit");
+				anchor2.append(span2);
+				videoBlock.append(anchor2);
+				videoBlock.find('h3 strong').html(title);
+				return videoBlock;
 			}
 			
             function onMouseEnter(e){
@@ -226,7 +269,6 @@
 			function embedVideo() {
 				var videoID = $("#saveVideo").data('value'); // gets video ID
 				var oldUrl = $("#saveVideo").data('url');
-				//var oldTitle = $("#VideoTitle").data('title');
 				var url = $("#videoLink").val();
 				var title = $("#videoTitle").val();
 				var vidFile = $("#videoFile")[0].files[0];
@@ -235,35 +277,41 @@
 				var ajaxUrl = '';
 				var oldVideoBlock = '';
 				var formData = new FormData();
+				if (url) {
+					if(url.startsWith("https://www.youtube.com/watch?v="))
+					{
+						videoId = url.substring(url.indexOf("v=")+2);
+						url = "https://www.youtube.com/embed/"+videoId;
+					}
+					formData.append('url', url);
+					videoBlock = createVideoBlock(reader, url, title,true);
+				}
+				if (vidFile) {
+					formData.append('videoFile', vidFile);
+					reader.onload = function (theFile) {
+						videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
+					};
+				}
 				if (videoID) {
 					oldVideoBlock = $("#" + videoID);
 					var videoBlockId = videoID;
 					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
 					formData.append('videoBlockId', videoBlockId);
-
 					if (url) {
-						formData.append('url', url);
-						videoBlock = createVideoBlock(reader, url, title);
 						$("#" + videoBlockId).replaceWith(videoBlock);
 					}
 					if (vidFile) {
-						formData.append('videoFile', vidFile);
 						reader.onload = function (theFile) {
-							videoBlock = createVideoBlock(reader, theFile.target.result);
 							$("#" + videoBlockId).replaceWith(videoBlock);
 						};
 					}
 				}
 				else {
 					if (url) {
-						formData.append('url', url);
-						videoBlock = createVideoBlock(reader, url, title);
 						$('#slideSpace').append(videoBlock);
 					}
 					if (vidFile) {
-						formData.append('videoFile', vidFile);
 						reader.onload = function (theFile) {
-							videoBlock = createVideoBlock(reader, theFile.target.result, title);
 							$('#slideSpace').append(videoBlock);
 						}
 					}
@@ -292,11 +340,13 @@
 						if (data != '') {
 							videoBlk.attr('id', data);
 							$("#currentVideo").find('#deleteVideoId').val(data);
+							$("#currentVideo").find('#editVideoId').val(data);
 							$("#currentVideo").attr('id', data);
 						}
 						else {
 							videoBlk.attr('id', videoID);
 							$("#currentVideo").find('#deleteVideoId').val(videoID);
+							$("#currentVideo").find('#editVideoId').val(videoID);
 							$("#currentVideo").attr('id', videoID);
 						}
 					},
@@ -766,7 +816,6 @@
 					$("#videoLink").val('');
 					$("#addVideoAlert").hide();
 					$(".open").removeClass("open");
-					//$("#uploadLink").tab('show');
 				});
                 
                 $("#file").click(function() {
@@ -1061,27 +1110,25 @@
 			   var id = $(this).siblings('input').val();
 			   var vidId = $('div#'+id).attr('id');
 			   var title = $('div#'+id).find('h3 strong').html();
-			   console.log(title);
 			 if (vidId != '') {
-				var url="";
-				if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
-						&& $('div#'+id).find('iframe').attr('src')!=null && typeof($('div#'+id).find('iframe').attr('src')) != "undefined")
+				 var url="";
+			     if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
+					&& $('div#'+id).find('iframe').attr('src')!=null && typeof($('div#'+id).find('iframe').attr('src')) != "undefined")
 					{
-				   url = $('div#'+id).find('iframe').attr('src');
+						url = $('div#'+id).find('iframe').attr('src');
 					}
-				   if (url.includes("www.")) {
-					   $("#saveVideo").data('url', url);
-					   $("#videoLink").val(url);
-					   $("#videoTitle").val(title);
-					   $("#urlTab").addClass("active");
-					   $("#urlLink").addClass("active");
-					   $("#uploadTab").removeClass("active");
-					   $("#uploadLink").removeClass("active");
-				   }
-				   
-				   $("#saveVideo").data('value', vidId);
-				   $("#addVideoAlert").show();
-			   } 
+				  if (url.length > 0) {
+				      $("#saveVideo").data('url', url);
+				      $("#videoLink").val(url);
+				      $("#videoTitle").val(title);
+				      $("#urlTab").addClass("active");
+				      $("#urlLink").addClass("active");
+				      $("#uploadTab").removeClass("active");
+				      $("#uploadLink").removeClass("active");
+				  }
+				  $("#saveVideo").data('value', vidId);
+				  $("#addVideoAlert").show();
+			   }
 			});
         </script>
     </head>

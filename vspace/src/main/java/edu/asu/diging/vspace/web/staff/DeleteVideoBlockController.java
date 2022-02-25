@@ -29,7 +29,7 @@ public class DeleteVideoBlockController {
             contentBlockManager.deleteVideoBlockById(blockId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Video Id does not exist, bad request.", e);
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);
