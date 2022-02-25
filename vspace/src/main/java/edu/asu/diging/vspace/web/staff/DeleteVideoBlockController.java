@@ -17,16 +17,17 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
 public class DeleteVideoBlockController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteVideoBlock(@PathVariable("blockId") String blockId) throws IOException {
+    public ResponseEntity<String> deleteVideoBlock(@PathVariable("id") String slideId,
+            @PathVariable("blockId") String blockId) throws IOException {
         try {
-            contentBlockManager.deleteVideoBlockById(blockId);
+            contentBlockManager.deleteVideoBlockById(blockId, slideId);
         } catch (BlockDoesNotExistException e) {
             logger.warn("Video Id does not exist, bad request.", e);
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);

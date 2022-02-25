@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
@@ -49,7 +46,7 @@ import edu.asu.diging.vspace.core.model.impl.VideoBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
-@Transactional
+@Transactional(rollbackFor = { Exception.class })
 @Service
 public class ContentBlockManager implements IContentBlockManager {
 
@@ -239,7 +236,7 @@ public class ContentBlockManager implements IContentBlockManager {
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         IVideoBlock vidBlock = null;
-        IVSVideo slideContentVideo = storeVideo(video, size, fileName, url, contentOrder, title);
+        IVSVideo slideContentVideo = storeVideo(video, size, fileName, url, title);
         vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
         vidBlock.setContentOrder(contentOrder);
         VideoBlock videoBlock = videoBlockRepo.save((VideoBlock) vidBlock);
@@ -247,14 +244,14 @@ public class ContentBlockManager implements IContentBlockManager {
         return returnValue;
     }
 
-    private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, Integer contentOrder,
-            String title) throws VideoCouldNotBeStoredException {
+    private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, String title)
+            throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = null;
-        if (video!=null) {
+        if (video != null) {
             slideContentVideo = saveVideo(video, size, fileName, title);
             storeVideoFile(video, slideContentVideo, fileName);
             slideContentVideo.setUrl(null);
-        } else if(url!=null && !url.isEmpty()) {
+        } else if (url != null && !url.isEmpty()) {
             slideContentVideo = saveVideoWithUrl(url, title);
         }
         return slideContentVideo;
@@ -324,20 +321,30 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
-     * Delete an video block using an id
+     * Delete an video block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
      * 
-     * @param id - id of resource to be deleted. If the id is null then the method
-     *           deletes nothing.
-     *
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the Image block with blockId is
+     *                present.
      */
 
     @Override
-    public void deleteVideoBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
+    public void deleteVideoBlockById(String blockId,String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
             return;
         }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
         try {
-            videoBlockRepo.deleteById(id);
+            videoBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
@@ -395,8 +402,8 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Override
     public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename,
-            Integer contentOrder, String title) throws VideoCouldNotBeStoredException {
-        IVSVideo slideContentVideo = storeVideo(video, fileSize, filename, url, contentOrder, title);
+            String title) throws VideoCouldNotBeStoredException {
+        IVSVideo slideContentVideo = storeVideo(video, fileSize, filename, url, title);
 
         videoBlock.setVideo(slideContentVideo);
         videoBlockRepo.save((VideoBlock) videoBlock);
@@ -464,6 +471,35 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public Integer findMaxContentOrder(String slideId) {
         return contentBlockRepository.findMaxContentOrder(slideId);
+    }
+
+    /**
+     * Adjusting the content order of the blocks of slide once it is dragged and
+     * changed position.
+     * 
+     * @param contentBlockList - The list contains the blocks and the updated
+     *                         content order corresponding to each blocks.
+     */
+    @Override
+    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
+
+        if (contentBlockList == null) {
+            return;
+        }
+        List<ContentBlock> contentBlocks = new ArrayList<>();
+        for (ContentBlock eachBlock : contentBlockList) {
+            String blockId = eachBlock.getId();
+            int contentOrder = eachBlock.getContentOrder();
+            Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+            if (contentBlock.isPresent()) {
+                ContentBlock contentBlockObj = contentBlock.get();
+                contentBlockObj.setContentOrder(contentOrder);
+                contentBlocks.add(contentBlockObj);
+            } else {
+                throw new BlockDoesNotExistException("Block Id not present");
+            }
+        }
+        contentBlockRepository.saveAll(contentBlocks);
     }
 
     /**

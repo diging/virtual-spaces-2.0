@@ -3,10 +3,9 @@
         <link rel="stylesheet"
             href="https://unpkg.com/easymde/dist/easymde.min.css">
         <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-        <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
         <style type="text/css">
             .hova {
             background-color: #f2f2f2;
@@ -15,6 +14,12 @@
             overflow-y: scroll;
             height: 400px;
             }
+            .fixed {
+		    position: fixed;
+		    top:0; left:0;
+		    width: 100%;
+		    z-index:100;
+     		}
         </style>
         <script th:inline="javascript">
             //# sourceURL=click.js
@@ -24,6 +29,13 @@
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
+            });
+            
+            $(window).scroll(function(){
+            	  var sticky = $('.sticky'),
+            	      scroll = $(window).scrollTop();
+            	  if (scroll >= 100) sticky.addClass('fixed');
+            	  else sticky.removeClass('fixed');
             });
             
             function createImageBlock(reader, width) {
@@ -41,7 +53,8 @@
                 	imageblock.find('img').attr('width', '800px');
                 return imageblock;
             }
-            function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
+            
+			function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
 				var videoBlock = $("<div></div>");
 				videoBlock.attr('id',"currentVideo");
 				videoBlock.attr('class',"tab vidDiv row");
@@ -51,7 +64,7 @@
 				heading.append($("<strong></strong>"));
 				innerDiv1.append(heading);
 				if (isUrlProvided) {
-					var iframe = $("<iframe></iframe>");	
+					var iframe = $("<iframe></iframe>");
 					iframe.attr('width',"800");
 					iframe.attr('height',"530");
 					iframe.attr('src',videoSrc);
@@ -98,7 +111,7 @@
 				videoBlock.find('h3 strong').html(title);
 				return videoBlock;
 			}
-			
+            
             function onMouseEnter(e){
                 var target = $( e.target );
                
@@ -265,8 +278,8 @@
             		$('#imageId').prop('selectedIndex',0).trigger( "change" );
             	}
             }
-			
-			function embedVideo() {
+            
+            function embedVideo() {
 				var videoID = $("#saveVideo").data('value'); // gets video ID
 				var oldUrl = $("#saveVideo").data('url');
 				var url = $("#videoLink").val();
@@ -285,12 +298,10 @@
 					}
 					formData.append('url', url);
 					videoBlock = createVideoBlock(reader, url, title,true);
+					console.log(videoBlock);
 				}
 				if (vidFile) {
 					formData.append('videoFile', vidFile);
-					reader.onload = function (theFile) {
-						videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-					};
 				}
 				if (videoID) {
 					oldVideoBlock = $("#" + videoID);
@@ -302,6 +313,7 @@
 					}
 					if (vidFile) {
 						reader.onload = function (theFile) {
+							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
 							$("#" + videoBlockId).replaceWith(videoBlock);
 						};
 					}
@@ -312,6 +324,7 @@
 					}
 					if (vidFile) {
 						reader.onload = function (theFile) {
+							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
 							$('#slideSpace').append(videoBlock);
 						}
 					}
@@ -324,11 +337,10 @@
 				if (vidFile) {
 					reader.readAsDataURL(vidFile);
 				}
-				formData.append('contentOrder', ++contentCount);
 				formData.append('videoTitle', title);
 				$.ajax({
 					enctype: 'multipart/form-data',
-					// ------------- creating image content blocks ------------
+					// ------------- creating video content blocks ------------
 					url: ajaxUrl,
 					type: 'POST',
 					cache: false,
@@ -336,7 +348,15 @@
 					processData: false,
 					data: formData,
 					success: function (data) {
-						var videoBlk = videoBlock.find('iframe');
+						console.log(data);
+						var videoBlk = "";
+						if(url){
+							videoBlk = videoBlock.find('iframe');
+						}
+						else{
+							videoBlk = videoBlock.find('video');
+						}
+						console.log(videoBlk);
 						if (data != '') {
 							videoBlk.attr('id', data);
 							$("#currentVideo").find('#deleteVideoId').val(data);
@@ -367,7 +387,7 @@
 					}
 				});
 			}
-			
+            
             function guidedTour() {
             	const tour = new Shepherd.Tour({
             		  defaultStepOptions: {
@@ -465,6 +485,78 @@
             		$('#file').prop("disabled",true);
             		$('#imageId').prop("disabled",false);
             	  });
+            	var timeout=null;
+            	$('#slideSpace').sortable({
+	            	update: function(event,ui) {
+		            	var jsonObj = [];
+		            	var blockId;
+		            	$(this).children().each(function(index,element){
+			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
+			            		blockId=$(element).attr('id');
+			            	}else {
+			            		blockId = $(element.innerHTML).filter('div').attr('id');
+			            	}
+			            	item = {}
+			            	item ["id"] = blockId;
+			            	item ["contentOrder"] = index;
+			            	jsonObj.push(item);
+			            	$(element.innerHTML).filter('div').attr('data-position',index);
+		            	});
+		            	var token = [[${_csrf.token}]];
+		            	if (jsonObj.length != 0){
+			            	if (timeout != null){
+			            		clearTimeout(timeout);
+			            	}
+			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+		            	}
+	            	}
+            	});
+
+            	function updateContentOrder(jsonObj,token){
+	            		$.ajax({
+	            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
+		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+		            		type: 'POST',
+		            		beforeSend: function(){
+			            		$(".loader").remove();
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+			            		$(".loader").show();
+		            		},
+		            		complete: function(){
+			            		$(".loader").hide();
+			            		timeout = null;
+		            		},
+		            		cache       : false,
+		            		contentType: 'application/json; charset=utf-8',
+		            		processData :false,
+		            		headers:{
+		            			'X-CSRF-Token':token
+		            		},
+		            		data: JSON.stringify(jsonObj),
+		            		success: function(data) {
+			            		$(".save").remove();
+			            		for(let i=0;i<data.length;i++) {
+				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+			            		} 
+			            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+			            		successDiv.append('<p>Successfully Saved.</p>');
+			            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		successDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(successDiv);
+		            		},
+		            		error: function(data) {
+			            		$(".errInSave").remove();
+			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+			            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		errorDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(errorDiv);
+		            		}
+	            		});
+            		}
                 [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
             		$('#addChoice').show();
             		$('#choiceSpace').show();
@@ -581,7 +673,7 @@
                 $("#addImage").click(function() {
                     $("#addImgAlert").show();
                 });
-				
+                
 				$("#addVideo").click(function() {
 					$("#addVideoAlert").show();
 				});
@@ -592,7 +684,7 @@
                     uploadImage();
                     $('#chooseFromLocal').trigger( "click" );
                 });
-				
+                
 				$("#saveVideo").click(function(e) {
 					e.preventDefault();
 					$("#addVideoAlert").hide();
@@ -618,7 +710,7 @@
             		$(alert).attr( 'value', $(this).siblings('input').val());
             		$('.modal-footer').append(alert); 
               	});
-				
+            	
 				$(document).on("click", ".deleteVideo", function(e) {
 					$("#confirmDeleteVideoAlert").show();
 					var alert = $('<input type="hidden" id="deleteVideoId">');
@@ -647,7 +739,7 @@
             	$("#cancelDeleteImage").click(function() {
             		$("#confirmDeleteImageAlert").hide();
             	});
-				
+            	
 				$("#cancelDeleteVideo").click(function() {
 					$("#confirmDeleteVideoAlert").find('input').remove();
 					$("#confirmDeleteVideoAlert").hide();	
@@ -728,9 +820,9 @@
             			});
             		}
             	});
-				
-					// ---------- Delete Video Block -----------
-	
+            	
+            	// ---------- Delete Video Block -----------
+            	
 				$("#deleteVideo").on("click", function(e) {
 					e.preventDefault();
 					$("#confirmDeleteTextAlert").find('input').remove();
@@ -805,8 +897,8 @@
                     $("#addImgAlert").hide();
                     $(".open").removeClass("open");
                 });
-				
-				$("#cancelVideoBtn").click(function() {
+                
+                $("#cancelVideoBtn").click(function() {
 					// Initialize selected video ID to blank, on clicking cancel button
 					$("#videoTitle").val('');
 					$("#saveVideo").data('value', '');
@@ -921,67 +1013,68 @@
                     $('#choiceForm')[0].reset();
                 });
             
-                    $("#urlLink").on("click", function (e) {
-				   if ($("#videoFile").val()) {
-						$("#videoTitle").prop('disabled', true);
-						$("#videoLink").prop('disabled', true);
-						$("#saveVideo").prop('disabled', true);
-					}
-					if (!$("#videoFile").val()) {
-						$("#videoTitle").prop('disabled', false);
-						$("#videoLink").prop('disabled', false);
-						$("#saveVideo").prop('disabled', false);
-					}
-					if (!$("#videoLink").val()) {
-						$("#saveVideo").prop('disabled', true);
-					}
-					$("#urlLink").addClass("active show");
-					$("#uploadLink").removeClass("active show");
-					$("#saveVideo").html("Embed Video");
-				});
+                $("#urlLink").on("click", function (e) {
+ 				   if ($("#videoFile").val()) {
+ 						$("#videoTitle").prop('disabled', true);
+ 						$("#videoLink").prop('disabled', true);
+ 						$("#saveVideo").prop('disabled', true);
+ 					}
+ 					if (!$("#videoFile").val()) {
+ 						$("#videoTitle").prop('disabled', false);
+ 						$("#videoLink").prop('disabled', false);
+ 						$("#saveVideo").prop('disabled', false);
+ 					}
+ 					if (!$("#videoLink").val()) {
+ 						$("#saveVideo").prop('disabled', true);
+ 					}
+ 					$("#urlLink").addClass("active show");
+ 					$("#uploadLink").removeClass("active show");
+ 					$("#saveVideo").html("Embed Video");
+ 				});
 
-				$("#uploadLink").on("click", function (e) {
-				    if ($("#videoLink").val()) {
-						$("#videoTitle").prop('disabled', true);
-						$("#videoFile").prop('disabled', true);
-						$("#saveVideo").prop('disabled', true);
-					}
-					else {
-						$("#videoTitle").prop('disabled', false);
-						$("#videoFile").prop('disabled', false);
-						$("#saveVideo").prop('disabled', false);
-					}
-					if (!$("#videoFile").val()) {
-						$("#saveVideo").prop('disabled', true);
-					} 
-					$("#urlLink").removeClass("active show");
-					$("#uploadLink").addClass("active show");
-					$("#saveVideo").html("Upload Video");
-				});
-				
-			 $("#videoLink").on("input", function (e) {
-					if (!$("#videoLink").val()) {
-						$("#saveVideo").prop('disabled', true);
-					}
-					else {
-						$("#saveVideo").prop('disabled', false);
-					}
-				});
-				
-				$("#videoFile").on("input", function (e) {
-					if (!$("#videoFile").val()) {
-						$("#saveVideo").prop('disabled', true);
-					}
-					else {
-						$("#saveVideo").prop('disabled', false);
-					}
-				});
-				
-				$("#videoTitle").on("input", function (e) {
-					if ($("#videoFile").val() || $("#videoLink").val()) {
-					$("#saveVideo").prop('disabled', false);
-					}
-				}); 
+ 				$("#uploadLink").on("click", function (e) {
+ 				    if ($("#videoLink").val()) {
+ 						$("#videoTitle").prop('disabled', true);
+ 						$("#videoFile").prop('disabled', true);
+ 						$("#saveVideo").prop('disabled', true);
+ 					}
+ 					else {
+ 						$("#videoTitle").prop('disabled', false);
+ 						$("#videoFile").prop('disabled', false);
+ 						$("#saveVideo").prop('disabled', false);
+ 					}
+ 					if (!$("#videoFile").val()) {
+ 						$("#saveVideo").prop('disabled', true);
+ 					} 
+ 					$("#urlLink").removeClass("active show");
+ 					$("#uploadLink").addClass("active show");
+ 					$("#saveVideo").html("Upload Video");
+ 				});
+ 				
+ 			 $("#videoLink").on("input", function (e) {
+ 					if (!$("#videoLink").val()) {
+ 						$("#saveVideo").prop('disabled', true);
+ 					}
+ 					else {
+ 						$("#saveVideo").prop('disabled', false);
+ 					}
+ 				});
+ 				
+ 				$("#videoFile").on("input", function (e) {
+ 					if (!$("#videoFile").val()) {
+ 						$("#saveVideo").prop('disabled', true);
+ 					}
+ 					else {
+ 						$("#saveVideo").prop('disabled', false);
+ 					}
+ 				});
+ 				
+ 				$("#videoTitle").on("input", function (e) {
+ 					if ($("#videoFile").val() || $("#videoLink").val()) {
+ 					$("#saveVideo").prop('disabled', false);
+ 					}
+ 				}); 
+                
                 function updateTextBox(blockId, text) {
                     // clear text box and buttons
                     $(".open").empty();
@@ -1006,7 +1099,7 @@
             
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-				$('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
+                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
             
                 $("#submitTextBlock").on("click", function(e){
                 	e.preventDefault();
@@ -1105,30 +1198,31 @@
             	}
             });
             
+            
 			// editing video block
 			$(document).on("click", ".editVideo", function(e) {
-			   var id = $(this).siblings('input').val();
-			   var vidId = $('div#'+id).attr('id');
-			   var title = $('div#'+id).find('h3 strong').html();
-			 if (vidId != '') {
-				 var url="";
-			     if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
+				var id = $(this).siblings('input').val();
+				var vidId = $('div#'+id).attr('id');
+				var title = $('div#'+id).find('h3 strong').html();
+				if (vidId != '') {
+					var url="";
+					if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
 					&& $('div#'+id).find('iframe').attr('src')!=null && typeof($('div#'+id).find('iframe').attr('src')) != "undefined")
 					{
 						url = $('div#'+id).find('iframe').attr('src');
 					}
-				  if (url.length > 0) {
-				      $("#saveVideo").data('url', url);
-				      $("#videoLink").val(url);
-				      $("#videoTitle").val(title);
-				      $("#urlTab").addClass("active");
-				      $("#urlLink").addClass("active");
-				      $("#uploadTab").removeClass("active");
-				      $("#uploadLink").removeClass("active");
-				  }
-				  $("#saveVideo").data('value', vidId);
-				  $("#addVideoAlert").show();
-			   }
+					if (url.length > 0) {
+						$("#saveVideo").data('url', url);
+						$("#videoLink").val(url);
+						$("#videoTitle").val(title);
+						$("#urlTab").addClass("active");
+						$("#urlLink").addClass("active");
+						$("#uploadTab").removeClass("active");
+						$("#uploadLink").removeClass("active");
+					}
+					$("#saveVideo").data('value', vidId);
+					$("#addVideoAlert").show();
+				}
 			});
         </script>
     </head>
@@ -1183,12 +1277,13 @@
                 +&nbsp;<span class="icon-text"></span></button>&nbsp;
                 <button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
                 +&nbsp;<span class="icon-image"></span></button>&nbsp;
-				<button type="button" id="addVideo" class="btn pill-btn" data-toggle="tooltip" title="Add Video" data-placement="top">
+                <button type="button" id="addVideo" class="btn pill-btn" data-toggle="tooltip" title="Add Video" data-placement="top">
                 +&nbsp;<span class="icon-video"></span></button>&nbsp;
                 <button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
                 +&nbsp;<span class="icon-checkmark"></span></button>
             </div>
-            <p style="margin-top: 0.5rem;">Double Click on a Block to Edit it</p>
+            <p style="margin-top: 0.5rem;">Double click on a block to edit it. Drag and drop blocks to change their order.</p>
+            <div class="sticky" id="contOrdUpdStatus"></div>
             <!-- Delete Text Modal -->
             <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
                 role="dialog" th:draggable="true">
@@ -1241,7 +1336,7 @@
                     </div>
                 </div>
             </div>
-			<!-- Delete Video Modal -->
+            <!-- Delete Video Modal -->
 			<div id="confirmDeleteVideoAlert" class="modal"
 				tabindex="-1" role="dialog" th:draggable="true">
 				<div class="modal-dialog" role="document">
@@ -1394,7 +1489,7 @@
                     </div>
                 </div>
             </div>
-			<div id="addVideoAlert" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog" role="document" draggable="true">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -1453,7 +1548,6 @@
                     </div>
                 </div>
             </div>
-			
             <div id="addChoiceAlert" class="modal" tabindex="-1"
                 role="dialog">
                 <div class="modal-dialog" role="document">
@@ -1499,41 +1593,41 @@
             </div>
             <div id="slideSpace">
                 <div th:each="contents: ${slideContents}">
-                    <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
                         <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
                         <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
                         <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
-					 <div class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
-                    <div>
-                    <h3><strong>[[${contents.video.title}]]</strong></h3>
-                    <br/>
-                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
-						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowfullscreen ></iframe>
-					<video width="800" height="530" th:if="${contents.video.url == null}" controls >
-						  <source th:src="@{'/api/video/'+${contents.video.id}}" />
-						</video>
-                        </div>
-                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
-                    <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
-                        <span class="icon-trash error"></span>
-                    </a>
-                    <input type="hidden" id="editVideoId" th:value="${contents.id}" />
-                    <a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"> 
-                        <span class="icon-edit"></span>
-                    </a>
-                </div>
-                    <div style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                     <div th:attr="data-position=${contents.contentOrder}" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+	                    <div>
+	                    	<h3><strong>[[${contents.video.title}]]</strong></h3>
+	                    	<br/>
+	                    	<iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen ></iframe>
+							<video width="800" height="530" th:if="${contents.video.url == null}" controls >
+							  <source th:src="@{'/api/video/'+${contents.video.id}}" />
+							</video>
+	                    </div>
+	                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
+	                    <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
+	                        <span class="icon-trash error"></span>
+	                    </a>
+	                    <input type="hidden" id="editVideoId" th:value="${contents.id}" />
+	                    <a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"> 
+	                        <span class="icon-edit"></span>
+	                    </a>
+                	</div>
+                    <div th:attr="data-position=${contents.contentOrder}" style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
                         <p class="col-md-10"> [[${contents.text}]]</p>
                         <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                         <a class="btn deleteText col-md-1" href="javascript:;"> 
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
-                    <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
+                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
                         <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
                             th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
                         <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"

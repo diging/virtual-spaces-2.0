@@ -25,7 +25,7 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
 public class EditVideoBlockController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -34,8 +34,10 @@ public class EditVideoBlockController {
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/video/{videoBlockId}", method = RequestMethod.POST)
     public ResponseEntity<String> editVideoBlock(@PathVariable("id") String slideId,
             @PathVariable("videoBlockId") String blockId, @PathVariable("moduleId") String moduleId,
-            @RequestParam(value = "videoFile", required = false) MultipartFile file, @RequestParam(value = "url", required = false) String videoUrl, 
-            @RequestParam("contentOrder") Integer contentOrder, @RequestParam(required = false) String videoTitle, Principal principal, RedirectAttributes attributes) throws IOException {
+            @RequestParam(value = "videoFile", required = false) MultipartFile file,
+            @RequestParam(value = "url", required = false) String videoUrl,
+            @RequestParam(required = false) String videoTitle, Principal principal, RedirectAttributes attributes)
+            throws IOException {
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
         byte[] video = null;
         String filename = null;
@@ -44,7 +46,8 @@ public class EditVideoBlockController {
             filename = file.getOriginalFilename();
         }
         try {
-            contentBlockManager.updateVideoBlock(videoBlock, video, (file != null) ? file.getSize() : null, videoUrl, filename, contentOrder, videoTitle);
+            contentBlockManager.updateVideoBlock(videoBlock, video, (file != null) ? file.getSize() : null, videoUrl,
+                    filename, videoTitle);
         } catch (VideoCouldNotBeStoredException e) {
             logger.error("Video block could not be stored, bad request.", e);
             ObjectMapper mapper = new ObjectMapper();
