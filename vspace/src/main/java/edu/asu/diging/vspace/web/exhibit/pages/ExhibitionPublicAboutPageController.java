@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.exhibit.publicpages;
+package edu.asu.diging.vspace.web.exhibit.pages;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

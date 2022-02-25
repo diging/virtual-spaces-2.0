@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.exhibit.publicview;
+package edu.asu.diging.vspace.web.exhibit.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

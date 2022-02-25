@@ -68,7 +68,7 @@ public class ExhibitionDataAspect {
         }
     }
 
-    @Around("execution(public * edu.asu.diging.vspace.web.exhibit.publicview..*Controller.*(..))")
+    @Around("execution(public * edu.asu.diging.vspace.web.exhibit.view..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
