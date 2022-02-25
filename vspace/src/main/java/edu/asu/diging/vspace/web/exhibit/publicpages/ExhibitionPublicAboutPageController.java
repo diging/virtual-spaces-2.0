@@ -18,7 +18,7 @@ public class ExhibitionPublicAboutPageController {
     @Autowired
     private IExhibitionAboutPageManager aboutPageManager;
     
-    @RequestMapping(value = "/exhibit/aboutPage")
+    @RequestMapping(value = "/exhibit/about")
     public String showPublicAboutPage(Model model) {
         ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
         model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());

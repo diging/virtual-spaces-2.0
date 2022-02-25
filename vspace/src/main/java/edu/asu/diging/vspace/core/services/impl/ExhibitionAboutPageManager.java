@@ -41,6 +41,10 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         return repo.save(exhibitionAboutPage);
     }
     
+    /**
+     *  This method returns the Exhibition About Page set by a Staff, if empty
+     * this method returns a new instance of an Exhibition About Page
+    */
     @Override
     public ExhibitionAboutPage getExhibitionAboutPage() {
         List<ExhibitionAboutPage> aboutPageList = findAll();

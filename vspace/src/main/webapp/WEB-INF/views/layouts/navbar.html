@@ -16,7 +16,7 @@
 					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
 		        	</li>
-		        	<a  href="/vspace/exhibit/aboutPage">
+		        	<a  th:href="@{/exhibit/about}">
 		        	<span th:if="${aboutPageTitle!=null && !#strings.isEmpty(aboutPageTitle)}" class = "icon-info secondary" />     	
 	        		<span class="custom_Text"
                                    th:if="${aboutPageTitle!=null && !#strings.isEmpty(aboutPageTitle)}"
