@@ -20,6 +20,21 @@
 		    width: 100%;
 		    z-index:100;
      		}
+     		
+     		li.active>a{
+			background: solid var(--primary);
+			color: #fff;
+			font-size: 15px;
+			}
+			
+			a.nav-link.active.show {
+			border-color: transparent;
+			border-bottom: 4px solid var(--primary);
+			color: var(--primary) !important;
+			background: transparent;
+			}
+			
+			
         </style>
         <script th:inline="javascript">
             //# sourceURL=click.js
@@ -298,7 +313,6 @@
 					}
 					formData.append('url', url);
 					videoBlock = createVideoBlock(reader, url, title,true);
-					console.log(videoBlock);
 				}
 				if (vidFile) {
 					formData.append('videoFile', vidFile);
@@ -348,7 +362,6 @@
 					processData: false,
 					data: formData,
 					success: function (data) {
-						console.log(data);
 						var videoBlk = "";
 						if(url){
 							videoBlk = videoBlock.find('iframe');
@@ -356,7 +369,6 @@
 						else{
 							videoBlk = videoBlock.find('video');
 						}
-						console.log(videoBlk);
 						if (data != '') {
 							videoBlk.attr('id', data);
 							$("#currentVideo").find('#deleteVideoId').val(data);
@@ -691,6 +703,12 @@
 					embedVideo();
 					$("#saveVideo").data('value', '');
 					$("#saveVideo").data('url', '');
+					$("#uploadTab").addClass("active");
+					$("#urlTab").removeClass("active");
+ 					$("#urlLink").removeClass("active show");
+ 					$("#urlLink>a").removeClass("active show");
+ 					$("#uploadLink").addClass("active show");
+					$("#uploadLink>a").addClass("active show");
 				});
                 
                 $("#addChoice").click(function() {
@@ -908,6 +926,12 @@
 					$("#videoLink").val('');
 					$("#addVideoAlert").hide();
 					$(".open").removeClass("open");
+					$("#uploadTab").addClass("active");
+					$("#urlTab").removeClass("active");
+ 					$("#urlLink").removeClass("active show");
+ 					$("#urlLink>a").removeClass("active show");
+ 					$("#uploadLink").addClass("active show");
+					$("#uploadLink>a").addClass("active show");
 				});
                 
                 $("#file").click(function() {
@@ -1014,7 +1038,7 @@
                 });
             
                 $("#urlLink").on("click", function (e) {
- 				   if ($("#videoFile").val()) {
+ 				    if ($("#videoFile").val()) {
  						$("#videoTitle").prop('disabled', true);
  						$("#videoLink").prop('disabled', true);
  						$("#saveVideo").prop('disabled', true);
@@ -1045,7 +1069,7 @@
  					}
  					if (!$("#videoFile").val()) {
  						$("#saveVideo").prop('disabled', true);
- 					} 
+ 					}
  					$("#urlLink").removeClass("active show");
  					$("#uploadLink").addClass("active show");
  					$("#saveVideo").html("Upload Video");
@@ -1214,12 +1238,15 @@
 					if (url.length > 0) {
 						$("#saveVideo").data('url', url);
 						$("#videoLink").val(url);
-						$("#videoTitle").val(title);
 						$("#urlTab").addClass("active");
-						$("#urlLink").addClass("active");
-						$("#uploadTab").removeClass("active");
-						$("#uploadLink").removeClass("active");
-					}
+						$("#urlLink").addClass("active  show");
+						$("#uploadTab").removeClass("active show");
+						$("#uploadLink").removeClass("active show");
+	 					$("#urlLink>a").addClass("active show");
+	 					$("#uploadLink").removeClass("active show");
+						$("#uploadLink>a").removeClass("active show");
+					} 
+					$("#videoTitle").val(title);
 					$("#saveVideo").data('value', vidId);
 					$("#addVideoAlert").show();
 				}
@@ -1499,20 +1526,20 @@
 							</button>
 						</div>
 						<form name="videoForm" id="videoUploadForm" enctype="multipart/form-data" method="post">
-							<div class="modal-body">
+							<div class="modal-body" style="background: var(--base-grey)">
 								<div role="tabpanel">
 									<ul class="nav nav-tabs" role="tablist">
-										<li role="presentation" id="uploadLink" class="active"><a href="#uploadTab"
+										<li role="presentation" id="uploadLink" class="active show"><a class="active show nav-link" href="#uploadTab"
 												aria-controls="uploadTab" role="tab" data-toggle="tab">Upload</a></li>
-										<li role="presentation" id="urlLink"><a href="#urlTab" aria-controls="urlTab" role="tab"
+										<li role="presentation" id="urlLink"><a class="nav-link" href="#urlTab" aria-controls="urlTab" role="tab"
 												data-toggle="tab">Link</a></li>
 									</ul>
 									<!-- Tab panes -->
 									<div class="tab-content">
 									<br/>
-										<label for="videoFile">Video Title:</label><input id="videoTitle" class="form-control" type="text" name="videoTitle"/>
+										<label for="videoFile">Video Title:</label><input class="form-control" id="videoTitle" type="text" name="videoTitle"/>
 										<div role="tabpanel" class="tab-pane active" id="uploadTab"><br />
-											<label for="videoFile">Upload Video: </label><input id="videoFile" class="form-control-file" type="file" name="videoFile"/>
+											<label for="videoFile">Upload Video: </label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
 										</div>
 										<div role="tabpanel" class="tab-pane" id="urlTab"><br />
 											<label for="videoLink">Enter URL: </label><input class="form-control" type="text" placeholder="Use Video Embed Link..." name="videoLink" rows="5" cols="500"
