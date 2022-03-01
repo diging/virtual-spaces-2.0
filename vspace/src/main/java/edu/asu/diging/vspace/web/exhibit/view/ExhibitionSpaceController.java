@@ -50,9 +50,6 @@ public class ExhibitionSpaceController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
-    
-    @Autowired
-    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/exhibit/space/{id}")
     public String space(@PathVariable("id") String id, Model model) {
@@ -64,9 +61,6 @@ public class ExhibitionSpaceController {
         if (space.getSpaceStatus() == null || space.getSpaceStatus().equals(SpaceStatus.PUBLISHED)
                 || authenticationFacade.getAuthenticatedUser() != null) {
             IExhibition exhibition = exhibitManager.getStartExhibition();
-            ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-            model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-            model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
             model.addAttribute("exhibitionConfig", exhibition);
             model.addAttribute("space", space);
             model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));

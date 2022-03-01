@@ -46,9 +46,6 @@ public class ExhibitionSlideController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
-    
-    @Autowired
-    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}", method = RequestMethod.GET)
     public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
@@ -74,9 +71,6 @@ public class ExhibitionSlideController {
             model.addAttribute("message", "Sorry, module has not been configured yet.");
             return "/exhibition/module";
         }
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-        model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-        model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText());
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);

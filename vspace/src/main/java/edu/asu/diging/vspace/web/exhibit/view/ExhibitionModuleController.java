@@ -23,9 +23,6 @@ public class ExhibitionModuleController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
-    @Autowired
-    private IExhibitionAboutPageManager aboutPageManager;
 
     @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
@@ -33,10 +30,7 @@ public class ExhibitionModuleController {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
-        }
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-        model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-        model.addAttribute("aboutPageText", exhibitionAboutPage.getAboutPageText()); 
+        } 
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null) {
