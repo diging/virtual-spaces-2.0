@@ -87,6 +87,43 @@ public class ExhibitionDataAspect {
         String moduleId = ids.getOrDefault(IdPrefix.MODULEID, "");
         return redirectRequest(jp, spaceId, moduleId, indexOfModel, exhibition);
     }
+    
+    @Around("execution(public * edu.asu.diging.vspace.web.exhibit.pages..*Controller.*(..))")
+    public Object showExhibitionAboutPage(ProceedingJoinPoint jp) throws Throwable {
+        Object[] args = jp.getArgs();
+        MethodSignature signature = (MethodSignature) jp.getSignature();
+        int modelIndex = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition(); 
+        // If there is no exhibition, we go back to root url page.
+        if(exhibition==null) {
+            return "redirect:/";
+        }
+        //If no exhibition mode has been setup for existing exhibition, we skip modes and aspects.
+        if(exhibition.getMode() == null) {
+            return jp.proceed();
+        }
+        Map<IdPrefix, String> ids = getIds(args, signature);
+        ExhibitionModes exhibitionMode = exhibition.getMode();
+        // If exhibition is set to offline, set the custom message or default message.
+        if(exhibitionMode.equals(ExhibitionModes.OFFLINE)) {
+            String modeValue = exhibition.getCustomMessage().equals("") == false ? exhibition.getCustomMessage() : exhibitionMode.getValue();
+            ((Model) args[modelIndex]).addAttribute("modeValue", modeValue);
+        }
+        if(exhibition.isAboutPageConfigured()) {
+            ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", true);
+        } else {
+            ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", false);
+        }
+        // If exhibition is set to maintenance, set the default message.
+        if(exhibitionMode.equals(ExhibitionModes.MAINTENANCE)) {
+            ((Model) args[modelIndex]).addAttribute("modeValue", exhibitionMode.getValue());
+        }
+        // If user is not logged in and exhibition is not active, show maintenance page.
+        if(authFacade.getAuthenticatedUser()==null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
+            return "maintenance";
+        }
+        return jp.proceed();
+    }
 
 
     /**
@@ -108,6 +145,11 @@ public class ExhibitionDataAspect {
         if(exhibitionMode.equals(ExhibitionModes.OFFLINE)) {
             String modeValue = exhibition.getCustomMessage().equals("") == false ? exhibition.getCustomMessage() : exhibitionMode.getValue();
             ((Model) args[modelIndex]).addAttribute("modeValue", modeValue);
+        }
+        if(exhibition.isAboutPageConfigured()) {
+            ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", true);
+        } else {
+            ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", false);
         }
         // If exhibition is set to maintenance, set the default message.
         if(exhibitionMode.equals(ExhibitionModes.MAINTENANCE)) {
