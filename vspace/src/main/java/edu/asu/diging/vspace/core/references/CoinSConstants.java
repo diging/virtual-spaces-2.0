@@ -14,7 +14,7 @@ public interface CoinSConstants {
     
     String RFT_VAL_FMT_TAG = "&rft_val_fmt=";
     
-    String RFT_DEGREE_TAG = "&rft.degree=";
+    String RFT_TYPE_TAG = "&rft.type=";
     
     String RFT_TITLE_TAG = "&rft.title=";
     

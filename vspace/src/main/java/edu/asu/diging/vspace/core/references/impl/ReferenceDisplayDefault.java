@@ -10,7 +10,6 @@ import edu.asu.diging.vspace.core.references.ReferenceDisplayFormatter;
 public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
     
     public String getReferenceDisplayText(IReference reference) {
-        
         String title = reference.getTitle();
         String author = reference.getAuthor();
         String year = reference.getYear();

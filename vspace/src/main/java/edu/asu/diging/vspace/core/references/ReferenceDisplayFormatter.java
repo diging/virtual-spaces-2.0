@@ -14,7 +14,7 @@ public class ReferenceDisplayFormatter {
 
     public ReferenceDisplayFormatter addAuthors(String author) {
         if(author!=null && !author.equals("")) {
-            this.referenceDisplayText.append(author + " ");
+            this.referenceDisplayText.append(author + ". ");
         }
         return this;
     }
@@ -42,14 +42,14 @@ public class ReferenceDisplayFormatter {
     
     public ReferenceDisplayFormatter addPages(String pages) {
         if(pages!=null && !pages.equals("")) {
-            this.referenceDisplayText.append(". ");
+            this.referenceDisplayText.append("p. " + pages + ". ");
         }
         return this;
     }
     
     public ReferenceDisplayFormatter addVolume(String volume) {
         if(volume!=null && !volume.equals("")) {
-            this.referenceDisplayText.append(volume + " ");
+            this.referenceDisplayText.append(volume + ". ");
         }
         return this;
     }
@@ -67,4 +67,5 @@ public class ReferenceDisplayFormatter {
         }
         return this;
     }
+    
 }

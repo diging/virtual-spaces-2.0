@@ -14,10 +14,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
-import edu.asu.diging.vspace.core.references.ReferenceBlock;
-import edu.asu.diging.vspace.core.references.impl.ReferenceDisplayDefault;
+import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
+import edu.asu.diging.vspace.web.model.ReferenceBlock;
 
 @Controller
 public class AddReferenceController {
@@ -29,7 +29,7 @@ public class AddReferenceController {
     private IContentBlockManager contentBlockManager;
     
     @Autowired
-    private ReferenceDisplayDefault referenceDisplayProvider;
+    private IReferenceDisplayProvider referenceDisplayProvider;
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/biblio/{biblioId}/reference/add", method = RequestMethod.POST)
     public ResponseEntity<ReferenceBlock> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 

@@ -74,7 +74,7 @@
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
-                	<p>Bibliography title: <span>[(${contents.biblioTitle})]</span>, description: <span>[(${contents.description})]</span></p>
+                	<p>Bibliography Title: <span>[(${contents.biblioTitle})]</span>, Description: <span>[(${contents.description})]</span></p>
                 	<ul>
 	                	<div th:each="contentRef: ${contents.references}">
 							<li>

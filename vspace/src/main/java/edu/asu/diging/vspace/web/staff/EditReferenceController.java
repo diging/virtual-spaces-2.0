@@ -18,10 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
-import edu.asu.diging.vspace.core.references.ReferenceBlock;
 import edu.asu.diging.vspace.core.references.ReferenceType;
 import edu.asu.diging.vspace.core.references.impl.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
+import edu.asu.diging.vspace.web.model.ReferenceBlock;
 
 @Controller
 public class EditReferenceController {
@@ -74,12 +74,10 @@ public class EditReferenceController {
             ref.setId(reference.getId());
             ref.setCreatedBy(reference.getCreatedBy());
             ref.setCreationDate(reference.getCreationDate());
+            ref.setBiblios(reference.getBiblios());
             referenceManager.updateReference(ref);
-            String refDisplayText = referenceDisplayProvider.getReferenceDisplayText((Reference)ref);
+            String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
             ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
-            attributes.addFlashAttribute("alertType", "success");
-            attributes.addFlashAttribute("message", "Reference successfully updated!");
-            attributes.addFlashAttribute("showAlert", "true");
             return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

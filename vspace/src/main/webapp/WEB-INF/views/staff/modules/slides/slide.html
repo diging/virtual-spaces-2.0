@@ -937,11 +937,11 @@
 		    contentType : 'application/json; charset=utf-8',
 		    processData : false,
 		    headers: {
-			'X-CSRF-Token': [[${_csrf.token}]] 
+			'X-CSRF-Token': [[${_csrf.token}]]
 			},
 		    data: jsonData,
 		    success: function(data) {
-			var referenceblock = $('<div id="'+ data.reference.id +'" class="referenceDivStaff tab row"><p class="col-md-10" >' + data.refDisplayText
+			var referenceblock = $('<div id="'+ data.reference.id +'" class="referenceDivStaff row" style="padding-left: 25px;"><p class="col-md-10" >' + data.refDisplayText
 					+ '</p><input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference col-md-1" href="javascript:;"><span class="icon-trash error"></span></a></div>');
 
 			$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1657,6 +1657,15 @@
 				<form name="sendReferenceForm" id="sendReferenceForm">
 					<div class="modal-body">
 						<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Type:</label>
+							<select class="form-control col-md-8" name="referenceType" id="typeRef">
+						     <option th:each="refType: ${referenceTypes}" th:value="${refType}"
+						     th:selected="${referenceTypes[0]}">
+								[[${@environment.getProperty('reference_type_' + refType)}]]
+						     </option>
+						</select>
+						</div>
+						<div class="form-group row">
 							<label for="name" class="col-md-3 col-form-label">Title:</label>
 							<input type="text" class="form-control col-md-8" id="titleRef" name="titleRef" />
 						</div>
@@ -1692,16 +1701,7 @@
 							<label for="name" class="col-md-3 col-form-label">Editors:</label>
 							<input type="text" class="form-control col-md-8" id="editorsRef" name="editorsRef" />
 						</div>
-						<div class="form-group row">
-							<label for="name" class="col-md-3 col-form-label">Type:</label>
-							<select class="form-control col-md-8" name="referenceType" id="typeRef">
-						     <option th:each="refType: ${referenceTypes}" th:value="${refType}"
-						     th:selected="${referenceTypes[0]}">
-							[[${@environment.getProperty('reference_type_'
-			    + refType)}]]
-						     </option>
-						</select>
-						</div>
+						
 						<div class="form-group row">
 							<label for="name" class="col-md-3 col-form-label">Note:</label>
 							<input type="text" class="form-control col-md-8" id="noteRef" name="noteRef" />
@@ -1760,6 +1760,15 @@
 				<form name="sendReferenceForm" id="sendEditReferenceForm">
 					<div class="modal-body">
 						<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Type:</label>
+							<select class="form-control col-md-8" name="editTypeRef" id="editTypeRef">
+						     <option th:each="refType: ${referenceTypes}" th:value="${refType}"
+							th:selected="${referenceTypes[0]}">
+								[[${@environment.getProperty('reference_type_' + refType)}]]
+						     </option>
+						</select>
+						</div>
+						<div class="form-group row">
 							<label for="name" class="col-md-3 col-form-label">Title:</label>
 							<input type="text" class="form-control col-md-8" id="editTitleRef" name="ediTitleRef" />
 						</div>
@@ -1795,15 +1804,7 @@
 							<label for="name" class="col-md-3 col-form-label">Editors:</label>
 							<input type="text" class="form-control col-md-8" id="editEditorsRef" name="editEditorsRef" />
 						</div>
-						<div class="form-group row">
-							<label for="name" class="col-md-3 col-form-label">Type:</label>
-							<select class="form-control col-md-8" name="editTypeRef" id="editTypeRef">
-						     <option th:each="refType: ${referenceTypes}" th:value="${refType}"
-							th:selected="${referenceTypes[0]}">
-							[[${@environment.getProperty('reference_type_' + refType)}]]
-						     </option>
-						</select>
-						</div>
+						
 						<div class="form-group row">
 							<label for="name" class="col-md-3 col-form-label">Note:</label>
 							<input type="text" class="form-control col-md-8" id="editNoteRef" name="editNoteRef" />
@@ -1912,7 +1913,7 @@
 
 				<div id="referenceSpace" class="col-md-10">
 					<div th:each="contentRef: ${contents.references}">
-						<div th:id="${contentRef.id}" class="referenceDivStaff tab row">
+						<div th:id="${contentRef.id}" class="referenceDivStaff row" style="padding-left: 25px;">
 							<p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
 							<input type="hidden" id="deleteReferenceId" th:value="${contentRef.id}" />
 							<a class="btn deleteReference col-md-1" href="javascript:;"> <span

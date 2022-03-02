@@ -41,7 +41,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }
-
+        
         urlEncodedReferenceMetaData += getRefTypeEncoded(env.getProperty(reference.getType())) + getRefTitleEncoded(reference.getTitle()) + getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
             + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl()) + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue()) + getRefPagesEncoded(reference.getPages())
             + getRefEditorsEncoded(reference.getEditors()) + getRefNoteEncoded(reference.getNote());
@@ -52,21 +52,19 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefTypeEncoded(String type) throws ReferenceMetadataEncodingException {
-        
-        if(type==null) {
+        if(type==null || type.trim().equals("")) {
             return "";
         }
         
         try {
-            return CoinSConstants.RFT_DEGREE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
+            return CoinSConstants.RFT_TYPE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }  
     }
     
     private String getRefTitleEncoded(String title) throws ReferenceMetadataEncodingException {
-        
-        if(title==null) {
+        if(title==null || title.trim().equals("")) {
             return "";
         }
         
@@ -78,8 +76,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
-        
-        if(author==null) {
+        if(author==null || author.trim().equals("")) {
             return "";
         }
         
@@ -92,7 +89,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     
     private String getRefYearEncoded(String year) throws ReferenceMetadataEncodingException {
         
-        if(year==null) {
+        if(year==null || year.trim().equals("")) {
             return "";
         }
         
@@ -105,7 +102,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     
     private String getRefJournalEncoded(String journal) throws ReferenceMetadataEncodingException {
         
-        if(journal==null) {
+        if(journal==null || journal.trim().equals("")) {
             return "";
         }
         
@@ -117,8 +114,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefUrlEncoded(String url) throws ReferenceMetadataEncodingException {
-        
-        if(url==null) {
+        if(url==null || url.trim().equals("")) {
             return "";
         }
         
@@ -130,8 +126,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefVolumeEncoded(String volume) throws ReferenceMetadataEncodingException {
-        
-        if(volume==null) {
+        if(volume==null || volume.trim().equals("")) {
             return "";
         }
         
@@ -143,8 +138,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefIssueEncoded(String issue) throws ReferenceMetadataEncodingException {
-        
-        if(issue==null) {
+        if(issue==null || issue.trim().equals("")) {
             return "";
         }
         
@@ -157,7 +151,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     
     private String getRefPagesEncoded(String pages) throws ReferenceMetadataEncodingException {
         String refPagesEncoded = "";
-        if (pages != null) {
+        if (pages != null && !pages.trim().equals("")) {
             try {
                 refPagesEncoded += CoinSConstants.RFT_ISSUE_TAG
                         + URLEncoder.encode(pages, StandardCharsets.UTF_8.name());
@@ -176,8 +170,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefEditorsEncoded(String editors) throws ReferenceMetadataEncodingException {
-        
-        if(editors==null) {
+        if(editors==null || editors.trim().equals("")) {
             return "";
         }
         
@@ -189,8 +182,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
     
     private String getRefNoteEncoded(String note) throws ReferenceMetadataEncodingException {
-        
-        if(note==null) {
+        if(note==null || note.trim().equals("")) {
             return "";
         }
         
