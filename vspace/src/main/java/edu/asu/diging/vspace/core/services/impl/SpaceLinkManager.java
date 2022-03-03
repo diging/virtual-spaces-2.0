@@ -120,8 +120,8 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,ISpaceLinkDi
     }
     
     @Override
-    public List<ISpaceLink> findSpaceLinksWithSourceNull(){
-        return spaceLinkRepo.findBySourceSpaceIsNull();
+    public Long getCountOfSpaceLinksWithSourceNull(){
+        return spaceLinkRepo.countBySourceSpaceIsNull();
     }
     
 

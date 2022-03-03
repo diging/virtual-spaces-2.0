@@ -1,7 +1,8 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 	<script th:inline="javascript">
-		var authenticatedName = [[${authenticationName}]]
+		
+		var admin = [[${admin}]];
 		var spaceLinksSize = [[${spaceLinksSize}]]
 		$(function () {
 		  $('[data-toggle="tooltip"]').tooltip()
@@ -9,6 +10,10 @@
 		
 	function closeSpaceLinkAlert(){
 		$("#spaceLinkAlert").hide();
+	}
+	
+	function closeSpaceLinksAlert() {
+		$("#spaceLinksAlertDeletionMessage").hide();
 	}
 	
 	function close(){
@@ -21,8 +26,9 @@
     		url: url,
     		type: 'DELETE',    
     		success: function(data) {
-    			//put succesfully deleted 
+    			console.log('success');
     			$("#spaceLinkAlert").hide();
+    			$("#spaceLinksAlertDeletionMessage").show();
     		},
     		error: function(data) {
     			//put unable to delete alert message
@@ -33,7 +39,7 @@
 	}
 	
 	$(window).on('load', function () {
-    	if(authenticatedName=="admin" && spaceLinksSize > 0){
+    	if(admin == true && spaceLinksSize >= 0){
     		$("#spaceLinkAlert").show();
     	}
     });
@@ -100,11 +106,11 @@
                             <h5 class="modal-title">Login</h5>
                         </div>
                         <div class="modal-body">
-                            <h6>There are space links with source space as Null. Do you want to delete them?</h6>
+                            <h6>There are space links with no source space. Do you want to delete them?</h6>
                         </div>
                         <div class="modal-footer">
                             <a class="btn btn-primary" style="color: white;"
-                                onClick="deleteSpaceLinks()">Yes</a>
+                                onClick="deleteSpaceLinks()">Yes, delete!</a>
                             <a class="btn btn-primary" style="color: white;"
                            onClick="closeSpaceLinkAlert()">No</a>
                         </div>
@@ -116,6 +122,15 @@
         <div class="alert alert-danger alert-dismissible show" role="alert">
 	        <p>We are sorry but something went wrong. Please try again later.</p>
 	        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onClick="close()">
+	        <span aria-hidden="true">&times;</span>
+        </button>
+        </div>        
+     </div>   
+     <div id="spaceLinksAlertDeletionMessage" class="modal" tabindex="-1" role="dialog"
+                style="display: none; marging-top:20px">
+        <div class="alert alert-warning alert-dismissible show" role="alert">
+	        <p>Successfully deleted incoming space links with no source space.</p>
+	        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onClick="closeSpaceLinksAlert()">
 	        <span aria-hidden="true">&times;</span>
         </button>
         </div>        

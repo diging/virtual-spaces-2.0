@@ -34,4 +34,6 @@ public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLin
     List<SpaceLink> findByTargetSpace(ISpace space);
 
     List<ISpaceLink> findBySourceSpaceIsNull();
+
+    Long countBySourceSpaceIsNull();
 }

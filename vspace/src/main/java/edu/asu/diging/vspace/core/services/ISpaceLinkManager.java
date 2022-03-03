@@ -13,5 +13,5 @@ public interface ISpaceLinkManager extends ILinkManager<ISpaceLink,ISpace,ISpace
 
     void deleteSpaceLinksWithSourceAsNull();
 
-    List<ISpaceLink> findSpaceLinksWithSourceNull();
+    Long getCountOfSpaceLinksWithSourceNull();
 }
