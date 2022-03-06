@@ -5,6 +5,7 @@ import javax.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
@@ -16,7 +17,7 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
     private float positionY;
     private int rotation;
     private DisplayType type;
-    private String howToOpen;
+    private ExternalLinkDisplayMode howToOpen;
 
     @OneToOne(targetEntity = VSImage.class)
     private IVSImage image;
@@ -104,12 +105,12 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
     }
 
     @Override
-    public String getHowToOpen() {
+    public ExternalLinkDisplayMode getHowToOpen() {
         return howToOpen;
     }
 
     @Override
-    public void setHowToOpen(String howToOpen) {
+    public void setHowToOpen(ExternalLinkDisplayMode howToOpen) {
         this.howToOpen = howToOpen;
     }
 }

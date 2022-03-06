@@ -15,6 +15,7 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -51,9 +52,11 @@ public class EditExternalLinkController extends EditSpaceLinksController {
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+        ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
+                : ExternalLinkDisplayMode.valueOf(howToOpen);
         IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
                 new Float(y), 0, externalLink, title, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
-                filename, howToOpen);
+                filename, externalLinkOpenMode);
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
                 display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
                 displayType, null, null);

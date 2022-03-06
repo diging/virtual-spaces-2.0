@@ -25,7 +25,7 @@ public interface ILinkDisplay extends IVSpaceElement {
 
     void setType(DisplayType type);
 
-    String getHowToOpen();
+    ExternalLinkDisplayMode getHowToOpen();
 
-    void setHowToOpen(String howToOpen);
+    void setHowToOpen(ExternalLinkDisplayMode howToOpen);
 }
