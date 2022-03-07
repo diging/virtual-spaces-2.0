@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;

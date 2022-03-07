@@ -30,12 +30,10 @@
                 'X-CSRF-Token': token 
            	},
     		success: function(data) {
-    			console.log('success');
     			$("#spaceLinkAlert").hide();
     			$("#spaceLinksAlertDeletionMessage").show();
     		},
     		error: function(data) {
-    			//put unable to delete alert message
     			$("#spaceLinkAlert").hide();
     			$("#error").show();
     		}

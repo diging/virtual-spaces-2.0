@@ -236,9 +236,10 @@ public class SpaceLinkManagerTest {
         List<ISpaceLink> spaceLinks =  new ArrayList<ISpaceLink>();
         spaceLinks.add(spaceLink);
         Mockito.when(spaceLinkRepo.findBySourceSpaceIsNull()).thenReturn(spaceLinks);
-        Mockito.doNothing().when(spaceLinkDisplayRepo).deleteByLink(spaceLink); 
-        Mockito.doNothing().when(spaceLinkRepo).deleteBySourceSpaceIdIsNull(); 
+       
         managerToTest.deleteSpaceLinksWithSourceAsNull();
+        Mockito.verify(spaceLinkDisplayRepo).deleteByLinkIn(spaceLinks);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceIdIsNull();
     }
     
     @Test
@@ -251,9 +252,9 @@ public class SpaceLinkManagerTest {
         List<ISpaceLink> spaceLinks =  new ArrayList<ISpaceLink>();
         spaceLinks.add(spaceLink);
         Mockito.when(spaceLinkRepo.findBySourceSpaceIsNull()).thenReturn(spaceLinks);
-        Mockito.doNothing().when(spaceLinkDisplayRepo).deleteByLink(spaceLink); 
-        Mockito.doNothing().when(spaceLinkRepo).deleteBySourceSpaceIdIsNull(); 
         managerToTest.deleteSpaceLinksWithSourceAsNull();
+        Mockito.verify(spaceLinkDisplayRepo).deleteByLinkIn(spaceLinks);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceIdIsNull();
     }
     
     
