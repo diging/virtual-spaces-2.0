@@ -3,7 +3,7 @@
 	<script th:inline="javascript">
 		
 		var admin = [[${admin}]];
-		var spaceLinksSize = [[${spaceLinksSize}]]
+		var spaceLinksSize = [[${spaceLinksSize}]];
 		$(function () {
 		  $('[data-toggle="tooltip"]').tooltip()
 		});
@@ -21,10 +21,14 @@
 	}
 	
 	function deleteSpaceLinks(){
-		var url = "[(@{'/staff/dashboard/deleteSpaceLinksWithNullSource?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+		var token =  $('input[name="_csrf"]').attr('value');
+		var url = "[(@{'/staff/dashboard/deleteSpaceLinksWithNullSource'})]";
 		$.ajax({
     		url: url,
-    		type: 'DELETE',    
+    		type: 'DELETE',
+    		headers: {
+                'X-CSRF-Token': token 
+           	},
     		success: function(data) {
     			console.log('success');
     			$("#spaceLinkAlert").hide();
@@ -39,7 +43,7 @@
 	}
 	
 	$(window).on('load', function () {
-    	if(admin == true && spaceLinksSize >= 0){
+    	if(admin == true && spaceLinksSize > 0){
     		$("#spaceLinkAlert").show();
     	}
     });
