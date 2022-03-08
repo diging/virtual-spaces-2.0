@@ -127,7 +127,10 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
 
         /*
          * When createLink is called then inside updateLinkAndDisplay(link, displayLink)
-         * is called to save Link and Display link in the database
+         * is called to save Link and Display link in the database and return an object
+         * of ExternalLinkDisplay. When setHowToOpen method is being called on the same
+         * ExternalLinkDisplay object to set howToOpen field then Hibernate
+         * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
                 linkLabel, displayType, linkImage, imageFilename);
@@ -144,7 +147,10 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
 
         /*
          * When updateLink is called then inside updateLinkAndDisplay(link, displayLink)
-         * is called to save Link and Display link in the database
+         * is called to save Link and Display link in the database and return an object
+         * of ExternalLinkDisplay. When setHowToOpen method is being called on the same
+         * ExternalLinkDisplay object to set howToOpen field then Hibernate
+         * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
                 linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);

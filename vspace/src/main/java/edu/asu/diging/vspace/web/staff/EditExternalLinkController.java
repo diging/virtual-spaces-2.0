@@ -44,7 +44,6 @@ public class EditExternalLinkController extends EditSpaceLinksController {
         if (validation != null) {
             return validation;
         }
-        System.out.println("howToOpen " + howToOpen);
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
