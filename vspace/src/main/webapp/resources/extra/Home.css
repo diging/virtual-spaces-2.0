@@ -757,6 +757,20 @@
 	background: #f2f2f2;
 }
 
+.searchInput {
+	display: flex !important;
+	background: var(--base-grey) !important;
+	border-radius: 5px !important;
+}
+
+.searchImg {
+	border-radius: 25px;
+	float: left;
+	width: 150px;
+	height: 150px;
+	margin-right: 15px !important;
+}
+
 .shepherd-button {
 	background-color: var(--primary) !important;
 	color: white !important;
