@@ -37,18 +37,13 @@
 
 <div layout:fragment="content" class="main-content">
 <script th:inline="javascript">
-var aboutPageDescription = [[${aboutPageText}]];
 function openNav(){
 	$("#mySidenav").css("width", "250px");
 }
 function closeNav(){
 	$("#mySidenav").css("width", "0");
 }
-
- $(document).ready(function() {
-	 var divElement = document.getElementById("aboutPageDescription"); 
-	 divElement.innerHTML += aboutPageDescription;
-}); 
+ 
 </script>
 
 <div id="Module_1" class="Home_Class" style="margin-left:-100px; margin-top: -45px;">
@@ -66,11 +61,10 @@ function closeNav(){
  </div>               
 	<div>
 	<div style="padding-left:200px">
-	<h2 th:text="${aboutPageTitle}"/>
+	<h2>[(${exhibitionAboutPage.getTitle()})] </h2>
 		<div style="padding: 0;">
 				<div  style="padding-top: 20px;">
-					<div id ="aboutPageDescription">
-					</div>
+					 <div>[(${exhibitionAboutPage.htmlRenderedText()})]</div>
 				</div>
 		</div>
 	</div>

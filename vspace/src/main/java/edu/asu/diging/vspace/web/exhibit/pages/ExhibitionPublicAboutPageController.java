@@ -21,8 +21,7 @@ public class ExhibitionPublicAboutPageController {
     @RequestMapping(value = "/exhibit/about")
     public String showPublicAboutPage(Model model) {
         ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-        model.addAttribute("aboutPageTitle", exhibitionAboutPage.getTitle());
-        model.addAttribute("aboutPageText", exhibitionAboutPage.htmlRenderedText()); 
+        model.addAttribute("exhibitionAboutPage", exhibitionAboutPage);
         return "exhibition/aboutPagePublic";
     }
 
