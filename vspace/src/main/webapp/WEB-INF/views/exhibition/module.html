@@ -83,13 +83,6 @@
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
         </div>
-          <div class="imgFullScreen">
-                <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
-                    onclick="imageFullScreen()">
-                    <span class="icon-pan secondary"></span> 
-                    <span class="tooltiptext">Full screen option</span>
-                </button>
-            </div>
          <div class="Group_7_Class" >
             <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
                <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
@@ -107,6 +100,13 @@
                     </button>  
                </div>
             </a>
+                <div class="imgFullScreen" style="position: fixed; z-index:110; left: 85%;top: 50.3%;">
+	                <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+	                    onclick="imageFullScreen()">
+	                    <span class="icon-visible secondary"></span> 
+	                    <span class="tooltiptext">Full screen option</span>
+	                </button>
+                </div>
          </div>
          <a th:href="@{'/exhibit/space/'+${spaceId}}">
             <div class="exit_to_space_Class" style="position: fixed;  z-index:120;">
@@ -132,6 +132,7 @@
                   </button>
             </div>
          </a>
+         
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
