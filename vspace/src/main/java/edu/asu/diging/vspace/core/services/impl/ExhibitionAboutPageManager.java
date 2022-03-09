@@ -25,9 +25,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     private ExhibitionAboutPageRepository repo;
     
     @Autowired
-    private ExhibitionRepository exhibitRepo;
-    
-    @Autowired
     private IExhibitionManager exhibitionManager;
     
     /* (non-Javadoc)
@@ -47,8 +44,10 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Override
     public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
-        exhibition.setAboutPageConfigured(true);
-        exhibitionManager.storeExhibition((Exhibition)exhibition);
+        if(!exhibition.isAboutPageConfigured()) {
+            exhibition.setAboutPageConfigured(true);
+            exhibitionManager.storeExhibition((Exhibition)exhibition);
+        }
         return repo.save(exhibitionAboutPage);
     }
     
