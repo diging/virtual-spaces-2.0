@@ -49,10 +49,7 @@ public class EditSpaceLinkController extends EditSpaceLinksController{
         if (file != null && !file.isEmpty()) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
-        } else if(imageId==null || imageId.equals("")){
-            String[] token = spaceLinkImageIdEdit.split("/");
-            imageId = token[token.length - 1];
-        }
+        } 
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x), new Float(y),
                 new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkDesc, spaceLinkIdValueEdit, spaceLinkDisplayId, type, linkImage, filename, imageId);
