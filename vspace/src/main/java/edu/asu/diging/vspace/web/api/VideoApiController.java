@@ -47,6 +47,6 @@ public class VideoApiController {
         }
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", video.getFileType())
-                .header("Content-Length", String.valueOf(videoContent.length - 1)).body(videoContent);
+                .header("Content-Length", String.valueOf(videoContent.length)).body(videoContent);
     } 
 }

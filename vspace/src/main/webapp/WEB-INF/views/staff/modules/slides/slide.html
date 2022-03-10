@@ -319,16 +319,15 @@
 				}
 				if (videoID) {
 					oldVideoBlock = $("#" + videoID);
-					var videoBlockId = videoID;
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-					formData.append('videoBlockId', videoBlockId);
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+					formData.append('videoBlockId', videoID);
 					if (url) {
-						$("#" + videoBlockId).replaceWith(videoBlock);
+						$("#" + videoID).replaceWith(videoBlock);
 					}
 					if (vidFile) {
 						reader.onload = function (theFile) {
 							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-							$("#" + videoBlockId).replaceWith(videoBlock);
+							$("#" + videoID).replaceWith(videoBlock);
 						};
 					}
 				}
@@ -389,12 +388,12 @@
 						else {
 							$("#current").replaceWith(oldVideoBlock);
 						}
-						if(data.status == 400) {
-							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Wrong request sent. Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.error').append(alert);
-						}
 						if (data.status == 403) {
 							$("#loginAlert").show();
+						}
+						else{
+							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.error').append(alert);
 						}
 					}
 				});
@@ -697,19 +696,19 @@
                     $('#chooseFromLocal').trigger( "click" );
                 });
                 
-				$("#saveVideo").click(function(e) {
-					e.preventDefault();
-					$("#addVideoAlert").hide();
-					embedVideo();
-					$("#saveVideo").data('value', '');
-					$("#saveVideo").data('url', '');
-					$("#uploadTab").addClass("active");
-					$("#urlTab").removeClass("active");
- 					$("#urlLink").removeClass("active show");
- 					$("#urlLink>a").removeClass("active show");
- 					$("#uploadLink").addClass("active show");
-					$("#uploadLink>a").addClass("active show");
-				});
+                $("#saveVideo").click(function(e) {
+                    e.preventDefault();
+                    $("#addVideoAlert").hide();
+                    embedVideo();
+                    $("#saveVideo").data('value', '');
+                    $("#saveVideo").data('url', '');
+                    $("#uploadTab").addClass("active");
+                    $("#urlTab").removeClass("active");
+                    $("#urlLink").removeClass("active show");
+                    $("#urlLink>a").removeClass("active show");
+                    $("#uploadLink").addClass("active show");
+                    $("#uploadLink>a").addClass("active show");
+                });
                 
                 $("#addChoice").click(function() {
                     $("#addChoiceAlert").show();
@@ -729,12 +728,12 @@
             		$('.modal-footer').append(alert); 
               	});
             	
-				$(document).on("click", ".deleteVideo", function(e) {
-					$("#confirmDeleteVideoAlert").show();
-					var alert = $('<input type="hidden" id="deleteVideoId">');
-					$(alert).attr( 'value', $(this).siblings('input').val());
-					$('.modal-footer').append(alert); 
-				});
+            	$(document).on("click", ".deleteVideo", function(e) {
+            		$("#confirmDeleteVideoAlert").show();
+            		var alert = $('<input type="hidden" id="deleteVideoId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
             	
             	$(document).on("click", ".deleteChoiceBlock", function(e) {
             		$("#confirmDeleteChoiceBlockAlert").show();
@@ -758,10 +757,10 @@
             		$("#confirmDeleteImageAlert").hide();
             	});
             	
-				$("#cancelDeleteVideo").click(function() {
-					$("#confirmDeleteVideoAlert").find('input').remove();
-					$("#confirmDeleteVideoAlert").hide();	
-				});
+            	$("#cancelDeleteVideo").click(function() {
+            		$("#confirmDeleteVideoAlert").find('input').remove();
+            		$("#confirmDeleteVideoAlert").hide();	
+            	});
             	
             	$("#cancelDeleteChoiceBlock").click(function() {
             	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
@@ -1224,31 +1223,31 @@
             
             
 			// editing video block
-			$(document).on("click", ".editVideo", function(e) {
-				var id = $(this).siblings('input').val();
-				var vidId = $('div#'+id).attr('id');
-				var title = $('div#'+id).find('h3 strong').html();
-				if (vidId != '') {
-					var url="";
-					if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
+            $(document).on("click", ".editVideo", function(e) {
+            	var id = $(this).siblings('input').val();
+            	var vidId = $('div#'+id).attr('id');
+            	var title = $('div#'+id).find('h3 strong').html();
+            	if (vidId != '') {
+                    var url="";
+                    if($('div#'+id).find('iframe')!=null && typeof($('div#'+id).find('iframe')) != "undefined"
 					&& $('div#'+id).find('iframe').attr('src')!=null && typeof($('div#'+id).find('iframe').attr('src')) != "undefined")
 					{
-						url = $('div#'+id).find('iframe').attr('src');
+            			url = $('div#'+id).find('iframe').attr('src');
 					}
-					if (url.length > 0) {
-						$("#saveVideo").data('url', url);
-						$("#videoLink").val(url);
-						$("#urlTab").addClass("active");
-						$("#urlLink").addClass("active  show");
-						$("#uploadTab").removeClass("active show");
-						$("#uploadLink").removeClass("active show");
-	 					$("#urlLink>a").addClass("active show");
-	 					$("#uploadLink").removeClass("active show");
-						$("#uploadLink>a").removeClass("active show");
+                	if (url.length > 0) {
+            			$("#saveVideo").data('url', url);
+            			$("#videoLink").val(url);
+            			$("#urlTab").addClass("active");
+            			$("#urlLink").addClass("active  show");
+            			$("#uploadTab").removeClass("active show");
+            			$("#uploadLink").removeClass("active show");
+            			$("#urlLink>a").addClass("active show");
+            			$("#uploadLink").removeClass("active show");
+            			$("#uploadLink>a").removeClass("active show");
 					} 
-					$("#videoTitle").val(title);
-					$("#saveVideo").data('value', vidId);
-					$("#addVideoAlert").show();
+                    $("#videoTitle").val(title);
+                    $("#saveVideo").data('value', vidId);
+                    $("#addVideoAlert").show();
 				}
 			});
         </script>
