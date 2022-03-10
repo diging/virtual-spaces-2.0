@@ -58,11 +58,11 @@ public class ExhibitionSpaceController {
          * Below null check is added to accommodate already existing spaces with null space status
          */
         if (space.getSpaceStatus() != null && space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
-        	if (authenticationFacade.getAuthenticatedUser() != null) {
-        		isSpacePublished = false;
-			} else {
-				return "redirect:/exhibit/404";
-			}
+            if (authenticationFacade.getAuthenticatedUser() != null) {
+                isSpacePublished = false;
+            } else {
+                return "redirect:/exhibit/404";
+            }
         }
         model.addAttribute("isSpacePublished", isSpacePublished);
         IExhibition exhibition = exhibitManager.getStartExhibition();
