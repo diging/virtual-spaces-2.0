@@ -87,7 +87,6 @@ function setLabelPosition(link,id, positionX, positionY){
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	debugger;
     if(link != null){
         var spaceLink;
         if(link.type == "ALERT"){
@@ -186,7 +185,6 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
-            debugger;
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkModalId-";
                 var divId = "#space"
