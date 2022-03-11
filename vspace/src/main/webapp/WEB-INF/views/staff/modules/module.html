@@ -217,7 +217,7 @@ $(document).ready(function() {
 <body>
     <div class="main-content" layout:fragment="content">
   
-    	<div class="flex-spacing" style="margin-bottom: 10px;"> 
+    	<div class="flex-spacing" style="margin-bottom: 40px;"> 
 	    	<div style="display: flex">
 	    		<div style="margin-right: 20px">
 	    			<h2>
@@ -230,8 +230,7 @@ $(document).ready(function() {
 						<span class="icon-caret-down" style="font-size: 16px"></span>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<a class="dropdown-item" data-toggle="tooltip" id="dateInfo" data-html="true" data-placement="top"><span class="icon-info-circle"></span>&emsp;Module info</a>
-						<a class="dropdown-item" data-toggle="tooltip" title="Edit Module" th:href="@{'/staff/module/'+${module.id}+'/edit'}"><span class="icon-edit"></span>&emsp;Edit Module</a>
+						<a class="dropdown-item" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"><span class="icon-info-circle"></span>&emsp; Slide info</a>
 						<a class="dropdown-item" style="cursor: pointer" th:onclick="guidedTour()"><span class="icon-map"></span>&emsp; Start tour</a>
 					</div>
 				</div>
@@ -245,24 +244,10 @@ $(document).ready(function() {
 						  <option th:value="Select" th:text="Select"></option>
               <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
           </select>
-          <button type="submit" style="margin-left:15px" class="btn primary-btn btn-sm">Submit</button>
+          <button type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 			</div>
     	</div>
-    	<div class="flex-spacing" style="justify-content: right; margin-top:0;"> 
-    	<div style="display:flex-right;">
-    	<label style="text-align: right;">Module Status</label>
-                <form method="POST" th:action="@{'/staff/module/'+${module?.id}+'/status'}">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
-                    <select  class="form-control-sm" name="statusParam" style="width: 200px; display: inline; ">
-                        <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(moduleStatus,'PUBLISHED')}">Published</option>
-                        <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(moduleStatus,'UNPUBLISHED')}">Unpublished</option>
-                    </select>
-                    <p style="display: inline; padding-left: 10px;">
-                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-                    </p>
-    	</div>
-            </div>
     	<div class="tab sequences" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>

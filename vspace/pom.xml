@@ -40,7 +40,6 @@
         <tomcat.server.id>TomcatServer</tomcat.server.id>
 
         <hibernate.show_sql></hibernate.show_sql>
-        <buildNumber>v0.16.1</buildNumber>
     </properties>
 
     <dependencyManagement>
