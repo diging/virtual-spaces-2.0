@@ -24,20 +24,26 @@
              {  
              display: flex;  
              justify-content: center;
+             margin: 0;
+             padding: 0;
+             max-width: 100%;
+             }
+             .nav-bar {
+             	margin-bottom: 0 !important; 
              }
         </style>
     </head>
     <body>
         <div layout:fragment="content">
         <div class="container">
-            <div id="graph"></div>
+            <div id="graph" style="width: 100%;height: 100%;"></div>
             <script>
                 var nodeJson = JSON.parse(jsonMap['nodesJson']);
                 // Some constants controlling the graph appearance
                 const PADDING_BUBBLE = 15 // distance between edge end and bubble
                 const PADDING_LABEL = 30 // distance between edge end and engineer id
                 
-                var diameter = 660,
+                var diameter = 700,
                     radius = diameter / 2,
                     innerRadius = radius - 170; // between center and edge end
                 
@@ -50,10 +56,10 @@
                     .angle(function (d) { return d.x / 180 * Math.PI; });
                 
                 var svg = d3.select("#graph").append("svg")
-                    .attr("width", diameter)
+                    .attr("width", "100%")
                     .attr("height", diameter)
                     .append("g")
-                    .attr("transform", "translate(" + radius + "," + radius + ")");
+                    .attr("style", "transform: translate(" + "50%" + "," + "40%" + ")");
                 
                 var link = svg.append("g").selectAll(".link"),
                     label = svg.append("g").selectAll(".label"),
