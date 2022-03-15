@@ -364,28 +364,28 @@
                     var posY = $("#space").position().top;
                     var externalLink = $('<a></a>');
                     externalLink.attr('href', link.externalLink.externalLink);
-    		        if(link.howToOpen == null || link.howToOpen == "NEWWINDOW" ){
+                    if(link.howToOpen == null || link.howToOpen == "NEWWINDOW" ){
     		        	externalLink.attr('target', "_blank");
 					}
-    		        else{
+                    else{
     		        	externalLink.attr('target', "_self"); 
 					}
-    		        if(link.type=="ALERT"){
+                    if(link.type=="ALERT"){
     		        	linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
 					}
-    		        else if(link.type=="IMAGE" && link.image != null){
+                    else if(link.type=="IMAGE" && link.image != null){
     		        	var extImageURL = [[@{/api/image/}]]+link.image.id;
     		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
 					}
-    		        else{
+                    else{
     		        	var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
 					} 
                     linkDisplay.css('position', 'absolute');
                     linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
                     linkDisplay.css('fill', 'grey'); 
                     linkDisplay.css('color', 'rgba(128,128,128,1)');
-                    var	linkPosX=(width*link.positionX)/[(${display?.width})];
-                    var	linkPosY=(height*link.positionY)/relativeHeight;
+                    var linkPosX=(width*link.positionX)/[(${display?.width})];
+                    var linkPosY=(height*link.positionY)/relativeHeight;
                     linkDisplay.css('left',linkPosX + posX);
                     linkDisplay.css('top', linkPosY + posY);
                     externalLink.append(linkDisplay);
