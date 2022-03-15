@@ -27,19 +27,16 @@ import edu.asu.diging.vspace.web.SequenceOverviewManager;
 public class SequenceOverviewManagerTest {
     
     @Mock
-    ModuleRepository moduleRepository;
+    private ModuleRepository moduleRepository;
     
     @Mock
-    ModuleLinkDisplayRepository moduleDisplayLinkRepository;
+    private ModuleLinkDisplayRepository moduleDisplayLinkRepository;
     
     @Mock
-    SequenceRepository sequenceRepo;
-    
-    @Mock
-    SequenceOverviewJsonFormat sequenceOverviewJsonFormat;
+    private SequenceRepository sequenceRepo;
     
     @InjectMocks
-    SequenceOverviewManager serviceToTest;
+    private SequenceOverviewManager serviceToTest;
     
     private List<ISlide> slides;
     
@@ -72,11 +69,9 @@ public class SequenceOverviewManagerTest {
         mapSequenceToSlides.put(sequences.get(0),slides);
         
         Mockito.when(sequenceRepo.findSequencesForModule("1")).thenReturn(sequences);
-        Mockito.when(sequenceOverviewJsonFormat.constructNodesForSequences(sequences)).thenReturn(sequenceOverviewList);
        
         ModuleOverview moduleOverview = serviceToTest.showModuleMap("1");
         assertEquals(sequenceOverviewList.get(0).getId(), moduleOverview.getSequenceOverview().get(0).getId());
-        Mockito.verify(sequenceOverviewJsonFormat).constructNodesForSequences(sequences);
         
     }
 
