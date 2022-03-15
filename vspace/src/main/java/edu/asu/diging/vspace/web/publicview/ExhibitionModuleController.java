@@ -12,6 +12,7 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
+import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 
 @Controller
 public class ExhibitionModuleController {
@@ -33,7 +34,7 @@ public class ExhibitionModuleController {
         }
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
-        if (module == null) {
+        if (module == null || module.getModuleStatus() == ModuleStatus.UNPUBLISHED) {
             return "redirect:/exhibit/404";
         } else if (module.getStartSequence() == null) {
             model.addAttribute("showAlert", true);

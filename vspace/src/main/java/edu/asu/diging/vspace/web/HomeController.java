@@ -24,8 +24,9 @@ public class HomeController {
     private ISetupManager setupManager;
 
     @RequestMapping(value = { "/", "/preview/{previewId}" })
-    public String home(Model model,@PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId) {
-        
+    public String home(Model model,
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!setupManager.isSetup()) {
             return "setup";
@@ -36,6 +37,9 @@ public class HomeController {
             if (!(authentication instanceof AnonymousAuthenticationToken)) {
                 return "redirect:/staff/dashboard/";
             } else {
+                if (previewId != null) {
+                    return "redirect:/preview/{previewId}/space/" + exhibition.getStartSpace().getId();
+                }
                 return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
             }
         }
