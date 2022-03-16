@@ -15,4 +15,12 @@ public interface IVSFile extends IVSpaceElement {
 
     String getFileType();
 
+    String getOriginalFileName();
+
+    void setOriginalFileName(String originalFileName);
+
+    String getFileDescription();
+
+    void setFileDescription(String fileDescription);
+
 }

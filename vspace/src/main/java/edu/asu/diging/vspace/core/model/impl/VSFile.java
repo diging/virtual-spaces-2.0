@@ -22,8 +22,10 @@ public class VSFile extends VSpaceElement implements IVSFile {
     private String filename;
     @Lob
     private String parentPath;
-    private String fileType;
-    
+    private String fileType;   
+    private String originalFileName;
+    private String fileDescription;
+
     @Override
     public String getId() {
         return id;
@@ -62,6 +64,26 @@ public class VSFile extends VSpaceElement implements IVSFile {
     @Override
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+    
+    @Override
+    public String getOriginalFileName() {
+        return originalFileName;
+    }
+
+    @Override
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+    }
+
+    @Override
+    public String getFileDescription() {
+        return fileDescription;
+    }
+
+    @Override
+    public void setFileDescription(String fileDescription) {
+        this.fileDescription = fileDescription;
     }
     
     

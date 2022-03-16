@@ -24,12 +24,15 @@ public class StorageEngine implements IStorageEngine {
 	@Value("${uploads_path}")
 	private String path;
 	
+	@Value("${file_uploads_directory")
+	private String fileUploadDir;
+	
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
 	 */
 	@Override
 	public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-		File parent = new File(path + File.separator + directory);
+		File parent = new File(path + File.separator + fileUploadDir);
 		if (!parent.exists()) {
 			parent.mkdir();
 		}
@@ -47,7 +50,7 @@ public class StorageEngine implements IStorageEngine {
             throw new FileStorageException("Could not store file.", e);
         }
         
-        return directory;
+        return fileUploadDir;
 	}
 	
 	@Override

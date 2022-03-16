@@ -28,12 +28,12 @@ public class FileApiManager {
     @Autowired
     private FileRepository fileRepo;
     
-    public CreationReturnValue storeFile(byte[] fileContent, String filename) {
+    public CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription) {
         IVSFile file = null;
         if(fileContent != null ) {
             Tika tika = new Tika();
             String contentType = tika.detect(fileContent);
-            file = fileFactory.createFile(filename, contentType);
+            file = fileFactory.createFile(fileName, contentType);
             fileRepo.save((VSFile)file);
         }
         CreationReturnValue returnValue = new CreationReturnValue();
@@ -41,11 +41,13 @@ public class FileApiManager {
         if(file != null) {
             String relativePath = null;
             try {
-                relativePath = storageEngine.storeFile(fileContent, filename, file.getId());
+                relativePath = storageEngine.storeFile(fileContent, fileName, file.getId());
             } catch (FileStorageException e) {
                 returnValue.getErrorMsgs().add("File could not be stored: " + e.getMessage());
             }
             file.setParentPath(relativePath);
+            file.setDescription(fileDescription);
+            file.setOriginalFileName(originalFileName);
             fileRepo.save((VSFile) file);
         }
         return returnValue;
