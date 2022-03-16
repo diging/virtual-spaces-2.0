@@ -136,7 +136,7 @@
 	    $("#editTitle").click(function() {
 	    	// Using data attribute
 	    	var sequenceTitle = $("#title").text()  // gets value without using trim function
-	        $('<div class="col-4" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+	        $('<div class="col-6" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
 	    	$('#title').text()
 	        $("#newTitle").val(sequenceTitle.split(": ")[1])
 	        $("#editTitle").hide()
@@ -297,7 +297,7 @@
 					<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Sequence:</span> [[${sequence.name}]]</h2>
 					<p id="description"> [[${sequence.description}]]</p>
 					<button id="submitDescription" type="button"
-						class="btn primary-btn btn-sm"
+						class="btn  btn-sm"
 						style="margin-top: 1%; margin-bottom: 1%;">Save</button>
 					<button id="cancelEditDescription" type="button"
 						class="btn primary-btn btn-sm"
@@ -316,9 +316,9 @@
 				</div>
 					
 				<button id="submitTitle" type="button" class="btn primary-btn"
-					style="float: left; margin-right: 1%;">Save</button>
+					style="float: left; margin-right: 1%; margin-left:.5rem; margin-bottom:5rem; line-height:2.5em">Save</button>
 				<button id="cancelEditTitle" type="button" class="btn primary-btn"
-					style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
+					style="margin-left: .4rem; margin-bottom:5rem;">Cancel</button>
 			</div>
 			<div class="alert alert-light" role="alert">
 				Created on <span class="date">[[${sequence.creationDate}]]</span> by
