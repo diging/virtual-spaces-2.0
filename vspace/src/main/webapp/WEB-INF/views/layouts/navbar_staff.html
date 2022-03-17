@@ -56,6 +56,13 @@
 			               <span class="icon-info secondary"></span><span class="custom_Text">&nbsp;About Page</span>
 			            </a>
 			        </li>
+			         <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+			            <a class="nav-link"
+			               th:style="${currentPage == 'files' ? 'active' : '' }"
+			               th:href="@{/staff/files/list}"> 
+			               <span class="icon-2x2-grid secondary"></span><span class="custom_Text">&nbsp;Files</span>
+			            </a>
+			        </li>
 		        </ul>
 		        <div class="footer">   
 		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">

@@ -12,6 +12,8 @@ import edu.asu.diging.vspace.core.model.impl.VSFile;
 @JaversSpringDataAuditable
 public interface FileRepository extends PagingAndSortingRepository<VSFile, String> {
 
+    List<VSFile> findAll();
+    
     List<VSFile> findByFilenameLikeOrNameLike(String filename, String name);
 
     List<VSFile> findByFilenameLike(String filename);

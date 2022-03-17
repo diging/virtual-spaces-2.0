@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff.api;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,26 +12,26 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.factory.IFileFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.VSFile;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 import edu.asu.diging.vspace.web.staff.FileApiManager;
 import edu.asu.diging.vspace.web.staff.forms.FileForm;
-import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
-@RestController
+@Controller
 public class FileApiController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,27 +39,23 @@ public class FileApiController {
     private ImageRepository imageRepo;
     
     @Autowired
-    private FileApiManager apiManager;
+    private FileApiManager fileManager;
     
     @Autowired
     private IStorageEngine storage;
     
-    @RequestMapping(value = "/api/file", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getFiles(@PathVariable String id) {
-        IVSImage image = imageRepo.findById(id).get();
-        byte[] imageContent = null;
-        try {
-            imageContent = storage.getImageContent(image.getId(), image.getFilename());
-        } catch (IOException e) {
-            logger.error("Could not retrieve image.", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(image.getFileType()));
-         
-        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+    @RequestMapping(value = "/staff/files/{id}", method = RequestMethod.GET)
+    public String getFile(Model model, @PathVariable String id) {
+        IVSFile file = fileManager.getFileById(id);
+        model.addAttribute("file", file);
+        return "staff/file/filedetails";
+    }
+    
+    @RequestMapping(value = "/staff/files/list", method = RequestMethod.GET)
+    public String getFilesList(Model model) {
+        List<VSFile> files = fileManager.getAllFiles();
+        model.addAttribute("files", files);
+        return "staff/files/filelist";
     }
     
     @RequestMapping(value = "/api/file/create", method = RequestMethod.POST)
@@ -71,7 +68,7 @@ public class FileApiController {
             try {
                 fileBytes = file.getBytes();
                 originalFileName = file.getOriginalFilename();
-                returnVal = apiManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
+                returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,7 @@ import edu.asu.diging.vspace.core.factory.IFileFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Service
 public class FileApiManager {
@@ -52,6 +52,15 @@ public class FileApiManager {
         }
         return returnValue;
         
+    }
+    
+    public List<VSFile> getAllFiles(){
+        return fileRepo.findAll();
+    }
+    
+    public IVSFile getFileById(String id) {
+        Optional<VSFile> optional = fileRepo.findById(id);
+        return optional.get();
     }
 
 }
