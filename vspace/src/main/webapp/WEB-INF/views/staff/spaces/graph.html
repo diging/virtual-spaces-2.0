@@ -59,7 +59,7 @@
                     .attr("width", "100%")
                     .attr("height", diameter)
                     .append("g")
-                    .attr("style", "transform: translate(" + "50%" + "," + "40%" + ")");
+                    .attr("style", "transform: translate(" + "50%" + "," + "48%" + ")");
                 
                 var link = svg.append("g").selectAll(".link"),
                     label = svg.append("g").selectAll(".label"),
@@ -152,7 +152,7 @@
                 	     })
                 .on('mouseover', function(d){
                 	 link.style('stroke', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id ? '#F2A950': "black")
-                	 .style('stroke-width', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id  ? 2 : 1)
+                	 .style('stroke-width', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id  ? 2 : 1);
                   })
                  .on('mouseout', function(event,d){
                 	link.style('stroke', 'black')
@@ -176,6 +176,9 @@
 				.attr("height", 35)
 				.attr("width", 35);
 				});
+                d3.selectAll("g").on("mouseover", function() {
+                	d3.select(this).raise();
+                });
                         
                 // Lazily construct the package hierarchy from class ids.
                 function packageHierarchy(classes) {
