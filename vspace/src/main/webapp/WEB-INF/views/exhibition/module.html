@@ -1,11 +1,7 @@
 <html layout:decorate="~{layouts/main}">
    <head>
       <style type="text/css">
-      .imgFullScreen {
-    position:relative;
-    left: 95%;
-    top: -1%;
-}
+      
 .imgFullScreen:hover .tooltiptext {
     visibility: visible;
 }
@@ -100,8 +96,8 @@
                     </button>  
                </div>
             </a>
-            <div class="imgFullScreen" style="position: fixed; z-index:110; left: 85%;top: 50.3%;">
-	            <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+            <div class="slideshow_next imgFullScreen" style="position: fixed; z-index:110; right: 11%;top: 50.3%;width:50px;">
+	            <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 33px; height: 33px;padding: 3px;"
 	                onclick="imageFullScreen()">
 	                    <span class="icon-visible secondary"></span>
 	                <span class="tooltiptext">Full screen option</span>
