@@ -864,7 +864,7 @@
             			    success: function(result) {
             			    	$('#' + blockId).remove();
             			    },
-							error: function(data) {
+            				error: function(data) {
             					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             					$('.error').append(alert); 
             					$(".error").delay(4000).slideUp(500, function(){
@@ -911,34 +911,34 @@
                 });
             	
                 $("#cancelImageBtn").click(function() {
-                	$('#chooseFromLocal').trigger( "click" );
-                	// Initialize selected image ID to blank, on clicking cancel button
-                	$("#uploadImage").data('value', '');
+                    $('#chooseFromLocal').trigger( "click" );
+                    // Initialize selected image ID to blank, on clicking cancel button
+                    $("#uploadImage").data('value', '');
                     $("#addImgAlert").hide();
                     $(".open").removeClass("open");
                 });
                 
                 $("#cancelVideoBtn").click(function() {
-                	// Initialize selected video ID to blank, on clicking cancel button
-                	$("#videoTitle").val('');
-                	$("#saveVideo").data('value', '');
-                	$("#saveVideo").data('url', '');
-                	$("#saveVideo").prop('disabled', true);
-                	$("#videoFile").val('');
-                	$("#videoLink").val('');
-                	$("#addVideoAlert").hide();
-                	$(".open").removeClass("open");
-                	$("#uploadTab").addClass("active");
-                	$("#urlTab").removeClass("active");
-                	$("#urlLink").removeClass("active show");
-                	$("#urlLink>a").removeClass("active show");
-                	$("#uploadLink").addClass("active show");
-                	$("#uploadLink>a").addClass("active show");
+                    // Initialize selected video ID to blank, on clicking cancel button
+                    $("#videoTitle").val('');
+                    $("#saveVideo").data('value', '');
+                    $("#saveVideo").data('url', '');
+                    $("#saveVideo").prop('disabled', true);
+                    $("#videoFile").val('');
+                    $("#videoLink").val('');
+                    $("#addVideoAlert").hide();
+                    $(".open").removeClass("open");
+                    $("#uploadTab").addClass("active");
+                    $("#urlTab").removeClass("active");
+                    $("#urlLink").removeClass("active show");
+                    $("#urlLink>a").removeClass("active show");
+                    $("#uploadLink").addClass("active show");
+                    $("#uploadLink>a").addClass("active show");
                 });
                 
                 $("#file").click(function() {
-                	$("#selectedImage").empty();
-                	$('#imageId').prop('selectedIndex',0).trigger( "change" );
+                    $("#selectedImage").empty();
+                    $('#imageId').prop('selectedIndex',0).trigger( "change" );
                 });
                 
                 $("#submitText").on("click", function(e) {
@@ -1251,8 +1251,8 @@
                     $("#videoTitle").val(title);
                     $("#saveVideo").data('value', vidId);
                     $("#addVideoAlert").show();
-				}
-			});
+            	}
+            });
         </script>
     </head>
     <body>
