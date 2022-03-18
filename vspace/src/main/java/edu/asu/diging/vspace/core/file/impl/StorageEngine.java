@@ -24,7 +24,7 @@ public class StorageEngine implements IStorageEngine {
 	@Value("${uploads_path}")
 	private String path;
 	
-	@Value("${file_uploads_directory")
+	@Value("${file_uploads_directory}")
 	private String fileUploadDir;
 	
 	/* (non-Javadoc)

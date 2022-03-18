@@ -46,7 +46,7 @@ public class FileApiManager {
                 returnValue.getErrorMsgs().add("File could not be stored: " + e.getMessage());
             }
             file.setParentPath(relativePath);
-            file.setDescription(fileDescription);
+            file.setFileDescription(fileDescription);
             file.setOriginalFileName(originalFileName);
             fileRepo.save((VSFile) file);
         }

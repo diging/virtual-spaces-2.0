@@ -7,11 +7,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,11 +20,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 import edu.asu.diging.vspace.web.staff.FileApiManager;
 import edu.asu.diging.vspace.web.staff.forms.FileForm;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
 public class FileApiController {
@@ -48,7 +43,7 @@ public class FileApiController {
     public String getFile(Model model, @PathVariable String id) {
         IVSFile file = fileManager.getFileById(id);
         model.addAttribute("file", file);
-        return "staff/file/filedetails";
+        return "staff/files/file";
     }
     
     @RequestMapping(value = "/staff/files/list", method = RequestMethod.GET)
@@ -58,9 +53,16 @@ public class FileApiController {
         return "staff/files/filelist";
     }
     
-    @RequestMapping(value = "/api/file/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/files/add", method = RequestMethod.GET)
+    public String showAddFile(Model model) {
+        model.addAttribute("files", new FileForm());
+        
+        return "staff/files/add";
+    }
+    
+    @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
     public String createFile(Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
-            Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) {
+            Principal principal, RedirectAttributes redirectAttrs) {
         byte[] fileBytes = null;
         String originalFileName = null;
         CreationReturnValue returnVal = null;
@@ -76,7 +78,7 @@ public class FileApiController {
             
         }
         
-        return "ok";
+        return "redirect:/staff/files/list";
     }
 
 }

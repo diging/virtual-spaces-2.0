@@ -22,13 +22,10 @@
     width: 140px;
 }
 </style>
-<script th:inline="javascript">
-	let files = [[${files}]];
-	console.log(files); 
-</script>
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
+    <a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ New File</a>
         <h2>Files</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following files.</div>
@@ -51,8 +48,8 @@
             </thead>
             <tbody class="tableBody">
                 <tr th:each="file: ${files}">
-                    <th scope="row"></th>
-                    <td>[[${file.filename}]]</td>
+                    <th scope="row">[[${file.filename}]]</th>
+                    <td>[[${file.originalFileName}]]</td>
                     <td>[[${file.createdBy}]]</td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
