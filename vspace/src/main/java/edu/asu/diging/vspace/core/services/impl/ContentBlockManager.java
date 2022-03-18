@@ -235,9 +235,8 @@ public class ContentBlockManager implements IContentBlockManager {
         ISlide slide = slideManager.getSlide(slideId);
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
-        IVideoBlock vidBlock = null;
         IVSVideo slideContentVideo = storeVideo(video, size, fileName, url, title);
-        vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
+        IVideoBlock vidBlock = videoBlockFactory.createVideoBlock(slide, slideContentVideo);
         vidBlock.setContentOrder(contentOrder);
         VideoBlock videoBlock = videoBlockRepo.save((VideoBlock) vidBlock);
         returnValue.setElement(videoBlock);
@@ -331,7 +330,7 @@ public class ContentBlockManager implements IContentBlockManager {
      */
 
     @Override
-    public void deleteVideoBlockById(String blockId,String slideId) throws BlockDoesNotExistException {
+    public void deleteVideoBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
         if (blockId == null) {
             return;
         }

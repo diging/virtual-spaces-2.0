@@ -91,8 +91,11 @@
 					var video = $("<video></video>");
 					video.attr('width',"800");
 					video.attr('height',"530");
-					video.attr('controls', '');
-					video.attr('src', videoSrc);
+					video.attr('controls', true);
+					var source = $("<source></source>");
+					source.attr('src', videoSrc);
+					source.attr('type',"video/mp4");
+					video.append(source);
 					innerDiv1.append(video);
 				}
 				videoBlock.append(innerDiv1);
@@ -685,9 +688,9 @@
                     $("#addImgAlert").show();
                 });
                 
-				$("#addVideo").click(function() {
-					$("#addVideoAlert").show();
-				});
+                $("#addVideo").click(function() {
+                    $("#addVideoAlert").show();
+                });
                 
                 $("#uploadImage").click(function(e) {
                     e.preventDefault();
@@ -841,36 +844,36 @@
             	// ---------- Delete Video Block -----------
             	
 				$("#deleteVideo").on("click", function(e) {
-					e.preventDefault();
-					$("#confirmDeleteTextAlert").find('input').remove();
-					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-					$("#confirmDeleteVideoAlert").hide();
-					var blockId = $('#deleteVideoId').attr('value');
-					if(blockId == null || blockId == ''){
-						var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						$('.error').append(alert); 
-						$(".error").delay(4000).slideUp(500, function(){
-							$(".error").empty();
-						});
-					} else{
-						$('#deleteVideoId').remove()
-						// ------------- delete video content blocks ------------
-						$.ajax({
-							url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-							type: 'DELETE',
-							success: function(result) {
-								$('#' + blockId).remove();
-							},
+            		e.preventDefault();
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteVideoAlert").hide();
+            		var blockId = $('#deleteVideoId').attr('value');
+            		if(blockId == null || blockId == ''){
+            			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            			$('.error').append(alert); 
+            			$(".error").delay(4000).slideUp(500, function(){
+            			    $(".error").empty();
+            			});
+            		} else{
+            			$('#deleteVideoId').remove()
+            			// ------------- delete video content blocks ------------
+            			$.ajax({
+            			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+            			    type: 'DELETE',
+            			    success: function(result) {
+            			    	$('#' + blockId).remove();
+            			    },
 							error: function(data) {
-								var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-								$('.error').append(alert); 
-								$(".error").delay(4000).slideUp(500, function(){
-									$(".error").empty();
-								});
-							}
-						});
-					}
-				});
+            					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            					$('.error').append(alert); 
+            					$(".error").delay(4000).slideUp(500, function(){
+            					    $(".error").empty();
+            					});
+            				}
+            			});
+            		}
+            	});
             	
             	$("#deleteChoiceBlock").on("click", function(e) {
             	    e.preventDefault();
@@ -916,22 +919,22 @@
                 });
                 
                 $("#cancelVideoBtn").click(function() {
-					// Initialize selected video ID to blank, on clicking cancel button
-					$("#videoTitle").val('');
-					$("#saveVideo").data('value', '');
-					$("#saveVideo").data('url', '');
-					$("#saveVideo").prop('disabled', true);
-					$("#videoFile").val('');
-					$("#videoLink").val('');
-					$("#addVideoAlert").hide();
-					$(".open").removeClass("open");
-					$("#uploadTab").addClass("active");
-					$("#urlTab").removeClass("active");
- 					$("#urlLink").removeClass("active show");
- 					$("#urlLink>a").removeClass("active show");
- 					$("#uploadLink").addClass("active show");
-					$("#uploadLink>a").addClass("active show");
-				});
+                	// Initialize selected video ID to blank, on clicking cancel button
+                	$("#videoTitle").val('');
+                	$("#saveVideo").data('value', '');
+                	$("#saveVideo").data('url', '');
+                	$("#saveVideo").prop('disabled', true);
+                	$("#videoFile").val('');
+                	$("#videoLink").val('');
+                	$("#addVideoAlert").hide();
+                	$(".open").removeClass("open");
+                	$("#uploadTab").addClass("active");
+                	$("#urlTab").removeClass("active");
+                	$("#urlLink").removeClass("active show");
+                	$("#urlLink>a").removeClass("active show");
+                	$("#uploadLink").addClass("active show");
+                	$("#uploadLink>a").addClass("active show");
+                });
                 
                 $("#file").click(function() {
                 	$("#selectedImage").empty();
@@ -1538,7 +1541,7 @@
 									<br/>
 										<label for="videoFile">Video Title:</label><input class="form-control" id="videoTitle" type="text" name="videoTitle"/>
 										<div role="tabpanel" class="tab-pane active" id="uploadTab"><br />
-											<label for="videoFile">Upload Video: </label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
+											<label for="videoFile">Upload Video in any of these format ( MP4, MOV, WEBM, MKV )</label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
 										</div>
 										<div role="tabpanel" class="tab-pane" id="urlTab"><br />
 											<label for="videoLink">Enter URL: </label><input class="form-control" type="text" placeholder="Use Video Embed Link..." name="videoLink" rows="5" cols="500"
@@ -1634,7 +1637,7 @@
 								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 								allowfullscreen ></iframe>
 							<video width="800" height="530" th:if="${contents.video.url == null}" controls >
-							  <source th:src="@{'/api/video/'+${contents.video.id}}" />
+							  <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
 							</video>
 	                    </div>
 	                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
