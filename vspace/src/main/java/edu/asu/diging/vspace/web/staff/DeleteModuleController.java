@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 
 @Controller
 public class DeleteModuleController {
@@ -26,8 +27,7 @@ public class DeleteModuleController {
     public ResponseEntity<String> deleteModule(@PathVariable("moduleId") String moduleId, Model model) {
         try {
             moduleManager.deleteModule(moduleId);
-        }
-        catch (IllegalStateException exception) {
+        } catch (ModuleNotFoundException exception) {
             logger.error("Could not delete Module.", exception);
             return new ResponseEntity<String>("Sorry, unable to delete the module.",
                     HttpStatus.NOT_FOUND);

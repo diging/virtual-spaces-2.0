@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 
 @Transactional
 @Service
@@ -101,7 +102,7 @@ public class ModuleManager implements IModuleManager {
     
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteModule(String moduleId) throws IllegalStateException {
+    public void deleteModule(String moduleId) throws ModuleNotFoundException {
         if(moduleId == null) {
             return;
         }
@@ -123,7 +124,7 @@ public class ModuleManager implements IModuleManager {
                         sequenceRepo.deleteById(sequence.getId());
                     });
         } else {
-            throw new IllegalStateException("Module not found");
+            throw new ModuleNotFoundException("Module not found");
         }
         moduleRepo.deleteById(moduleId);
         return;

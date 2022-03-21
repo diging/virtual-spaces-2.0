@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 
 public interface IModuleManager {
 
@@ -25,5 +26,5 @@ public interface IModuleManager {
     
     Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText);
 
-    void deleteModule(String moduleId);
+    void deleteModule(String moduleId) throws ModuleNotFoundException;
 }
