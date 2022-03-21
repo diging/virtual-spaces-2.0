@@ -287,6 +287,20 @@ $(document).ready(function() {
 				</form>
 			</div>
     	</div>
+    	<div class="flex-spacing" style="justify-content: right; margin-top:0;"> 
+    	<div style="display:flex-right;">
+    	<label style="text-align: right;">Module Status</label>
+                <form method="POST" th:action="@{'/staff/module/'+${module?.id}+'/status'}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
+                    <select  class="form-control-sm" name="statusParam" style="width: 200px; display: inline; ">
+                        <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(moduleStatus,'PUBLISHED')}">Published</option>
+                        <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(moduleStatus,'UNPUBLISHED')}">Unpublished</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+    	</div>
+            </div>
     	<div id="sequences" class="tab sequences" style="margin-top: 0;">
     		<div style="display: flex; justify-content: space-between">
 				<h4>Sequences</h4>
