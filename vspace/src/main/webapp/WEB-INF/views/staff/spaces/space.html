@@ -1449,6 +1449,17 @@ $(function(){
                         <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
                     </p>
                 </form>
+                <label style="margin-right: 10px;">Hide all space links to this space</label>
+                <form method="POST" th:action="@{'/staff/space/links/edit/'+${space.id}+'/incoming'}">
+           		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <select class="form-control" name="hideSpaceLinksParam" style="width: 200px; display: inline;">
+                      <option th:id="No" th:value=false th:selected="${!space.hideIncomingLinks}">No</option>
+                      <option th:id="Yes" th:value=true th:selected="${space.hideIncomingLinks}">Yes</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
                 <label style="margin-right: 10px;">Show Links to Unpublished Spaces</label>
                 <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/showSpaceLinks'}" name="f">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
