@@ -324,7 +324,7 @@
     		          'overflow': 'visible'
     		        });
                 }
-            })
+            });
             moduleLinks.forEach(function(link,index){
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
@@ -332,7 +332,13 @@
     		        var moduleLink = $('<a></a>');
     		        var moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
     		        moduleLink.attr("href", moduleLinkURL);
-    		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        var linkDisplay;
+    		        if(link.type=="IMAGE" && link.image != null){
+                        var moduleImageURL = [[@{/api/image/}]]+link.image.id;
+                        linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
+    		        } else {
+    		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+                	}
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
@@ -398,7 +404,16 @@
 		    <span aria-hidden="true">&times;</span>
 		  </button>
 		</div>
+		<div>
 		
+	    <div th:if="${!isSpacePublished}" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
+           <span class="icon-warning secondary"></span> This space has not been published.
+		   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		   <span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		
+		</div>
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">
