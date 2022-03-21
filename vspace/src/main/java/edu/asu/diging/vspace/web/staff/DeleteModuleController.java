@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 
 @Controller
 public class DeleteModuleController {

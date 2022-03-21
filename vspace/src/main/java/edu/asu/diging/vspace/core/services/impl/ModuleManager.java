@@ -16,13 +16,13 @@ import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 
 @Transactional
 @Service
@@ -127,6 +127,5 @@ public class ModuleManager implements IModuleManager {
             throw new ModuleNotFoundException("Module not found");
         }
         moduleRepo.deleteById(moduleId);
-        return;
     }
 }

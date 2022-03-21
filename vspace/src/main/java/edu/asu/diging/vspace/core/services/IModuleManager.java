@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 
 public interface IModuleManager {
 
