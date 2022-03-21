@@ -62,5 +62,18 @@ public class FileApiManager {
         Optional<VSFile> optional = fileRepo.findById(id);
         return optional.get();
     }
+    
+    public IVSFile editFile(String fileId, String fileName, String description) {
+        IVSFile file = null;
+        Optional<VSFile> optional = fileRepo.findById(fileId);
+        if(!optional.isPresent()) {
+            return file;
+        }
+        file = optional.get();
+        file.setFilename(fileName);
+        file.setDescription(description);
+        fileRepo.save((VSFile)file);
+        return file;
+    }
 
 }

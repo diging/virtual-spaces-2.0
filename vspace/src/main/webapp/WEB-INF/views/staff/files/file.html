@@ -29,13 +29,13 @@
  		<h3>Edit File</h3>
 
 		<form method="POST"
-			th:action='@{|/staff/space/${file.id}/edit?${_csrf.parameterName}=${_csrf.token}|}' th:object="${fileForm}"
+			th:action='@{|/staff/files/edit/${file.id}?${_csrf.parameterName}=${_csrf.token}|}' th:object="${fileForm}"
 			enctype="multipart/form-data" style="margin-top: 40px">
 
 			<div class="form-group row">
-				<label for="filenamename" class="col-md-2 col-form-label">File Name:</label> 
-				<textarea type="text" class="form-control col-md-10" id="filename" rows="1" cols="30"
-					 th:text="${file.filename}" name="filename"></textarea>
+				<label for="fileName" class="col-md-2 col-form-label">File Name:</label> 
+				<textarea type="text" class="form-control col-md-10" id="fileName" rows="1" cols="30"
+					 th:text="${file.filename}" name="fileName"></textarea>
 			</div>
 
 			<div class="form-group row">
@@ -45,7 +45,6 @@
 			</div>
 
 			<button class="btn primary-btn" type="submit" value="submit">Save File</button>
-			<a th:href="@{|/staff/space/${spaceId}|}" class="btn btn-light">Cancel</a>
 		</form>
 		
 		

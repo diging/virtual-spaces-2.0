@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.web.staff.api;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -79,6 +80,15 @@ public class FileApiController {
         }
         
         return "redirect:/staff/files/list";
+    }
+    
+    @RequestMapping(value = "/staff/files/edit/{fileId}", method = RequestMethod.POST)
+    public String editFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
+        String fileName = fileForm.getFileName();
+        String description = fileForm.getDescription();
+        IVSFile file = fileManager.editFile(fileId, fileName, description);
+        String id = file.getId();
+        return "redirect:/staff/files/"+id;
     }
 
 }
