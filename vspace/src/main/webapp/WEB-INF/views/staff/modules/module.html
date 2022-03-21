@@ -249,7 +249,8 @@ $(document).ready(function() {
 </head>
 <body>
     <div class="main-content" layout:fragment="content">
-    	<div class="flex-spacing" style="margin-bottom: 10px;"> 
+ 
+    	<div class="flex-spacing" style="margin-bottom: 40px;"> 
 	    	<div style="display: flex">
 	    		<div style="margin-right: 20px">
 	    			<h2>
@@ -262,8 +263,7 @@ $(document).ready(function() {
 						<span class="icon-caret-down" style="font-size: 16px"></span>
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<a class="dropdown-item" data-toggle="tooltip" id="dateInfo" data-html="true" data-placement="top"><span class="icon-info-circle"></span>&emsp;Module info</a>
-						<a class="dropdown-item" data-toggle="tooltip" title="Edit Module" th:href="@{'/staff/module/'+${module.id}+'/edit'}"><span class="icon-edit"></span>&emsp;Edit Module</a>
+						<a class="dropdown-item" id="dateInfo" data-toggle="tooltip" data-html="true" data-placement="top"><span class="icon-info-circle"></span>&emsp; Slide info</a>
 						<a class="dropdown-item" style="cursor: pointer" th:onclick="guidedTour()"><span class="icon-map"></span>&emsp; Start tour</a>
 					</div>
 				</div>
@@ -283,7 +283,7 @@ $(document).ready(function() {
 						  <option th:value="Select" th:text="Select"></option>
               <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
           </select>
-          <button type="submit" style="margin-left:15px" class="btn primary-btn btn-sm">Submit</button>
+          <button type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 			</div>
     	</div>
