@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IModuleLink;
@@ -23,6 +25,7 @@ public class ModuleLinkDisplay extends LinkDisplay implements IModuleLinkDisplay
     private String id;
 
     @OneToOne(targetEntity = ModuleLink.class)
+    @NotFound(action=NotFoundAction.IGNORE)
     private IModuleLink link;
 
     /*
