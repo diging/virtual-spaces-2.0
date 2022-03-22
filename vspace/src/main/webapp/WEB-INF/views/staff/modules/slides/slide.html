@@ -97,7 +97,7 @@
                 	source.attr('type',"video/mp4");
                 	video.append(source);
                 	innerDiv1.append(video);
-				}
+                }
                 videoBlock.append(innerDiv1);
                 var input1 = $("<input></input>");
                 input1.attr('id',"deleteVideoId");
@@ -1077,8 +1077,8 @@
  					$("#saveVideo").html("Upload Video");
  				});
  				
- 			 $("#videoLink").on("input", function (e) {
- 					if (!$("#videoLink").val()) {
+ 				$("#videoLink").on("input", function (e) {
+ 				    if (!$("#videoLink").val()) {
  						$("#saveVideo").prop('disabled', true);
  					}
  					else {
@@ -1087,17 +1087,17 @@
  				});
  				
  				$("#videoFile").on("input", function (e) {
- 					if (!$("#videoFile").val()) {
+ 				    if (!$("#videoFile").val()) {
  						$("#saveVideo").prop('disabled', true);
  					}
- 					else {
+ 				    else {
  						$("#saveVideo").prop('disabled', false);
  					}
  				});
  				
  				$("#videoTitle").on("input", function (e) {
- 					if ($("#videoFile").val() || $("#videoLink").val()) {
- 					$("#saveVideo").prop('disabled', false);
+ 				    if ($("#videoFile").val() || $("#videoLink").val()) {
+ 						$("#saveVideo").prop('disabled', false);
  					}
  				}); 
                 
@@ -1366,27 +1366,29 @@
                 </div>
             </div>
             <!-- Delete Video Modal -->
-			<div id="confirmDeleteVideoAlert" class="modal"
-				tabindex="-1" role="dialog" th:draggable="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Confirm Delete</h5>
-							<button type="button" class="close"
-								data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<h6>Are you sure you want to delete this video block?</h6>
-						</div>
-						<div class="modal-footer">
-							<button id="cancelDeleteVideo" type="reset" class="btn light">Cancel</button>
-							<button type="submit" id="deleteVideo" class="btn btn-primary">Submit</button>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div id="confirmDeleteVideoAlert" class="modal"
+                tabindex="-1" role="dialog" th:draggable="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirm Delete</h5>
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Are you sure you want to delete this video block?</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="cancelDeleteVideo" type="reset"
+                                class="btn light">Cancel</button>
+                            <button type="submit" id="deleteVideo"
+                                class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Delete ChoiceBlock Modal -->
             <div id="confirmDeleteChoiceBlockAlert" class="modal"
                 tabindex="-1" role="dialog" th:draggable="true">
