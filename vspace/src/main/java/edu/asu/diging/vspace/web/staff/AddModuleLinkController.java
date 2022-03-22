@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -31,13 +32,13 @@ public class AddModuleLinkController {
     @Autowired
     private IModuleLinkManager moduleLinkManager;
 
-
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
     public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
-            @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-            @RequestParam("type") String displayType)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
+            @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
+            @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("moduleType") String displayType,
+            @RequestParam("moduleLinkImage") MultipartFile file)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -51,11 +52,18 @@ public class AddModuleLinkController {
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
+        byte[] linkImage = null;
+        String filename = null;
+        if (file != null) {
+            linkImage = file.getBytes();
+            filename = file.getOriginalFilename();
+        }
+
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
         try {
-            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedModuleId, moduleLinkLabel, type, null, null);
+            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
+                    linkedModuleId, moduleLinkLabel, type, linkImage, filename);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

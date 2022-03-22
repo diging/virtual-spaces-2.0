@@ -1,5 +1,15 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+	<style>
+	
+	.unpublishedtooltiptext {
+    display: none;
+    color: var(--secondary);
+    font-weight: bold;
+    font-size: 0.875rem;
+    float: left;
+}
+	</style>
 	<script>
 		$(document).ready(function() {
 
@@ -9,6 +19,10 @@
 	        $(function () {
 	  		  $('[data-toggle="tooltip"]').tooltip()
 	  		});
+	        
+	        $(function () {
+		  		  $('[data-toggle="tooltip"]').tooltip()
+		  	});
 	    });
 	    
 	    function list() {
@@ -59,8 +73,15 @@
                <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}}">
                    <span class='icon-2x2-grid'></span>&emsp;[[${module.name}]]</a>
                    (Created on <span class="date">[[${module.creationDate}]]</span>
-                   by [[${module.createdBy}]])
+                   by [[${module.createdBy}]]) 
+                   <span th:if="${module.getModuleStatus()!=null && #strings.equals(module.getModuleStatus(),'UNPUBLISHED')}"
+                    class="icon-warning secondary"
+                    aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This module is currently unpublished.">
+                   </span>
+                   
                </li>
+                
+              
         	</ul>
 		</div>
     </div>
