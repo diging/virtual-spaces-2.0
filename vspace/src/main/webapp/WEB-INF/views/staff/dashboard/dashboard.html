@@ -22,7 +22,7 @@
 	
 	function deleteSpaceLinks(){
 		var token =  $('input[name="_csrf"]').attr('value');
-		var url = "[(@{'/staff/dashboard/deleteSpaceLinksWithNullSource'})]";
+		var url = "[(@{'/staff/dashboard/cleanup'})]";
 		$.ajax({
     		url: url,
     		type: 'DELETE',
@@ -41,7 +41,7 @@
 	}
 	
 	$(window).on('load', function () {
-    	if(admin == true && spaceLinksSize > 0){
+    	if(admin != null && spaceLinksSize != null && admin == true && spaceLinksSize > 0){
     		$("#spaceLinkAlert").show();
     	}
     });
