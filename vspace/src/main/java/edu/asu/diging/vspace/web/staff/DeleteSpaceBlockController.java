@@ -25,8 +25,6 @@ public class DeleteSpaceBlockController {
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSpaceBlock(@PathVariable("id") String slideId,@PathVariable("blockId") String blockId) throws IOException {
-        logger.info("block id is {}", blockId);
-        logger.info("module id is", slideId);
         try {
             contentBlockManager.deleteSpaceBlockById(blockId,slideId);
 
