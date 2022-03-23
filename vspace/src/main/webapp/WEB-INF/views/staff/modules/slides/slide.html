@@ -5,6 +5,7 @@
         <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
         <style type="text/css">
             .hova {
             background-color: #f2f2f2;
@@ -13,6 +14,12 @@
             overflow-y: scroll;
             height: 400px;
             }
+            .fixed {
+		    position: fixed;
+		    top:0; left:0;
+		    width: 100%;
+		    z-index:100;
+     		}
         </style>
         <script th:inline="javascript">
             //# sourceURL=click.js
@@ -22,6 +29,13 @@
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
+            });
+            
+            $(window).scroll(function(){
+            	  var sticky = $('.sticky'),
+            	      scroll = $(window).scrollTop();
+            	  if (scroll >= 100) sticky.addClass('fixed');
+            	  else sticky.removeClass('fixed');
             });
             
             function createImageBlock(reader, width) {
@@ -304,6 +318,78 @@
             		$('#file').prop("disabled",true);
             		$('#imageId').prop("disabled",false);
             	  });
+            	var timeout=null;
+            	$('#slideSpace').sortable({
+	            	update: function(event,ui) {
+		            	var jsonObj = [];
+		            	var blockId;
+		            	$(this).children().each(function(index,element){
+			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
+			            		blockId=$(element).attr('id');
+			            	}else {
+			            		blockId = $(element.innerHTML).filter('div').attr('id');
+			            	}
+			            	item = {}
+			            	item ["id"] = blockId;
+			            	item ["contentOrder"] = index;
+			            	jsonObj.push(item);
+			            	$(element.innerHTML).filter('div').attr('data-position',index);
+		            	});
+		            	var token = [[${_csrf.token}]];
+		            	if (jsonObj.length != 0){
+			            	if (timeout != null){
+			            		clearTimeout(timeout);
+			            	}
+			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+		            	}
+	            	}
+            	});
+
+            	function updateContentOrder(jsonObj,token){
+	            		$.ajax({
+	            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
+		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+		            		type: 'POST',
+		            		beforeSend: function(){
+			            		$(".loader").remove();
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+			            		$(".loader").show();
+		            		},
+		            		complete: function(){
+			            		$(".loader").hide();
+			            		timeout = null;
+		            		},
+		            		cache       : false,
+		            		contentType: 'application/json; charset=utf-8',
+		            		processData :false,
+		            		headers:{
+		            			'X-CSRF-Token':token
+		            		},
+		            		data: JSON.stringify(jsonObj),
+		            		success: function(data) {
+			            		$(".save").remove();
+			            		for(let i=0;i<data.length;i++) {
+				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+			            		} 
+			            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+			            		successDiv.append('<p>Successfully Saved.</p>');
+			            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		successDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(successDiv);
+		            		},
+		            		error: function(data) {
+			            		$(".errInSave").remove();
+			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+			            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		errorDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(errorDiv);
+		            		}
+	            		});
+            		}
                 [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
             		$('#addChoice').show();
             		$('#choiceSpace').show();
@@ -869,7 +955,8 @@
                 <button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
                 +&nbsp;<span class="icon-checkmark"></span></button>
             </div>
-            <p style="margin-top: 0.5rem;">Double Click on a Block to Edit it</p>
+            <p style="margin-top: 0.5rem;">Double click on a block to edit it. Drag and drop blocks to change their order.</p>
+            <div class="sticky" id="contOrdUpdStatus"></div>
             <!-- Delete Text Modal -->
             <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
                 role="dialog" th:draggable="true">
@@ -1116,21 +1203,21 @@
             </div>
             <div id="slideSpace">
                 <div th:each="contents: ${slideContents}">
-                    <div th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
                         <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
                         <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
                         <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
-                    <div style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                    <div th:attr="data-position=${contents.contentOrder}" style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
                         <p class="col-md-10"> [[${contents.text}]]</p>
                         <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                         <a class="btn deleteText col-md-1" href="javascript:;"> 
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
-                    <div th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
+                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
                         <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
                             th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
                         <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
