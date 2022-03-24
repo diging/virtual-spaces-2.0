@@ -1540,7 +1540,7 @@
 									<br/>
 										<label for="videoFile">Video Title:</label><input class="form-control" id="videoTitle" type="text" name="videoTitle"/>
 										<div role="tabpanel" class="tab-pane active" id="uploadTab"><br />
-											<label for="videoFile">Upload Video in any of these format ( MP4, MOV, WEBM, MKV )</label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
+											<label for="videoFile">Upload Video in any of these format ( MP4, MOV, WEBM, MKV )<br>Note that not all encodings are supported. For .mov files make sure the encoding is H.264</label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
 										</div>
 										<div role="tabpanel" class="tab-pane" id="urlTab"><br />
 											<label for="videoLink">Enter URL: </label><input class="form-control" type="text" placeholder="Use Video Embed Link..." name="videoLink" rows="5" cols="500"
@@ -1636,7 +1636,7 @@
 								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 								allowfullscreen ></iframe>
 							<video width="800" height="530" th:if="${contents.video.url == null}" controls >
-							  <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
+							  <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4;"/>
 							</video>
 	                    </div>
 	                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
