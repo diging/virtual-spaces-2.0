@@ -216,9 +216,9 @@ function drawLinks(){
             var externalLinks = data['externalLinks'];
             var moduleLinks = data['moduleLinks'];
             var posXModal = $("#bgImage").position().left;
-            var posYModal = $("#bgImage").position().top;
+            var posYModal = 0;
             var posX = $("#main-bgImage").position().left;
-            var posY = $("#main-bgImage").position().top;
+            var posY = $("#main-bgImage").position().top - 25;
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkModalId-";
                 var divId = "#space"
@@ -417,16 +417,16 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     var posX;
     if(show) {
         posX = $("#main-bgImage").position().left;
-       
+        posY = $("#main-bgImage").position().top; 
     }
     else{
         posX = $("#bgImage").position().left;
-        
+        posY = 0;
     }
     $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
     $(selectedLinkClass).css({ 'position': 'absolute'});
     $(selectedLinkClass).css({ 'left': x + posX});
-    $(selectedLinkClass).css({ 'top': y});
+    $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass+' span').remove();
     $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
     feather.replace();    
