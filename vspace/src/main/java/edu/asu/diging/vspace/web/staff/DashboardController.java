@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 
-import edu.asu.diging.simpleusers.web.admin.DigingUserRoleConstants;
+import edu.asu.diging.simpleusers.core.model.Role;
 
 @Controller
 public class DashboardController {
@@ -35,10 +35,8 @@ public class DashboardController {
     @RequestMapping("/staff/dashboard")
     public String displayDashboard(Model model, Authentication authentication) {
         if(authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals(DigingUserRoleConstants.ADMIN_ROLE))) {
-            long spaceLinksSize = spaceLinkManager.getCountOfSpaceLinksWithSourceNull();
-            model.addAttribute("admin", true);
-            model.addAttribute("spaceLinksSize", spaceLinksSize);
+                .anyMatch(r -> r.getAuthority().equals(Role.ADMIN))) {
+            model.addAttribute("spaceLinksSize", spaceLinkManager.getCountOfSpaceLinksWithSourceNull());
         }
         List<Space> recentSpaces = spaceRepo.findTop5ByOrderByCreationDateDesc();
         List<Module> recentModules = moduleRepo.findTop5ByOrderByCreationDateDesc();

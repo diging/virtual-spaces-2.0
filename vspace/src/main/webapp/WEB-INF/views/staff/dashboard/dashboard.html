@@ -1,8 +1,7 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-	<script th:inline="javascript">
-		
-		var admin = [[${admin}]];
+	<script th:inline="javascript" >
+		var admin = [[${#authorization.expression("hasRole('ROLE_ADMIN')")}]];
 		var spaceLinksSize = [[${spaceLinksSize}]];
 		$(function () {
 		  $('[data-toggle="tooltip"]').tooltip()
@@ -41,7 +40,7 @@
 	}
 	
 	$(window).on('load', function () {
-    	if(admin != null && spaceLinksSize != null && admin == true && spaceLinksSize > 0){
+    	if(admin == true && spaceLinksSize != null && spaceLinksSize > 0){
     		$("#spaceLinkAlert").show();
     	}
     });

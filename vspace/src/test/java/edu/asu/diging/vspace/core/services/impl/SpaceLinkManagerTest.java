@@ -230,8 +230,6 @@ public class SpaceLinkManagerTest {
     
     @Test
     public void test_deleteSpaceLinkWithSourceAsNull_present() {
-        ISpace space = new Space();
-        space.setId(spaceId1);
         SpaceLink spaceLink = new SpaceLink();
         spaceLink.setSourceSpace(null);
         spaceLink.setId(spaceLinkId1);
