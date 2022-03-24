@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.exhibit.pages;
+package edu.asu.diging.vspace.web.publicpages;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 
 @Controller
@@ -20,8 +19,8 @@ public class ExhibitionPublicAboutPageController {
     
     @RequestMapping(value = "/exhibit/about")
     public String showPublicAboutPage(Model model) {
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();
-        model.addAttribute("exhibitionAboutPage", exhibitionAboutPage);
+        model.addAttribute("exhibitionAboutPage", aboutPageManager.getExhibitionAboutPage());
+        model.addAttribute("aboutPageConfigured", true);
         return "exhibition/aboutPagePublic";
     }
 

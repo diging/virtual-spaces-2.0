@@ -52,8 +52,10 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     }
     
     /**
-     *  This method returns the first Exhibition About Page set by a Staff, if empty
-     * this method returns a new instance of an Exhibition About Page
+     * This method returns the first ExhibitionAboutPage set by a Staff, if the
+     * ExhibitionAboutPage is not set yet, this method returns a new instance of 
+     * an ExhibitionAbout Page
+     * @return ExhibitionAboutPage
     */
     @Override
     public ExhibitionAboutPage getExhibitionAboutPage() {
