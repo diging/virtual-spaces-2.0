@@ -91,12 +91,12 @@
                     $(".open").css('overflow-y', 'scroll');
                     $(".open").css('height', '400px');
                 } else if(divName.includes("SpaceDivStaff")){
-                	$(e.target).closest('.SpaceDivStaff').addClass("open");
+                    $(e.target).closest('.SpaceDivStaff').addClass("open");
                     var description = $("div.open p:eq(0)").text();
                     currentSelectedSpace = $("div.open p:eq(1)").text();
-                	defaultValue = description;
-            		var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
-            		var blockId = $(this).closest("div").attr("id");
+                    defaultValue = description;
+                    var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
+                    var blockId = $(this).closest("div").attr("id");
                     $("#editSpaceAlert").show();
                     markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
                     markDown.value(description.trim());
