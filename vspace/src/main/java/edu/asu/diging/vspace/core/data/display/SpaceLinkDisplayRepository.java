@@ -33,5 +33,4 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
     void deleteBySpaceLinkId(String spaceLinkId);
 
     public void deleteByLink(ISpaceLink space);
-
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -46,7 +46,9 @@
 	<div layout:fragment="content" style="margin: 60px 0 60px auto"></div>
 	<footer class="footer mt-auto" style="position: fixed">
 		<div class="d-flex justify-content-center">
-			<span class="text-muted">This web application was built with Virtual Spaces 2.0</span>
+			<span class="text-muted">This web application was built with Virtual Spaces 2.0. </span>
+			<span style="padding-right:3px; margin-left:6px">Version</span>
+			<span th:text="${#strings.defaultString(@environment.getProperty('buildNum'),'')}"></span> 
 		</div>
 	</footer>
 </body>

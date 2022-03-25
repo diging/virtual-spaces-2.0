@@ -37,6 +37,13 @@ public class TextBlock extends ContentBlock implements ITextBlock {
         this.text = text;
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ITextBlock#htmlRenderedText()
+     */
+    @Override
     @Transient
     public String htmlRenderedText() {
         Parser parser = Parser.builder().build();
@@ -44,5 +51,4 @@ public class TextBlock extends ContentBlock implements ITextBlock {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(document);
     }
-
 }
