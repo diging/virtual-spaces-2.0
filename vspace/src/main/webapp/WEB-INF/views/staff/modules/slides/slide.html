@@ -105,14 +105,13 @@
                     $(".open").css('display', 'none');
                     $(".open").css('overflow-y', 'scroll');
                     $(".open").css('height', '400px');
-                }
-                else {
-                	// store image ID selected by the user to replace, onDoubleClick
-                	var imgBlockID = $(e.target).attr('id'); 
-                	if(imgBlockID != ''){
-                    	$("#uploadImage").data('value', imgBlockID); // sets image ID value
-                    	$("#addImgAlert").show();
-                	}
+                } else {
+                    // store image ID selected by the user to replace, onDoubleClick
+		    var imgBlockID = $(e.target).attr('id'); 
+		    if(imgBlockID != '') {
+		        $("#uploadImage").data('value', imgBlockID); // sets image ID value
+		        $("#addImgAlert").show();
+		    }
             	
                 }
             }
@@ -660,13 +659,13 @@
                 		        $('#' + blockId).remove();
                 		        
                 		    },
-                			error: function(data) {
-                				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                				$('.error').append(alert); 
-                				$(".error").delay(4000).slideUp(500, function(){
+                		    error: function(data) {
+                			 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                			 $('.error').append(alert); 
+                			 $(".error").delay(4000).slideUp(500, function(){
                 				    $(".error").empty();
-                				});
-                			}
+                			 });
+                	             }
                 		});
                 	});
             	
@@ -796,9 +795,9 @@
                     
                     var formData = new FormData();
                     var text = markDown.value();
-                	var title = document.getElementById('spaceTitle').value;
-                	var selectedSpace = document.getElementById('spaceName');
-                	var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+                    var title = document.getElementById('spaceTitle').value;
+                    var selectedSpace = document.getElementById('spaceName');
+                    var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
                     formData.append('title', title);
                     formData.append('spaceId', spaceId);
                     markDown.value('');
@@ -818,15 +817,14 @@
                         },
                         error: function(data) {
                         	if (data.status == 403){
-                        		$("#loginAlert").show();
+                        	    $("#loginAlert").show();
+                        	} else {
+                            	    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            	    $('.error').append(alert);
                         	}
-                        	else {
-                            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            	$('.error').append(alert);
-                        	}
-                        }
-                    });
-                });
+                         }
+                     });
+                 });
                 
                 $('input:checkbox').click(function() {
                     if ($(this).is(':checked')) {
@@ -1002,17 +1000,16 @@
                             // replace space box with new description
                            updateSpaceBox(blockId, text)
                            $(".open").removeClass("open");
-                       },
-                       error: function(data) {
-                    		if (data.status == 403) {
-                       			$("#loginAlert").show();
-                       		}
-                       		else {
-                           		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                           		$('.error').append(alert);
-                       		}
-                       }
-                   });
+                        },
+                        error: function(data) {
+                    	    if (data.status == 403) {
+                                $("#loginAlert").show();
+                       	    } else {
+                                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                $('.error').append(alert);
+                       	    }
+                         }
+                     });
                 });   
                 $("#imageId").select2({
             		ajax: {
