@@ -1,12 +1,19 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -32,5 +39,11 @@ public class ListSpacesController {
         }
 
         return "staff/spaces/spacelist";
+    }
+    
+    @RequestMapping("/staff/module/slide/listspaces")
+    public ResponseEntity<List<ISpace>> listSpacesForSlideContentBlock(){
+        List<ISpace> spaces = spaceManager.getAllSpaces();
+        return new ResponseEntity<List<ISpace>>(spaces, HttpStatus.OK);
     }
 }

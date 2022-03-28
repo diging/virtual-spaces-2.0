@@ -54,7 +54,6 @@ public class SlideController {
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) throws JsonProcessingException {
 
         ISlide slide = slideManager.getSlide(id);
-        model.addAttribute("spaces", spaceRepo.findAll());
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
