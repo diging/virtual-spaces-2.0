@@ -35,7 +35,6 @@ public class EditSpaceBlockController {
             @RequestParam("spaceBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("spaceBlockTitle") String spaceBlockTitle,
             @RequestParam("spaceId") String spaceId) throws IOException {
-        logger.info("spaceId is {}", spaceId);
         ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
         ISpace space = spaceManager.getSpace(spaceId);
         spaceBlock.setTitle(spaceBlockTitle);
