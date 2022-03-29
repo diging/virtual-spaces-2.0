@@ -92,17 +92,12 @@
             }
             
             function populateSpacesInEditSpaceBlock(currentSelectedSpace){
-            	var currentSpace  = document.getElementById("selectedSpace");
-		    	currentSpace.innerHTML = currentSelectedSpace;
             	$.ajax({
         		    url: "[(@{'/staff/module/slide/listspaces/'})]"+"?"+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         		    type: 'GET',
         		    success: function(result) {
         		    	removeAllSelectOptionsInEditBlock("editSpaceName");
         		    	formatSpaceListResultsInEditSpaceBlock(result);
-        		    	
-        		    	
-        		        
         		    },
         			error: function(data) {
         				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -113,6 +108,24 @@
         			}
         		});
             	
+            }
+            
+            function getCurrentSelectedSpaceForSpaceBlock(spaceBlockId){
+            	$.ajax({
+        		    url: "[(@{'/staff/module/slide/spaceblock/'})]" + spaceBlockId +"?"+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+        		    type: 'GET',
+        		    success: function(result) {
+        		    	var currentSpace  = document.getElementById("selectedSpace");
+        		    	currentSpace.innerHTML = result; 
+        		    },
+        			error: function(data) {
+        				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+        				$('.error').append(alert); 
+        				$(".error").delay(4000).slideUp(500, function(){
+        				    $(".error").empty();
+        				});
+        			}
+        		});
             }
             
             function onDoubleClick(e){
@@ -133,6 +146,8 @@
                     $(".open").css('overflow-y', 'scroll');
                     $(".open").css('height', '400px');
                 } else if(divName.includes("SpaceDivStaff")){
+                	let spaceId = e.target.closest('div').id;
+                	getCurrentSelectedSpaceForSpaceBlock(spaceId);
                     $(e.target).closest('.SpaceDivStaff').addClass("open");
                     var description = $("div.open p:eq(0)").text();
                     currentSelectedSpace = $("div.open p:eq(1)").text();

@@ -31,7 +31,7 @@ public class EditSpaceBlockController {
     private ISpaceManager spaceManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/edit", method = RequestMethod.POST)
-    public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
+    public ResponseEntity<String> editSpaceBlock(@PathVariable("id") String slideId,
             @RequestParam("spaceBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("spaceBlockTitle") String spaceBlockTitle,
             @RequestParam("spaceId") String spaceId) throws IOException {
@@ -42,6 +42,16 @@ public class EditSpaceBlockController {
         contentBlockManager.updateSpaceBlock((SpaceBlock) spaceBlock);
 
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/staff/module/slide/spaceblock/{id}", method = RequestMethod.GET)
+    public ResponseEntity<String> getSpaceBlock(@PathVariable("id") String spaceBlockId)
+            throws IOException {
+        ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(spaceBlockId);
+        if(spaceBlock.getSpace() == null) {
+            return new ResponseEntity<String>("", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>(spaceBlock.getSpace().getName(), HttpStatus.OK);
     }
 
 }
