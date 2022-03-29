@@ -1,8 +1,6 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 	<script th:inline="javascript" >
-		var admin = [[${#authorization.expression("hasRole('ROLE_ADMIN')")}]];
-		var spaceLinksSize = [[${spaceLinksSize}]];
 		$(function () {
 		  $('[data-toggle="tooltip"]').tooltip()
 		});
@@ -39,11 +37,15 @@
     	});
 	}
 	
-	$(window).on('load', function () {
-    	if(admin == true && spaceLinksSize != null && spaceLinksSize > 0){
+	/*[# sec:authorize="hasRole('ROLE_ADMIN')"]*/
+    $(window).on('load', function () {
+    	var spaceLinksSize = [[${spaceLinksSize}]];
+    	if(spaceLinksSize != null && spaceLinksSize > 0){
     		$("#spaceLinkAlert").show();
     	}
     });
+    /*[/]*/
+    	
 	</script>
 </head>
 <body>
