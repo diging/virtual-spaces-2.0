@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -29,6 +30,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -297,4 +299,19 @@ public class SpaceManager implements ISpaceManager {
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
+    
+    @Override
+    public List<ISpace> findByName(String searchText){
+        String searchTerm = "%" + searchText + "%";
+        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spaces.forEach(r -> spaceResults.add(r));
+        return spaceResults;
+    }
+    
+    @Override
+    public List<ISpace> getSpaces(int pageNo) {
+        return getSpaces(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
+    
 }
