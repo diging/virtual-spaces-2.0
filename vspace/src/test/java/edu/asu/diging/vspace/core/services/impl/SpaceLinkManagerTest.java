@@ -53,7 +53,7 @@ public class SpaceLinkManagerTest {
     @InjectMocks
     private SpaceLinkManager managerToTest = new SpaceLinkManager();
 
-    private String spaceId1, spaceId2, spaceId3;
+    private String spaceId1, spaceId2, spaceId3, spaceLinkId1;
 
     @Before
     public void init() {
@@ -61,6 +61,7 @@ public class SpaceLinkManagerTest {
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000002";
         spaceId3 = "SPA000000003";
+        spaceLinkId1 = "SPL00000001";
     }
 
     @Test
@@ -226,4 +227,19 @@ public class SpaceLinkManagerTest {
         Assert.assertEquals(spaceLinkDisplayUpdated.getLink().getTargetSpace(), actualUpdatedLink.getLink().getTargetSpace());
         Assert.assertEquals(spaceLinkDisplayUpdated.getType(), actualUpdatedLink.getType());
     }
+    
+    @Test
+    public void test_deleteSpaceLinkWithSourceAsNull_present() {
+        SpaceLink spaceLink = new SpaceLink();
+        spaceLink.setSourceSpace(null);
+        spaceLink.setId(spaceLinkId1);
+        List<ISpaceLink> spaceLinks =  new ArrayList<ISpaceLink>();
+        spaceLinks.add(spaceLink);
+        Mockito.when(spaceLinkRepo.findBySourceSpaceIsNull()).thenReturn(spaceLinks);
+        managerToTest.deleteSpaceLinksWithSourceAsNull();
+        Mockito.verify(spaceLinkDisplayRepo).deleteByLinkIn(spaceLinks);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceIdIsNull();
+    }
+    
+    
 }
