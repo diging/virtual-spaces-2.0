@@ -290,8 +290,8 @@
 			let relativeHeight = ([(${display?.width})]/width)*height;
 			spaceLinks.forEach(function(link,index){
                 if(link!=null){
-                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-    		        var posY = $("#space").position().top;
+                    var posX = $("#bgImage").position().left + 5; 
+    		        var posY = $("#bgImage").position().top - 25;
     		        var spaceLink = $('<a></a>');
     		        spaceLink.attr("href", link.link.targetSpace.id);
     		        var linkDisplay;
@@ -327,8 +327,8 @@
             });
             moduleLinks.forEach(function(link,index){
                 if(link!=null){
-                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-    		        var posY = $("#space").position().top;
+                    var posX = $("#bgImage").position().left + 5; 
+    		        var posY = $("#bgImage").position().top - 30;
     		        var moduleLink = $('<a></a>');
     		        var moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
     		        moduleLink.attr("href", moduleLinkURL);
@@ -360,8 +360,8 @@
             })
             externalLinks.forEach(function(link,index){
                 if(link!=null){
-                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-                    var posY = $("#space").position().top;
+                    var posX = $("#bgImage").position().left + 10; 
+                    var posY = $("#bgImage").position().top - 25;
                     var externalLink = $('<a></a>');
                     externalLink.attr('href', link.externalLink.externalLink);
                     if(link.howToOpen == null || link.howToOpen == "NEWWINDOW" ){
