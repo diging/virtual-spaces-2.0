@@ -72,7 +72,7 @@
                 $(this).removeClass("hova");
             }
             
-            function createSpaceDropDown(result){
+            /* function createSpaceDropDown(result){
             	var element = document.getElementById("editSpaceName");
             	var body = "";
             	result.forEach((ele)=> {
@@ -84,14 +84,14 @@
             	});
             		
             	
-            }
+            } */
             
             function removeOptions(elementId){
             	var element = document.getElementById(elementId);
             	element.innerHTML="";
             }
             
-            function findSpaces(currentSelectedSpace){
+            /* function findSpaces(currentSelectedSpace){
             	$.ajax({
                     	url: "[(@{'/staff/spaces/search/'})]"+"?"+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         		type: 'GET',
@@ -108,7 +108,7 @@
         		}
         	});
             	
-            }
+            } */
             
             function getSelectedSpace(spaceBlockId){
             	$.ajax({
@@ -147,14 +147,12 @@
                     $(".open").css('height', '400px');
                 } else if(divName.includes("SpaceDivStaff")){
                     let spaceId = e.target.closest('div').id;
-                    getSelectedSpace(spaceId);
                     $(e.target).closest('.SpaceDivStaff').addClass("open");
                     var description = $("div.open p:eq(0)").text();
                     currentSelectedSpace = $("div.open p:eq(1)").text();
                     defaultValue = description;
                     var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
                     var blockId = $(this).closest("div").attr("id");
-                    findSpaces(currentSelectedSpace);
                     $("#editSpaceAlert").show();
                     markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
                     markDown.value(description.trim());
@@ -582,50 +580,25 @@
                 	$(".EasyMDEContainer").remove();
                 	markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
                 	$("#addSpaceAlert").show();
-                	//fetch spaces here
-                	/* $.ajax({
-            		    url: "[(@{'/staff/spaces/search/'})]"+"?"+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-            		    type: 'GET',
-            		    success: function(result) {
-            		        formatSpaceListResults(result);
-            		        $(".EasyMDEContainer").remove();
-                                markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
-                                $("#addSpaceAlert").show();
-            		        
-            		    },
-            		    error: function(data) {
-            		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            			$('.error').append(alert); 
-            			$(".error").delay(4000).slideUp(500, function(){
-            			    $(".error").empty();
-            			});
-            		    }
-            		}); */
                    
                 });
                 
-                /* $("#spaceName").click(function() {
-                	
-                	$.ajax({
-            		    url: "[(@{'/staff/spaces/search/'})]"+"?"+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-            		    type: 'GET',
-            		    success: function(result) {
-            		        formatSpaceListResults(result);
-            		        $(".EasyMDEContainer").remove();
-                                markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
-                                $("#addSpaceAlert").show();
-            		        
+                $("#editSpaceName").select2({
+                	ajax: {
+            		    url: function (params) {
+            		  		var spaceURL = [[@{|/staff/spaces/search|}]];
+            		  		return spaceURL;
             		    },
-            		    error: function(data) {
-            		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            			$('.error').append(alert); 
-            			$(".error").delay(4000).slideUp(500, function(){
-            			    $(".error").empty();
-            			});
-            		    }
-            		});
-                }); */
-                
+            		    dataType: 'json',
+            		    processResults: function (data) {
+            		        return {
+            		          results: data,
+            		        };
+            		      },
+            		},
+            		templateResult: formatSpace,
+            		templateSelection: formatSpaceSelection
+                });
                 
                 $("#spaceName").select2({
                 	ajax: {
@@ -957,6 +930,7 @@
                     var title = document.getElementById('spaceTitle').value;
                     var selectedSpace = document.getElementById('spaceName');
                     var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+                    document.getElementById('spaceTitle').value="";
                     formData.append('title', title);
                     formData.append('spaceId', spaceId);
                     markDown.value('');
@@ -969,7 +943,6 @@
                         data: formData,
                         enctype: 'multipart/form-data',
                         success: function(data) {
-            
                             var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                             $('#slideSpace').append(textblock);             
@@ -1527,8 +1500,11 @@
                                 <textarea class="form-control"
                                     id="editSpaceBlock" rows="3"></textarea>
                             </div>
-                            <select name="editSpacesNames" id="editSpaceName">
-							</select>
+                            <select id="editSpaceName" name=editSpacesNames
+                                        class="form-control-xs target"
+                                        style="height: 50px; width: 200px;">
+                                        <option selected value="">Choose from existing</option>
+                                    </select>
 							<p>Current selected space is <span id="selectedSpace" >[[${currentSelectedSpaceBlock}]]</span></p>
                             <div class="modal-footer">
                                 <button id="cancelSpaceBlock" type="reset"

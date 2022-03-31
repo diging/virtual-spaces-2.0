@@ -40,4 +40,31 @@ public interface ISpaceManager {
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
     
     List<ISpace> findByName(String name);
+
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+    List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
+
+    /**
+     * Method to return the total pages sufficient to display all spaces
+     * 
+     * @return totalPages required to display all spaces in DB
+     */
+    long getTotalPages();
+
+    /**
+     * Method to return page number after validation
+     * 
+     * @param pageNo page provided by calling method
+     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
+     *         totalPages.
+     */
+    int validatePageNumber(int pageNo);
+
+    List<ISpace> getSpaces(int pageNo);
 }

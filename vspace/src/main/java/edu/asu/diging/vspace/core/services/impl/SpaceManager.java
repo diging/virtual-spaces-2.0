@@ -11,8 +11,10 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -80,6 +82,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    @Value("${page_size}")
+    private int pageSize;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -311,7 +316,72 @@ public class SpaceManager implements ISpaceManager {
     
     @Override
     public List<ISpace> getSpaces(int pageNo) {
-        return getSpaces(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+        return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
+    
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+
+    @Override
+    public List<ISpace> getSpaces(int pageNo, String sortedBy, String order) {
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
+        pageNo = validatePageNumber(pageNo);
+        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Page<Space> spaces;
+        spaces = spaceRepo.findAll(sortByRequestedField);
+        List<ISpace> results = new ArrayList<>();
+        if(spaces != null) {
+            spaces.getContent().forEach(i -> results.add(i));
+        }
+        return results;
+    }
+    
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+            sortingParameters = Sort.by(sortedBy);
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+            sortingParameters = sortingParameters.ascending();
+        } else {
+            sortingParameters = sortingParameters.descending();
+        }
+        return sortingParameters;
+    }
+    
+    /**
+     * Method to return the total pages sufficient to display all spaces
+     * 
+     * @return totalPages required to display all spaces in DB
+     */
+    
+    @Override
+    public long getTotalPages() {
+        return (spaceRepo.count() % pageSize==0) ? spaceRepo.count() / pageSize:(spaceRepo.count() / pageSize) + 1;
+    }
+    
+    /**
+     * Method to return page number after validation
+     * 
+     * @param pageNo page provided by calling method
+     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
+     *         totalPages.
+     */
+
+    @Override
+    public int validatePageNumber(int pageNo) {
+        long totalPages = getTotalPages();
+        if(pageNo<1) {
+            return 1;
+        } else if(pageNo>totalPages) {
+            return (totalPages==0) ? 1:(int) totalPages;
+        }
+        return pageNo;
     }
     
 }
