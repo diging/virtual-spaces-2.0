@@ -1,5 +1,4 @@
 package edu.asu.diging.vspace.core.aspects;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +41,6 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private AuthenticationFacade authFacade;
-    
-    private static final String ABOUT_PAGE_PUBLIC_METHOD_NAME = "showPublicAboutPage";
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {
@@ -75,9 +72,6 @@ public class ExhibitionDataAspect {
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
-        MethodSignature methodSignature = (MethodSignature)  jp.getStaticPart().getSignature();
-        Method method = methodSignature.getMethod();
-        String methodName = method.getName();
         int indexOfModel = (Arrays.asList(signature.getParameterTypes())).indexOf(Model.class);
         Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition(); 
         // If there is no exhibition, we go back to root url page.
@@ -91,7 +85,7 @@ public class ExhibitionDataAspect {
         Map<IdPrefix, String> ids = getIds(args, signature);
         String spaceId = ids.getOrDefault(IdPrefix.SPACEID, "");
         String moduleId = ids.getOrDefault(IdPrefix.MODULEID, "");
-        return redirectRequest(jp, spaceId, moduleId, methodName, indexOfModel, exhibition);
+        return redirectRequest(jp, spaceId, moduleId, indexOfModel, exhibition);
     }
 
     /**
@@ -104,7 +98,7 @@ public class ExhibitionDataAspect {
      * @return              returns the page to load upon aspect completion.
      * @throws Throwable    
      */
-    private Object redirectRequest(ProceedingJoinPoint jp, String spaceId, String moduleId, String methodName, int modelIndex, Exhibition exhibition) throws Throwable{
+    private Object redirectRequest(ProceedingJoinPoint jp, String spaceId, String moduleId, int modelIndex, Exhibition exhibition) throws Throwable{
         ISpace space = spaceManager.getSpace(spaceId);
         IModule module = moduleManager.getModule(moduleId);
         Object[] args = jp.getArgs();
@@ -128,7 +122,7 @@ public class ExhibitionDataAspect {
             return "maintenance";
         }
         // If the space and module Id is not found, show message on screen.
-        if(space==null && module==null && !methodName.equals(ABOUT_PAGE_PUBLIC_METHOD_NAME)) {
+        if(space==null && module==null) {
             return "redirect:/exhibit/404";
         }
         // If user is logged in and exhibition is not active, show exhibition with pop up message.
