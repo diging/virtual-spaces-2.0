@@ -33,14 +33,15 @@ public class AddModuleLinkController {
     @Autowired
     private IModuleLinkManager moduleLinkManager;
 
-
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
     public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
+
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
             @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
             @RequestParam("moduleLinkDesc") String moduleLinkDesc, @RequestParam("moduleType") String displayType, @RequestParam(value="moduleLinkImage", required = false) MultipartFile file,
             @RequestParam(value="imageId", required=false) String imageId)
                     throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -53,19 +54,21 @@ public class AddModuleLinkController {
             node.put("errorMessage", "No link coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
-        
+
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
         }
-        
+
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
         try {
+
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename, imageId);
+
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

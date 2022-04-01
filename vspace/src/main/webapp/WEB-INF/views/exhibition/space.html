@@ -364,6 +364,7 @@
             externalLinks.forEach(function(link,index){
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
+
     		        var posY = $("#space").position().top;
     		        var externalLink = $('<a></a>');
     		        var externalLinkTooltip;
@@ -391,12 +392,13 @@
     		        externalLink.append(linkDisplay);
     		        $("#space").append(externalLink);
     		        $(".externalLabel-"+index).css({
+
     		            'transform': 'rotate(0deg)',
     		            'left': link.positionX + posX - 10,
     		            'padding-top': '30px',
     		            'color': 'rgba(150, 45, 62, 1)',
     		            'font-size': '12px'
-    		          });
+  		          });
                 }
             })
 		}
@@ -409,7 +411,16 @@
 		    <span aria-hidden="true">&times;</span>
 		  </button>
 		</div>
+		<div>
 		
+	    <div th:if="${!isSpacePublished}" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
+           <span class="icon-warning secondary"></span> This space has not been published.
+		   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		   <span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		
+		</div>
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">

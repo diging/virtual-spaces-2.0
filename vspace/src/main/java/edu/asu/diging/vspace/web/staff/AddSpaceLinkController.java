@@ -36,11 +36,13 @@ public class AddSpaceLinkController {
 
     @RequestMapping(value = "/staff/space/{id}/spacelink", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
+
             @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("spaceLinkLabel") String title,
             @RequestParam("linkedSpace") String linkedSpaceId, @RequestParam("spaceLinkLabel") String spaceLinkLabel,
             @RequestParam("spaceLinkDesc") String spaceLinkDesc, @RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file, 
             @RequestParam(value="imageId", required=false) String imageId)
                     throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageDoesNotExistException {
+
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -64,8 +66,10 @@ public class AddSpaceLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display;
         try {
+
             display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y),
                     new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkDesc, type, linkImage, filename, imageId);
+
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
@@ -80,8 +84,8 @@ public class AddSpaceLinkController {
         linkNode.put("displayId", display.getId());
         linkNode.put("x", display.getPositionX());
         linkNode.put("y", display.getPositionY());
-        SpaceStatus targetSpaceStatus=spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
-        String linkedSpaceStatus = targetSpaceStatus!=null ? targetSpaceStatus.toString() : null;
+        SpaceStatus targetSpaceStatus = spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
+        String linkedSpaceStatus = targetSpaceStatus != null ? targetSpaceStatus.toString() : null;
         linkNode.put("linkedSpaceStatus", linkedSpaceStatus);
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }

@@ -16,12 +16,14 @@ import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 
 @Controller
-public class EditExternalLinkController extends EditSpaceLinksController{
+public class EditExternalLinkController extends EditSpaceLinksController {
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -31,6 +33,7 @@ public class EditExternalLinkController extends EditSpaceLinksController{
 
     @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
+
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title, @RequestParam("externalLinkDesc") String desc,
             @RequestParam("url") String externalLink,
             @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit, @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
@@ -39,8 +42,9 @@ public class EditExternalLinkController extends EditSpaceLinksController{
             @RequestParam(value="imageId", required=false) String imageId)
                     throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
+
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
-        if(validation!=null) {
+        if (validation != null) {
             return validation;
         }
         byte[] linkImage = null;
@@ -50,8 +54,10 @@ public class EditExternalLinkController extends EditSpaceLinksController{
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+
         IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x), new Float(y), 0, externalLink, title, desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage, filename, imageId);        
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,displayType,null,null);
+
 
     }
 }

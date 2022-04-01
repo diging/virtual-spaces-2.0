@@ -122,7 +122,9 @@ public class ExternalLinkManagerTest {
         Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
         Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalDisplayLink)).thenReturn((ExternalLinkDisplay)externalDisplayLink);
 
+
         IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link", spaceId1, 10, 30, 40, "EXL001", "New External Link", "New External Link Desc", DisplayType.ARROW, null, null, null);
+
         Assert.assertEquals(externalDisplayLink.getId(), savedExternalLinkDisplay1.getId());
         Assert.assertEquals(externalDisplayLink.getName(), savedExternalLinkDisplay1.getName());
         Assert.assertEquals(externalDisplayLink.getDescription(), savedExternalLinkDisplay1.getDescription());
@@ -215,7 +217,9 @@ public class ExternalLinkManagerTest {
         Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
         Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalLinkDisplay)).thenReturn((ExternalLinkDisplay)externalLinkDisplay);
 
+
         IExternalLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestExternalNew", spaceId1, 20, 40, 0, "www.google.com", "TestExternalNew", "TestExternalNew Desc", "EXL001", "EXLD001", DisplayType.ARROW, null, null, null);
+
         Assert.assertEquals(externalLinkDisplay.getId(), actualUpdatedLink.getId());
         Assert.assertEquals(externalLinkDisplay.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(externalLinkDisplay.getDescription(), actualUpdatedLink.getDescription());

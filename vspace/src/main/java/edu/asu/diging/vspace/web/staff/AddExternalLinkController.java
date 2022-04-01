@@ -20,9 +20,11 @@ import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 
 @Controller
 public class AddExternalLinkController {
@@ -35,11 +37,13 @@ public class AddExternalLinkController {
 
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
+
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,  @RequestParam("externalLinkDesc") String desc,
             @RequestParam("url") String externalLink,
             @RequestParam("type") String displayType, @RequestParam(value="externalLinkImage", required=false) MultipartFile file,
             @RequestParam(value="imageId", required=false) String imageId)
                     throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+
 
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
@@ -53,7 +57,9 @@ public class AddExternalLinkController {
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+
         IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0, externalLink, title, desc, type, linkImage, filename, imageId);
+
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());
