@@ -232,6 +232,18 @@ public class ImageService implements IImageService {
         results.forEach(r -> imageResults.add(r));
         return imageResults;
     }
+    
+    @Override
+    public List<IVSImage> findByFilenameOrNameContainsOrDescription(String searchTerm) {
+    	
+        String likeSearchTerm = "%" + searchTerm + "%";
+        List<VSImage> results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,likeSearchTerm);
+        
+        
+        List<IVSImage> imageResults = new ArrayList<>();
+        results.forEach(r -> imageResults.add(r));
+        return imageResults;
+    }
 
     @Override
     public void addCategory(IVSImage image, ImageCategory category) {

@@ -17,6 +17,8 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 public interface ImageRepository extends PagingAndSortingRepository<VSImage, String> {
 
     List<VSImage> findByFilenameLikeOrNameLike(String filename, String name);
+    
+   List<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name ,String Description);
 
     List<VSImage> findByFilenameLike(String filename);
 

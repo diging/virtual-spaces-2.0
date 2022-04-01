@@ -120,13 +120,20 @@ $( document ).ready(function() {
     height: 100px;
     width: 140px;
 }
+
 </style>
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
         <h2>Images</h2>
+      
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following images.</div>
+            <div class="searchInput">
+    			  <input class="form-control" style="background: none; margin-left: 70%;width: 20%;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchWord}">
+    			  <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
+    			  <span class="icon-search"></span></button></a>
+			  </div>
         <table class="table">
             <thead>
                 <tr>
@@ -199,6 +206,35 @@ $( document ).ready(function() {
             </tbody>
         </table>
         <div id="page-selection"></div>
+        <script>
+                 $(document).on('input', '#searchImageField', function(e){
+                	 
+                	 if($("#searchImageField").val().trim()) {
+                		 
+                          $('#searchImageButton').removeAttr('disabled');
+                	 }
+                	 else {
+                         $('#searchImageButton').attr('disabled','true');
+                	 }
+                	 if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
+                		 console.log($("#searchImageField").val());
+                			$("#searchImageLink").attr('href','[[@{/staff/images/searchImagesncd?searchText=}]]'+$("#searchImageField").val());
+                			console.log($("#searchImageLink"));
+                	 } 
+                	 else{
+                		 $("#searchImageLink").attr('href','');
+                	 }
+                });
+                $(document).on('keydown', function(e) { 
+                	
+                     if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchImageField").val().trim()) {
+                    	 
+                         $("#searchImageButton").trigger('click');
+                     }
+                 }) 
+            </script>
+        
+        
     </div>
 </body>
 </html>

@@ -45,4 +45,32 @@ public class ImageSearchApiController {
         }
         return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
     }
+    
+    @RequestMapping("/staff/images/searchImagesncd")
+    public ResponseEntity<String> searchImageDescription(@RequestParam(value = "searchText", required = false) String searchTerm) {
+        List<IVSImage> images = null;
+        System.out.println("inside "+searchTerm);
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+        	
+            images = imageService.findByFilenameOrNameContainsOrDescription(searchTerm);
+        } else {
+            images = imageService.getImages(1);
+        }
+        
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode idArray = mapper.createArrayNode();
+        for (IVSImage image : images) {
+            ObjectNode imageNode = mapper.createObjectNode();
+            imageNode.put("id", image.getId());
+            if (image.getName() != null && !image.getName().isEmpty()) {
+                imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
+            } else {
+                 imageNode.put("text", image.getFilename());
+            }
+            idArray.add(imageNode);
+        }
+        return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
+    }
+    
+    
 }
