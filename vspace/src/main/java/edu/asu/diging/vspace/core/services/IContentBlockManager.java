@@ -59,4 +59,6 @@ public interface IContentBlockManager {
     Integer findMaxContentOrder(String slideId);
 
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
+
+    void updateVideoTitle(IVideoBlock videoBlock, String videoTitle);
 }
