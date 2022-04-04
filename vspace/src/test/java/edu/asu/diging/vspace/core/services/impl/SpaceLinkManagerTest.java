@@ -83,6 +83,7 @@ public class SpaceLinkManagerTest {
         imageId2 = "IMG00000002";
         imageFileName = "Space Image 1";
         spcDisplayLinkId = "SPLD001";
+        spaceLinkId1 = "SPL00000001";
     }
 
     @Test
@@ -368,4 +369,19 @@ public class SpaceLinkManagerTest {
         Assert.assertEquals(spaceLinkDisplayUpdated.getImage().getWidth(), savedSpaceLinkDisplay2.getImage().getWidth());
         Assert.assertEquals(spaceLinkDisplayUpdated.getImage().getId(), savedSpaceLinkDisplay2.getImage().getId());
     }
+  
+    public void test_deleteSpaceLinkWithSourceAsNull_present() {
+        SpaceLink spaceLink = new SpaceLink();
+        spaceLink.setSourceSpace(null);
+        spaceLink.setId(spaceLinkId1);
+        List<ISpaceLink> spaceLinks =  new ArrayList<ISpaceLink>();
+        spaceLinks.add(spaceLink);
+        Mockito.when(spaceLinkRepo.findBySourceSpaceIsNull()).thenReturn(spaceLinks);
+        managerToTest.deleteSpaceLinksWithSourceAsNull();
+        Mockito.verify(spaceLinkDisplayRepo).deleteByLinkIn(spaceLinks);
+        Mockito.verify(spaceLinkRepo).deleteBySourceSpaceIdIsNull();
+    }
+    
+    
+
 }
