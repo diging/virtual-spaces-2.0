@@ -217,9 +217,9 @@ $( document ).ready(function() {
                          $('#searchImageButton').attr('disabled','true');
                 	 }
                 	 if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
-                		 console.log($("#searchImageField").val());
+                		 
                 			$("#searchImageLink").attr('href','[[@{/staff/images/searchImagesncd?searchText=}]]'+$("#searchImageField").val());
-                			console.log($("#searchImageLink"));
+                			
                 	 } 
                 	 else{
                 		 $("#searchImageLink").attr('href','');
