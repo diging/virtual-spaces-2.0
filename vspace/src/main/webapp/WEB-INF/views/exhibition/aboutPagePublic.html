@@ -35,7 +35,7 @@
 
 <body>
 
-<div layout:fragment="content" class="main-content">
+<div layout:fragment="content" class="main-content" style="margin: 0px 0 0px auto">
 <script th:inline="javascript">
 function openNav(){
 	$("#mySidenav").css("width", "250px");
@@ -60,10 +60,10 @@ function closeNav(){
                     onclick="openNav()">&#9776;</span>
  </div>               
 	<div>
-	<div style="padding-left:200px">
+	<div>
 	<h2>[(${exhibitionAboutPage.getTitle()})] </h2>
-		<div style="padding: 0;">
-				<div  style="padding-top: 20px;">
+		<div style="padding: 0; margin-right:40px">
+				<div>
 					 <div>[(${exhibitionAboutPage.htmlRenderedText()})]</div>
 				</div>
 		</div>
