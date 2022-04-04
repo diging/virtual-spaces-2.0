@@ -43,15 +43,4 @@ public class EditSpaceBlockController {
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
-    @RequestMapping(value = "/staff/module/slide/{slideId}/space/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getSpaceBlock(@PathVariable("id") String spaceBlockId, @PathVariable("slideId") String slideId)
-            throws IOException {
-        ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(spaceBlockId);
-        if(spaceBlock.getSpace() == null) {
-            return new ResponseEntity<String>("", HttpStatus.OK);
-        }
-        return new ResponseEntity<String>(spaceBlock.getSpace().getName(), HttpStatus.OK);
-    }
-
 }

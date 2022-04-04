@@ -72,12 +72,7 @@
                 $(this).removeClass("hova");
             }
             
-            function removeOptions(elementId){
-            	var element = document.getElementById(elementId);
-            	element.innerHTML="";
-            }
-            
-            function getCurrentSelectedSpace(blockId){
+            function getSelectedSpace(blockId){
             	$.ajax({
                 	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/spaceblock/'})]"+ blockId + "?" +[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
     		type: 'GET',
@@ -120,7 +115,7 @@
                     defaultValue = description;
                     var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
                     var blockId = $(this).closest("div").attr("id");
-                    getCurrentSelectedSpace(blockId);
+                    getSelectedSpace(blockId);
                     $("#editSpaceAlert").show();
                     markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
                     markDown.value(description.trim());
@@ -545,7 +540,6 @@
                 });
                 
                 $("#addSpace").click(function() {
-                	$(".EasyMDEContainer").remove();
                 	markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
                 	$("#addSpaceAlert").show();
                    
@@ -603,22 +597,6 @@
                             '<span>' + space.name + '</span>'
                     );
                     return $image;
-                }
-                
-                
-                function formatSpaceListResults(result){
-                    var element = document.getElementById("spaceName");
-                    element.innerHTML="";
-                    var body = "";
-                    result.forEach((ele)=> {
-                        var letter =  "<option value=" + ele.id + ">"+ele.name+"</option>";
-                	var newOption = document.createElement("option");
-                	newOption.text = ele.name;
-                	newOption.value = ele.id;
-                	element.appendChild(newOption);
-                    });
-                		
-                	
                 }
                 
                 $("#addImage").click(function() {
@@ -743,6 +721,7 @@
             		// ---------- Delete Space Block -------------
                 	
             		$("#deleteSpace").on("click", function(e) {
+            			var token =  $('input[name="_csrf"]').attr('value');
                 		e.preventDefault();
                 		$("#confirmDeleteImageAlert").find('input').remove();
                 		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
@@ -753,8 +732,11 @@
                 		
                 		// ------------- delete space content blocks ------------
                 		$.ajax({
-                		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+                		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId,
                 		    type: 'DELETE',
+                		    headers:{
+		            			'X-CSRF-Token':token
+		            		},
                 		    success: function(result) {
                 		        $('#' + blockId).remove();
                 		        
@@ -889,6 +871,7 @@
                 });
                 
                 $("#submitSpace").on("click", function(e) {
+                	var token =  $('input[name="_csrf"]').attr('value');
                     $("#addSpaceAlert").hide();
                     e.preventDefault();
                     // ------------- creating space content blocks ------------
@@ -903,12 +886,15 @@
                     formData.append('spaceId', spaceId);
                     markDown.value('');
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/SpaceBlockContent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/SpaceBlockContent'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
                             var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
@@ -1074,6 +1060,7 @@
                    });
                 });   
                 $("#submitSpaceBlock").on("click", function(e){
+                	var token =  $('input[name="_csrf"]').attr('value');
                 	e.preventDefault();
                     // ------------- editting text content blocks ------------
                     var selectedSpace = document.getElementById('editSpaceName');
@@ -1088,11 +1075,14 @@
                     formData.append('spaceBlockTitle', text);
                 	$("#editSpaceAlert").hide();
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         data: formData,
                         enctype: 'multipart/form-data',
                         success: function(data) {
@@ -1242,7 +1232,7 @@
                 <button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
                 +&nbsp;<span class="icon-text"></span></button>&nbsp;
                 <button type="button" id="addSpace" class="btn pill-btn" data-toggle="tooltip" title="Add Space Block" data-placement="top">
-                +&nbsp;<span class="icon-text"></span></button>&nbsp;
+                +&nbsp;<span class="icon-layers"></span></button>&nbsp;
                 <button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
                 +&nbsp;<span class="icon-image"></span></button>&nbsp;
                 <button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
