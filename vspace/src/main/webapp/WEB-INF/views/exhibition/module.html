@@ -4,7 +4,7 @@
 		      .link  {
 		  stroke: #999;
 		  stroke-opacity: 0.6;
-		  stroke-width: 5px;
+		  stroke-width: 2px;
 		}
 		
 		.nodes circle {
@@ -243,7 +243,7 @@
 
 				  	  nodeEnter.append("text")
 				  		  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
-				  		  .attr("dy", ".35em")
+				  		  .attr("dy", "1.5em")
 				  		  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
 				  		  .text(function(d) { return d.name; })
 				  		  .style("fill-opacity", 1e-6);

@@ -20,9 +20,9 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.SequenceOverviewManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
-import edu.asu.diging.vspace.web.SequenceOverviewManager;
 import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.web.exception.SlideNotFoundException;
@@ -127,8 +127,7 @@ public class ExhibitionSlideController {
             model.addAttribute("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
         
-        ModuleOverview moduleOverview = null;
-        moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
+        ModuleOverview moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
         moduleOverview.setName(module.getName());
         moduleOverview.setId(module.getId());
         model.addAttribute("overview", moduleOverview);
