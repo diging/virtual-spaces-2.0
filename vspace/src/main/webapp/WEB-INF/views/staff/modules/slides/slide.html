@@ -364,27 +364,26 @@
 					processData: false,
 					data: formData,
 					success: function (data) {
-					    console.log(videoBlock);
 					    if(videoBlock){
-						var videoBlk = "";
-						if(url){
-							videoBlk = videoBlock.find('iframe');
-						}
-						else{
-							videoBlk = videoBlock.find('video');
-						}
-						if (data != '') {
-							videoBlk.attr('id', data);
-							$("#currentVideo").find('#deleteVideoId').val(data);
-							$("#currentVideo").find('#editVideoId').val(data);
-							$("#currentVideo").attr('id', data);
-						}
-						else {
-							videoBlk.attr('id', videoID);
-							$("#currentVideo").find('#deleteVideoId').val(videoID);
-							$("#currentVideo").find('#editVideoId').val(videoID);
-							$("#currentVideo").attr('id', videoID);
-						}
+							var videoBlk = "";
+							if(url){
+								videoBlk = videoBlock.find('iframe');
+							}
+							else{
+								videoBlk = videoBlock.find('video');
+							}
+							if (data != '') {
+								videoBlk.attr('id', data);
+								$("#currentVideo").find('#deleteVideoId').val(data);
+								$("#currentVideo").find('#editVideoId').val(data);
+								$("#currentVideo").attr('id', data);
+							}
+							else {
+								videoBlk.attr('id', videoID);
+								$("#currentVideo").find('#deleteVideoId').val(videoID);
+								$("#currentVideo").find('#editVideoId').val(videoID);
+								$("#currentVideo").attr('id', videoID);
+							}
 					    }
 					    else{
 					        if(videoID){
