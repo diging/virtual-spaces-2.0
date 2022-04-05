@@ -49,6 +49,8 @@ public interface ISpaceManager {
      * @return list of images in the requested pageNo and requested order.
      */
     List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
+    
+    List<ISpace> getSpaces(int pageNo);
 
     /**
      * Method to return the total pages sufficient to display all spaces
@@ -65,6 +67,4 @@ public interface ISpaceManager {
      *         totalPages.
      */
     int validatePageNumber(int pageNo);
-
-    List<ISpace> getSpaces(int pageNo);
 }
