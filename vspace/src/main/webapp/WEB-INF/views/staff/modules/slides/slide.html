@@ -364,6 +364,8 @@
 					processData: false,
 					data: formData,
 					success: function (data) {
+					    console.log(videoBlock);
+					    if(videoBlock){
 						var videoBlk = "";
 						if(url){
 							videoBlk = videoBlock.find('iframe');
@@ -383,6 +385,12 @@
 							$("#currentVideo").find('#editVideoId').val(videoID);
 							$("#currentVideo").attr('id', videoID);
 						}
+					    }
+					    else{
+					        if(videoID){
+					        	$("#" + videoID).find('h3 strong').html(title);
+					        }
+					    }
 					},
 					error: function (data) {
 						if (videoID == '') {
@@ -1050,8 +1058,8 @@
  						$("#videoLink").prop('disabled', false);
  						$("#saveVideo").prop('disabled', false);
  					}
- 					if (!$("#videoLink").val()) {
- 						$("#saveVideo").prop('disabled', true);
+ 					if ($("#videoTitle").val() && !$("#videoLink").val()) {
+ 						$("#saveVideo").prop('disabled', false);
  					}
  					$("#urlLink").addClass("active show");
  					$("#uploadLink").removeClass("active show");
@@ -1068,8 +1076,8 @@
  						$("#videoFile").prop('disabled', false);
  						$("#saveVideo").prop('disabled', false);
  					}
- 					if (!$("#videoFile").val()) {
- 						$("#saveVideo").prop('disabled', true);
+ 					if ($("#videoTitle").val() && !$("#videoFile").val()) {
+ 						$("#saveVideo").prop('disabled', false);
  					}
  					$("#urlLink").removeClass("active show");
  					$("#uploadLink").addClass("active show");
@@ -1224,6 +1232,7 @@
             
 			// editing video block
             $(document).on("click", ".editVideo", function(e) {
+                $("#saveVideo").prop('disabled', false);
             	var id = $(this).siblings('input').val();
             	var vidId = $('div#'+id).attr('id');
             	var title = $('div#'+id).find('h3 strong').html();
