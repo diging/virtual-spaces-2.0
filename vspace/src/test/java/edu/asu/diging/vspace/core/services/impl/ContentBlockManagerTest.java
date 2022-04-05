@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +22,14 @@ import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.SpaceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.impl.SpaceBlockFactory;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
+import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 
 public class ContentBlockManagerTest {
 
@@ -36,6 +44,12 @@ public class ContentBlockManagerTest {
 
     @Mock
     private ImageContentBlockRepository imageBlockRepo;
+    
+    @Mock
+    private ISlideManager slideManager;
+    
+    @Mock
+    private SpaceBlockFactory spaceBlockFactory;
 
     @InjectMocks
     private ContentBlockManager managerToTest;
@@ -96,6 +110,21 @@ public class ContentBlockManagerTest {
         when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(spaceBlockRepo).deleteById(spaceBlockId);
         managerToTest.deleteSpaceBlockById(spaceBlockId,"slideId_1");
+    }
+    
+    @Test
+    public void test_addSpaceBlock_success() {
+        String slideId = "slideId";
+        ISlide slide = null;
+        String title = "this is a space block";
+        Integer contentOrder = 2;
+        Space space = new Space();
+        ISpaceBlock spaceBlock = new SpaceBlock();
+        when(slideManager.getSlide(slideId)).thenReturn(slide);
+        when(spaceBlockFactory.createSpaceBlock(slide, title, (ISpace)space)).thenReturn(spaceBlock);
+        when(spaceBlockRepo.save((SpaceBlock)spaceBlock)).thenReturn((SpaceBlock) spaceBlock);
+        ISpaceBlock createdBlock = managerToTest.createSpaceBlock(slideId, title, contentOrder, space);
+        Assert.assertEquals(createdBlock.getContentOrder(), contentOrder);
     }
 
     @Test

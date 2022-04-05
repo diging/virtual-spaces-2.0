@@ -334,8 +334,8 @@ public class ContentBlockManager implements IContentBlockManager {
     }
     
     @Override
-    public void updateSpaceBlock(SpaceBlock textBlock) {
-        spaceBlockRepo.save((SpaceBlock) textBlock);
+    public void updateSpaceBlock(SpaceBlock spaceBlock) {
+        spaceBlockRepo.save((SpaceBlock) spaceBlock);
     }
 
     @Override
