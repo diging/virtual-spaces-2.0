@@ -218,7 +218,7 @@
 				  		  links = tree.links(nodes);
 
 				  	  // Normalize for fixed-depth.
-				  	  nodes.forEach(function(d) { d.y = d.depth * 60; });
+				  	  nodes.forEach(function(d) { d.y = d.depth * 100; });
 
 				  	  // Update the nodes…
 				  	  var node = svg.selectAll("g.node")
@@ -242,7 +242,7 @@
 				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
 
 				  	  nodeEnter.append("text")
-				  		  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+				  		  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
 				  		  .attr("dy", "1.5em")
 				  		  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
 				  		  .text(function(d) { return d.name; })
