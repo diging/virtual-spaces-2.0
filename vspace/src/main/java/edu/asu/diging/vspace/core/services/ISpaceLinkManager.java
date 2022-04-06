@@ -10,4 +10,8 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 public interface ISpaceLinkManager extends ILinkManager<ISpaceLink,ISpace,ISpaceLinkDisplay>{
 
     List<ISpaceLinkDisplay> getSpaceLinkForGivenOrNullSpaceStatus(String spaceId, SpaceStatus spaceStatus);
+
+    void deleteSpaceLinksWithSourceAsNull();
+
+    Long getCountOfSpaceLinksWithSourceNull();
 }
