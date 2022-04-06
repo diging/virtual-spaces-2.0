@@ -4,7 +4,7 @@
 <style>
 .main-contents {
 justify-content:center;
-
+margin-top:-20px;
 margin-left:100px;
 margin-right:100px;
 }
@@ -18,9 +18,11 @@ margin-right:100px;
 <div layout:fragment="content"  >
 
 <div id="Module_1" class="main-contents" >
-            
+     <div style = "float:left">
+     <a href="javascript:history.back()" class="btn primary-btn btn-large" style="float: left; ">Back</a>
+     </div>       
 		
-	<div style="justify-content:center"> 
+	<div style="justify-content:center; float:left"> 
 	
 	<h2>[(${exhibitionAboutPage.getTitle()})] </h2>
 		<div >
@@ -28,7 +30,6 @@ margin-right:100px;
 					 <div>[(${exhibitionAboutPage.htmlRenderedText()})]</div>
 				</div>
 		</div>
-		 <a th:href="@{/}" class="btn primary-btn btn-large" style="float: left; ">Back</a>
 	</div>
 	
 	</div>
