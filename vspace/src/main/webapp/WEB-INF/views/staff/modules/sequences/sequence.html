@@ -136,7 +136,7 @@
 	    $("#editTitle").click(function() {
 	    	// Using data attribute
 	    	var sequenceTitle = $("#title").text()  // gets value without using trim function
-	        $('<div class="col-15" id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+	        $('<div id = "editSequenceTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
 	    	$('#title').text()
 	        $("#newTitle").val(sequenceTitle.split(": ")[1])
 	        $("#editTitle").hide()
