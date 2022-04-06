@@ -463,16 +463,19 @@ function showExternalLinks(externalLink, show, x, y) {
             'position': 'absolute',
             'font-size': "12px",
             'transform': 'rotate(0deg)',
-            'left': x + posX - displaceLableOnX,
-            'top': y + posY + displaceLableOnY,
             'color': 'blue'
         });
         link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
     }
+    
+    if(show) {
+        link.css('top', externalLink["y"] + posY);
+    } else {
+    	link.css('top', externalLink["y"]);
+    }
 
     link.css('position', 'absolute');
     link.css('left', externalLink["x"] + posX);
-    link.css('top', externalLink["y"] + posY);
     link.css('color', 'blue');
     link.css('font-size', "12px");
 
@@ -664,7 +667,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
         var posX = $(this).position().left;
         var posY = $(this).position().top;    
         storeX = e.pageX - $(this).offset().left;
-        storeY = e.pageY - $(this).offset().top;
+        storeY = e.pageY - $(this).offset().top + 25;
         showExternalLinkEdit(editExternalLinkInfo(), false, storeX,storeY);
     });
     hideLinkInfoTabs();
@@ -753,9 +756,9 @@ $(function(){
                 var posX = $(this).position().left
                 var posY = $(this).position().top;
                 storeX = e.pageX - $(this).offset().left;
-                storeY = e.pageY - $(this).offset().top;
+                storeY = e.pageY - $(this).offset().top + 25;
 
-                showExternalLinks(createExternalLinkInfo(), false, storeX+$("#space").scrollLeft(), storeY+$("#space").scrollTop());
+                showExternalLinks(createExternalLinkInfo(), false, storeX, storeY);
             });
             hideLinkInfoTabs();
             displayForms("#createExternalLinkAlert");
@@ -1035,16 +1038,16 @@ $(function(){
 
         $("#editExternalLinkBtn").click(function(e) {
             e.preventDefault();
+            $("#space").scrollTop(0);
             var linkId = $("#externalLinkIdEdit").val();
             if (storeX == undefined || storeY == undefined) {
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
                 $('#errorAlert').show();
                 return;
             }
-            $("#space").scrollTop(0);
             var linkedSpace = $("#externalLinkIdEdit").val();
             $("#externalLinkXEdit").val(storeX);
-            $("#externalLinkYEdit").val(storeY);
+            $("#externalLinkYEdit").val(storeY - 25);
             var form = $("#editExternalLinkForm");
             var formData = new FormData(form[0]);
             var externalLinkInfo = editExternalLinkInfo();
@@ -1083,6 +1086,7 @@ $(function(){
 
         $("#createExternalLinkBtn").click(function(e) {
             e.preventDefault();
+            $("#space").scrollTop(0);
             var payload = {};
 
             if (storeX == undefined || storeY == undefined) {
@@ -1114,7 +1118,7 @@ $(function(){
                 return;
             }
             $("#externalLinkX").val(storeX);
-            $("#externalLinkY").val(storeY);
+            $("#externalLinkY").val(storeY - 25);
 
             var form = $("#createExternalLinkForm");
             var formData = new FormData(form[0]);
