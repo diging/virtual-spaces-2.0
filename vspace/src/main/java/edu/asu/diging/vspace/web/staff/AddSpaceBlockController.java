@@ -30,7 +30,7 @@ public class AddSpaceBlockController {
     @Autowired
     private ISpaceManager spaceManager;
     
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/SpaceBlockContent", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/space", method = RequestMethod.POST)
     ResponseEntity<String> addSpaceBlock(@RequestParam("title") String title,@RequestParam("spaceId") String spaceId, @PathVariable("slideId") String slideId,
             @PathVariable("moduleId") String moduleId){
         ISpace space = spaceManager.getSpace(spaceId);

@@ -332,8 +332,7 @@ public class SpaceManager implements ISpaceManager {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<Space> spaces;
-        spaces = spaceRepo.findAll(sortByRequestedField);
+        Page<Space> spaces = spaceRepo.findAll(sortByRequestedField);
         List<ISpace> results = new ArrayList<>();
         if(spaces != null) {
             spaces.getContent().forEach(i -> results.add(i));

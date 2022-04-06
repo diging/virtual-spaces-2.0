@@ -23,7 +23,7 @@ public class SpaceBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
     
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/spaceblock/{blockId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/{blockId}", method = RequestMethod.GET)
     public ResponseEntity<String> getSpaceBlockSpace(@PathVariable("id") String slideId,
             @PathVariable("blockId") String blockId) throws IOException {
         ISpace space = null;
