@@ -3,10 +3,14 @@
 <head>
 <style>
 .main-contents {
-justify-content:center;
 margin-top:-20px;
 margin-left:100px;
 margin-right:100px;
+}
+
+.about-page{
+justify-content:center;
+padding-top:40px;
 }
 
 
@@ -18,11 +22,11 @@ margin-right:100px;
 <div layout:fragment="content"  >
 
 <div id="Module_1" class="main-contents" >
-     <div style = "float:left">
-     <a href="javascript:history.back()" class="btn primary-btn btn-large" style="float: left; ">Back</a>
+     <div >
+     <a href="javascript:history.back()" class="btn primary-btn" >Back</a>
      </div>       
 		
-	<div style="justify-content:center; float:left"> 
+	<div class="about-page" > 
 	
 	<h2>[(${exhibitionAboutPage.getTitle()})] </h2>
 		<div >
