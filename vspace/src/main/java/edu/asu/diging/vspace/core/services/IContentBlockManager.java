@@ -60,5 +60,5 @@ public interface IContentBlockManager {
 
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
 
-    void updateVideoTitle(IVideoBlock videoBlock, String videoTitle);
+    void saveVideoBlock(IVideoBlock videoBlock);
 }

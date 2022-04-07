@@ -523,9 +523,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
     
     @Override
-    public void updateVideoTitle(IVideoBlock videoBlock,  String title){
-        IVSVideo slideContentVideo =  videoBlock.getVideo();
-        slideContentVideo.setTitle(title);
-        slideContentVideo = videoRepo.save((VSVideo) slideContentVideo);
+    public void saveVideoBlock(IVideoBlock videoBlock){
+        videoRepo.save((VSVideo) videoBlock.getVideo());
     }
 }

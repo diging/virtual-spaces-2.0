@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.model.IVSVideo;
 import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
@@ -41,7 +42,9 @@ public class EditVideoBlockController {
 
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
         if (videoTitle != null && (videoUrl == null || file == null)) {
-            contentBlockManager.updateVideoTitle(videoBlock, videoTitle);
+            IVSVideo slideContentVideo =  videoBlock.getVideo();
+            slideContentVideo.setTitle(videoTitle);
+            contentBlockManager.saveVideoBlock(videoBlock);
         } else {
             byte[] video = null;
             String filename = null;
