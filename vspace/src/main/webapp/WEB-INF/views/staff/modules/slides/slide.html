@@ -1062,7 +1062,12 @@
  					}
  					$("#urlLink").addClass("active show");
  					$("#uploadLink").removeClass("active show");
+ 					if($("#videoFile").val() || $("#videoTitle").val()){
+ 					   $("#saveVideo").html("Update Video");   
+ 					}
+ 					else{
  					$("#saveVideo").html("Embed Video");
+ 					}
  				});
 
  				$("#uploadLink").on("click", function (e) {
@@ -1080,7 +1085,12 @@
  					}
  					$("#urlLink").removeClass("active show");
  					$("#uploadLink").addClass("active show");
- 					$("#saveVideo").html("Upload Video");
+ 					if($("#videoFile").val() || $("#videoTitle").val()){
+  					   $("#saveVideo").html("Update Video");   
+  					}
+  					else{
+  					$("#saveVideo").html("Upload Video");
+  					}
  				});
  				
  				$("#videoLink").on("input", function (e) {
@@ -1231,6 +1241,7 @@
             
 			// editing video block
             $(document).on("click", ".editVideo", function(e) {
+                $("#saveVideo").html("Update Video");
                 $("#saveVideo").prop('disabled', false);
             	var id = $(this).siblings('input').val();
             	var vidId = $('div#'+id).attr('id');
