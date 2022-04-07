@@ -39,7 +39,7 @@ public class ExhibitionSequencesController {
 
     @RequestMapping(value = { 
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}",
-        "/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
+        "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
     public String sequence(Model model, @PathVariable("sequenceId") String sequenceId,
             @PathVariable("moduleId") String moduleId, @PathVariable("spaceId") String spaceId,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,

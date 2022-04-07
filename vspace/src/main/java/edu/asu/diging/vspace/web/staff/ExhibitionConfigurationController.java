@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,7 +42,7 @@ public class ExhibitionConfigurationController {
         // for now we assume there is just one exhibition
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         if (exhibition == null) {
-            Exhibition exhibitionObj = (Exhibition) exhibitManager.createExhibitionWithPreviewId();
+            Exhibition exhibitionObj = (Exhibition) exhibitFactory.createExhibition();
             model.addAttribute("exhibition", exhibitionObj);
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));

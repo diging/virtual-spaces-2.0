@@ -23,7 +23,7 @@ public class ExhibitionModuleController {
     @Autowired
     private ISpaceManager spaceManager;
 
-    @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{previewId}/{spaceId}/module/{id}" })
+    @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{id}" })
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {

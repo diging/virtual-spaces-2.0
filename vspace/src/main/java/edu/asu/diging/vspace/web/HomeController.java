@@ -23,7 +23,7 @@ public class HomeController {
     @Autowired
     private ISetupManager setupManager;
 
-    @RequestMapping(value = { "/", "/preview/{previewId}" })
+    @RequestMapping(value = { "/", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}" })
     public String home(Model model,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId) {
 

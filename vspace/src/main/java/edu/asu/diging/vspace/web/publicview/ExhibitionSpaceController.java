@@ -49,7 +49,7 @@ public class ExhibitionSpaceController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
-    @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{previewId}/space/{id}" })
+    @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/space/{id}" })
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;

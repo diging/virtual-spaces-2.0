@@ -23,7 +23,7 @@ import edu.asu.diging.vspace.web.publicview.ExhibitionConstants;
 
 @Component
 @Aspect
-public class previewDataAspect {
+public class PreviewDataAspect {
 
     @Autowired
     private IExhibitionManager exhibitionManager;
