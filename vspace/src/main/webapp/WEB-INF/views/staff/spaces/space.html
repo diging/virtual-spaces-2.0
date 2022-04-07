@@ -261,6 +261,7 @@ function drawLinks(){
 function showSpaceLink(spaceLink, show, x, y) {
     $("#space_label").remove();
     $("#link").remove();
+    $("#undefined").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var space_label = $("<p id='space_label' class='tooltiptext'></p>");
@@ -277,7 +278,7 @@ function showSpaceLink(spaceLink, show, x, y) {
             'transform': 'rotate(0deg)',
             'color': 'grey'
         });
-        link = $('<span data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c "></span></div></span>');
+        link = $('<span id="' + spaceLink["id"] +'" data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c "></span></div></span>');
     }
     if(show) {
         var unpublishedSpaceElement;
@@ -325,6 +326,7 @@ function showSpaceLink(spaceLink, show, x, y) {
 function showModuleLink(moduleLink, show, x, y) {
     $("#module_label").remove();
     $("#link").remove();
+    $("#undefined").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var module_label = $("<p id='module_label' class='tooltiptext'></p>");
@@ -342,7 +344,7 @@ function showModuleLink(moduleLink, show, x, y) {
             'transform': 'rotate(0deg)',
             'color': 'red'
         });
-        link = $('<span data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
+        link = $('<span id="' + moduleLink["id"] +'" data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
     } 
     if(show) {
         link.find("div").css('fill', 'red');
@@ -450,6 +452,7 @@ function hideLinkInfoTabs(){
 function showExternalLinks(externalLink, show, x, y) {
     $("#ext_label").remove();
     $("#link").remove();
+    $("#undefined").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
     var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
@@ -465,7 +468,7 @@ function showExternalLinks(externalLink, show, x, y) {
             'transform': 'rotate(0deg)',
             'color': 'blue'
         });
-        link = $('<span data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
+        link = $('<span id="' + externalLink["id"] +'" data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
     }
     
     if(show) {
@@ -1309,11 +1312,12 @@ $(function(){
             linkIcon = null;
             $("#space").scrollTop(0);
             $("#link").remove();
-
+            $("#undefined").remove();
             $("#space_label").remove();
             $("#space").hide();
             $("#createSpaceLinkAlert").hide(); 
             $('#errorAlert').hide();
+            $("#bgImage").off("click");
             drawLinks();
         });
 
@@ -1323,10 +1327,12 @@ $(function(){
             $("#space").scrollTop(0);
             moduleLinkIcon=null;
             $("#link").remove();
+            $("#undefined").remove();
             $("#module_label").remove();
             $("#space").hide();
             $("#createModuleLinkAlert").hide();  
             $('#errorAlert').hide();
+            $("#bgImage").off("click");
             drawLinks();
         }); 
 
@@ -1336,12 +1342,14 @@ $(function(){
             $("#space").scrollTop(0);
             externalLinkIcon=null;
             $("#external-link").remove();
+            $("#undefined").remove();
             $("div#link").remove();
             $("#external-arrow").remove();
             $("#ext_label").remove();
             $("#space").hide();
             $("#createExternalLinkAlert").hide();
             $('#errorAlert').hide();
+            $("#bgImage").off("click");
             drawLinks();
         });
 
