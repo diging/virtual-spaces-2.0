@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
 import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -43,6 +44,9 @@ public class ModuleManager implements IModuleManager {
     
     @Autowired
     private SlideManager slideManager;
+    
+    @Autowired
+    private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
     
     /*
      * (non-Javadoc)
@@ -108,8 +112,8 @@ public class ModuleManager implements IModuleManager {
         }
         moduleLinkRepo.findModuleLinksByModuleId(moduleId).forEach(
                 moduleLink -> {
-                    moduleLink.setModule(null);
-                    moduleLinkRepo.save((ModuleLink)moduleLink);
+                    moduleLinkDisplayRepo.deleteByLink(moduleLink);
+                    moduleLinkRepo.deleteById(moduleLink.getId());
                 });
         //delete all slides
         Optional<Module> moduleOptional = moduleRepo.findById(moduleId);

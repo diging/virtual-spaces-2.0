@@ -34,7 +34,7 @@ function deleteModule(moduleId){
 	        },
 	        error: function(data) {
 	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-	            $('.error').append(alert);
+	            $('.delete-module-error').append(alert);
 	        }
 	    });
 }
@@ -231,7 +231,7 @@ $(document).ready(function() {
 	
 	$("#deleteModuleButtonConfirm").on("click", function() {
 		$('#deleteModuleAlert').modal('hide');
-		var moduleId=[[${module.id}]]; 
+		var moduleId=[[${module.id}]];
 		deleteModule(moduleId);
 	});
 	
@@ -249,6 +249,7 @@ $(document).ready(function() {
 </head>
 <body>
     <div class="main-content" layout:fragment="content">
+    <span class="delete-module-error"></span>	
     	<div class="flex-spacing" style="margin-bottom: 10px;"> 
 	    	<div style="display: flex">
 	    		<div style="margin-right: 20px">
