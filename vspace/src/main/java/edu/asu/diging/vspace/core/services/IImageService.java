@@ -36,6 +36,7 @@ public interface IImageService {
     void removeCategory(IVSImage image, ImageCategory category);
 
     List<IVSImage> findByFilenameOrNameContains(String searchTerm);
-    List<IVSImage> findByFilenameOrNameContainsOrDescription(String searchTerm);
+    
+    List<IVSImage> search(String searchTerm);
 
 }
