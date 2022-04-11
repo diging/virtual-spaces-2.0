@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.publicview;
+package edu.asu.diging.vspace.web.exhibit.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +10,8 @@ import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
@@ -29,7 +31,7 @@ public class ExhibitionModuleController {
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
-        }
+        } 
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         if (module == null || module.getModuleStatus() == ModuleStatus.UNPUBLISHED) {

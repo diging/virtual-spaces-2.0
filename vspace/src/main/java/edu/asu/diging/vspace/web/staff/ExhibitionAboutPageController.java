@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 /**
@@ -50,6 +51,6 @@ public class ExhibitionAboutPageController {
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
         return "redirect:/staff/exhibit/about";
-    }
+    }   
 
 }
