@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services;
 
-import java.util.HashMap;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
@@ -12,8 +11,8 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
+import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 

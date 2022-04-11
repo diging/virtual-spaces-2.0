@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 @Repository
 @JaversSpringDataAuditable
