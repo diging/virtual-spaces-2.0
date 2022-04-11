@@ -21,4 +21,6 @@ public interface IExhibitionAboutPageManager {
      * @return {@link ExhibitionAboutPage} Returns the object after being stored. Object will now have an ID.
      */
     ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage);
+
+    ExhibitionAboutPage getExhibitionAboutPage();
 }
