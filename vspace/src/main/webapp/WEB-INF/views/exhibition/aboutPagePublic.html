@@ -1,0 +1,42 @@
+
+<html layout:decorate="~{layouts/main}">
+<head>
+<style>
+.main-contents {
+margin-top:-20px;
+margin-left:100px;
+margin-right:100px;
+}
+
+.about-page{
+justify-content:center;
+padding-top:40px;
+}
+
+
+</style>
+</head>
+
+<body >
+
+<div layout:fragment="content"  >
+
+<div id="Module_1" class="main-contents" >
+     <div >
+     <a href="javascript:history.back()" class="btn primary-btn" >Back</a>
+     </div>       
+		
+	<div class="about-page" > 
+	
+	<h2>[(${exhibitionAboutPage.getTitle()})] </h2>
+		<div >
+				<div>
+					 <div>[(${exhibitionAboutPage.htmlRenderedText()})]</div>
+				</div>
+		</div>
+	</div>
+	
+	</div>
+	</div>
+</body>
+</html>

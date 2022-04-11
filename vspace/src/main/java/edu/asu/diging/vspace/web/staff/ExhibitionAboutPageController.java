@@ -45,6 +45,6 @@ public class ExhibitionAboutPageController {
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
         return "redirect:/staff/exhibit/about";
-    }
+    }   
 
 }
