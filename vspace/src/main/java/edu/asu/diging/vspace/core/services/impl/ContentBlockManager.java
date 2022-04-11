@@ -225,18 +225,6 @@ public class ContentBlockManager implements IContentBlockManager {
 
     }
     
-    @Override
-    public ISpace getCurrentSpaceForSpaceBlock(String blockId, String slideId) throws BlockDoesNotExistException {
-        if (blockId == null) {
-            return null;
-        }
-        ISpaceBlock spaceBlock = getSpaceBlock(blockId);
-        if (spaceBlock == null) {
-            throw new BlockDoesNotExistException("Block Id not present");
-        }
-        return spaceBlock.getSpace();
-    }
-    
     /**
      * Delete a space block using an id and also decrease content order by 1 of all
      * the slide's block which are after this block
@@ -335,7 +323,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
     
     @Override
-    public void updateSpaceBlock(SpaceBlock spaceBlock) {
+    public void saveSpaceBlock(SpaceBlock spaceBlock) {
         spaceBlockRepo.save((SpaceBlock) spaceBlock);
     }
 

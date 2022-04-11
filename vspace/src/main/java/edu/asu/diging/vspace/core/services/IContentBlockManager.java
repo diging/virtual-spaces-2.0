@@ -54,7 +54,7 @@ public interface IContentBlockManager {
 
     ISpaceBlock getSpaceBlock(String spaceBlockId);
 
-    void updateSpaceBlock(SpaceBlock textBlock);
+    void saveSpaceBlock(SpaceBlock textBlock);
 
     /**
      * Delete a space block using an id and also decrease content order by 1 of all
@@ -69,6 +69,4 @@ public interface IContentBlockManager {
     void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
     
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
-
-    ISpace getCurrentSpaceForSpaceBlock(String blockId, String slideId) throws BlockDoesNotExistException;
 }

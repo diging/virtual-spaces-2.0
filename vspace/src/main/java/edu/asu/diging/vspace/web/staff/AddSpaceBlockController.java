@@ -24,7 +24,7 @@ public class AddSpaceBlockController {
     private ISpaceManager spaceManager;
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/space", method = RequestMethod.POST)
-    ResponseEntity<String> addSpaceBlock(@RequestParam("title") String title,@RequestParam("spaceId") String spaceId, @PathVariable("slideId") String slideId,
+    public ResponseEntity<String> addSpaceBlock(@RequestParam("title") String title,@RequestParam("spaceId") String spaceId, @PathVariable("slideId") String slideId,
             @PathVariable("moduleId") String moduleId){
         ISpace space = spaceManager.getSpace(spaceId);
         Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);

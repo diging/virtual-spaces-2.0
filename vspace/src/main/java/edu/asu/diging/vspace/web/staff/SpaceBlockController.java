@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
@@ -21,16 +21,13 @@ public class SpaceBlockController {
     private IContentBlockManager contentBlockManager;
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/{blockId}", method = RequestMethod.GET)
-    public ResponseEntity<String> getSpaceBlockSpace(@PathVariable("id") String slideId,
+    public ResponseEntity<ISpace> getSpaceBlockSpace(@PathVariable("id") String slideId,
             @PathVariable("blockId") String blockId) throws IOException {
-        ISpace space = null;
-        try {
-            space = contentBlockManager.getCurrentSpaceForSpaceBlock(blockId, slideId);
-        } catch (BlockDoesNotExistException e) {
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
+        if(spaceBlock == null) {
+            return new ResponseEntity<ISpace>(HttpStatus.NOT_FOUND);
         }
-        
-        return new ResponseEntity<String>(space.getName(),HttpStatus.OK);
+        return new ResponseEntity<ISpace>(spaceBlock.getSpace(),HttpStatus.OK);
     }
 
 }

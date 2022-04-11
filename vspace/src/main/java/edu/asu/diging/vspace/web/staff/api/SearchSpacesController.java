@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff;
+package edu.asu.diging.vspace.web.staff.api;
 
 import java.util.List;
 
@@ -17,13 +17,13 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
-public class ListSpacesInContentBlockController {
+public class SearchSpacesController {
     
     @Autowired
     private ISpaceManager spaceManager;
     
     @RequestMapping("/staff/spaces/search")
-    public ResponseEntity<String> listSpacesForSlideContentBlock(@RequestParam(value = "term", required = false) String searchTerm){
+    public ResponseEntity<String> searchSpacesForSlideContentBlock(@RequestParam(value = "term", required = false) String searchTerm){
         List<ISpace> spaces = null;
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             spaces = spaceManager.findByName(searchTerm);
