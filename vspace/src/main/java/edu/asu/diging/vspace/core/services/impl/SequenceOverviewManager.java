@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.SequenceRepository;
+import edu.asu.diging.vspace.core.model.IBranchingPoint;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.services.ISequenceOverviewManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
@@ -18,6 +23,12 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
     @Autowired
     private SequenceRepository sequenceRepo;
     
+    @Autowired
+    private SequenceManager sequenceManager;
+    
+    @Autowired
+    private ModuleManager moduleManager;
+    
     /**
      * This method is used to fetch all Sequences which belong to a module and 
      * convert this into a SequenceOverview node. The SequenceOverviewNode is added to 
@@ -25,9 +36,10 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
      * @return ModuleOverview which contains the module and the list of sequences and its slides
      */
     public ModuleOverview showModuleMap(String id) {
-        List<Sequence> sequenceList = sequenceRepo.findSequencesForModule(id);
-        List<SequenceOverview> sequenceOverview = constructNodesForSequences(sequenceList);
         
+        IModule module = moduleManager.getModule(id);
+        ISequence startSequence = module.getStartSequence();
+        List<SequenceOverview> sequenceOverview = constructNodesFromStartSequence(startSequence);
         ModuleOverview moduleOverviewJson = new ModuleOverview();
         moduleOverviewJson.setSequenceOverview(sequenceOverview);
         return moduleOverviewJson;
@@ -40,14 +52,21 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
      * @param contextPath   This variable holds the contextpath of the application
      * @param SequenceNodeList List of sequences
      */
-    private List<SequenceOverview> constructNodesForSequences(List<Sequence> sequenceNodeList) {
-
-        List<SequenceOverview> sequenceVertexList = new ArrayList<>();
-        if (sequenceNodeList != null) {
-            sequenceNodeList.forEach((sequenceNode)->{
-                sequenceVertexList.add(createSequenceNode(sequenceNode));
-            });
+    private List<SequenceOverview> constructNodesFromStartSequence(ISequence startSequence) {
+        List<ISlide> slides = startSequence.getSlides();
+        SequenceOverview sequenceOverview = new SequenceOverview();
+        sequenceOverview.setName(startSequence.getName());
+        sequenceOverview.setId(startSequence.getId());
+        List<IBranchingPoint> branchingPoints = new ArrayList<IBranchingPoint>();
+        List<ISlide> sequenceSlides = new ArrayList<ISlide>();
+        for(ISlide slide : slides) {
+            if(slide instanceof BranchingPoint ) {
+                branchingPoints.add((IBranchingPoint)slide);
+            }else {
+                sequenceSlides.add(slide);
+            }
         }
+        sequenceOverview.setSlides(sequenceSlides);
         return sequenceVertexList;
     }
     

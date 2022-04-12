@@ -21,6 +21,10 @@
       	width:800px;
       	height:800px;
       	}
+      	
+      	.text{
+      	font-size:11px;
+      	}
       
 .imgFullScreen:hover .tooltiptext {
     visibility: visible;
@@ -299,6 +303,7 @@
 				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
 
 				  	  nodeEnter.append("text")
+				  	  .attr("class","text")
 				  		  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
 				  		  .attr("dy", "1.5em")
 				  		  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
@@ -316,6 +321,12 @@
 				  				return 20;
 				  				}
 				  			return 10;
+				  			})
+				  			.style("opacity", function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
+				  					&& (d.slideId.normalize() === currentSlide.id.normalize())){
+				  				return 1;
+				  				}
+				  			return 0.5;
 				  			})
 				  		  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
 
@@ -337,7 +348,7 @@
 				  	  // Update the links…
 				  	  var link = svg.selectAll("path.link")
 				  		  .data(links, function(d) { return d.target.id; })
-				  		// link.style("fill", function(d) { return d._children ? "orange" : "orange"; });
+				  		
 
 				  	  // Enter any new links at the parent's previous position.
 				  	  link.enter().insert("path", "g")
@@ -345,7 +356,8 @@
 				  		  .attr("d", function(d) {
 				  			var o = {x: source.x0, y: source.y0};
 				  			return diagonal({source: o, target: o});
-				  		  });
+				  		  })
+				  		  .style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
 
 				  	  // Transition links to their new position.
 				  	  link.transition()
