@@ -19,6 +19,8 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
     List<VSImage> findByFilenameLikeOrNameLike(String filename, String name);
     
     List<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
+    
+    Page<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(Pageable pageable, String filename, String name, String description);
 
     List<VSImage> findByFilenameLike(String filename);
 
@@ -26,5 +28,8 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
 
     List<IVSImage> findByCategories(ImageCategory category);
     
+    
+    
     long countByCategories(ImageCategory category);
+    
 }

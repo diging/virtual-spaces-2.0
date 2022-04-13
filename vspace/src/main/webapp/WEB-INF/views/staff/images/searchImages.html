@@ -62,7 +62,7 @@
                  lastClass: 'last',
                  firstClass: 'first'
              }).on("page", function(event, num){
-                 window.location.assign("./"+num+"?imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+                 window.location.assign("./"+num+"?searchText="+[[${searchTerm}]]);
              });
          
            $("table.table thead th").each(function(){
@@ -223,7 +223,7 @@
              }
              if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
             	 
-            		$("#searchImageLink").attr('href','[[@{/staff/images/search/full/1?searchText=}]]'+$("#searchImageField").val());
+            		$("#searchImageLink").attr('href','[[@{/staff/images/search/full?searchText=}]]'+$("#searchImageField").val());
             		
              } 
              else{

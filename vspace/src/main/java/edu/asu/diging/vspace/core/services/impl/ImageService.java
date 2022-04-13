@@ -172,7 +172,7 @@ public class ImageService implements IImageService {
         long count = imageRepo.countByCategories(category);
         return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
     }
-    
+   
     /**
      * Method to return page number after validation
      * 
@@ -191,7 +191,7 @@ public class ImageService implements IImageService {
         }
         return pageNo;
     }
-
+   
     /**
      * Method to edit image details
      * 
@@ -234,18 +234,6 @@ public class ImageService implements IImageService {
     }
     
     @Override
-    public List<IVSImage> findByFilenameOrNameContainsOrDescription(String searchTerm) {
-    	
-        String likeSearchTerm = "%" + searchTerm + "%";
-        List<VSImage> results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,likeSearchTerm);
-        
-        
-        List<IVSImage> imageResults = new ArrayList<>();
-        results.forEach(r -> imageResults.add(r));
-        return imageResults;
-    }
-
-    @Override
     public void addCategory(IVSImage image, ImageCategory category) {
         if(image.getCategories()==null) {
             image.setCategories(new ArrayList<>());
@@ -262,4 +250,81 @@ public class ImageService implements IImageService {
         image.getCategories().remove(category);
         imageRepo.save((VSImage) image);
     }
+    
+    /**
+     * This method is used to search the search string specified in the input
+     * @param searchTerm - This is the search string which is being searched.
+     * @return list of images based on the search string.
+     */
+    @Override
+    public List<IVSImage> search(String searchTerm) {
+    	
+        String likeSearchTerm = "%" + searchTerm + "%";
+        List<VSImage> results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,likeSearchTerm);       
+        List<IVSImage> imageResults = new ArrayList<>();
+        results.forEach(r -> imageResults.add(r));
+        return imageResults;
+    }
+      
+    /**
+     * Method to return the total pages sufficient to display all images
+     * @param images - This is the result list of search images.
+     * @return totalPages required to display all images in DB
+     */
+    @Override
+    public long getTotalPages(List<IVSImage> images) {
+        if(images==null) {
+            return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
+        }
+        long count = images.size();
+        return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
+    }
+    
+    /**
+     * Method to return page number after validation
+     * 
+     * @param pageNo - page provided by calling method
+     * @param images - This is the result list of search images.
+     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
+     *         totalPages.
+     */
+    @Override
+    public int validatePageNumber(int pageNo,List<IVSImage> images) {
+    	long totalPages=getTotalPages(images);;
+        if(pageNo<1) {
+            return 1;
+        } else if(pageNo>totalPages) {
+            return (totalPages==0) ? 1:(int) totalPages;
+        }
+        return pageNo;
+    }
+    
+    /**
+     * Method to return the requested images
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @param searchTerm - This is the search string which is being searched.   
+     * @param images - This is the result list of search images.           
+     * @return list of images in the requested pageNo and requested order.
+     */   
+    @Override
+    public List<IVSImage> getImagesForPagination(int pageNo, List<IVSImage> images, String searchTerm) {
+        
+        pageNo = validatePageNumber(pageNo, images);
+        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize);
+        
+        String likeSearchTerm = "%" + searchTerm + "%";
+        Page<VSImage> result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,likeSearchTerm, likeSearchTerm,likeSearchTerm); 
+       
+        List<IVSImage> imageResults = new ArrayList<>();
+        if(result != null) {
+        	result.getContent().forEach(i -> imageResults.add(i));
+        }
+        return imageResults;
+    }
+    
+    
+ 
+    
 }

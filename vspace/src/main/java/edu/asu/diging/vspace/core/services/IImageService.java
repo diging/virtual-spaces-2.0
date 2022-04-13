@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
@@ -24,7 +26,7 @@ public interface IImageService {
     long getTotalImageCount(ImageCategory filter);
 
     long getTotalPages(ImageCategory filter);
-
+   
     int validatePageNumber(int pageNo, ImageCategory filter);
 
     void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
@@ -38,5 +40,18 @@ public interface IImageService {
     List<IVSImage> findByFilenameOrNameContains(String searchTerm);
     
     List<IVSImage> search(String searchTerm);
+    
+    int validatePageNumber(int pageNo, List<IVSImage> images);
+    
+    long getTotalPages(List<IVSImage> images);
+
+	List<IVSImage> getImagesForPagination(int pageNo, List<IVSImage> images, String searchTerm);
+    
+    
+    
+    
+
+    
+    
 
 }
