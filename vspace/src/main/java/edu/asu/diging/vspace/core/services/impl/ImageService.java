@@ -1,11 +1,14 @@
 package edu.asu.diging.vspace.core.services.impl;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import javax.imageio.ImageIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -46,7 +50,7 @@ public class ImageService implements IImageService {
     public ImageData getImageData(byte[] image) {
         try {
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(image));
-            if(bufferedImage!=null) {
+            if (bufferedImage != null) {
                 int imageHeight = bufferedImage.getHeight();
                 int imageWidth = bufferedImage.getWidth();
                 return new ImageData(imageHeight, imageWidth);
@@ -72,7 +76,7 @@ public class ImageService implements IImageService {
         int imageHeight = image.getHeight();
 
         Float newWidth = (new Float(height) / new Float(imageHeight)) * new Float(imageWidth);
-        if(newWidth<width) {
+        if (newWidth < width) {
             return new ImageData(height, newWidth.intValue());
         }
 
@@ -82,17 +86,17 @@ public class ImageService implements IImageService {
 
     private Sort getSortingParameters(String sortedBy, String order) {
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
-        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+        if (sortedBy != null && SortByField.getAllValues().contains(sortedBy)) {
             sortingParameters = Sort.by(sortedBy);
         }
-        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+        if (order != null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
             sortingParameters = sortingParameters.ascending();
         } else {
             sortingParameters = sortingParameters.descending();
         }
         return sortingParameters;
     }
-    
+
     /**
      * Method to return the requested images
      * 
@@ -103,16 +107,16 @@ public class ImageService implements IImageService {
      * @return list of images for the requested pageNo and category
      */
     @Override
-    public List<IVSImage> getImages(int pageNo, ImageCategory category) {
+    public List < IVSImage > getImages(int pageNo, ImageCategory category) {
         return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-    
-    
+
+
     @Override
-    public List<IVSImage> getImages(int pageNo) {
+    public List < IVSImage > getImages(int pageNo) {
         return getImages(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-    
+
     /**
      * Method to return the requested images
      * 
@@ -122,23 +126,23 @@ public class ImageService implements IImageService {
      */
 
     @Override
-    public List<IVSImage> getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
+    public List < IVSImage > getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<VSImage> images;
-        if(category==null) {
+        Page < VSImage > images;
+        if (category == null) {
             images = imageRepo.findAll(sortByRequestedField);
         } else {
             images = imageRepo.findByCategories(sortByRequestedField, category);
         }
-        List<IVSImage> results = new ArrayList<>();
-        if(images != null) {
-            images.getContent().forEach(i -> results.add(i));
+        List < IVSImage > results = new ArrayList < > ();
+        if (images != null) {
+            images.getContent().forEach(i - > results.add(i));
         }
         return results;
     }
-    
+
     /**
      * Method to return the total image count
      * 
@@ -147,42 +151,28 @@ public class ImageService implements IImageService {
 
     @Override
     public long getTotalImageCount(ImageCategory category) {
-        if(category==null) {
+        if (category == null) {
             return imageRepo.count();
         }
         return imageRepo.countByCategories(category);
     }
-    
+
     /**
      * Method to return the total pages sufficient to display all images
      * 
      * @return totalPages required to display all images in DB
      */
 
-    
+
     @Override
     public long getTotalPages(ImageCategory category) {
-        if(category==null) {
-            return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
+        if (category == null) {
+            return (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize : (imageRepo.count() / pageSize) + 1;
         }
         long count = imageRepo.countByCategories(category);
-        return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
+        return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
     }
-    
-    /**
-     * Method to return the total pages sufficient to display all images
-     * @param images - This is the result list of search images.
-     * @return totalPages required to display all images in DB
-     */
-    @Override
-    public long getTotalPages(List<IVSImage> images) {
-        if(images==null) {
-            return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
-        }
-        long count = images.size();
-        return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
-    }
-   
+
     /**
      * Method to return page number after validation
      * 
@@ -194,33 +184,14 @@ public class ImageService implements IImageService {
     @Override
     public int validatePageNumber(int pageNo, ImageCategory category) {
         long totalPages = getTotalPages(category);
-        if(pageNo<1) {
+        if (pageNo < 1) {
             return 1;
-        } else if(pageNo>totalPages) {
-            return (totalPages==0) ? 1:(int) totalPages;
+        } else if (pageNo > totalPages) {
+            return (totalPages == 0) ? 1 : (int) totalPages;
         }
         return pageNo;
     }
-    
-    /**
-     * Method to return page number after validation
-     * 
-     * @param pageNo - page provided by calling method
-     * @param images - This is the result list of search images.
-     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
-     *         totalPages.
-     */
-    @Override
-    public int validatePageNumber(int pageNo,List<IVSImage> images) {
-    	long totalPages=getTotalPages(images);;
-        if(pageNo<1) {
-            return 1;
-        } else if(pageNo>totalPages) {
-            return (totalPages==0) ? 1:(int) totalPages;
-        }
-        return pageNo;
-    }
-   
+
     /**
      * Method to edit image details
      * 
@@ -245,8 +216,8 @@ public class ImageService implements IImageService {
      */
     @Override
     public IVSImage getImageById(String imageId) throws ImageDoesNotExistException {
-        Optional<VSImage> imageOptional = imageRepo.findById(imageId);
-        if(imageOptional.isPresent()) {
+        Optional < VSImage > imageOptional = imageRepo.findById(imageId);
+        if (imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
             throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
@@ -254,21 +225,21 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public List<IVSImage> findByFilenameOrNameContains(String searchTerm) {
+    public List < IVSImage > findByFilenameOrNameContains(String searchTerm) {
         String likeSearchTerm = "%" + searchTerm + "%";
-        List<VSImage> results = imageRepo.findByFilenameLikeOrNameLike(likeSearchTerm, likeSearchTerm);
-        List<IVSImage> imageResults = new ArrayList<>();
-        results.forEach(r -> imageResults.add(r));
+        List < VSImage > results = imageRepo.findByFilenameLikeOrNameLike(likeSearchTerm, likeSearchTerm);
+        List < IVSImage > imageResults = new ArrayList < > ();
+        results.forEach(r - > imageResults.add(r));
         return imageResults;
     }
-    
+
     @Override
     public void addCategory(IVSImage image, ImageCategory category) {
-        if(image.getCategories()==null) {
-            image.setCategories(new ArrayList<>());
+        if (image.getCategories() == null) {
+            image.setCategories(new ArrayList < > ());
         }
 
-        if(!image.getCategories().contains(category)) {
+        if (!image.getCategories().contains(category)) {
             image.getCategories().add(category);
         }
         imageRepo.save((VSImage) image);
@@ -279,21 +250,55 @@ public class ImageService implements IImageService {
         image.getCategories().remove(category);
         imageRepo.save((VSImage) image);
     }
-    
+
     /**
      * This method is used to search the search string specified in the input
      * @param searchTerm - This is the search string which is being searched.
      * @return list of images based on the search string.
      */
     @Override
-    public List<IVSImage> search(String searchTerm) {
+    public List < IVSImage > search(String searchTerm) {
+
         String likeSearchTerm = "%" + searchTerm + "%";
-        List<VSImage> results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,likeSearchTerm);       
-        List<IVSImage> imageResults = new ArrayList<>();
-        results.forEach(r -> imageResults.add(r));
+        List < VSImage > results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm, likeSearchTerm);
+        List < IVSImage > imageResults = new ArrayList < > ();
+        results.forEach(r - > imageResults.add(r));
         return imageResults;
     }
-   
+
+    /**
+     * Method to return the total pages sufficient to display all images
+     * @param images - This is the result list of search images.
+     * @return totalPages required to display all images in DB
+     */
+    @Override
+    public long getTotalPages(List < IVSImage > images) {
+        if (images == null) {
+            return (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize : (imageRepo.count() / pageSize) + 1;
+        }
+        long count = images.size();
+        return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
+    }
+
+    /**
+     * Method to return page number after validation
+     * 
+     * @param pageNo - page provided by calling method
+     * @param images - This is the result list of search images.
+     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
+     *         totalPages.
+     */
+    @Override
+    public int validatePageNumber(int pageNo, List < IVSImage > images) {
+        long totalPages = getTotalPages(images);;
+        if (pageNo < 1) {
+            return 1;
+        } else if (pageNo > totalPages) {
+            return (totalPages == 0) ? 1 : (int) totalPages;
+        }
+        return pageNo;
+    }
+
     /**
      * Method to return the requested images
      * 
@@ -302,20 +307,20 @@ public class ImageService implements IImageService {
      * @param searchTerm - This is the search string which is being searched.   
      * @param images - This is the result list of search images.           
      * @return list of images in the requested pageNo and requested order.
-     */   
+     */
     @Override
-    public List<IVSImage> getImagesForPagination(int pageNo, List<IVSImage> images, String searchTerm) {
-        
+    public List < IVSImage > getImagesForPagination(int pageNo, List < IVSImage > images, String searchTerm) {
+
         pageNo = validatePageNumber(pageNo, images);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize);
-        
+
         String likeSearchTerm = "%" + searchTerm + "%";
-        Page<VSImage> result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,likeSearchTerm, likeSearchTerm,likeSearchTerm); 
-       
-        List<IVSImage> imageResults = new ArrayList<>();
-        if(result != null) {
-        	result.getContent().forEach(i -> imageResults.add(i));
+        Page < VSImage > result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField, likeSearchTerm, likeSearchTerm, likeSearchTerm);
+
+        List < IVSImage > imageResults = new ArrayList < > ();
+        if (result != null) {
+            result.getContent().forEach(i - > imageResults.add(i));
         }
         return imageResults;
-    }   
+    }
 }
