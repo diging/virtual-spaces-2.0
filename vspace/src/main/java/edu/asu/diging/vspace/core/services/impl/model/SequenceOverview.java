@@ -10,14 +10,14 @@ public class SequenceOverview {
 
     private String id;
     
-    private List<ISlide> slides;
+    private List<SlideOverview> slideOverview;
 
-    public List<ISlide> getSlides() {
-        return slides;
+    public List<SlideOverview> getSlides() {
+        return slideOverview;
     }
 
-    public void setSlides(List<ISlide> slides) {
-        this.slides = slides;
+    public void setSlides(List<SlideOverview> slideOverview) {
+        this.slideOverview = slideOverview;
     }
 
     public String getName() {

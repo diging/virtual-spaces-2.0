@@ -6,7 +6,8 @@ public class ModuleOverview {
     
     private String name;
     private String id;
-    private List<SequenceOverview> sequenceOverview;
+    private SequenceOverview startSequence;
+    private List<SequenceOverview> otherSequences;
     
     public String getName() {
         return name;
@@ -20,11 +21,18 @@ public class ModuleOverview {
     public void setId(String id) {
         this.id = id;
     }
-    public List<SequenceOverview> getSequenceOverview() {
-        return sequenceOverview;
+    public SequenceOverview getStartSequence() {
+        return startSequence;
     }
-    public void setSequenceOverview(List<SequenceOverview> sequenceOverview) {
-        this.sequenceOverview = sequenceOverview;
+    public void setStartSequence(SequenceOverview startSequence) {
+        this.startSequence = startSequence;
+    }
+    
+    public List<SequenceOverview> getOtherSequences() {
+        return otherSequences;
+    }
+    public void setOtherSequences(List<SequenceOverview> otherSequences) {
+        this.otherSequences = otherSequences;
     }
 
 }
