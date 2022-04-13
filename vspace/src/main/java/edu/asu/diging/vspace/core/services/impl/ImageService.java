@@ -287,7 +287,6 @@ public class ImageService implements IImageService {
      */
     @Override
     public List<IVSImage> search(String searchTerm) {
-    	
         String likeSearchTerm = "%" + searchTerm + "%";
         List<VSImage> results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,likeSearchTerm);       
         List<IVSImage> imageResults = new ArrayList<>();
