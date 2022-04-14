@@ -198,11 +198,46 @@
                         </div>
                         <div id="graph" class="modal-body" style="width:2000px;height:2000px">
 			<script>
+			            console.log(json);
                         let treeData = [];
                         treeData.children=[];
-				  		let sequences = json['sequenceOverview'];
-				  		let slides = [];
-				  		
+                        let startSequence = json['startSequence'];
+				  		let otherSequences = json['otherSequences'];
+				  		let startSequenceslides = [];
+				  		console.log(startSequence);
+				  		let startNodeSequence = {};
+				  		let startNodeSequenceSlides = [];
+				  		startNodeSequence.children = [];
+				  		startNodeSequence.name = startSequence.name;
+				  		startNodeSequence.id = startSequence.id;
+				  		startNodeSequence.group = "sequence";
+				  		//we will use parent identifier as id instead of name
+				  		startNodeSequence.parent = json.id;
+				  		let slideIndex = 0;
+				  		for(slide of startSequence.slides){
+				  			let slideNode = {}
+				  			slideNode.name = slide.name;
+				  			slideNode.group = "slide";
+				  			slideNode.sequenceId = startSequence.id;
+				  			slideNode.slideId = slide.id;
+				  			slideNode.id = startSequence.id + slide.id;
+				  			startNodeSequenceSlides.push(slideNode);
+				  			slideNode.children=[];
+				  			if(slideIndex == 0){
+				  				  let slideLink ={};
+				  				  slideNode.parent=nodeSequence.name;
+				  				  nodeSequence.children.push(slideNode);
+				  				  prev=slideNode;
+				  				  
+					  		  } else {
+					  			  prev.children.push(slideNode);
+					  			  slideNode.parent=prev;
+					  			  prev=slideNode;
+					  		  }
+					  		  source = slideNode.id;
+					  		  
+					  		slideIndex=slideIndex+1;
+				  		}
 				  		for (sequence of sequences) {
 				  		  let nodeSequence = {};
 				  		  nodeSequence.children=[];
@@ -243,8 +278,10 @@
 				  		  }
 				  		treeData.children.push(nodeSequence)
 				  		}
+				  		/* treeData.name = json.name;
+				  		var margin = {top: 20, right: 120, bottom: 20, left: 120}, */
 				  		treeData.name = json.name;
-				  		var margin = {top: 20, right: 120, bottom: 20, left: 120},
+				  		var margin = {top: 70, right: 110, bottom: 20, left: 120},
 				  		width = 960 - margin.right - margin.left,
 				  		height = 500 - margin.top - margin.bottom;
 				  		
@@ -261,8 +298,8 @@
 				  	var svg = d3.select("#graph").append("svg")
 				  		.attr("width", width + margin.right + margin.left)
 				  		.attr("height", height + margin.top + margin.bottom)
-				  	  .append("g")
-				  		.attr("transform", "translate(" + 208 + "," + margin.top + ")");
+				  	  .append("g");
+				  		/* .attr("transform", "translate(" + 208 + "," + margin.top + ")"); */
 
 				  	root = treeData;
 				  	root.x0 = height / 2;
@@ -280,7 +317,7 @@
 
 				  	  // Normalize for fixed-depth.
 				  	  nodes.forEach(function(d) { d.y = d.depth * 100; });
-
+					
 				  	  // Update the nodes…
 				  	  var node = svg.selectAll("g.node")
 				  		  .data(nodes, function(d) { return d.id || (d.id = ++i); });
@@ -332,6 +369,14 @@
 
 				  	  nodeUpdate.select("text")
 				  		  .style("fill-opacity", 1);
+				  	  
+				  	nodeEnter.append("text")
+				  	  .attr("class","text")
+				  		  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
+				  		  .attr("dy", "1.5em")
+				  		  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+				  		  .text(function(d) { return d.name; })
+				  		  .style("fill-opacity", 1e-6);
 
 				  	  // Transition exiting nodes to the parent's new position.
 				  	  var nodeExit = node.exit().transition()
@@ -364,14 +409,6 @@
 				  		  .duration(duration)
 				  		  .attr("d", diagonal);
 
-				  	  // Transition exiting nodes to the parent's new position.
-				  	  link.exit().transition()
-				  		  .duration(duration)
-				  		  .attr("d", function(d) {
-				  			var o = {x: source.x, y: source.y};
-				  			return diagonal({source: o, target: o});
-				  		  })
-				  		  .remove();
 
 				  	  // Stash the old positions for transition.
 				  	  nodes.forEach(function(d) {
@@ -391,7 +428,7 @@
 				  	  }
 				  	  update(d);
 				  	}
-				       
+				        
                         </script>
          </div>
          </div>

@@ -43,7 +43,7 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
     public ModuleOverview showModuleMap(String id) {
         IModule module = moduleManager.getModule(id);
         ISequence startSequence = module.getStartSequence();
-        List<ISequence> sequences = module.getSequences();
+        List<ISequence> sequences = moduleManager.getModuleSequences(id);
         SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
         List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
         for(ISequence sequence : sequences) {
@@ -53,36 +53,8 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
         }
         ModuleOverview moduleOverviewJson = new ModuleOverview();
         moduleOverviewJson.setStartSequence(startSequenceNode);
+        moduleOverviewJson.setOtherSequences(otherSequences);
         return moduleOverviewJson;
-    }
-    
-    /**
-     * creating list of SequenceOverview object for sequence nodes in the moduleoverview
-     * graph
-     * 
-     * @param contextPath   This variable holds the contextpath of the application
-     * @param SequenceNodeList List of sequences
-     */
-    private SequenceOverview constructNodesFromStartSequence(ISequence startSequence, List<ISequence> sequences) {
-        Set<BranchingPoint> branchingPointsMap = new HashSet<BranchingPoint>();
-        SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
-        List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
-        for(ISequence sequence : sequences) {
-            if(sequence != startSequence) {
-                otherSequences.add(createSequenceOverviewNode(sequence));
-            }
-        }
-        
-    }
-    
-    
-    private List<SequenceOverview> constructSequenceNodes(Sequence sequence, Set<BranchingPoint> branchingPointsMap){
-        List<ISlide> sequenceSlides = sequence.getSlides();
-        for(ISlide slide : sequenceSlides) {
-            if(slide instanceof BranchingPoint ) {
-                branchingPointsMap.add((BranchingPoint)slide);
-            }
-        }
     }
     
     private SequenceOverview createSequenceOverviewNode(ISequence sequence) {
@@ -101,15 +73,17 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
             SlideOverview slideOverview = new SlideOverview(); 
             if(slide instanceof BranchingPoint ) {
                 slideOverview.setBranchingPoint(true);
+                List<ISequence> sequenceChoices = ((BranchingPoint)slide).getSequence();
+                List<String> slideOverviewSequenceChoices = new ArrayList<String>();
+                for(ISequence sequence : sequenceChoices) {
+                    slideOverviewSequenceChoices.add(sequence.getName());
+                }
+                slideOverview.setSequenceIds(slideOverviewSequenceChoices);
             }
             slideOverview.setId(slide.getId());
             slideOverview.setName(slide.getName());
-            List<ISequence> sequenceChoices = ((BranchingPoint)slide).getSequence();
-            List<String> slideOverviewSequenceChoices = new ArrayList<String>();
-            for(ISequence sequence : sequenceChoices) {
-                slideOverviewSequenceChoices.add(sequence.getName());
-            }
-            slideOverview.setSequenceIds(slideOverviewSequenceChoices);
+            
+            
             slideOverviews.add(slideOverview);
         } 
         return slideOverviews;
