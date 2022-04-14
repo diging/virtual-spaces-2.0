@@ -19,7 +19,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.web.publicview.ExhibitionConstants;
+import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 @Component
 @Aspect
@@ -28,7 +28,7 @@ public class PreviewDataAspect {
     @Autowired
     private IExhibitionManager exhibitionManager;
 
-    @Around("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
+    @Around("execution(public * edu.asu.diging.vspace.web.exhibit..*Controller.*(..)) || execution(public * edu.asu.diging.vspace.web.HomeController.*(..))")
     public Object checkPreview(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();

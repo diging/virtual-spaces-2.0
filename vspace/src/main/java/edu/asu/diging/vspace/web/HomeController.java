@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISetupManager;
-import edu.asu.diging.vspace.web.publicview.ExhibitionConstants;
+import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 @Controller
 public class HomeController {

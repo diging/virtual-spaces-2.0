@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ISpaceLink;
@@ -25,6 +27,7 @@ public class SpaceLinkDisplay extends LinkDisplay implements ISpaceLinkDisplay {
     private DisplayType type;
 
     @OneToOne(targetEntity = SpaceLink.class)
+    @NotFound(action=NotFoundAction.IGNORE)
     private ISpaceLink link;
 
     /*

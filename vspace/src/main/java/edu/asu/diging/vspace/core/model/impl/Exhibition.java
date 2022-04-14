@@ -36,6 +36,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private ExhibitionModes mode;
 
     private String customMessage;
+    
+    private boolean aboutPageConfigured;
 
     private String previewId;
 
@@ -105,6 +107,16 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     public void setCustomMessage(String customMessage) {
         this.customMessage = customMessage;
+    }
+    
+    @Override
+    public boolean isAboutPageConfigured() {
+        return aboutPageConfigured;
+    }
+    
+    @Override
+    public void setAboutPageConfigured(boolean aboutPageConfigured) {
+        this.aboutPageConfigured = aboutPageConfigured;
     }
 
     public String getPreviewId() {
