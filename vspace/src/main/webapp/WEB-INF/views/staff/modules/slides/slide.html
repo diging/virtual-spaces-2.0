@@ -99,13 +99,10 @@
                 	innerDiv1.append(video);
                 }
                 videoBlock.append(innerDiv1);
-                var input1 = $("<input></input>");
-                input1.attr('class',"deleteVideoId");
-                input1.attr('type',"hidden");
-                videoBlock.append(input1);
                 var anchor1 = $("<a></a>");
                 anchor1.attr('href',"javascript:;");
                 anchor1.attr('class',"btn deleteVideo col-md-1");
+                anchor1.attr('data-video-id',"");
                 anchor1.css('position','absolute');
                 anchor1.css('right','25px');
                 var span1 = $("<span></span>");
@@ -374,13 +371,13 @@
 							}
 							if (data != '') {
 								videoBlk.attr('id', data);
-								$("#currentVideo").find('.deleteVideoId').val(data);
+								$("#currentVideo").find('a:first').attr('data-video-id', data);
 								$("#currentVideo").find('#editVideoId').val(data);
 								$("#currentVideo").attr('id', data);
 							}
 							else {
 								videoBlk.attr('id', videoID);
-								$("#currentVideo").find('.deleteVideoId').val(videoID);
+								$("#currentVideo").find('a:first').attr('data-video-id', videoID);
 								$("#currentVideo").find('#editVideoId').val(videoID);
 								$("#currentVideo").attr('id', videoID);
 							}
@@ -739,9 +736,9 @@
               	});
             	
             	$(document).on("click", ".deleteVideo", function(e) {
+            	    debugger
             		$("#confirmDeleteVideoAlert").show();
-            		var alert = $('<input type="hidden" class="deleteVideoId">');
-            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
             		$('.modal-footer').append(alert); 
               	});
             	
@@ -856,7 +853,8 @@
             		$("#confirmDeleteTextAlert").find('input').remove();
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
             		$("#confirmDeleteVideoAlert").hide();
-            		var blockId = $('.deleteVideoId').attr('value');
+            		var blockId = $('#videoIdToDelete').attr('value');
+            		$('#videoIdToDelete').val("");
             		if(blockId == null || blockId == ''){
             			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             			$('.error').append(alert); 
@@ -864,8 +862,7 @@
             			    $(".error").empty();
             			});
             		} else{
-            			$('#'+blockId+'>.deleteVideoId').remove()
-            			// ------------- delete video content blocks ------------
+            		    // ------------- delete video content blocks ------------
             			$.ajax({
             			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
             			    type: 'DELETE',
@@ -1397,6 +1394,7 @@
                         <div class="modal-body">
                             <h6>Are you sure you want to delete this video block?</h6>
                         </div>
+                        <input type="hidden" id="videoIdToDelete" />
                         <div class="modal-footer">
                             <button id="cancelDeleteVideo" type="reset"
                                 class="btn light">Cancel</button>
@@ -1655,12 +1653,12 @@
 	                    	<iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
 								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 								allowfullscreen ></iframe>
-							<video width="800" height="530" th:if="${contents.video.url == null}" controls >
+							<video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
 							  <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
 							</video>
 	                    </div>
-	                    <input type="hidden" class="deleteVideoId" th:value="${contents.id}" />
-	                    <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
+	                    
+	                    <a class="btn deleteVideo col-md-1" href="javascript:;" th:attr="data-video-id=${contents.id}" style="position:absolute; right:25px;"> 
 	                        <span class="icon-trash error"></span>
 	                    </a>
 	                    <input type="hidden" id="editVideoId" th:value="${contents.id}" />
