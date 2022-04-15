@@ -829,6 +829,7 @@
             			    $(".error").empty();
             			});
             		} else{
+            			$('#deleteImageId').remove()
             			// ------------- delete image content blocks ------------
             			$.ajax({
             			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
@@ -844,7 +845,6 @@
             					});
             				}
             			});
-            			$('#deleteImageId').remove()
             		}
             	});
             	
