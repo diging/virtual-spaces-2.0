@@ -100,7 +100,7 @@
                 }
                 videoBlock.append(innerDiv1);
                 var input1 = $("<input></input>");
-                input1.attr('id',"deleteVideoId");
+                input1.attr('class',"deleteVideoId");
                 input1.attr('type',"hidden");
                 videoBlock.append(input1);
                 var anchor1 = $("<a></a>");
@@ -374,13 +374,13 @@
 							}
 							if (data != '') {
 								videoBlk.attr('id', data);
-								$("#currentVideo").find('#deleteVideoId').val(data);
+								$("#currentVideo").find('.deleteVideoId').val(data);
 								$("#currentVideo").find('#editVideoId').val(data);
 								$("#currentVideo").attr('id', data);
 							}
 							else {
 								videoBlk.attr('id', videoID);
-								$("#currentVideo").find('#deleteVideoId').val(videoID);
+								$("#currentVideo").find('.deleteVideoId').val(videoID);
 								$("#currentVideo").find('#editVideoId').val(videoID);
 								$("#currentVideo").attr('id', videoID);
 							}
@@ -740,7 +740,7 @@
             	
             	$(document).on("click", ".deleteVideo", function(e) {
             		$("#confirmDeleteVideoAlert").show();
-            		var alert = $('<input type="hidden" id="deleteVideoId">');
+            		var alert = $('<input type="hidden" class="deleteVideoId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
             		$('.modal-footer').append(alert); 
               	});
@@ -856,7 +856,7 @@
             		$("#confirmDeleteTextAlert").find('input').remove();
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
             		$("#confirmDeleteVideoAlert").hide();
-            		var blockId = $('#deleteVideoId').attr('value');
+            		var blockId = $('.deleteVideoId').attr('value');
             		if(blockId == null || blockId == ''){
             			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             			$('.error').append(alert); 
@@ -864,7 +864,7 @@
             			    $(".error").empty();
             			});
             		} else{
-            			$('#deleteVideoId').remove()
+            			$('#'+blockId+'>.deleteVideoId').remove()
             			// ------------- delete video content blocks ------------
             			$.ajax({
             			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
@@ -1659,7 +1659,7 @@
 							  <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
 							</video>
 	                    </div>
-	                    <input type="hidden" id="deleteVideoId" th:value="${contents.id}" />
+	                    <input type="hidden" class="deleteVideoId" th:value="${contents.id}" />
 	                    <a class="btn deleteVideo col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
 	                        <span class="icon-trash error"></span>
 	                    </a>
