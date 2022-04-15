@@ -738,8 +738,8 @@
             	$(document).on("click", ".deleteVideo", function(e) {
             	    debugger
             		$("#confirmDeleteVideoAlert").show();
+            	    console.log($(this).attr('data-video-id'));
             		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
-            		$('.modal-footer').append(alert); 
               	});
             	
             	$(document).on("click", ".deleteChoiceBlock", function(e) {
