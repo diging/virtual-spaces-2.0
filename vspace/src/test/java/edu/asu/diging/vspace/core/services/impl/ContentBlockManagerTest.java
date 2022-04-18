@@ -106,10 +106,27 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteSpaceBlockById_forNonExistentId() throws BlockDoesNotExistException {
         String spaceBlockId = "notARealId";
-        Optional<ContentBlock> contentBlockOptional = Optional.of(contentBlock);
-        when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
+        when(contentBlockRepository.findById("notARealId")).thenReturn(Optional.empty());
         Mockito.doThrow(EmptyResultDataAccessException.class).when(spaceBlockRepo).deleteById(spaceBlockId);
         managerToTest.deleteSpaceBlockById(spaceBlockId,"slideId_1");
+    }
+    
+    @Test
+    public void test_deleteSpaceBlockById_valid() throws BlockDoesNotExistException {
+        SpaceBlock spaceBlock = new SpaceBlock();
+        managerToTest.saveSpaceBlock(spaceBlock);
+        
+        Mockito.verify(spaceBlockRepo).save(spaceBlock);
+        
+    }
+    
+    @Test
+    public void test_editSpaceBlock_valid() throws BlockDoesNotExistException {
+        String spaceBlockId = "realId";
+        when(contentBlockRepository.findById(spaceBlockId)).thenReturn(Optional.of(contentBlock));
+        managerToTest.deleteSpaceBlockById(spaceBlockId,"slideId_1");
+        Mockito.verify(spaceBlockRepo).deleteById(spaceBlockId);
+        
     }
     
     @Test
