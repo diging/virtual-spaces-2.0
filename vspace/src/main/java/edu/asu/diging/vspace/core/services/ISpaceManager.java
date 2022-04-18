@@ -51,20 +51,4 @@ public interface ISpaceManager {
     List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
     
     List<ISpace> getSpaces(int pageNo);
-
-    /**
-     * Method to return the total pages sufficient to display all spaces
-     * 
-     * @return totalPages required to display all spaces in DB
-     */
-    long getTotalPages();
-
-    /**
-     * Method to return page number after validation
-     * 
-     * @param pageNo page provided by calling method
-     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
-     *         totalPages.
-     */
-    int validatePageNumber(int pageNo);
 }

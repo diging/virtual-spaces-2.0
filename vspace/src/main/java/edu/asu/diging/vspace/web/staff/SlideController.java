@@ -39,9 +39,6 @@ public class SlideController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
-    @Autowired
-    private SpaceRepository spaceRepo;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) throws JsonProcessingException {

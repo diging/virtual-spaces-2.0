@@ -74,7 +74,7 @@
             
             function getSelectedSpace(blockId){
             	$.ajax({
-                	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId + "?" +[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+                	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
     		type: 'GET',
     		success: function(result) {
     			$("#selectedSpace").text('');

@@ -330,9 +330,15 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public List<ISpace> getSpaces(int pageNo, String sortedBy, String order) {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
-        pageNo = validatePageNumber(pageNo);
+        if(pageNo < 1) {
+            pageNo = 1;
+        }
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<Space> spaces = spaceRepo.findAll(sortByRequestedField);
+        if(spaces.getContent().size() == 0) {
+            sortByRequestedField = PageRequest.of(spaces.getTotalPages() - 1, pageSize, sortingParameters);
+            spaces = spaceRepo.findAll(sortByRequestedField);
+        }
         List<ISpace> results = new ArrayList<>();
         if(spaces != null) {
             spaces.getContent().forEach(i -> results.add(i));
@@ -351,36 +357,6 @@ public class SpaceManager implements ISpaceManager {
             sortingParameters = sortingParameters.descending();
         }
         return sortingParameters;
-    }
-    
-    /**
-     * Method to return the total pages sufficient to display all spaces
-     * 
-     * @return totalPages required to display all spaces in DB
-     */
-    
-    @Override
-    public long getTotalPages() {
-        return (spaceRepo.count() % pageSize==0) ? spaceRepo.count() / pageSize:(spaceRepo.count() / pageSize) + 1;
-    }
-    
-    /**
-     * Method to return page number after validation
-     * 
-     * @param pageNo page provided by calling method
-     * @return 1 if pageNo less than 1 and lastPage if pageNo greater than
-     *         totalPages.
-     */
-
-    @Override
-    public int validatePageNumber(int pageNo) {
-        long totalPages = getTotalPages();
-        if(pageNo<1) {
-            return 1;
-        } else if(pageNo>totalPages) {
-            return (totalPages==0) ? 1:(int) totalPages;
-        }
-        return pageNo;
     }
     
 }

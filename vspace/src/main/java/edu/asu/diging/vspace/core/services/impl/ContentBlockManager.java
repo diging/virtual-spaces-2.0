@@ -455,4 +455,9 @@ public class ContentBlockManager implements IContentBlockManager {
             contentBlockRepository.saveAll(contentBlockList);
         }
     }
+
+    @Override
+    public void updateSpaceBlock(SpaceBlock spaceBlock) {
+        spaceBlockRepo.save(spaceBlock);
+    }
 }

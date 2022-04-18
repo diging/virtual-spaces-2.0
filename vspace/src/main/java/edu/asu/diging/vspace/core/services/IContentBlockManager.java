@@ -69,4 +69,6 @@ public interface IContentBlockManager {
     void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
     
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
+
+    void updateSpaceBlock(SpaceBlock spaceBlock);
 }

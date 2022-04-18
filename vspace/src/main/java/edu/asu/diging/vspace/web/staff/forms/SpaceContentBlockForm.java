@@ -2,8 +2,8 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 public class SpaceContentBlockForm {
     
-    String title;
-    String spaceName;
+    private String title;
+    private String spaceName;
     
     public String getTitle() {
         return title;
