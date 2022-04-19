@@ -44,12 +44,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     @Override
     public SpacesCustomOrder createNewCustomOrder(List<String> spaceOrders,
             String name,
-            String description) throws IllegalStateException {
-        List<SpacesCustomOrder> spacesCustomOrderRepoValue = spacesCustomOrderRepository.
-                findByCustomOrderName(name);
-        if(!spacesCustomOrderRepoValue.isEmpty()) {
-            throw new IllegalStateException("Order with same name present");
-        }
+            String description) {
         List<ISpace> orderedSpaces= new ArrayList<ISpace>();
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setCustomOrderName(name);
