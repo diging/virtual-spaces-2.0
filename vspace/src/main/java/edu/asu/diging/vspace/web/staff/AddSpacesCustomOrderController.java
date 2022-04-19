@@ -44,13 +44,7 @@ public class AddSpacesCustomOrderController {
             return new ResponseEntity<String>("Cannot leave the name field empty", HttpStatus.BAD_REQUEST);
         }
         SpacesCustomOrder spacesCustomOrder = null;
-        try {
-            spacesCustomOrder = spacesCustomOrderManager.createNewCustomOrder(spaceOrders, name, description);
-        }
-        catch(IllegalStateException ex) {
-            model.addAttribute("showAlert", true);
-            return new ResponseEntity<String>("Change the name as it already exists", HttpStatus.BAD_REQUEST);
-        }
+        spacesCustomOrder = spacesCustomOrderManager.createNewCustomOrder(spaceOrders, name, description);
         return new ResponseEntity<String>(spacesCustomOrder.getId(), HttpStatus.OK);
     }
 
