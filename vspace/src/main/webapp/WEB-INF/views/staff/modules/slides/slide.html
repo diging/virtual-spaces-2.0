@@ -736,10 +736,8 @@
               	});
             	
             	$(document).on("click", ".deleteVideo", function(e) {
-            	    debugger
             		$("#confirmDeleteVideoAlert").show();
-            	    console.log($(this).attr('data-video-id'));
-            		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
+            		$(".videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
               	});
             	
             	$(document).on("click", ".deleteChoiceBlock", function(e) {
@@ -848,13 +846,12 @@
             	// ---------- Delete Video Block -----------
             	
 				$("#deleteVideo").on("click", function(e) {
-				    debugger;
             		e.preventDefault();
             		$("#confirmDeleteTextAlert").find('input').remove();
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
             		$("#confirmDeleteVideoAlert").hide();
-            		var blockId = $('#videoIdToDelete').attr('value');
-            		$('#videoIdToDelete').val("");
+            		var blockId = $('.videoIdToDelete').attr('value');
+            		$('.videoIdToDelete').val("");
             		if(blockId == null || blockId == ''){
             			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             			$('.error').append(alert); 
@@ -939,6 +936,7 @@
                     $("#urlLink>a").removeClass("active show");
                     $("#uploadLink").addClass("active show");
                     $("#uploadLink>a").addClass("active show");
+                    $('.videoIdToDelete').val("");
                 });
                 
                 $("#file").click(function() {
@@ -1394,7 +1392,7 @@
                         <div class="modal-body">
                             <h6>Are you sure you want to delete this video block?</h6>
                         </div>
-                        <input type="hidden" id="videoIdToDelete" />
+                        <input type="hidden" class="videoIdToDelete" />
                         <div class="modal-footer">
                             <button id="cancelDeleteVideo" type="reset"
                                 class="btn light">Cancel</button>
