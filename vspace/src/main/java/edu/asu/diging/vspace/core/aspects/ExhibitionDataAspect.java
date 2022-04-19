@@ -75,7 +75,7 @@ public class ExhibitionDataAspect {
         }
     }
 
-    @Around("execution(public * edu.asu.diging.vspace.web.publicview..*Controller.*(..))")
+    @Around("execution(public * edu.asu.diging.vspace.web.exhibit..*Controller.*(..))")
     public Object showExhibition(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
         MethodSignature signature = (MethodSignature) jp.getSignature();
@@ -94,7 +94,6 @@ public class ExhibitionDataAspect {
         String moduleId = ids.getOrDefault(IdPrefix.MODULEID, "");
         return redirectRequest(jp, spaceId, moduleId, indexOfModel, exhibition);
     }
-
 
     /**
      * Based on exhibition mode, get the redirect page or pass control to controller. 
@@ -115,6 +114,11 @@ public class ExhibitionDataAspect {
         if(exhibitionMode.equals(ExhibitionModes.OFFLINE)) {
             String modeValue = exhibition.getCustomMessage().equals("") == false ? exhibition.getCustomMessage() : exhibitionMode.getValue();
             ((Model) args[modelIndex]).addAttribute("modeValue", modeValue);
+        }
+        if(exhibition.isAboutPageConfigured()) {
+            ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", true);
+        } else {
+            ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", false);
         }
         // If exhibition is set to maintenance, set the default message.
         if(exhibitionMode.equals(ExhibitionModes.MAINTENANCE)) {

@@ -32,4 +32,8 @@ public interface IExhibition extends IVSpaceElement {
 
     void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder);
 
+    boolean isAboutPageConfigured();
+
+    void setAboutPageConfigured(boolean aboutPageConfigured);
+
 }

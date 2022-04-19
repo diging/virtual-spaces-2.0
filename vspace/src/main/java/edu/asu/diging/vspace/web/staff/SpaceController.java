@@ -33,7 +33,9 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 public class SpaceController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
+    public static final String STAFF_SPACE_PATH = "/staff/space/";
+
     @Autowired
     private ISpaceManager spaceManager;
 
@@ -55,7 +57,7 @@ public class SpaceController {
     @Autowired
     IExhibitionManager exhibitionManager;
 
-    @RequestMapping("/staff/space/{id}")
+    @RequestMapping(STAFF_SPACE_PATH+"{id}")
     public String showSpace(@PathVariable String id, Model model) {
 
         ISpace space = spaceManager.getFullyLoadedSpace(id);
@@ -77,7 +79,7 @@ public class SpaceController {
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/staff/space/{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = STAFF_SPACE_PATH+"{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String,Object>> showSpaceLinks(@PathVariable String id, Model model) {
         Map<String,Object> responseData = new HashMap<String,Object>();
         responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));

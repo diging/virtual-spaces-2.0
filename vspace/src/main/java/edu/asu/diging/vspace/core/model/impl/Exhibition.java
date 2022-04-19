@@ -45,6 +45,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @OneToOne(targetEntity = SpacesCustomOrder.class)
     @JoinColumn(name = "Space_Custom_Order_Id", referencedColumnName = "id")
     private SpacesCustomOrder spacesCustomOrder;
+    
+    private boolean aboutPageConfigured;
 
     /*
      * (non-Javadoc)
@@ -132,6 +134,16 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @Override
     public void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder) {
         this.spacesCustomOrder = spacesCustomOrder;
+    }
+        
+        
+    public boolean isAboutPageConfigured() {
+        return aboutPageConfigured;
+    }
+    
+    @Override
+    public void setAboutPageConfigured(boolean aboutPageConfigured) {
+        this.aboutPageConfigured = aboutPageConfigured;
     }
 
 }

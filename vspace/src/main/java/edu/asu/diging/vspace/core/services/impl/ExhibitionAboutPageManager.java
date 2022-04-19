@@ -6,10 +6,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 /**
  * 
  * @author Avirup Biswas
@@ -21,6 +23,9 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 
     @Autowired
     private ExhibitionAboutPageRepository repo;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
@@ -38,7 +43,24 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      */
     @Override
     public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        if(!exhibition.isAboutPageConfigured()) {
+            exhibition.setAboutPageConfigured(true);
+            exhibitionManager.storeExhibition((Exhibition)exhibition);
+        }
         return repo.save(exhibitionAboutPage);
+    }
+    
+    /**
+     * This method returns the first ExhibitionAboutPage set by a Staff, if the
+     * ExhibitionAboutPage is not set yet, this method returns a new instance of 
+     * an ExhibitionAbout Page
+     * @return ExhibitionAboutPage
+    */
+    @Override
+    public ExhibitionAboutPage getExhibitionAboutPage() {
+        List<ExhibitionAboutPage> aboutPageList = findAll();
+        return aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
     }
     
 }
