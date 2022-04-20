@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +18,12 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -103,5 +109,26 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     protected void deleteLinkRepo(IModuleLink link) {
         moduleLinkRepo.delete((ModuleLink) link);
     }
+
+	@Override
+	public HashSet<ISpace> findModuleLinksFromModuleId(String moduleId) {
+		System.out.println("inside module link manager method");
+		List<ModuleLink> moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
+		System.out.println(moduleLinks);
+		List<ISpace> spaces=new ArrayList<>();
+		for (ModuleLink ml : moduleLinks) {
+			System.out.println(ml.getId());
+            String spaceId=moduleLinkRepo.getSpaceIdFromModuleLink(ml.getId());
+            System.out.println("after space id cal");
+            System.out.println(spaceId);
+            ISpace space = spaceManager.getSpace(spaceId);
+            spaces.add(space);
+            System.out.println(spaces);
+        }
+		HashSet<ISpace> uniqueSpaces = new HashSet<ISpace>(spaces);
+		System.out.println(uniqueSpaces);
+		return uniqueSpaces;
+		
+	}
 
 }
