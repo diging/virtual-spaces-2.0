@@ -75,7 +75,7 @@ public class ExhibitionSpaceController {
         model.addAttribute("exhibitionConfig", exhibition);
         model.addAttribute("space", space);
         model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
-		model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
+        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         if (space.isShowUnpublishedLinks()) {
             spaceLinks = spaceLinkManager.getLinkDisplays(id);
         } else {
