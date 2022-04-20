@@ -216,17 +216,27 @@
 				  		let slideIndex = 0;
 				  		for(slide of startSequence.slides){
 				  			let slideNode = {}
+				  			slideNode.children=[];
+				  			if(slide.branchingPoint == true){
+				  				slideNode.branchingPoint = true;
+				  				slideNode.branchingPoints = [];
+				  				for(seq of slide.sequenceIds){
+				  					let branchSeq = {};
+				  					branchSeq.name = seq;
+				  					slideNode.children.push(branchSeq);
+				  				}
+				  			}
 				  			slideNode.name = slide.name;
 				  			slideNode.group = "slide";
 				  			slideNode.sequenceId = startSequence.id;
 				  			slideNode.slideId = slide.id;
 				  			slideNode.id = startSequence.id + slide.id;
 				  			startNodeSequenceSlides.push(slideNode);
-				  			slideNode.children=[];
+				  			
 				  			if(slideIndex == 0){
 				  				  let slideLink ={};
-				  				  slideNode.parent=nodeSequence.name;
-				  				  nodeSequence.children.push(slideNode);
+				  				  slideNode.parent=startNodeSequence.name;
+				  				  startNodeSequence.children.push(slideNode);
 				  				  prev=slideNode;
 				  				  
 					  		  } else {
@@ -238,7 +248,10 @@
 					  		  
 					  		slideIndex=slideIndex+1;
 				  		}
-				  		for (sequence of sequences) {
+				  		treeData.children.push(startNodeSequence);
+				  		console.log('start node sequence is')
+				  		console.log(startNodeSequence);
+				  		for (sequence of otherSequences) {
 				  		  let nodeSequence = {};
 				  		  nodeSequence.children=[];
 				  		  nodeSequence.name = sequence.name;
@@ -249,6 +262,7 @@
 				  		  let index = 0;
 				  		  let source = "";
 				  		  var slideNodeTree = [];
+				  		  let slides = [];
 				  		  var prev=null;
 				  		  for(slide of sequenceSlides){
 				  			  
@@ -258,7 +272,6 @@
 				  			  slideNode.sequenceId = sequence.id;
 				  			  slideNode.slideId = slide.id;
 				  			  slideNode.id = sequence.id + slide.id;
-				  			  slides.push(slideNode);
 				  			  slideNode.children=[];
 				  			  
 					  		  if(index == 0){
@@ -273,15 +286,17 @@
 					  			  prev=slideNode;
 					  		  }
 					  		  source = slideNode.id;
-					  		  
+					  		  slides.push(slideNode);
 					  		  index=index+1;
 				  		  }
 				  		treeData.children.push(nodeSequence)
 				  		}
+				  		console.log('tree data is')
+				  		console.log(treeData);
+				  		  treeData.name = json.name;
+				  		var margin = {top: 20, right: 120, bottom: 20, left: 120},
 				  		/* treeData.name = json.name;
-				  		var margin = {top: 20, right: 120, bottom: 20, left: 120}, */
-				  		treeData.name = json.name;
-				  		var margin = {top: 70, right: 110, bottom: 20, left: 120},
+				  		var margin = {top: 70, right: 110, bottom: 20, left: 120},*/
 				  		width = 960 - margin.right - margin.left,
 				  		height = 500 - margin.top - margin.bottom;
 				  		
@@ -298,10 +313,10 @@
 				  	var svg = d3.select("#graph").append("svg")
 				  		.attr("width", width + margin.right + margin.left)
 				  		.attr("height", height + margin.top + margin.bottom)
-				  	  .append("g");
-				  		/* .attr("transform", "translate(" + 208 + "," + margin.top + ")"); */
+				  	  .append("g")
+				  		.attr("transform", "translate(" + 208 + "," + margin.top + ")");
 
-				  	root = treeData;
+				     root = treeData;
 				  	root.x0 = height / 2;
 				  	root.y0 = 0;
 				  	  
@@ -427,7 +442,7 @@
 				  		d._children = null;
 				  	  }
 				  	  update(d);
-				  	}
+				  	} 
 				        
                         </script>
          </div>
