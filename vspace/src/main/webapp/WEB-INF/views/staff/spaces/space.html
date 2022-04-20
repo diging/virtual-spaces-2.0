@@ -194,17 +194,8 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 	}
 }
 
-function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
     if(block != null){
-        var imageHeight;
-        var imageWidth;
-        if(divId === '#space'){
-            imageHeight = parseInt($("#bgImage").css("height"));
-            imageWidth = parseInt($("#bgImage").css("width"));
-        }else{
-            imageHeight = parseInt($("#main-bgImage").css("height"));
-            imageWidth = parseInt($("#main-bgImage").css("width"));
-        }
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
         var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
@@ -251,6 +242,7 @@ function drawLinks(){
             var posYModal = $("#bgImage").position().top;
             var posX = $("#main-bgImage").position().left;
             var posY = $("#main-bgImage").position().top;
+            
             spaceLinks.forEach(function(link,index){
                 var spanId= "spacelinkModalId-";
                 var divId = "#space"
@@ -288,13 +280,17 @@ function drawLinks(){
             textBlocks.forEach(function(block,index){
                 var spanId= "textModalBlockId-";
                 var divId = "#space";
-                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal);
+                var imageHeight = parseInt($("#bgImage").css("height"));
+                var imageWidth = parseInt($("#bgImage").css("width"));
+                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
             })
             
             textBlocks.forEach(function(block,index){
                 var spanId= "textBlockId-";
                 var divId = "#main-space";
-                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal);
+                var imageHeight = parseInt($("#main-bgImage").css("height"));
+                var imageWidth = parseInt($("#main-bgImage").css("width"));
+                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
             })
         }
     });
@@ -807,30 +803,9 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
         storeX = e.pageX - $(this).offset().left;
         storeY = e.pageY - $(this).offset().top + 25;
         showTextBlockEdit(editTextBlockInfo());
-        //edit(blockId);
     });
     hideLinkInfoTabs();
     displayForms("#editTextBlockInfo");
-}
-function edit(blockId)
-{
-	var textBlckVal = $("#textModalBlockId-"+blockId+" .textBlock")[0],
-    editHeight = textBlckVal.clientHeight,
-    editWidth = textBlckVal.clientWidth;
-    $("#textModalBlockId-"+blockId+" .textBlock").css('resize', 'both');
-    var Imgheight = parseInt($("#bgImage").css("height"));
-    var Imgwidth = parseInt($("#bgImage").css("width"));
-            
-    $("#textModalBlockId-"+blockId+" .textBlock").on("mouseup", function(e){
-    	 if (editHeight !== textBlckVal.clientHeight || editWidth !== textBlckVal.clientWidth ) {
-    		 editHeight = textBlckVal.clientHeight;
-    		 editWidth = textBlckVal.clientWidth;
-         let percentileHeight = (editHeight*100)/Imgheight;
-         let percentileWidth = (editWidth*100)/Imgwidth;
-         $("#textBoxWidthIDEdit").val(percentileWidth);
-         $("#textBoxHeightIDEdit").val(percentileHeight);
-    	 }
-    });
 }
 function resetHighlighting() {
     // reset icon links
@@ -1668,7 +1643,7 @@ $(function(){
             $("#ext_label").remove();
             $("#space").hide();
             $("#createExternalLinkAlert").hide();
-			$("#bgImage").off("click");
+            $("#bgImage").off("click");
             $('#errorAlert').hide();
             drawLinks();
         });
