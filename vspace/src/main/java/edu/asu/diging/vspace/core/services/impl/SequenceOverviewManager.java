@@ -1,22 +1,17 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.SequenceRepository;
-import edu.asu.diging.vspace.core.model.IBranchingPoint;
+import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
-import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISequenceOverviewManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
@@ -24,12 +19,6 @@ import edu.asu.diging.vspace.core.services.impl.model.SlideOverview;
 
 @Service
 public class SequenceOverviewManager implements ISequenceOverviewManager {
-    
-    @Autowired
-    private SequenceRepository sequenceRepo;
-    
-    @Autowired
-    private ISequenceManager sequenceManager;
     
     @Autowired
     private IModuleManager moduleManager;
@@ -73,10 +62,10 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
             SlideOverview slideOverview = new SlideOverview(); 
             if(slide instanceof BranchingPoint ) {
                 slideOverview.setBranchingPoint(true);
-                List<ISequence> sequenceChoices = ((BranchingPoint)slide).getSequence();
+                List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
                 List<String> slideOverviewSequenceChoices = new ArrayList<String>();
-                for(ISequence sequence : sequenceChoices) {
-                    slideOverviewSequenceChoices.add(sequence.getName());
+                for(IChoice choice : sequenceChoices) {
+                    slideOverviewSequenceChoices.add(choice.getSequence().getName());
                 }
                 slideOverview.setSequenceIds(slideOverviewSequenceChoices);
             }
