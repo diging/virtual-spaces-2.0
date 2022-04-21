@@ -6,6 +6,8 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
+		<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
+    	data-auto-replace-svg="nest"></script>
         <style type="text/css">
             .hova {
             background-color: #f2f2f2;
@@ -41,6 +43,8 @@
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
+            var addVideoClk=0;
+            var editVideoClk=0;
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
@@ -109,13 +113,10 @@
                 span1.attr('class',"icon-trash error");
                 anchor1.append(span1);
                 videoBlock.append(anchor1);
-                var input2 = $("<input></input>");
-                input2.attr('id',"editVideoId");
-                input2.attr('type',"hidden");
-                videoBlock.append(input2);
                 var anchor2 = $("<a></a>");
                 anchor2.attr('href',"javascript:;");
                 anchor2.attr('class',"btn editVideo col-md-1");
+                anchor2.attr('data-editvideo-id',"");
                 anchor2.css('position','absolute');
                 anchor2.css('top','60px');
                 anchor2.css('right','25px');
@@ -371,14 +372,14 @@
 							}
 							if (data != '') {
 								videoBlk.attr('id', data);
-								$("#currentVideo").find('a:first').attr('data-video-id', data);
-								$("#currentVideo").find('#editVideoId').val(data);
+								$("#currentVideo >.deleteVideo").attr('data-video-id', data);
+								$("#currentVideo >.editVideo").attr('data-editvideo-id', data);
 								$("#currentVideo").attr('id', data);
 							}
 							else {
 								videoBlk.attr('id', videoID);
-								$("#currentVideo").find('a:first').attr('data-video-id', videoID);
-								$("#currentVideo").find('#editVideoId').val(videoID);
+								$("#currentVideo >.deleteVideo").find('a:first').attr('data-video-id', videoID);
+								$("#currentVideo >.editVideo").attr('data-editvideo-id', videoID);
 								$("#currentVideo").attr('id', videoID);
 							}
 					    }
@@ -693,7 +694,10 @@
                 });
                 
                 $("#addVideo").click(function() {
+                    $("#videoTitle").value = "";
                     $("#addVideoAlert").show();
+                    addVideoClk =1;
+                    editVideoClk=0;
                 });
                 
                 $("#uploadImage").click(function(e) {
@@ -736,8 +740,15 @@
               	});
             	
             	$(document).on("click", ".deleteVideo", function(e) {
-            		$("#confirmDeleteVideoAlert").show();
             		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
+            		$(".load").remove();
+            		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+            		$(".load").show();
+            		setTimeout(function() {
+            		    //code to be executed after 3 second
+            		    $(".load").hide();
+            		    $("#confirmDeleteVideoAlert").show();
+            		  }, 3000);
               	});
             	
             	$(document).on("click", ".deleteChoiceBlock", function(e) {
@@ -936,6 +947,7 @@
                     $("#urlLink>a").removeClass("active show");
                     $("#uploadLink").addClass("active show");
                     $("#uploadLink>a").addClass("active show");
+                    $("#saveVideo").html("Update Video"); 
                     $('#videoIdToDelete').val("");
                 });
                 
@@ -1053,17 +1065,30 @@
  						$("#videoLink").prop('disabled', false);
  						$("#saveVideo").prop('disabled', false);
  					}
- 					if ($("#videoTitle").val() && !$("#videoLink").val()) {
- 						$("#saveVideo").prop('disabled', false);
+ 					if (!$("#videoTitle").val() && !$("#videoLink").val()) {
+ 						$("#saveVideo").prop('disabled', true);
+ 					}
+ 					if (!$("#videoTitle").val() && $("#videoLink").val()) {
+ 						$("#saveVideo").prop('disabled', true);
  					}
  					$("#urlLink").addClass("active show");
  					$("#uploadLink").removeClass("active show");
- 					if($("#videoFile").val() || $("#videoTitle").val()){
- 					   $("#saveVideo").html("Update Video");   
- 					}
- 					else{
- 					$("#saveVideo").html("Embed Video");
- 					}
+                    if(addVideoClk==1 && editVideoClk==0){
+                        $("#saveVideo").html("Embed Video"); 
+                        if (!$("#videoTitle").val() || !$("#videoLink").val()) {
+     						$("#saveVideo").prop('disabled', true);
+     					}
+                    }
+                    if(addVideoClk==0 && editVideoClk==1){
+                        $("#saveVideo").html("Update Video");  
+                        if ($("#videoTitle").val() && !$("#videoLink").val()) {
+     						$("#saveVideo").prop('disabled', false);
+     					}
+                        if (!$("#videoTitle").val() && $("#videoLink").val()) {
+     						$("#saveVideo").prop('disabled', true);
+     					}
+                    }
+                    
  				});
 
  				$("#uploadLink").on("click", function (e) {
@@ -1076,17 +1101,27 @@
  						$("#videoFile").prop('disabled', false);
  						$("#saveVideo").prop('disabled', false);
  					}
- 					if ($("#videoTitle").val() && !$("#videoFile").val()) {
- 						$("#saveVideo").prop('disabled', false);
+ 					
+ 					if (!$("#videoTitle").val() && !$("#videoFile").val()) {
+ 						$("#saveVideo").prop('disabled', true);
  					}
  					$("#urlLink").removeClass("active show");
  					$("#uploadLink").addClass("active show");
- 					if($("#videoFile").val() || $("#videoTitle").val()){
-  					   $("#saveVideo").html("Update Video");   
-  					}
-  					else{
-  					$("#saveVideo").html("Upload Video");
-  					}
+ 				   if(addVideoClk==1 && editVideoClk==0){
+                       $("#saveVideo").html("Upload Video");   
+                       if (!$("#videoTitle").val() || !$("#videoFile").val()) {
+    						$("#saveVideo").prop('disabled', true);
+    					}
+                   }
+                   if(addVideoClk==0 && editVideoClk==1){
+                       $("#saveVideo").html("Update Video");  
+                       if ($("#videoTitle").val() && !$("#videoFile").val()) {
+    						$("#saveVideo").prop('disabled', false);
+    					}
+                       if (!$("#videoTitle").val() && $("#videoFile").val()) {
+    						$("#saveVideo").prop('disabled', true);
+    					}
+                   }
  				});
  				
  				$("#videoLink").on("input", function (e) {
@@ -1237,9 +1272,11 @@
             
 			// editing video block
             $(document).on("click", ".editVideo", function(e) {
+                addVideoClk =0;
+                editVideoClk=1;
                 $("#saveVideo").html("Update Video");
                 $("#saveVideo").prop('disabled', false);
-            	var id = $(this).siblings('input').val();
+            	var id = $(this).attr('data-editvideo-id');
             	var vidId = $('div#'+id).attr('id');
             	var title = $('div#'+id).find('h3 strong').html();
             	if (vidId != '') {
@@ -1659,8 +1696,7 @@
 	                    <a class="btn deleteVideo col-md-1" href="javascript:;" th:attr="data-video-id=${contents.id}" style="position:absolute; right:25px;"> 
 	                        <span class="icon-trash error"></span>
 	                    </a>
-	                    <input type="hidden" id="editVideoId" th:value="${contents.id}" />
-	                    <a class="btn editVideo col-md-1" href="javascript:;" style="position:absolute; top:60px;right:25px;"> 
+	                    <a class="btn editVideo col-md-1" href="javascript:;" th:attr="data-editvideo-id=${contents.id}" style="position:absolute; top:60px;right:25px;"> 
 	                        <span class="icon-edit"></span>
 	                    </a>
                 	</div>
