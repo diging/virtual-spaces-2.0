@@ -22,12 +22,35 @@
 		    }
 		}
 	</script>
+	<style>
+	.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: 238px;
+    top: 146px;
+    background: rgba(0, 0, 0, 0.6);
+}
+.previewExhb:hover .tooltiptext {
+    visibility: visible;
+}
+	</style>
 </head>
 
 <body>
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition Configuration</h2>
-	
+		<div th:if="${exhibitionMode =='ACTIVE' and previewId!=null}">
+	     <a class="previewExhb" target="_blank" th:href="@{|/preview/${previewId}|}"><span class="icon-visible secondary"></span> 
+	     <span class="tooltiptext">Preview Exhibition</span></a><br><br>
+	     <p>To share the Exhibition Preview provide the link <a style="color:blue;" th:href="@{|/preview/${previewId}|}"> [[@{|/preview/${previewId}|}]]</a></p>
+	     </div>
 		<div style="padding: 30px 0;">
 		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

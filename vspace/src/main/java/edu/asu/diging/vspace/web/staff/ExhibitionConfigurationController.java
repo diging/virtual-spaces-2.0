@@ -38,15 +38,24 @@ public class ExhibitionConfigurationController {
     private ExhibitionFactory exhibitFactory;
 
     @RequestMapping("/staff/exhibit/config")
-    public String showExhibitions(Model model) {
+    public String showExhibitions(HttpServletRequest request, Model model) {
         // for now we assume there is just one exhibition
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
+        String previewId = null;
+        ExhibitionModes exhibitionMode = null;
         if (exhibition == null) {
             Exhibition exhibitionObj = (Exhibition) exhibitFactory.createExhibition();
             model.addAttribute("exhibition", exhibitionObj);
+            previewId = exhibitionObj.getPreviewId();
+            exhibitionMode = exhibitionObj.getMode();
+        } else {
+            previewId = exhibition.getPreviewId();
+            exhibitionMode = exhibition.getMode();
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
+        model.addAttribute("previewId", previewId);
+        model.addAttribute("exhibitionMode",exhibitionMode.name());
         return "staff/exhibit/config";
     }
 
@@ -84,6 +93,8 @@ public class ExhibitionConfigurationController {
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
+        attributes.addAttribute("previewId", exhibition.getPreviewId());
+        attributes.addAttribute("exhibitionMode",exhibition.getMode().name());
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
 }

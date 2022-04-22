@@ -23,7 +23,7 @@ public class HomeController {
     @Autowired
     private ISetupManager setupManager;
 
-    @RequestMapping(value = { "/", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}" })
+    @RequestMapping(value = { "/", "/preview/{" + ExhibitionConstants.PREVIEW_ID + "}" })
     public String home(Model model,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId) {
 
@@ -34,13 +34,14 @@ public class HomeController {
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null && exhibition.getStartSpace() != null) {
-            if (!(authentication instanceof AnonymousAuthenticationToken)) {
-                return "redirect:/staff/dashboard/";
+            if (previewId != null) {
+                return "redirect:/preview/{previewId}/space/" + exhibition.getStartSpace().getId();
             } else {
-                if (previewId != null) {
-                    return "redirect:/preview/{previewId}/space/" + exhibition.getStartSpace().getId();
+                if (!(authentication instanceof AnonymousAuthenticationToken)) {
+                    return "redirect:/staff/dashboard/";
+                } else {
+                    return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
                 }
-                return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
             }
         }
         return "home";
