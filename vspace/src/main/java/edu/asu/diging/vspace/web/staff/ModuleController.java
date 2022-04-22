@@ -44,7 +44,8 @@ public class ModuleController {
         for (ISpace sp : spaces) {
         	System.out.println(sp.getName());
         }
-        if (spaces== null) {
+        if (spaces.isEmpty()) {
+        	System.out.println("message show");
             model.addAttribute("message", "Sorry, No spaces has been linked to this Module");
             
         }
