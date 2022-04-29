@@ -25,6 +25,7 @@ import edu.asu.diging.vspace.core.model.impl.SlideWithSpace;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
 
 @Controller
 public class PublicSearchSlideController {
@@ -41,12 +42,12 @@ public class PublicSearchSlideController {
     private ISlideManager slideManager;
     
     @RequestMapping(value = "/exhibit/search/slide")
-    public ResponseEntity<PublicSearchSlideResults> searchInVspace(
+    public ResponseEntity<StaffSearchSlideResults> searchInVspace(
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<ISlide> slideList = paginationForSlide(slidePagenum, searchTerm);
-        PublicSearchSlideResults publicSearch = new PublicSearchSlideResults();
+        StaffSearchSlideResults publicSearch = new StaffSearchSlideResults();
         publicSearch.setSlides(slideList);
         
         Map<String, String> slideFirstImage = new HashMap<>();
@@ -57,7 +58,7 @@ public class PublicSearchSlideController {
             }
         }
         publicSearch.setFirstImageOfSlide(slideFirstImage);
-        return new ResponseEntity<PublicSearchSlideResults>(publicSearch, HttpStatus.OK);
+        return new ResponseEntity<StaffSearchSlideResults>(publicSearch, HttpStatus.OK);
     }
 
     /**

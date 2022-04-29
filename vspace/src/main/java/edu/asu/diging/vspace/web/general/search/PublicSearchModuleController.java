@@ -26,6 +26,7 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
 
 @Controller
 public class PublicSearchModuleController {
@@ -42,12 +43,12 @@ public class PublicSearchModuleController {
     private ISequenceManager sequenceManager;
 
     @RequestMapping(value = "/exhibit/search/module")
-    public ResponseEntity<PublicSearchModuleResults> searchInVspace(
+    public ResponseEntity<StaffSearchModuleResults> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);
-        PublicSearchModuleResults publicSearchModule = new PublicSearchModuleResults();
+        StaffSearchModuleResults publicSearchModule = new StaffSearchModuleResults();
         publicSearchModule.setModules(moduleList);
         
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
@@ -76,7 +77,7 @@ public class PublicSearchModuleController {
         }
         publicSearchModule.setModuleImageIdMap(moduleFirstSlideImage);
         publicSearchModule.setModuleAlertMessages(isModuleConfiguredMap);
-        return new ResponseEntity<PublicSearchModuleResults>(publicSearchModule, HttpStatus.OK);
+        return new ResponseEntity<StaffSearchModuleResults>(publicSearchModule, HttpStatus.OK);
     }
 
     /**
