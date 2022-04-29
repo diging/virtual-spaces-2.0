@@ -30,7 +30,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLinkDisplay> implements IModuleLinkManager{
+public class ModuleLinkManager extends LinkManager < IModuleLink, IModule, IModuleLinkDisplay > implements IModuleLinkManager {
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -51,7 +51,7 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public List<IModuleLinkDisplay> getLinkDisplays(String spaceId) {
+    public List < IModuleLinkDisplay > getLinkDisplays(String spaceId) {
         return moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId);
     }
 
@@ -69,28 +69,28 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     @Override
     protected IModuleLinkDisplay updateLinkAndDisplay(IModuleLink link, IModuleLinkDisplay displayLink) {
         moduleLinkRepo.save((ModuleLink) link);
-        return moduleLinkDisplayRepo.save((ModuleLinkDisplay)displayLink);
+        return moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
     }
 
     @Override
-    protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId){
-        Optional<ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
-        if(moduleLinkDisplay.isPresent()) {
+    protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId) {
+        Optional < ModuleLinkDisplay > moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        if (moduleLinkDisplay.isPresent()) {
             return moduleLinkDisplay.get();
         }
         return null;
     }
 
     @Override
-    protected IModuleLink getLink(String moduleLinkID){
-        Optional<ModuleLink> moduleLink = moduleLinkRepo.findById(moduleLinkID);
-        if(moduleLink.isPresent()) {
+    protected IModuleLink getLink(String moduleLinkID) {
+        Optional < ModuleLink > moduleLink = moduleLinkRepo.findById(moduleLinkID);
+        if (moduleLink.isPresent()) {
             return moduleLink.get();
         }
         return null;
     }
 
-    @Override 
+    @Override
     protected IModuleLinkDisplay createDisplayLink(IModuleLink link) {
         return moduleLinkDisplayFactory.createModuleLinkDisplay(link);
     }
@@ -110,18 +110,17 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
         moduleLinkRepo.delete((ModuleLink) link);
     }
 
-	@Override
-	public HashSet<ISpace> findModuleLinksFromModuleId(String moduleId) {
-		List<ModuleLink> moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
-		System.out.println(moduleLinks);
-		List<ISpace> spaces=new ArrayList<>();
-		for (ModuleLink ml : moduleLinks) {
-            String spaceId=moduleLinkRepo.getSpaceIdFromModuleLink(ml.getId());
+    @Override
+    public HashSet < ISpace > findModuleLinksFromModuleId(String moduleId) {
+        List < ModuleLink > moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
+        List < ISpace > spaces = new ArrayList < > ();
+        for (ModuleLink ml: moduleLinks) {
+            String spaceId = moduleLinkRepo.getSpaceIdFromModuleLink(ml.getId());
             ISpace space = spaceManager.getSpace(spaceId);
             spaces.add(space);
         }
-		HashSet<ISpace> uniqueSpaces = new HashSet<ISpace>(spaces);
-		return uniqueSpaces;	
-	}
+        HashSet < ISpace > uniqueSpaces = new HashSet < ISpace > (spaces);
+        return uniqueSpaces;
+    }
 
 }
