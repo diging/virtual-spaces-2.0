@@ -8,27 +8,47 @@
 <script th:src="@{'/resources/extra/space.js'}"></script>
 
 <script th:inline="javascript">
-//# sourceURL=script.js
+function downloadFile(){
+	$.ajax({
+        url: "[(@{'/staff/files/download/'+${file.id}})]",
+        type: 'GET',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+        	console.log('downloaded')
+        },
+        error: function(data) {
+        	console.log('could not download')
+        }
+    });
+}
 
 </script>
 <style>
+/* .download{
+margin-left:1200px;
+} */
 </style>
 </head>
 
 <body>
-    <div layout:fragment="content" class="main-content">
+    <div  layout:fragment="content" class="main-content">
  		<div class="flex-spacing">
  			<div>
 	    		<h2 th:text=${file.filename}/>
-		        <p>[[${file.description}]]</p>
+		        <p>[[${file.fileDescription}]]</p>
 		        
 		        
 	    	</div>
  			 
  		</div>
- 		<h3>Edit File</h3>
-
-		<form method="POST"
+ 		<div>
+ 		<h3 >Edit File</h3>
+ 		<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()">Download File</button>
+ 		</div>
+		<div>
+ 		
+ 		<form method="POST"
 			th:action='@{|/staff/files/edit/${file.id}?${_csrf.parameterName}=${_csrf.token}|}' th:object="${fileForm}"
 			enctype="multipart/form-data" style="margin-top: 40px">
 
@@ -41,11 +61,12 @@
 			<div class="form-group row">
 				<label for="description" class="col-md-2 col-form-label">Description:</label>
 				<textarea class="form-control col-md-10" rows="5" cols="30"
-					id="description" name="description" th:text=${file.description} ></textarea>
+					id="description" name="description" th:text=${file.fileDescription} ></textarea>
 			</div>
-
 			<button class="btn primary-btn" type="submit" value="submit">Save File</button>
 		</form>
+ 		</div>
+		
 		
 		
         

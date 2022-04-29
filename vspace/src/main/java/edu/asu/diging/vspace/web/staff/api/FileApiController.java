@@ -1,3 +1,4 @@
+
 package edu.asu.diging.vspace.web.staff.api;
 
 import java.io.FileNotFoundException;
@@ -87,6 +88,13 @@ public class FileApiController {
         String fileName = fileForm.getFileName();
         String description = fileForm.getDescription();
         IVSFile file = fileManager.editFile(fileId, fileName, description);
+        String id = file.getId();
+        return "redirect:/staff/files/"+id;
+    }
+    
+    @RequestMapping(value = "/staff/files/download/{fileId}", method = RequestMethod.GET)
+    public String downloadFile(Model model, @PathVariable String fileId) {
+        IVSFile file = fileManager.downloadFile(fileId);
         String id = file.getId();
         return "redirect:/staff/files/"+id;
     }

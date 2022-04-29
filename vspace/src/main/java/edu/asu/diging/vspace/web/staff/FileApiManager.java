@@ -71,9 +71,13 @@ public class FileApiManager {
         }
         file = optional.get();
         file.setFilename(fileName);
-        file.setDescription(description);
+        file.setFileDescription(description);
         fileRepo.save((VSFile)file);
         return file;
+    }
+
+    public IVSFile downloadFile(String fileId) {
+        return null;
     }
 
 }
