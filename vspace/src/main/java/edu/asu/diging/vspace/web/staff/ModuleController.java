@@ -25,12 +25,10 @@ public class ModuleController {
 
     @Autowired
     private IModuleManager moduleManager;
-   
-    
+      
     @Autowired
     private IModuleLinkManager moduleLink;
-    
-    
+       
     @RequestMapping("/staff/module/{id}")
     public String showModule(@PathVariable String id, Model model) {
         IModule module = moduleManager.getModule(id);

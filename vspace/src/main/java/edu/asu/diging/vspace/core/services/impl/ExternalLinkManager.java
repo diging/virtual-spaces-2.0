@@ -10,10 +10,18 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
+import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
@@ -23,7 +31,8 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay> implements IExternalLinkManager{
+public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay>
+        implements IExternalLinkManager {
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -39,6 +48,15 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
 
     @Autowired
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
+
+    @Autowired
+    private IImageFactory imageFactory;
+
+    @Autowired
+    private ImageRepository imageRepo;
+
+    @Autowired
+    private IStorageEngine storage;
 
     @Override
     public List<IExternalLinkDisplay> getLinkDisplays(String spaceId) {
@@ -60,22 +78,22 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     @Override
     protected IExternalLinkDisplay updateLinkAndDisplay(IExternalLink link, IExternalLinkDisplay displayLink) {
         externalLinkRepo.save((ExternalLink) link);
-        return externalLinkDisplayRepo.save((ExternalLinkDisplay)displayLink);
+        return externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
     }
 
     @Override
-    protected IExternalLinkDisplay getDisplayLink(String externalLinkDisplayId){
+    protected IExternalLinkDisplay getDisplayLink(String externalLinkDisplayId) {
         Optional<ExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo.findById(externalLinkDisplayId);
-        if(externalLinkDisplay.isPresent()) {
+        if (externalLinkDisplay.isPresent()) {
             return externalLinkDisplay.get();
         }
         return null;
     }
 
     @Override
-    protected IExternalLink getLink(String externalLinkID){
+    protected IExternalLink getLink(String externalLinkID) {
         Optional<ExternalLink> externalLink = externalLinkRepo.findById(externalLinkID);
-        if(externalLink.isPresent()) {
+        if (externalLink.isPresent()) {
             return externalLink.get();
         }
         return null;
@@ -98,7 +116,46 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
 
     @Override
     protected void deleteLinkRepo(IExternalLink link) {
-        externalLinkRepo.delete((ExternalLink)link);
+        externalLinkRepo.delete((ExternalLink) link);
+    }
+
+    @Override
+    public IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
+            String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,
+            ExternalLinkDisplayMode howToOpen)
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+
+        /*
+         * When createLink is called then inside updateLinkAndDisplay(link, displayLink)
+         * is called to save Link and Display link in the database and return an object
+         * of ExternalLinkDisplay. When setHowToOpen method is being called on the same
+         * ExternalLinkDisplay object to set howToOpen field then Hibernate
+         * automatically persist howToOpen in database.
+         */
+        IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
+                linkLabel, displayType, linkImage, imageFilename);
+        externalLinkDisplay.setHowToOpen(howToOpen);
+        return externalLinkDisplay;
+
+    }
+
+    @Override
+    public IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
+            String linkedId, String linkLabel, String linkId, String linkDisplayId, DisplayType displayType,
+            byte[] linkImage, String imageFilename, ExternalLinkDisplayMode howToOpen)
+            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+
+        /*
+         * When updateLink is called then inside updateLinkAndDisplay(link, displayLink)
+         * is called to save Link and Display link in the database and return an object
+         * of ExternalLinkDisplay. When setHowToOpen method is being called on the same
+         * ExternalLinkDisplay object to set howToOpen field then Hibernate
+         * automatically persist howToOpen in database.
+         */
+        IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
+                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
+        externalLinkDisplay.setHowToOpen(howToOpen);
+        return externalLinkDisplay;
     }
 
 }
