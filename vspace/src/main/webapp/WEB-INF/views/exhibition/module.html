@@ -13,8 +13,9 @@
 		}
       	
       	.modal-content{
-      	width:800px;
-      	height:800px
+      	width:1200px;
+      	height:1200px;
+      	margin-left:-400px;
       	}
       	
       	.modal-dialog{
@@ -201,8 +202,6 @@
 						 const branchingPointsSet = new Set();
 						 const sequencesMap = new Map();
 						 function createFromSequence(sequence, treeData, isStartSequence){
-							console.log('sequence is')
-							console.log(sequence);
 							let startNodeSequence = {};
 					  		let startNodeSequenceSlides = [];
 					  		startNodeSequence.children = [];
@@ -220,10 +219,7 @@
 					  				slideNode.branchingPoint = true;
 					  				slideNode.branchingPoints = [];
 					  				for(seq of slide.sequenceIds){
-					  					console.log('sequence name is')
-					  					console.log(seq)
 					  					if(seq === sequence.name){
-					  						console.log('inside')
 					  						let branchSeq = {};
 						  					branchSeq.name = seq;
 						  					slideNode.children.push(branchSeq);
@@ -266,7 +262,6 @@
 					  		return treeData;
 							
 						}
-			            console.log(json);
                         let treeData = [];
                         treeData.children=[];
                         let startSequence = json['startSequence'];
@@ -276,8 +271,6 @@
 				  		let isStartSequence = true;
 				  		treeData = createFromSequence(startSequence, treeData, isStartSequence);
 				  		isStartSequence = false;
-				  		console.log('tree data is');
-				  		console.log(treeData);
 				  		for (sequence of otherSequences) {
 				  		treeData = createFromSequence(sequence, treeData,isStartSequence);
 				  		}
@@ -288,13 +281,11 @@
 				  				branch.children.push(sequencesMap.get(branchSequence.name))
 				  			}
 				  		}
-				  		console.log('final tree data is')
-				  		console.log(treeData)
 				  		  treeData.name = json.name;
 				  		var margin = {top: 20, right: 120, bottom: 20, left: 120},
 				  		/* treeData.name = json.name;
 				  		var margin = {top: 70, right: 110, bottom: 20, left: 120},*/
-				  		width = 960 - margin.right - margin.left,
+				  		width = 1200 - margin.right - margin.left,
 				  		height = 500 - margin.top - margin.bottom;
 				  		
 				  	var i = 0,
@@ -328,7 +319,7 @@
 				  		  links = tree.links(nodes);
 
 				  	  // Normalize for fixed-depth.
-				  	  nodes.forEach(function(d) { d.y = d.depth * 100; });
+				  	  nodes.forEach(function(d) { d.y = d.depth * 110; });
 					
 				  	  // Update the nodes…
 				  	  var node = svg.selectAll("g.node")
@@ -337,8 +328,7 @@
 				  	  // Enter any new nodes at the parent's previous position.
 				  	  var nodeEnter = node.enter().append("g")
 				  		  .attr("class", "node")
-				  		  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-				  		  .on("click", click);
+				  		  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; });
 
 				  	  nodeEnter.append("circle")
 				  		  .attr("r", function(d){
@@ -354,7 +344,7 @@
 				  	  nodeEnter.append("text")
 				  	  .attr("class","text")
 				  		  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
-				  		  .attr("dy", "1.5em")
+				  		  .attr("dy", "2.3em")
 				  		  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
 				  		  .text(function(d) { return d.name; })
 				  		  .style("fill-opacity", 1e-6);
@@ -430,7 +420,7 @@
 				  	}
 
 				  	// Toggle children on click.
-				  	function click(d) {
+				  	/* function click(d) {
 				  	  if (d.children) {
 				  		d._children = d.children;
 				  		d.children = null;
@@ -439,7 +429,7 @@
 				  		d._children = null;
 				  	  }
 				  	  update(d);
-				  	} 
+				  	}  */
 				        
                         </script>
          </div>
