@@ -112,23 +112,16 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
 
 	@Override
 	public HashSet<ISpace> findModuleLinksFromModuleId(String moduleId) {
-		System.out.println("inside module link manager method");
 		List<ModuleLink> moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
 		System.out.println(moduleLinks);
 		List<ISpace> spaces=new ArrayList<>();
 		for (ModuleLink ml : moduleLinks) {
-			System.out.println(ml.getId());
             String spaceId=moduleLinkRepo.getSpaceIdFromModuleLink(ml.getId());
-            System.out.println("after space id cal");
-            System.out.println(spaceId);
             ISpace space = spaceManager.getSpace(spaceId);
             spaces.add(space);
-            System.out.println(spaces);
         }
 		HashSet<ISpace> uniqueSpaces = new HashSet<ISpace>(spaces);
-		System.out.println(uniqueSpaces);
-		return uniqueSpaces;
-		
+		return uniqueSpaces;	
 	}
 
 }

@@ -37,44 +37,15 @@ public class ModuleController {
         model.addAttribute("module", module);
         model.addAttribute("slides", moduleManager.getModuleSlides(id));
         model.addAttribute("sequences", moduleManager.getModuleSequences(id));
-        model.addAttribute("moduleStatus", module.getModuleStatus());
-        
-        System.out.println("Inside controller");
+        model.addAttribute("moduleStatus", module.getModuleStatus());        
         HashSet<ISpace> spaces=moduleLink.findModuleLinksFromModuleId(id);
-        for (ISpace sp : spaces) {
-        	System.out.println(sp.getName());
-        }
         if (spaces.isEmpty()) {
-        	System.out.println("message show");
-            model.addAttribute("message", "Sorry, No spaces has been linked to this Module");
-            
+            model.addAttribute("message", "Sorry, No spaces has been linked to this Module");          
         }
         else
         {
-        	model.addAttribute("spacesList", spaces);
-        	
-        }
-        
-    
-        
+        	model.addAttribute("spacesList", spaces);     	
+        }      
         return "staff/modules/module";
     }
-    
-	/*
-	 * @RequestMapping(value = "/staff/module/space/{id}") public String
-	 * findModuleSpace(@PathVariable("id") String moduleId, Model model) throws
-	 * SpaceNotFoundException, ModuleNotFoundException { IModule module =
-	 * moduleManager.getModule(moduleId);
-	 * 
-	 * model.addAttribute("module", module);
-	 * System.out.println("Inside controller"); HashSet<ISpace>
-	 * spaces=moduleLink.findModuleLinksFromModuleId(moduleId); for (ISpace sp :
-	 * spaces) { System.out.println(sp.getName()); } if (spaces== null) {
-	 * model.addAttribute("message",
-	 * "Sorry, No spaces has been linked to this Module"); return
-	 * "staff/modules/module"; } else { model.addAttribute("spacesList", spaces);
-	 * return "staff/modules/module"; }
-	 * 
-	 * }
-	 */
 }
