@@ -1,7 +1,9 @@
-package edu.asu.diging.vspace.core.model.impl;
+package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 import java.util.Map;
+
+import edu.asu.diging.vspace.core.model.impl.Slide;
 
 public class StaffSearchSlideTextBlock {
     

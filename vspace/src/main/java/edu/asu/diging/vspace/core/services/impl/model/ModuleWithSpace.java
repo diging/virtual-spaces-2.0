@@ -1,4 +1,5 @@
-package edu.asu.diging.vspace.core.model.impl;
+package edu.asu.diging.vspace.core.services.impl.model;
+import edu.asu.diging.vspace.core.model.impl.Module;
 
 public class ModuleWithSpace extends Module {
     

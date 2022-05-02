@@ -1,5 +1,5 @@
-package edu.asu.diging.vspace.core.model.impl;
-
+package edu.asu.diging.vspace.core.services.impl.model;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 public class SlideWithSpace extends Slide {
     
     private String spaceId;
