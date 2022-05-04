@@ -73,21 +73,17 @@ public class PublicSearchManager implements IPublicSearchManager{
      * @return set of modules whose name or description contains the search string
      *         in the requested page.
      */
-    @Override
-    public Page<IModule> searchInModules(String searchTerm, int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
-        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
-        int totalModulePage = modulePage.getTotalPages();
-        if (page > totalModulePage) {
-            totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
-            requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
-            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
-        }
-        return modulePage;
-    }
+	/*
+	 * @Override public Page<IModule> searchInModules(String searchTerm, int page) {
+	 * if (page < 1) { page = 1; } Pageable requestedPageForModule =
+	 * PageRequest.of(page - 1, pageSize); Page<IModule> modulePage =
+	 * moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+	 * int totalModulePage = modulePage.getTotalPages(); if (page > totalModulePage)
+	 * { totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
+	 * requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
+	 * modulePage = moduleManager.findByNameOrDescription(requestedPageForModule,
+	 * searchTerm); } return modulePage; }
+	 */
 
     /**
      * Method to return the requested slides whose name or description contains the
@@ -99,21 +95,17 @@ public class PublicSearchManager implements IPublicSearchManager{
      * @return set of slides whose name or description contains the search string in
      *         the requested page.
      */
-    @Override
-    public Page<ISlide> searchInSlides(String searchTerm, int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
-        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
-        int totalSlidePage = slidePage.getTotalPages();
-        if (page > totalSlidePage) {
-            totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
-            requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
-            slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
-        }
-        return slidePage;
-    }
+	/*
+	 * @Override public Page<ISlide> searchInSlides(String searchTerm, int page) {
+	 * if (page < 1) { page = 1; } Pageable requestedPageForSlide =
+	 * PageRequest.of(page - 1, pageSize); Page<ISlide> slidePage =
+	 * slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm); int
+	 * totalSlidePage = slidePage.getTotalPages(); if (page > totalSlidePage) {
+	 * totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
+	 * requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
+	 * slidePage = slideManager.findByNameOrDescription(requestedPageForSlide,
+	 * searchTerm); } return slidePage; }
+	 */
 
     /**
      * Method to return the requested slides whose text blocks contains the search
@@ -125,20 +117,17 @@ public class PublicSearchManager implements IPublicSearchManager{
      * @return list of slides whose text blocks contains the search string in the
      *         requested page.
      */
-    @Override
-    public Page<ISlide> searchInSlideTexts(String searchTerm, int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
-        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
-        int totalSlideTextPage = slidetextPage.getTotalPages();
-        if (page > totalSlideTextPage) {
-            totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;
-            requestedPageForSlideText = PageRequest.of(totalSlideTextPage - 1, pageSize);
-            slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
-        }
-        return slidetextPage;
-    }
+	/*
+	 * @Override public Page<ISlide> searchInSlideTexts(String searchTerm, int page)
+	 * { if (page < 1) { page = 1; } Pageable requestedPageForSlideText =
+	 * PageRequest.of(page - 1, pageSize); Page<ISlide> slidetextPage =
+	 * textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+	 * searchTerm); int totalSlideTextPage = slidetextPage.getTotalPages(); if (page
+	 * > totalSlideTextPage) { totalSlideTextPage = totalSlideTextPage == 0 ? 1 :
+	 * totalSlideTextPage; requestedPageForSlideText =
+	 * PageRequest.of(totalSlideTextPage - 1, pageSize); slidetextPage =
+	 * textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+	 * searchTerm); } return slidetextPage; }
+	 */
 
 }

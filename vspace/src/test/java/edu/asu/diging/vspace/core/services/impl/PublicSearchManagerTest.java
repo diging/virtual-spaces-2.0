@@ -47,6 +47,9 @@ public class PublicSearchManagerTest {
 
     @InjectMocks
     private PublicSearchManager serviceToTest;
+    
+    @InjectMocks
+    private StaffSearchManager staffSearchManager;
 
     private List<ISpace> spaces;
     
@@ -154,7 +157,7 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
-        Page<IModule> tempResult = serviceToTest.searchInModules(search, 1);
+        Page<IModule> tempResult = staffSearchManager.searchInModules(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
@@ -169,7 +172,7 @@ public class PublicSearchManagerTest {
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IModule>(new ArrayList<IModule>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
         when(moduleManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<IModule>(modules));
-        Page<IModule> tempResult = serviceToTest.searchInModules(search, 7);
+        Page<IModule> tempResult = staffSearchManager.searchInModules(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
@@ -183,7 +186,7 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
-        Page<IModule> tempResult = serviceToTest.searchInModules(search, -2);
+        Page<IModule> tempResult = staffSearchManager.searchInModules(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
@@ -196,7 +199,7 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
-        Page<ISlide> tempResult = serviceToTest.searchInSlides(search, 1);
+        Page<ISlide> tempResult = staffSearchManager.searchInSlides(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
@@ -211,7 +214,7 @@ public class PublicSearchManagerTest {
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
         when(slideManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<ISlide>(slides));
-        Page<ISlide> tempResult = serviceToTest.searchInSlides(search, 7);
+        Page<ISlide> tempResult = staffSearchManager.searchInSlides(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
@@ -225,7 +228,7 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
-        Page<ISlide> tempResult = serviceToTest.searchInSlides(search, -2);
+        Page<ISlide> tempResult = staffSearchManager.searchInSlides(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
@@ -239,7 +242,7 @@ public class PublicSearchManagerTest {
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
-        Page<ISlide> tempResult = serviceToTest.searchInSlideTexts(search, 1);
+        Page<ISlide> tempResult = staffSearchManager.searchInSlideTexts(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
@@ -256,7 +259,7 @@ public class PublicSearchManagerTest {
         Pageable requestedPage1 = PageRequest.of(0, 10);
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage1, search))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
-        Page<ISlide> tempResult = serviceToTest.searchInSlideTexts(search, 7);
+        Page<ISlide> tempResult = staffSearchManager.searchInSlideTexts(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
@@ -271,7 +274,7 @@ public class PublicSearchManagerTest {
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
-        Page<ISlide> tempResult = serviceToTest.searchInSlideTexts(search, -2);
+        Page<ISlide> tempResult = staffSearchManager.searchInSlideTexts(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));

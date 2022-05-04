@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.factory.ISequenceFactory;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -34,6 +35,9 @@ public class SequenceManager implements ISequenceManager {
 
     @Autowired
     private SequenceRepository sequenceRepo;
+    
+    @Autowired
+    private ModuleRepository moduleRepo;
 
     @Override
     public ISequence storeSequence(String moduleId, SequenceForm sequenceForm) {
@@ -62,6 +66,6 @@ public class SequenceManager implements ISequenceManager {
 
     @Override
     public List<ISequence> getAllSequencesForModules() {
-        return sequenceRepo.getAllSequencesForModules();
+        return moduleRepo.findAllByStartSequenceNotNull();
     }
 }

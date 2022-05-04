@@ -21,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.model.impl.ModuleWithSpace;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
 
 @Controller
@@ -41,6 +42,9 @@ public class PublicSearchModuleController {
     
     @Autowired
     private ISequenceManager sequenceManager;
+    
+    @Autowired
+    private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/exhibit/search/module")
     public ResponseEntity<StaffSearchModuleResults> searchInVspace(
@@ -91,7 +95,7 @@ public class PublicSearchModuleController {
      * @param searchTerm    This is the search string which is being searched.
      */
     private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         List<IModule> moduleList = new ArrayList<>();
         
         for(IModule module : modulePage.getContent()) {

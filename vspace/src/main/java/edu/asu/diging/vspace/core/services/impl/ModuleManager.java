@@ -89,5 +89,4 @@ public class ModuleManager implements IModuleManager {
     public Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText) {
         return moduleRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage,searchText,searchText);
     }
-    
 }

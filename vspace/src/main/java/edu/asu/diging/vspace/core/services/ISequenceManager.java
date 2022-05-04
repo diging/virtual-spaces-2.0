@@ -12,7 +12,8 @@ public interface ISequenceManager {
     ISequence getSequence(String sequenceId);
     
     void updateSequence(ISequence sequence);
+
+	List<ISequence> getAllSequencesForModules();
     
-    List<ISequence> getAllSequencesForModules();
 
 }
