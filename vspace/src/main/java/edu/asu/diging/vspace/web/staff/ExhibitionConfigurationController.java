@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,6 +38,8 @@ public class ExhibitionConfigurationController {
     @Autowired
     private ExhibitionFactory exhibitFactory;
 
+    public static final String EXH_PREVIEW = "EXH_PREVIEW_";
+    
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(HttpServletRequest request, Model model) {
         // for now we assume there is just one exhibition
@@ -50,6 +53,12 @@ public class ExhibitionConfigurationController {
             exhibitionMode = exhibitionObj.getMode();
         } else {
             previewId = exhibition.getPreviewId();
+            if(previewId==null) {
+            UUID randomUUID = UUID.randomUUID();
+            String randomString = randomUUID.toString().replaceAll("-", "");
+            exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
+            previewId = exhibition.getPreviewId();
+            }
             exhibitionMode = exhibition.getMode();
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
