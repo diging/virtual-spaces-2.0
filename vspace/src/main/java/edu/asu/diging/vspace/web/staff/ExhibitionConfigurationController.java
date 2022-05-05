@@ -41,30 +41,23 @@ public class ExhibitionConfigurationController {
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
     
     @RequestMapping("/staff/exhibit/config")
-    public String showExhibitions(HttpServletRequest request, Model model) {
+    public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         String previewId = null;
-        ExhibitionModes exhibitionMode = null;
         if (exhibition == null) {
-            Exhibition exhibitionObj = (Exhibition) exhibitFactory.createExhibition();
-            model.addAttribute("exhibition", exhibitionObj);
-            previewId = exhibitionObj.getPreviewId();
-            exhibitionMode = exhibitionObj.getMode();
+           exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             previewId = exhibition.getPreviewId();
             if(previewId==null) {
             UUID randomUUID = UUID.randomUUID();
             String randomString = randomUUID.toString().replaceAll("-", "");
             exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
-            previewId = exhibition.getPreviewId();
             }
-            exhibitionMode = exhibition.getMode();
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("previewId", previewId);
-        model.addAttribute("exhibitionMode",exhibitionMode.name());
+        model.addAttribute("exhibition", exhibition);
         return "staff/exhibit/config";
     }
 
@@ -89,6 +82,9 @@ public class ExhibitionConfigurationController {
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
+            UUID randomUUID = UUID.randomUUID();
+            String randomString = randomUUID.toString().replaceAll("-", "");
+            exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
@@ -102,8 +98,6 @@ public class ExhibitionConfigurationController {
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
-        attributes.addAttribute("previewId", exhibition.getPreviewId());
-        attributes.addAttribute("exhibitionMode",exhibition.getMode().name());
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
 }

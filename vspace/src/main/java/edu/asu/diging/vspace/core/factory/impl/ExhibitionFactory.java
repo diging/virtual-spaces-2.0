@@ -1,11 +1,8 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.factory.IExhibitionFactory;
-import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 
@@ -23,12 +20,7 @@ public class ExhibitionFactory implements IExhibitionFactory {
      */
     @Override
     public IExhibition createExhibition() {
-        Exhibition exhibitionObj = new Exhibition();
-        UUID randomUUID = UUID.randomUUID();
-        String randomString = randomUUID.toString().replaceAll("-", "");
-        exhibitionObj.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
-        exhibitionObj.setMode(ExhibitionModes.ACTIVE);
-        return exhibitionObj;
+        return new Exhibition();
     }
 
 }
