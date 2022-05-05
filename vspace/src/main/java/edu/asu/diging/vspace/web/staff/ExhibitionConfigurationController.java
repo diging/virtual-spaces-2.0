@@ -49,7 +49,7 @@ public class ExhibitionConfigurationController {
            exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             previewId = exhibition.getPreviewId();
-            if(previewId==null) {
+            if(previewId==null || previewId.isEmpty()) {
             UUID randomUUID = UUID.randomUUID();
             String randomString = randomUUID.toString().replaceAll("-", "");
             exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
