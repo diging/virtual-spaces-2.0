@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,8 @@ import java.util.Optional;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.JsonObject;
 
 import edu.asu.diging.vspace.core.data.FileRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -70,14 +73,24 @@ public class FileApiManager {
             return file;
         }
         file = optional.get();
-        file.setFilename(fileName);
+        if(storageEngine.renameFile(file, fileName)) {
+            file.setFilename(fileName);   
+        }
         file.setFileDescription(description);
         fileRepo.save((VSFile)file);
         return file;
     }
 
-    public IVSFile downloadFile(String fileId) {
-        return null;
+    public byte[] downloadFile(String fileId) throws IOException {
+        IVSFile file = getFileById(fileId);
+
+        byte[] fileContent = storageEngine.downloadFile(file.getId(), file.getFilename());
+        return fileContent;
+    }
+    
+    public void deleteFile(String fileId) {
+        IVSFile file = getFileById(fileId);
+        storageEngine.deleteFile(file);
     }
 
 }

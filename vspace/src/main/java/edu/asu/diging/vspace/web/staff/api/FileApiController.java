@@ -1,7 +1,6 @@
 
 package edu.asu.diging.vspace.web.staff.api;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -9,6 +8,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,27 +20,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 import edu.asu.diging.vspace.web.staff.FileApiManager;
 import edu.asu.diging.vspace.web.staff.forms.FileForm;
-import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
 public class FileApiController {
+    
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private ImageRepository imageRepo;
     
     @Autowired
     private FileApiManager fileManager;
-    
-    @Autowired
-    private IStorageEngine storage;
     
     @RequestMapping(value = "/staff/files/{id}", method = RequestMethod.GET)
     public String getFile(Model model, @PathVariable String id) {
@@ -93,10 +86,22 @@ public class FileApiController {
     }
     
     @RequestMapping(value = "/staff/files/download/{fileId}", method = RequestMethod.GET)
-    public String downloadFile(Model model, @PathVariable String fileId) {
-        IVSFile file = fileManager.downloadFile(fileId);
-        String id = file.getId();
-        return "redirect:/staff/files/"+id;
+    public ResponseEntity<byte[]> downloadFile(Model model, @PathVariable String fileId) {
+        byte[] fileContent = null;
+        try {
+            fileContent = fileManager.downloadFile(fileId);
+        } catch (IOException e) {
+            logger.info(e.getMessage());
+            return new ResponseEntity<byte[]>(fileContent, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return new ResponseEntity<byte[]>(fileContent, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/staff/files/delete/{fileId}", method = RequestMethod.GET)
+    public ResponseEntity<String> deleteFile(Model model, @PathVariable String fileId) {
+        fileManager.deleteFile(fileId);
+        return new ResponseEntity<String>("Deleted file", HttpStatus.OK);
     }
 
 }

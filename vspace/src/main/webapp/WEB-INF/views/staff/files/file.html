@@ -8,6 +8,28 @@
 <script th:src="@{'/resources/extra/space.js'}"></script>
 
 <script th:inline="javascript">
+
+function base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+       var ascii = binaryString.charCodeAt(i);
+       bytes[i] = ascii;
+    }
+    return bytes;
+ }
+ 
+function saveByteArray(reportName, byte) {
+	var fileType = [[${file.fileType}]];
+    var blob = new Blob([byte], {type: fileType});
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
+};
+
 function downloadFile(){
 	$.ajax({
         url: "[(@{'/staff/files/download/'+${file.id}})]",
@@ -15,7 +37,10 @@ function downloadFile(){
         cache       : false,
         contentType : false,
         success: function(data) {
-        	console.log('downloaded')
+        	var sampleArr = base64ToArrayBuffer(data);
+        	var fileName = [[${file.filename}]];
+        	console.log(fileName)
+        	saveByteArray(fileName, sampleArr);
         },
         error: function(data) {
         	console.log('could not download')

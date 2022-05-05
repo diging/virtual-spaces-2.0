@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Component
@@ -92,4 +94,44 @@ public class StorageEngine implements IStorageEngine {
 	    File renamedFile = new File(path + File.separator + image.getId() + File.separator + newFileName);
 	    return currentFile.renameTo(renamedFile);
 	}
+	
+	@Override
+    public boolean renameFile(IVSFile file, String newFileName) {
+        File currentFile = new File(path + File.separator + fileUploadDir + File.separator + file.getFilename());
+        File renamedFile = new File(path + File.separator + fileUploadDir + File.separator + newFileName);
+        return currentFile.renameTo(renamedFile);
+    }
+	
+	@Override
+    public byte[] downloadFile(String directory, String filename) throws IOException {
+	    File fileObject = new File(path + File.separator + fileUploadDir + File.separator + filename);
+        URLConnection con = fileObject.toURI().toURL().openConnection();
+        
+        InputStream input = con.getInputStream();
+
+        byte[] buffer = new byte[4096];
+        
+        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
+       
+        int n = -1;
+        while ((n = input.read(buffer)) != -1) {
+            output.write(buffer, 0, n);
+        }
+        input.close();
+        output.flush();
+        output.close();
+        
+        byteOutput.flush();
+        byte[] bytes = byteOutput.toByteArray();
+        byteOutput.close();
+        byte[] encodedBytes = Base64.getEncoder().encode(bytes);
+        return encodedBytes;
+    }
+
+    @Override
+    public void deleteFile(IVSFile file) {
+        File storedFile = new File(path + File.separator + fileUploadDir + File.separator + file.getFilename());
+        storedFile.delete();
+    }
 }
