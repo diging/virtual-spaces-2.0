@@ -6,14 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
-import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 
 @Controller
