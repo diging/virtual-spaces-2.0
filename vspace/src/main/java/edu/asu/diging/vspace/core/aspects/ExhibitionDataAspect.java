@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -14,6 +16,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.auth.impl.AuthenticationFacade;
@@ -26,6 +31,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 @Component
 @Aspect
@@ -116,7 +122,7 @@ public class ExhibitionDataAspect {
                     : exhibitionMode.getValue();
             ((Model) args[modelIndex]).addAttribute("modeValue", modeValue);
         }
-        if(exhibition.isAboutPageConfigured()) {
+        if (exhibition.isAboutPageConfigured()) {
             ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", true);
         } else {
             ((Model) args[modelIndex]).addAttribute("aboutPageConfigured", false);
@@ -125,8 +131,12 @@ public class ExhibitionDataAspect {
         if (exhibitionMode.equals(ExhibitionModes.MAINTENANCE)) {
             ((Model) args[modelIndex]).addAttribute("modeValue", exhibitionMode.getValue());
         }
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest();
+        Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        String previewId = (String) pathVariables.get(ExhibitionConstants.PREVIEW_ID);
         // If user is not logged in and exhibition is not active, show maintenance page.
-        if (authFacade.getAuthenticatedUser() == null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
+        if (authFacade.getAuthenticatedUser() == null && !exhibitionMode.equals(ExhibitionModes.ACTIVE) && previewId==null) {
             return "/exhibition/maintenance";
         }
         // If the space and module Id is not found, show message on screen.
