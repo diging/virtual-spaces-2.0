@@ -46,7 +46,7 @@
 <body>
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition Configuration</h2>
-		<div th:if="${exhibitionMode =='ACTIVE' and previewId!=null}">
+		<div th:if="${previewId!=null}">
 	     <a class="previewExhb" target="_blank" th:href="@{|/preview/${previewId}|}"><span class="icon-visible secondary"></span> 
 	     <span class="tooltiptext">Preview Exhibition</span></a><br><br>
 	     <p>To share the Exhibition Preview provide the link <a style="color:blue;" th:href="@{|/preview/${previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${previewId}|}]]</a></p>
