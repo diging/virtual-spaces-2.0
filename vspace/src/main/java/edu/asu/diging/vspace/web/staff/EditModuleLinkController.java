@@ -18,7 +18,7 @@ import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 @Controller
 public class EditModuleLinkController extends EditSpaceLinksController {
 
@@ -33,14 +33,19 @@ public class EditModuleLinkController extends EditSpaceLinksController {
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
             @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
             @RequestParam("moduleLinkLabel") String moduleLinkLabel,
+            @RequestParam("moduleLinkDesc") String moduleLinkDesc,
             @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
+            @RequestParam("moduleLinkImageIdEdit") String moduleLinkImageIdEdit,
             @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
-            @RequestParam("moduleLinkImage") MultipartFile file) throws NumberFormatException,
-            SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException {
+            @RequestParam("moduleLinkImage") MultipartFile file, @RequestParam(value="imageId", required=false) String imageId) throws NumberFormatException,
+            SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
             return validation;
+        }else if(imageId==null || imageId.equals("")){
+            String[] token = moduleLinkImageIdEdit.split("/");
+            imageId = token[token.length - 1];
         }
         byte[] linkImage = null;
         String filename = null;
@@ -50,8 +55,8 @@ public class EditModuleLinkController extends EditSpaceLinksController {
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x),
-                new Float(y), new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit,
-                moduleLinkDisplayId, type, linkImage, filename);
+                new Float(y), new Integer(rotation), linkedModuleId, moduleLinkLabel,moduleLinkDesc, moduleLinkIdValueEdit,
+                moduleLinkDisplayId, type, linkImage, filename, imageId);
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),
                 display.getRotation(), null, title, displayType, linkedModuleId, null);
     }
