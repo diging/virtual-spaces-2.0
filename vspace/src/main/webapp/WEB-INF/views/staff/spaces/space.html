@@ -1491,6 +1491,7 @@ $(function(){
         $("#editExternalLinkBtn").click(function(e) {
             e.preventDefault();
             $("#space").scrollTop(0);
+
             var externalLinkLabel = $("#externalLinkLabelEdit").val();
 
             if (externalLinkLabel == undefined || externalLinkLabel == "") {
@@ -1498,6 +1499,7 @@ $(function(){
                 $('#errorAlert').show();
                 return;
             }
+
 
 
             var linkId = $("#externalLinkIdEdit").val();
@@ -1853,9 +1855,11 @@ $(function(){
             $("#link").remove();
             $("#undefined").remove();
 
+
             $('#chooseFromLocal-spcLink').trigger( "click" );
             $('#imageId-spcLink').val('');
             $("#space_label_desc").remove();
+
             $("#space").hide();
             $("#createSpaceLinkAlert").hide(); 
             $('#errorAlert').hide();
@@ -1872,6 +1876,7 @@ $(function(){
             $("#undefined").remove();
 
             $("#module_label_desc").remove();
+
 
             $("#space").hide();
             $("#createModuleLinkAlert").hide();  
