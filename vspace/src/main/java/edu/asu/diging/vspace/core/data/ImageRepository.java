@@ -27,9 +27,6 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
     Page<VSImage> findByCategories(Pageable pageable, ImageCategory category);
 
     List<IVSImage> findByCategories(ImageCategory category);
-    
-    
-    
-    long countByCategories(ImageCategory category);
-    
+        
+    long countByCategories(ImageCategory category);  
 }

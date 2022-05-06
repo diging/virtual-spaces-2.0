@@ -16,31 +16,31 @@ import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
 public class ImageSearchApiController {
-    
-    @Autowired
-    private IImageService imageService;
-    
-    @RequestMapping("/staff/images/search")
-    public ResponseEntity<String> searchImage(@RequestParam(value = "term", required = false) String searchTerm) {
-        List<IVSImage> images = null;
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            images = imageService.findByFilenameOrNameContains(searchTerm);
-        } else {
-            images = imageService.getImages(1);
-        }
-        
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode idArray = mapper.createArrayNode();
-        for (IVSImage image : images) {
-            ObjectNode imageNode = mapper.createObjectNode();
-            imageNode.put("id", image.getId());
-            if (image.getName() != null && !image.getName().isEmpty()) {
-                imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
-            } else {
-                 imageNode.put("text", image.getFilename());
-            }
-            idArray.add(imageNode);
-        }
-        return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
-    } 
+
+	@Autowired
+	private IImageService imageService;
+
+	@RequestMapping("/staff/images/search")
+	public ResponseEntity<String> searchImage(@RequestParam(value = "term", required = false) String searchTerm) {
+		List<IVSImage> images = null;
+		if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+			images = imageService.findByFilenameOrNameContains(searchTerm);
+		} else {
+			images = imageService.getImages(1);
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode idArray = mapper.createArrayNode();
+		for (IVSImage image : images) {
+			ObjectNode imageNode = mapper.createObjectNode();
+			imageNode.put("id", image.getId());
+			if (image.getName() != null && !image.getName().isEmpty()) {
+				imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
+			} else {
+				imageNode.put("text", image.getFilename());
+			}
+			idArray.add(imageNode);
+		}
+		return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
+	}
 }
