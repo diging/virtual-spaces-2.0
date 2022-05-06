@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.services;
 import java.util.List;
+
 import org.springframework.data.domain.Page;
+
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
@@ -41,5 +43,5 @@ public interface IImageService {
     
     List<IVSImage> search(String searchTerm);
     
-    List<IVSImage> getImagesForPagination(int pageNo, List<IVSImage> images, String searchTerm);
+	List<IVSImage> getImagesForPagination(int pageNo, List<IVSImage> images, String searchTerm);
 }
