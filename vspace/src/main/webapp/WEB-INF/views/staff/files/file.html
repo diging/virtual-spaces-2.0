@@ -48,6 +48,26 @@ function downloadFile(){
     });
 }
 
+function deleteFile(){
+	var token = [[${_csrf.token}]];
+	$.ajax({
+        url: "[(@{'/staff/files/delete/'+${file.id}})]",
+        type: 'POST',
+        headers:{
+			'X-CSRF-Token':token
+		},
+        cache: false,
+        contentType : false,
+        success: function(data) {
+        	window.location.href = "[(@{'/staff/files/list/'})]";
+        },
+        error: function(data) {
+        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.errorDelete').append(alert);
+        }
+    });
+}
+
 </script>
 <style>
 /* .download{
@@ -58,6 +78,7 @@ margin-left:1200px;
 
 <body>
     <div  layout:fragment="content" class="main-content">
+    <span class = "errorDelete"></span>
  		<div class="flex-spacing">
  			<div>
 	    		<h2 th:text=${file.filename}/>
@@ -68,8 +89,10 @@ margin-left:1200px;
  			 
  		</div>
  		<div>
+ 		<button class="download btn primary-btn" type="submit" value="submit" onClick = "deleteFile()" style="float:right">
+			Delete File
+			</button>
  		<h3 >Edit File</h3>
- 		<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()">Download File</button>
  		</div>
 		<div>
  		
@@ -89,6 +112,7 @@ margin-left:1200px;
 					id="description" name="description" th:text=${file.fileDescription} ></textarea>
 			</div>
 			<button class="btn primary-btn" type="submit" value="submit">Save File</button>
+			<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()" >Download File</button>
 		</form>
  		</div>
 		

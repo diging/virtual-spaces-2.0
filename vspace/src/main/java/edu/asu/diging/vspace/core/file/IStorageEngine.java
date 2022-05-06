@@ -18,5 +18,5 @@ public interface IStorageEngine {
 
     boolean renameFile(IVSFile file, String newFileName);
 
-    void deleteFile(IVSFile file);
+    boolean deleteFile(IVSFile file);
 }

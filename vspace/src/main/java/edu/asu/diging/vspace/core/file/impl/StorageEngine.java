@@ -130,8 +130,8 @@ public class StorageEngine implements IStorageEngine {
     }
 
     @Override
-    public void deleteFile(IVSFile file) {
+    public boolean deleteFile(IVSFile file) {
         File storedFile = new File(path + File.separator + fileUploadDir + File.separator + file.getFilename());
-        storedFile.delete();
+        return storedFile.delete();
     }
 }

@@ -88,9 +88,13 @@ public class FileApiManager {
         return fileContent;
     }
     
-    public void deleteFile(String fileId) {
+    public boolean deleteFile(String fileId) {
         IVSFile file = getFileById(fileId);
-        storageEngine.deleteFile(file);
+        if(storageEngine.deleteFile(file)) {
+            fileRepo.delete((VSFile) file);
+            return true;
+        }
+        return false;
     }
 
 }

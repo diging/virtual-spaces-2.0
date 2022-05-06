@@ -41,7 +41,7 @@
                         href="#">Created Date</a></th>
                      <th scope="col" sort-prop="modifiedDate"><a
                      href="#">Modified Date</a></th>
-                     <th scope="col" >Edit</th>
+                     <th scope="col" >View</th>
                      
                      
                 </tr>
@@ -53,7 +53,7 @@
                     <td>[[${file.createdBy}]]</td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
-                    <td><a th:href="@{'/staff/files/'+${file.id}}" >Show</a></td>
+                    <td><a th:href="@{'/staff/files/'+${file.id}}" ><span class="btn primary-btn btn-sm">Show</span></a></td>
                 </tr>
             </tbody>
         </table>

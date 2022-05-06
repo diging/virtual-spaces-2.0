@@ -98,9 +98,11 @@ public class FileApiController {
         return new ResponseEntity<byte[]>(fileContent, HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/staff/files/delete/{fileId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/files/delete/{fileId}", method = RequestMethod.POST)
     public ResponseEntity<String> deleteFile(Model model, @PathVariable String fileId) {
-        fileManager.deleteFile(fileId);
+        if(!fileManager.deleteFile(fileId)) {
+            return new ResponseEntity<String>("Could not delete file", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<String>("Deleted file", HttpStatus.OK);
     }
 
