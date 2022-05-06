@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -35,13 +34,11 @@ public class AddModuleLinkController {
 
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
     public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
-
-            @RequestParam("y") String y, @RequestParam("rotation") String rotation, @RequestParam("moduleLinkLabel") String title,
-            @RequestParam("linkedModule") String linkedModuleId, @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-            @RequestParam("moduleLinkDesc") String moduleLinkDesc, @RequestParam("moduleType") String displayType, @RequestParam(value="moduleLinkImage", required = false) MultipartFile file,
-            @RequestParam(value="imageId", required=false) String imageId)
-                    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
-
+            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
+            @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
+            @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("moduleType") String displayType,
+            @RequestParam("moduleLinkImage") MultipartFile file)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -65,10 +62,8 @@ public class AddModuleLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         IModuleLinkDisplay display;
         try {
-
-            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y),
-                    new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename, imageId);
-
+            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
+                    linkedModuleId, moduleLinkLabel, type, linkImage, filename);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

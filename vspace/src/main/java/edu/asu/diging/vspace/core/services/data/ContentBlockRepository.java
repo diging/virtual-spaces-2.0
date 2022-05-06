@@ -1,0 +1,20 @@
+package edu.asu.diging.vspace.core.data;
+
+import java.util.List;
+
+import org.javers.spring.annotation.JaversSpringDataAuditable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+
+import edu.asu.diging.vspace.core.model.impl.ContentBlock;
+
+@Repository
+@JaversSpringDataAuditable
+public interface ContentBlockRepository extends PagingAndSortingRepository<ContentBlock, String> {
+
+    @Query("SELECT max(contentOrder) FROM ContentBlock d WHERE d.slide.id = ?1")
+    public Integer findMaxContentOrder(String slideId);
+    
+    public List<ContentBlock> findBySlide_IdAndContentOrderGreaterThan(String slideId,Integer contentOrder);    
+}
