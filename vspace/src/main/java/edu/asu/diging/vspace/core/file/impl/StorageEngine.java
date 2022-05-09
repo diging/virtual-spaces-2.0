@@ -81,13 +81,13 @@ public class StorageEngine implements IStorageEngine {
         return bytes;
     }
 	
-    /**
-     * Method to rename image   
-     * 
-     * @param image - image file
-     * @param newFileName - new name of the file
-     * @return true if file renaming was successful, otherwise return false 
-     */ 
+	/**
+	* Method to rename image   
+	* 
+	* @param image - image file
+	* @param newFileName - new name of the file
+	* @return true if file renaming was successful, otherwise return false 
+	*/ 
 	@Override
 	public boolean renameImage(IVSImage image, String newFileName) {
 	    File currentFile = new File(path + File.separator + image.getId() + File.separator + image.getFilename());
