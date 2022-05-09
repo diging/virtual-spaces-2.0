@@ -39,20 +39,20 @@ public class StorageEngine implements IStorageEngine {
 			parent.mkdir();
 		}
 		File file = new File(parent.getAbsolutePath() + File.separator + filename);
-        BufferedOutputStream stream;
-        try {
-            stream = new BufferedOutputStream(new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-        try {
-            stream.write(fileContent);
-            stream.close();
-        } catch (IOException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-        
-        return directory;
+		BufferedOutputStream stream;
+		try {
+			stream = new BufferedOutputStream(new FileOutputStream(file));
+		} catch (FileNotFoundException e) {
+			throw new FileStorageException("Could not store file.", e);
+		}
+		try {
+			stream.write(fileContent);
+			stream.close();
+		} catch (IOException e) {
+			throw new FileStorageException("Could not store file.", e);
+		}
+
+		return directory;
 	}
 	
 	@Override
