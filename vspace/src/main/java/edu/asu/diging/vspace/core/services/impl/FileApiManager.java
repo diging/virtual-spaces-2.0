@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -30,6 +31,9 @@ public class FileApiManager implements IFileApiManager {
     @Autowired
     private FileRepository fileRepo;
     
+    @Value("${file_uploads_directory}")
+    private String fileUploadDir;
+    
     @Override
     public CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription) {
         IVSFile file = null;
@@ -44,7 +48,7 @@ public class FileApiManager implements IFileApiManager {
         if(file != null) {
             String relativePath = null;
             try {
-                relativePath = storageEngine.storeFile(fileContent, fileName, file.getId());
+                relativePath = storageEngine.storeFile(fileContent, fileName, fileUploadDir);
             } catch (FileStorageException e) {
                 returnValue.getErrorMsgs().add("File could not be stored: " + e.getMessage());
             }

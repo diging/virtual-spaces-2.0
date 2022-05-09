@@ -48,7 +48,7 @@ public class AddSpaceController {
         return "staff/spaces/add";
     }
 
-    @RequestMapping(value = "/staff/space/adds", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);

@@ -58,7 +58,6 @@ public class FileApiController {
         try {
             fileContent = fileManager.downloadFile(fileId);
         } catch (IOException e) {
-            logger.info(e.getMessage());
             return new ResponseEntity<byte[]>(fileContent, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         

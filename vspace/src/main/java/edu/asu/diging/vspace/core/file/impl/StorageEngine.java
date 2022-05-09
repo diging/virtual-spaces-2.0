@@ -34,7 +34,7 @@ public class StorageEngine implements IStorageEngine {
 	 */
 	@Override
 	public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-		File parent = new File(path + File.separator + fileUploadDir);
+		File parent = new File(path + File.separator + directory);
 		if (!parent.exists()) {
 			parent.mkdir();
 		}
@@ -52,7 +52,7 @@ public class StorageEngine implements IStorageEngine {
             throw new FileStorageException("Could not store file.", e);
         }
         
-        return fileUploadDir;
+        return directory;
 	}
 	
 	@Override
