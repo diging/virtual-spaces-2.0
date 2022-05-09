@@ -13,10 +13,11 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 @Controller
 public class ModuleController {
 
+    public static final String STAFF_MODULE_PATH = "/staff/module/";
     @Autowired
     private IModuleManager moduleManager;
 
-    @RequestMapping("/staff/module/{id}")
+    @RequestMapping(STAFF_MODULE_PATH+"{id}")
     public String showModule(@PathVariable String id, Model model) {
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
