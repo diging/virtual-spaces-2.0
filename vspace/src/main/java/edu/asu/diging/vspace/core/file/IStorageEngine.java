@@ -14,9 +14,9 @@ public interface IStorageEngine {
 
 	boolean renameImage(IVSImage image, String newFileName);
 
-    byte[] downloadFile(String directory, String filename) throws IOException;
+	byte[] downloadFile(String directory, String filename) throws IOException;
 
-    boolean renameFile(IVSFile file, String newFileName);
+	boolean renameFile(IVSFile file, String newFileName);
 
-    boolean deleteFile(IVSFile file);
+	boolean deleteFile(IVSFile file);
 }
