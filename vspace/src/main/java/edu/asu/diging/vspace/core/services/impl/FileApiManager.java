@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff;
+package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
 
 import edu.asu.diging.vspace.core.data.FileRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -17,10 +16,10 @@ import edu.asu.diging.vspace.core.factory.IFileFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
-import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.core.services.IFileApiManager;
 
 @Service
-public class FileApiManager {
+public class FileApiManager implements IFileApiManager {
     
     @Autowired
     private IStorageEngine storageEngine;
@@ -31,6 +30,7 @@ public class FileApiManager {
     @Autowired
     private FileRepository fileRepo;
     
+    @Override
     public CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription) {
         IVSFile file = null;
         if(fileContent != null ) {
@@ -57,15 +57,18 @@ public class FileApiManager {
         
     }
     
+    @Override
     public List<VSFile> getAllFiles(){
         return fileRepo.findAll();
     }
     
+    @Override
     public IVSFile getFileById(String id) {
         Optional<VSFile> optional = fileRepo.findById(id);
         return optional.get();
     }
     
+    @Override
     public IVSFile editFile(String fileId, String fileName, String description) {
         IVSFile file = null;
         Optional<VSFile> optional = fileRepo.findById(fileId);
@@ -81,6 +84,7 @@ public class FileApiManager {
         return file;
     }
 
+    @Override
     public byte[] downloadFile(String fileId) throws IOException {
         IVSFile file = getFileById(fileId);
 
@@ -88,6 +92,7 @@ public class FileApiManager {
         return fileContent;
     }
     
+    @Override
     public boolean deleteFile(String fileId) {
         IVSFile file = getFileById(fileId);
         if(storageEngine.deleteFile(file)) {

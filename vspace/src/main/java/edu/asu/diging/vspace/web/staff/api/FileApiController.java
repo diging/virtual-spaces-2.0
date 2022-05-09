@@ -2,7 +2,6 @@
 package edu.asu.diging.vspace.web.staff.api;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,14 +15,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
-import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.web.staff.FileApiManager;
+import edu.asu.diging.vspace.core.services.impl.FileApiManager;
 import edu.asu.diging.vspace.web.staff.forms.FileForm;
 
 @Controller
@@ -48,34 +43,6 @@ public class FileApiController {
         return "staff/files/filelist";
     }
     
-    @RequestMapping(value = "/staff/files/add", method = RequestMethod.GET)
-    public String showAddFile(Model model) {
-        model.addAttribute("files", new FileForm());
-        
-        return "staff/files/add";
-    }
-    
-    @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
-    public String createFile(Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
-            Principal principal, RedirectAttributes redirectAttrs) {
-        byte[] fileBytes = null;
-        String originalFileName = null;
-        CreationReturnValue returnVal = null;
-        if (file != null) {
-            try {
-                fileBytes = file.getBytes();
-                originalFileName = file.getOriginalFilename();
-                returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            
-        }
-        
-        return "redirect:/staff/files/list";
-    }
-    
     @RequestMapping(value = "/staff/files/edit/{fileId}", method = RequestMethod.POST)
     public String editFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
         String fileName = fileForm.getFileName();
@@ -96,14 +63,6 @@ public class FileApiController {
         }
         
         return new ResponseEntity<byte[]>(fileContent, HttpStatus.OK);
-    }
-    
-    @RequestMapping(value = "/staff/files/delete/{fileId}", method = RequestMethod.POST)
-    public ResponseEntity<String> deleteFile(Model model, @PathVariable String fileId) {
-        if(!fileManager.deleteFile(fileId)) {
-            return new ResponseEntity<String>("Could not delete file", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<String>("Deleted file", HttpStatus.OK);
     }
 
 }
