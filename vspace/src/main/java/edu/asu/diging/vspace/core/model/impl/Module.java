@@ -27,6 +27,8 @@ public class Module extends VSpaceElement implements IModule {
         parameters = @Parameter(name = "prefix", value = IPrefix.MODULE_PREFIX),
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
+    
+    private ModuleStatus moduleStatus;
 
     //-------- @JsonIgnore used as this Slide will be returned in a controller
     @JsonIgnore
@@ -121,5 +123,16 @@ public class Module extends VSpaceElement implements IModule {
     @Override
     public void setStartSequence(ISequence startSequence) {
         this.startSequence = startSequence;
+    }
+
+    @Override
+    public void setModuleStatus(ModuleStatus status) {
+        this.moduleStatus = status;
+        
+    }
+
+    @Override
+    public ModuleStatus getModuleStatus() {
+        return moduleStatus;
     }
 }

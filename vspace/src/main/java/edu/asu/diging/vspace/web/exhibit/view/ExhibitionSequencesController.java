@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.publicview;
+package edu.asu.diging.vspace.web.exhibit.view;
 
 import java.util.List;
 
@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -17,10 +21,6 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
-import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
-import edu.asu.diging.vspace.web.exception.SlidesInSequenceNotFoundException;
-import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Controller
 public class ExhibitionSequencesController {
