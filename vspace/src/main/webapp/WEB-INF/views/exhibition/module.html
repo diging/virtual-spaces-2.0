@@ -74,11 +74,14 @@
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
-                	<p>Bibliography Title: <span>[(${contents.biblioTitle})]</span>, Description: <span>[(${contents.description})]</span></p>
-                	<ul>
-	                	<div th:each="contentRef: ${contents.references}">
-							<li>
-								<div th:id="${contentRef.id}" class="referenceDiv">
+                	
+                	<p class="list-group-item" >Bibliography <br>
+                	Title : <span>[(${contents.biblioTitle})]</span><br>
+                	 Description: <span>[(${contents.description})]</span></p>
+                	<ul class="list-group">
+	                	<div  th:each="contentRef: ${contents.references}">
+							<li class="list-group-item" style = "font-size: 15px" >
+								<div  th:id="${contentRef.id}" class="referenceDiv">
 									<p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
 								</div>
 								<span class='Z3988' th:title='${@referenceMetadataRegistry.getProvider("default").getReferenceMetadata(contentRef)}'> </span>
