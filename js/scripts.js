@@ -34,6 +34,17 @@ window.addEventListener('DOMContentLoaded', event => {
 var myCarousel = document.querySelector('#myCarousel')
 var carousel = new bootstrap.Carousel(myCarousel)
 
+
+
+$('#features a').on('click', function (e) {
+    e.preventDefault()
+    $(this).tab('show')
+  })
+
+  $( document ).ready(function() {
+    $('html, body').scrollTop: $("a.active").offset().top;
+});
+
 });
 
 

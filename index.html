@@ -89,149 +89,87 @@
             </div>
         </aside>
         <!-- Features button section-->
-        <section class="bg-light">
-            <div class="container px-5 text-center mt-5" id="features" >
-                <a href="#spaces" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Spaces</a>
-                <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Modules</a>
-                <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Images</a>
-                <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">User Management</a>
-            <!-- Carousel wrapper -->
-            <div id="myCarousel" class="carousel slide carousel-fade mt-5" data-mdb-ride="carousel">
-                <!-- Indicators -->
-                <div class="carousel-indicators">
-                    <button
-                        type="button"
-                        data-mdb-target="#myCarousel"
-                        data-mdb-slide-to="0"
-                        class="active"
-                        aria-current="true"
-                        aria-label="Slide 1"
-                    ></button>
-                    <button
-                        type="button"
-                        data-mdb-target="#myCarousel"
-                        data-mdb-slide-to="1"
-                        aria-label="Slide 2"
-                    ></button>
-                    <button
-                        type="button"
-                        data-mdb-target="#myCarousel"
-                        data-mdb-slide-to="2"
-                        aria-label="Slide 3"
-                    ></button>
-                    <button
-                        type="button"
-                        data-mdb-target="#myCarousel"
-                        data-mdb-slide-to="3"
-                        aria-label="Slide 4"
-                    ></button>
-                    <button
-                        type="button"
-                        data-mdb-target="#myCarousel"
-                        data-mdb-slide-to="4"
-                        aria-label="Slide 5"
-                    ></button>
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header">
+                <ul class="nav nav-pills card-header-pills justify-content-center" id="features" data-bs-tabs="tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#spaces">Spaces</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#modules">Modules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#images">Images</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#users">User Management</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Header -->
+            <!-- Spaces -->
+            <form class="card-body tab-content center-block scroll" style="width: 1200px">
+                    <div role="tabpanel" class="tab-pane active" id="spaces">
+                    <div class="container-fluid">   
+                       <div class="row">
+                           <div class="col-lg-3">
+                                <div id="list-example" class="list-group">
+                                    <a class="list-group-item list-group-item-action" href="#list-item-1">Overview</a>
+                                    <a class="list-group-item list-group-item-action" href="#list-item-2">Creating a Space</a>
+                                    <a class="list-group-item list-group-item-action" href="#list-item-3">Editing a Space</a>
+                                    <a class="list-group-item list-group-item-action" href="#list-item-4">Change a Background Image</a>
+                                    <a class="list-group-item list-group-item-action" href="#list-item-5">Delete a Space</a>
+                                </div>
+                           </div>
+                           <div class="col-lg-9">
+                            <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+                                <h4 id="list-item-1">Overview</h4>
+                                    <img src="assets/img/carousel/overview.jpg" class="center-block border shadow-sm rounded img-fluid" alt="Overview">
+                                    <p>Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in 
+                                        and a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules.</p>
+                                <h4 id="list-item-2">Creating a Space</h4>
+                                    <img src="assets/img/carousel/newspace.jpg" class="center-block border shadow-sm rounded img-fluid" alt="Overview">
+                                    <p>To create a new space click on the plus icon in the menu bar next to "Spaces": 
+                                        This will take you to a page on which you can enter a title and a description for your space. 
+                                        Here you can also upload a background image for your space or choose from the existing images drop down. 
+                                        Make sure that your background image has a high enough resolution.
+                                        Once you are satisfied with the details click on "Create Space" button that will take you to a page that lets you add space links, 
+                                        external links or module links to your space.</p>
+                                <h4 id="list-item-3">Editing a Space</h4>
+                                    <img src="assets/img/carousel/edit.jpg" class="center-block border shadow-sm rounded img-fluid" alt="Overview">
+                                    <p>To edit the title of a space click on the space you need to edit from the space list and click on the <img src="assets/img/carousel/editsymbol.png"> icon which is next to the existing title.</p>
+                                <h4 id="list-item-4">Change a Background Image</h4>
+                                    <img src="assets/img/carousel/change.jpg" class="center-block border shadow-sm rounded img-fluid" alt="Overview">
+                                    <p>To change the background image, click on the "Change Image" button. A dialog box will pop up that lets you upload a new image from your computer. 
+                                        Once you have selected the image, click "Upload Image". The page will reload to display the uploaded Image.</p>
+                                <h4 id="list-item-5">Delete a Space</h4>
+                                    <img src="assets/img/carousel/delete.jpg" class="center-block border shadow-sm rounded img-fluid" alt="Overview">
+                                    <p>To delete the current space, you can click the "Delete Space" button and confirm the action by clicking "Delete" on the dialog box that appears or
+                                        you can also delete a space from the space list in the Space Management page by clicking the icon next to the name of the space.
+                                        Once the current space is deleted:</p>
+                                        <p> - you can't locate it in the Space Management page. </p>
+                                        <p>- all the space links, external links and module links with the source being the deleted space will be deleted.</p>
+                                        <p>- all the space links with the destination being the deleted space will still exist but will now point to nothing. Make sure you set a new target for those space links or delete them if not needed.
+                                        </p>
+                                    </p>
+                              </div>
+                           </div>
+                        </div> 
+                    </div>
+                </div>                
+                <!-- Spaces -->
+                <div class="tab-pane" id="modules">
+                    <p class=" card-text">Change Static Network settings.</p>
                 </div>
-            
-                <!-- Inner -->
-                <div class="carousel-inner center-block" id="spaces">
-                    <!-- Progress Bar -->
-                    <div class="progress" style="width:1000px">
-                        <div class="progress-bar" role="progressbar" style="width:20%">
-                            Overview
-                        </div>
-                        <div class="progress-bar" role="progressbar" style="width:20%">
-                            Creating a Space
-                        </div>
-                        <div class="progress-bar" role="progressbar" style="width:20%">
-                            Editing a Space
-                        </div>
-                        <div class="progress-bar" role="progressbar" style="width:20%">
-                            Change a Background Image
-                          </div>
-                        <div class="progress-bar" role="progressbar" style="width:20%">
-                            Delete a Space
-                        </div>
-                      </div>
-                    <!-- Progress Bar -->
-                    <!-- Single item -->
-                    <div class="carousel-item active" id="overview">
-                        <img src="assets/img/carousel/overview.jpg" class="carousel-size center-block" alt="Overview"/>
-                        <div class="carousel-caption carousel-bg center-block">
-                        <h5>Overview</h5>
-                        <p>Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in 
-                            and a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules.</p>
-                        </div>
-                    </div>
-                
-                    <!-- Single item -->
-                    <div class="carousel-item" id="newspace">
-                        <img src="assets/img/carousel/newspace.jpg" class="carousel-size center-block" alt="Creating a Space"/>
-                        <div class="carousel-caption carousel-bg center-block">
-                        <h5>Creating a Space</h5>
-                        <p>To create a new space click on the plus icon in the menu bar next to "Spaces": 
-                        This will take you to a page on which you can enter a title and a description for your space. 
-                        Here you can also upload a background image for your space or choose from the existing images drop down. 
-                        Make sure that your background image has a high enough resolution.
-                        Once you are satisfied with the details click on "Create Space" button that will take you to a page that lets you add space links, 
-                        external links or module links to your space.
-                        </p>
-                        </div>
-                    </div>
-                
-                    <!-- Single item -->
-                    <div class="carousel-item" id="edit">
-                        <img src="assets/img/carousel/edit.jpg" class="carousel-size center-block" alt="Editing a Space"/>
-                        <div class="carousel-caption carousel-bg center-block">
-                        <h5>Editing a Space</h5>
-                        <p>To edit the title of a space click on the space you need to edit from the space list and click on the <img src="assets/img/carousel/editsymbol.png"> icon which is next to the existing title.</p>
-                        </div>
-                    </div>
-            
-
-                    <!-- Single item -->
-                    <div class="carousel-item" id="change">
-                        <img src="assets/img/carousel/change.jpg" class="carousel-size center-block"  alt="Change a Background Image"/>
-                        <div class="carousel-caption carousel-bg center-block">
-                        <h5>Change a Background Image</h5>
-                        <p>To change the background image, click on the "Change Image" button. A dialog box will pop up that lets you upload a new image from your computer. 
-                            Once you have selected the image, click "Upload Image". The page will reload to display the uploaded Image.
-                        </p>
-                        </div>
-                    </div>
-        
-
-                    <!-- Single item -->
-                    <div class="carousel-item" id="delete">
-                        <img src="assets/img/carousel/delete.jpg" class="carousel-size center-block" alt="Delete a Space"/>
-                        <div class="carousel-caption carousel-bg center-block">
-                        <h5>Delete a Space</h5>
-                        <p>To delete the current space, you can click the "Delete Space" button and confirm the action by clicking "Delete" on the dialog box that appears or
-                            you can also delete a space from the space list in the Space Management page by clicking the icon next to the name of the space.
-                            Once the current space is deleted:</p>
-                            <p> - you can't locate it in the Space Management page. </p>
-                            <p>- all the space links, external links and module links with the source being the deleted space will be deleted.</p>
-                            <p></p>- all the space links with the destination being the deleted space will still exist but will now point to nothing. Make sure you set a new target for those space links or delete them if not needed.
-                            </p>
-                        </div>
-                    </div>
-                    
-                <!-- Inner -->
+                <div class="tab-pane" id="images">
+                    <p class=" card-text">Change Static Network settings.</p>
                 </div>
-                <!-- Controls -->
-                <button class="carousel-control-prev" type="button" data-mdb-target="#myCarousel" data-mdb-slide="prev" onclick="$('#myCarousel').carousel('prev')">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-mdb-target="#myCarousel" data-mdb-slide="next" onclick="$('#myCarousel').carousel('next')">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-                </button>
-            <!-- Carousel wrapper -->
-        </div>
-    </div>
-    </section>
-
+                <div class="tab-pane" id="users">
+                    <p class=" card-text">Change Static Network settings.</p>
+                </div>
+            </form>
+       </div>
         <!-- Call to action section-->
         <section class="cta">
             <div class="cta-content">
