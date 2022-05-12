@@ -45,6 +45,10 @@ $('#features a').on('click', function (e) {
     $('html, body').scrollTop: $("a.active").offset().top;
 });
 
+var scrollSpy = new bootstrap.ScrollSpy(document.body, {
+    target: '#list-example'
+  })
+
 });
 
 

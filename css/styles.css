@@ -76,6 +76,13 @@
   }
 }
 
+
+.scrollspy-example {
+  position: relative;
+  height: 200px;
+  overflow: auto;
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -611,6 +618,8 @@ progress {
   border-radius: 0.25rem;
   max-width: 100%;
   height: auto;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .figure {
@@ -1376,6 +1385,11 @@ progress {
   .col-lg-3 {
     flex: 0 0 auto;
     width: 25%;
+    margin-top:1rem;
+  }
+
+  .col-lg-3.sticky-top {
+    align-self: flex-start;
   }
 
   .col-lg-4 {
@@ -1401,11 +1415,13 @@ progress {
   .col-lg-8 {
     flex: 0 0 auto;
     width: 66.66666667%;
+    margin-top:1rem;
   }
 
   .col-lg-9 {
     flex: 0 0 auto;
     width: 75%;
+    margin-top:1rem;
   }
 
   .col-lg-10 {
@@ -4527,6 +4543,10 @@ textarea.form-control-lg {
   overflow-y: auto;
 }
 
+.unscroll {
+  height: 100vh;;
+}
+
 .card {
   position: relative;
   display: flex;
@@ -5093,7 +5113,7 @@ textarea.form-control-lg {
   border-radius: 0.25rem;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-  max-height: 300px;
+  max-height: 700px;
   margin-bottom: 10px;
 }
 
@@ -6578,7 +6598,6 @@ textarea.form-control-lg {
 }
 
 .sticky-top {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1020;
