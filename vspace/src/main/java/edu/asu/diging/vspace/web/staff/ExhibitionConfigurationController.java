@@ -16,6 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.model.ExhibitionLanguageCodes;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -49,6 +50,7 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
+        model.addAttribute("exhibitionLanguages", Arrays.asList(ExhibitionLanguageCodes.values()));
         return "staff/exhibit/config";
     }
 

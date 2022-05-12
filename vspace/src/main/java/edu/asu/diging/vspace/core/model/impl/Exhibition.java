@@ -1,14 +1,19 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 
@@ -37,6 +42,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private String customMessage;
     
     private boolean aboutPageConfigured;
+    
+    @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL)
+    private List<ExhibitionLanguage> languages;
 
     /*
      * (non-Javadoc)
@@ -115,5 +123,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
     }
+
+    public List<ExhibitionLanguage> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<ExhibitionLanguage> languages) {
+        this.languages = languages;
+    }
+
+ 
 
 }
