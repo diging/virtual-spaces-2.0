@@ -23,7 +23,7 @@ public class SearchSpacesController {
     private ISpaceManager spaceManager;
     
     @RequestMapping("/staff/spaces/search")
-    public ResponseEntity<String> searchSpacesForSlideContentBlock(@RequestParam(value = "term", required = false) String searchTerm){
+    public ResponseEntity<String> search(@RequestParam(value = "term", required = false) String searchTerm){
         List<ISpace> spaces = null;
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             spaces = spaceManager.findByName(searchTerm);
@@ -34,10 +34,10 @@ public class SearchSpacesController {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode idArray = mapper.createArrayNode();
         for (ISpace space : spaces) {
-            ObjectNode imageNode = mapper.createObjectNode();
-            imageNode.put("id", space.getId());
-            imageNode.put("name", space.getName());
-            idArray.add(imageNode);
+            ObjectNode spaceNode = mapper.createObjectNode();
+            spaceNode.put("id", space.getId());
+            spaceNode.put("name", space.getName());
+            idArray.add(spaceNode);
         }
         return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
     }

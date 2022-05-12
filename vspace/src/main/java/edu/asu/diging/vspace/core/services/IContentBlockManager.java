@@ -54,7 +54,7 @@ public interface IContentBlockManager {
 
     ISpaceBlock getSpaceBlock(String spaceBlockId);
 
-    void saveSpaceBlock(SpaceBlock textBlock);
+    void saveSpaceBlock(ISpaceBlock textBlock);
 
     /**
      * Delete a space block using an id and also decrease content order by 1 of all
@@ -70,5 +70,5 @@ public interface IContentBlockManager {
     
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
 
-    void updateSpaceBlock(SpaceBlock spaceBlock);
+    void updateSpaceBlock(ISpaceBlock spaceBlock);
 }

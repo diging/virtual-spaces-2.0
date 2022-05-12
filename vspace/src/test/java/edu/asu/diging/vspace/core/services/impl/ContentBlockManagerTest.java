@@ -112,16 +112,7 @@ public class ContentBlockManagerTest {
     }
     
     @Test
-    public void test_deleteSpaceBlockById_valid() throws BlockDoesNotExistException {
-        SpaceBlock spaceBlock = new SpaceBlock();
-        managerToTest.saveSpaceBlock(spaceBlock);
-        
-        Mockito.verify(spaceBlockRepo).save(spaceBlock);
-        
-    }
-    
-    @Test
-    public void test_editSpaceBlock_valid() throws BlockDoesNotExistException {
+    public void test_deleteSpaceBlock_valid() throws BlockDoesNotExistException {
         String spaceBlockId = "realId";
         when(contentBlockRepository.findById(spaceBlockId)).thenReturn(Optional.of(contentBlock));
         managerToTest.deleteSpaceBlockById(spaceBlockId,"slideId_1");
@@ -142,6 +133,16 @@ public class ContentBlockManagerTest {
         when(spaceBlockRepo.save((SpaceBlock)spaceBlock)).thenReturn((SpaceBlock) spaceBlock);
         ISpaceBlock createdBlock = managerToTest.createSpaceBlock(slideId, title, contentOrder, space);
         Assert.assertEquals(createdBlock.getContentOrder(), contentOrder);
+    }
+    
+    @Test
+    public void test_getSpaceBlock_success() {
+        String spaceId="spaceId";
+        SpaceBlock spaceBlock = new SpaceBlock();
+        spaceBlock.setId(spaceId);
+        when(spaceBlockRepo.findById(spaceId)).thenReturn(Optional.of(spaceBlock));
+        ISpaceBlock retrievedSpaceBlock = managerToTest.getSpaceBlock(spaceId);
+        assertEquals(spaceId, retrievedSpaceBlock.getId());
     }
 
     @Test

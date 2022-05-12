@@ -323,7 +323,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
     
     @Override
-    public void saveSpaceBlock(SpaceBlock spaceBlock) {
+    public void saveSpaceBlock(ISpaceBlock spaceBlock) {
         spaceBlockRepo.save((SpaceBlock) spaceBlock);
     }
 
@@ -457,7 +457,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateSpaceBlock(SpaceBlock spaceBlock) {
-        spaceBlockRepo.save(spaceBlock);
+    public void updateSpaceBlock(ISpaceBlock spaceBlock) {
+        spaceBlockRepo.save((SpaceBlock)spaceBlock);
     }
 }
