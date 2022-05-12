@@ -38,7 +38,7 @@ public class ContentBlockManagerTest {
 
     @Mock
     private ImageContentBlockRepository imageBlockRepo;
-<<<<<<< HEAD
+
     
     @Mock
     private BiblioBlockRepository biblioBlockRepo;
@@ -52,9 +52,7 @@ public class ContentBlockManagerTest {
     @Mock
     private ReferenceManager refManager;
     
-=======
 
->>>>>>> origin/develop
     @InjectMocks
     private ContentBlockManager managerToTest;
 
