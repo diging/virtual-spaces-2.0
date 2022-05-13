@@ -1060,7 +1060,7 @@
                    });
                 });   
                 $("#submitSpaceBlock").on("click", function(e){
-                	var token =  $('input[name="_csrf"]').attr('value');
+                	var token = [[${_csrf.token}]];
                 	e.preventDefault();
                     // ------------- editting text content blocks ------------
                     var selectedSpace = document.getElementById('editSpaceName');
@@ -1599,7 +1599,7 @@
                     </div>
                      <div th:attr="data-position=${contents.contentOrder}" style="word-break:break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row"  th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
                         <p class="col-md-10"> [[${contents.title}]]</p>
-                        <p hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
+                        <p th:if=${contents.space != null} hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
                         <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
                         <a class="btn deleteSpace col-md-1" href="javascript:;"> 
                         <span class="icon-trash error"></span>
