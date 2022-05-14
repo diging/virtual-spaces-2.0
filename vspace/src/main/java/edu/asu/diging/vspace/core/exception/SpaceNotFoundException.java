@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.exception;
+package edu.asu.diging.vspace.core.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
