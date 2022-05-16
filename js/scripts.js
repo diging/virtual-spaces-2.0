@@ -51,4 +51,9 @@ var scrollSpy = new bootstrap.ScrollSpy(document.body, {
 
 });
 
+function redirectIt(obj){
+    var goToLink = obj.getAttribute("href");
+    window.location.href=goToLink;
+}
+
 
