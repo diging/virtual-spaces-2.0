@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -23,11 +28,6 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
-import edu.asu.diging.vspace.web.exception.SequenceNotFoundException;
-import edu.asu.diging.vspace.web.exception.SlideNotFoundException;
-import edu.asu.diging.vspace.web.exception.SlidesInSequenceNotFoundException;
-import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Controller
 public class ExhibitionSlideController {
