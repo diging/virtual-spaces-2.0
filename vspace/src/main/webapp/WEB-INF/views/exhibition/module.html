@@ -144,7 +144,24 @@
 	                	<div  th:each="contentRef: ${contents.references}">
 							<li class="list-group-item" style = "font-size: 15px" >
 								<div  th:id="${contentRef.id}" class="referenceDiv">
-									<p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
+								<!--  <p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>-->
+								<p  class="col-md-10">Reference Title : [[${contentRef.title} ]] </p>
+								<p  class="col-md-10">Reference Author : [[${contentRef.author}]]</p>
+								<p  class="col-md-10">Reference Year : [[${contentRef.year}]]</p>
+								<p  class="col-md-10">Reference Volume : [[${contentRef.volume}]]</p>
+								<p  class="col-md-10">Reference Issue : [[${contentRef.issue}]]</p>
+								<p  class="col-md-10">Reference pages : [[${contentRef.pages}]]</p>
+								<p  class="col-md-10">Reference Editors : [[${contentRef.editors}]]</p>
+								<p  class="col-md-10">Reference Type : [[${contentRef.type}]]</p>
+								<p  class="col-md-10">Reference Note : [[${contentRef.note}]]</p>
+								<a th:href='${contentRef.url}'><p  class="col-md-12">Reference URL :  [[${contentRef.url}]]</p></a>
+								
+								
+    							
+									
+								
+									
+									
 								</div>
 								<span class='Z3988' th:title='${@referenceMetadataRegistry.getProvider("default").getReferenceMetadata(contentRef)}'> </span>
 							</li>
