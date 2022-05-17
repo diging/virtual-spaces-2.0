@@ -21,6 +21,12 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
+/**
+ * 
+ * Represents Preview data aspect.
+ * @author prachikharge
+ *
+ */
 @Component
 @Aspect
 public class PreviewDataAspect {
@@ -28,6 +34,13 @@ public class PreviewDataAspect {
     @Autowired
     private IExhibitionManager exhibitionManager;
 
+    /**
+     * Checks preview before and after joint point
+     * 
+     * @param jp
+     * @return
+     * @throws Throwable
+     */
     @Around("execution(public * edu.asu.diging.vspace.web.exhibit..*Controller.*(..)) || execution(public * edu.asu.diging.vspace.web.HomeController.*(..))")
     public Object checkPreview(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();

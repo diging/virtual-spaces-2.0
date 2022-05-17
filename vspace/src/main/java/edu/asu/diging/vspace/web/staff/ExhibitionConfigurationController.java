@@ -46,13 +46,13 @@ public class ExhibitionConfigurationController {
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         String previewId = null;
         if (exhibition == null) {
-           exhibition = (Exhibition) exhibitFactory.createExhibition();
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             previewId = exhibition.getPreviewId();
             if(previewId==null || previewId.isEmpty()) {
-            UUID randomUUID = UUID.randomUUID();
-            String randomString = randomUUID.toString().replaceAll("-", "");
-            exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
+                UUID randomUUID = UUID.randomUUID();
+                String randomString = randomUUID.toString().replaceAll("-", "");
+                exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
             }
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
