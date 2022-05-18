@@ -1,0 +1,16 @@
+{
+"languages" : [
+{
+"code" : "EN",
+"label" : "English"
+},
+{
+"code" : "AA",
+"label" : "Afar"
+},
+{
+"code" : "AB",
+"label" : "Abkhazian"
+}
+]
+}

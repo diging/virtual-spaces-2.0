@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.asu.diging.vspace.config.ExhibitionLanguageConfigList;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionLanguageCodes;
@@ -21,6 +22,7 @@ import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -38,6 +40,9 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
+    
+    @Autowired
+    private ExhibitionLanguageConfigList exhibitionLanguageConfigList;
 
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
@@ -50,7 +55,7 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("exhibitionLanguages", Arrays.asList(ExhibitionLanguageCodes.values()));
+        model.addAttribute("exhibitionLanguages", exhibitionLanguageConfigList.getLanguages());
         return "staff/exhibit/config";
     }
 
@@ -68,6 +73,7 @@ public class ExhibitionConfigurationController {
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+            @RequestParam("exhibitLanguage") ExhibitionLanguage languages,
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);

@@ -55,7 +55,7 @@
 		         <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Language:</label>
 		            <select class="form-control" name="exhibitLanguage" onChange="modeChange(exhibitLanguage.value)">
-		                <option th:each="language: ${exhibitionLanguages}" th:id=${language} th:value=${language} th:selected="${#strings.equals(language,exhibition.languages)}">[[${language}]]</option>
+		                <option th:each="language: ${languages.label}" th:id=${language} th:value=${language} th:selected="${#strings.equals(language,exhibition.languages)}">[[${language}]]</option>
 		            </select>
 		        </div>
 		        <div id="offlineMessage" style="padding-top: 20px;" th:style="${exhibition.mode != 'OFFLINE' ? 'display: none;' : '' }">
