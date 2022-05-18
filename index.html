@@ -20,6 +20,7 @@
     <body id="page-top">
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+            <a href="http://github.com/diging/virtual-spaces-2.0"><img loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>          
             <div class="container px-5">
                 <a class="navbar-brand fw-bold" href="#page-top"><img src="assets/img/logo.png" width="150px"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +31,7 @@
                     <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#page-top">Home</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#features">Features</a></li>
-                        <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Download</a></li>
+                        <li class="nav-item"><a class="nav-link me-lg-3" href="#download">GitHub</a></li>
                     </ul>
                     <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0">
                         <span class="d-flex align-items-center">
@@ -96,7 +97,10 @@
             <div class="card-header" id="features">
                 <ul class="nav nav-pills card-header-pills justify-content-center" data-bs-tabs="tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#spaces">Spaces</a>
+                        <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#start">Getting Started</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#spaces">Spaces</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#modules">Modules</a>
@@ -110,9 +114,49 @@
                 </ul>
             </div>
             <!-- Header -->
+            <!-- Getting Started -->
+            <form class="card-body tab-content center-block scroll rounded" style="width: 1200px">
+                <div role="tabpanel" class="tab-pane active" id="start">
+                <div class="container-fluid">   
+                   <div class="row">
+                       <div class="col-lg-3 center-block sticky-top">
+                            <div id="list-example" class="list-group">
+                                <a class="list-group-item list-group-item-action active" href="#start-1">Structure</a>
+                                <a class="list-group-item list-group-item-action" href="#start-2">Virtual Spaces 2.0 </a>
+                            </div>
+                       </div>
+                       <div class="col-lg-8 center-block">
+                        <body data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" tabindex="0">
+                            <h3 id="start-1">Structure</h3>
+                                <p>A virtual space consists of Spaces and Modules. Spaces represent real or fictional spaces, meaning a space can represent 
+                                    for example a room in a building or exhibition, or it can represent a specific topic such as "programming in Python". 
+                                    A Space consists of a background image and links that are placed on the background image that allow users to move 
+                                    from one Space to another, from a Space to a Module, 
+                                    or from a Space to a website outside of a virtual space. Modules are built up similar to PowerPoint presentations. 
+                                    They consist of Slides that contain images and texts. Those slides are arranged in Sequences that define the order of 
+                                    the slides in a Module. A specific type of Slide is a Branching Point. Branching Points are Slides that in addition to
+                                    text and images have Branching Point Choices (or Choices) that allow a user to jump out of a current Sequence into another one, 
+                                    effectively giving the arrangement of Slides in a Module a tree structure.</p>
+                                    <p>&nbsp;</p>
+                                    <p>&nbsp;</p>
+                            <h3 id="start-2">Virtual Spaces 2.0</h3>
+                                <p>Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in and 
+                                    a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules. 
+                                    To login to the private space, click on the login icon in the right upper corner. 
+                                    This will bring you to a page that allows you to either login or create a new user account. 
+                                    If you sign up for a new user account, an admin user will have to first approve your account and give you certain privileges 
+                                    before you can login to the private space.</p>
+                                    <p>&nbsp;</p>
+                                    <p>&nbsp;</p>
+                          </div>
+                        </body>
+                    </div> 
+                </div>
+                </div>
+            <!-- Getting Started -->
             <!-- Spaces -->
             <form class="card-body tab-content center-block scroll rounded" style="width: 1200px">
-                    <div role="tabpanel" class="tab-pane active" id="spaces">
+                    <div role="tabpanel" class="tab-pane" id="spaces">
                     <div class="container-fluid">   
                        <div class="row">
                            <div class="col-lg-3 center-block sticky-top">
@@ -362,7 +406,7 @@
                         <br />
                         Start building.
                     </h2>
-                    <a class="btn btn-outline-light py-3 px-4 rounded-pill" href="https://" target="_blank">Download for free</a>
+                    <a class="btn btn-outline-light py-3 px-4 rounded-pill" href="http://github.com/diging/virtual-spaces-2.0" target="_blank">Fork me on Github</a>
                 </div>
             </div>
         </section>
