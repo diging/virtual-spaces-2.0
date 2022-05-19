@@ -33,6 +33,7 @@ public class ExhibitionFactory implements IExhibitionFactory {
      * @param exhibitionObj
      * @return
      */
+    @Override
     public void updatePreviewId(Exhibition exhibitionObj) {
         UUID randomUUID = UUID.randomUUID();
         String randomString = randomUUID.toString().replaceAll("-", "");
