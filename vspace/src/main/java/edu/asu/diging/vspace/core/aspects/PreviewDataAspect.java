@@ -23,7 +23,8 @@ import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 /**
  * 
- * Represents Preview data aspect.
+ * This aspect intercepts the controller for the public site. It performs checks and adds information needed 
+ * for the preview site if the preview site is requested.
  * @author prachikharge
  *
  */
@@ -35,7 +36,11 @@ public class PreviewDataAspect {
     private IExhibitionManager exhibitionManager;
 
     /**
-     * Checks preview before and after joint point
+     * This method does the following: 
+     * 
+     * 1. Checks if the requested url is for the preview (if it contains a preview id)
+     * 2. Checks if the preview id is correct (if not showing a 404)
+     * 3. Adds the preview id into the model and sets isExhPreview to true
      * 
      * @param jp
      * @return

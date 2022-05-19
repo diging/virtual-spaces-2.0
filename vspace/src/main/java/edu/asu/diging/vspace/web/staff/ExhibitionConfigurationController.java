@@ -50,9 +50,7 @@ public class ExhibitionConfigurationController {
         } else {
             previewId = exhibition.getPreviewId();
             if(previewId==null || previewId.isEmpty()) {
-                UUID randomUUID = UUID.randomUUID();
-                String randomString = randomUUID.toString().replaceAll("-", "");
-                exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
+                exhibitFactory.updatePreviewId(exhibition);
             }
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
@@ -82,9 +80,6 @@ public class ExhibitionConfigurationController {
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
-            UUID randomUUID = UUID.randomUUID();
-            String randomString = randomUUID.toString().replaceAll("-", "");
-            exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
