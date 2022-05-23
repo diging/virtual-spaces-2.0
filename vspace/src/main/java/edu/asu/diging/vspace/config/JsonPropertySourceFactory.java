@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.config;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,9 @@ public class JsonPropertySourceFactory implements PropertySourceFactory {
             throws IOException {
         Map<String, Object> readValue = new ObjectMapper()
                 .readValue(resource.getInputStream(), Map.class);
-              return new MapPropertySource("json-property", readValue);
+             MapPropertySource source=  new MapPropertySource("json-property", readValue);
+             
+             return source;
     }
   }
 

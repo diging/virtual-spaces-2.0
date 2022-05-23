@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,6 +17,10 @@ import edu.asu.diging.vspace.core.model.ExhibitionLanguageCodes;
 @Entity
 public class ExhibitionLanguage {
 
+    public ExhibitionLanguage() {
+        super();
+    }
+
     @Id
     @GeneratedValue(generator = "exhibit_language_id_generator")
     @GenericGenerator(name = "exhibit_language_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -25,14 +31,19 @@ public class ExhibitionLanguage {
     @ManyToOne(targetEntity = Exhibition.class)
     private Exhibition exhibition;
     
-    @Enumerated(EnumType.STRING)
-    private ExhibitionLanguageCodes code;
+    private String code;
 
-    public ExhibitionLanguageCodes getCode() {
+    public ExhibitionLanguage(String label, String code, Exhibition exhibition) {
+       this.label=label;
+       this.code=code;
+       this.exhibition=exhibition;
+    }
+
+    public String getCode() {
         return code;
     }
 
-    public void setCode(ExhibitionLanguageCodes code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -52,4 +63,23 @@ public class ExhibitionLanguage {
         this.exhibition = exhibition;
     }
     
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, exhibition, label);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ExhibitionLanguage other = (ExhibitionLanguage) obj;
+        return Objects.equals(code, other.code) && Objects.equals(exhibition, other.exhibition)
+               && Objects.equals(label, other.label);
+    }
+
 }

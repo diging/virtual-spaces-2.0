@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,6 +28,23 @@ import edu.asu.diging.vspace.core.model.ISpace;
 @Entity
 public class Exhibition extends VSpaceElement implements IExhibition {
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Exhibition other = (Exhibition) obj;
+        return Objects.equals(id, other.id);
+    }
+
     @Id
     @GeneratedValue(generator = "exhibit_id_generator")
     @GenericGenerator(name = "exhibit_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -44,7 +63,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL)
-    private List<ExhibitionLanguage> languages;
+    private Set<ExhibitionLanguage> languages;
 
     /*
      * (non-Javadoc)
@@ -124,14 +143,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.aboutPageConfigured = aboutPageConfigured;
     }
 
-    public List<ExhibitionLanguage> getLanguages() {
+    public Set<ExhibitionLanguage> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<ExhibitionLanguage> languages) {
+    public void setLanguages(Set<ExhibitionLanguage> languages) {
         this.languages = languages;
     }
 
  
+   
 
 }
