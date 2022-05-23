@@ -34,9 +34,9 @@ public class ExhibitionLanguage {
     private boolean isDefault;
 
     public ExhibitionLanguage(String label, String code, Exhibition exhibition) {
-       this.label=label;
-       this.code=code;
-       this.exhibition=exhibition;
+        this.label=label;
+        this.code=code;
+        this.exhibition=exhibition;
     }
 
     public String getCode() {
