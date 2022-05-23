@@ -14,15 +14,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonPropertySourceFactory implements PropertySourceFactory {
      
 
- 
+    /**
+     * Converts language json  read from properties file to a map and stores in property source.
+     * 
+     */
     @Override
     public org.springframework.core.env.PropertySource<?> createPropertySource(String name, EncodedResource resource)
             throws IOException {
         Map<String, Object> readValue = new ObjectMapper()
                 .readValue(resource.getInputStream(), Map.class);
-             MapPropertySource source=  new MapPropertySource("json-property", readValue);
-             
-             return source;
+        return new MapPropertySource("json-property", readValue);
     }
-  }
+}
 

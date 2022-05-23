@@ -29,9 +29,12 @@ public class ExhibitionLanguageConfig {
     @Autowired
     private Environment environment;
     
-    List<Map>  exhibitionLanguageList = new ArrayList();
+    List<Map>  exhibitionLanguageList = new ArrayList<Map>();
     
-    
+    /**
+     * Fetches the exhibition language list from property source and stores in exhibitionLanguageList
+     * 
+     */
     @PostConstruct
     public void init() {
         for(Iterator it = ((AbstractEnvironment) environment).getPropertySources().iterator(); it.hasNext(); ) {
