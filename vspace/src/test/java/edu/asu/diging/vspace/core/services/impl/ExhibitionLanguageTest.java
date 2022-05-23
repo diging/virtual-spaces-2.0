@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
-import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 
@@ -25,7 +24,7 @@ public class ExhibitionLanguageTest {
 
 
     @InjectMocks
-    ExhibitionFactory exhibitionFactory;
+    ExhibitionManager exhibitionManager;
 
     @Mock
     private ExhibitionRepository exhibitRepo;
@@ -59,7 +58,7 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages,null);
+        exhibitionManager.updateExhibitionLanguages(exhibition, languages,null);
         assertEquals(exhibition.getLanguages().size(),2);
 
     }
@@ -94,7 +93,7 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language2);
         mappedLanguages.add(language3);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages, null);
+        exhibitionManager.updateExhibitionLanguages(exhibition, languages, null);
 
         //no duplicate entries should be added
         assertEquals(exhibition.getLanguages().size(),3);
@@ -119,7 +118,7 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages,null);
+        exhibitionManager.updateExhibitionLanguages(exhibition, languages,null);
         assertEquals(exhibition.getLanguages().size(),1);
 
 
@@ -143,7 +142,7 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages,"en");
+        exhibitionManager.updateExhibitionLanguages(exhibition, languages,"en");
         assertEquals(exhibition.getLanguages().size(),2);
         exhibition.getLanguages().forEach(language -> {
             if(language.getCode().equals("en")) { 

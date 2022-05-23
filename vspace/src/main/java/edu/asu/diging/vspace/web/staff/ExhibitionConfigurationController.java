@@ -57,7 +57,7 @@ public class ExhibitionConfigurationController {
         if(exhibition!=null) {
             model.addAttribute("exhibition", exhibition);
             if(exhibition.getLanguages() != null ) {
-                model.addAttribute("existingLanguages", exhibition.getLanguages()
+                model.addAttribute("mappedLanguages", exhibition.getLanguages()
                         .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
             }
         } else {
@@ -65,7 +65,7 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("exhibitionLanguages", exhibitionLanguageConfig.getExhibitionLanguageList());
+        model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
        
         return "staff/exhibit/config";
     }
@@ -99,7 +99,7 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        exhibitFactory.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
+        exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
         
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);

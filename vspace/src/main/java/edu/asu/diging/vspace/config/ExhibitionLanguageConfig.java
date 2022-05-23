@@ -32,7 +32,7 @@ public class ExhibitionLanguageConfig {
     List<Map>  exhibitionLanguageList = new ArrayList<Map>();
     
     /**
-     * Fetches the exhibition language list from property source and stores in exhibitionLanguageList
+     * Fetches the configured language list from environment property source and stores in exhibitionLanguageList
      * 
      */
     @PostConstruct
@@ -43,11 +43,8 @@ public class ExhibitionLanguageConfig {
                 MapPropertySource mapSource = ((MapPropertySource) propertySource);
                 if("json-property".equals(mapSource.getName())) {
                     Map<String, Object> languageMap = mapSource.getSource();
-
                     exhibitionLanguageList = (List<Map>) languageMap.get("languages");
-
                 }
-
             }
         }
     }

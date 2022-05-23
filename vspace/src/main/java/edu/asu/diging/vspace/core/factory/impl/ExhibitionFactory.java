@@ -18,9 +18,6 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 
 @Service
 public class ExhibitionFactory implements IExhibitionFactory {
-    
-    @Autowired
-    private ExhibitionLanguageConfig exhibitionLanguageConfig;
 
     /*
      * (non-Javadoc)
@@ -30,47 +27,6 @@ public class ExhibitionFactory implements IExhibitionFactory {
     @Override
     public IExhibition createExhibition() {
         return new Exhibition();
-    }
-
-    /**
-     * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
-     *  
-     * @param exhibition
-     * @param defaultLanguage 
-     * @param languages
-     */
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
-        List<ExhibitionLanguage> languageMapList = new ArrayList();
-       
-        if(defaultLanguage!=null) {
-            codes.add(defaultLanguage);
-        }
-        codes.forEach(code -> {
-            Optional<ExhibitionLanguage> languageMap = exhibitionLanguageConfig.getExhibitionLanguageList()
-                    .stream().filter(map-> code.equalsIgnoreCase((String) map.get("code")))
-                    .map(language ->{ 
-                        ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) language.get("label"),
-                                (String) language.get("code"), exhibition);
-
-                        if(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage)) {
-                            exhibitionLanguage.setDefault(true);
-                        }
-                        return exhibitionLanguage;
-
-                    }).findFirst();
-
-            if(languageMap.isPresent()) {
-
-                languageMapList.add(languageMap.get());
-            }
-        });
-        
-        
-        if(CollectionUtils.isNotEmpty(languageMapList)) {
-            exhibition.getLanguages().addAll(languageMapList);
-        }
-       
-
     }
 
 }

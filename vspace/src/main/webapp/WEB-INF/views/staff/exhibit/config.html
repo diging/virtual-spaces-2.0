@@ -52,14 +52,14 @@
 		         <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Languages:</label>
 		            <select class="form-control" name="exhibitLanguage" multiple="multiple" >
-		                <option th:each="language: ${exhibitionLanguages}" th:id=${language.code} th:value=${language.code} th:selected="${existingLanguages!=null && existingLanguages.contains(language.label)}">[[${language.label}]]</option>
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${mappedLanguages!=null && mappedLanguages.contains(language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>
 		        
 		        <div style="padding-top: 20px;">
 		            <label for="title">Default Exhibition Language:</label>
 		            <select class="form-control" name="defaultExhibitLanguage" >
-		                <option th:each="language: ${exhibitionLanguages}" th:id=${language.code} th:value=${language.code} th:selected="${existingLanguages!=null && existingLanguages.contains(language.label)}">[[${language.label}]]</option>
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${mappedLanguages!=null && mappedLanguages.contains(language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>
 		        <div id="offlineMessage" style="padding-top: 20px;" th:style="${exhibition.mode != 'OFFLINE' ? 'display: none;' : '' }">

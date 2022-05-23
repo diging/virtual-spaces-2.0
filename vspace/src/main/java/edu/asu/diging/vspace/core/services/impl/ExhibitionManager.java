@@ -6,12 +6,17 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Transactional
@@ -20,6 +25,12 @@ public class ExhibitionManager implements IExhibitionManager {
 
     @Autowired
     private ExhibitionRepository exhibitRepo;
+    
+    @Autowired
+    private ExhibitionLanguageConfig exhibitionLanguageConfig;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
 
     /*
      * (non-Javadoc)
@@ -66,4 +77,50 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return null;
     }
+
+    /**
+     * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
+     *  
+     * @param exhibition
+     * @param defaultLanguage 
+     * @param languages
+     */
+    @Override
+    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
+        List<ExhibitionLanguage> languageMapList = new ArrayList();
+        if(CollectionUtils.isNotEmpty(codes)) {
+            if(defaultLanguage!=null) {
+                codes.add(defaultLanguage);
+            }
+            codes.forEach(code -> {
+                Optional<ExhibitionLanguage> languageMap = exhibitionLanguageConfig.getExhibitionLanguageList()
+                        .stream().filter(map-> code.equalsIgnoreCase((String) map.get("code")))
+                        .map(language -> { 
+                            ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) language.get("label"),
+                                    (String) language.get("code"), exhibition);
+
+                            if(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage)) {
+                                exhibitionLanguage.setDefault(true);
+                            }
+                            return exhibitionLanguage;
+
+                        }).findFirst();
+
+                if(languageMap.isPresent()) {
+
+                    languageMapList.add(languageMap.get());
+                }
+            });
+
+
+            if(CollectionUtils.isNotEmpty(languageMapList)) {
+                logger.info("Updating Exhibition with Languages" + codes);
+                exhibition.getLanguages().addAll(languageMapList);
+            }
+        }
+
+    }
+
+
+
 }
