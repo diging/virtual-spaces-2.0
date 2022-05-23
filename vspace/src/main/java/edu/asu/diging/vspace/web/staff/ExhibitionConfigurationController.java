@@ -3,7 +3,7 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,9 +14,6 @@ import org.springframework.core.env.AbstractEnvironment;
 
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +25,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
-import edu.asu.diging.vspace.core.model.ExhibitionLanguageCodes;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -63,14 +58,17 @@ public class ExhibitionConfigurationController {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         if(exhibition!=null) {
             model.addAttribute("exhibition", exhibition);
+            if(exhibition.getLanguages() != null ) {
+                model.addAttribute("existingLanguages", exhibition.getLanguages()
+                        .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
+            }
         } else {
             model.addAttribute("exhibition", new Exhibition());
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         model.addAttribute("exhibitionLanguages", exhibitionLanguageConfig.getExhibitionLanguageList());
-        model.addAttribute("existingLanguages", exhibition.getLanguages());
-              
+       
         return "staff/exhibit/config";
     }
 

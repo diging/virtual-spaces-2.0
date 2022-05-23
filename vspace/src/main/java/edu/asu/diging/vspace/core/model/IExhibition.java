@@ -1,5 +1,9 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.Set;
+
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+
 public interface IExhibition extends IVSpaceElement {
 
     /*
@@ -26,6 +30,6 @@ public interface IExhibition extends IVSpaceElement {
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
 
-    Object getLanguages();
+    Set<ExhibitionLanguage> getLanguages();
 
 }

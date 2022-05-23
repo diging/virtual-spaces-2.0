@@ -1,9 +1,12 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +32,29 @@ public class ExhibitionFactory implements IExhibitionFactory {
         return new Exhibition();
     }
 
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> languages) {
-        languages.forEach(language -> {
-            
-           List<ExhibitionLanguage> languageMapList = exhibitionLanguageConfig.getExhibitionLanguageList().stream().filter(languageMap -> 
-            languages.contains((String)languageMap.get("label"))
-            ).map(map -> new ExhibitionLanguage((String) map.get("label"), (String) map.get("code"), exhibition)).collect(Collectors.toList());
-           
-          exhibition.getLanguages().addAll(languageMapList);
+    /**
+     * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
+     *  
+     * @param exhibition
+     * @param languages
+     */
+    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes) {
+        List<ExhibitionLanguage> languageMapList = new ArrayList();
+        codes.forEach(code -> {
+            Optional<ExhibitionLanguage> languageMap = exhibitionLanguageConfig.getExhibitionLanguageList()
+                    .stream().filter(map-> code.equalsIgnoreCase((String) map.get("code")))
+                    .map(exhibitLanguage -> new ExhibitionLanguage((String) exhibitLanguage.get("label"),
+                            (String) exhibitLanguage.get("code"), exhibition)).findFirst();
+
+            if(languageMap.isPresent()) {
+                languageMapList.add(languageMap.get());
+            }
         });
-        
+        if(CollectionUtils.isNotEmpty(languageMapList)) {
+            exhibition.getLanguages().addAll(languageMapList);
+        }
+
+
     }
 
 }
