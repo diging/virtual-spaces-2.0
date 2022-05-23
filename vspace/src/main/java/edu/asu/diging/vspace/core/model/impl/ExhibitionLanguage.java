@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.ExhibitionLanguageCodes;
-
 @Entity
 public class ExhibitionLanguage {
 
@@ -32,6 +30,8 @@ public class ExhibitionLanguage {
     private Exhibition exhibition;
     
     private String code;
+    
+    private boolean isDefault;
 
     public ExhibitionLanguage(String label, String code, Exhibition exhibition) {
        this.label=label;
@@ -80,6 +80,14 @@ public class ExhibitionLanguage {
         ExhibitionLanguage other = (ExhibitionLanguage) obj;
         return Objects.equals(code, other.code) && Objects.equals(exhibition, other.exhibition)
                && Objects.equals(label, other.label);
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 
 }

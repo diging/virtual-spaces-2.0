@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.core.env.AbstractEnvironment;
-
 
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +85,7 @@ public class ExhibitionConfigurationController {
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
+            @RequestParam("defaultExhibitLanguage") String defaultLanguage,
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
@@ -100,8 +99,7 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        
-        exhibitFactory.updateExhibitionLanguages(exhibition,languages);
+        exhibitFactory.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
         
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);

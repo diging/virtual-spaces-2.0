@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages);
+        exhibitionFactory.updateExhibitionLanguages(exhibition, languages,null);
         assertEquals(exhibition.getLanguages().size(),2);
 
     }
@@ -93,14 +94,14 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language2);
         mappedLanguages.add(language3);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages);
+        exhibitionFactory.updateExhibitionLanguages(exhibition, languages, null);
 
         //no duplicate entries should be added
         assertEquals(exhibition.getLanguages().size(),3);
     }
 
     @Test
-    public void test_updateExhibitionLanguages_whenLabelIsNotPresentInConfig(){
+    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig(){
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -118,11 +119,37 @@ public class ExhibitionLanguageTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        exhibitionFactory.updateExhibitionLanguages(exhibition, languages);
+        exhibitionFactory.updateExhibitionLanguages(exhibition, languages,null);
         assertEquals(exhibition.getLanguages().size(),1);
 
 
     }
 
+    @Test
+    public void test_updateExhibitionLanguages_defaultLanguage(){
+        Exhibition exhibition = new Exhibition();
 
+        List<String> languages= new ArrayList() ;
+        languages.add("en");
+        languages.add("aa");  
+        List<Map> mappedLanguages= new ArrayList();
+
+        Map<String, String> language1 =    new LinkedHashMap<String, String>();
+        language1.put("code", "en");
+        language1.put("label", "English");
+        Map<String, String> language2 =   new LinkedHashMap<String, String>();
+        language2.put("code", "aa");
+        language2.put("label", "Afar");
+        mappedLanguages.add(language1);
+        mappedLanguages.add(language2);
+        when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
+        exhibitionFactory.updateExhibitionLanguages(exhibition, languages,"en");
+        assertEquals(exhibition.getLanguages().size(),2);
+        exhibition.getLanguages().forEach(language -> {
+            if(language.getCode().equals("en")) { 
+                assertTrue(language.isDefault());
+      
+            } });
+
+    }
 }
