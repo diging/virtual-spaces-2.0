@@ -35,11 +35,11 @@ public class EditSpaceBlockController {
             @RequestParam("spaceBlockId") String blockId, @PathVariable("moduleId") String moduleId,
             @RequestParam("spaceBlockTitle") String spaceBlockTitle,
             @RequestParam("spaceId") String spaceId) throws IOException {
-        ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
+        ISpaceBlock spaceBlock = (SpaceBlock)contentBlockManager.getSpaceBlock(blockId);
         ISpace space = spaceManager.getSpace(spaceId);
         spaceBlock.setTitle(spaceBlockTitle);
         spaceBlock.setSpace(space);
-        contentBlockManager.updateSpaceBlock((SpaceBlock) spaceBlock);
+        contentBlockManager.updateSpaceBlock( spaceBlock);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }

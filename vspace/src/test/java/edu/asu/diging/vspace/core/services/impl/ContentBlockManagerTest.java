@@ -128,9 +128,9 @@ public class ContentBlockManagerTest {
         Integer contentOrder = 2;
         Space space = new Space();
         ISpaceBlock spaceBlock = new SpaceBlock();
-        when(slideManager.getSlide(slideId)).thenReturn(slide);
-        when(spaceBlockFactory.createSpaceBlock(slide, title, (ISpace)space)).thenReturn(spaceBlock);
-        when(spaceBlockRepo.save((SpaceBlock)spaceBlock)).thenReturn((SpaceBlock) spaceBlock);
+        Mockito.when(slideManager.getSlide(slideId)).thenReturn(slide);
+        Mockito.when(spaceBlockRepo.save((SpaceBlock)spaceBlock)).thenReturn((SpaceBlock) spaceBlock);
+        Mockito.when(spaceBlockFactory.createSpaceBlock(slide, title, (ISpace)space)).thenReturn(spaceBlock);
         ISpaceBlock createdBlock = managerToTest.createSpaceBlock(slideId, title, contentOrder, space);
         Assert.assertEquals(createdBlock.getContentOrder(), contentOrder);
     }
