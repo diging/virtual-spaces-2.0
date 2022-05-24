@@ -4064,8 +4064,10 @@ textarea.form-control-lg {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding-top: 0.5rem;
+  padding-top: 0rem;
   padding-bottom: 0.5rem;
+  margin-top: 0;
+  margin: 0;
 }
 .navbar > .container,
 .navbar > .container-fluid,
@@ -4078,6 +4080,8 @@ textarea.form-control-lg {
   flex-wrap: inherit;
   align-items: center;
   justify-content: space-between;
+  padding-top: 0rem;
+  margin-top: 0;
 }
 .navbar-brand {
   padding-top: 0.3125rem;
@@ -4103,7 +4107,7 @@ textarea.form-control-lg {
 }
 
 .navbar-text {
-  padding-top: 0.5rem;
+  padding-top: 0rem;
   padding-bottom: 0.5rem;
 }
 
@@ -4271,6 +4275,7 @@ textarea.form-control-lg {
   .navbar-expand-lg .navbar-nav .nav-link {
     padding-right: 0.5rem;
     padding-left: 0.5rem;
+    padding-top: 0rem;
   }
   .navbar-expand-lg .navbar-nav-scroll {
     overflow: visible;
@@ -11394,6 +11399,7 @@ section {
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:active {
   color: #2937f0;
 }
+
 #mainNav .navbar-toggler {
   font-size: 0.875rem;
   padding: 0.75rem 1rem;
