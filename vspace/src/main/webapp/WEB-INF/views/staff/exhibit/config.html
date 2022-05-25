@@ -46,11 +46,11 @@
 <body>
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition Configuration</h2>
-		<div th:if="${exhibition!=null && exhibition.previewId!=null}">
-	     <a class="previewExhb" target="_blank" th:href="@{|/preview/${exhibition.previewId}|}"><span class="icon-visible secondary"></span> 
-	     <span class="tooltiptext">Preview Exhibition</span></a><br><br>
-	     <p>To share the Exhibition Preview provide the link <a style="color:blue;" th:href="@{|/preview/${exhibition.previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${exhibition.previewId}|}]]</a></p>
-	     </div>
+		<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${exhibition!=null && exhibition.previewId!=null}">
+	     <p><a class="previewExhb" target="_blank" th:href="@{|/preview/${exhibition.previewId}|}"><span class="icon-visible secondary"></span> 
+	     <span class="tooltiptext">Preview Exhibition</span></a>To share the Exhibition Preview provide the link 
+	     <a style="color:blue;" th:href="@{|/preview/${exhibition.previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${exhibition.previewId}|}]]</a></p>
+	    </div>
 		<div style="padding: 30px 0;">
 		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

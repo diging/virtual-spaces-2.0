@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,12 +46,7 @@ public class ExhibitionConfigurationController {
         String previewId = null;
         if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
-        } else {
-            previewId = exhibition.getPreviewId();
-            if(previewId==null || previewId.isEmpty()) {
-                exhibitFactory.updatePreviewId(exhibition);
-            }
-        }
+        } 
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         model.addAttribute("exhibition", exhibition);
