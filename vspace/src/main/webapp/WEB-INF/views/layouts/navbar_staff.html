@@ -63,6 +63,13 @@
 			               <span class="icon-network-alt secondary"></span><span class="custom_Text">&nbsp;Space Overview</span>
 			            </a>
 			        </li>
+			        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
+			            <a class="nav-link"
+			               th:style="${currentPage == 'downloads' ? 'active' : '' }"
+			               th:href="@{/staff/downloads/list}">
+			               <span class="icon-download secondary"></span><span class="custom_Text">&nbsp;Downloads</span>
+			            </a>
+			        </li>
 		        </ul>
 		        <div class="footer">   
 		        	<a href="https://github.com/diging/virtual-spaces-2.0" style="color: var(--secondary)">
