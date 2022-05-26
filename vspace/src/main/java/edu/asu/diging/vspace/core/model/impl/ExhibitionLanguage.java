@@ -17,7 +17,7 @@ public class ExhibitionLanguage {
 
     @Id
     @GeneratedValue(generator = "exhibit_language_id_generator")
-    @GenericGenerator(name = "exhibit_language_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GenericGenerator(name = "exhibit_language_id_generator", parameters = @Parameter(name = "prefix", value = "LANG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
     private String label;
