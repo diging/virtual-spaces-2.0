@@ -15,10 +15,6 @@ import org.hibernate.annotations.Parameter;
 @Entity
 public class ExhibitionLanguage {
 
-    public ExhibitionLanguage() {
-        super();
-    }
-
     @Id
     @GeneratedValue(generator = "exhibit_language_id_generator")
     @GenericGenerator(name = "exhibit_language_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -32,7 +28,11 @@ public class ExhibitionLanguage {
     private String code;
     
     private boolean isDefault;
-
+    
+    public ExhibitionLanguage() {
+        super();
+    }
+    
     public ExhibitionLanguage(String label, String code, Exhibition exhibition) {
         this.label=label;
         this.code=code;

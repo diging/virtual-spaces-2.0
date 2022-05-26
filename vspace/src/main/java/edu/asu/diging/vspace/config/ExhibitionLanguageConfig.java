@@ -29,7 +29,7 @@ public class ExhibitionLanguageConfig {
     @Autowired
     private Environment environment;
     
-    List<Map>  exhibitionLanguageList = new ArrayList<Map>();
+    private List<Map>  exhibitionLanguageList = new ArrayList<Map>();
     
     /**
      * Fetches the configured language list from environment property source and stores in exhibitionLanguageList
@@ -41,9 +41,9 @@ public class ExhibitionLanguageConfig {
             org.springframework.core.env.PropertySource propertySource = (org.springframework.core.env.PropertySource) it.next();
             if (propertySource instanceof MapPropertySource) {
                 MapPropertySource mapSource = ((MapPropertySource) propertySource);
-                if("json-property".equals(mapSource.getName())) {
+                if(ConfigConstants.EXHIBITION_LANGUAGE_LIST_PROPERTY.equals(mapSource.getName())) {
                     Map<String, Object> languageMap = mapSource.getSource();
-                    exhibitionLanguageList = (List<Map>) languageMap.get("languages");
+                    exhibitionLanguageList = (List<Map>) languageMap.get(ConfigConstants.LANGUAGES);
                 }
             }
         }

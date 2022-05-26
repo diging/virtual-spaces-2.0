@@ -23,7 +23,7 @@ public class JsonPropertySourceFactory implements PropertySourceFactory {
             throws IOException {
         Map<String, Object> readValue = new ObjectMapper()
                 .readValue(resource.getInputStream(), Map.class);
-        return new MapPropertySource("json-property", readValue);
+        return new MapPropertySource(ConfigConstants.EXHIBITION_LANGUAGE_LIST_PROPERTY, readValue);
     }
 }
 

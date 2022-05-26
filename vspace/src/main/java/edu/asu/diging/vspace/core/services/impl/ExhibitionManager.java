@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -23,14 +25,14 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 @Service
 public class ExhibitionManager implements IExhibitionManager {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private ExhibitionRepository exhibitRepo;
     
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
 
     /*
      * (non-Javadoc)
@@ -87,40 +89,32 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
-        List<ExhibitionLanguage> languageMapList = new ArrayList();
         if(CollectionUtils.isNotEmpty(codes)) {
             if(defaultLanguage!=null) {
                 codes.add(defaultLanguage);
             }
-            codes.forEach(code -> {
-                Optional<ExhibitionLanguage> languageMap = exhibitionLanguageConfig.getExhibitionLanguageList()
-                        .stream().filter(map-> code.equalsIgnoreCase((String) map.get("code")))
-                        .map(language -> { 
-                            ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) language.get("label"),
-                                    (String) language.get("code"), exhibition);
+            if(CollectionUtils.isNotEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
+                List<ExhibitionLanguage> exhibitionLanguages =   exhibitionLanguageConfig.getExhibitionLanguageList()
+                        .stream().filter(languageMap -> codes.contains(languageMap.get(ConfigConstants.CODE)))
+                        .map(map -> {
+                            ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) map.get(ConfigConstants.LABEL),
+                                    (String) map.get(ConfigConstants.CODE), exhibition);
 
                             if(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage)) {
                                 exhibitionLanguage.setDefault(true);
                             }
                             return exhibitionLanguage;
+                        }).collect(Collectors.toList());
 
-                        }).findFirst();
-
-                if(languageMap.isPresent()) {
-
-                    languageMapList.add(languageMap.get());
+                if(CollectionUtils.isNotEmpty(exhibitionLanguages)) {
+                    logger.info("Updating Exhibition with Languages" + codes);
+                    exhibition.getLanguages().addAll(exhibitionLanguages);
                 }
-            });
-
-
-            if(CollectionUtils.isNotEmpty(languageMapList)) {
-                logger.info("Updating Exhibition with Languages" + codes);
-                exhibition.getLanguages().addAll(languageMapList);
+            } else {
+                logger.error("Language list configuration not available");
             }
-        }
+        } 
 
     }
-
-
 
 }
