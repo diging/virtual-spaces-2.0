@@ -92,27 +92,27 @@ public class StorageEngine implements IStorageEngine {
 
     @Override
     public byte[] getFileContent(File fileObject) throws IOException  {
-      URLConnection con = fileObject.toURI().toURL().openConnection();
+        URLConnection con = fileObject.toURI().toURL().openConnection();
 
-      InputStream input = con.getInputStream();
+        InputStream input = con.getInputStream();
 
-      byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[4096];
 
-      ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-      BufferedOutputStream output = new BufferedOutputStream(byteOutput);
+        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
 
-      int n = -1;
-      while ((n = input.read(buffer)) != -1) {
-          output.write(buffer, 0, n);
-      }
-      input.close();
-      output.flush();
-      output.close();
+        int n = -1;
+        while ((n = input.read(buffer)) != -1) {
+            output.write(buffer, 0, n);
+        }
+        input.close();
+        output.flush();
+        output.close();
 
-      byteOutput.flush();
-      byte[] bytes = byteOutput.toByteArray();
-      byteOutput.close();
-      return bytes;
+        byteOutput.flush();
+        byte[] bytes = byteOutput.toByteArray();
+        byteOutput.close();
+        return bytes;
     }
 
     @Override
