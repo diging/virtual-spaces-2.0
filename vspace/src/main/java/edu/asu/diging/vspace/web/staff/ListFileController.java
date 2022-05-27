@@ -1,5 +1,5 @@
 
-package edu.asu.diging.vspace.web.staff.api;
+package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
-import edu.asu.diging.vspace.core.services.impl.FileApiManager;
+import edu.asu.diging.vspace.core.services.impl.FileManager;
 import edu.asu.diging.vspace.web.staff.forms.FileForm;
 
 @Controller
-public class FileApiController {
+public class ListFileController {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private FileApiManager fileManager;
+    private FileManager fileManager;
     
     @RequestMapping(value = "/staff/files/{id}", method = RequestMethod.GET)
     public String getFile(Model model, @PathVariable String id) {
@@ -43,25 +43,7 @@ public class FileApiController {
         return "staff/files/filelist";
     }
     
-    @RequestMapping(value = "/staff/files/edit/{fileId}", method = RequestMethod.POST)
-    public String editFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
-        String fileName = fileForm.getFileName();
-        String description = fileForm.getDescription();
-        IVSFile file = fileManager.editFile(fileId, fileName, description);
-        String id = file.getId();
-        return "redirect:/staff/files/"+id;
-    }
-    
-    @RequestMapping(value = "/staff/files/download/{fileId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> downloadFile(Model model, @PathVariable String fileId) {
-        byte[] fileContent = null;
-        try {
-            fileContent = fileManager.downloadFile(fileId);
-        } catch (IOException e) {
-            return new ResponseEntity<byte[]>(fileContent, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        return new ResponseEntity<byte[]>(fileContent, HttpStatus.OK);
-    }
+   
+  
 
 }

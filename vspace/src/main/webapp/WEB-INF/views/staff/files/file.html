@@ -69,11 +69,6 @@ function deleteFile(){
 }
 
 </script>
-<style>
-/* .download{
-margin-left:1200px;
-} */
-</style>
 </head>
 
 <body>
@@ -111,7 +106,7 @@ margin-left:1200px;
 				<textarea class="form-control col-md-10" rows="5" cols="30"
 					id="description" name="description" th:text=${file.fileDescription} ></textarea>
 			</div>
-			<button class="btn primary-btn" type="submit" value="submit">Save File</button>
+			<button class="btn primary-btn" type="submit" value="submit">Save File</button>			
 			<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()" >Download File</button>
 		</form>
  		</div>

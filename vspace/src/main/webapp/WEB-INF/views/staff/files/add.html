@@ -15,7 +15,6 @@
 	
 	
 	<form method="POST" th:action="@{|/staff/files/add?${_csrf.parameterName}=${_csrf.token}|}" th:object="${files}" enctype="multipart/form-data" style="margin-top:40px">
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 		<div class="form-group row">
 			<label for="fileName" class="col-md-2 col-form-label">File Name:</label>
 			<input type="text" class="form-control col-md-10" name="fileName" id="fileName" />

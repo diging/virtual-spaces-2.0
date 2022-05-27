@@ -1,8 +1,10 @@
-package edu.asu.diging.vspace.web.staff.api;
+package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,14 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.core.services.impl.FileApiManager;
+import edu.asu.diging.vspace.core.services.impl.FileManager;
 import edu.asu.diging.vspace.web.staff.forms.FileForm;
 
 @Controller
-public class AddFileApiController {
+public class AddFileController {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private FileApiManager fileManager;
+    private FileManager fileManager;
     
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
     public String createFile(Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
@@ -35,7 +39,7 @@ public class AddFileApiController {
                 originalFileName = file.getOriginalFilename();
                 returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error occured while creating file", e);              
             }
             
         }

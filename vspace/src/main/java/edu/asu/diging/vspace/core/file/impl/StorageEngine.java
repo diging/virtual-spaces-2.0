@@ -57,28 +57,8 @@ public class StorageEngine implements IStorageEngine {
 
     @Override
     public byte[] getImageContent(String directory, String filename) throws IOException {
-        File fileObject = new File(path + File.separator + directory + File.separator + filename);
-        URLConnection con = fileObject.toURI().toURL().openConnection();
-
-        InputStream input = con.getInputStream();
-
-        byte[] buffer = new byte[4096];
-
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
-
-        int n = -1;
-        while ((n = input.read(buffer)) != -1) {
-            output.write(buffer, 0, n);
-        }
-        input.close();
-        output.flush();
-        output.close();
-
-        byteOutput.flush();
-        byte[] bytes = byteOutput.toByteArray();
-        byteOutput.close();
-        return bytes;
+        File fileObject = getFile(directory, filename);       
+        return getFileContent(fileObject);
     }
 	
     /**
@@ -90,48 +70,59 @@ public class StorageEngine implements IStorageEngine {
     */ 
     @Override
     public boolean renameImage(IVSImage image, String newFileName) {
-        File currentFile = new File(path + File.separator + image.getId() + File.separator + image.getFilename());
-        File renamedFile = new File(path + File.separator + image.getId() + File.separator + newFileName);
+        File currentFile = getFile(image.getId(), image.getFilename());
+        File renamedFile = getFile(image.getId(), newFileName);
         return currentFile.renameTo(renamedFile);
     }
 
     @Override
     public boolean renameFile(IVSFile file, String newFileName) {
-        File currentFile = new File(path + File.separator + fileUploadDir + File.separator + file.getFilename());
-        File renamedFile = new File(path + File.separator + fileUploadDir + File.separator + newFileName);
-        r.eturn currentFile.renameTo(renamedFile);
+        File currentFile = getFile(fileUploadDir, file.getFilename());
+        File renamedFile = getFile(fileUploadDir, newFileName);
+        return currentFile.renameTo(renamedFile);
     }
 
     @Override
     public byte[] downloadFile(String directory, String filename) throws IOException {
-        File fileObject = new File(path + File.separator + fileUploadDir + File.separator + filename);
-        URLConnection con = fileObject.toURI().toURL().openConnection();
-
-        InputStream input = con.getInputStream();
-
-        byte[] buffer = new byte[4096];
-
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
-
-        int n = -1;
-        while ((n = input.read(buffer)) != -1) {
-            output.write(buffer, 0, n);
-        }
-        input.close();
-        output.flush();
-        output.close();
-
-        byteOutput.flush();
-        byte[] bytes = byteOutput.toByteArray();
-        byteOutput.close();
+        File fileObject = getFile(fileUploadDir, filename);
+        byte[] bytes = getFileContent(fileObject);
         byte[] encodedBytes = Base64.getEncoder().encode(bytes);
         return encodedBytes;
     }
 
     @Override
-    public boolean deleteFile(IVSFile file) {
-        File storedFile = new File(path + File.separator + fileUploadDir + File.separator + file.getFilename());
+    public byte[] getFileContent(File fileObject) throws IOException  {
+      URLConnection con = fileObject.toURI().toURL().openConnection();
+
+      InputStream input = con.getInputStream();
+
+      byte[] buffer = new byte[4096];
+
+      ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+      BufferedOutputStream output = new BufferedOutputStream(byteOutput);
+
+      int n = -1;
+      while ((n = input.read(buffer)) != -1) {
+          output.write(buffer, 0, n);
+      }
+      input.close();
+      output.flush();
+      output.close();
+
+      byteOutput.flush();
+      byte[] bytes = byteOutput.toByteArray();
+      byteOutput.close();
+      return bytes;
+    }
+
+    @Override
+    public boolean deleteFile(IVSFile file) {        
+        File storedFile = getFile(fileUploadDir,file.getFilename() );
         return storedFile.delete();
+    }
+    
+    @Override
+    public File getFile(String fileUploadDir, String fileName) {
+        return new File(path + File.separator + fileUploadDir + File.separator  + fileName);
     }
 }

@@ -17,10 +17,10 @@ import edu.asu.diging.vspace.core.factory.IFileFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
-import edu.asu.diging.vspace.core.services.IFileApiManager;
+import edu.asu.diging.vspace.core.services.IFileManager;
 
 @Service
-public class FileApiManager implements IFileApiManager {
+public class FileManager implements IFileManager {
     
     @Autowired
     private IStorageEngine storageEngine;
@@ -50,7 +50,7 @@ public class FileApiManager implements IFileApiManager {
             try {
                 relativePath = storageEngine.storeFile(fileContent, fileName, fileUploadDir);
             } catch (FileStorageException e) {
-                returnValue.getErrorMsgs().add("File could not be stored: " + e.getMessage());
+                returnValue.getErrorMsgs().add("File could not be stored: " + e);
             }
             file.setParentPath(relativePath);
             file.setFileDescription(fileDescription);
@@ -74,12 +74,11 @@ public class FileApiManager implements IFileApiManager {
     
     @Override
     public IVSFile editFile(String fileId, String fileName, String description) {
-        IVSFile file = null;
         Optional<VSFile> optional = fileRepo.findById(fileId);
         if(!optional.isPresent()) {
-            return file;
+            return null;
         }
-        file = optional.get();
+        IVSFile file  = optional.get();
         if(storageEngine.renameFile(file, fileName)) {
             file.setFilename(fileName);   
         }
@@ -91,9 +90,7 @@ public class FileApiManager implements IFileApiManager {
     @Override
     public byte[] downloadFile(String fileId) throws IOException {
         IVSFile file = getFileById(fileId);
-
-        byte[] fileContent = storageEngine.downloadFile(file.getId(), file.getFilename());
-        return fileContent;
+        return storageEngine.downloadFile(file.getId(), file.getFilename());
     }
     
     @Override

@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.file;
 
+import java.io.File;
 import java.io.IOException;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -19,4 +20,8 @@ public interface IStorageEngine {
     boolean renameFile(IVSFile file, String newFileName);
 
     boolean deleteFile(IVSFile file);
+
+    File getFile(String fileUploadDir, String fileName);
+
+    byte[] getFileContent(File fileObject) throws IOException;
 }

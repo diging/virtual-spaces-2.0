@@ -7,7 +7,7 @@ import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
-public interface IFileApiManager {
+public interface IFileManager {
 
     CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription);
 
