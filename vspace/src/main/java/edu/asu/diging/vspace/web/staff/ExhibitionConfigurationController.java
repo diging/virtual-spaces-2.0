@@ -22,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -59,6 +60,9 @@ public class ExhibitionConfigurationController {
             if(exhibition.getLanguages() != null ) {
                 model.addAttribute("mappedLanguages", exhibition.getLanguages()
                         .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
+                model.addAttribute("defaultLanguage",exhibition.getLanguages().stream()
+                        .filter(language -> language.isDefault()).findFirst().orElse(null) );
+          
             }
         } else {
             model.addAttribute("exhibition", new Exhibition());
@@ -77,6 +81,7 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
+     * @throws LanguageListConfigurationNotFound 
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
@@ -86,7 +91,7 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
-            RedirectAttributes attributes) throws IOException {
+            RedirectAttributes attributes) throws IOException, LanguageListConfigurationNotFound {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
@@ -100,7 +105,7 @@ public class ExhibitionConfigurationController {
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
-        
+    
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);
         }

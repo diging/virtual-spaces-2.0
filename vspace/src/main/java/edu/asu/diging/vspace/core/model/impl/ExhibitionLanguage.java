@@ -38,15 +38,7 @@ public class ExhibitionLanguage {
         this.code=code;
         this.exhibition=exhibition;
     }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
+    
     public String getLabel() {
         return label;
     }
@@ -54,7 +46,7 @@ public class ExhibitionLanguage {
     public void setLabel(String label) {
         this.label = label;
     }
-
+    
     public Exhibition getExhibition() {
         return exhibition;
     }
@@ -63,7 +55,22 @@ public class ExhibitionLanguage {
         this.exhibition = exhibition;
     }
     
+    public String getCode() {
+        return code;
+    }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+    
     @Override
     public int hashCode() {
         return Objects.hash(code, exhibition, label);
@@ -80,14 +87,6 @@ public class ExhibitionLanguage {
         ExhibitionLanguage other = (ExhibitionLanguage) obj;
         return Objects.equals(code, other.code) && Objects.equals(exhibition, other.exhibition)
                && Objects.equals(label, other.label);
-    }
-
-    public boolean isDefault() {
-        return isDefault;
-    }
-
-    public void setDefault(boolean isDefault) {
-        this.isDefault = isDefault;
     }
 
 }

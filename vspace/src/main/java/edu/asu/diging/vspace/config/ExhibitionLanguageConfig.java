@@ -20,6 +20,8 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.stereotype.Component;
 
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import org.springframework.core.env.MutablePropertySources;
+
 
 @Component
 @PropertySource(value= "classpath:exhibitionLanguages.properties" , factory=JsonPropertySourceFactory.class)
@@ -37,16 +39,13 @@ public class ExhibitionLanguageConfig {
      */
     @PostConstruct
     public void init() {
-        for(Iterator it = ((AbstractEnvironment) environment).getPropertySources().iterator(); it.hasNext(); ) {
-            org.springframework.core.env.PropertySource propertySource = (org.springframework.core.env.PropertySource) it.next();
-            if (propertySource instanceof MapPropertySource) {
-                MapPropertySource mapSource = ((MapPropertySource) propertySource);
-                if(ConfigConstants.EXHIBITION_LANGUAGE_LIST_PROPERTY.equals(mapSource.getName())) {
-                    Map<String, Object> languageMap = mapSource.getSource();
-                    exhibitionLanguageList = (List<Map>) languageMap.get(ConfigConstants.LANGUAGES);
-                }
-            }
+        
+        org.springframework.core.env.PropertySource<?> source =  ((AbstractEnvironment) environment).getPropertySources().get(ConfigConstants.EXHIBITION_LANGUAGE_LIST_PROPERTY);
+        if(source !=null ) {
+            Map<String, Object> languageMap = (Map<String, Object>) source.getSource();
+            exhibitionLanguageList = (List<Map>) languageMap.get(ConfigConstants.LANGUAGES);
         }
+        
     }
    
     public List<Map> getExhibitionLanguageList() {
