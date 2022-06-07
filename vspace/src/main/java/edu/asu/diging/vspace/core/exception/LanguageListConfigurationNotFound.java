@@ -10,27 +10,22 @@ public class LanguageListConfigurationNotFound  extends Exception {
 
     public LanguageListConfigurationNotFound() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public LanguageListConfigurationNotFound(String arg0, Throwable arg1, boolean arg2, boolean arg3) {
-        super(arg0, arg1, arg2, arg3);
-        // TODO Auto-generated constructor stub
+    public LanguageListConfigurationNotFound(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public LanguageListConfigurationNotFound(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-        // TODO Auto-generated constructor stub
+    public LanguageListConfigurationNotFound(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public LanguageListConfigurationNotFound(String arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public LanguageListConfigurationNotFound(String message) {
+        super(message);
     }
 
-    public LanguageListConfigurationNotFound(Throwable arg0) {
-        super(arg0);
-        // TODO Auto-generated constructor stub
+    public LanguageListConfigurationNotFound(Throwable cause) {
+        super(cause);
     }
 
 }

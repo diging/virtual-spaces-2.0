@@ -101,20 +101,20 @@ public class ExhibitionManager implements IExhibitionManager {
 
             if(CollectionUtils.isNotEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
                 exhibitionLanguageConfig.getExhibitionLanguageList().stream()
-                .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
-                .forEach(languageMap -> {
-                    ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
-                            (String) languageMap.get(ConfigConstants.CODE), exhibition);
-
-                    int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
-                    if( index < 0 ) {
-                        exhibition.getLanguages().add(exhibitionLanguage);
-                    } 
-                    else {
-                        exhibitionLanguage =   exhibition.getLanguages().get(index);
-
-                    }
-                    updateDefault(exhibitionLanguage, defaultLanguage);
+                    .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
+                    .forEach(languageMap -> {
+                        ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
+                                (String) languageMap.get(ConfigConstants.CODE), exhibition);
+    
+                        int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
+                        if( index < 0 ) {
+                            exhibition.getLanguages().add(exhibitionLanguage);
+                        } 
+                        else {
+                            exhibitionLanguage =   exhibition.getLanguages().get(index);
+    
+                        }
+                        updateDefault(exhibitionLanguage, defaultLanguage);
 
                 });  
 
