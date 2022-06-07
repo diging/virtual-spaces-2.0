@@ -40,9 +40,9 @@ public class ExhibitionLanguageConfig {
     @PostConstruct
     public void init() {
         
-        org.springframework.core.env.PropertySource<?> source =  ((AbstractEnvironment) environment).getPropertySources().get(ConfigConstants.EXHIBITION_LANGUAGE_LIST_PROPERTY);
-        if(source !=null ) {
-            Map<String, Object> languageMap = (Map<String, Object>) source.getSource();
+        org.springframework.core.env.PropertySource<?> propertySource =  ((AbstractEnvironment) environment).getPropertySources().get(ConfigConstants.EXHIBITION_LANGUAGE_LIST_PROPERTY);
+        if( propertySource != null ) {
+            Map<String, Object> languageMap = (Map<String, Object>) propertySource.getSource();
             exhibitionLanguageList = (List<Map>) languageMap.get(ConfigConstants.LANGUAGES);
         }
         
