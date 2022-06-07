@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -168,13 +169,26 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        serviceToTest.updateExhibitionLanguages(exhibition, languages,"en");
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "en");
         assertEquals(exhibition.getLanguages().size(),2);
         exhibition.getLanguages().forEach(language -> {
             if(language.getCode().equals("en")) { 
                 assertTrue(language.isDefault());
       
             } });
+        
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),2);
+        exhibition.getLanguages().forEach(language -> {
+            if(language.getCode().equals("en")) { 
+                assertFalse(language.isDefault());
+      
+            }
+            if(language.getCode().equals("aa")) { 
+                assertTrue(language.isDefault());
+      
+            }});
+        
 
     }
 

@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +48,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL)
-    private Set<ExhibitionLanguage> languages = new HashSet<ExhibitionLanguage>();
+    private List<ExhibitionLanguage> languages = new ArrayList<ExhibitionLanguage>();
 
     /*
      * (non-Javadoc)
@@ -127,11 +128,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.aboutPageConfigured = aboutPageConfigured;
     }
 
-    public Set<ExhibitionLanguage> getLanguages() {
+    public List<ExhibitionLanguage> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(Set<ExhibitionLanguage> languages) {
+    public void setLanguages(List<ExhibitionLanguage> languages) {
         this.languages = languages;
     }
 
