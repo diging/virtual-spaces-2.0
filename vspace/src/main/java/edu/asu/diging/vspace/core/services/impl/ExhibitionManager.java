@@ -116,7 +116,7 @@ public class ExhibitionManager implements IExhibitionManager {
                         }
                         updateDefault(exhibitionLanguage, defaultLanguage);
 
-                });  
+                    });  
 
             } else {
                 throw new LanguageListConfigurationNotFound("Exhibition Language Configuration not found");
