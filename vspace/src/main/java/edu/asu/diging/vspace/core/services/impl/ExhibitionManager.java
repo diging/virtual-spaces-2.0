@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -103,17 +104,8 @@ public class ExhibitionManager implements IExhibitionManager {
                 exhibitionLanguageConfig.getExhibitionLanguageList().stream()
                     .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
                     .forEach(languageMap -> {
-                        ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
-                                (String) languageMap.get(ConfigConstants.CODE), exhibition);
-    
-                        int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
-                        if( index < 0 ) {
-                            exhibition.getLanguages().add(exhibitionLanguage);
-                        } 
-                        else {
-                            exhibitionLanguage =   exhibition.getLanguages().get(index);
-    
-                        }
+                        
+                        ExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);                     
                         updateDefault(exhibitionLanguage, defaultLanguage);
 
                     });  
@@ -123,6 +115,29 @@ public class ExhibitionManager implements IExhibitionManager {
             }
         } 
 
+    }
+
+    /**
+     * Adds exhibitionLanguage to exhibition if not already present. If already present, returns exhibitionLanguage from the exhibition.
+     * 
+     * @param exhibition
+     * @param languageMap
+     * @return
+     */
+    private ExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
+        ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
+                (String) languageMap.get(ConfigConstants.CODE), exhibition);
+
+        int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
+        if( index < 0 ) {
+            exhibition.getLanguages().add(exhibitionLanguage);
+        } 
+        else {
+            exhibitionLanguage =   exhibition.getLanguages().get(index);
+
+        }
+
+        return exhibitionLanguage;
     }
 
     /**
