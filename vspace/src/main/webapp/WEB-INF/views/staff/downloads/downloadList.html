@@ -1,10 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html layout:decorate="~{layouts/main_staff}">
 <head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}">
+</script>
+<script th:inline="javascript">
+
+
+function downloadFile(){
+	$.ajax({
+        url: "[(@{'/staff/download/'})]",
+        type: 'GET',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+        	console.log('success');
+        },
+        error: function(data) {
+        	console.log('could not download')
+        }
+    });
+}
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid var(--primary);
+    padding: 5px;
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-
+<div layout:fragment="content" class="main-content">
+	<a th:action="@{/staff/download}" class="btn primary-btn btn-sm" style="float: right" onClick = "downloadFile()">Download</a>
+	 <h2>Downloads</h2>
+	 <table>
+	 </table>
+</div>
 </body>
 </html>
