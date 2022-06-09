@@ -43,7 +43,6 @@ public class ExhibitionConfigurationController {
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
-        String previewId = null;
         if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } 
