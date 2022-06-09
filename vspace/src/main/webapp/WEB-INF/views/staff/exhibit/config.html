@@ -4,13 +4,42 @@
 	<script th:inline="javascript">
 		$(document).ready(function() {
 		    var offlineMessage = $('#offlineMessage');
+		    var moduleLinkImageupload = $('#moduleLinkImageupload');
+		    var spaceLinkImageUpload = $('#spaceLinkImageUpload');
+		    var externalLinkImageupload = $('#externalLinkImageupload');
+		    
+		    
 		    if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
 		        offlineMessage.show();
 		    }
 		    else {
 		        offlineMessage.hide();
 		    }
+		    moduleLinkImageupload.hide();
+		    spaceLinkImageUpload.hide();
+		    externalLinkImageupload.hide();
+		    
+		    $("#cancelSpaceImgBtn").click(function() {
+		    	spaceLinkImageUpload.hide(); 
+	        });
+		    
+		    $("#cancelModuleImgBtn").click(function() {
+		    	moduleLinkImageupload.hide(); 
+	        });
+		    
+		    $("#cancelExternalImgBtn").click(function() {
+		    	externalLinkImageupload.hide(); 
+	        });
+		    
+		    $("#cancelModuleImgBtn").click(function() {
+		    	moduleLinkImageupload.hide(); 
+	        });
+		    
 		});
+		
+		
+		
+	    
 		
 		function modeChange(modeChosen) {
 		    var offlineMessage = $('#offlineMessage');
@@ -21,6 +50,24 @@
 		        offlineMessage.hide();
 		    }
 		}
+		function defaultLinkSpaceImages() {
+			var spaceLinkImageUpload = $('#spaceLinkImageUpload');
+			spaceLinkImageUpload.show();
+			
+		}
+		
+		function defaultLinkModuleImages() {
+			var moduleLinkImageupload = $('#moduleLinkImageupload');
+			moduleLinkImageupload.show();
+		}
+	
+		function defaultLinkExternalImages() {
+			var externalLinkImageupload = $('#externalLinkImageupload');
+			externalLinkImageupload.show();
+		}
+		
+		
+		
 	</script>
 </head>
 
@@ -49,6 +96,53 @@
 		                <option th:each="mode: ${exhibitionModes}" th:id=${mode} th:value=${mode} th:selected="${#strings.equals(mode,exhibition.mode)}">[[${mode}]]</option>
 		            </select>
 		        </div>
+		        
+		        <div style="padding-top: 20px;">
+            	<button id="spaceLinkbtnDisplay" type = "button" onClick = "defaultLinkSpaceImages()" class="btn primary-btn btn-sm">Default Space Link Image</button>
+            	
+            	</div>
+            	<br>
+            	<div id = "spaceLinkImageUpload" class="alert alert-secondary" style="background: white;display: block;">
+            	
+                <input type="file" name="file" rows="5" cols="500" id="file" />
+                <p class="mb-0 text-right">
+                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
+                    <button id="cancelSpaceImgBtn"  type="button" class="btn light btn-sm btn-sm">Cancel</button>
+                </p>
+            </div>
+            
+            <div style="padding-top: 20px;">
+		           <button id="moduleLinkbtn" type = "button" onClick = "defaultLinkModuleImages()" class="btn primary-btn btn-sm">Default Module Link Image</button>
+            	
+            	</div>
+            	<br>
+            	<div id = "moduleLinkImageupload" class="alert alert-secondary" style="background: white;">
+            	
+                <input type="file" name="file" rows="5" cols="500" id="file" />
+                <p class="mb-0 text-right">
+                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
+                    &nbsp;
+                    <button id="cancelModuleImgBtn" type="button" class="btn light btn-sm btn-sm">Cancel</button>
+                </p>
+            </div>
+            
+            <div style="padding-top: 20px;">
+		           
+            	<button id="externalLinkbtn" type = "button" onClick = "defaultLinkExternalImages()" class="btn primary-btn btn-sm">Default External Link Image</button>
+            	
+            	</div>
+            	<br>
+            	<div id = "externalLinkImageupload" class="alert alert-secondary" style="background: white;display: block;">
+            	
+                <input type="file" name="file" rows="5" cols="500" id="file" />
+                <p class="mb-0 text-right">
+                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
+                    &nbsp;
+                    <button id="cancelExternalImgBtn" type="button" class="btn light btn-sm btn-sm">Cancel</button>
+                </p>
+            </div>
+		        
+		        
 		        <div id="offlineMessage" style="padding-top: 20px;" th:style="${exhibition.mode != 'OFFLINE' ? 'display: none;' : '' }">
 		            <label for="title">Offline Message:</label> 
 		            <input type="text" class="form-control" name="customMessage"
