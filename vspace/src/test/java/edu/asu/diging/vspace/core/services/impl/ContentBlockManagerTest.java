@@ -100,6 +100,7 @@ public class ContentBlockManagerTest {
         Optional<ContentBlock> contentBlockOptional = Optional.of(contentBlock);
         when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(textBlockRepo).deleteById(textBlockId);
+        Mockito.doThrow(EmptyResultDataAccessException.class).when(textBlockRepo).existsById(textBlockId);
         managerToTest.deleteTextBlockById(textBlockId, "slideId_1");
     }
     
@@ -108,6 +109,7 @@ public class ContentBlockManagerTest {
         String spaceBlockId = "notARealId";
         when(contentBlockRepository.findById("notARealId")).thenReturn(Optional.empty());
         Mockito.doThrow(EmptyResultDataAccessException.class).when(spaceBlockRepo).deleteById(spaceBlockId);
+        Mockito.doThrow(EmptyResultDataAccessException.class).when(textBlockRepo).existsById(spaceBlockId);
         managerToTest.deleteSpaceBlockById(spaceBlockId,"slideId_1");
     }
     
