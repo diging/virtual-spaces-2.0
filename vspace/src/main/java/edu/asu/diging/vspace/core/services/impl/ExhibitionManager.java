@@ -105,11 +105,11 @@ public class ExhibitionManager implements IExhibitionManager {
         }
 
         exhibitionLanguageConfig.getExhibitionLanguageList().stream()
-        .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
-        .forEach(languageMap -> {
-            IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
-            exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
-        });  
+            .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
+            .forEach(languageMap -> {
+                IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
+                exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
+            });  
 
     }
 

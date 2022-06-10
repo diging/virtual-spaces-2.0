@@ -43,7 +43,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
 
     @Override
     public void setId(String id) {
-       this.setId(id);        
+        this.setId(id);        
     }
 
     public String getLabel() {
