@@ -1,19 +1,16 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.Objects;
-
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 @Entity
-public class ExhibitionLanguage {
+public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLanguage {
 
     @Id
     @GeneratedValue(generator = "exhibit_language_id_generator")
@@ -39,6 +36,16 @@ public class ExhibitionLanguage {
         this.exhibition=exhibition;
     }
     
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+       this.setId(id);        
+    }
+
     public String getLabel() {
         return label;
     }
@@ -55,6 +62,7 @@ public class ExhibitionLanguage {
         this.exhibition = exhibition;
     }
     
+    @Override
     public String getCode() {
         return code;
     }
@@ -63,10 +71,12 @@ public class ExhibitionLanguage {
         this.code = code;
     }
 
+    @Override
     public boolean isDefault() {
         return isDefault;
     }
 
+    @Override
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
@@ -88,5 +98,6 @@ public class ExhibitionLanguage {
         return Objects.equals(code, other.code) && Objects.equals(exhibition, other.exhibition)
                && Objects.equals(label, other.label);
     }
+
 
 }

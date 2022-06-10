@@ -2,10 +2,6 @@ package edu.asu.diging.vspace.core.exception;
 
 public class LanguageListConfigurationNotFound  extends Exception {
 
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public LanguageListConfigurationNotFound() {

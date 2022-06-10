@@ -52,7 +52,7 @@
 		         <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Languages:</label>
 		            <select class="form-control" name="exhibitLanguage" multiple="multiple" >
-		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${mappedLanguages!=null && mappedLanguages.contains(language.label)}">[[${language.label}]]</option>
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${savedExhibitionLanguages!=null && savedExhibitionLanguages.contains(language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>
 		        

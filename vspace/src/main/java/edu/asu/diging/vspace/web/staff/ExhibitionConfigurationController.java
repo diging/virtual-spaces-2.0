@@ -58,7 +58,7 @@ public class ExhibitionConfigurationController {
         if(exhibition!=null) {
             model.addAttribute("exhibition", exhibition);
             if(exhibition.getLanguages() != null ) {
-                model.addAttribute("mappedLanguages", exhibition.getLanguages()
+                model.addAttribute("savedExhibitionLanguages",  exhibition.getLanguages()
                         .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
                 model.addAttribute("defaultLanguage",exhibition.getLanguages().stream()
                         .filter(language -> language.isDefault()).findFirst().orElse(null) );

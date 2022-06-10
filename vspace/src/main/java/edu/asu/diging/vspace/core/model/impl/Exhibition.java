@@ -19,6 +19,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 /**
@@ -48,7 +49,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL)
-    private List<ExhibitionLanguage> languages = new ArrayList<ExhibitionLanguage>();
+    private List<IExhibitionLanguage> languages = new ArrayList<IExhibitionLanguage>();
 
     /*
      * (non-Javadoc)
@@ -128,11 +129,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.aboutPageConfigured = aboutPageConfigured;
     }
 
-    public List<ExhibitionLanguage> getLanguages() {
+    public List<IExhibitionLanguage> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<ExhibitionLanguage> languages) {
+    public void setLanguages(List<IExhibitionLanguage> languages) {
         this.languages = languages;
     }
 

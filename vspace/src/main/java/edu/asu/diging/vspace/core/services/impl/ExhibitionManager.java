@@ -19,6 +19,7 @@ import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -26,8 +27,6 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 @Transactional
 @Service
 public class ExhibitionManager implements IExhibitionManager {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ExhibitionRepository exhibitRepo;
@@ -92,28 +91,25 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws LanguageListConfigurationNotFound {
-        if(CollectionUtils.isNotEmpty(codes)) {
-            
-            // Adds defaultLanguage to codes list if not already exists.
-            if(defaultLanguage!=null && !codes.contains(defaultLanguage)) {
-                codes.add(defaultLanguage);
-            }
+        if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
+            throw new LanguageListConfigurationNotFound("Exhibition Language Configuration not found");
+        }
 
+        if(CollectionUtils.isEmpty(codes) ) {
+            return;
+        }
 
-            if(CollectionUtils.isNotEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
-                exhibitionLanguageConfig.getExhibitionLanguageList().stream()
-                    .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
-                    .forEach(languageMap -> {
-                        
-                        ExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);                     
-                        updateDefault(exhibitionLanguage, defaultLanguage);
+        // Adds defaultLanguage to codes list if not already exists.
+        if(defaultLanguage!=null && !codes.contains(defaultLanguage)) {
+            codes.add(defaultLanguage);
+        }
 
-                    });  
-
-            } else {
-                throw new LanguageListConfigurationNotFound("Exhibition Language Configuration not found");
-            }
-        } 
+        exhibitionLanguageConfig.getExhibitionLanguageList().stream()
+        .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
+        .forEach(languageMap -> {
+            IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
+            exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
+        });  
 
     }
 
@@ -124,36 +120,18 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param languageMap
      * @return
      */
-    private ExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
-        ExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
+    private IExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
+        IExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
                 (String) languageMap.get(ConfigConstants.CODE), exhibition);
 
         int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
         if( index < 0 ) {
             exhibition.getLanguages().add(exhibitionLanguage);
-        } 
-        else {
-            exhibitionLanguage =   exhibition.getLanguages().get(index);
-
+        } else {
+            exhibitionLanguage = exhibition.getLanguages().get(index);
         }
 
         return exhibitionLanguage;
-    }
-
-    /**
-     * Updates isDefault to true if equal to defaultLanguage. Otherwise sets to false.
-     * 
-     * @param exhibitionLanguage
-     * @param defaultLanguage
-     */
-    private void updateDefault(ExhibitionLanguage exhibitionLanguage, String defaultLanguage) {
-       
-        if(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage)) {
-            exhibitionLanguage.setDefault(true);
-        } else {
-            exhibitionLanguage.setDefault(false);
-        }
-
     }
 
 }

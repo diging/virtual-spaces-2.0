@@ -31,6 +31,6 @@ public interface IExhibition extends IVSpaceElement {
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
 
-    List<ExhibitionLanguage> getLanguages();
+    List<IExhibitionLanguage> getLanguages();
 
 }
