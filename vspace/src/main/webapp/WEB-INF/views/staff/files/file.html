@@ -84,7 +84,7 @@ function deleteFile(){
  			 
  		</div>
  		<div>
- 		<button class="download btn primary-btn" type="submit" value="submit" onClick = "deleteFile()" style="float:right">
+ 		<button class="delete btn primary-btn" type="submit" value="submit" onClick = "deleteFile()" style="float:right">
 			Delete File
 			</button>
  		<h3 >Edit File</h3>
@@ -107,8 +107,10 @@ function deleteFile(){
 					id="description" name="description" th:text=${file.fileDescription} ></textarea>
 			</div>
 			<button class="btn primary-btn" type="submit" value="submit">Save File</button>			
-			<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()" >Download File</button>
-		</form>
+<!--  			<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()" >Download File</button>
+ -->	
+  			<button class="download btn primary-btn" type="submit" value="submit" onClick = "window.location.href=@{/staff/files/download/{id}(id=${file.id})}" >Download File</button>
+ 			</form>
  		</div>
 		
 		
