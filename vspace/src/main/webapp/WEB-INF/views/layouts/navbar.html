@@ -19,6 +19,14 @@
 					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
 		        	</li>
+		        	<span style="padding-bottom:4px" th:if="${aboutPageConfigured==true}">
+		        	<a th:href="@{/exhibit/about}">
+		        	<span title="About" class = "icon-info secondary" style="font-size: 22px; cursor: pointer; font-weight: bold;
+                                   margin-right:10px; margin-left:-10px; padding-right:15px; " />     	
+	        		
+                      </a>
+		        	</span>
+		        	</li>
 					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
 					        <a class="nav-link" th:href="@{/}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
 			                	<span class="sr-only">(current)</span>

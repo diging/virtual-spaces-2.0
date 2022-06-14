@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
+
 @ControllerAdvice
 public class ExhibitionExceptionHandler {
 

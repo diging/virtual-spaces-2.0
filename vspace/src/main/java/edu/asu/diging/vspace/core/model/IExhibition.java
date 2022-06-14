@@ -22,4 +22,8 @@ public interface IExhibition extends IVSpaceElement {
 
     String getTitle();
 
+    boolean isAboutPageConfigured();
+
+    void setAboutPageConfigured(boolean aboutPageConfigured);
+
 }
