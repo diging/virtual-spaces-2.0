@@ -18,6 +18,7 @@
         <link href="css/styles.css" rel="stylesheet" />
     </head>
         <!-- Navigation-->
+        <body id="page-top">
         <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
             <a href="http://github.com/diging/virtual-spaces-2.0"><img class=fixed-top loading="lazy" width="100" height="100" 
                 src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" alt="Fork me on GitHub"></a>          
@@ -30,7 +31,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#page-top">Home</a></li>
-                        <li class="nav-item"><a class="nav-link me-lg-3" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="nav-link me-lg-3" href="#documentation">Documentation</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#download">GitHub</a></li>
                     </ul>
                     <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0">
@@ -91,312 +92,20 @@
                 </div>
             </div>
         </aside>
-        <!-- Features button section-->
-        <div class="card">
-            <!-- Header -->
-            <div class="card-header" id="features">
-                <ul class="nav nav-pills card-header-pills justify-content-center" data-bs-tabs="tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#start">Getting Started</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#spaces">Spaces</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#modules">Modules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#images">Images</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#users">User Management</a>
-                    </li>
-                </ul>
+         <!-- Basic features section-->
+        <section class="bg-light">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between" id="documentation">
+                    <div class="col-12 col-lg-5">
+                        <h2 class="display-4 lh-1 mb-4">Enter a new age of Virtual Spaces</h2>
+                        <a class="btn btn-outline-dark py-3 px-4 rounded-pill" target="_self" href="documentation.html" target="_blank">Documentation</a>
+                    </div>
+                    <div class="col-sm-8 col-md-6">
+                        <div class="px-5 px-sm-0"><img class="img-fluid rounded-circle" src="https://source.unsplash.com/u8Jn2rzYIps/900x900" alt="..." /></div>
+                    </div>
+                </div>
             </div>
-            <!-- Header -->
-            <!-- Getting Started -->
-            <form class="card-body tab-content center-block scroll rounded" style="width: 1200px">
-                <div role="tabpanel" class="tab-pane active" id="start">
-                <div class="container-fluid">   
-                   <div class="row">
-                       <div class="col-lg-3 center-block sticky-top">
-                            <div id="list-example" class="list-group">
-                                <a class="list-group-item list-group-item-action active" href="#start-1">Structure</a>
-                                <a class="list-group-item list-group-item-action" href="#start-2">Virtual Spaces 2.0 </a>
-                            </div>
-                       </div>
-                       <div class="col-lg-8 center-block">
-                        <body data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" tabindex="0">
-                            <h3 id="start-1">Structure</h3>
-                                <p>A virtual space consists of Spaces and Modules. Spaces represent real or fictional spaces, meaning a space can represent 
-                                    for example a room in a building or exhibition, or it can represent a specific topic such as "programming in Python". 
-                                    A Space consists of a background image and links that are placed on the background image that allow users to move 
-                                    from one Space to another, from a Space to a Module, 
-                                    or from a Space to a website outside of a virtual space. Modules are built up similar to PowerPoint presentations. 
-                                    They consist of Slides that contain images and texts. Those slides are arranged in Sequences that define the order of 
-                                    the slides in a Module. A specific type of Slide is a Branching Point. Branching Points are Slides that in addition to
-                                    text and images have Branching Point Choices (or Choices) that allow a user to jump out of a current Sequence into another one, 
-                                    effectively giving the arrangement of Slides in a Module a tree structure.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                            <h3 id="start-2">Virtual Spaces 2.0</h3>
-                                <p>Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in and 
-                                    a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules. 
-                                    To login to the private space, click on the login icon in the right upper corner. 
-                                    This will bring you to a page that allows you to either login or create a new user account. 
-                                    If you sign up for a new user account, an admin user will have to first approve your account and give you certain privileges 
-                                    before you can login to the private space.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                          </div>
-                        </body>
-                    </div> 
-                </div>
-                </div>
-            <!-- Getting Started -->
-            <!-- Spaces -->
-            <form class="card-body tab-content center-block scroll rounded" style="width: 1200px">
-                    <div role="tabpanel" class="tab-pane" id="spaces">
-                    <div class="container-fluid">   
-                       <div class="row">
-                           <div class="col-lg-3 center-block sticky-top">
-                                <div id="list-example" class="list-group">
-                                    <a class="list-group-item list-group-item-action active" href="#space-1">Overview</a>
-                                    <a class="list-group-item list-group-item-action" href="#space-2">Creating a Space</a>
-                                    <a class="list-group-item list-group-item-action" href="#space-3">Editing a Space</a>
-                                    <a class="list-group-item list-group-item-action" href="#space-4">Change a Background Image</a>
-                                    <a class="list-group-item list-group-item-action" href="#space-5">Delete a Space</a>
-                                </div>
-                           </div>
-                           <div class="col-lg-8 center-block">
-                            <body data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" tabindex="0">
-                                <h3 id="space-1">Overview</h3>
-                                    <img src="assets/img/carousel/overview.jpg" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in 
-                                        and a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules.</p>
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                <h3 id="space-2">Creating a Space</h3>
-                                    <img src="assets/img/carousel/newspace.jpg" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>To create a new space click on the plus icon in the menu bar next to "Spaces": 
-                                        This will take you to a page on which you can enter a title and a description for your space. 
-                                        Here you can also upload a background image for your space or choose from the existing images drop down. 
-                                        Make sure that your background image has a high enough resolution.
-                                        Once you are satisfied with the details click on "Create Space" button that will take you to a page that lets you add space links, 
-                                        external links or module links to your space.</p>
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                <h3 id="space-3">Editing a Space</h3>
-                                    <img src="assets/img/carousel/edit.jpg" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>To edit the title of a space click on the space you need to edit from the space list and click on the <img src="assets/img/carousel/editsymbol.png"> icon which is next to the existing title.</p>
-                                    <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                <h3 id="space-4">Change a Background Image</h3>
-                                    <img src="assets/img/carousel/change.jpg" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>To change the background image, click on the "Change Image" button. A dialog box will pop up that lets you upload a new image from your computer. 
-                                        Once you have selected the image, click "Upload Image". The page will reload to display the uploaded Image.</p>
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                <h3 id="space-5">Delete a Space</h3>
-                                    <img src="assets/img/carousel/delete.jpg" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>To delete the current space, you can click the "Delete Space" button and confirm the action by clicking "Delete" on the dialog box that appears or
-                                        you can also delete a space from the space list in the Space Management page by clicking the icon next to the name of the space.
-                                        Once the current space is deleted:</p>
-                                        <p> - You can't locate it in the Space Management page. </p>
-                                        <p>- All the space links, external links and module links with the source being the deleted space will be deleted.</p>
-                                        <p>- All the space links with the destination being the deleted space will still exist but will now point to nothing. Make sure you set a new target for those space links or delete them if not needed.
-                                        </p>
-                                    </p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                              </div>
-                            </body>
-                        </div> 
-                    </div>
-                    </div>
-                <!-- Spaces -->
-                <!-- Modules -->
-                <div role="tabpanel" class="tab-pane" id="modules">
-                    <div class="container-fluid">   
-                        <div class="row">
-                            <div class="col-lg-3 center-block sticky-top">
-                                 <div id="list-example" class="list-group">
-                                     <a class="list-group-item list-group-item-action active" href="#modules-1">Overview</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-2">Creating a Module</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-3">Editing a Module</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-4">Slides</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-5">&nbsp;&nbsp;Adding a Slide</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-6">&nbsp;&nbsp;Editing a Slide</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-7">&nbsp;&nbsp;Slide with Content Blocks</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text Content Block</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image Content Block</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-10">Sequences</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-11">&nbsp;&nbsp;Adding a Sequence</a>
-                                     <a class="list-group-item list-group-item-action" href="#modules-12">&nbsp;&nbsp;Start a Sequence</a>
-                                 </div>
-                            </div>
-                            <div class="col-lg-8 center-block">
-                             <body data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" tabindex="0">
-                                 <h3 id="modules-1">Overview</h3>
-                                     <img src="assets/img/carousel/modules.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                     <p>Clicking on the "Modules" link in the menu will take you to the Module management.
-                                        From here you can either click on an existing module to modify it or create a new one.</p>
-                                         <p>&nbsp;</p>
-                                         <p>&nbsp;</p>
-                                 <h3 id="modules-2">Creating a Module</h3>
-                                     <p>To create a new module click on the plus icon in the menu bar next to "Modules":</p>
-                                     <p><img src="assets/img/carousel/newmodule.png" class="border shadow-sm rounded"></p>
-                                     <p>This will take you to a page on which you can enter a title and a description for your module. Once you are satisfied with the details click on "Create Module" button 
-                                         that will take you to a page that lets you add slides and sequences to your module. </p>
-                                         <p>&nbsp;</p>
-                                         <p>&nbsp;</p> 
-                                 <h3 id="modules-3">Editing a Module</h3>
-                                     <img src="assets/img/carousel/editmodule.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                     <p>A module can have Slides which can be arranged into Sequences that define the order of the slides in a Module. 
-                                         Once you click on a module from the module list, you will be redirected to the module page where you can add or remove the number of Slides and Sequences based on the requirement. </p>
-                                     <p>&nbsp;</p>
-                                         <p>&nbsp;</p>
-                                 <h3 id="modules-4">Slides</h3>
-                                    <p>A Slide can contain either text or image content blocks. These slides can be used to create Sequences.</p>
-                                 <h3 id="modules-5">Adding a Slide</h3>
-                                    <p>To create a new slide click on the plus icon in the Slides column head next to "Slides":</p>
-                                    <p><img src="assets/img/carousel/newslide.png" class="border shadow-sm rounded"></p>
-                                    <p>This will take you to a page on which you can enter a title and a description for your slide. 
-                                    Title and description will eventually show up in the Module Page, e.g. the title is shown in the slides list and 
-                                    the description is shown as info box.
-                                    Once you've created a slide, you will be redirected to the same module page for which you have created the slide.</p>
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                <h3 id="modules-6">Editing a Slide</h3>
-                                    <p>To edit a slide click on the slide name from the list of slides in the module page. 
-                                        Once you are redirected to the slide page, you can edit the title of the Slide and the description by clicking the icon. 
-                                        Each Slide consists of Text Blocks and Image Blocks representing text and images. </p>
-                                    <p><img src="assets/img/carousel/editslide.png" class="center-block border shadow-sm rounded img-thumbnail"></p>
-                                    <p>You can use the "Add content" dropdown and select either "Add Text" or "Add Image" based on what needs to be added for a particular slide. </p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                <h3 id="modules-7">Slide with Content Blocks</h3>
-                                    <img src="assets/img/carousel/block.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>This is typically how a slide would look with Text blocks and Image blocks included.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                <h3 id="modules-8">Text Content Block</h3>
-                                    <p>To add a Text Content Block to your slide, select the "Add Text" option from the "Add Content" dropdown button. A dialog box will appear that lets you create a new text block.</p> 
-                                    <img src="assets/img/carousel/textblock.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>You can enter the text you want to add to the block in the text field of the dialog box that appears. Once you are done, click on the "Submit" button to save the Text. 
-                                        Once you submit the text, you will be redirected to the same Slide page in which these Content blocks will be listed one after the other.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                <h3 id="modules-9">Image Content Block</h3>
-                                    <p>To add an Image Content Block to your slide, select the "Add Image" option from the "Add Content" dropdown button. A dialog box will appear that lets you create a new image block.</p>
-                                    <img src="assets/img/carousel/imageblock.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                    <p>You can upload the image you want to add to the Image block in the dialog box that appears. Once you are done, click on the "Upload Image" button. 
-                                        Once you have uploaded the image, you will be redirected to the same Slide page in which these Content blocks will be listed one after the other.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                <h3 id="modules-10">Sequences</h3>
-                                <h3 id="modules-11">Adding a Sequence</h3>
-                                    <p>A Sequence allows you to arrange slides in a particular order for presentation.
-                                        To create a new Sequence click on the plus icon in the column head next to "Sequences":</p>
-                                    <p><img src="assets/img/carousel/newsequence.png" class="border shadow-sm rounded"></p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                <h3 id="modules-12">Starting a Sequence</h3>
-                                    <p>Something</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                               </div>
-                             </body>
-                         </div> 
-                     </div>
-                </div>
-                <!-- Modules -->
-                <!-- Images -->
-                <div role="tabpanel" class="tab-pane" id="images">
-                    <div class="container-fluid">   
-                        <div class="row">
-                            <div class="col-lg-3 center-block sticky-top">
-                                 <div id="list-example" class="list-group">
-                                     <a class="list-group-item list-group-item-action active" href="#images-1">Overview</a>
-                                     <a class="list-group-item list-group-item-action" href="#images-2">Editing an Image</a>
-                                     <a class="list-group-item list-group-item-action" href="#images-3">Tagging an Image</a>
-                                 </div>
-                            </div>
-                            <div class="col-lg-8 center-block">
-                             <body data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" tabindex="0">
-                                 <h3 id="images-1">Overview</h3>
-                                     <img src="assets/img/carousel/images.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                     <p>The Images section, is where the entire list of all the images used in Virtual Spaces 2.0 either for a Space, a Slide or as a Link Image is displayed.
-                                        Clicking on the "Images" link in the menu will take you to the Image management page.</p>
-                                         <p>&nbsp;</p>
-                                         <p>&nbsp;</p>
-                                 <h3 id="images-2">Editing an Image</h3>
-                                     <p>To edit the name and description for an image, click on the image from the image list which will navigate you to the image page. 
-                                         Click on the <img src="assets/img/carousel/editsymbol.png"> icon and once you are done with your changes click "Save Image" button to save the changes. 
-                                         Once this is done you will be redirected to the image page which reflects the changes made.</p>
-                                         <p>&nbsp;</p>
-                                         <p>&nbsp;</p> 
-                                 <h3 id="images-3">Tagging an Image</h3>
-                                    <img src="assets/img/carousel/tag.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                     <p>You can also add tags to an image indicating its usage using the "Tag" dropdown option which is available for each image in the Image Management Page. </p>
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                               </div>
-                             </body>
-                         </div> 
-                     </div>
-                </div>
-                <!-- Images -->
-                <!-- User Management -->
-                <div role="tabpanel" class="tab-pane" id="users">
-                    <div class="container-fluid">   
-                        <div class="row">
-                            <div class="col-lg-3 center-block sticky-top">
-                                 <div id="list-example" class="list-group">
-                                     <a class="list-group-item list-group-item-action active" href="#users-1">Overview</a>
-                                     <a class="list-group-item list-group-item-action" href="#users-2">Activate a User</a>
-                                     <a class="list-group-item list-group-item-action" href="#users-3">Making a User an Admin</a>
-                                     <a class="list-group-item list-group-item-action" href="#users-4">Making a User Staff</a>
-                                     <a class="list-group-item list-group-item-action" href="#users-5">Deactivate a User</a>
-                                 </div>
-                            </div>
-                            <div class="col-lg-8 center-block">
-                             <body data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" tabindex="0">
-                                 <h3 id="users-1">Overview</h3>
-                                 <p>To get to the user management of Virtual Spaces 2.0, go to the dashboard and click on the "Users" link in the menu. 
-                                     You should see something similar to this:.</p>
-                                     <img src="assets/img/carousel/users.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                         <p>&nbsp;</p>
-                                         <p>&nbsp;</p>
-                                 <h3 id="users-2">Activate a User</h3>
-                                     <p>To activate a user, click on "Activate" next to the user.</p>
-                                     <img src="assets/img/carousel/activate.png" class="center-block border shadow-sm rounded img-thumbnail">
-                                         <p>&nbsp;</p>
-                                         <p>&nbsp;</p> 
-                                 <h3 id="users-3">Making a User an Admin</h3>
-                                     <p>To make a user an admin user, click on the "Make admin" link next to the user. 
-                                         Admin users can create and edit scenes and modules, approve user accounts, and assign users their roles. 
-                                         Make sure to trust a user before giving them Admin privileges.</p>
-                                        <p>&nbsp;</p>
-                                        <p>&nbsp;</p>
-                                <h3 id="users-4">Making a User Staff</h3>
-                                    <p>To make a user staff, click on the "Make staff" link next to the user. Staff users can create and edit scenes and modules. 
-                                        Make sure to trust a user before making them staff, since they have full control over a virtual space.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                <h3 id="users-5">Deactivate a User</h3>
-                                    <p>To deactivate a user, click on the "Deactivate User" link next to a user. Deactivating a user prevent that user to login to Virtual Spaces 2.0. It does not delete the user account. 
-                                        It can be reactivated at any point by clicking on the "Activate" link.</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                               </div>
-                             </body>
-                         </div> 
-                     </div>
-                </div>
-                <!-- User Management -->
-            </form>
-       </div>
+        </section>
         <!-- Call to action section-->
         <section class="cta">
             <div class="cta-content">
@@ -462,4 +171,5 @@
         <script src="js/scripts.js"></script>
         <script src="js/jquery-1.7.1.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+    </body>
 </html>

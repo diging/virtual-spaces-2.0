@@ -51,9 +51,17 @@ var scrollSpy = new bootstrap.ScrollSpy(document.body, {
 
 });
 
-function redirectIt(obj){
-    var goToLink = obj.getAttribute("href");
-    window.location.href=goToLink;
-}
+$(document).ready(function(){
+    $("#menu-toggle").click(function (e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  });
+
+  function showContent(ev) {
+    (ev||event).preventDefault();
+    ...the rest of the function
+  }
+
 
 
