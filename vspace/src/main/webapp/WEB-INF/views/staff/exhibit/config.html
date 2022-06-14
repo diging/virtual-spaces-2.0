@@ -18,6 +18,7 @@
 		    moduleLinkImageupload.hide();
 		    spaceLinkImageUpload.hide();
 		    externalLinkImageupload.hide();
+		    $("#changeBgImgAlert").show();
 		    
 		    $("#cancelSpaceImgBtn").click(function() {
 		    	spaceLinkImageUpload.hide(); 
@@ -76,7 +77,7 @@
 		<h2>Exhibition Configuration</h2>
 	
 		<div style="padding: 30px 0;">
-		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f">
+		    <form th:action="@{/staff/exhibit/config}" method="post" name="f" enctype="multipart/form-data">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam"/>
 		        <label for="space">Select the start space of the exhibition:</label>
@@ -104,9 +105,9 @@
             	<br>
             	<div id = "spaceLinkImageUpload" class="alert alert-secondary" style="background: white;display: block;">
             	
-                <input type="file" name="file" rows="5" cols="500" id="file" />
-                <p class="mb-0 text-right">
-                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
+                <input  type="file" name="spacelinkImage" rows="5" cols="500" id="spacelinkImage" class="form-control-file" />
+                <p class="form-control mb-0 text-right">
+                    <!--  <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>-->
                     <button id="cancelSpaceImgBtn"  type="button" class="btn light btn-sm btn-sm">Cancel</button>
                 </p>
             </div>
@@ -153,6 +154,7 @@
 		        </p>	
 		    </form>
 		</div>
+		
 	</div>
 </body>
 </html>
