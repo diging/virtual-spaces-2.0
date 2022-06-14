@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -145,6 +146,19 @@ public class ContentBlockManagerTest {
         when(spaceBlockRepo.findById(spaceId)).thenReturn(Optional.of(spaceBlock));
         ISpaceBlock retrievedSpaceBlock = managerToTest.getSpaceBlock(spaceId);
         assertEquals(spaceId, retrievedSpaceBlock.getId());
+    }
+    
+    @Test
+    public void test_getSpaceBlock_forNonExistentId() throws BlockDoesNotExistException {
+    	
+    	String spaceId = "notRealId";
+    	SpaceBlock spaceBlock = new SpaceBlock();
+        spaceBlock.setId(spaceId);
+        Mockito.doThrow(EmptyResultDataAccessException.class).when(spaceBlockRepo).findById(spaceId);
+        ISpaceBlock retrievedSpaceBlock = managerToTest.getSpaceBlock(spaceId);
+        assertNull(retrievedSpaceBlock);
+        
+      
     }
 
     @Test
