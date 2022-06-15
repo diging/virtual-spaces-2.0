@@ -119,7 +119,7 @@ public class ExhibitionDataAspect {
         }
         // If user is not logged in and exhibition is not active, show maintenance page.
         if(authFacade.getAuthenticatedUser()==null && !exhibitionMode.equals(ExhibitionModes.ACTIVE)) {
-            return "maintenance";
+            return "exhibition/maintenance";
         }
         // If the space and module Id is not found, show message on screen.
         if(space==null && module==null) {
