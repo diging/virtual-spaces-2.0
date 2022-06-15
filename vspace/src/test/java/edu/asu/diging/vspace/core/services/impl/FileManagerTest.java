@@ -100,11 +100,10 @@ public class FileManagerTest {
     }
     
     @Test
-    public void test_store_failure() throws FileStorageException {
+    public void test_storeFile_failure() throws FileStorageException {
         
         String fileId = "fileId";
         VSFile file = new VSFile();
-        String relativePath = "relativePath";
         byte[] fileBytes = fileContentString.getBytes();
         when(storageEngine.deleteFile(file)).thenReturn(true);
         when(fileFactory.createFile(fileName, "text/plain")).thenReturn(file);
