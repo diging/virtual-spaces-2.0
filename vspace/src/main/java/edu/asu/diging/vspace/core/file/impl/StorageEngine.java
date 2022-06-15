@@ -92,7 +92,7 @@ public class StorageEngine implements IStorageEngine {
         File fileObject = getFile(fileUploadDir, fileName);
         Path path = Paths.get(fileObject.getAbsolutePath());
         Resource resource =  new ByteArrayResource(Files.readAllBytes(path));   
-       return resource;
+        return resource;
     }
 
     @Override
