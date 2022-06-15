@@ -87,7 +87,7 @@ public class FileManagerTest {
     }
     
     @Test
-    public void test_store_success() throws FileStorageException {
+    public void test_storeFile_success() throws FileStorageException {
         String fileId = "fileId";
         VSFile file = new VSFile();
         String relativePath = "relativePath";
