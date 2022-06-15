@@ -109,7 +109,8 @@ function deleteFile(){
 			<button class="btn primary-btn" type="submit" value="submit">Save File</button>			
 <!--  			<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()" >Download File</button>
  -->	
-  			<button class="download btn primary-btn" type="submit" value="submit" onClick = "window.location.href=@{/staff/files/download/{id}(id=${file.id})}" >Download File</button>
+<!--   			<button class="download btn primary-btn" type="submit" value="submit" onClick = "window.location.href=@{/staff/files/download/{id}(id=${file.id})}" >Download File</button>
+ --> 			<a th:href="@{/staff/files/download/{id}(id=${file.id})}" class="download btn primary-btn" >Download file</a>
  			</form>
  		</div>
 		

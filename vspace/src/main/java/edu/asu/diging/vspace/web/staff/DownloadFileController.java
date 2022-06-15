@@ -6,7 +6,9 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +33,14 @@ public class DownloadFileController {
             return new ResponseEntity<byte[]>(fileContent, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
-        return new ResponseEntity<byte[]>(fileContent, HttpStatus.OK);
+        
+        
+//        return new ResponseEntity<byte[]>(fileContent, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + "abc")
+                .contentType(MediaType.ALL)
+                .contentLength(fileContent.length)
+                .body(fileContent);
     }
     
     
