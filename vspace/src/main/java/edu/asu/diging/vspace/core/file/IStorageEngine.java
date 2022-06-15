@@ -3,6 +3,9 @@ package edu.asu.diging.vspace.core.file;
 import java.io.File;
 import java.io.IOException;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -15,7 +18,7 @@ public interface IStorageEngine {
 
     boolean renameImage(IVSImage image, String newFileName);
 
-    byte[] downloadFile(String directory, String filename) throws IOException;
+    Resource downloadFile(String fileName) throws IOException;
 
     boolean renameFile(IVSFile file, String newFileName);
 

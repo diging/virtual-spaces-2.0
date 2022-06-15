@@ -9,45 +9,6 @@
 
 <script th:inline="javascript">
 
-function base64ToArrayBuffer(base64) {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-       var ascii = binaryString.charCodeAt(i);
-       bytes[i] = ascii;
-    }
-    return bytes;
- }
- 
-function saveByteArray(reportName, byte) {
-	var fileType = [[${file.fileType}]];
-    var blob = new Blob([byte], {type: fileType});
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    var fileName = reportName;
-    link.download = fileName;
-    link.click();
-};
-
-function downloadFile(){
-	$.ajax({
-        url: "[(@{'/staff/files/download/'+${file.id}})]",
-        type: 'GET',
-        cache       : false,
-        contentType : false,
-        success: function(data) {
-        	var sampleArr = base64ToArrayBuffer(data);
-        	var fileName = [[${file.filename}]];
-        	console.log(fileName)
-        	saveByteArray(fileName, sampleArr);
-        },
-        error: function(data) {
-        	console.log('could not download')
-        }
-    });
-}
-
 function deleteFile(){
 	var token = [[${_csrf.token}]];
 	$.ajax({
@@ -90,29 +51,31 @@ function deleteFile(){
  		<h3 >Edit File</h3>
  		</div>
 		<div>
- 		
- 		<form method="POST"
-			th:action='@{|/staff/files/edit/${file.id}?${_csrf.parameterName}=${_csrf.token}|}' th:object="${fileForm}"
-			enctype="multipart/form-data" style="margin-top: 40px">
 
-			<div class="form-group row">
-				<label for="fileName" class="col-md-2 col-form-label">File Name:</label> 
-				<textarea type="text" class="form-control col-md-10" id="fileName" rows="1" cols="30"
-					 th:text="${file.filename}" name="fileName"></textarea>
-			</div>
+			<form method="POST"
+				th:action='@{|/staff/files/edit/${file.id}?${_csrf.parameterName}=${_csrf.token}|}'
+				th:object="${fileForm}" enctype="multipart/form-data"
+				style="margin-top: 40px">
 
-			<div class="form-group row">
-				<label for="description" class="col-md-2 col-form-label">Description:</label>
-				<textarea class="form-control col-md-10" rows="5" cols="30"
-					id="description" name="description" th:text=${file.fileDescription} ></textarea>
-			</div>
-			<button class="btn primary-btn" type="submit" value="submit">Save File</button>			
-<!--  			<button class="download btn primary-btn" type="submit" value="submit" onClick = "downloadFile()" >Download File</button>
- -->	
-<!--   			<button class="download btn primary-btn" type="submit" value="submit" onClick = "window.location.href=@{/staff/files/download/{id}(id=${file.id})}" >Download File</button>
- --> 			<a th:href="@{/staff/files/download/{id}(id=${file.id})}" class="download btn primary-btn" >Download file</a>
- 			</form>
- 		</div>
+				<div class="form-group row">
+					<label for="fileName" class="col-md-2 col-form-label">File
+						Name:</label>
+					<textarea type="text" class="form-control col-md-10" id="fileName"
+						rows="1" cols="30" th:text="${file.filename}" name="fileName"></textarea>
+				</div>
+
+				<div class="form-group row">
+					<label for="description" class="col-md-2 col-form-label">Description:</label>
+					<textarea class="form-control col-md-10" rows="5" cols="30"
+						id="description" name="description"
+						th:text=${file.fileDescription}></textarea>
+				</div>
+				<button class="btn primary-btn" type="submit" value="submit">Save
+					File</button>
+				<a th:href="@{/staff/files/download/{id}(id=${file.id})}"
+					class="download btn primary-btn">Download file</a>
+			</form>
+		</div>
 		
 		
 		

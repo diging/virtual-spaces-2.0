@@ -1,7 +1,11 @@
 package edu.asu.diging.vspace.core.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
@@ -17,7 +21,7 @@ public interface IFileManager {
 
     IVSFile editFile(String fileId, String fileName, String description);
 
-    byte[] downloadFile(String fileId) throws IOException;
+    Resource downloadFile(String fileName) throws IOException;
 
     boolean deleteFile(String fileId);
 

@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Optional;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 
@@ -88,9 +91,8 @@ public class FileManager implements IFileManager {
     }
 
     @Override
-    public byte[] downloadFile(String fileId) throws IOException {
-        IVSFile file = getFileById(fileId);
-        return storageEngine.downloadFile(file.getId(), file.getFilename());
+    public Resource downloadFile(String fileName) throws IOException {             
+        return storageEngine.downloadFile(fileName);
     }
     
     @Override

@@ -8,10 +8,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -83,11 +88,11 @@ public class StorageEngine implements IStorageEngine {
     }
 
     @Override
-    public byte[] downloadFile(String directory, String filename) throws IOException {
-        File fileObject = getFile(fileUploadDir, filename);
-        byte[] bytes = getFileContent(fileObject);
-        byte[] encodedBytes = Base64.getEncoder().encode(bytes);
-        return encodedBytes;
+    public Resource downloadFile(String fileName) throws IOException {               
+        File fileObject = getFile(fileUploadDir, fileName);
+        Path path = Paths.get(fileObject.getAbsolutePath());
+        Resource resource =  new ByteArrayResource(Files.readAllBytes(path));   
+       return resource;
     }
 
     @Override
