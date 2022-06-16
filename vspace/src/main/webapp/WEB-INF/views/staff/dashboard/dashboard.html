@@ -47,12 +47,41 @@
     /*[/]*/
     	
 	</script>
+		<style>
+	.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: 238px;
+    top: 146px;
+    background: rgba(0, 0, 0, 0.6);
+}
+.previewExhb:hover .tooltiptext {
+    visibility: visible;
+}
+	</style>
 </head>
 <body>
 <div class="justify-content-left" layout:fragment="content">
     <div class="main-content">
     	<h2>Welcome back!</h2>
-    	<span>View your most recent edits, or create new items.</span>
+			<div class="alert alert-success alert-dismissible fade show" th:if="${exhibitionMode !='ACTIVE' and previewId!=null}">
+				<p>
+					<a class="previewExhb" target="_blank"
+						th:href="@{|/preview/${previewId}|}"><span
+						class="icon-visible secondary"></span> <span class="tooltiptext">Preview
+							Exhibition</span></a> To share the Exhibition Preview provide the link <a
+						style="color: blue;" th:href="@{|/preview/${previewId}|}">
+						[[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${previewId}|}]]</a>
+				</p>
+			</div>
+			<span>View your most recent edits, or create new items.</span>
 		<div class="tab" style="margin-top: 10px; padding: 10px;">
 			<h4>Spaces</h4>	
 			<div class="grid" style="margin-top: 10px;">
