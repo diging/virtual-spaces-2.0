@@ -100,7 +100,7 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws LanguageListConfigurationNotFound {
-        if(!CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
+        if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFound("Exhibition Language Configuration not found");
         }
 
