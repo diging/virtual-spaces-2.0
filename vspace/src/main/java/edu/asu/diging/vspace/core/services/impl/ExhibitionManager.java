@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
+import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -34,6 +35,8 @@ public class ExhibitionManager implements IExhibitionManager {
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
     
+    @Autowired
+    private ExhibitionFactory exhibitFactory;
 
     /*
      * (non-Javadoc)
@@ -76,7 +79,12 @@ public class ExhibitionManager implements IExhibitionManager {
         // for now we just take the first one created, there shouldn't be more than one
         List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
         if (exhibitions.size() > 0) {
-            return exhibitions.get(0);
+            Exhibition exhibition = exhibitions.get(0);
+            String previewId = exhibition.getPreviewId();
+            if(previewId==null || previewId.isEmpty()) {
+                exhibitFactory.updatePreviewId(exhibition);
+            }
+            return exhibition;
         }
         return null;
     }

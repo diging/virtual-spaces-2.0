@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 /**
@@ -50,6 +51,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL)
     private List<IExhibitionLanguage> languages = new ArrayList<IExhibitionLanguage>();
+
+    private String previewId;
 
     /*
      * (non-Javadoc)
@@ -102,7 +105,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     public ExhibitionModes getMode() {
         return mode;
     }
@@ -155,5 +158,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         return Objects.equals(id, other.id);
     }
    
+    public String getPreviewId() {
+        return previewId;
+    }
 
+    public void setPreviewId(String previewId) {
+        this.previewId = previewId;
+    }
 }

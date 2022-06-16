@@ -51,26 +51,27 @@ public class ExhibitionConfigurationController {
     
 
 
+    public static final String EXH_PREVIEW = "EXH_PREVIEW_";
+    
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
+
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        if(exhibition!=null) {
-            model.addAttribute("exhibition", exhibition);
-            if(exhibition.getLanguages() != null ) {
-                model.addAttribute("savedExhibitionLanguages",  exhibition.getLanguages()
-                        .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
-                model.addAttribute("defaultLanguage",exhibition.getLanguages().stream()
-                        .filter(language -> language.isDefault()).findFirst().orElse(null) );
-          
-            }
-        } else {
-            model.addAttribute("exhibition", new Exhibition());
+        if(exhibition==null) {           
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+        }
+        if(exhibition.getLanguages() != null ) {
+            model.addAttribute("savedExhibitionLanguages",  exhibition.getLanguages()
+                    .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
+            model.addAttribute("defaultLanguage",exhibition.getLanguages().stream()
+                    .filter(language -> language.isDefault()).findFirst().orElse(null) );
+      
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
-       
+        model.addAttribute("exhibition", exhibition);
         return "staff/exhibit/config";
     }
 
@@ -96,7 +97,7 @@ public class ExhibitionConfigurationController {
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;
-        if(exhibitID==null || exhibitID.isEmpty()) {
+        if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
@@ -107,6 +108,7 @@ public class ExhibitionConfigurationController {
         exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
     
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+
             exhibition.setCustomMessage(customMessage);
         }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
