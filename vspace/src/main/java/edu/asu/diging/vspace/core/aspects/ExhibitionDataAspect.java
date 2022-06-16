@@ -136,7 +136,6 @@ public class ExhibitionDataAspect {
         Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         String previewId = (String) pathVariables.get(ExhibitionConstants.PREVIEW_ID);
         // If user is not logged in and exhibition is not active, show maintenance page.
-
         if (authFacade.getAuthenticatedUser() == null && !exhibitionMode.equals(ExhibitionModes.ACTIVE) && previewId==null) {
             return "/exhibition/maintenance";
         }
