@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
 import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
@@ -23,6 +24,7 @@ public class ExhibitionExceptionHandler {
     private static final String sequence_not_found="sequence_not_found";
     private static final String slide_not_found="slide_not_found";
     private static final String slide_not_found_in_sequence="slide_not_found_in_sequence";
+    private static final String language_list_configuration_not_found="language_list_configuration_not_found";
     
     @ExceptionHandler({ ModuleNotFoundException.class })
     protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
@@ -86,6 +88,20 @@ public class ExhibitionExceptionHandler {
         modelAndView.addObject("message", ex.getMessage());
         logger.info("SpaceNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+space_not_found+" Message:: " + ex.getMessage());
+        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.setViewName("module");
+        return modelAndView;
+    }
+    
+    @ExceptionHandler({ LanguageListConfigurationNotFound.class })
+    protected ModelAndView handleLanguageListConfigurationNotFoundException(HttpServletRequest request,
+            LanguageListConfigurationNotFound ex) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("error_code", language_list_configuration_not_found);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
+        logger.info("LanguageListConfigurationNotFound Occured:: URL=" + request.getRequestURL());
+        logger.info("Code:: "+language_list_configuration_not_found+" Message:: " + ex.getMessage());
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;

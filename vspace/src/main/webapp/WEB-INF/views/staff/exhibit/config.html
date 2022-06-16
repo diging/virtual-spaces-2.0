@@ -85,7 +85,8 @@
 		        <div style="padding-top: 20px;">
 		            <label for="title">Default Exhibition Language:</label>
 		            <select class="form-control" name="defaultExhibitLanguage" >
-		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${defaultLanguage!=null && #strings.equals(defaultLanguage.label, language.label)}">[[${language.label}]]</option>
+		           		<option th:value="null" >----</option>
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${ defaultLanguage!=null && #strings.equals(defaultLanguage.label, language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>
 		        <div id="offlineMessage" style="padding-top: 20px;" th:style="${exhibition.mode != 'OFFLINE' ? 'display: none;' : '' }">

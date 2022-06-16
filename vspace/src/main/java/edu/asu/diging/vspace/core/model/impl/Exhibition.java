@@ -154,8 +154,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Exhibition other = (Exhibition) obj;
-        return Objects.equals(id, other.id);
+        return Objects.equals(id, ((Exhibition) obj).id);
     }
    
     public String getPreviewId() {

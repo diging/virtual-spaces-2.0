@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
@@ -99,7 +100,7 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws LanguageListConfigurationNotFound {
-        if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
+        if(!CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFound("Exhibition Language Configuration not found");
         }
 
@@ -108,7 +109,7 @@ public class ExhibitionManager implements IExhibitionManager {
         }
 
         // Adds defaultLanguage to codes list if not already exists.
-        if(defaultLanguage!=null && !codes.contains(defaultLanguage)) {
+        if(!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
         }
 
