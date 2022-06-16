@@ -38,6 +38,10 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     private byte[] spacelinkImage;
     
+    private byte[] modulelinkImage;
+    
+    private byte[] externallinkImage;
+    
     private boolean aboutPageConfigured;
 
     /*
@@ -129,5 +133,23 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
     }
+
+	public byte[] getModulelinkImage() {
+		return modulelinkImage;
+	}
+
+	public void setModulelinkImage(byte[] modulelinkImage) {
+		this.modulelinkImage = modulelinkImage;
+	}
+
+	public byte[] getExternallinkImage() {
+		return externallinkImage;
+	}
+
+	public void setExternallinkImage(byte[] externallinkImage) {
+		this.externallinkImage = externallinkImage;
+	}
+    
+    
 
 }
