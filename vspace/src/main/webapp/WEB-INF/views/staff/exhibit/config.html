@@ -105,13 +105,14 @@
             	<br>
             	<div id = "spaceLinkImageUpload" class="alert alert-secondary" style="background: white;display: block;">
             	
-                <input  type="file" name="spacelinkImage" rows="5" cols="500" id="spacelinkImage" class="form-control-file" />
+                <input th:value="${exhibition.spacelinkImage}" type="file" name="spacelinkImage" rows="5" cols="500" id="spacelinkImage" class="form-control-file" />
                 <p class="form-control mb-0 text-right">
                     <!--  <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>-->
                     <button id="cancelSpaceImgBtn"  type="button" class="btn light btn-sm btn-sm">Cancel</button>
                 </p>
             </div>
             
+           
             <div style="padding-top: 20px;">
 		           <button id="moduleLinkbtn" type = "button" onClick = "defaultLinkModuleImages()" class="btn primary-btn btn-sm">Default Module Link Image</button>
             	

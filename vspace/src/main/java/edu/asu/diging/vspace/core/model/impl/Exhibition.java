@@ -36,6 +36,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String customMessage;
     
+    private byte[] spacelinkImage;
+    
     private boolean aboutPageConfigured;
 
     /*
@@ -90,7 +92,19 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.title = title;
     }
     
-    public ExhibitionModes getMode() {
+    
+    
+    
+
+	public byte[] getSpacelinkImage() {
+		return spacelinkImage;
+	}
+
+	public void setSpacelinkImage(byte[] spacelinkImage) {
+		this.spacelinkImage = spacelinkImage;
+	}
+
+	public ExhibitionModes getMode() {
         return mode;
     }
 

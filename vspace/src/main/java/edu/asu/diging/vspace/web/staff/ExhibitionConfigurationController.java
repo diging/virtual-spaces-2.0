@@ -9,7 +9,6 @@ import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,11 +67,12 @@ public class ExhibitionConfigurationController {
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
-            
+            @RequestParam("spacelinkImage") MultipartFile[] spacelinkImage,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+            Principal principal,
             RedirectAttributes attributes) throws IOException {
     	
-    	System.out.println("Baishali Nayak ");
+    	System.out.println("Baishali Nayak "+spacelinkImage);
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
