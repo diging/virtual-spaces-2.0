@@ -27,7 +27,8 @@ public class DownloadFileController {
     
     @RequestMapping(value = "/staff/files/download/{fileId}", method = RequestMethod.GET )
     public ResponseEntity<Resource> downloadFile(Model model, @PathVariable String fileId) throws IOException {
-        Resource resource = null;  IVSFile file= null;
+        Resource resource = null;  
+        IVSFile file= null;
         try {        
             file = fileManager.getFileById(fileId);
             resource = fileManager.downloadFile(file.getFilename());                  
