@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
@@ -93,15 +93,15 @@ public class ExhibitionExceptionHandler {
         return modelAndView;
     }
     
-    @ExceptionHandler({ LanguageListConfigurationNotFound.class })
+    @ExceptionHandler({ LanguageListConfigurationNotFoundException.class })
     protected ModelAndView handleLanguageListConfigurationNotFoundException(HttpServletRequest request,
-            LanguageListConfigurationNotFound ex) {
+            LanguageListConfigurationNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error_code", language_list_configuration_not_found);
         modelAndView.addObject("showAlert", true);
         modelAndView.addObject("message", ex.getMessage());
         logger.info("LanguageListConfigurationNotFound Occured:: URL=" + request.getRequestURL());
-        logger.info("Code:: "+language_list_configuration_not_found+" Message:: " + ex.getMessage());
+        logger.info("Code:: "+language_list_configuration_not_found+" Cause:: " + ex);
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;

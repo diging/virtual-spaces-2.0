@@ -22,7 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -82,7 +82,7 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
-     * @throws LanguageListConfigurationNotFound 
+     * @throws LanguageListConfigurationNotFoundException 
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
@@ -92,7 +92,7 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
-            RedirectAttributes attributes) throws IOException, LanguageListConfigurationNotFound {
+            RedirectAttributes attributes) throws IOException, LanguageListConfigurationNotFoundException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
 

@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
-import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -96,12 +96,12 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param exhibition
      * @param defaultLanguage 
      * @param languages
-     * @throws LanguageListConfigurationNotFound 
+     * @throws LanguageListConfigurationNotFoundException 
      */
     @Override
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws LanguageListConfigurationNotFound {
+    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
         if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
-            throw new LanguageListConfigurationNotFound("Exhibition Language Configuration not found");
+            throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
 
         if(CollectionUtils.isEmpty(codes) ) {

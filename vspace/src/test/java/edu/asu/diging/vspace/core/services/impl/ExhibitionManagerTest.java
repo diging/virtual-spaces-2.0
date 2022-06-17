@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
-import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFound;
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
@@ -66,7 +66,7 @@ public class ExhibitionManagerTest {
     
 
     @Test
-    public void test_updateExhibitionLanguages_success() throws LanguageListConfigurationNotFound{
+    public void test_updateExhibitionLanguages_success() throws LanguageListConfigurationNotFoundException{
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -91,7 +91,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_duplicates() throws LanguageListConfigurationNotFound{
+    public void test_updateExhibitionLanguages_duplicates() throws LanguageListConfigurationNotFoundException{
         Exhibition exhibition = new Exhibition();
 
         //Exhibition already consists of 2 languages
@@ -127,7 +127,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() throws LanguageListConfigurationNotFound{
+    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() throws LanguageListConfigurationNotFoundException{
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -152,7 +152,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_defaultLanguage() throws LanguageListConfigurationNotFound{
+    public void test_updateExhibitionLanguages_defaultLanguage() throws LanguageListConfigurationNotFoundException{
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
