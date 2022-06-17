@@ -35,6 +35,6 @@ public interface IExhibitionManager {
 
     IExhibition getStartExhibition();
 
-    void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage) throws LanguageListConfigurationNotFoundException;
+    void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
 
 }
