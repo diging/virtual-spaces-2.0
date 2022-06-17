@@ -51,7 +51,7 @@ public class AddModuleLinkController {
             node.put("errorMessage", "No link coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
-        
+
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -64,7 +64,6 @@ public class AddModuleLinkController {
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
                     linkedModuleId, moduleLinkLabel, type, linkImage, filename);
-
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

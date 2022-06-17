@@ -17,7 +17,7 @@ public interface IModuleManager {
     IModule getModule(String id);
     
     List<IModule> getAllModules();
-    
+
     List<ISlide> getModuleSlides(String moduleId);
     
     List<ISequence> getModuleSequences(String moduleId);

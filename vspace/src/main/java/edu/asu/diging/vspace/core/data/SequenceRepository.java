@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 
 @Repository
@@ -19,5 +18,5 @@ public interface SequenceRepository extends PagingAndSortingRepository<Sequence,
     
     @Query("SELECT d FROM Sequence d WHERE d.module.id = ?1 and d.id = ?2")
     public Sequence findSequenceForModuleAndSequence(String moduleId, String sequenceId);
-   
+
 }
