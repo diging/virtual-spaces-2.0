@@ -39,6 +39,7 @@ public class AddModuleLinkController {
             @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("moduleType") String displayType,
             @RequestParam("moduleLinkImage") MultipartFile file)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
@@ -63,6 +64,7 @@ public class AddModuleLinkController {
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
                     linkedModuleId, moduleLinkLabel, type, linkImage, filename);
+
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
