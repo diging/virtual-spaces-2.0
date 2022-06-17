@@ -4,7 +4,7 @@
 	</head>
 	
 	<body>
-		<div th:fragment="navbar">
+		<div th:if="${isExhPreview} == null OR ${isExhPreview} == false" th:fragment="navbar">
 			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
@@ -76,6 +76,27 @@
 			        }
 			    })
 			</script>
+	    </div>
+	    <div th:if="${isExhPreview} == true" th:fragment="navbar">
+			<nav class="nav-bar" style="height:48px">
+		      <a class="navbar-brand" title="Go to exhibition Preview"  th:href="@{'/preview/'+${previewId}}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
+		      [[${exhibition?.title}]]</a>
+		        <div class="nav" id="navbarCollapse">
+		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
+					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
+					        <a class="nav-link" th:href="@{'/preview/'+${previewId}}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
+			                </a>
+			        </li> 
+		        </ul>
+		        <div class="form-inline mt-2 mt-md-0">
+		          	<form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
+		         	 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+		  				<button style="background-color: #ffffff !important;" class="btn nav-link" type="submit" title="Logout" ><span style="color: #e39e44 !important;" class="icon-sign-out"></span></button>
+		         	</form>
+		         	<a class="btn nav-link" sec:authorize="isAnonymous()" th:href="@{/login}"><span class="icon-sign-in"></span></a>
+		        </div>
+		      </div>
+		    </nav>
 	    </div>
 	</body>
 </html>
