@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-public interface IVSImage extends IVSpaceElement {
+public interface IVSImage extends IVSFile {
 
 	String getFilename();
 

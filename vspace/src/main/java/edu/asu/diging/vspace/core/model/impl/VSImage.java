@@ -19,7 +19,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
 
 @Entity
-public class VSImage extends VSpaceElement implements IVSImage {
+public class VSImage extends VSFile implements IVSImage {
 
     @Id
     @GeneratedValue(generator = "image_id_generator")
@@ -153,5 +153,5 @@ public class VSImage extends VSpaceElement implements IVSImage {
     public void setCategories(List<ImageCategory> categories) {
         this.categories = categories;
     }
-
+  
 }

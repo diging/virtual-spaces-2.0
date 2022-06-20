@@ -82,7 +82,7 @@ public class FileManager implements IFileManager {
             return null;
         }
         IVSFile file  = optional.get();
-        if(storageEngine.renameFile(file, fileName)) {
+        if(storageEngine.renameFile(file.getFilename(), fileName, fileUploadDir)) {
             file.setFilename(fileName);   
         }
         file.setFileDescription(description);
@@ -92,13 +92,13 @@ public class FileManager implements IFileManager {
 
     @Override
     public Resource downloadFile(String fileName) throws IOException {             
-        return storageEngine.downloadFile(fileName);
+        return storageEngine.downloadFile(fileName, fileUploadDir);
     }
     
     @Override
     public boolean deleteFile(String fileId) {
         IVSFile file = getFileById(fileId);
-        if(storageEngine.deleteFile(file)) {
+        if(storageEngine.deleteFile(file.getFilename(), fileUploadDir)) {
             fileRepo.delete((VSFile) file);
             return true;
         }

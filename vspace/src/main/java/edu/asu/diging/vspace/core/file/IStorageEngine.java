@@ -16,13 +16,13 @@ public interface IStorageEngine {
 
     byte[] getImageContent(String directory, String filename) throws IOException;
 
-    boolean renameImage(IVSImage image, String newFileName);
+//    boolean renameImage(IVSImage image, String newFileName);
 
-    Resource downloadFile(String fileName) throws IOException;
+    Resource downloadFile(String fileName, String directory) throws IOException;
 
-    boolean renameFile(IVSFile file, String newFileName);
+    boolean renameFile(String fileName, String newFileName, String directory);
 
-    boolean deleteFile(IVSFile file);
+    boolean deleteFile(String fileName, String directory);
 
     File getFile(String fileUploadDir, String fileName);
 

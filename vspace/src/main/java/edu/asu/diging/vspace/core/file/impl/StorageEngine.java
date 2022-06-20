@@ -31,19 +31,13 @@ public class StorageEngine implements IStorageEngine {
     @Value("${uploads_path}")
     private String path;
 
-    @Value("${file_uploads_directory}")
-    private String fileUploadDir;
 
     /* (non-Javadoc)
     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
     */
     @Override
     public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-        File parent = new File(path + File.separator + directory);
-	if (!parent.exists()) {
-            parent.mkdir();
-        }
-        File file = new File(parent.getAbsolutePath() + File.separator + filename);
+        File file = getFile(directory, filename);
         BufferedOutputStream stream;
         try {
             stream = new BufferedOutputStream(new FileOutputStream(file));
@@ -66,30 +60,30 @@ public class StorageEngine implements IStorageEngine {
         return getFileContent(fileObject);
     }
 	
-    /**
-    * Method to rename image   
-    * 
-    * @param image - image file
-    * @param newFileName - new name of the file
-    * @return true if file renaming was successful, otherwise return false 
-    */ 
+//    /**
+//    * Method to rename image   
+//    * 
+//    * @param image - image file
+//    * @param newFileName - new name of the file
+//    * @return true if file renaming was successful, otherwise return false 
+//    */ 
+//    @Override
+//    public boolean renameImage(IVSImage image, String newFileName) {
+//        File currentFile = getFile(image.getId(), image.getFilename());
+//        File renamedFile = getFile(image.getId(), newFileName);
+//        return currentFile.renameTo(renamedFile);
+//    }
+
     @Override
-    public boolean renameImage(IVSImage image, String newFileName) {
-        File currentFile = getFile(image.getId(), image.getFilename());
-        File renamedFile = getFile(image.getId(), newFileName);
+    public boolean renameFile(String fileName, String newFileName, String directory) {             
+        File currentFile = getFile(directory, fileName);
+        File renamedFile = getFile(directory, newFileName);
         return currentFile.renameTo(renamedFile);
     }
 
     @Override
-    public boolean renameFile(IVSFile file, String newFileName) {
-        File currentFile = getFile(fileUploadDir, file.getFilename());
-        File renamedFile = getFile(fileUploadDir, newFileName);
-        return currentFile.renameTo(renamedFile);
-    }
-
-    @Override
-    public Resource downloadFile(String fileName) throws IOException {               
-        File fileObject = getFile(fileUploadDir, fileName);
+    public Resource downloadFile(String fileName, String directory) throws IOException {               
+        File fileObject = getFile(directory, fileName);
         Path path = Paths.get(fileObject.getAbsolutePath());
         Resource resource =  new ByteArrayResource(Files.readAllBytes(path));   
         return resource;
@@ -121,13 +115,19 @@ public class StorageEngine implements IStorageEngine {
     }
 
     @Override
-    public boolean deleteFile(IVSFile file) {        
-        File storedFile = getFile(fileUploadDir,file.getFilename() );
+    public boolean deleteFile(String fileName, String directory) {        
+        File storedFile = getFile(directory,fileName);
         return storedFile.delete();
     }
     
     @Override
-    public File getFile(String fileUploadDir, String fileName) {
-        return new File(path + File.separator + fileUploadDir + File.separator  + fileName);
+    public File getFile(String directory, String fileName) {
+
+//        File parent = new File(path + File.separator + directory);
+//        if (!parent.exists()) {
+//            parent.mkdir();
+//        }
+//        return new File(parent.getAbsolutePath() + File.separator + fileName);
+                return new File(path + File.separator + directory + File.separator  + fileName);
     }
 }
