@@ -100,8 +100,8 @@ public class ExhibitionExceptionHandler {
         modelAndView.addObject("error_code", language_list_configuration_not_found);
         modelAndView.addObject("showAlert", true);
         modelAndView.addObject("message", ex.getMessage());
-        logger.info("LanguageListConfigurationNotFound Occured:: URL=" + request.getRequestURL());
-        logger.info("Code:: "+language_list_configuration_not_found+" Cause:: " + ex);
+        logger.error("LanguageListConfigurationNotFound Occured:: URL=" + request.getRequestURL());
+        logger.error("Code:: "+language_list_configuration_not_found+" Cause:: " + ex);
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;

@@ -139,8 +139,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setLanguages(List<IExhibitionLanguage> languages) {
         this.languages = languages;
     }
+   
+    public String getPreviewId() {
+        return previewId;
+    }
 
-
+    public void setPreviewId(String previewId) {
+        this.previewId = previewId;
+    }
+    
     @Override
     public int hashCode() {
         return Objects.hash(id);
@@ -155,13 +162,5 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         if (getClass() != obj.getClass())
             return false;
         return Objects.equals(id, ((Exhibition) obj).id);
-    }
-   
-    public String getPreviewId() {
-        return previewId;
-    }
-
-    public void setPreviewId(String previewId) {
-        this.previewId = previewId;
     }
 }
