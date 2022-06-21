@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -66,7 +68,7 @@ public class ExhibitionManagerTest {
     
 
     @Test
-    public void test_updateExhibitionLanguages_success() throws LanguageListConfigurationNotFoundException{
+    public void test_updateExhibitionLanguages_success() {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -91,7 +93,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_duplicates() throws LanguageListConfigurationNotFoundException{
+    public void test_updateExhibitionLanguages_duplicates() {
         Exhibition exhibition = new Exhibition();
 
         //Exhibition already consists of 2 languages
@@ -127,7 +129,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() throws LanguageListConfigurationNotFoundException{
+    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -152,7 +154,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_defaultLanguage() throws LanguageListConfigurationNotFoundException{
+    public void test_updateExhibitionLanguages_defaultLanguage() {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -191,5 +193,18 @@ public class ExhibitionManagerTest {
         
 
     }
+    
+    @Test
+    public void test_updateExhibitionLanguages_whenLanguageListConfigurationNotFound() {
+        Exhibition exhibition = new Exhibition();
 
+        List<String> languages= new ArrayList() ;
+
+        languages.add("en");
+
+        when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(new ArrayList());
+        Assert.assertThrows(LanguageListConfigurationNotFoundException.class,
+                () -> serviceToTest.updateExhibitionLanguages(exhibition, languages,null));
+
+    }
 }

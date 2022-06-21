@@ -82,7 +82,6 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
-     * @throws LanguageListConfigurationNotFoundException 
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
