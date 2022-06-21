@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
@@ -19,7 +20,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
 
 @Entity
-public class VSImage extends VSFile implements IVSImage {
+public class VSImage extends VSpaceElement implements IVSImage {
 
     @Id
     @GeneratedValue(generator = "image_id_generator")
@@ -41,6 +42,10 @@ public class VSImage extends VSFile implements IVSImage {
     @ElementCollection(targetClass = ImageCategory.class)
     @Enumerated(EnumType.STRING)
     private List<ImageCategory> categories;
+    
+    private String originalFileName;
+    private String fileDescription;
+    
 
     /*
      * (non-Javadoc)
@@ -153,5 +158,27 @@ public class VSImage extends VSFile implements IVSImage {
     public void setCategories(List<ImageCategory> categories) {
         this.categories = categories;
     }
+
+    @Override
+    public String getOriginalFileName() {
+       return  this.originalFileName;
+    }
+
+    @Override
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+        
+    }
+
+    @Override
+    public String getFileDescription() {
+        return fileDescription;
+    }
+
+    @Override
+    public void setFileDescription(String fileDescription) {
+        this.fileDescription = fileDescription;
+    }
+    
   
 }

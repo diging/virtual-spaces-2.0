@@ -37,6 +37,8 @@ public class StorageEngine implements IStorageEngine {
     */
     @Override
     public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
+        
+        
         File file = getFile(directory, filename);
         BufferedOutputStream stream;
         try {
@@ -123,11 +125,11 @@ public class StorageEngine implements IStorageEngine {
     @Override
     public File getFile(String directory, String fileName) {
 
-//        File parent = new File(path + File.separator + directory);
-//        if (!parent.exists()) {
-//            parent.mkdir();
-//        }
-//        return new File(parent.getAbsolutePath() + File.separator + fileName);
-                return new File(path + File.separator + directory + File.separator  + fileName);
+        File parent = new File(path + File.separator + directory);
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+        return new File(parent.getAbsolutePath() + File.separator + fileName);
+//                return new File(path + File.separator + directory + File.separator  + fileName);
     }
 }

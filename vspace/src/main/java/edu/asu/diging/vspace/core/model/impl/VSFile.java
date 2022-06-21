@@ -3,7 +3,9 @@ package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
 import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -11,6 +13,7 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IVSFile;
 
 @Entity
+
 public class VSFile extends VSpaceElement implements IVSFile {
 
     @Id
