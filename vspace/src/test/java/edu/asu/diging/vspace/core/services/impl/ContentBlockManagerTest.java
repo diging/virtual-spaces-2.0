@@ -148,7 +148,7 @@ public class ContentBlockManagerTest {
         assertEquals(spaceId, retrievedSpaceBlock.getId());
     }
     
-    @Test
+    @Test(expected = Exception.class)
     public void test_getSpaceBlock_forNonExistentId() throws BlockDoesNotExistException {
     	
     	String spaceId = "notRealId";
