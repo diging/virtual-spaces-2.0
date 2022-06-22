@@ -7,10 +7,6 @@ public interface IVSFile extends IVSMedia {
 
     void setFilename(String filename);
 
-    String getParentPath();
-
-    void setParentPath(String parentPath);
-
     void setFileType(String fileType);
 
     String getFileType();

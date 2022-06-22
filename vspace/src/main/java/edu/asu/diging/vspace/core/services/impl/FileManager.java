@@ -55,7 +55,7 @@ public class FileManager implements IFileManager {
             } catch (FileStorageException e) {
                 returnValue.getErrorMsgs().add("File could not be stored: " + e);
             }
-            file.setParentPath(relativePath);
+//            file.setParentPath(relativePath);
             file.setFileDescription(fileDescription);
             file.setOriginalFileName(originalFileName);
             fileRepo.save((VSFile) file);

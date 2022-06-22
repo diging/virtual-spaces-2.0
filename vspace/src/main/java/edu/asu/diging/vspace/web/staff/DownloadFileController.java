@@ -39,7 +39,7 @@ public class DownloadFileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename())
                 .contentLength(resource.contentLength())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_TYPE, file.getFileType())
                 .body(resource);
     }
 }

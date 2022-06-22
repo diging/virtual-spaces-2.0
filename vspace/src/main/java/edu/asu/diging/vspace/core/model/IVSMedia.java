@@ -10,7 +10,4 @@ public interface IVSMedia extends IVSpaceElement {
     
     public void setFileType(String fileType);
     
-    public String getParentPath();
-    
-    public void setParentPath(String parentPath);
 }

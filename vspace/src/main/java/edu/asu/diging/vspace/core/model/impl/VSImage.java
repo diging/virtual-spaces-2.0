@@ -27,6 +27,11 @@ public class VSImage extends VSMedia implements IVSImage {
     @GenericGenerator(name = "image_id_generator", parameters = @Parameter(name = "prefix", value = "IMG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
+ 
+    @Lob
+    private String parentPath;
+
+
     private int height;
     private int width;
 
@@ -56,6 +61,30 @@ public class VSImage extends VSMedia implements IVSImage {
     public void setId(String id) {
         this.id = id;
     }
+
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IImage#getParentPath()
+     */
+    @Override
+    public String getParentPath() {
+        return parentPath;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IImage#setParentPath(java.lang.String)
+     */
+    @Override
+    public void setParentPath(String parentPath) {
+        this.parentPath = parentPath;
+    }
+
+ 
 
     @Override
     public int getHeight() {

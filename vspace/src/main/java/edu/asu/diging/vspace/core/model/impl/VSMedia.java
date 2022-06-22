@@ -12,9 +12,6 @@ public abstract class VSMedia extends VSpaceElement implements IVSMedia{
     private String filename;
     
     private String fileType;  
-
-    @Lob
-    private String parentPath;
     
     @Override
     public String getFileType() {
@@ -46,26 +43,5 @@ public abstract class VSMedia extends VSpaceElement implements IVSMedia{
     public void setFilename(String filename) {
         this.filename = filename;
     }
-    
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.IVSMedia#getParentPath()
-     */
-    @Override
-    public String getParentPath() {
-        return parentPath;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.IVSMedia#setParentPath(java.lang.String)
-     */
-    @Override
-    public void setParentPath(String parentPath) {
-        this.parentPath = parentPath;
-    }
+   
 }
