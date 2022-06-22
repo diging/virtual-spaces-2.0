@@ -72,7 +72,7 @@ public class FileManagerTest {
         VSFile file = new VSFile();
         file.setFilename(fileName);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.renameFile(file, fileName)).thenReturn(true);
+        when(storageEngine.renameFile(file.getFilename(), fileName, null)).thenReturn(true);
         IVSFile returnedFile = serviceToTest.editFile(fileId, fileName, fileDescription);
         assertEquals(file.getFilename(), returnedFile.getFilename());
     }
@@ -80,8 +80,9 @@ public class FileManagerTest {
     @Test
     public void test_deleteFile_success() {
         VSFile file = new VSFile();
+        file.setFilename(fileName);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.deleteFile(file)).thenReturn(true);
+        when(storageEngine.deleteFile(file.getFilename(), null)).thenReturn(true);
         serviceToTest.deleteFile(fileId);
         verify(fileRepo).delete(file);
     }
@@ -92,7 +93,7 @@ public class FileManagerTest {
         VSFile file = new VSFile();
         String relativePath = "relativePath";
         byte[] fileBytes = fileContentString.getBytes();
-        when(storageEngine.deleteFile(file)).thenReturn(true);
+        when(storageEngine.deleteFile(file.getFilename(), null)).thenReturn(true);
         when(fileFactory.createFile(fileName, fileId)).thenReturn(file);
         when(storageEngine.storeFile(fileBytes, fileName, fileContentString)).thenReturn(relativePath);
         CreationReturnValue returnValue = serviceToTest.storeFile(fileBytes, fileName, fileDescription, fileId);
@@ -105,7 +106,7 @@ public class FileManagerTest {
         String fileId = "fileId";
         VSFile file = new VSFile();
         byte[] fileBytes = fileContentString.getBytes();
-        when(storageEngine.deleteFile(file)).thenReturn(true);
+        when(storageEngine.deleteFile(file.getFilename(), null)).thenReturn(true);
         when(fileFactory.createFile(fileName, "text/plain")).thenReturn(file);
         when(storageEngine.storeFile(fileBytes, fileName, null)).thenThrow(new FileStorageException());
         CreationReturnValue returnValue = serviceToTest.storeFile(fileBytes, fileName, fileDescription, fileId);
@@ -118,7 +119,7 @@ public class FileManagerTest {
     public void test_deleteFile_failure() {
         VSFile file = new VSFile();
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.deleteFile(file)).thenReturn(false);
+        when(storageEngine.deleteFile(file.getFilename(), "")).thenReturn(false);
         assertFalse(serviceToTest.deleteFile(fileId));
     }
     
@@ -127,7 +128,7 @@ public class FileManagerTest {
         VSFile file = new VSFile();
         file.setFilename(fileName);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.renameFile(file, fileName)).thenReturn(true);
+        when(storageEngine.renameFile(file.getFilename(), fileName, null)).thenReturn(true);
         IVSFile returnedFile = serviceToTest.editFile(fileId, fileName, fileDescription);
         assertEquals(file.getFilename(), returnedFile.getFilename());
     }
@@ -136,7 +137,7 @@ public class FileManagerTest {
         String fileId = "fileId";
         VSFile file = new VSFile();
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.downloadFile(Mockito.any(String.class))).thenThrow(new IOException());
+        when(storageEngine.downloadFile(Mockito.any(String.class) ,Mockito.any( String.class))).thenThrow(new IOException());
         assertThrows(IOException.class, () -> serviceToTest.downloadFile(fileId));
     }
 }
