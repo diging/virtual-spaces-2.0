@@ -20,18 +20,12 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
 
 @Entity
-public class VSImage extends VSpaceElement implements IVSImage {
+public class VSImage extends VSMedia implements IVSImage {
 
     @Id
     @GeneratedValue(generator = "image_id_generator")
     @GenericGenerator(name = "image_id_generator", parameters = @Parameter(name = "prefix", value = "IMG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
-    @Lob
-    private String filename;
-    @Lob
-    private String parentPath;
-    private String fileType;
 
     private int height;
     private int width;
@@ -42,10 +36,6 @@ public class VSImage extends VSpaceElement implements IVSImage {
     @ElementCollection(targetClass = ImageCategory.class)
     @Enumerated(EnumType.STRING)
     private List<ImageCategory> categories;
-    
-    private String originalFileName;
-    private String fileDescription;
-    
 
     /*
      * (non-Javadoc)
@@ -65,58 +55,6 @@ public class VSImage extends VSpaceElement implements IVSImage {
     @Override
     public void setId(String id) {
         this.id = id;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.IImage#getFilename()
-     */
-    @Override
-    public String getFilename() {
-        return filename;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.IImage#setFilename(java.lang.String)
-     */
-    @Override
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.IImage#getParentPath()
-     */
-    @Override
-    public String getParentPath() {
-        return parentPath;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.IImage#setParentPath(java.lang.String)
-     */
-    @Override
-    public void setParentPath(String parentPath) {
-        this.parentPath = parentPath;
-    }
-
-    @Override
-    public String getFileType() {
-        return fileType;
-    }
-
-    @Override
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
     }
 
     @Override
@@ -158,27 +96,5 @@ public class VSImage extends VSpaceElement implements IVSImage {
     public void setCategories(List<ImageCategory> categories) {
         this.categories = categories;
     }
-
-    @Override
-    public String getOriginalFileName() {
-       return  this.originalFileName;
-    }
-
-    @Override
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
-        
-    }
-
-    @Override
-    public String getFileDescription() {
-        return fileDescription;
-    }
-
-    @Override
-    public void setFileDescription(String fileDescription) {
-        this.fileDescription = fileDescription;
-    }
-    
   
 }

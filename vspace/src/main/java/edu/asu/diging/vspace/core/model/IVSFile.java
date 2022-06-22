@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.model;
 
 
-public interface IVSFile extends IVSpaceElement {
+public interface IVSFile extends IVSMedia {
     
     String getFilename();
 
