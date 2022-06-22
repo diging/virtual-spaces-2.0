@@ -61,20 +61,6 @@ public class StorageEngine implements IStorageEngine {
         File fileObject = getFile(directory, filename);       
         return getFileContent(fileObject);
     }
-	
-//    /**
-//    * Method to rename image   
-//    * 
-//    * @param image - image file
-//    * @param newFileName - new name of the file
-//    * @return true if file renaming was successful, otherwise return false 
-//    */ 
-//    @Override
-//    public boolean renameImage(IVSImage image, String newFileName) {
-//        File currentFile = getFile(image.getId(), image.getFilename());
-//        File renamedFile = getFile(image.getId(), newFileName);
-//        return currentFile.renameTo(renamedFile);
-//    }
 
     @Override
     public boolean renameFile(String fileName, String newFileName, String directory) {             
@@ -130,6 +116,5 @@ public class StorageEngine implements IStorageEngine {
             parent.mkdir();
         }
         return new File(parent.getAbsolutePath() + File.separator + fileName);
-//                return new File(path + File.separator + directory + File.separator  + fileName);
     }
 }
