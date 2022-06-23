@@ -3572,20 +3572,20 @@ textarea.form-control-lg {
 }
 
 .dropdown-menu {
-  position: absolute;
-  z-index: 1000;
-  display: none;
-  min-width: 10rem;
-  padding: 0.5rem 0;
-  margin: 0;
-  font-size: 1rem;
-  color: #212529;
-  text-align: left;
-  list-style: none;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-top: 150px;
+  margin-left:10px;
+  width: 300px;
+  height: 1000px;
+  border-radius: 0.5rem;
+  background-color: var(--bs-light);
+  position: sticky;
+  overflow: auto;
+  z-index: inherit;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 .dropdown-menu[data-bs-popper] {
   top: 100%;
@@ -4052,11 +4052,15 @@ textarea.form-control-lg {
 
 .tab-content > .tab-pane {
   display: none;
-  background-color: #f0f0f0;
+  padding-top:150px;
+  height: 750px;
+  background-color: #ffffff;
 }
 .tab-content > .active {
   display: block;
-  background-color: #f0f0f0;
+  padding-top:150px;
+  height: 750px;
+  background-color: #ffffff;
 }
 
 .navbar {
@@ -5120,13 +5124,21 @@ textarea.form-control-lg {
 .list-group {
   display: flex;
   flex-direction: column;
-  padding-left: 0;
-  margin-bottom: 0;
+  padding-left: 10px;
+  padding-right: 20px;
+  margin-left:10px;
+  width: 300px;
+  height: auto;
   border-radius: 0.25rem;
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
-  max-height: 700px;
-  margin-bottom: 10px;
+  background-color: var(--bs-light);
+  position: sticky;
+  overflow: auto;
+  z-index: inherit;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.just-padding{
+  padding-top: 150px; 
 }
 
 .list-group-numbered {
@@ -5160,8 +5172,9 @@ textarea.form-control-lg {
   padding: 0.5rem 1rem;
   color: #212529;
   text-decoration: none;
-  background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  width: 250px;
 }
 .list-group-item:first-child {
   border-top-left-radius: inherit;
@@ -5454,6 +5467,7 @@ textarea.form-control-lg {
   background-color: #141619;
   border-color: #141619;
 }
+
 
 .btn-close {
   box-sizing: content-box;
@@ -11815,7 +11829,7 @@ ul.social {
 .sidebar {
   margin: 0;
   padding: 50px;
-  padding-top: 150px;
+  padding-top: 300px;
   width: 300px;
   background-color: var(--bs-light);
   position: absolute;
