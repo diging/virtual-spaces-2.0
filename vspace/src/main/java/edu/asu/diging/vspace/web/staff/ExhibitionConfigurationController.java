@@ -9,6 +9,7 @@ import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,13 +68,10 @@ public class ExhibitionConfigurationController {
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
-            @RequestParam("spacelinkImage") MultipartFile[] spacelinkImage,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             Principal principal,
             RedirectAttributes attributes) throws IOException {
     	
-    	System.out.println("Baishali Nayak "+spacelinkImage);
-
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;
@@ -96,6 +94,41 @@ public class ExhibitionConfigurationController {
         
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
+    
+    @RequestMapping(value = "/staff/exhibit/config/images", method = RequestMethod.POST)
+    public RedirectView updateSpace( HttpServletRequest request, Model model, 
+    		@RequestParam("externalLinkImage") MultipartFile externalLinkImage,
+    		@RequestParam("spacelinkImage")  MultipartFile spacelinkImage,
+    		@RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
+            Principal principal, RedirectAttributes attributes) throws IOException {
+    	
+    	byte[] spaceImage = null;
+        String spaceLinkFilename = null;
+        if (spacelinkImage != null) {
+        	spaceImage = spacelinkImage.getBytes();
+        	spaceLinkFilename = spacelinkImage.getOriginalFilename();
+            
+        }
+        
+        byte[] moduleImage = null;
+        String moduleLinkFilename = null;
+        if (spacelinkImage != null) {
+        	moduleImage = moduleLinkImage.getBytes();
+        	moduleLinkFilename = moduleLinkImage.getOriginalFilename();
+            
+        }
+    	
+        byte[] externalImage = null;
+        String externalLinkFilename = null;
+        if (externalLinkImage != null) {
+        	externalImage = externalLinkImage.getBytes();
+        	externalLinkFilename = externalLinkImage.getOriginalFilename();
+            
+        }
+        return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    
     
     
 }
