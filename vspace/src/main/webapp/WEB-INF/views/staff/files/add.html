@@ -5,17 +5,46 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <script th:inline="javascript">
-
+function addFile(){
+	
+	console.log("in add file");
+	var token = [[${_csrf.token}]];
+    var form = $("#addFileForm");
+    var formData = new FormData(form[0]);
+	$.ajax({
+        url: "[(@{'/staff/files/add'})]",
+        type: 'POST',
+        headers:{
+			'X-CSRF-Token':token
+		},
+        cache: false,
+        enctype: 'multipart/form-data',
+        contentType : false,
+        data: formData,
+		success: function(data) {
+        	window.location.href = "[(@{'/staff/files/list/'})]";
+        },
+        error: function(data) {
+        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.errorAdd').append(alert);
+        }
+    });
+}
 
 </script>
 </head>
 <body>
 <div class="main-content" layout:fragment="content">
+      <span class = "errorAdd"></span>
+
 	<h2>Upload new File</h2>
 	
 	
-	<form method="POST" th:action="@{|/staff/files/add?${_csrf.parameterName}=${_csrf.token}|}" th:object="${files}" enctype="multipart/form-data" style="margin-top:40px">
-		<div class="form-group row">
+<!-- 	<form method="POST" th:action="@{|/staff/files/add?${_csrf.parameterName}=${_csrf.token}|}" th:object="${files}" enctype="multipart/form-data" style="margin-top:40px">
+ -->		
+ 	<form id="addFileForm"  method="POST" th:onsubmit="addFile()" style="margin-top:40px">
+ 
+ 		<div class="form-group row">
 			<label for="fileName" class="col-md-2 col-form-label">File Name:</label>
 			<input type="text" class="form-control col-md-10" name="fileName" id="fileName" />
 		</div>
@@ -31,7 +60,7 @@
 			
 		</div>
 	
-		<button class="btn primary-btn" type="submit" value="submit">Create	File</button>
+		<button class="btn primary-btn" type="submit" value="submit" >Create	File</button>
 	</form>
 </div>
 </body>

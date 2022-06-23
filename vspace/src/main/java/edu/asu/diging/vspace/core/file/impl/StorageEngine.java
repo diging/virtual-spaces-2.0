@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ByteArrayResource;
@@ -73,8 +74,7 @@ public class StorageEngine implements IStorageEngine {
     public Resource downloadFile(String fileName, String directory) throws IOException {               
         File fileObject = getFile(directory, fileName);
         Path path = Paths.get(fileObject.getAbsolutePath());
-        Resource resource =  new ByteArrayResource(Files.readAllBytes(path));   
-        return resource;
+        return new ByteArrayResource(Files.readAllBytes(path));   
     }
 
     @Override
@@ -104,17 +104,22 @@ public class StorageEngine implements IStorageEngine {
 
     @Override
     public boolean deleteFile(String fileName, String directory) {        
-        File storedFile = getFile(directory,fileName);
-        return storedFile.delete();
+        File storedFile = getFile(directory,fileName);               
+        File storedDirectory = getDirectory(directory);
+        return storedFile.delete() && storedDirectory.delete() ;
+
     }
     
     @Override
     public File getFile(String directory, String fileName) {
-
-        File parent = new File(path + File.separator + directory);
-        if (!parent.exists()) {
-            parent.mkdir();
+        File parentDirectory = getDirectory(directory);
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdir();
         }
-        return new File(parent.getAbsolutePath() + File.separator + fileName);
+        return new File(parentDirectory.getAbsolutePath() + File.separator + fileName);
     }
+    
+   public File getDirectory(String directory) {
+       return new File(path + File.separator + directory);
+   }
 }

@@ -20,11 +20,8 @@ public class EditFileController {
 
     @RequestMapping(value = "/staff/files/edit/{fileId}", method = RequestMethod.POST)
     public String editFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
-        String fileName = fileForm.getFileName();
-        String description = fileForm.getDescription();
-        IVSFile file = fileManager.editFile(fileId, fileName, description);
-        String id = file.getId();
-        return "redirect:/staff/files/"+id;
+        IVSFile file = fileManager.editFile(fileId, fileForm.getFileName(), fileForm.getDescription());
+        return "redirect:/staff/files/"+file.getId();
     }
 
 }

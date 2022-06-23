@@ -2,12 +2,12 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +24,8 @@ public class DownloadFileController {
     @Autowired
     private FileManager fileManager;
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     
     @RequestMapping(value = "/staff/files/download/{fileId}", method = RequestMethod.GET )
     public ResponseEntity<Resource> downloadFile(Model model, @PathVariable String fileId) throws IOException {
@@ -31,8 +33,9 @@ public class DownloadFileController {
         IVSFile file= null;
         try {        
             file = fileManager.getFileById(fileId);
-            resource = fileManager.downloadFile(file.getFilename());                  
+            resource = fileManager.downloadFile(file.getFilename(), fileId);                  
         } catch (IOException e) {
+            logger.error("Could not download file", e);
             return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

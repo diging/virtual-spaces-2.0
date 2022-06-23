@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -32,10 +34,10 @@ public class FileManager implements IFileManager {
     private IFileFactory fileFactory;
     
     @Autowired
-    private FileRepository fileRepo;
+    private FileRepository fileRepo; 
     
-    @Value("${file_uploads_directory}")
-    private String fileUploadDir;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     
     @Override
     public CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription) {
@@ -51,8 +53,9 @@ public class FileManager implements IFileManager {
         if(file != null) {
             String relativePath = null;
             try {
-                relativePath = storageEngine.storeFile(fileContent, fileName, fileUploadDir);
+                relativePath = storageEngine.storeFile(fileContent, fileName, file.getId());
             } catch (FileStorageException e) {
+                logger.error("File could not be stored", e);
                 returnValue.getErrorMsgs().add("File could not be stored: " + e);
             }
             file.setFileDescription(fileDescription);
@@ -81,7 +84,7 @@ public class FileManager implements IFileManager {
             return null;
         }
         IVSFile file  = optional.get();
-        if(storageEngine.renameFile(file.getFilename(), fileName, fileUploadDir)) {
+        if(storageEngine.renameFile(file.getFilename(), fileName, fileId)) {
             file.setFilename(fileName);   
         }
         file.setFileDescription(description);
@@ -90,14 +93,14 @@ public class FileManager implements IFileManager {
     }
 
     @Override
-    public Resource downloadFile(String fileName) throws IOException {             
-        return storageEngine.downloadFile(fileName, fileUploadDir);
+    public Resource downloadFile(String fileName, String fileId) throws IOException {             
+        return storageEngine.downloadFile(fileName, fileId);
     }
     
     @Override
     public boolean deleteFile(String fileId) {
         IVSFile file = getFileById(fileId);
-        if(storageEngine.deleteFile(file.getFilename(), fileUploadDir)) {
+        if(storageEngine.deleteFile(file.getFilename(), fileId)) {
             fileRepo.delete((VSFile) file);
             return true;
         }

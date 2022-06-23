@@ -21,7 +21,7 @@ public interface IFileManager {
 
     IVSFile editFile(String fileId, String fileName, String description);
 
-    Resource downloadFile(String fileName) throws IOException;
+    Resource downloadFile(String fileName, String fileId) throws IOException;
 
     boolean deleteFile(String fileId);
 
