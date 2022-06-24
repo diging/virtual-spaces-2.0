@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,30 +31,8 @@ public class AddFileController {
     @Autowired
     private FileManager fileManager;
     
-//    @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
-//    public String createFile(Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
-//            Principal principal, RedirectAttributes redirectAttrs) {
-//        byte[] fileBytes = null;
-//        String originalFileName = null;
-//        CreationReturnValue returnVal = null;
-//        if (file != null) {
-//            try {
-//                fileBytes = file.getBytes();
-//                originalFileName = file.getOriginalFilename();
-//                returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
-//           throw new IOException();
-//            } catch (IOException e) {
-//                logger.error("Error occured while creating file", e);  
-//                
-//            }
-//            
-//        }
-//        
-//        return "redirect:/staff/files/list";
-//    }
-    
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
-    public ResponseEntity<String> createFile(Model model, @ModelAttribute FileForm fileForm,  @RequestParam("file") MultipartFile file,
+    public ResponseEntity<String> createFile( Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
             Principal principal, RedirectAttributes redirectAttrs) {
         byte[] fileBytes = null;
         String originalFileName = null;
@@ -62,7 +42,6 @@ public class AddFileController {
                 fileBytes = file.getBytes();
                 originalFileName = file.getOriginalFilename();
                 returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
-//           throw new IOException();
             } catch (IOException e) {
                 logger.error("Error occured while creating file", e);  
                 return new ResponseEntity<String>("Could not create file", HttpStatus.BAD_REQUEST);
