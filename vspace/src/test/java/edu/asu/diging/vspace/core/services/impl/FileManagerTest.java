@@ -82,7 +82,7 @@ public class FileManagerTest {
         VSFile file = new VSFile();
         file.setFilename(fileName);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.deleteFile(file.getFilename(), null)).thenReturn(true);
+        when(storageEngine.deleteFile(file.getFilename(), fileId)).thenReturn(true);
         serviceToTest.deleteFile(fileId);
         verify(fileRepo).delete(file);
     }
@@ -138,6 +138,6 @@ public class FileManagerTest {
         VSFile file = new VSFile();
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
         when(storageEngine.downloadFile(Mockito.any(String.class) ,Mockito.any( String.class))).thenThrow(new IOException());
-        assertThrows(IOException.class, () -> serviceToTest.downloadFile(fileId));
+        assertThrows(IOException.class, () -> serviceToTest.downloadFile(file.getFilename(), fileId));
     }
 }
