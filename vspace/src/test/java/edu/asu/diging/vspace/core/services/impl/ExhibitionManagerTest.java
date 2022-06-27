@@ -207,4 +207,36 @@ public class ExhibitionManagerTest {
                 () -> serviceToTest.updateExhibitionLanguages(exhibition, languages,null));
 
     }
+    
+    @Test
+    public void test_updateExhibitionLanguages_whenLanguageIsUnselected() {
+        Exhibition exhibition = new Exhibition();
+  
+        List<Map> mappedLanguages= new ArrayList();
+
+        Map<String, String> language1 =    new LinkedHashMap<String, String>();
+        language1.put("code", "en");
+        language1.put("label", "English");
+        Map<String, String> language2 =   new LinkedHashMap<String, String>();
+        language2.put("code", "aa");
+        language2.put("label", "Afar");
+        mappedLanguages.add(language1);
+        mappedLanguages.add(language2);
+        
+        
+        List<String> languages= new ArrayList() ;
+        languages.add("en");
+        languages.add("aa");  
+
+        when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
+        
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),2);
+        
+        languages.remove("en");
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),1);
+        
+        
+    }
 }

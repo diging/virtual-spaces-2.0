@@ -120,7 +120,7 @@ public class ExhibitionManager implements IExhibitionManager {
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
             });  
 
-        
+        // Removes exhibition langauge if unselected.
         exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
                 .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList()));
 
