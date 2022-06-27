@@ -49,7 +49,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     private boolean aboutPageConfigured;
     
-    @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval=true)
     private List<IExhibitionLanguage> languages = new ArrayList<IExhibitionLanguage>();
 
     private String previewId;
