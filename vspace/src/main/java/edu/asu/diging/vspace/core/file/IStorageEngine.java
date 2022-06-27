@@ -7,7 +7,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
-import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 public interface IStorageEngine {
@@ -25,4 +24,6 @@ public interface IStorageEngine {
     File getFile(String fileUploadDir, String fileName);
 
     byte[] getFileContent(File fileObject) throws IOException;
+    
+    File getDirectoryPath(String directory);
 }

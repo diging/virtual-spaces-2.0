@@ -105,21 +105,22 @@ public class StorageEngine implements IStorageEngine {
     @Override
     public boolean deleteFile(String fileName, String directory) {        
         File storedFile = getFile(directory,fileName);               
-        File storedDirectory = getDirectory(directory);
+        File storedDirectory = getDirectoryPath(directory);
         return storedFile.delete() && storedDirectory.delete() ;
 
     }
     
     @Override
     public File getFile(String directory, String fileName) {
-        File parentDirectory = getDirectory(directory);
+        File parentDirectory = getDirectoryPath(directory);
         if (!parentDirectory.exists()) {
             parentDirectory.mkdir();
         }
         return new File(parentDirectory.getAbsolutePath() + File.separator + fileName);
     }
     
-   public File getDirectory(String directory) {
-       return new File(path + File.separator + directory);
-   }
+    @Override
+    public File getDirectoryPath(String directory) {
+        return new File(path + File.separator + directory);
+    }
 }
