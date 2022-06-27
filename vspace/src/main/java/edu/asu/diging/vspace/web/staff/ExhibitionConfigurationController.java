@@ -40,6 +40,8 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
+    
+    private byte[]  spaceImage;
 
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
@@ -83,6 +85,10 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
+        System.out.println("********************************"+spaceImage);
+        exhibition.setSpacelinkImage(spaceImage);
+        
+        
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);
         }
@@ -102,7 +108,7 @@ public class ExhibitionConfigurationController {
     		@RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
             Principal principal, RedirectAttributes attributes) throws IOException {
     	
-    	byte[] spaceImage = null;
+    	
         String spaceLinkFilename = null;
         if (spacelinkImage != null) {
         	spaceImage = spacelinkImage.getBytes();
@@ -125,8 +131,19 @@ public class ExhibitionConfigurationController {
         	externalLinkFilename = externalLinkImage.getOriginalFilename();
             
         }
+       
+        
+        
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
+    
+    
+    
+    
+    
+   
+    
+    
     
     
     
