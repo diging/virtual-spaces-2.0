@@ -11,9 +11,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ByteArrayResource;
@@ -22,8 +20,6 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IVSFile;
-import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Component
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
