@@ -26,7 +26,7 @@ import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
 
 @Controller
-public class PublicSearchController {
+public class PublicSearchController extends SearchController {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -71,10 +71,8 @@ public class PublicSearchController {
      */
     private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
         Page<ISpace> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
-        model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
-        model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
-        model.addAttribute("spaceSearchResults", spacePage.getContent());
-        model.addAttribute("spaceCount", spacePage.getTotalElements());
+        updateModelWithSpaceSearchResult(model, spacePage, spacePagenum);
+
     }
 
     /**
@@ -88,10 +86,15 @@ public class PublicSearchController {
      * @param model         This the object of Model attribute in spring MVC.
      * @param searchTerm    This is the search string which is being searched.
      */
-    private void paginationForModule(String modulePagenum, Model model, String searchTerm) {
-        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-        model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
-        model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
+    
+    @Override
+    protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
+//        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+//        model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
+//        model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
+//        model.addAttribute("moduleCount", modulePage.getTotalElements());
+
+        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);
         List<ModuleWithSpace> moduleList = new ArrayList<>();
         
         //Adding space info for each module
@@ -109,7 +112,7 @@ public class PublicSearchController {
             }
         }
         model.addAttribute("moduleSearchResults", moduleList);
-        model.addAttribute("moduleCount", modulePage.getTotalElements());
+        return modulePage;
     }
 
     /**
@@ -123,10 +126,13 @@ public class PublicSearchController {
      * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private void paginationForSlide(String slidePagenum, Model model, String searchTerm) {
-        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
-        model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
-        model.addAttribute("slideTotalPages", slidePage.getTotalPages());
+    protected Page<ISlide> paginationForSlide(String slidePagenum, Model model, String searchTerm) {
+//        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+//        model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
+//        model.addAttribute("slideTotalPages", slidePage.getTotalPages());
+//        model.addAttribute("slideCount", slidePage.getTotalElements());
+        
+        Page<ISlide> slidePage = super.paginationForSlide(slidePagenum, model, searchTerm);
         List<ISlide> slideList = new ArrayList<>();
         Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
         
@@ -148,7 +154,8 @@ public class PublicSearchController {
             }
         }
         model.addAttribute("slideSearchResults", slideList);
-        model.addAttribute("slideCount", slidePage.getTotalElements());
+        return slidePage;
+
     }
 
     /**
@@ -163,11 +170,15 @@ public class PublicSearchController {
      * @param model            This the object of Model attribute in spring MVC.
      * @param searchTerm       This is the search string which is being searched.
      */
-    private void paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
-        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
-                Integer.parseInt(slideTextPagenum));
-        model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
-        model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
+    protected Page<ISlide> paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
+//        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
+//                Integer.parseInt(slideTextPagenum));
+//        model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
+//        model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
+//        model.addAttribute("slideTextCount", slideTextPage.getTotalElements());
+
+        Page<ISlide> slideTextPage  = super.paginationForSlideText(slideTextPagenum, model, searchTerm);
+        
         List<Slide> slideTextList = new ArrayList<>();
         Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
         
@@ -189,7 +200,7 @@ public class PublicSearchController {
             }
         }
         model.addAttribute("slideTextSearchResults", slideTextList);
-        model.addAttribute("slideTextCount", slideTextPage.getTotalElements());
+       return  slideTextPage;
     }
     
 }
