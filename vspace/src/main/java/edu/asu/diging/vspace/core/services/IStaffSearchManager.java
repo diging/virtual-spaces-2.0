@@ -6,9 +6,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 
-public interface IStaffSearchManager {
-
-    Page<ISpace> searchInSpaces(String searchTerm, int page);
+public interface IStaffSearchManager extends ISearchManager {
 
     Page<IModule> searchInModules(String searchTerm, int page);
 
