@@ -6,13 +6,26 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Transactional
 @Service
@@ -20,6 +33,18 @@ public class ExhibitionManager implements IExhibitionManager {
 
     @Autowired
     private ExhibitionRepository exhibitRepo;
+    
+    @Autowired
+    private IImageFactory imageFactory;
+
+    @Autowired
+    private IImageService imageService;
+    
+    @Autowired
+    private ImageRepository imageRepo;
+    
+    @Autowired
+    private IStorageEngine storage;
 
     /*
      * (non-Javadoc)
@@ -65,5 +90,40 @@ public class ExhibitionManager implements IExhibitionManager {
             return exhibitions.get(0);
         }
         return null;
+    }
+    
+    @Override
+    public void storeDefaultImage(byte[] image, String filename) {
+    	
+        IVSImage bgImage = null;
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+
+            bgImage = imageFactory.createImage(filename, contentType);
+            bgImage = imageRepo.save((VSImage) bgImage);
+        }
+
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+
+        if (bgImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, bgImage.getId());
+            } catch (FileStorageException e) {
+                returnValue.getErrorMsgs().add("Default image could not be stored: " + e.getMessage());
+            }
+            bgImage.setParentPath(relativePath);
+            ImageData imageData = imageService.getImageData(image);
+            if (imageData != null) {
+                bgImage.setHeight(imageData.getHeight());
+                bgImage.setWidth(imageData.getWidth());
+            }
+            imageRepo.save((VSImage) bgImage);
+            
+        }
+
+        
     }
 }

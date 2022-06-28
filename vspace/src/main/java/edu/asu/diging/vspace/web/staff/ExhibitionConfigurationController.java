@@ -132,7 +132,7 @@ public class ExhibitionConfigurationController {
             
         }
        
-        
+        exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename);
         
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 /*
  * (non-Javadoc)
@@ -33,5 +34,7 @@ public interface IExhibitionManager {
     List<IExhibition> findAll();
 
     IExhibition getStartExhibition();
+    
+    public void storeDefaultImage(byte[] image, String filename);
 
 }
