@@ -1,11 +1,5 @@
 package edu.asu.diging.vspace.web.general.search;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,31 +10,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
-import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.IStaffSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
-import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
+import edu.asu.diging.vspace.web.SearchController;
+
 
 @Controller
 public class PublicSearchController extends SearchController {
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private IPublicSearchManager publicSearchManager;
-    
-    @Autowired
-    private IModuleLinkManager moduleLinkManager;
-    
-    @Autowired
-    private ISlideManager slideManager;
-    
-    @Autowired
-    private IStaffSearchManager staffSearchManager;
+  
     
     @RequestMapping(value = "/exhibit/search", method=RequestMethod.GET)
     public String getAllSearchedElements(
@@ -72,7 +51,6 @@ public class PublicSearchController extends SearchController {
     private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
         Page<ISpace> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         updateModelWithSpaceSearchResult(model, spacePage, spacePagenum);
-
     }
 
     /**
@@ -89,31 +67,12 @@ public class PublicSearchController extends SearchController {
     
     @Override
     protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
-//        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-//        model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
-//        model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
-//        model.addAttribute("moduleCount", modulePage.getTotalElements());
-
-        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);
-        List<ModuleWithSpace> moduleList = new ArrayList<>();
-        
-        //Adding space info for each module
-        for(IModule module : modulePage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-            if(moduleLink!=null) {
-                ModuleWithSpace modWithSpace = new ModuleWithSpace();
-                try {
-                    BeanUtils.copyProperties(modWithSpace, module);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
-                }
-                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                moduleList.add(modWithSpace);
-            }
-        }
-        model.addAttribute("moduleSearchResults", moduleList);
+        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);               
+        model.addAttribute("moduleSearchResults", publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
         return modulePage;
     }
+
+   
 
     /**
      * This method is used to search the search string specified in the input
@@ -126,38 +85,13 @@ public class PublicSearchController extends SearchController {
      * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
-    protected Page<ISlide> paginationForSlide(String slidePagenum, Model model, String searchTerm) {
-//        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
-//        model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
-//        model.addAttribute("slideTotalPages", slidePage.getTotalPages());
-//        model.addAttribute("slideCount", slidePage.getTotalElements());
-        
-        Page<ISlide> slidePage = super.paginationForSlide(slidePagenum, model, searchTerm);
-        List<ISlide> slideList = new ArrayList<>();
-        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
-        
-       //Adding space info for each slide
-        for(ISlide slide : slidePage.getContent()) {
-            if(slideSet.contains(slide.getId())) {
-                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-                if(moduleLink!=null) {
-                    SlideWithSpace slideWithSpace = new SlideWithSpace();
-                    try {
-                        BeanUtils.copyProperties(slideWithSpace, slide);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Could not create moduleWithSpace.", e);
-                    }
-                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                    slideList.add(slideWithSpace);
-                }
-            }
-        }
-        model.addAttribute("slideSearchResults", slideList);
+    protected Page<ISlide> paginationForSlide(String slidePagenum, Model model, String searchTerm) {     
+        Page<ISlide> slidePage = super.paginationForSlide(slidePagenum, model, searchTerm);      
+        model.addAttribute("slideSearchResults", publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
         return slidePage;
-
     }
 
+ 
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the slides corresponding to the page number
@@ -171,36 +105,10 @@ public class PublicSearchController extends SearchController {
      * @param searchTerm       This is the search string which is being searched.
      */
     protected Page<ISlide> paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
-//        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
-//                Integer.parseInt(slideTextPagenum));
-//        model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
-//        model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
-//        model.addAttribute("slideTextCount", slideTextPage.getTotalElements());
-
-        Page<ISlide> slideTextPage  = super.paginationForSlideText(slideTextPagenum, model, searchTerm);
-        
-        List<Slide> slideTextList = new ArrayList<>();
-        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
-        
-        //Adding space info for each slide
-        for(ISlide slide : slideTextPage.getContent()) {
-            if(slideSet.contains((String)slide.getId())) {
-                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-                if(moduleLink!=null) {
-                    SlideWithSpace slideWithSpace = new SlideWithSpace();
-                    try {
-                        BeanUtils.copyProperties(slideWithSpace, slide);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Could not create moduleWithSpace.", e);
-                    }
-                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                    slideTextList.add(slideWithSpace);
-                }
-            }
-        }
-        model.addAttribute("slideTextSearchResults", slideTextList);
-       return  slideTextPage;
+        Page<ISlide> slideTextPage  = super.paginationForSlideText(slideTextPagenum, model, searchTerm);              
+        model.addAttribute("slideTextSearchResults", publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage));
+        return  slideTextPage;
     }
+
     
 }

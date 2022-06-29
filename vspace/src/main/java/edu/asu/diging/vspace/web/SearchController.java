@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.general.search;
+package edu.asu.diging.vspace.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

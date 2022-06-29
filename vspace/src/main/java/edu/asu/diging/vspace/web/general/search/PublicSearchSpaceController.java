@@ -28,9 +28,8 @@ public class PublicSearchSpaceController {
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
-        List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);
-        StaffSearchSpaceResults publicSearch = new StaffSearchSpaceResults();
-        publicSearch.setSpaces(spaceList);
+        List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);      
+        StaffSearchSpaceResults publicSearch  = publicSearchManager.getStaffSearchSpaceResults(spaceList);
         return new ResponseEntity<StaffSearchSpaceResults>(publicSearch, HttpStatus.OK);
     }
 

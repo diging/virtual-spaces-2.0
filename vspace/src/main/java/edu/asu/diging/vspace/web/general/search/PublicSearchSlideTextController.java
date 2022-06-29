@@ -1,17 +1,9 @@
 package edu.asu.diging.vspace.web.general.search;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,51 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
-import edu.asu.diging.vspace.core.services.IModuleLinkManager;
-import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
 
 @Controller
 public class PublicSearchSlideTextController {
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
-    @Autowired
-    private IModuleLinkManager moduleLinkManager;
 
     @Autowired
-    private IStaffSearchManager staffSearchManager;
+    private IPublicSearchManager publicSearchManager;
     
-    @Autowired
-    private ISlideManager slideManager;
-
     @RequestMapping(value = "/exhibit/search/slideText")
     public ResponseEntity<StaffSearchSlideTextBlockResults> searchInVspace(HttpServletRequest request,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-        StaffSearchSlideTextBlockResults publicSearch = new StaffSearchSlideTextBlockResults();
-        publicSearch.setSlidesWithMatchedTextBlock(slideTextList);
-        
-        Map<String, String> slideTextFirstImageMap = new HashMap<>();
-        Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
-        
-        for (ISlide slide : slideTextList) {
-            if (slide != null) {
-                if (slide.getFirstImageBlock() != null) {
-                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
-                }
-                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
-                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
-                }
-            }
-        }
-        publicSearch.setSlideToFirstImageMap(slideTextFirstImageMap);
-        publicSearch.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
+        List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);       
+        StaffSearchSlideTextBlockResults publicSearch  = publicSearchManager.getStaffSearchSlideTextBlockResults(slideTextList, searchTerm);       
         return new ResponseEntity<StaffSearchSlideTextBlockResults>(publicSearch, HttpStatus.OK);
     }
 
@@ -81,27 +44,8 @@ public class PublicSearchSlideTextController {
      * @param searchTerm       This is the search string which is being searched.
      */
     private List<ISlide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
+        Page<ISlide> slideTextPage = publicSearchManager.searchInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
-        List<ISlide> slideTextList = new ArrayList<>();
-        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
-        
-        for(ISlide slide : slideTextPage.getContent()) {
-            if(slideSet.contains(slide.getId())) {
-                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-                if(moduleLink!=null) {
-                    SlideWithSpace slideWithSpace = new SlideWithSpace();
-                    try {
-                        BeanUtils.copyProperties(slideWithSpace, slide);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Could not create moduleWithSpace.", e);
-                    }
-                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                    slideTextList.add(slideWithSpace);
-                }
-            }
-        }
-        return slideTextList;
+        return publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage);
     }
 }

@@ -14,7 +14,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
-import edu.asu.diging.vspace.web.general.search.SearchController;
+import edu.asu.diging.vspace.web.SearchController;
 
 @Controller
 public class StaffSearchController extends SearchController {
@@ -71,10 +71,6 @@ public class StaffSearchController extends SearchController {
      */
     @Override
     protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
-//        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-//        model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
-//        model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
-//        model.addAttribute("moduleCount", modulePage.getTotalElements());
         Page<IModule> modulePage =  super.paginationForModule(modulePagenum, model, searchTerm);
         model.addAttribute("moduleSearchResults", modulePage.getContent());
         return modulePage;
@@ -91,12 +87,8 @@ public class StaffSearchController extends SearchController {
      * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
-    protected Page<ISlide>  paginationForSlide(String slidePagenum, Model model, String searchTerm) {
-//        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
-//        model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
-//        model.addAttribute("slideTotalPages", slidePage.getTotalPages());
-//       
-        
+    @Override
+    protected Page<ISlide>  paginationForSlide(String slidePagenum, Model model, String searchTerm) {    
         Page<ISlide> slidePage = super.paginationForSlide(slidePagenum, model, searchTerm);
         model.addAttribute("slideSearchResults", slidePage.getContent());
         return slidePage;
@@ -114,17 +106,10 @@ public class StaffSearchController extends SearchController {
      * 
      * @param searchTerm       This is the search string which is being searched.
      */
-    protected Page<ISlide>  paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
-//        Page<ISlide> slideTextPage = staffSearchManager.searchInSlideTexts(searchTerm,
-//                Integer.parseInt(slideTextPagenum));
-//        model.addAttribute("slideTextCurrentPageNumber", Integer.parseInt(slideTextPagenum));
-//        model.addAttribute("slideTextTotalPages", slideTextPage.getTotalPages());
-//        model.addAttribute("slideTextCount", slideTextPage.getTotalElements());
-        
-        Page<ISlide> slideTextPage = super.paginationForSlideText(slideTextPagenum, model, searchTerm)  ;
-        
+    @Override
+    protected Page<ISlide>  paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {    
+        Page<ISlide> slideTextPage = super.paginationForSlideText(slideTextPagenum, model, searchTerm)  ;      
         model.addAttribute("slideTextSearchResults", slideTextPage.getContent());
-
         return slideTextPage;
     }
 }

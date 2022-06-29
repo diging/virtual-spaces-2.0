@@ -29,17 +29,7 @@ public class StaffSearchSlideController {
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<ISlide> slideList = paginationForSlide(slidePagenum, searchTerm);
-        StaffSearchSlideResults staffSearch = new StaffSearchSlideResults();
-        staffSearch.setSlides(slideList);
-
-        Map<String, String> slideFirstImage = new HashMap<>();
-
-        for (ISlide slide : slideList) {
-            if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
-            }
-        }
-        staffSearch.setFirstImageOfSlide(slideFirstImage);
+        StaffSearchSlideResults staffSearch  = staffSearchManager.getStaffSearchSlideResults(slideList);
         return new ResponseEntity<StaffSearchSlideResults>(staffSearch, HttpStatus.OK);
     }
 

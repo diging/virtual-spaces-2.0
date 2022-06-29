@@ -1,17 +1,48 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISearchManager;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
 
+
+@Service
 public abstract class SearchManager implements ISearchManager {
     
     @Value("${page_size}")
     private int pageSize;
+    
+    @Autowired
+    private ISequenceManager sequenceManager;
+    
+    @Autowired
+    private IModuleManager moduleManager;
+
+    @Autowired
+    private ISlideManager slideManager;
+
+    @Autowired
+    private TextContentBlockRepository textContentBlockRepo;
     
     /**
      * Method to return the requested spaces whose name or description contains the
@@ -40,9 +71,197 @@ public abstract class SearchManager implements ISearchManager {
         return spacePage;
     }
     
+    /**
+     * Method to return the requested modules whose name or description contains the
+     * search string
+     * 
+     * @param searchTerm string which has been searched
+     * @param page.      The page number starts from 1.
+     * @return set of modules whose name or description contains the search string
+     *         in the requested page.
+     */
+    @Override
+    public Page<IModule> searchInModules(String searchTerm, int page) {
+        /* if page<1, 1st page is returned */
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
+        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        int totalModulePage = modulePage.getTotalPages();
+        /*
+         * spring will just return an empty dataset if a page that is greater than the
+         * total number of pages is returned. So, the page given (except when it's < 1,
+         * then set it to 1) and then checking if the total page count is smaller than
+         * the given one (if so, make another request). In most cases the page number
+         * will be within the range of pages, so we would need only one db call. Only in
+         * cases where the page number is wrong, would a second one be needed.if
+         * page>total pages,last page is returned.
+         */
+        if (page > totalModulePage) {
+            totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
+            requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
+            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        }
+        return modulePage;
+    }
+
+    /**
+     * Method to return the requested slides whose name or description contains the
+     * search string
+     * 
+     * @param searchTerm string which has been searched
+     * @param page.      The page number starts from 1.
+     * @return set of slides whose name or description contains the search string in
+     *         the requested page.
+     */
+    @Override
+    public Page<ISlide> searchInSlides(String searchTerm, int page) {
+        /* if page<1, 1st page is returned */
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
+        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        int totalSlidePage = slidePage.getTotalPages();
+        /*
+         * spring will just return an empty dataset if a page that is greater than the
+         * total number of pages is returned. So, the page given (except when it's < 1,
+         * then set it to 1) and then checking if the total page count is smaller than
+         * the given one (if so, make another request). In most cases the page number
+         * will be within the range of pages, so we would need only one db call. Only in
+         * cases where the page number is wrong, would a second one be needed.if
+         * page>total pages,last page is returned.
+         */
+        if (page > totalSlidePage) {
+            totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
+            requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
+            slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        }
+        return slidePage;
+    }
+
+    /**
+     * Method to return the requested slides whose text blocks contains the search
+     * string
+     * 
+     * @param searchTerm string which has been searched
+     * @param page.      The page number starts from 1.
+     * @return list of slides whose text blocks contains the search string in the
+     *         requested page.
+     */
+    @Override
+    public Page<ISlide> searchInSlideTexts(String searchTerm, int page) {
+        /* if page<1, 1st page is returned */
+        if (page < 1) {
+            page = 1;
+        }
+        Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
+        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+                searchTerm);
+        int totalSlideTextPage = slidetextPage.getTotalPages();
+        /*
+         * spring will just return an empty dataset if a page that is greater than the
+         * total number of pages is returned. So, the page given (except when it's < 1,
+         * then set it to 1) and then checking if the total page count is smaller than
+         * the given one (if so, make another request). In most cases the page number
+         * will be within the range of pages, so we would need only one db call. Only in
+         * cases where the page number is wrong, would a second one be needed.if
+         * page>total pages,last page is returned.
+         */
+        if (page > totalSlideTextPage) {
+            totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;
+            requestedPageForSlideText = PageRequest.of(totalSlideTextPage - 1, pageSize);
+            slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+        }
+        return slidetextPage;
+    }
     
     protected abstract  Page<ISpace> spaceSearch(Pageable requestedPageForSpace ,  String searchTerm);
-        
-    
 
+    
+    @Override
+    public StaffSearchModuleResults getStaffSearchModuleResults(List<IModule> moduleList) {
+
+        StaffSearchModuleResults searchModuleResults = new StaffSearchModuleResults();
+        searchModuleResults.setModules(moduleList);
+
+        Map<String, String> moduleFirstSlideImage = new HashMap<>();
+        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
+
+        for (IModule module : moduleList) {
+            if (module.getStartSequence() == null) {
+                isModuleConfiguredMap.put(module.getId(), false);
+                moduleFirstSlideImage.put(module.getId(), null);
+            } else {
+                isModuleConfiguredMap.put(module.getId(), true);
+                String startSequenceID = module.getStartSequence().getId();
+                List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
+                        ? sequenceManager.getSequence(startSequenceID).getSlides()
+                                : null;
+
+                Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
+                String firstSlideImageId = null;
+
+                if (slide != null && slide.getFirstImageBlock() != null) {
+                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+                }
+                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
+            }
+
+        }
+        searchModuleResults.setModuleImageIdMap(moduleFirstSlideImage);
+        searchModuleResults.setModuleAlertMessages(isModuleConfiguredMap);
+
+        return searchModuleResults;
+    }
+
+    
+    @Override
+    public StaffSearchSlideResults getStaffSearchSlideResults(List<ISlide> slideList) {
+        StaffSearchSlideResults searchSlideResults = new StaffSearchSlideResults();
+        searchSlideResults.setSlides(slideList);
+        
+        Map<String, String> slideFirstImage = new HashMap<>();
+        
+        for (ISlide slide : slideList) {
+            if (slide != null && slide.getFirstImageBlock() != null) {
+                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
+            }
+        }
+        searchSlideResults.setFirstImageOfSlide(slideFirstImage);
+        return searchSlideResults;
+    }
+    
+    
+    @Override
+    public StaffSearchSlideTextBlockResults getStaffSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
+        StaffSearchSlideTextBlockResults staffSearchSlideTextBlockResults = new StaffSearchSlideTextBlockResults();
+        staffSearchSlideTextBlockResults.setSlidesWithMatchedTextBlock(slideTextList);
+        
+        Map<String, String> slideTextFirstImageMap = new HashMap<>();
+        Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
+        
+        for (ISlide slide : slideTextList) {
+            if (slide != null) {
+                if (slide.getFirstImageBlock() != null) {
+                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
+                }
+                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
+                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
+                }
+            }
+        }
+        staffSearchSlideTextBlockResults.setSlideToFirstImageMap(slideTextFirstImageMap);
+        staffSearchSlideTextBlockResults.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
+        
+        return staffSearchSlideTextBlockResults;
+    }
+    
+    @Override
+    public StaffSearchSpaceResults getStaffSearchSpaceResults(List<ISpace> spaceList) {
+        StaffSearchSpaceResults staffSearchSpaceResults = new StaffSearchSpaceResults();
+        staffSearchSpaceResults.setSpaces(spaceList);
+        return staffSearchSpaceResults;
+    }
 }

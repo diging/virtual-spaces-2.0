@@ -21,68 +21,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.services.impl.SearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
+import edu.asu.diging.vspace.core.services.ISearchManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
 
 @Controller
-public class PublicSearchModuleController {
+public class PublicSearchModuleController  {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IPublicSearchManager publicSearchManager;
     
-    @Autowired
-    private IModuleLinkManager moduleLinkManager;
-    
-    @Autowired
-    private ISequenceManager sequenceManager;
-    
-    @Autowired
-    private IStaffSearchManager staffSearchManager;
+
+
 
     @RequestMapping(value = "/exhibit/search/module")
     public ResponseEntity<StaffSearchModuleResults> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);
-        StaffSearchModuleResults publicSearchModule = new StaffSearchModuleResults();
-        publicSearchModule.setModules(moduleList);
         
-        Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
         
-        for (IModule module : moduleList) {
-            if (module.getStartSequence() == null) {
-                isModuleConfiguredMap.put(module.getId(), false);
-                moduleFirstSlideImage.put(module.getId(), null);
-            } else {
-                isModuleConfiguredMap.put(module.getId(), true);
-                String startSequenceID = module.getStartSequence().getId();
-                List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
-                        ? sequenceManager.getSequence(startSequenceID).getSlides()
-                        : null;
+        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);        
+        
+        StaffSearchModuleResults publicSearchModule  =  publicSearchManager.getStaffSearchModuleResults(moduleList);
 
-                Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
-                String firstSlideImageId = null;
-
-                if (slide != null && slide.getFirstImageBlock() != null) {
-                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
-                }
-                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
-            }
-            
-        }
-        publicSearchModule.setModuleImageIdMap(moduleFirstSlideImage);
-        publicSearchModule.setModuleAlertMessages(isModuleConfiguredMap);
         return new ResponseEntity<StaffSearchModuleResults>(publicSearchModule, HttpStatus.OK);
     }
+
+
 
     /**
      * This method is used to search the searched string specified in the input
@@ -95,24 +69,26 @@ public class PublicSearchModuleController {
      * @param searchTerm    This is the search string which is being searched.
      */
     private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-        List<IModule> moduleList = new ArrayList<>();
+        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+//        
+//        publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
+//        List<IModule> moduleList = new ArrayList<>();
+//        
+//        for(IModule module : modulePage.getContent()) {
+//            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
+//            if(moduleLink!=null) {
+//                ModuleWithSpace modWithSpace = new ModuleWithSpace();
+//                try {
+//                    BeanUtils.copyProperties(modWithSpace, module);
+//                } catch (IllegalAccessException | InvocationTargetException e) {
+//                    logger.error("Could not create moduleWithSpace.", e);
+//                }
+//                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
+//                moduleList.add(modWithSpace);
+//            }
+//        }
         
-        for(IModule module : modulePage.getContent()) {
-            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-            if(moduleLink!=null) {
-                ModuleWithSpace modWithSpace = new ModuleWithSpace();
-                try {
-                    BeanUtils.copyProperties(modWithSpace, module);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
-                }
-                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                moduleList.add(modWithSpace);
-            }
-        }
-        
-        return moduleList;
+        return   publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
     }
 
 }

@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,26 +29,9 @@ public class StaffSearchSlideTextController {
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-        StaffSearchSlideTextBlockResults staffSearch = new StaffSearchSlideTextBlockResults();
-        staffSearch.setSlidesWithMatchedTextBlock(slideTextList);
 
-        Map<String, String> slideTextFirstImageMap = new HashMap<>();
-
-        Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
-
-        for (ISlide slide : slideTextList) {
-            if (slide != null) {
-                if (slide.getFirstImageBlock() != null) {
-                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
-                }
-                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
-                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
-                }
-            }
-        }
-        staffSearch.setSlideToFirstImageMap(slideTextFirstImageMap);
-        staffSearch.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
-        return new ResponseEntity<StaffSearchSlideTextBlockResults>(staffSearch, HttpStatus.OK);
+        StaffSearchSlideTextBlockResults staffSearch  = staffSearchManager.getStaffSearchSlideTextBlockResults(slideTextList, searchTerm);
+                return new ResponseEntity<StaffSearchSlideTextBlockResults>(staffSearch, HttpStatus.OK);
     }
 
     /**
