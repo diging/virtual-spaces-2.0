@@ -1,12 +1,7 @@
 package edu.asu.diging.vspace.web.general.search;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.IModule;
-import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.services.impl.SearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
-import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
-import edu.asu.diging.vspace.core.services.ISearchManager;
-import edu.asu.diging.vspace.core.services.ISequenceManager;
-import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
 
 @Controller
@@ -47,12 +33,8 @@ public class PublicSearchModuleController  {
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        
-        
-        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);        
-        
+        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);                
         StaffSearchModuleResults publicSearchModule  =  publicSearchManager.getStaffSearchModuleResults(moduleList);
-
         return new ResponseEntity<StaffSearchModuleResults>(publicSearchModule, HttpStatus.OK);
     }
 
@@ -69,26 +51,8 @@ public class PublicSearchModuleController  {
      * @param searchTerm    This is the search string which is being searched.
      */
     private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-//        
-//        publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
-//        List<IModule> moduleList = new ArrayList<>();
-//        
-//        for(IModule module : modulePage.getContent()) {
-//            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
-//            if(moduleLink!=null) {
-//                ModuleWithSpace modWithSpace = new ModuleWithSpace();
-//                try {
-//                    BeanUtils.copyProperties(modWithSpace, module);
-//                } catch (IllegalAccessException | InvocationTargetException e) {
-//                    logger.error("Could not create moduleWithSpace.", e);
-//                }
-//                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
-//                moduleList.add(modWithSpace);
-//            }
-//        }
-        
-        return   publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
+        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));    
+        return  publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
     }
 
 }
