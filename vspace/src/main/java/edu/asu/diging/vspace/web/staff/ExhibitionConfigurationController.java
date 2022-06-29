@@ -1,6 +1,12 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -36,18 +44,32 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
+    
+    @Autowired
+    private ExhibitionLanguageConfig exhibitionLanguageConfig;
+    
+
 
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
     
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
-        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
-        if (exhibition == null) {
+
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        if(exhibition==null) {           
             exhibition = (Exhibition) exhibitFactory.createExhibition();
-        } 
+        }
+        if(exhibition.getLanguages() != null ) {
+            model.addAttribute("savedExhibitionLanguages",  exhibition.getLanguages()
+                    .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
+            model.addAttribute("defaultLanguage",exhibition.getLanguages().stream()
+                    .filter(language -> language.isDefault()).findFirst().orElse(null) );
+      
+        }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
+        model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
         model.addAttribute("exhibition", exhibition);
         return "staff/exhibit/config";
     }
@@ -66,6 +88,8 @@ public class ExhibitionConfigurationController {
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+            @RequestParam("exhibitLanguage") List<String> languages,
+            @RequestParam("defaultExhibitLanguage") String defaultLanguage,
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
@@ -79,7 +103,10 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        if (exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+        exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
+    
+        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+
             exhibition.setCustomMessage(customMessage);
         }
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
