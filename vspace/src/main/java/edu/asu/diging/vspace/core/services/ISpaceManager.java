@@ -36,9 +36,7 @@ public interface ISpaceManager {
     List<SpaceLink> getIncomingLinks(String id);
     
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
-    
-    Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
-    
+        
     Page<ISpace> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchText);
     
 }

@@ -35,7 +35,7 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
 
     @Override
     protected Page<ISpace> spaceSearch(Pageable requestedPageForSpace, String searchTerm) {
-        return spaceManager.findByNameOrDescription(requestedPageForSpace, searchTerm);
+        return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, null, searchTerm);
     }
 
 

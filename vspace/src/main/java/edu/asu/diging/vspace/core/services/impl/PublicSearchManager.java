@@ -38,10 +38,6 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     @Autowired
     private IModuleLinkManager moduleLinkManager;
     
-    
-    @Autowired
-    private ISlideManager slideManager;
-    
     @Override
     protected Page<ISpace> spaceSearch(Pageable requestedPageForSpace, String searchTerm) {
         return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
@@ -51,29 +47,25 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     public List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
 
         List<ISlide> slideList = new ArrayList<>();
-        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
 
         //Adding space info for each slide
         for(ISlide slide : slidePage.getContent()) {
-            if(slideSet.contains(slide.getId())) {
-                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-                if(moduleLink!=null) {
-                    SlideWithSpace slideWithSpace = new SlideWithSpace();
-                    try {
-                        BeanUtils.copyProperties(slideWithSpace, slide);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Could not create moduleWithSpace.", e);
-                    }
-                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                    slideList.add(slideWithSpace);
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+            if(moduleLink!=null) {
+                SlideWithSpace slideWithSpace = new SlideWithSpace();
+                try {
+                    BeanUtils.copyProperties(slideWithSpace, slide);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
                 }
+                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
+                slideList.add(slideWithSpace);
             }
         }
-
         return slideList;
     }
-   
+
     public List<IModule> updateModuleListWithSpaceInfo(Page<IModule> modulePage) {
         List<IModule> moduleList = new ArrayList<>();
 
@@ -100,23 +92,20 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
 
         List<ISlide> slideTextList = new ArrayList<>();
-        Set<String> slideSet = slideManager.getAllSlidesFromStartSequences();
 
         //Adding space info for each slide
         for(ISlide slide : slideTextPage.getContent()) {
-            if(slideSet.contains(slide.getId())) {
-                ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
-                if(moduleLink!=null) {
-                    SlideWithSpace slideWithSpace = new SlideWithSpace();
-                    try {
-                        BeanUtils.copyProperties(slideWithSpace, slide);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        logger.error("Could not create moduleWithSpace.", e);
-                    }
-                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                    slideTextList.add(slideWithSpace);
+            ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
+            if(moduleLink!=null) {
+                SlideWithSpace slideWithSpace = new SlideWithSpace();
+                try {
+                    BeanUtils.copyProperties(slideWithSpace, slide);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Could not create moduleWithSpace.", e);
                 }
+                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
+                slideTextList.add(slideWithSpace);
             }
         }
         return slideTextList;
