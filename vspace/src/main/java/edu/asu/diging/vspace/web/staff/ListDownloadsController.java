@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +25,16 @@ public class ListDownloadsController {
     
     
     @RequestMapping(value = "/staff/download", method = RequestMethod.GET) 
-    public void downloadExhibition(Model model) {
+    public String downloadExhibition(HttpServletRequest request) {
         try {
-            download("vspace/exhibit/space/SPA000000002");
+//            System.out.println(request.+"://"+ request.getServerName());
+            download("http://localhost:8080/vspace/exhibit/space/SPA000000002");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+        return "staff/downloads/downloadList";
     }
     
     public  void download(String urlString) throws IOException {
