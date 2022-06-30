@@ -159,7 +159,7 @@ public class StaffSearchManagerTest {
 
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "space";
-        when(spaceManager.findByNameOrDescription(requestedPage, search))
+        when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage, null, search))
                 .thenReturn(new PageImpl<ISpace>(spaces,requestedPage, 12));
         Page<ISpace> tempResult = serviceToTest.searchInSpaces(search, 1);
         assertEquals(10, tempResult.getContent().size());
@@ -171,7 +171,7 @@ public class StaffSearchManagerTest {
             dummySpaceIdBuilder.append(String.valueOf(i));
             assertEquals(dummySpaceIdBuilder.toString(),idList.get(i-1));
         }
-        verify(spaceManager).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager).findBySpaceStatusAndNameOrDescription(requestedPage, null, search);
     }
 
     @Test
@@ -179,16 +179,16 @@ public class StaffSearchManagerTest {
 
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "space";
-        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISpace>(new ArrayList<ISpace>(),requestedPage, 12));
+        when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage, null, search)).thenReturn(new PageImpl<ISpace>(new ArrayList<ISpace>(),requestedPage, 12));
         Pageable requestedPage1 = PageRequest.of(1, 10);
-        when(spaceManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<ISpace>(lastPageSpaces,requestedPage1, 12));
+        when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage1, null, search)).thenReturn(new PageImpl<ISpace>(lastPageSpaces,requestedPage1, 12));
         Page<ISpace> tempResult = serviceToTest.searchInSpaces(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_11",idList.get(0));
         assertEquals("SPACE_ID_12",idList.get(1));
-        verify(spaceManager).findByNameOrDescription(requestedPage, search);
-        verify(spaceManager).findByNameOrDescription(requestedPage1, search);
+        verify(spaceManager).findBySpaceStatusAndNameOrDescription(requestedPage, null, search);
+        verify(spaceManager).findBySpaceStatusAndNameOrDescription(requestedPage1,null,  search);
     }
 
     @Test
@@ -196,7 +196,7 @@ public class StaffSearchManagerTest {
 
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "space";
-        when(spaceManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISpace>(spaces, requestedPage, 12));
+        when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage, null, search)).thenReturn(new PageImpl<ISpace>(spaces, requestedPage, 12));
         Page<ISpace> tempResult = serviceToTest.searchInSpaces(search, -1);
         assertEquals(10, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
@@ -207,7 +207,7 @@ public class StaffSearchManagerTest {
             dummySpaceIdBuilder.append(String.valueOf(i));
             assertEquals(dummySpaceIdBuilder.toString(),idList.get(i-1));
         }
-        verify(spaceManager).findByNameOrDescription(requestedPage, search);
+        verify(spaceManager).findBySpaceStatusAndNameOrDescription(requestedPage, null,  search);
     }
 
     @Test
