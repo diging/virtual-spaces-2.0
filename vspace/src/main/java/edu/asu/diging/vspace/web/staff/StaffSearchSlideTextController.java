@@ -31,7 +31,7 @@ public class StaffSearchSlideTextController {
         List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
 
         StaffSearchSlideTextBlockResults staffSearch  = staffSearchManager.getStaffSearchSlideTextBlockResults(slideTextList, searchTerm);
-                return new ResponseEntity<StaffSearchSlideTextBlockResults>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<StaffSearchSlideTextBlockResults>(staffSearch, HttpStatus.OK);
     }
 
     /**
