@@ -152,7 +152,7 @@ public class ContentBlockManagerTest {
 	}
 
 	@Test
-	public void test_addSpaceBlock_success() {
+	public void test_createSpaceBlock_success() {
 		String slideId = "slideId";
 		ISlide slide = null;
 		String title = "this is a space block";
@@ -369,7 +369,7 @@ public class ContentBlockManagerTest {
 
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void test_createImageBlock_success() throws ImageCouldNotBeStoredException {
 		String slideId = "slide1";
 		String fileName = "dummyFile";
@@ -384,9 +384,24 @@ public class ContentBlockManagerTest {
 		byte[] image = new byte[1000];
 
 		when(slideManager.getSlide(slideId)).thenReturn(slide);
+		when(imageFactory.createImage(fileName, fileName)).thenReturn(slideContentImage);
+		when(imageBlockRepo.save((ImageBlock)imageBlock)).thenReturn((ImageBlock)imageBlock);
 		Mockito.when(imageBlockFactory.createImageBlock(slide, slideContentImage)).thenReturn(imageBlock);
 		managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
 
+	}
+	
+	@Test
+	public void test_saveSpaceBlock_success() throws ImageCouldNotBeStoredException {
+		ISpaceBlock spaceBlock = new SpaceBlock();
+		spaceBlock.setContentOrder(3);
+		spaceBlock.setId("spaceBlock1");
+		managerToTest.saveSpaceBlock(spaceBlock);
+		Mockito.verify(spaceBlockRepo).save((SpaceBlock)spaceBlock);
+        
+        
+        
+		
 	}
 
 }
