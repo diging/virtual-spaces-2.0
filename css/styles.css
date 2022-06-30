@@ -4052,14 +4052,12 @@ textarea.form-control-lg {
 
 .tab-content > .tab-pane {
   display: none;
-  padding-top:150px;
-  height: 750px;
+  height: 1000px;
   background-color: #ffffff;
 }
 .tab-content > .active {
   display: block;
-  padding-top:150px;
-  height: 750px;
+  height: 1000px;
   background-color: #ffffff;
 }
 
@@ -5124,10 +5122,8 @@ textarea.form-control-lg {
 .list-group {
   display: flex;
   flex-direction: column;
-  padding-left: 10px;
   padding-right: 20px;
-  margin-left:10px;
-  width: 300px;
+  width: 320px;
   height: auto;
   border-radius: 0.25rem;
   background-color: var(--bs-light);
@@ -5141,6 +5137,15 @@ textarea.form-control-lg {
   padding-top: 150px; 
 }
 
+.just-margin{
+  margin-bottom: 50px; 
+}
+
+.just-font{
+  color:#000;
+  text-decoration: none;
+}
+
 .list-group-numbered {
   list-style-type: none;
   counter-reset: section;
@@ -5151,7 +5156,7 @@ textarea.form-control-lg {
 }
 
 .list-group-item-action {
-  width: 100%;
+  width: auto;
   color: #495057;
   text-align: inherit;
 }
@@ -5173,8 +5178,8 @@ textarea.form-control-lg {
   color: #212529;
   text-decoration: none;
   border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
   width: 250px;
+  border-width: 0 0 1px;
 }
 .list-group-item:first-child {
   border-top-left-radius: inherit;
