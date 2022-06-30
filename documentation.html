@@ -45,59 +45,57 @@
     <!-- Sidebar-->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-3 list-group">
-                <ul class="list-group list-group-flush just-padding" role="tablist">
-                    <h3 style="color:black">Virtual Spaces 2.0</h3>
-                    <p></p>
-                    <h5><a class="just-font" href="#start">Getting Started</a></h5>
-                    <a class="just-font" href="#start-1" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Structure of a Virtual Space</li></a>
-                    <a class="just-font" href="#start-2" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Virtual Spaces 2.0</li></a>
-                    <p></p>
-                </ul>
-                <ul class="list-group list-group-flush" role="tablist">
-                    <h5><a class="just-font" href="#space">Spaces</a></h5>
-                    <a class="just-font" href="#space-1" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Overview</li></a>
-                    <a class="just-font" href="#space-2" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Create a Space</li></a>
-                    <a class="just-font" href="#space-3" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Edit a Space</li></a>
-                    <a class="just-font" href="#space-4" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Change Background Image</li></a>
-                    <a class="just-font" href="#space-5" data-toggle="tab"><li class="list-group-item list-group-item-action" role="tab">Delete a Space</li></a>
-                    <p></p>
-                </ul>
-                <ul class="list-group list-group-flush" role="tablist">
-                    <h5>Modules</h5>
-                    <a class="list-group-item list-group-item-action" href="#messages" role="tab">Messages</a>
-                    <p></p>
-                </ul>
-                <ul class="list-group list-group-flush" role="tablist">
-                    <h5>Images</h5>
-                    <a class="list-group-item list-group-item-action" href="#settings" role="tab">Settings</a>
-                    <p></p>
-                </ul>
-                <ul class="list-group list-group-flush" role="tablist">
-                    <h5>User Management</h5>
-                    <a class="list-group-item list-group-item-action" href="#users" role="tab">Users</a>
-                </ul>
-            </div>
-
-        <div class="col-lg-7 tab-content just-padding center-block">
-            <div class="tab-pane active" id="start" role="tabpanel">
-                <p class="just-margin"></p>
-                <h3 id="start-1">Structure of a Virtual Space</h3>
-                A virtual space consists of Spaces and Modules. Spaces represent real or fictional spaces, meaning a space can represent for example a room in a building or exhibition, or it can represent a specific topic such as "programming in Python". A Space consists of a background image and links that are placed on the background image that allow users to move from one Space to another, from a Space to a Module, or from a Space to a website outside of a virtual space. Modules are built up similar to PowerPoint presentations. They consist of Slides that contain images and texts. Those slides are arranged in Sequences that define the order of the slides in a Module. A specific type of Slide is a Branching Point. Branching Points are Slides that in addition to text and images have Branching Point Choices (or Choices) that allow a user to jump out of a current Sequence into another one, effectively giving the arrangement of Slides in a Module a tree structure.
-                <p class="just-margin"></p>
-                <h3 id="start-2">Virtual Spaces 2.0</h3>
-                Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in and a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules. To login to the private space, click on the login icon in the right upper corner. This will bring you to a page that allows you to either login or create a new user account. If you sign up for a new user account, an admin user will have to first approve your account and give you certain privileges before you can login to the private space.
-            </div>
-            <div class="tab-pane" id="space" role="tabpanel">
-                <h3 id="space-1">Overview</h3>
-                <h3 id="space-2">Create a Space</h3>
-                <h3 id="space-3">Edit a Space</h3>
-                <h3 id="space-4">Change Background Image</h3>
-                <h3 id="space-5">Delete a Space</h3>
-            </div>
-            <div class="tab-pane" id="settings" role="tabpanel">...</div>
-            <div class="tab-pane" id="users" role="tabpanel">...</div>
-        </div>
+            <div class="col-lg-3 just-padding list-group">
+                <div class="list-group list-group-flush center-block" id="list-tab" role="tablist">
+                <h3 style="color:black">Virtual Spaces 2.0</h3>
+                <p></p>
+                <!-- Getting Started-->
+                  <a class="list-group-item list-group-item-action active" id="list-start" data-toggle="collapse" href="#start" role="tab" aria-expanded="false" aria-controls="start"><h5>Getting Started</h5></a>
+                  <a class="list-group-item list-group-item-action" id="list-start-1" data-toggle="collapse" href="#start-1" role="tab"><li>Structure of a Virtual Space</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-start-2" data-toggle="collapse" href="#start-2" role="tab"><li>Virtual Spaces 2.0</li></a>
+                <!-- Spaces-->  
+                  <a class="list-group-item list-group-item-action" id="list-space" data-bs-toggle="list" data-toggle="collapse" href="#space" role="tab" aria-controls="space"><h5>Spaces</h5></a>
+                  <a class="list-group-item list-group-item-action" id="list-space-1" data-bs-toggle="list" data-toggle="collapse" href="#space-1" role="tab" aria-controls="space-1"><li>Overview</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-space-2" data-bs-toggle="list" data-toggle="collapse" href="#space-2" role="tab" aria-controls="space-2"><li>Create a Space</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-space-3" data-bs-toggle="list" data-toggle="collapse" href="#space-3" role="tab" aria-controls="space-3"><li>Edit a Space</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-space-4" data-bs-toggle="list" data-toggle="collapse" href="#space-4" role="tab" aria-controls="space-4"><li>Change Background Image</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-space-5" data-bs-toggle="list" data-toggle="collapse" href="#space-5" role="tab" aria-controls="space-5"><li>Delete a Space</li></a>
+                <!-- Modules-->                  
+                  <a class="list-group-item list-group-item-action" id="list-module" data-bs-toggle="list" data-toggle="collapse" href="#module" role="tab" aria-controls="module">Modules</a>
+                <!-- Images-->  
+                  <a class="list-group-item list-group-item-action" id="list-image" data-bs-toggle="list" data-toggle="collapse" href="#image" role="tab" aria-controls="image">Images</a>
+                <!-- User Management-->  
+                  <a class="list-group-item list-group-item-action" id="list-user" data-bs-toggle="list"  data-toggle="collapse"href="#user" role="tab" aria-controls="user">User Management</a>
+                </div>
+              </div>
+            <!-- Contents-->
+              <div class="col-lg-7 just-padding center-block">
+                <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="start" role="tabpanel" aria-labelledby="list-start">
+                    <p class="just-margin"></p>
+                    <h3 id="start-1">Structure of a Virtual Space</h3>
+                    A virtual space consists of Spaces and Modules. Spaces represent real or fictional spaces, meaning a space can represent for example a room in a building or exhibition, or it can represent a specific topic such as "programming in Python". A Space consists of a background image and links that are placed on the background image that allow users to move from one Space to another, from a Space to a Module, or from a Space to a website outside of a virtual space. Modules are built up similar to PowerPoint presentations. They consist of Slides that contain images and texts. Those slides are arranged in Sequences that define the order of the slides in a Module. A specific type of Slide is a Branching Point. Branching Points are Slides that in addition to text and images have Branching Point Choices (or Choices) that allow a user to jump out of a current Sequence into another one, effectively giving the arrangement of Slides in a Module a tree structure.
+                    <p class="just-margin"></p>
+                    <h3 id="start-2">Virtual Spaces 2.0</h3>
+                    Virtual Spaces 2.0 has two components: the public virtual space that any user can see without being logged in and a private space requiring a user account and certain privileges that allows the creation of Spaces and Modules. To login to the private space, click on the login icon in the right upper corner. This will bring you to a page that allows you to either login or create a new user account. If you sign up for a new user account, an admin user will have to first approve your account and give you certain privileges before you can login to the private space.                
+                  </div>
+                  <div class="tab-pane fade" id="space" role="tabpanel" aria-labelledby="list-space">
+                    <p class="just-margin"></p>
+                    <h3 id="space-1">Overview</h3>
+                    <p class="just-margin"></p>
+                    <h3 id="space-2">Create a Space</h3>
+                    <p class="just-margin"></p>
+                    <h3 id="space-3">Edit a Space</h3>
+                    <p class="just-margin"></p>
+                    <h3 id="space-4">Change Background Image</h3>
+                    <p class="just-margin"></p>
+                    <h3 id="space-5">Delete a Space</h3>
+                  </div>
+                  <div class="tab-pane fade" id="module" role="tabpanel" aria-labelledby="list-module">...</div>
+                  <div class="tab-pane fade" id="image" role="tabpanel" aria-labelledby="list-image">...</div>
+                  <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="list-user">...</div>
+                </div>
+              </div>            
       </div>
     </div>
 
