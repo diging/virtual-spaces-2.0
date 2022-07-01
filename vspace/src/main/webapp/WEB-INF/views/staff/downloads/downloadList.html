@@ -45,7 +45,7 @@ function downloadFile(){
 </head>
 <body>
 <div layout:fragment="content" class="main-content">
-	<a th:action="@{/staff/download}" class="btn primary-btn btn-sm" style="float: right" onClick = "downloadFile()">Download</a>
+	<a th:href="@{/staff/download}" class="download btn primary-btn" style="float: right" >Download</a>
 	 <h2>Downloads</h2>
 	 <table>
 	 </table>
