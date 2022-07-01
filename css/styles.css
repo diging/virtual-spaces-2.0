@@ -190,7 +190,7 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 ol ol,
@@ -4053,6 +4053,7 @@ textarea.form-control-lg {
 .tab-content > .tab-pane {
   display: none;
   height: 1000px;
+  overflow-y: scroll;
   background-color: #ffffff;
 }
 .tab-content > .active {
@@ -5140,6 +5141,10 @@ textarea.form-control-lg {
 
 .just-margin{
   margin-bottom: 50px; 
+}
+
+.just-margin-small{
+  margin-bottom: 10px; 
 }
 
 .just-font{
@@ -8014,7 +8019,7 @@ textarea.form-control-lg {
 }
 
 .rounded {
-  border-radius: 0.25rem !important;
+  border-radius: 0.5rem !important;
 }
 
 .rounded-0 {
