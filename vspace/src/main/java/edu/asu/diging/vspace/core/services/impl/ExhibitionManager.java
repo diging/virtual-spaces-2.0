@@ -16,12 +16,8 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -31,99 +27,99 @@ import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 @Service
 public class ExhibitionManager implements IExhibitionManager {
 
-    @Autowired
-    private ExhibitionRepository exhibitRepo;
-    
-    @Autowired
-    private IImageFactory imageFactory;
+	@Autowired
+	private ExhibitionRepository exhibitRepo;
 
-    @Autowired
-    private IImageService imageService;
-    
-    @Autowired
-    private ImageRepository imageRepo;
-    
-    @Autowired
-    private IStorageEngine storage;
+	@Autowired
+	private IImageFactory imageFactory;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
-     * asu.diging.vspace.core.model.impl.Exhibition)
-     */
-    @Override
-    public IExhibition storeExhibition(Exhibition exhibition) {
-        return exhibitRepo.save(exhibition);
-    }
+	@Autowired
+	private IImageService imageService;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
-     * .lang.String)
-     */
-    @Override
-    public IExhibition getExhibitionById(String id) {
-        Optional<Exhibition> exhibition = exhibitRepo.findById(id);
-        if (exhibition.isPresent()) {
-            return exhibition.get();
-        }
-        return null;
-    }
+	@Autowired
+	private ImageRepository imageRepo;
 
-    @Override
-    public List<IExhibition> findAll() {
-        Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
-        List<IExhibition> results = new ArrayList<>();
-        exhibitions.forEach(e -> results.add((IExhibition) e));
-        return results;
-    }
+	@Autowired
+	private IStorageEngine storage;
 
-    @Override
-    public IExhibition getStartExhibition() {
-        // for now we just take the first one created, there shouldn't be more than one
-        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
-        if (exhibitions.size() > 0) {
-            return exhibitions.get(0);
-        }
-        return null;
-    }
-    
-    @Override
-    public void storeDefaultImage(byte[] image, String filename) {
-    	
-        IVSImage bgImage = null;
-        if (image != null && image.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(image);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
+	 * asu.diging.vspace.core.model.impl.Exhibition)
+	 */
+	@Override
+	public IExhibition storeExhibition(Exhibition exhibition) {
+		return exhibitRepo.save(exhibition);
+	}
 
-            bgImage = imageFactory.createImage(filename, contentType);
-            bgImage = imageRepo.save((VSImage) bgImage);
-        }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
+	 * .lang.String)
+	 */
+	@Override
+	public IExhibition getExhibitionById(String id) {
+		Optional<Exhibition> exhibition = exhibitRepo.findById(id);
+		if (exhibition.isPresent()) {
+			return exhibition.get();
+		}
+		return null;
+	}
 
-        CreationReturnValue returnValue = new CreationReturnValue();
-        returnValue.setErrorMsgs(new ArrayList<>());
+	@Override
+	public List<IExhibition> findAll() {
+		Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
+		List<IExhibition> results = new ArrayList<>();
+		exhibitions.forEach(e -> results.add((IExhibition) e));
+		return results;
+	}
 
-        if (bgImage != null) {
-            String relativePath = null;
-            try {
-                relativePath = storage.storeFile(image, filename, bgImage.getId());
-            } catch (FileStorageException e) {
-                returnValue.getErrorMsgs().add("Default image could not be stored: " + e.getMessage());
-            }
-            bgImage.setParentPath(relativePath);
-            ImageData imageData = imageService.getImageData(image);
-            if (imageData != null) {
-                bgImage.setHeight(imageData.getHeight());
-                bgImage.setWidth(imageData.getWidth());
-            }
-            imageRepo.save((VSImage) bgImage);
-            
-        }
+	@Override
+	public IExhibition getStartExhibition() {
+		// for now we just take the first one created, there shouldn't be more than one
+		List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+		if (exhibitions.size() > 0) {
+			return exhibitions.get(0);
+		}
+		return null;
+	}
 
-        
-    }
+	@Override
+	public void storeDefaultImage(byte[] image, String filename) {
+
+		IVSImage defaultImage = null;
+		if (image != null && image.length > 0) {
+			Tika tika = new Tika();
+			String contentType = tika.detect(image);
+
+			defaultImage = imageFactory.createImage(filename, contentType);
+			defaultImage = imageRepo.save((VSImage) defaultImage);
+		}
+
+		CreationReturnValue returnValue = new CreationReturnValue();
+		returnValue.setErrorMsgs(new ArrayList<>());
+
+		if (defaultImage != null) {
+			String relativePath = null;
+			try {
+				relativePath = storage.storeFile(image, filename, defaultImage.getId());
+			} catch (FileStorageException e) {
+				returnValue.getErrorMsgs().add("Default image could not be stored: " + e.getMessage());
+			}
+			defaultImage.setParentPath(relativePath);
+			ImageData imageData = imageService.getImageData(image);
+			if (imageData != null) {
+				defaultImage.setHeight(imageData.getHeight());
+				defaultImage.setWidth(imageData.getWidth());
+			}
+			imageRepo.save((VSImage) defaultImage);
+
+		}
+
+	}
+
 }
