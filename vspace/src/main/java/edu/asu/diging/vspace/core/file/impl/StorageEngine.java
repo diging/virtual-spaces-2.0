@@ -89,4 +89,42 @@ public class StorageEngine implements IStorageEngine {
 	    File renamedFile = new File(path + File.separator + image.getId() + File.separator + newFileName);
 	    return currentFile.renameTo(renamedFile);
 	}
+	
+	
+	/* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
+     */
+    @Override
+    public String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException {
+        File parent = new File(path + File.separator + directory);
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+        File file = new File(parent.getAbsolutePath() + File.separator + filename);
+        BufferedOutputStream stream;
+        try {
+            stream = new BufferedOutputStream(new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        try {
+            stream.write(fileContent);
+            stream.close();
+        } catch (IOException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        
+        return directory;
+    }
+    
+    
+    public String createFolder(String folderName, String path ) {
+        File folder = new File(path + File.separator + folderName);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        
+        return folder.getAbsolutePath();
+        
+    }
 }

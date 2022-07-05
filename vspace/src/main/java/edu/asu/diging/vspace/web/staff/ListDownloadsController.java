@@ -19,6 +19,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,10 @@ public class ListDownloadsController {
 
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    
+    @Autowired
+    DownloadsManager downloadsManager;
     
     @RequestMapping("/staff/downloads/list")
     public String listDownloads(Model model) {
@@ -49,9 +57,12 @@ public class ListDownloadsController {
     @RequestMapping(value = "/staff/download", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request) {
 
+   
         String spaceId= "SPA000000001";
         Resource resource = null;  
         try {
+            
+            downloadsManager.downloadSpaces();
             //            System.out.println(request.+"://"+ request.getServerName());
             resource =  download("http://localhost:8080/vspace/exhibit/space/" + spaceId);
 

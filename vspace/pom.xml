@@ -26,8 +26,8 @@
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path></uploaded.files.path>
-
+        <uploaded.files.path>/Users/prachikharge/virtual-spaces-2.0/vspace/uploads</uploaded.files.path>
+        <downloaded.files.path>/Users/prachikharge/virtual-spaces-2.0/vspace/downloads</downloaded.files.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -363,11 +363,6 @@
 		    <artifactId>javax.annotation-api</artifactId>
 		    <version>1.3.2</version>
    		</dependency>
-   		<dependency>
-		    <groupId>org.jsoup</groupId>
-		    <artifactId>jsoup</artifactId>
-		    <version>1.15.1</version>
-		</dependency>
     </dependencies>
 
     <build>

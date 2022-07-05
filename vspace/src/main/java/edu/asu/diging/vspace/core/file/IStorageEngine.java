@@ -12,4 +12,7 @@ public interface IStorageEngine {
 	byte[] getImageContent(String directory, String filename) throws IOException;
 
 	boolean renameImage(IVSImage image, String newFileName);
+	
+	   String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException;
+
 }
