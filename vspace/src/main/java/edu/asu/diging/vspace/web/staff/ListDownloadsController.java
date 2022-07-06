@@ -62,13 +62,12 @@ public class ListDownloadsController {
         Resource resource = null;  
         try {
             
-            downloadsManager.downloadSpaces();
+      
             //            System.out.println(request.+"://"+ request.getServerName());
-            resource =  download("http://localhost:8080/vspace/exhibit/space/" + spaceId);
-
+            resource =   downloadsManager.downloadSpaces();
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + spaceId)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=SPA000000001")
                     .contentLength(resource.contentLength())
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
                     .body(resource);
@@ -79,42 +78,7 @@ public class ListDownloadsController {
         }
     }
     
-    public  Resource download(String urlString) throws IOException {
-        URL url = new URL(urlString);
-     
-        try {
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            HTMLEditorKit htmlKit = new HTMLEditorKit();
-            HTMLDocument htmlDoc = (HTMLDocument) htmlKit.createDefaultDocument();
-            htmlKit.read(reader, htmlDoc, 0);
-            for (HTMLDocument.Iterator iterator = htmlDoc.getIterator(HTML.Tag.A); iterator.isValid(); iterator.next()) {
-                AttributeSet attributes = iterator.getAttributes();
-                String imgSrc = (String) attributes.getAttribute(HTML.Attribute.HREF);
-
-                System.out.println(imgSrc);
-                if (imgSrc != null && (imgSrc.toLowerCase().endsWith(".jpg") || (imgSrc.endsWith(".png")) || (imgSrc.endsWith(".jpeg")) || (imgSrc.endsWith(".bmp")) || (imgSrc.endsWith(".ico")))) {
-                    downloadImage(url.toString(), imgSrc);
-                }
-            }
-
-          
-//           String line;
-//           while ((line = reader.readLine()) != null) {
-//              writer.write(line);
-//           }
-           System.out.println("Page downloaded.");
-        }catch(Exception e) {
-            e.printStackTrace();
-            logger.error("" + e);
-        } 
-         
-           return new ByteArrayResource(IOUtils.toByteArray(url)); 
-         
-        
-     }
-    
-
+  
     private static void downloadImage(String webUrl, String imgSrc) {
         BufferedImage image = null;
         try {

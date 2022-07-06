@@ -96,7 +96,7 @@ public class StorageEngine implements IStorageEngine {
      */
     @Override
     public String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException {
-        File parent = new File(path + File.separator + directory);
+        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
         if (!parent.exists()) {
             parent.mkdir();
         }
@@ -126,5 +126,31 @@ public class StorageEngine implements IStorageEngine {
         
         return folder.getAbsolutePath();
         
+    }
+    
+    @Override
+    public byte[] getFileContent(String directory, String filename, String path) throws IOException {
+        File fileObject = new File(path + File.separator + directory + File.separator + filename);
+        URLConnection con = fileObject.toURI().toURL().openConnection();
+        
+        InputStream input = con.getInputStream();
+
+        byte[] buffer = new byte[4096];
+        
+        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
+       
+        int n = -1;
+        while ((n = input.read(buffer)) != -1) {
+            output.write(buffer, 0, n);
+        }
+        input.close();
+        output.flush();
+        output.close();
+        
+        byteOutput.flush();
+        byte[] bytes = byteOutput.toByteArray();
+        byteOutput.close();
+        return bytes;
     }
 }

@@ -1,10 +1,22 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 
+import javax.swing.text.AttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -36,12 +48,15 @@ public class DownloadsManager {
     private String path;
     
     
-    public void downloadSpaces() {
+    public Resource downloadSpaces() {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
         
         spaces.forEach( space -> {
             
             String spaceFolderPath = storageEngine.createFolder(space.getId(), path);
+            
+           Resource resource =  addHtmlPage(space.getId(), spaceFolderPath);
+            String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
             
             List<IModuleLink> moduleLinks = space.getModuleLinks();
             
@@ -56,7 +71,7 @@ public class DownloadsManager {
                     try {
                         byte[] byteArray = storageEngine.getImageContent(image.getId(), image.getFilename());
                         
-                        storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), spaceFolderPath );
+                        storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
                         
                         
                     } catch (IOException e) {
@@ -72,5 +87,42 @@ public class DownloadsManager {
             
             
         } );
+        return new ByteArrayResource(null);
     }
+
+
+    private Resource addHtmlPage(String directory, String spaceFolderPath) {
+        // TODO Auto-generated method stub
+        
+        try {
+            
+            
+            
+            
+//         byte[] fileContent =   storageEngine.getFileContent("template", "downloadTemplate.html", path); //TODO: to be made constant
+//         storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+        return download("http://localhost:8080/vspace/exhibit/space/download/" + directory);
+         
+         
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+//        catch (FileStorageException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+        return null;
+        
+    }
+    
+    
+    public  Resource download(String urlString) throws IOException {
+        URL url = new URL(urlString);
+       return new ByteArrayResource(IOUtils.toByteArray(url)); 
+         
+        
+     }
+    
+
 }
