@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.tika.Tika;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
@@ -77,9 +75,9 @@ public class ContentBlockManagerTest {
 
 	@Mock
 	private ISlideManager slideManager;
-	
+
 	@Mock
-    private IStorageEngine storage;
+	private IStorageEngine storage;
 
 	@Mock
 	private IImageBlockFactory imageBlockFactory;
@@ -89,7 +87,7 @@ public class ContentBlockManagerTest {
 
 	@Mock
 	private ITextBlockFactory textBlockFactory;
-	
+
 	@Mock
 	private ChoiceBlockFactory choiceBlockFactory;
 
@@ -395,7 +393,7 @@ public class ContentBlockManagerTest {
 	public void test_createImageBlock_success() throws ImageCouldNotBeStoredException, FileStorageException {
 		String slideId = "slide1";
 		String fileName = "dummyFile";
-        String contentType = "application/octet-stream";
+		String contentType = "application/octet-stream";
 		Integer contentOrder = 3;
 		ISlide slide = new Slide();
 		slide.setId(slideId);
@@ -416,12 +414,12 @@ public class ContentBlockManagerTest {
 		managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
 
 	}
-	
+
 	@Test
 	public void test_createImageBlock2_success() throws ImageCouldNotBeStoredException, FileStorageException {
 		String slideId = "slide1";
 		String fileName = "dummyFile";
-        String contentType = "application/octet-stream";
+		String contentType = "application/octet-stream";
 		Integer contentOrder = 3;
 		ISlide slide = new Slide();
 		slide.setId(slideId);
@@ -430,7 +428,6 @@ public class ContentBlockManagerTest {
 		slideContentImage.setWidth(1300);
 		IImageBlock imageBlock = new ImageBlock();
 		imageBlock.setContentOrder(contentOrder);
-		String relativePathString = "";
 
 		when(slideManager.getSlide(slideId)).thenReturn(slide);
 		when(imageFactory.createImage(fileName, contentType)).thenReturn(slideContentImage);
@@ -456,9 +453,7 @@ public class ContentBlockManagerTest {
 
 		String slideId = "slideId";
 		ISlide slide = null;
-		String title = "this is a space block";
 		Integer contentOrder = 2;
-		Space space = new Space();
 		String titleString = "Title1";
 		String text = "text123";
 		ITextBlock textBlock = new TextBlock();
@@ -481,7 +476,7 @@ public class ContentBlockManagerTest {
 		Mockito.verify(textBlockRepo).save((TextBlock) textBlock);
 
 	}
-	
+
 	@Test
 	public void test_getTextBlock_success() throws BlockDoesNotExistException {
 		String textblockID = "textBlock1";
@@ -492,7 +487,7 @@ public class ContentBlockManagerTest {
 		assertEquals(textblockID, retrievedTextBlock.getId());
 
 	}
-	
+
 	@Test
 	public void test_getChoiceBlock_success() throws BlockDoesNotExistException {
 		String choiceBlockID = "choiceBlock1";
@@ -503,7 +498,7 @@ public class ContentBlockManagerTest {
 		assertEquals(choiceBlockID, retrievedChoiceBlock.getId());
 
 	}
-	
+
 	@Test
 	public void test_getImageBlock_success() throws BlockDoesNotExistException {
 		String imgBlockId = "imgBlockId";
@@ -514,7 +509,7 @@ public class ContentBlockManagerTest {
 		assertEquals(imgBlockId, retrievedImageBlock.getId());
 
 	}
-	
+
 	@Test
 	public void test_createChoiceBlock_success() throws BlockDoesNotExistException {
 
@@ -539,14 +534,5 @@ public class ContentBlockManagerTest {
 		Assert.assertEquals(createdChoiceBlock.getContentOrder(), contentOrder);
 
 	}
-	
-	
-	
-	
-
-	
-	
-	// findMaxContentOrder
-	// createImageBlock
 
 }
