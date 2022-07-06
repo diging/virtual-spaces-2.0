@@ -30,39 +30,39 @@ import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 @Controller
 public class SlideController {
 
-	@Autowired
-	private ISlideManager slideManager;
+    @Autowired
+    private ISlideManager slideManager;
 
-	@Autowired
-	private IModuleManager moduleManager;
+    @Autowired
+    private IModuleManager moduleManager;
 
-	@Autowired
-	private IContentBlockManager contentBlockManager;
+    @Autowired
+    private IContentBlockManager contentBlockManager;
 
-	@RequestMapping("/staff/module/{moduleId}/slide/{id}")
-	public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model)
-			throws JsonProcessingException {
+    @RequestMapping("/staff/module/{moduleId}/slide/{id}")
+    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model)
+            throws JsonProcessingException {
 
-		ISlide slide = slideManager.getSlide(id);
-		model.addAttribute("module", moduleManager.getModule(moduleId));
-		model.addAttribute("slide", slide);
-		model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
-		List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
-		model.addAttribute("slideContents", slideContents);
-		model.addAttribute("contentCount",
-				slideContents.size() > 0 ? slideContents.get(slideContents.size() - 1).getContentOrder() : 0);
-		if (slideManager.getSlide(id) instanceof BranchingPoint) {
-			model.addAttribute("choices", ((IBranchingPoint) slide).getChoices());
-		}
-		return "staff/modules/slides/slide";
-	}
+        ISlide slide = slideManager.getSlide(id);
+        model.addAttribute("module", moduleManager.getModule(moduleId));
+        model.addAttribute("slide", slide);
+        model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
+        List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
+        model.addAttribute("slideContents", slideContents);
+        model.addAttribute("contentCount",
+                slideContents.size() > 0 ? slideContents.get(slideContents.size() - 1).getContentOrder() : 0);
+        if (slideManager.getSlide(id) instanceof BranchingPoint) {
+            model.addAttribute("choices", ((IBranchingPoint) slide).getChoices());
+        }
+        return "staff/modules/slides/slide";
+    }
 
-	@RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/contents", method = RequestMethod.GET)
-	public ResponseEntity<List<IContentBlock>> getAllContentBlocks(Model model,
-			@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId,
-			@ModelAttribute SequenceForm sequenceForm, Principal principal) {
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/contents", method = RequestMethod.GET)
+    public ResponseEntity<List<IContentBlock>> getAllContentBlocks(Model model,
+            @PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId,
+            @ModelAttribute SequenceForm sequenceForm, Principal principal) {
 
-		List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(slideId);
-		return new ResponseEntity<List<IContentBlock>>(slideContents, HttpStatus.OK);
-	}
+        List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(slideId);
+        return new ResponseEntity<List<IContentBlock>>(slideContents, HttpStatus.OK);
+    }
 }
