@@ -30,18 +30,21 @@ import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.factory.impl.SpaceBlockFactory;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
@@ -70,6 +73,9 @@ public class ContentBlockManagerTest {
 
 	@Mock
 	private SpaceBlockFactory spaceBlockFactory;
+
+	@Mock
+	private ITextBlockFactory textBlockFactory;
 
 	@Mock
 	private ChoiceContentBlockRepository choiceBlockRepo;
@@ -385,23 +391,57 @@ public class ContentBlockManagerTest {
 
 		when(slideManager.getSlide(slideId)).thenReturn(slide);
 		when(imageFactory.createImage(fileName, fileName)).thenReturn(slideContentImage);
-		when(imageBlockRepo.save((ImageBlock)imageBlock)).thenReturn((ImageBlock)imageBlock);
+		when(imageBlockRepo.save((ImageBlock) imageBlock)).thenReturn((ImageBlock) imageBlock);
 		Mockito.when(imageBlockFactory.createImageBlock(slide, slideContentImage)).thenReturn(imageBlock);
 		managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
 
 	}
-	
+
 	@Test
-	public void test_saveSpaceBlock_success() throws ImageCouldNotBeStoredException {
+	public void test_saveSpaceBlock_success() throws BlockDoesNotExistException {
 		ISpaceBlock spaceBlock = new SpaceBlock();
 		spaceBlock.setContentOrder(3);
 		spaceBlock.setId("spaceBlock1");
 		managerToTest.saveSpaceBlock(spaceBlock);
-		Mockito.verify(spaceBlockRepo).save((SpaceBlock)spaceBlock);
-        
-        
-        
-		
+		Mockito.verify(spaceBlockRepo).save((SpaceBlock) spaceBlock);
+
 	}
+
+	@Test
+	public void test_createTextBlock_success() throws BlockDoesNotExistException {
+
+		String slideId = "slideId";
+		ISlide slide = null;
+		String title = "this is a space block";
+		Integer contentOrder = 2;
+		Space space = new Space();
+		String titleString = "Title1";
+		String text = "text123";
+		ITextBlock textBlock = new TextBlock();
+
+		Mockito.when(slideManager.getSlide(slideId)).thenReturn(slide);
+		Mockito.when(textBlockFactory.createTextBlock(slide, text)).thenReturn(textBlock);
+		Mockito.when(textBlockRepo.save((TextBlock) textBlock)).thenReturn((TextBlock) textBlock);
+		ITextBlock createdBlock = managerToTest.createTextBlock(titleString, text, contentOrder);
+
+		Assert.assertEquals(createdBlock.getContentOrder(), contentOrder);
+
+	}
+
+	@Test
+	public void test_updateTextBlock_success() throws BlockDoesNotExistException {
+		TextBlock textBlockk = new TextBlock();
+		textBlockk.setContentOrder(3);
+		textBlockk.setId("textBlock1");
+		managerToTest.updateTextBlock(textBlockk);
+		Mockito.verify(textBlockRepo).save((TextBlock) textBlockk);
+
+	}
+
+	// getTextBlock
+	// getChoiceBlock
+	// createChoiceBlock
+	// findMaxContentOrder
+	// createImageBlock
 
 }
