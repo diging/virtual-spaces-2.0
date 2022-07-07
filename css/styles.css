@@ -5136,7 +5136,7 @@ textarea.form-control-lg {
 }
 
 .just-padding{
-  padding-top: 150px; 
+  padding-top: 100px; 
 }
 
 .just-margin{
@@ -5180,7 +5180,9 @@ textarea.form-control-lg {
 .list-group-item {
   position: relative;
   display: block;
-  padding: 0.5rem 1rem;
+  padding-left: 0.5rem;
+  padding-top: 0.05rem;
+  padding-bottom: 0.05rem;
   color: #212529;
   text-decoration: none;
   border: 1px solid rgba(0, 0, 0, 0.125);
