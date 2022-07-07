@@ -49,14 +49,23 @@ public class DownloadsManager {
     
     
     public Resource downloadSpaces() {
+        
+        Resource resource = null;
+        String exhibitionFolderPath =  storageEngine.createFolder("Exhibition", path);
+        
+//        copyResourcesToExhibition //TODO: 
+        
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
         
-        spaces.forEach( space -> {
+        for(Space space : spaces) {
             
-            String spaceFolderPath = storageEngine.createFolder(space.getId(), path);
+            String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
             
-           Resource resource =  addHtmlPage(space.getId(), spaceFolderPath);
+          resource = addHtmlPage(space.getId(), spaceFolderPath);
+           
             String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
+            
+            copyImageToFolder(space.getImage(),imagesFolderPath) ;
             
             List<IModuleLink> moduleLinks = space.getModuleLinks();
             
@@ -66,60 +75,65 @@ public class DownloadsManager {
                   List<ISlide> slides = module.getSlides();
                   
                   slides.forEach(slide -> {
+                     
                     IVSImage image = slide.getFirstImageBlock().getImage();
-                    
-                    try {
-                        byte[] byteArray = storageEngine.getImageContent(image.getId(), image.getFilename());
-                        
-                        storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
-                        
-                        
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (FileStorageException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                    copyImageToFolder(image, imagesFolderPath);
+             
 
               });
             });
             
             
-        } );
-        return new ByteArrayResource(null);
+        } 
+        return resource;
+    }
+
+
+    private void copyImageToFolder(IVSImage image, String imagesFolderPath) {
+        try {
+            byte[] byteArray = storageEngine.getImageContent(image.getId(), image.getFilename());
+
+            storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
+
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (FileStorageException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
     }
 
 
     private Resource addHtmlPage(String directory, String spaceFolderPath) {
         // TODO Auto-generated method stub
+        Resource resource  = null;
+        try {          
+            
+//       byte[] fileContent =   storageEngine.getFileContent("template", "downloadTemplate.html", path); //TODO: to be made constant
+            byte[] fileContent = download("http://localhost:8080/vspace/exhibit/space/download/" + directory);
+            resource =  new ByteArrayResource(fileContent);
         
-        try {
-            
-            
-            
-            
-//         byte[] fileContent =   storageEngine.getFileContent("template", "downloadTemplate.html", path); //TODO: to be made constant
-//         storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
-        return download("http://localhost:8080/vspace/exhibit/space/download/" + directory);
-         
+            storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+
          
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } 
-//        catch (FileStorageException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-        return null;
+        catch (FileStorageException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return resource;
         
     }
     
     
-    public  Resource download(String urlString) throws IOException {
+    public  byte[] download(String urlString) throws IOException {
         URL url = new URL(urlString);
-       return new ByteArrayResource(IOUtils.toByteArray(url)); 
+       return IOUtils.toByteArray(url); 
          
         
      }

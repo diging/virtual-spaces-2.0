@@ -1,6 +1,22 @@
 <html layout:decorate="~{layouts/main}">
 <head>
-<style>
+
+<!-- Bootstrap core CSS -->
+<link href="./../resources/bootstrap-4.1.2/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<link href="./../resources/bootstrap/assets/css/ie10-viewport-bug-workaround.css" type="text/css" rel="stylesheet">
+
+<!-- Custom styles for this template -->
+<link href="./../resources/bootstrap/grid.css" type="text/css" rel="stylesheet">
+<link href="./../resources/extra/Module_1.css" type="text/css" rel="stylesheet">
+<link href="./../resources/extra/Module_1_slideshow_1.css" type="text/css" rel="stylesheet">
+<link href="./../resources/extra/Home.css" type="text/css" rel="stylesheet">
+<link href="./../resources/extra/Sequence.css" type="text/css" rel="stylesheet">
+<link href="./../resources/extra/diging-icon-pack.css" type="text/css" rel="stylesheet">
+
+
+<style >
 .Info_cz_Class .tooltiptext {
     visibility: hidden;
     width: 120px;
@@ -459,7 +475,7 @@
             })
 		}
 		</script>
-		
+	<!-- 	
 		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
 		  <span class="icon-warning secondary"></span> You are viewing the public page. Go to the staff home 
 		  	<span class="icon-home secondary"></span> to make changes.
@@ -468,7 +484,7 @@
 		  </button>
 		</div>
 		<div>
-		
+	<!-- 	 
 	    <div th:if="${!isSpacePublished}" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
            <span class="icon-warning secondary"></span> This space has not been published.
 		   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -476,8 +492,8 @@
 		  </button>
 		</div>
 		
-		</div>
-		<div class="imgResizeDiv">
+		</div> -->
+	<!-- 	<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">
                     <span class="icon-expand secondary"
@@ -485,8 +501,8 @@
                         class="tooltiptext">Resize Image</span>
                 </button>
             </div>
-        
-        <div class="imgFullScreen">
+         -->
+ <!--        <div class="imgFullScreen">
                 <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="imageFullScreen()">
                     <span class="icon-visible secondary"
@@ -494,7 +510,7 @@
                         class="tooltiptext">Full screen option</span>
                 </button>
             </div>
-            
+             -->
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -583,7 +599,9 @@
 
                             <img
                                 th:style="|max-width: ${space.image?.width}px; border-radius: 13px; width: 100%;|"
-                                id="bgImage" th:src="@{'/images/'+${space.image?.id}+'/'+${space.image?.filename} }"/>
+                                id="bgImage" th:src="${'./images/'+ space.image?.id + '/'+ space.image?.filename}"/>
+                                 
+
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">
