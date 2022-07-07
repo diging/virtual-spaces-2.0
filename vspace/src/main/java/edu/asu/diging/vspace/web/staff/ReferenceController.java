@@ -32,7 +32,7 @@ public class ReferenceController {
             @PathVariable("refId") String refId) throws IOException {
         IReference reference = referenceManager.getReference(refId);
         if(reference!=null) { 
-            return new ResponseEntity<IReference>((Reference)reference, HttpStatus.OK);
+            return new ResponseEntity<IReference>(reference, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
