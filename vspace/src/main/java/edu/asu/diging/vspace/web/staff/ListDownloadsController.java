@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
@@ -61,10 +62,9 @@ public class ListDownloadsController {
         String spaceId= "SPA000000001";
         Resource resource = null;  
         try {
-            
-      
+           ;      
             //            System.out.println(request.+"://"+ request.getServerName());
-            resource =   downloadsManager.downloadSpaces();
+            resource =   downloadsManager.downloadSpaces( request.getServletContext().getRealPath("") + "/resources" );
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=SPA000000001")
@@ -79,29 +79,5 @@ public class ListDownloadsController {
     }
     
   
-    private static void downloadImage(String webUrl, String imgSrc) {
-        BufferedImage image = null;
-        try {
-            if (!(imgSrc.startsWith("http"))) {
-                String url = null;
-                url = url + imgSrc;
-            } else {
-                String url = imgSrc;
-            }
-            imgSrc = imgSrc.substring(imgSrc.lastIndexOf("/") + 1);
-            String imageFormat = null;
-            imageFormat = imgSrc.substring(imgSrc.lastIndexOf(".") + 1);
-            String imgPath = null;
-            imgPath = "/Users/prachikharge/virtual-spaces-2.0/vspace/uploads/images/" + imgSrc ;
-            String url = null;
-            URL imageUrl = new URL(url);
-            image = ImageIO.read(imageUrl);
-            if (image != null) {
-                File file = new File(imgPath);
-                ImageIO.write(image, imageFormat, file);
-            }
-        } catch (IOException ex) {
-        }
 
-    }
 }

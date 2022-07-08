@@ -15,6 +15,8 @@ public interface IStorageEngine {
 	
 	   String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException;
 
-    byte[] getFileContent(String directory, String filename, String path) throws IOException;
+    byte[] getFileContent(String path) throws IOException;
+
+    String storeFolder(byte[] fileContent, String path) throws FileStorageException;
 
 }

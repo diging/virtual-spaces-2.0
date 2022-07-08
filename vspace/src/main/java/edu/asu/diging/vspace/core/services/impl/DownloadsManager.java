@@ -12,7 +12,10 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -37,7 +40,8 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 @Service
 public class DownloadsManager {
 
-    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     SpaceRepository spaceRepository;
     
@@ -48,12 +52,13 @@ public class DownloadsManager {
     private String path;
     
     
-    public Resource downloadSpaces() {
+    public Resource downloadSpaces(String resourcesPath) {
         
         Resource resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder("Exhibition", path);
         
-//        copyResourcesToExhibition //TODO: 
+        copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); //TODO: 
+        
         
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
         
@@ -89,6 +94,23 @@ public class DownloadsManager {
     }
 
 
+    private void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
+
+        try {
+
+
+            FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + "resources")); //TODO: constant
+
+
+        } catch (IOException e) {
+            logger.error("Could not copy resources" , e);
+            e.printStackTrace();
+        } 
+
+
+    }
+
+
     private void copyImageToFolder(IVSImage image, String imagesFolderPath) {
         try {
             byte[] byteArray = storageEngine.getImageContent(image.getId(), image.getFilename());
@@ -107,11 +129,9 @@ public class DownloadsManager {
 
 
     private Resource addHtmlPage(String directory, String spaceFolderPath) {
-        // TODO Auto-generated method stub
         Resource resource  = null;
         try {          
             
-//       byte[] fileContent =   storageEngine.getFileContent("template", "downloadTemplate.html", path); //TODO: to be made constant
             byte[] fileContent = download("http://localhost:8080/vspace/exhibit/space/download/" + directory);
             resource =  new ByteArrayResource(fileContent);
         

@@ -101,6 +101,8 @@ public class StorageEngine implements IStorageEngine {
             parent.mkdir();
         }
         File file = new File(parent.getAbsolutePath() + File.separator + filename);
+        
+
         BufferedOutputStream stream;
         try {
             stream = new BufferedOutputStream(new FileOutputStream(file));
@@ -129,8 +131,8 @@ public class StorageEngine implements IStorageEngine {
     }
     
     @Override
-    public byte[] getFileContent(String directory, String filename, String path) throws IOException {
-        File fileObject = new File(path + File.separator + directory + File.separator + filename);
+    public byte[] getFileContent(String path) throws IOException {
+        File fileObject = new File(path );
         URLConnection con = fileObject.toURI().toURL().openConnection();
         
         InputStream input = con.getInputStream();
@@ -152,5 +154,33 @@ public class StorageEngine implements IStorageEngine {
         byte[] bytes = byteOutput.toByteArray();
         byteOutput.close();
         return bytes;
+    }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
+     */
+    @Override
+    public String storeFolder(byte[] fileContent, String path) throws FileStorageException {
+        File parent = new File(path );
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+//        File file = new File(parent.getAbsolutePath() + File.separator + filename);
+        
+
+        BufferedOutputStream stream;
+        try {
+            stream = new BufferedOutputStream(new FileOutputStream(parent));
+        } catch (FileNotFoundException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        try {
+            stream.write(fileContent);
+            stream.close();
+        } catch (IOException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        
+        return path;
     }
 }
