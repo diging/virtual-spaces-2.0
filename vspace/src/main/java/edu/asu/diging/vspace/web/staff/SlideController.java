@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -40,8 +38,7 @@ public class SlideController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
-    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model)
-            throws JsonProcessingException {
+    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
 
         ISlide slide = slideManager.getSlide(id);
         model.addAttribute("module", moduleManager.getModule(moduleId));

@@ -163,7 +163,7 @@ public class ContentBlockManagerTest {
     }
 
     @Test
-    public void test_deleteSpaceBlock_success() throws BlockDoesNotExistException {
+    public void test_deleteSpaceBlockById_success() throws BlockDoesNotExistException {
         String spaceBlockId = "realId";
         when(contentBlockRepository.findById(spaceBlockId)).thenReturn(Optional.of(contentBlock));
         managerToTest.deleteSpaceBlockById(spaceBlockId, "slideId_1");
@@ -179,11 +179,17 @@ public class ContentBlockManagerTest {
         Integer contentOrder = 2;
         Space space = new Space();
         ISpaceBlock spaceBlock = new SpaceBlock();
+        spaceBlock.setTitle(title);
+        spaceBlock.setId(slideId);
+        spaceBlock.setSpace(space);
         Mockito.when(slideManager.getSlide(slideId)).thenReturn(slide);
         Mockito.when(spaceBlockRepo.save((SpaceBlock) spaceBlock)).thenReturn((SpaceBlock) spaceBlock);
         Mockito.when(spaceBlockFactory.createSpaceBlock(slide, title, (ISpace) space)).thenReturn(spaceBlock);
         ISpaceBlock createdBlock = managerToTest.createSpaceBlock(slideId, title, contentOrder, space);
         Assert.assertEquals(createdBlock.getContentOrder(), contentOrder);
+        Assert.assertEquals(createdBlock.getTitle(), title);
+        Assert.assertEquals(createdBlock.getId(), slideId);
+        Assert.assertEquals(createdBlock.getSpace(), space);
     }
 
     @Test
@@ -303,23 +309,22 @@ public class ContentBlockManagerTest {
         String slideId = "slide1";
         ISlide slide = new Slide();
         slide.setId(slideId);
+        String contentBlockIdString = "contentBlockId1";
         ContentBlock firstContentBlock = new ContentBlock();
-        firstContentBlock.setId("contentBlockId1");
+        firstContentBlock.setId(contentBlockIdString);
         firstContentBlock.setContentOrder(Integer.valueOf(3));
-
-        ContentBlock secondContentBlock = new ContentBlock();
-        secondContentBlock.setId("contentBlockId2");
-        secondContentBlock.setContentOrder(Integer.valueOf(4));
 
         List<IContentBlock> contentBlocks = new ArrayList<>();
         contentBlocks.add(firstContentBlock);
-        contentBlocks.add(secondContentBlock);
         slide.setContents(contentBlocks);
         when(slideManager.getSlide(slideId)).thenReturn(slide);
         when(slideRepo.findById("notARealId")).thenReturn(Optional.empty());
 
-        List<IContentBlock> contentBlock = managerToTest.getAllContentBlocks(slideId);
-        assertTrue(!contentBlock.isEmpty());
+        List<IContentBlock> returnedContentBlock = managerToTest.getAllContentBlocks(slideId);
+        assertEquals(returnedContentBlock.get(0).getId(),contentBlockIdString);
+        assertEquals(returnedContentBlock.size(),contentBlocks.size());
+        assertEquals(returnedContentBlock.get(0).getContentOrder(), Integer.valueOf(3));
+        assertTrue(!returnedContentBlock.isEmpty());
 
     }
 
@@ -329,6 +334,7 @@ public class ContentBlockManagerTest {
         String slideId = "realSlideId";
         when(contentBlockRepository.findById(blockId)).thenReturn(Optional.of(contentBlock));
         managerToTest.deleteChoiceBlockById(blockId, slideId);
+        Mockito.verify(choiceBlockRepo).deleteById(blockId);
 
     }
 
@@ -337,6 +343,7 @@ public class ContentBlockManagerTest {
         String blockId = null;
         String slideId = "realSlideId";
         managerToTest.deleteChoiceBlockById(blockId, slideId);
+        Mockito.verify(choiceBlockRepo, Mockito.never()).deleteById(blockId);
 
     }
 
@@ -346,6 +353,7 @@ public class ContentBlockManagerTest {
         String slideId = "realSlideId";
         when(contentBlockRepository.findById(blockId)).thenReturn(Optional.empty());
         managerToTest.deleteChoiceBlockById(blockId, slideId);
+        Mockito.verify(choiceBlockRepo, Mockito.never()).deleteById(blockId);
 
     }
 
@@ -356,6 +364,7 @@ public class ContentBlockManagerTest {
         when(contentBlockRepository.findById(blockId)).thenReturn(Optional.of(contentBlock));
         Mockito.doThrow(EmptyResultDataAccessException.class).when(choiceBlockRepo).deleteById(blockId);
         managerToTest.deleteChoiceBlockById(blockId, slideId);
+        Mockito.verify(choiceBlockRepo, Mockito.never()).deleteById(blockId);
 
     }
 
@@ -375,6 +384,7 @@ public class ContentBlockManagerTest {
         when(imageFactory.createImage(fileName, fileName)).thenReturn(slideContentImage);
         when(imageRepo.save((VSImage) slideContentImage)).thenReturn((VSImage) slideContentImage);
         managerToTest.updateImageBlock(imageBlock, image, fileName);
+        Mockito.verify(imageBlockRepo).save((ImageBlock)imageBlock);
 
     }
 
@@ -386,14 +396,16 @@ public class ContentBlockManagerTest {
         slideContentImage.setWidth(1300);
         IImageBlock imageBlock = new ImageBlock();
         managerToTest.updateImageBlock(imageBlock, slideContentImage);
+        Mockito.verify(imageBlockRepo).save((ImageBlock)imageBlock);
 
     }
 
     @Test
-    public void test_createImageBlock_success() throws ImageCouldNotBeStoredException, FileStorageException {
+    public void test_createImageBlock_success1() throws ImageCouldNotBeStoredException, FileStorageException {
         String slideId = "slide1";
         String fileName = "dummyFile";
         String contentType = "application/octet-stream";
+        String createdBy = "Baishali";
         Integer contentOrder = 3;
         ISlide slide = new Slide();
         slide.setId(slideId);
@@ -401,25 +413,31 @@ public class ContentBlockManagerTest {
         slideContentImage.setHeight(700);
         slideContentImage.setWidth(1300);
         IImageBlock imageBlock = new ImageBlock();
-        imageBlock.setContentOrder(contentOrder);
+        imageBlock.setCreatedBy(createdBy);
+        imageBlock.setImage(slideContentImage);
+        imageBlock.setId(slideId);
         byte[] image = new byte[1000];
         String relativePathString = "";
 
         when(slideManager.getSlide(slideId)).thenReturn(slide);
         when(imageFactory.createImage(fileName, contentType)).thenReturn(slideContentImage);
         when(storage.storeFile(image, fileName, contentType)).thenReturn(relativePathString);
-        when(imageBlockRepo.save((ImageBlock) imageBlock)).thenReturn((ImageBlock) imageBlock);
+        Mockito.when(imageBlockRepo.save((ImageBlock) imageBlock)).thenReturn((ImageBlock) imageBlock);
         Mockito.when(imageRepo.save((VSImage) slideContentImage)).thenReturn((VSImage) slideContentImage);
         Mockito.when(imageBlockFactory.createImageBlock(slide, slideContentImage)).thenReturn(imageBlock);
-        managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
-
+        CreationReturnValue  returnValue =  managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
+        assertEquals(returnValue.getElement().getCreatedBy(), createdBy);
+        assertEquals(returnValue.getElement().getId(), slideId);
+        assertNotNull(returnValue);
+        
     }
 
     @Test
-    public void test_createImageBlock2_success() throws ImageCouldNotBeStoredException, FileStorageException {
+    public void test_createImageBlock_success2() throws ImageCouldNotBeStoredException, FileStorageException {
         String slideId = "slide1";
         String fileName = "dummyFile";
         String contentType = "application/octet-stream";
+        String createdBy = "Baishali";
         Integer contentOrder = 3;
         ISlide slide = new Slide();
         slide.setId(slideId);
@@ -427,13 +445,17 @@ public class ContentBlockManagerTest {
         slideContentImage.setHeight(700);
         slideContentImage.setWidth(1300);
         IImageBlock imageBlock = new ImageBlock();
-        imageBlock.setContentOrder(contentOrder);
+        imageBlock.setCreatedBy(createdBy);
+        imageBlock.setImage(slideContentImage);
+        imageBlock.setId(slideId);
 
         when(slideManager.getSlide(slideId)).thenReturn(slide);
         when(imageFactory.createImage(fileName, contentType)).thenReturn(slideContentImage);
         when(imageBlockRepo.save((ImageBlock) imageBlock)).thenReturn((ImageBlock) imageBlock);
         Mockito.when(imageBlockFactory.createImageBlock(slide, slideContentImage)).thenReturn(imageBlock);
         CreationReturnValue returnValue = managerToTest.createImageBlock(slideId, slideContentImage, contentOrder);
+        assertEquals(returnValue.getElement().getCreatedBy(), createdBy);
+        assertEquals(returnValue.getElement().getId(), slideId);
         assertNotNull(returnValue);
 
     }
@@ -457,13 +479,16 @@ public class ContentBlockManagerTest {
         String titleString = "Title1";
         String text = "text123";
         ITextBlock textBlock = new TextBlock();
+        textBlock.setId(slideId);
+        textBlock.setText(text);
 
         Mockito.when(slideManager.getSlide(slideId)).thenReturn(slide);
         Mockito.when(textBlockFactory.createTextBlock(slide, text)).thenReturn(textBlock);
         Mockito.when(textBlockRepo.save((TextBlock) textBlock)).thenReturn((TextBlock) textBlock);
         ITextBlock createdBlock = managerToTest.createTextBlock(titleString, text, contentOrder);
-
         Assert.assertEquals(createdBlock.getContentOrder(), contentOrder);
+        Assert.assertEquals(createdBlock.getId(), slideId);
+        Assert.assertEquals(createdBlock.getText(), text);
 
     }
 
