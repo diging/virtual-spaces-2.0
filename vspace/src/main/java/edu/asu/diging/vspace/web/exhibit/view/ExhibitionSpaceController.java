@@ -124,6 +124,6 @@ public class ExhibitionSpaceController {
         if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
         }
-        return "staff/downloads/downloadTemplate";
+        return "exhibition/downloads/spaceDownloadTemplate";
     }
 }

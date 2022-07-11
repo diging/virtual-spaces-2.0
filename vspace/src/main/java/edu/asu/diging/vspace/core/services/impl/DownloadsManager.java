@@ -5,7 +5,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
@@ -52,47 +58,83 @@ public class DownloadsManager {
     private String path;
     
     
-    public Resource downloadSpaces(String resourcesPath) {
+    public ZipOutputStream downloadSpaces(String resourcesPath) {
         
-        Resource resource = null;
+        ZipOutputStream resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder("Exhibition", path);
-        
+
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); //TODO: 
-        
-        
+
+
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
-        
+
         for(Space space : spaces) {
-            
+
             String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
-            
-          resource = addHtmlPage(space.getId(), spaceFolderPath);
-           
+
+            addHtmlPage(space.getId(), spaceFolderPath , "/space/download/"+ space.getId() );
+
             String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
-            
+
             copyImageToFolder(space.getImage(),imagesFolderPath) ;
-            
+
             List<IModuleLink> moduleLinks = space.getModuleLinks();
-            
+
             moduleLinks.forEach(moduleLink -> {
-             IModule module =   moduleLink.getModule();
+                IModule module =   moduleLink.getModule();
+                ISequence startSequence = module.getStartSequence();
+                if(startSequence!= null) {
+                    List<ISlide> slides = startSequence.getSlides();
+                    slides.forEach(slide -> {
 
-                  List<ISlide> slides = module.getSlides();
-                  
-                  slides.forEach(slide -> {
-                     
-                    IVSImage image = slide.getFirstImageBlock().getImage();
-                    copyImageToFolder(image, imagesFolderPath);
-             
+                        IVSImage image = slide.getFirstImageBlock().getImage();
+                        copyImageToFolder(image, imagesFolderPath);
+                        addHtmlPage(module.getId(), spaceFolderPath , space.getId() + "/module/" + module.getId() + "/sequence/"+ startSequence.getId()+"/slide/"+slide.getId() + "?isDownload=true");
 
-              });
+
+                    });
+                }
             });
-            
-            
+
+
         } 
+        
+        try {
+            resource= zip(exhibitionFolderPath, path + File.separator + "Exhibition.zip");//TODO change folder name unique
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return resource;
     }
 
+    public ZipOutputStream zip( String sourcDirPath,  String zipPath) throws IOException {
+        Path zipFile = Files.createFile(Paths.get(zipPath));
+
+        Path sourceDirPath = Paths.get(sourcDirPath);
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipFile));
+             Stream<Path> paths = Files.walk(sourceDirPath)) {
+            paths
+                    .filter(path -> !Files.isDirectory(path))
+                    .forEach(path -> {
+                        ZipEntry zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+                        try {
+                            zipOutputStream.putNextEntry(zipEntry);
+                            Files.copy(path, zipOutputStream);
+                            zipOutputStream.closeEntry();
+                        } catch (IOException e) {
+                            System.err.println(e);
+                        }
+                    });
+            return zipOutputStream;
+            
+        } catch (IOException e1) {
+            throw new IOException(e1);
+        }
+
+        
+//        logger.debug("Zip is created at : "+zipFile);
+//        return new ByteArrayResource(Files.readAllBytes(zipFile));
+      }
 
     private void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
 
@@ -104,7 +146,6 @@ public class DownloadsManager {
 
         } catch (IOException e) {
             logger.error("Could not copy resources" , e);
-            e.printStackTrace();
         } 
 
 
@@ -118,35 +159,24 @@ public class DownloadsManager {
             storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
 
 
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (FileStorageException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }        
+        } catch (IOException | FileStorageException e) {
+            logger.error("Could not copy images" , e);
+        }     
     }
 
 
-    private Resource addHtmlPage(String directory, String spaceFolderPath) {
-        Resource resource  = null;
+    private void addHtmlPage(String directory, String spaceFolderPath, String api) {
         try {          
             
-            byte[] fileContent = download("http://localhost:8080/vspace/exhibit/space/download/" + directory);
-            resource =  new ByteArrayResource(fileContent);
-        
+            byte[] fileContent = download("http://localhost:8080/vspace/exhibit"+api);        
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 
          
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } 
-        catch (FileStorageException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return resource;
+        } catch (IOException | FileStorageException e) {
+            logger.error("Could not copy template" , e);
+        }   
+        
+       
         
     }
     

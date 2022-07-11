@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -51,30 +52,31 @@ public class ListDownloadsController {
     @RequestMapping("/staff/downloads/list")
     public String listDownloads(Model model) {
         
-        return "staff/downloads/downloadList";
+        return "exhibition/downloads/downloadList";
     }
     
     
     @RequestMapping(value = "/staff/download", method = RequestMethod.GET) 
-    public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request) {
+    public ResponseEntity<ZipOutputStream> downloadExhibition(HttpServletRequest request) {
 
    
-        String spaceId= "SPA000000001";
-        Resource resource = null;  
+        ZipOutputStream resource = null;  
         try {
            ;      
-            //            System.out.println(request.+"://"+ request.getServerName());
             resource =   downloadsManager.downloadSpaces( request.getServletContext().getRealPath("") + "/resources" );
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=SPA000000001")
-                    .contentLength(resource.contentLength())
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+            ResponseEntity<ZipOutputStream> response = ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=SPA000000001.zip")
+//                    .contentLength(resource.contentLength())
+                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+                  
                     .body(resource);
-
-        } catch (IOException e) {
+          
+            return response;
+        } 
+        catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ZipOutputStream>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
