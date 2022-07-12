@@ -58,6 +58,7 @@
                   <a class="list-group-item list-group-item-action" id="list-space-3" data-bs-toggle="toggle" data-toggle="collapse" href="#space-3" role="tab" aria-controls="space-3"><li>Edit a Space</li></a>
                   <a class="list-group-item list-group-item-action" id="list-space-4" data-bs-toggle="toggle" data-toggle="collapse" href="#space-4" role="tab" aria-controls="space-4"><li>Change Background Image</li></a>
                   <a class="list-group-item list-group-item-action" id="list-space-5" data-bs-toggle="toggle" data-toggle="collapse" href="#space-5" role="tab" aria-controls="space-5"><li>Delete a Space</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-space-6" data-bs-toggle="toggle" data-toggle="collapse" href="#space-6" role="tab" aria-controls="space-6"><li>Space Overview</li></a>
                 <!-- Modules-->                  
                   <a class="list-group-item list-group-item-action" id="list-module" data-bs-toggle="list" data-toggle="collapse" href="#module" role="tab" aria-controls="module"><h5>Modules</h5></a>
                   <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#module-1" role="tab" aria-controls="module-1"><li>Overview</li></a>
@@ -72,15 +73,15 @@
                 <!-- Images-->  
                   <a class="list-group-item list-group-item-action" id="list-image" data-bs-toggle="list" data-toggle="collapse" href="#image" role="tab" aria-controls="image"><h5>Images</h5></a>
                   <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#image-1" role="tab" aria-controls="image-1"><li>Overview</li></a>
-                  <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#image-2" role="tab" aria-controls="image-2"><li>Edit an Image</li></a>
-                  <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#image-3" role="tab" aria-controls="image-3"><li>Image Tagging</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-module-2" data-bs-toggle="toggle" data-toggle="collapse" href="#image-2" role="tab" aria-controls="image-2"><li>Edit an Image</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-module-3" data-bs-toggle="toggle" data-toggle="collapse" href="#image-3" role="tab" aria-controls="image-3"><li>Image Tagging</li></a>
                 <!-- User Management-->  
                   <a class="list-group-item list-group-item-action" id="list-user" data-bs-toggle="list"  data-toggle="collapse" href="#user" role="tab" aria-controls="user"><h5>User Management</h5></a>
                   <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#user-1" role="tab" aria-controls="user-1"><li>Overview</li></a>
-                  <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#user-2" role="tab" aria-controls="user-2"><li>Activate User</li></a>
-                  <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#user-3" role="tab" aria-controls="user-3"><li>Making a User an Admin</li></a>
-                  <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#user-4" role="tab" aria-controls="user-4"><li>Making a User Staff</li></a>
-                  <a class="list-group-item list-group-item-action" id="list-module-1" data-bs-toggle="toggle" data-toggle="collapse" href="#user-5" role="tab" aria-controls="user-5"><li>Deactivate User</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-module-2" data-bs-toggle="toggle" data-toggle="collapse" href="#user-2" role="tab" aria-controls="user-2"><li>Activate a User</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-module-3" data-bs-toggle="toggle" data-toggle="collapse" href="#user-3" role="tab" aria-controls="user-3"><li>Making a User an Admin</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-module-4" data-bs-toggle="toggle" data-toggle="collapse" href="#user-4" role="tab" aria-controls="user-4"><li>Making a User Staff</li></a>
+                  <a class="list-group-item list-group-item-action" id="list-module-5" data-bs-toggle="toggle" data-toggle="collapse" href="#user-5" role="tab" aria-controls="user-5"><li>Deactivate a User</li></a>
                 </div>
               </div>
             <!-- Contents-->
@@ -141,6 +142,15 @@
                         <li>You can't locate it in the Space Management page.</li>
                         <li>All the space links, external links and module links with the source being the deleted space will be deleted.</li>
                         <li>All the space links with the destination being the deleted space will still exist but will now point to nothing. Make sure you set a new target for those space links or delete them if not needed.</li>
+                    <p class="just-margin"></p>
+                    <!-- Spaces 6-->
+                    <h3 id="space-6">Space Overview</h3>
+                    <p class="just-margin-small"></p>
+                    <p class="just-margin-small"></p>
+                    By selecting "Space Overview" from the menu bar, you can see how the spaces are interconnected. You may see how each slide is associated with sequences in the same module with this function.  A branching point block would connect to a second sequence that was created in a module with a slide.
+                    <p class="just-margin-small"></p>
+                    <img src="assets/img/carousel/spaceoverview.png" width="600" class="rounded shadow img-fluid">
+                    <p class="just-margin-small"></p>
                     <p class="just-margin"></p>
                   </div>
                   <div class="tab-pane fade" id="module" role="tabpanel" aria-labelledby="list-module">
@@ -214,6 +224,8 @@
                     To create a new Sequence click on the plus icon in the column head next to "Sequences":
                     <p class="just-margin-small"></p>
                     <img src="assets/img/carousel/newsequence.png" width="150" class="rounded shadow img-fluid">
+                    <p class="just-margin-small"></p>
+                    Start sequences set the entry point of a module. So when the user clicks on a module (in the public exhibition), the first slide of the start sequence, is shown and then the next button goes to the next slide in the sequence, etc.
                     <p class="just-margin"></p>
                   </div>
                   <div class="tab-pane fade" id="image" role="tabpanel" aria-labelledby="list-image">
@@ -250,7 +262,7 @@
                     <p class="just-margin-small"></p>
                     <!-- User 2-->
                     <p class="just-margin"></p>
-                    <h3 id="image-2">Activate User</h3>
+                    <h3 id="image-2">Activate a User</h3>
                     <img src="assets/img/carousel/activate.png" width="600" class="rounded shadow img-fluid">
                     <p class="just-margin-small"></p>
                     To edit the name and description for an image, click on the image from the image list which will navigate you to the image page. Click on the <img src="assets/img/carousel/editsymbol.png"> icon and once you are done with your changes click "Save Image" button to save the changes. Once this is done you will be redirected to the image page which reflects the changes made.
@@ -267,7 +279,7 @@
                     <p class="just-margin-small"></p>
                     <!-- User 5-->
                     <p class="just-margin"></p>
-                    <h3 id="image-3">Deactivate User</h3>
+                    <h3 id="image-3">Deactivate a User</h3>
                     To deactivate a user, click on the "Deactivate User" link next to a user. Deactivating a user prevent that user to login to Virtual Spaces 2.0. It does not delete the user account. It can be reactivated at any point by clicking on the "Activate" link.
                     <p class="just-margin-small"></p>
                     <p class="just-margin"></p>
