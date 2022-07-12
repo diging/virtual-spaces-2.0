@@ -63,7 +63,7 @@ public class ListDownloadsController {
         ZipOutputStream resource = null;  
         try {
            ;      
-            resource =   downloadsManager.downloadSpaces( request.getServletContext().getRealPath("") + "/resources" );
+            resource =   downloadsManager.downloadExhibition( request.getServletContext().getRealPath("") + "/resources" );
 
             ResponseEntity<ZipOutputStream> response = ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=SPA000000001.zip")

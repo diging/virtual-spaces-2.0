@@ -31,12 +31,16 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
+import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -58,7 +62,7 @@ public class DownloadsManager {
     private String path;
     
     
-    public ZipOutputStream downloadSpaces(String resourcesPath) {
+    public ZipOutputStream downloadExhibition(String resourcesPath) {
         
         ZipOutputStream resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder("Exhibition", path);
@@ -69,34 +73,17 @@ public class DownloadsManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
+            downloadSpace(space, exhibitionFolderPath);
 
-            String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
-
-            addHtmlPage(space.getId(), spaceFolderPath , "/space/download/"+ space.getId() );
-
-            String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
-
-            copyImageToFolder(space.getImage(),imagesFolderPath) ;
-
-            List<IModuleLink> moduleLinks = space.getModuleLinks();
-
-            moduleLinks.forEach(moduleLink -> {
-                IModule module =   moduleLink.getModule();
-                ISequence startSequence = module.getStartSequence();
-                if(startSequence!= null) {
-                    List<ISlide> slides = startSequence.getSlides();
-                    slides.forEach(slide -> {
-
-                        IVSImage image = slide.getFirstImageBlock().getImage();
-                        copyImageToFolder(image, imagesFolderPath);
-                        addHtmlPage(module.getId(), spaceFolderPath , space.getId() + "/module/" + module.getId() + "/sequence/"+ startSequence.getId()+"/slide/"+slide.getId() + "?isDownload=true");
-
-
-                    });
-                }
-            });
-
-
+//space.getSpaceLinks();
+            
+//            List<IExternalLink> externalLinks = space.getExternalLinks();
+//            externalLinks.forEach(externalLink -> {
+//               externalLink. 
+//            });
+            
+            
+                    
         } 
         
         try {
@@ -105,6 +92,73 @@ public class DownloadsManager {
             e.printStackTrace();
         }
         return resource;
+    }
+
+    private void downloadSpace(Space space, String exhibitionFolderPath) {
+
+        String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
+
+        addHtmlPage(space.getId(), spaceFolderPath , "/space/download/"+ space.getId() );
+
+        String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
+
+        copyImageToFolder(space.getImage(),imagesFolderPath) ;
+
+        List<IModuleLink> moduleLinks = space.getModuleLinks();
+
+        moduleLinks.forEach(moduleLink -> {
+                     
+            IModule module =   moduleLink.getModule();
+            downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
+            
+        });        
+    }
+
+    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+        ISequence startSequence = module.getStartSequence();
+        if(startSequence!= null) {
+            downloadSequence(startSequence, module, space, spaceFolderPath,imagesFolderPath );
+           
+        }
+
+    }
+
+    private void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+            String imagesFolderPath) {
+        List<ISlide> slides = startSequence.getSlides();
+        slides.forEach(slide -> {
+            if(slide instanceof BranchingPoint) {
+                BranchingPoint branchingPoint = (BranchingPoint) slide;
+           List<IChoice> choices  =  branchingPoint.getChoices();
+           choices.forEach(choice -> {
+               downloadSequence(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath); 
+           });
+            }
+            else if(slide.getClass().equals(ISlide.class)) {
+                IVSImage image = slide.getFirstImageBlock().getImage();
+                copyImageToFolder(image, imagesFolderPath);
+                String api = getApiToDownloadSlide(space, module, startSequence , slide);
+                addHtmlPage(slide.getId(), spaceFolderPath ,"/" +space.getId() + "/module/" + module.getId() + "/sequence/"+ startSequence.getId()+"/slide/"+slide.getId() + "?isDownload=true");
+            }
+
+        });
+        
+    }
+
+    private String getApiToDownloadSlide(ISpace space, IModule module, ISequence startSequence, ISlide slide) {
+        StringBuilder apiStringBuilder = new StringBuilder();
+        apiStringBuilder.append("/");
+        apiStringBuilder.append(space.getId());
+        apiStringBuilder.append("/module/");
+        apiStringBuilder.append(module.getId());
+        apiStringBuilder.append("/sequence/");
+
+        apiStringBuilder.append(startSequence.getId());
+        apiStringBuilder.append("/slide/");
+        apiStringBuilder.append(slide.getId());
+        apiStringBuilder.append("?isDownload=true");
+
+        return apiStringBuilder.toString();
     }
 
     public ZipOutputStream zip( String sourcDirPath,  String zipPath) throws IOException {

@@ -130,7 +130,7 @@ public class ExhibitionSlideController {
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
         
-        if(isDownload) {
+        if(Boolean.TRUE.equals(isDownload)) {
             return "exhibition/downloads/moduleDownloadTemplate";
         }else {
             return "exhibition/module";
