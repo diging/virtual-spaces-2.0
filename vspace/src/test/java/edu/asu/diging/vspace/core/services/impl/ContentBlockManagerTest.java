@@ -321,8 +321,8 @@ public class ContentBlockManagerTest {
         when(slideRepo.findById("notARealId")).thenReturn(Optional.empty());
 
         List<IContentBlock> returnedContentBlock = managerToTest.getAllContentBlocks(slideId);
-        assertEquals(returnedContentBlock.get(0).getId(),contentBlockIdString);
-        assertEquals(returnedContentBlock.size(),contentBlocks.size());
+        assertEquals(returnedContentBlock.get(0).getId(), contentBlockIdString);
+        assertEquals(returnedContentBlock.size(), contentBlocks.size());
         assertEquals(returnedContentBlock.get(0).getContentOrder(), Integer.valueOf(3));
         assertTrue(!returnedContentBlock.isEmpty());
 
@@ -369,7 +369,7 @@ public class ContentBlockManagerTest {
     }
 
     @Test
-    public void test_updateImageBlock_success1() throws ImageCouldNotBeStoredException {
+    public void test_updateImageBlock_successImageUpdatedWithFilename() throws ImageCouldNotBeStoredException {
         String slideId = "realSlideId";
         String fileName = "dummyFile";
         ISlide slide = new Slide();
@@ -384,24 +384,25 @@ public class ContentBlockManagerTest {
         when(imageFactory.createImage(fileName, fileName)).thenReturn(slideContentImage);
         when(imageRepo.save((VSImage) slideContentImage)).thenReturn((VSImage) slideContentImage);
         managerToTest.updateImageBlock(imageBlock, image, fileName);
-        Mockito.verify(imageBlockRepo).save((ImageBlock)imageBlock);
+        Mockito.verify(imageBlockRepo).save((ImageBlock) imageBlock);
 
     }
 
     @Test
-    public void test_updateImageBlock_success2() throws ImageCouldNotBeStoredException {
+    public void test_updateImageBlock_successImageUpdated() throws ImageCouldNotBeStoredException {
 
         IVSImage slideContentImage = new VSImage();
         slideContentImage.setHeight(700);
         slideContentImage.setWidth(1300);
         IImageBlock imageBlock = new ImageBlock();
         managerToTest.updateImageBlock(imageBlock, slideContentImage);
-        Mockito.verify(imageBlockRepo).save((ImageBlock)imageBlock);
+        Mockito.verify(imageBlockRepo).save((ImageBlock) imageBlock);
 
     }
 
     @Test
-    public void test_createImageBlock_success1() throws ImageCouldNotBeStoredException, FileStorageException {
+    public void test_createImageBlock_successImageCreatedWithFilename()
+            throws ImageCouldNotBeStoredException, FileStorageException {
         String slideId = "slide1";
         String fileName = "dummyFile";
         String contentType = "application/octet-stream";
@@ -425,18 +426,17 @@ public class ContentBlockManagerTest {
         Mockito.when(imageBlockRepo.save((ImageBlock) imageBlock)).thenReturn((ImageBlock) imageBlock);
         Mockito.when(imageRepo.save((VSImage) slideContentImage)).thenReturn((VSImage) slideContentImage);
         Mockito.when(imageBlockFactory.createImageBlock(slide, slideContentImage)).thenReturn(imageBlock);
-        CreationReturnValue  returnValue =  managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
+        CreationReturnValue returnValue = managerToTest.createImageBlock(slideId, image, fileName, contentOrder);
         assertEquals(returnValue.getElement().getCreatedBy(), createdBy);
         assertEquals(returnValue.getElement().getId(), slideId);
         assertNotNull(returnValue);
-        
+
     }
 
     @Test
-    public void test_createImageBlock_success2() throws ImageCouldNotBeStoredException, FileStorageException {
+    public void test_createImageBlock_successImageCreated()
+            throws ImageCouldNotBeStoredException, FileStorageException {
         String slideId = "slide1";
-        String fileName = "dummyFile";
-        String contentType = "application/octet-stream";
         String createdBy = "Baishali";
         Integer contentOrder = 3;
         ISlide slide = new Slide();
@@ -450,7 +450,6 @@ public class ContentBlockManagerTest {
         imageBlock.setId(slideId);
 
         when(slideManager.getSlide(slideId)).thenReturn(slide);
-        when(imageFactory.createImage(fileName, contentType)).thenReturn(slideContentImage);
         when(imageBlockRepo.save((ImageBlock) imageBlock)).thenReturn((ImageBlock) imageBlock);
         Mockito.when(imageBlockFactory.createImageBlock(slide, slideContentImage)).thenReturn(imageBlock);
         CreationReturnValue returnValue = managerToTest.createImageBlock(slideId, slideContentImage, contentOrder);
