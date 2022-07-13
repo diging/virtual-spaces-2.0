@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
@@ -57,29 +60,31 @@ public class ListDownloadsController {
     
     
     @RequestMapping(value = "/staff/download", method = RequestMethod.GET) 
-    public ResponseEntity<ZipOutputStream> downloadExhibition(HttpServletRequest request) {
+    public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request) {
 
-   
-        ZipOutputStream resource = null;  
-        try {
-           ;      
-            resource =   downloadsManager.downloadExhibition( request.getServletContext().getRealPath("") + "/resources" );
 
-            ResponseEntity<ZipOutputStream> response = ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=SPA000000001.zip")
-//                    .contentLength(resource.contentLength())
+        Resource resource = null; 
+        try {     
+            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
+            String exhibitionFolderName= "Exhibition"+ LocalDateTime.now();
+
+            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName);
+            resource = new ByteArrayResource(byteArrayResource);
+            return  ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+                    .contentLength(resource.contentLength())
                     .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-                  
                     .body(resource);
-          
-            return response;
+
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<ZipOutputStream>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
         }
     }
-    
+
   
 
 }
