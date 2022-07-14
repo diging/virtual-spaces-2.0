@@ -674,7 +674,32 @@
 			$("#confirmDeleteImageAlert").find('input').remove();
 			$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 			$("#confirmDeleteBiblioAlert").hide();
+			
 		});
+		
+		$("#cancelCloseBiblio").click(function() {
+			$("#confirmDeleteBiblioAlert").hide();
+			
+		});
+		
+		$("#closeBiblioAlert").click(function() {
+			$("#addBiblioAlert").hide();
+			
+		});
+		
+		
+		$("#closeDeleteReference").click(function() {
+			$("#confirmDeleteRefAlert").hide();
+			
+		});
+		
+		$("#closeReferenceAlert").click(function() {
+			$("#addReferenceAlert").hide();
+			
+		});
+		
+		
+		
 	
 		$("#cancelDeleteReference").click(function() {
 			$("#confirmDeleteTextAlert").find('input').remove();
@@ -951,7 +976,7 @@
 		    success: function(data) {
 			var biblioblock = $('<div><div id="'+ data.id +'" class="biblioDivStaff tab row"><p class="col-md-10"> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span></p>'
 					+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><span class="icon-trash error"></span></a>'
-					+ '<a class="btn addReference col-md-1" style="padding-top: 8px;" data-toggle="tooltip" title="Add Reference"><span class="icon-circle-add"></span></a><div id="referenceSpace" class="col-md-10"></div></div></div>');
+					+ '<a class="btn addReference col-md-1" style="padding-top: 8px;" data-toggle="tooltip" title="Add Reference"><span class="icon-circle-add"></span></a><div id="referenceSpace" class="col-md-11 offset-mid-1"></div></div></div>');
 
 			$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 			$('#slideSpace').append(biblioblock);             
@@ -985,6 +1010,8 @@
 		var editors = $("#editorsRef").val();
 		var type = $("#typeRef").val();
 		var note = $("#noteRef").val();
+		
+		
 
 		formData.append('title', title);
 		formData.append('author', author);
@@ -998,7 +1025,7 @@
 		formData.append('type', type);
 		formData.append('note', note);
 		var biblioBlockId = $('#currentBiblioId').attr('value');
-
+		
 		$("#titleRef").val('');
 		$("#authorRef").val('');
 		$("#yearRef").val('');
@@ -1015,7 +1042,7 @@
 		var object = {};
 		formData.forEach((value, key) => object[key] = value);
 		var jsonData = JSON.stringify(object);
-
+		
 		$.ajax({
 		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/add'],
 		    type: 'POST',
@@ -1027,8 +1054,8 @@
 			},
 		    data: jsonData,
 		    success: function(data) {
-			var referenceblock = $('<div id="'+ data.reference.id +'" class="referenceDivStaff row" style="padding-left: 25px;"><p class="col-md-10" >' + data.refDisplayText
-					+ '</p><input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference col-md-1" href="javascript:;"><span class="icon-trash error"></span></a></div>');
+			var referenceblock = $('<div id="'+ data.reference.id +'" class="referenceDivStaff row" style="padding-left: 25px;"><p class="col-md-10 offset-md-1" >' + data.refDisplayText
+					+ '</p><input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference " href="javascript:;"><span class="icon-trash error" ></span></a></div>');
 
 			$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
 			var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -1139,7 +1166,7 @@
 			$(".open").append('<p class="col-md-10">Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, Description: <span>' + formData.get('description')
 					+ '</span></p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:2.3%;"><i style="color: var(--error);" class="icon-trash error"></i></a>');
 
-			$(".open").append('<div id="referenceSpace" class="col-md-10">'+formData.get('refListDiv')) + '</div>';
+			$(".open").append('<div id="referenceSpace" class="col-md-12">'+formData.get('refListDiv')) + '</div>';
 
 			//reset border of the card
 			//rebind event handlers
@@ -1498,7 +1525,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Confirm Delete</h5>
-					<button type="button" class="close" data-dismiss="modal"
+					<button id="cancelCloseBiblio" type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -1521,7 +1548,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Confirm Delete</h5>
-					<button type="button" class="close" data-dismiss="modal"
+					<button id = "closeDeleteReference" type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -1703,7 +1730,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Add new Bibliography Block</h5>
-					<button type="button" class="close" data-dismiss="modal"
+					<button id ="closeBiblioAlert" type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -1736,7 +1763,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Add new Reference</h5>
-					<button type="button" class="close" data-dismiss="modal"
+					<button type="button" id = "closeReferenceAlert" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -1986,7 +2013,7 @@
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
-
+					
                     <div th:id="${contents.id}" class="biblioDivStaff tab row"
 				th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
 				<p class="col-md-10">
@@ -1999,10 +2026,10 @@
 					class="icon-trash error"></span>
 				</a>
 
-				<div id="referenceSpace" class="col-md-10">
+				<div id="referenceSpace" class="col-md-11 offset-md-1">
 					<div th:each="contentRef: ${contents.references}">
 						<div th:id="${contentRef.id}" class="referenceDivStaff row" style="padding-left: 25px;">
-							<p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
+							<p class="col-md-10 offset-md-1" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
 							<input type="hidden" id="deleteReferenceId" th:value="${contentRef.id}" />
 							<a class="btn deleteReference col-md-1" href="javascript:;"> <span
 								class="icon-trash error"></span>

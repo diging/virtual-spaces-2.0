@@ -137,7 +137,7 @@
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
                
-                	<p class="list-group-item" >Bibliography <br>
+                	<p class="list-group-item" >Bibliography<br>
                 	Title : <span>[(${contents.biblioTitle})]</span><br>
                 	 Description: <span>[(${contents.description})]</span></p>
                 	<ul class="list-group">
@@ -145,6 +145,7 @@
 							<li class="list-group-item" style = "font-size: 15px" >
 								<div  th:id="${contentRef.id}" class="referenceDiv">
 								<!--  <p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>-->
+								<p  class="col-md-10">Reference Type : [[${contentRef.type}]]</p>
 								<p  class="col-md-10">Reference Title : [[${contentRef.title} ]] </p>
 								<p  class="col-md-10">Reference Author : [[${contentRef.author}]]</p>
 								<p  class="col-md-10">Reference Year : [[${contentRef.year}]]</p>
@@ -152,7 +153,7 @@
 								<p  class="col-md-10">Reference Issue : [[${contentRef.issue}]]</p>
 								<p  class="col-md-10">Reference pages : [[${contentRef.pages}]]</p>
 								<p  class="col-md-10">Reference Editors : [[${contentRef.editors}]]</p>
-								<p  class="col-md-10">Reference Type : [[${contentRef.type}]]</p>
+								
 								<p  class="col-md-10">Reference Note : [[${contentRef.note}]]</p>
 								<a th:href='${contentRef.url}'><p  class="col-md-12">Reference URL :  [[${contentRef.url}]]</p></a>
 								

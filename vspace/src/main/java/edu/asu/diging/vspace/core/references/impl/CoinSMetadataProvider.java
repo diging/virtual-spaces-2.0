@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.hibernate.sql.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +156,12 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             try {
                 refPagesEncoded += CoinSConstants.RFT_ISSUE_TAG
                         + URLEncoder.encode(pages, StandardCharsets.UTF_8.name());
-                String[] tokens = pages.split("-", 2);
+                String[] tokens = pages.split("-");
+                if(tokens.length >=2) {
+                    tokens = pages.split("-", 2);
+                    
+                }
+           
                 if (tokens.length > 1) {
                     refPagesEncoded += CoinSConstants.RFT_START_PAGE_TAG
                             + URLEncoder.encode(tokens[0], StandardCharsets.UTF_8.name());
