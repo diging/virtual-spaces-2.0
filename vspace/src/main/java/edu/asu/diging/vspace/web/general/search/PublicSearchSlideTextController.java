@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
 
 @Controller
 public class PublicSearchSlideTextController {
@@ -24,13 +24,13 @@ public class PublicSearchSlideTextController {
     private IPublicSearchManager publicSearchManager;
     
     @RequestMapping(value = "/exhibit/search/slideText")
-    public ResponseEntity<StaffSearchSlideTextBlockResults> searchInVspace(HttpServletRequest request,
+    public ResponseEntity<SearchSlideTextBlockResults> searchInVspace(HttpServletRequest request,
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);       
-        StaffSearchSlideTextBlockResults publicSearch  = publicSearchManager.getStaffSearchSlideTextBlockResults(slideTextList, searchTerm);       
-        return new ResponseEntity<StaffSearchSlideTextBlockResults>(publicSearch, HttpStatus.OK);
+        SearchSlideTextBlockResults publicSearch  = publicSearchManager.getSearchSlideTextBlockResults(slideTextList, searchTerm);       
+        return new ResponseEntity<SearchSlideTextBlockResults>(publicSearch, HttpStatus.OK);
     }
 
     /**

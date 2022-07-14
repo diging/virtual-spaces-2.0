@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 
-public class StaffSearchSpaceResults {
+public class SearchSpaceResults {
     
     private List<ISpace> spaces;
 

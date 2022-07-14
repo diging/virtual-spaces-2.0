@@ -7,10 +7,10 @@ import org.springframework.data.domain.Page;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 public interface ISearchManager {
     
@@ -49,13 +49,13 @@ public interface ISearchManager {
      */
     Page<ISlide> searchInSlideTexts(String searchTerm, int page);
 
-    StaffSearchModuleResults getStaffSearchModuleResults(List<IModule> moduleList);
+    SearchModuleResults getSearchModuleResults(List<IModule> moduleList);
 
-    StaffSearchSlideResults getStaffSearchSlideResults(List<ISlide> slideList);
+    SearchSlideResults getSearchSlideResults(List<ISlide> slideList);
 
-    StaffSearchSlideTextBlockResults getStaffSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
+    SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
 
-    StaffSearchSpaceResults getStaffSearchSpaceResults(List<ISpace> spaceList);
+    SearchSpaceResults getSearchSpaceResults(List<ISpace> spaceList);
     
 
 }

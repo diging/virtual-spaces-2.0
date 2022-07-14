@@ -6,7 +6,7 @@ import java.util.Map;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 
-public class StaffSearchSlideTextBlockResults {
+public class SearchSlideTextBlockResults {
     
     private List<ISlide> slidesWithMatchedTextBlock;
 

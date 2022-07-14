@@ -18,7 +18,7 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 /**
  * This class has all the methods with the business logics for searching a word

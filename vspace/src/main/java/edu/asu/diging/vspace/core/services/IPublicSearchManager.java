@@ -8,7 +8,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
 
 public interface IPublicSearchManager extends ISearchManager{
 
@@ -18,5 +18,5 @@ public interface IPublicSearchManager extends ISearchManager{
 
     public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
 
-    public StaffSearchSlideTextBlockResults getStaffSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
+    public SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
 }

@@ -20,7 +20,7 @@ import edu.asu.diging.vspace.core.services.ISearchManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.SearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
 
 @Controller
 public class StaffSearchModuleController {
@@ -29,13 +29,13 @@ public class StaffSearchModuleController {
     private IStaffSearchManager staffSearchManager;
     
     @RequestMapping(value = "/staff/search/module")
-    public ResponseEntity<StaffSearchModuleResults> searchInVspace(
+    public ResponseEntity<SearchModuleResults> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);        
-        StaffSearchModuleResults staffSearch = staffSearchManager.getStaffSearchModuleResults(moduleList);
-        return new ResponseEntity<StaffSearchModuleResults>(staffSearch, HttpStatus.OK);
+        SearchModuleResults staffSearch = staffSearchManager.getSearchModuleResults(moduleList);
+        return new ResponseEntity<SearchModuleResults>(staffSearch, HttpStatus.OK);
     }
 
     /**

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.ISlide;
 
-public class StaffSearchSlideResults {
+public class SearchSlideResults {
     
     private List<ISlide> slides;
 

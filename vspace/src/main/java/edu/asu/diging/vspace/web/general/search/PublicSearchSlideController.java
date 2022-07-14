@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
 
 @Controller
 public class PublicSearchSlideController {
@@ -22,13 +22,13 @@ public class PublicSearchSlideController {
     private IPublicSearchManager publicSearchManager;
     
     @RequestMapping(value = "/exhibit/search/slide")
-    public ResponseEntity<StaffSearchSlideResults> searchInVspace(
+    public ResponseEntity<SearchSlideResults> searchInVspace(
             @RequestParam(value = "slidePagenum", required = false, defaultValue = "1") String slidePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<ISlide> slideList = paginationForSlide(slidePagenum, searchTerm);        
-        StaffSearchSlideResults publicSearch =  publicSearchManager.getStaffSearchSlideResults(slideList);        
-        return new ResponseEntity<StaffSearchSlideResults>(publicSearch, HttpStatus.OK);
+        SearchSlideResults publicSearch =  publicSearchManager.getSearchSlideResults(slideList);        
+        return new ResponseEntity<SearchSlideResults>(publicSearch, HttpStatus.OK);
     }
 
     /**

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 @Controller
 public class StaffSearchSpaceController {
@@ -24,13 +24,13 @@ public class StaffSearchSpaceController {
     private IStaffSearchManager staffSearchManager;
 
     @RequestMapping(value = "/staff/search/space")
-    public ResponseEntity<StaffSearchSpaceResults> searchInVspace(
+    public ResponseEntity<SearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
         List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);
-        StaffSearchSpaceResults staffSearch = staffSearchManager.getStaffSearchSpaceResults(spaceList);
-        return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
+        SearchSpaceResults staffSearch = staffSearchManager.getSearchSpaceResults(spaceList);
+        return new ResponseEntity<SearchSpaceResults>(staffSearch, HttpStatus.OK);
     }
 
     /**

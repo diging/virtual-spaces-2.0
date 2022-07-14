@@ -20,13 +20,12 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISearchManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideResults;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSlideTextBlockResults;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 
-@Service
 public abstract class SearchManager implements ISearchManager {
     
     @Value("${page_size}")
@@ -43,6 +42,14 @@ public abstract class SearchManager implements ISearchManager {
 
     @Autowired
     private TextContentBlockRepository textContentBlockRepo;
+    
+    protected abstract  Page<ISpace> spaceSearch(Pageable requestedPageForSpace ,  String searchTerm);
+    
+//    protected abstract  Page<IModule> moduleSearch(Pageable requestedPageForModule ,  String searchTerm);
+//    
+//    protected abstract  Page<ISlide> slideSearch(Pageable requestedPageForSlide ,  String searchTerm);
+//
+//    protected abstract  Page<ISlide> slideTextSearch(Pageable requestedPageForSlideText ,  String searchTerm);   
     
     /**
      * Method to return the requested spaces whose name or description contains the
@@ -177,13 +184,13 @@ public abstract class SearchManager implements ISearchManager {
         return slidetextPage;
     }
     
-    protected abstract  Page<ISpace> spaceSearch(Pageable requestedPageForSpace ,  String searchTerm);
+
 
     
     @Override
-    public StaffSearchModuleResults getStaffSearchModuleResults(List<IModule> moduleList) {
+    public SearchModuleResults getSearchModuleResults(List<IModule> moduleList) {
 
-        StaffSearchModuleResults searchModuleResults = new StaffSearchModuleResults();
+        SearchModuleResults searchModuleResults = new SearchModuleResults();
         searchModuleResults.setModules(moduleList);
 
         Map<String, String> moduleFirstSlideImage = new HashMap<>();
@@ -218,8 +225,8 @@ public abstract class SearchManager implements ISearchManager {
 
     
     @Override
-    public StaffSearchSlideResults getStaffSearchSlideResults(List<ISlide> slideList) {
-        StaffSearchSlideResults searchSlideResults = new StaffSearchSlideResults();
+    public SearchSlideResults getSearchSlideResults(List<ISlide> slideList) {
+        SearchSlideResults searchSlideResults = new SearchSlideResults();
         searchSlideResults.setSlides(slideList);
         
         Map<String, String> slideFirstImage = new HashMap<>();
@@ -235,8 +242,8 @@ public abstract class SearchManager implements ISearchManager {
     
     
     @Override
-    public StaffSearchSlideTextBlockResults getStaffSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
-        StaffSearchSlideTextBlockResults staffSearchSlideTextBlockResults = new StaffSearchSlideTextBlockResults();
+    public SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
+        SearchSlideTextBlockResults staffSearchSlideTextBlockResults = new SearchSlideTextBlockResults();
         staffSearchSlideTextBlockResults.setSlidesWithMatchedTextBlock(slideTextList);
         
         Map<String, String> slideTextFirstImageMap = new HashMap<>();
@@ -259,8 +266,8 @@ public abstract class SearchManager implements ISearchManager {
     }
     
     @Override
-    public StaffSearchSpaceResults getStaffSearchSpaceResults(List<ISpace> spaceList) {
-        StaffSearchSpaceResults staffSearchSpaceResults = new StaffSearchSpaceResults();
+    public SearchSpaceResults getSearchSpaceResults(List<ISpace> spaceList) {
+        SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
         staffSearchSpaceResults.setSpaces(spaceList);
         return staffSearchSpaceResults;
     }

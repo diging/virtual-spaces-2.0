@@ -5,7 +5,7 @@ import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.IModule;
 
-public class StaffSearchModuleResults {
+public class SearchModuleResults {
 
     private List<IModule> modules;
 

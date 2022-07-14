@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.StaffSearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
 
 @Controller
 public class PublicSearchModuleController  {
@@ -29,13 +29,13 @@ public class PublicSearchModuleController  {
 
 
     @RequestMapping(value = "/exhibit/search/module")
-    public ResponseEntity<StaffSearchModuleResults> searchInVspace(
+    public ResponseEntity<SearchModuleResults> searchInVspace(
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);                
-        StaffSearchModuleResults publicSearchModule  =  publicSearchManager.getStaffSearchModuleResults(moduleList);
-        return new ResponseEntity<StaffSearchModuleResults>(publicSearchModule, HttpStatus.OK);
+        SearchModuleResults publicSearchModule  =  publicSearchManager.getSearchModuleResults(moduleList);
+        return new ResponseEntity<SearchModuleResults>(publicSearchModule, HttpStatus.OK);
     }
 
 
