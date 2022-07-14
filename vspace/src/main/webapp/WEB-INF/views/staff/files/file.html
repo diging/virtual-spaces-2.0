@@ -72,7 +72,7 @@ function deleteFile(){
 				</div>
 				<button class="btn primary-btn" type="submit" value="submit">Save
 					File</button>
-				<a th:href="@{/staff/files/download/{id}(id=${file.id})}"
+				<a th:if="${file.getOriginalFileName!=null}" th:href="@{/staff/files/download/{id}(id=${file.id})}"
 					class="download btn primary-btn">Download file</a>
 			</form>
 		</div>

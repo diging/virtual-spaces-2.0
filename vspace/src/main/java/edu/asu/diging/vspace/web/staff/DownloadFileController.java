@@ -40,7 +40,7 @@ public class DownloadFileController {
         }
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getOriginalFileName())
                 .contentLength(resource.contentLength())
                 .header(HttpHeaders.CONTENT_TYPE, file.getFileType())
                 .body(resource);
