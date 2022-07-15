@@ -15,6 +15,7 @@ import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISearchManager;
@@ -26,7 +27,7 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResult
 import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 
-public abstract class SearchManager implements ISearchManager {
+public abstract class SearchManager<T> implements ISearchManager<T> {
     
     @Value("${page_size}")
     private int pageSize;
@@ -34,22 +35,13 @@ public abstract class SearchManager implements ISearchManager {
     @Autowired
     private ISequenceManager sequenceManager;
     
-    @Autowired
-    private IModuleManager moduleManager;
-
-    @Autowired
-    private ISlideManager slideManager;
-
-    @Autowired
-    private TextContentBlockRepository textContentBlockRepo;
-    
     protected abstract  Page<ISpace> spaceSearch(Pageable requestedPageForSpace ,  String searchTerm);
     
-//    protected abstract  Page<IModule> moduleSearch(Pageable requestedPageForModule ,  String searchTerm);
-//    
-//    protected abstract  Page<ISlide> slideSearch(Pageable requestedPageForSlide ,  String searchTerm);
-//
-//    protected abstract  Page<ISlide> slideTextSearch(Pageable requestedPageForSlideText ,  String searchTerm);   
+    protected abstract  Page<T> moduleSearch(Pageable requestedPageForModule ,  String searchTerm);
+    
+    protected abstract  Page<ISlide> slideSearch(Pageable requestedPageForSlide ,  String searchTerm);
+
+    protected abstract  Page<ISlide> slideTextSearch(Pageable requestedPageForSlideText ,  String searchTerm);   
     
     /**
      * Method to return the requested spaces whose name or description contains the
@@ -88,13 +80,14 @@ public abstract class SearchManager implements ISearchManager {
      *         in the requested page.
      */
     @Override
-    public Page<IModule> searchInModules(String searchTerm, int page) {
+    public Page<T> searchInModules(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
-        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+        Page<T> modulePage = moduleSearch(requestedPageForModule, searchTerm);
+//        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         int totalModulePage = modulePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -108,7 +101,9 @@ public abstract class SearchManager implements ISearchManager {
         if (page > totalModulePage) {
             totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
             requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
-            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
+            
+            modulePage = moduleSearch(requestedPageForModule, searchTerm);
+//            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         }
         return modulePage;
     }
@@ -129,7 +124,8 @@ public abstract class SearchManager implements ISearchManager {
             page = 1;
         }
         Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
-        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+        Page<ISlide> slidePage = slideSearch(requestedPageForSlide, searchTerm);
+//        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
         int totalSlidePage = slidePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -143,7 +139,7 @@ public abstract class SearchManager implements ISearchManager {
         if (page > totalSlidePage) {
             totalSlidePage = totalSlidePage == 0 ? 1 : totalSlidePage;
             requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
-            slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
+            slidePage = slideSearch(requestedPageForSlide, searchTerm);
         }
         return slidePage;
     }
@@ -164,8 +160,11 @@ public abstract class SearchManager implements ISearchManager {
             page = 1;
         }
         Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
-        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+//        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
+//                searchTerm);
+        Page<ISlide> slidetextPage = slideTextSearch(requestedPageForSlideText,
                 searchTerm);
+        
         int totalSlideTextPage = slidetextPage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -179,7 +178,8 @@ public abstract class SearchManager implements ISearchManager {
         if (page > totalSlideTextPage) {
             totalSlideTextPage = totalSlideTextPage == 0 ? 1 : totalSlideTextPage;
             requestedPageForSlideText = PageRequest.of(totalSlideTextPage - 1, pageSize);
-            slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText, searchTerm);
+            slidetextPage = slideTextSearch(requestedPageForSlideText,
+                    searchTerm);
         }
         return slidetextPage;
     }

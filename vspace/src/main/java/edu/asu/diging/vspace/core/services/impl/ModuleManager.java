@@ -24,6 +24,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 
 @Transactional
 @Service
@@ -131,5 +132,13 @@ public class ModuleManager implements IModuleManager {
             throw new ModuleNotFoundException("Module not found");
         }
         moduleRepo.deleteById(moduleId);
+    }
+    
+    
+    public Page<ModuleWithSpace> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage,String searchText){
+        
+        
+        return moduleRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText, searchText);
+        
     }
 }

@@ -69,10 +69,12 @@ public class StaffSearchController extends SearchController {
      * @param model         This the object of Model attribute in spring MVC.
      * @param searchTerm    This is the search string which is being searched.
      */
-    @Override
+
     protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
-        Page<IModule> modulePage =  super.paginationForModule(modulePagenum, model, searchTerm);
-        model.addAttribute("moduleSearchResults", modulePage.getContent());
+//        Page<IModule> modulePage =  super.paginationForModule(modulePagenum, model, searchTerm);
+        
+        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent() );
         return modulePage;
 
     }

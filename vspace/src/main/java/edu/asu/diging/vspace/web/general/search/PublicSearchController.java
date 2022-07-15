@@ -11,11 +11,12 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 import edu.asu.diging.vspace.web.SearchController;
 
 
 @Controller
-public class PublicSearchController extends SearchController {
+public class PublicSearchController<T extends ModuleWithSpace> extends SearchController {
     
     @Autowired
     private IPublicSearchManager publicSearchManager;
@@ -65,10 +66,13 @@ public class PublicSearchController extends SearchController {
      * @param searchTerm    This is the search string which is being searched.
      */
     
-    @Override
-    protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
-        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);               
-        model.addAttribute("moduleSearchResults", publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
+    
+    protected Page<ModuleWithSpace> paginationForModule(String modulePagenum, Model model, String searchTerm) {
+//        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);    
+        
+        Page<ModuleWithSpace> modulePage  = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+//        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
+        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent());
         return modulePage;
     }
 

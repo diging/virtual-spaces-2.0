@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
@@ -8,8 +10,9 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 
-public class SearchController {
+public class SearchController<T> {
 
     @Autowired
     private IStaffSearchManager staffSearchManager;
@@ -30,13 +33,16 @@ public class SearchController {
      * @param modulePagenum current page number sent as request parameter in the
      *                      URL.
      * @param model         This the object of Model attribute in spring MVC.
+     * @param content 
      * @param searchTerm    This is the search string which is being searched.
      */
-    protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
-        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+    protected Page<T> updateModelWithModuleSearchResult(String modulePagenum, Model model , Page<T> modulePage, List<T> content) {
+//        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
         model.addAttribute("moduleCurrentPageNumber", Integer.parseInt(modulePagenum));
         model.addAttribute("moduleTotalPages", modulePage.getTotalPages());
         model.addAttribute("moduleCount", modulePage.getTotalElements());
+        model.addAttribute("moduleSearchResults", content);
+
         return modulePage;
     }
 
@@ -57,6 +63,7 @@ public class SearchController {
         model.addAttribute("slideCurrentPageNumber", Integer.parseInt(slidePagenum));
         model.addAttribute("slideTotalPages", slidePage.getTotalPages());
         model.addAttribute("slideCount", slidePage.getTotalElements());
+        
         return slidePage;
     }
 

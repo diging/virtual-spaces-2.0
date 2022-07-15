@@ -13,20 +13,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
+import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
+import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
 
 @Service
-public class PublicSearchManager extends SearchManager implements IPublicSearchManager{
+public class PublicSearchManager<T extends ModuleWithSpace> extends SearchManager implements IPublicSearchManager{
 
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,6 +43,15 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
+    
+    @Autowired
+    private IModuleManager moduleManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
+    
+    @Autowired
+    private TextContentBlockRepository textContentBlockRepo;
     
     @Override
     protected Page<ISpace> spaceSearch(Pageable requestedPageForSpace, String searchTerm) {
@@ -111,6 +126,29 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
         return slideTextList;
     }
 
+
+    @Override
+    protected Page<ModuleWithSpace> moduleSearch(Pageable requestedPageForModule, String searchTerm) {
+        return moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPageForModule, searchTerm);
+    }
+
+
+    @Override
+    protected Page<ISlide> slideSearch(Pageable requestedPageForSlide, String searchTerm) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    protected Page<ISlide> slideTextSearch(Pageable requestedPageForSlideText, String searchTerm) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+  
+   
 
     
 }

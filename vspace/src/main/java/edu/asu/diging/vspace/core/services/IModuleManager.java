@@ -9,6 +9,7 @@ import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 
 public interface IModuleManager {
 
@@ -27,4 +28,6 @@ public interface IModuleManager {
     Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText);
 
     void deleteModule(String moduleId) throws ModuleNotFoundException;
+
+    Page<ModuleWithSpace> findByNameOrDescriptionLinkedToSpace(Pageable requestedPageForModule, String searchTerm);
 }

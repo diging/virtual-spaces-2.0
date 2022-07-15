@@ -12,7 +12,7 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
-public interface ISearchManager {
+public interface ISearchManager<T> {
     
     public Page<ISpace> searchInSpaces(String searchTerm, int page);
 
@@ -25,7 +25,7 @@ public interface ISearchManager {
      * @return set of modules whose name or description contains the search string
      *         in the requested page.
      */
-    Page<IModule> searchInModules(String searchTerm, int page);
+    Page<T> searchInModules(String searchTerm, int page);
 
     /**
      * Method to return the requested slides whose name or description contains the

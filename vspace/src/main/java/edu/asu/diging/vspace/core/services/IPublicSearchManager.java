@@ -17,6 +17,4 @@ public interface IPublicSearchManager extends ISearchManager{
     public List<IModule> updateModuleListWithSpaceInfo(Page<IModule> modulePage);
 
     public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
-
-    public SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
 }
