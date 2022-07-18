@@ -32,7 +32,7 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
  *
  */
 @Service
-public class StaffSearchManager<T extends IModule> extends SearchManager implements IStaffSearchManager {
+public class StaffSearchManager extends SearchManager implements IStaffSearchManager {
 
     @Autowired
     private ISpaceManager spaceManager;

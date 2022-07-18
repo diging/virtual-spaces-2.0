@@ -31,9 +31,9 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     List<ISequence> findAllByStartSequenceNotNull();
     
     
-    @Query("SELECT DISTINCT module, moduleLink.space.id from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id where module.name like ?1 OR module.description like ?2") 
+    @Query("SELECT DISTINCT module from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id where module.name like %?1% OR module.description like %?2%") 
 //            countQuery = "SELECT count(*) FROM Module module JOIN ModuleLink moduleLink on module.id = moduleLink.module_id where module.name like ?2 OR module.description like ?3", 
-//            nativeQuery = true )
-    Page<ModuleWithSpace> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
+//           )
+    Page<IModule> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
             String description);
 }

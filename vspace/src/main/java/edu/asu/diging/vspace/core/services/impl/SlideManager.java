@@ -173,4 +173,10 @@ public class SlideManager implements ISlideManager {
     public Set<String> getAllSlidesFromStartSequences() {
         return slideRepo.findAllSlidesFromStartSequences();
     }
+    
+    @Override
+    public Page<ISlide> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage, String searchText) {
+
+        return slideRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText,searchText);
+    }
 }

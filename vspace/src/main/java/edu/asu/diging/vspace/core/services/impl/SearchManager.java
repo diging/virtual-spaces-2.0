@@ -27,7 +27,7 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResult
 import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 
-public abstract class SearchManager<T> implements ISearchManager<T> {
+public abstract class SearchManager implements ISearchManager {
     
     @Value("${page_size}")
     private int pageSize;
@@ -37,7 +37,7 @@ public abstract class SearchManager<T> implements ISearchManager<T> {
     
     protected abstract  Page<ISpace> spaceSearch(Pageable requestedPageForSpace ,  String searchTerm);
     
-    protected abstract  Page<T> moduleSearch(Pageable requestedPageForModule ,  String searchTerm);
+    protected abstract  Page<IModule> moduleSearch(Pageable requestedPageForModule ,  String searchTerm);
     
     protected abstract  Page<ISlide> slideSearch(Pageable requestedPageForSlide ,  String searchTerm);
 
@@ -80,13 +80,13 @@ public abstract class SearchManager<T> implements ISearchManager<T> {
      *         in the requested page.
      */
     @Override
-    public Page<T> searchInModules(String searchTerm, int page) {
+    public Page<IModule> searchInModules(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
-        Page<T> modulePage = moduleSearch(requestedPageForModule, searchTerm);
+        Page<IModule> modulePage = moduleSearch(requestedPageForModule, searchTerm);
 //        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         int totalModulePage = modulePage.getTotalPages();
         /*

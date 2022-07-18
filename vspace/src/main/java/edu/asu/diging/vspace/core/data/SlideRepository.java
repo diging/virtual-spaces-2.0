@@ -30,4 +30,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     @Query(value="SELECT d.Slide_Id FROM Sequence_Slides d, Module m WHERE d.Sequence_Id = m.startSequence_id", nativeQuery = true)
     Set<String> findAllSlidesFromStartSequences();
 
+    
+    Page<ISlide> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
+            String description);
 }

@@ -32,7 +32,7 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
 
 @Service
-public class PublicSearchManager<T extends ModuleWithSpace> extends SearchManager implements IPublicSearchManager{
+public class PublicSearchManager extends SearchManager implements IPublicSearchManager{
 
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -128,22 +128,23 @@ public class PublicSearchManager<T extends ModuleWithSpace> extends SearchManage
 
 
     @Override
-    protected Page<ModuleWithSpace> moduleSearch(Pageable requestedPageForModule, String searchTerm) {
-        return moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPageForModule, searchTerm);
+    protected Page<IModule> moduleSearch(Pageable requestedPageForModule, String searchTerm) {
+        Page<IModule> modulePage =  moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPageForModule, searchTerm);
+        updateModuleListWithSpaceInfo(modulePage);
+        return modulePage;
+        
     }
 
 
     @Override
     protected Page<ISlide> slideSearch(Pageable requestedPageForSlide, String searchTerm) {
-        // TODO Auto-generated method stub
-        return null;
+        return slideManager.findByNameOrDescriptionLinkedToSpace(requestedPageForSlide, searchTerm);
     }
 
 
     @Override
     protected Page<ISlide> slideTextSearch(Pageable requestedPageForSlideText, String searchTerm) {
-        // TODO Auto-generated method stub
-        return null;
+        return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm);
     }
 
 

@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.web.SearchController;
 
 
 @Controller
-public class PublicSearchController<T extends ModuleWithSpace> extends SearchController {
+public class PublicSearchController<T extends IModule> extends SearchController {
     
     @Autowired
     private IPublicSearchManager publicSearchManager;
@@ -67,12 +67,11 @@ public class PublicSearchController<T extends ModuleWithSpace> extends SearchCon
      */
     
     
-    protected Page<ModuleWithSpace> paginationForModule(String modulePagenum, Model model, String searchTerm) {
+    protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
 //        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);    
         
-        Page<ModuleWithSpace> modulePage  = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
-//        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
-        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent());
+        Page<IModule> modulePage  = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
         return modulePage;
     }
 
@@ -91,6 +90,7 @@ public class PublicSearchController<T extends ModuleWithSpace> extends SearchCon
      */
     protected Page<ISlide> paginationForSlide(String slidePagenum, Model model, String searchTerm) {     
         Page<ISlide> slidePage = super.paginationForSlide(slidePagenum, model, searchTerm);      
+        model.addAttribute("slideSearchResults", publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
         model.addAttribute("slideSearchResults", publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
         return slidePage;
     }
