@@ -23,8 +23,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.SortByField;
+import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
 public class ReferenceManagerTest {
@@ -216,8 +218,8 @@ public class ReferenceManagerTest {
                 Sort.by(SortByField.REFERENCE_TITLE.getValue()).descending());
         when(refRepo.count()).thenReturn(1L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(refList));
-        List<IReference> requestedReferences = refManagerToTest.getReferences(1,
-                SortByField.REFERENCE_TITLE.getValue(), Sort.Direction.DESC.toString());
+        List<IReference> requestedReferences = refManagerToTest.getReferences(1, SortByField.REFERENCE_TITLE.getValue(),
+                Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByTitleDesc(requestedReferences));
         assertEquals(2, requestedReferences.size());
         assertEquals(REF_ID2, requestedReferences.get(0).getId());
@@ -238,11 +240,12 @@ public class ReferenceManagerTest {
     @Test
     public void test_getReferences_sorted_pageGreaterThanTotalPages() {
         ReflectionTestUtils.setField(refManagerToTest, "pageSize", 1);
-        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.REFERENCE_TITLE.getValue()).descending());
+        Pageable sortByRequestedField = PageRequest.of(4, 1,
+                Sort.by(SortByField.REFERENCE_TITLE.getValue()).descending());
         when(refRepo.count()).thenReturn(5L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(refList));
-        List<IReference> requestedReferences = refManagerToTest.getReferences(7,
-                SortByField.REFERENCE_TITLE.getValue(), Sort.Direction.DESC.toString());
+        List<IReference> requestedReferences = refManagerToTest.getReferences(7, SortByField.REFERENCE_TITLE.getValue(),
+                Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByTitleDesc(requestedReferences));
         assertEquals(REF_ID2, requestedReferences.get(0).getId());
     }
@@ -253,8 +256,8 @@ public class ReferenceManagerTest {
                 Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(refRepo.count()).thenReturn(5L);
         when(refRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<Reference>(new ArrayList<>()));
-        List<IReference> requestedReferences = refManagerToTest.getReferences(1,
-                SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+        List<IReference> requestedReferences = refManagerToTest.getReferences(1, SortByField.CREATION_DATE.getValue(),
+                Sort.Direction.DESC.toString());
         assertEquals(true, requestedReferences.isEmpty());
     }
 
@@ -315,10 +318,47 @@ public class ReferenceManagerTest {
         assertNull(refManagerToTest.getReferenceById(REF_ID1));
     }
 
+    @Test
+    public void test_getReference_success() {
+        Mockito.when(refRepo.findById(REF_ID1)).thenReturn(Optional.of(refList.get(0)));
+        assertEquals(refList.get(0).getId(), refManagerToTest.getReference(REF_ID1).getId());
+
+    }
+    
+    @Test
+    public void test_getReferencesForBiblio_success() {
+        List<IReference> refList = new ArrayList<>();
+        Mockito.when(refRepo.findByBiblios_Id("BiblioId")).thenReturn(refList);
+        assertEquals(refList, refManagerToTest.getReferencesForBiblio("BiblioId"));
+
+    }
+
+    @Test
+    public void test_saveReference_success() {
+        Reference ref = new Reference();
+        ref.setId(REF_ID1);
+        ref.setTitle(REF_NEW_TITLE);
+        ref.setAuthor(REF_AUTHOR1);
+        Optional<Reference> refObj = Optional.of(ref);
+        IBiblioBlock biblio = new BiblioBlock();
+        biblio.setBiblioTitle(REF_AUTHOR1);
+        biblio.setId(REF_ID1);
+        biblio.setReferences(refList);
+        List<BiblioBlock> biblioList = new ArrayList<>();
+        biblioList.add((BiblioBlock)biblio);
+        
+        Mockito.when(refRepo.save((Reference) ref)).thenReturn(ref);
+        Mockito.when(refRepo.findById(ref.getId())).thenReturn(refObj);
+        IReference returnResult = refManagerToTest.saveReference(biblio, ref);
+        assertEquals(returnResult.getTitle(), REF_NEW_TITLE);
+        assertEquals(returnResult.getAuthor(), REF_AUTHOR1);
+        assertEquals(returnResult.getId(), REF_ID1);
+        verify(refRepo).save((Reference) ref);
+    }
+
     private Boolean checkSortByTitleDesc(List<IReference> requestedReferences) {
         for (int i = 0; i < requestedReferences.size() - 1; ++i) {
-            if (requestedReferences.get(i).getTitle()
-                    .compareTo(requestedReferences.get(i + 1).getTitle()) < 0) {
+            if (requestedReferences.get(i).getTitle().compareTo(requestedReferences.get(i + 1).getTitle()) < 0) {
                 return false;
             }
         }
