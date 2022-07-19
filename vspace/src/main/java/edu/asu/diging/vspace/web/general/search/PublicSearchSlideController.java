@@ -42,7 +42,7 @@ public class PublicSearchSlideController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private List<ISlide> paginationForSlide(String slidePagenum, String searchTerm) {
-        Page<ISlide> slidePage = publicSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));      
+        Page<ISlide> slidePage = publicSearchManager.paginationInSlides(searchTerm, Integer.parseInt(slidePagenum));      
         List<ISlide> slideList = publicSearchManager.updateSlidePageWithSpaceInfo(slidePage);      
         return slideList;
     }

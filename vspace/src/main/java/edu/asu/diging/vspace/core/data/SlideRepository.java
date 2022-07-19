@@ -31,6 +31,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     Set<String> findAllSlidesFromStartSequences();
 
     
+    @Query("SELECT DISTINCT s from Slide s where  s.module.id IN (SELECT DISTINCT module.id from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id) AND s.name like %?1% OR s.description like %?2%")
     Page<ISlide> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
             String description);
 }

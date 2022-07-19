@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -148,8 +149,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     }
 
 
-  
-   
+
 
     
 }

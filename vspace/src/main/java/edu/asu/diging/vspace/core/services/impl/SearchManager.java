@@ -53,7 +53,7 @@ public abstract class SearchManager implements ISearchManager {
      *         the requested page.
      */
     @Override
-    public Page<ISpace> searchInSpaces(String searchTerm, int page) {
+    public Page<ISpace> paginationInSpaces(String searchTerm, int page) {
         if (page < 1) {
             page = 1;
         }
@@ -67,6 +67,8 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForSpace = PageRequest.of(totalSpacePage - 1, pageSize);   
             spacePage = spaceSearch(requestedPageForSpace,  searchTerm);
         }
+        
+        
         return spacePage;
     }
     
@@ -80,14 +82,13 @@ public abstract class SearchManager implements ISearchManager {
      *         in the requested page.
      */
     @Override
-    public Page<IModule> searchInModules(String searchTerm, int page) {
+    public Page<IModule> paginationInModules(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForModule = PageRequest.of(page - 1, pageSize);
         Page<IModule> modulePage = moduleSearch(requestedPageForModule, searchTerm);
-//        Page<IModule> modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         int totalModulePage = modulePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -101,9 +102,7 @@ public abstract class SearchManager implements ISearchManager {
         if (page > totalModulePage) {
             totalModulePage = totalModulePage == 0 ? 1 : totalModulePage;
             requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
-            
             modulePage = moduleSearch(requestedPageForModule, searchTerm);
-//            modulePage = moduleManager.findByNameOrDescription(requestedPageForModule, searchTerm);
         }
         return modulePage;
     }
@@ -118,14 +117,13 @@ public abstract class SearchManager implements ISearchManager {
      *         the requested page.
      */
     @Override
-    public Page<ISlide> searchInSlides(String searchTerm, int page) {
+    public Page<ISlide> paginationInSlides(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSlide = PageRequest.of(page - 1, pageSize);
         Page<ISlide> slidePage = slideSearch(requestedPageForSlide, searchTerm);
-//        Page<ISlide> slidePage = slideManager.findByNameOrDescription(requestedPageForSlide, searchTerm);
         int totalSlidePage = slidePage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -154,14 +152,12 @@ public abstract class SearchManager implements ISearchManager {
      *         requested page.
      */
     @Override
-    public Page<ISlide> searchInSlideTexts(String searchTerm, int page) {
+    public Page<ISlide> paginationInSlideTexts(String searchTerm, int page) {
         /* if page<1, 1st page is returned */
         if (page < 1) {
             page = 1;
         }
         Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
-//        Page<ISlide> slidetextPage = textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
-//                searchTerm);
         Page<ISlide> slidetextPage = slideTextSearch(requestedPageForSlideText,
                 searchTerm);
         

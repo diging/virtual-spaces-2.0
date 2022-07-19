@@ -49,7 +49,7 @@ public class StaffSearchModuleController {
      * @param searchTerm    This is the search string which is being searched.
      */
     private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = staffSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage = staffSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));
         return modulePage.getContent();
     }
 

@@ -43,7 +43,7 @@ public class StaffSearchSlideController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private List<ISlide> paginationForSlide(String slidePagenum, String searchTerm) {
-        Page<ISlide> slidePage = staffSearchManager.searchInSlides(searchTerm, Integer.parseInt(slidePagenum));
+        Page<ISlide> slidePage = staffSearchManager.paginationInSlides(searchTerm, Integer.parseInt(slidePagenum));
         return slidePage.getContent();
     }
 }

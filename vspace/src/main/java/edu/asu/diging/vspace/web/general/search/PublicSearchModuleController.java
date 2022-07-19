@@ -51,7 +51,7 @@ public class PublicSearchModuleController  {
      * @param searchTerm    This is the search string which is being searched.
      */
     private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));    
+        Page<IModule> modulePage = publicSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));    
         return  publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
     }
 

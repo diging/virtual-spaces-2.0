@@ -17,7 +17,7 @@ public interface TextContentBlockRepository extends PagingAndSortingRepository<T
     @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1%")
     public Page<ISlide> findWithNameOrDescription(Pageable requestedPage, String searchText);
     
-    @Query()
+    @Query("SELECT DISTINCT c.slide FROM ContentBlock c, TextBlock t WHERE c.id = t.id AND t.text LIKE %?1% and c.slide.module.id IN (SELECT DISTINCT module.id from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id)")
     public Page<ISlide> findWithNameOrDescriptionLinkedToSpace(Pageable requestedPage, String searchText);
     
 }

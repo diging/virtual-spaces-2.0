@@ -43,7 +43,7 @@ public class StaffSearchSpaceController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+        Page<ISpace> spacePage = staffSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         return spacePage.getContent();
     }
 }

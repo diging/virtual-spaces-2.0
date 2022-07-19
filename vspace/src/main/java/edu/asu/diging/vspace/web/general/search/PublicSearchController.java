@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.web.SearchController;
 
 
 @Controller
-public class PublicSearchController<T extends IModule> extends SearchController {
+public class PublicSearchController extends SearchController {
     
     @Autowired
     private IPublicSearchManager publicSearchManager;
@@ -31,14 +31,16 @@ public class PublicSearchController<T extends IModule> extends SearchController 
             Model model, @RequestParam(name = "searchText") String searchTerm,
             @RequestParam(value = "tab", defaultValue = "module") String tab) {
 
-        paginationForSpace(spacePagenum, model, searchTerm);
-        paginationForModule(modulePagenum, model, searchTerm);
-        paginationForSlide(slidePagenum, model, searchTerm);
-        paginationForSlideText(slideTextPagenum, model, searchTerm);
+        searchInSpaces(spacePagenum, model, searchTerm);        
+        searchInModules(modulePagenum, model, searchTerm);
+        searchInSlides(slidePagenum, model, searchTerm);
+        searchInSlideTexts(slideTextPagenum, model, searchTerm);
+        
         model.addAttribute("searchWord", searchTerm);
         return "exhibition/search/publicSearch";
     }
-    
+
+
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the spaces corresponding to the page number
@@ -49,9 +51,10 @@ public class PublicSearchController<T extends IModule> extends SearchController 
      * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private void paginationForSpace(String spacePagenum, Model model, String searchTerm) {
-        Page<ISpace> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+    public Page<ISpace> searchInSpaces(String spacePagenum, Model model, String searchTerm) {
+        Page<ISpace> spacePage = publicSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         updateModelWithSpaceSearchResult(model, spacePage, spacePagenum);
+        return spacePage;
     }
 
     /**
@@ -65,17 +68,15 @@ public class PublicSearchController<T extends IModule> extends SearchController 
      * @param model         This the object of Model attribute in spring MVC.
      * @param searchTerm    This is the search string which is being searched.
      */
-    
-    
-    protected Page<IModule> paginationForModule(String modulePagenum, Model model, String searchTerm) {
-//        Page<IModule> modulePage = super.paginationForModule(modulePagenum, model, searchTerm);    
-        
-        Page<IModule> modulePage  = publicSearchManager.searchInModules(searchTerm, Integer.parseInt(modulePagenum));
+
+
+    public Page<IModule> searchInModules(String modulePagenum, Model model, String searchTerm) {
+        Page<IModule> modulePage  = publicSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));
         updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
         return modulePage;
     }
 
-   
+
 
     /**
      * This method is used to search the search string specified in the input
@@ -88,14 +89,13 @@ public class PublicSearchController<T extends IModule> extends SearchController 
      * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
-    protected Page<ISlide> paginationForSlide(String slidePagenum, Model model, String searchTerm) {     
-        Page<ISlide> slidePage = super.paginationForSlide(slidePagenum, model, searchTerm);      
-        model.addAttribute("slideSearchResults", publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
-        model.addAttribute("slideSearchResults", publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
+    public Page<ISlide> searchInSlides(String slidePagenum, Model model, String searchTerm) {     
+        Page<ISlide> slidePage = publicSearchManager.paginationInSlides( searchTerm, Integer.parseInt(slidePagenum));
+        updateModelWithSlideSearchResults(slidePagenum, model, slidePage, publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
         return slidePage;
     }
 
- 
+
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the slides corresponding to the page number
@@ -108,9 +108,9 @@ public class PublicSearchController<T extends IModule> extends SearchController 
      * @param model            This the object of Model attribute in spring MVC.
      * @param searchTerm       This is the search string which is being searched.
      */
-    protected Page<ISlide> paginationForSlideText(String slideTextPagenum, Model model, String searchTerm) {
-        Page<ISlide> slideTextPage  = super.paginationForSlideText(slideTextPagenum, model, searchTerm);              
-        model.addAttribute("slideTextSearchResults", publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage));
+    public Page<ISlide> searchInSlideTexts(String slideTextPagenum, Model model, String searchTerm) {       
+        Page<ISlide> slideTextPage = publicSearchManager.paginationInSlideTexts(searchTerm, Integer.parseInt(slideTextPagenum));
+        updateModelWithSlideTextSearchResults(slideTextPagenum, model, searchTerm, slideTextPage, publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage));
         return  slideTextPage;
     }
 

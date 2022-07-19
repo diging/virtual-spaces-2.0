@@ -44,7 +44,7 @@ public class PublicSearchSlideTextController {
      * @param searchTerm       This is the search string which is being searched.
      */
     private List<ISlide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<ISlide> slideTextPage = publicSearchManager.searchInSlideTexts(searchTerm,
+        Page<ISlide> slideTextPage = publicSearchManager.paginationInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
         return publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage);
     }

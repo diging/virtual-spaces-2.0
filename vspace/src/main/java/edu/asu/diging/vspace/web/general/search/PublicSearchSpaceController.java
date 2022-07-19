@@ -28,8 +28,7 @@ public class PublicSearchSpaceController {
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
-        List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);      
-        SearchSpaceResults publicSearch  = publicSearchManager.getSearchSpaceResults(spaceList);
+        SearchSpaceResults publicSearch = paginationForSpace(spacePagenum, searchTerm);      
         return new ResponseEntity<SearchSpaceResults>(publicSearch, HttpStatus.OK);
     }
 
@@ -42,8 +41,9 @@ public class PublicSearchSpaceController {
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = publicSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
-        return spacePage.getContent();
+    private SearchSpaceResults paginationForSpace(String spacePagenum, String searchTerm) {
+        Page<ISpace> spacePage = publicSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));     
+        return publicSearchManager.getSearchSpaceResults(spacePage.getContent());
     }
+  
 }
