@@ -32,8 +32,6 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     
     
     @Query("SELECT DISTINCT module from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id where module.name like %?1% OR module.description like %?2%") 
-//            countQuery = "SELECT count(*) FROM Module module JOIN ModuleLink moduleLink on module.id = moduleLink.module_id where module.name like ?2 OR module.description like ?3", 
-//           )
     Page<IModule> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
             String description);
 }

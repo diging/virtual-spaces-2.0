@@ -23,7 +23,4 @@ public interface IPublicSearchManager extends ISearchManager{
 
     public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
 
-
-
-
 }
