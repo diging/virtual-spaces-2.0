@@ -76,7 +76,7 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
     public SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm) {
         Page<ISlide> slideTextPage = paginationInSlideTexts(searchTerm,
                 Integer.parseInt(slideTextPagenum));
-       return  getSearchSlideTextBlockResults(slideTextPage.getContent(), searchTerm);
+        return  getSearchSlideTextBlockResults(slideTextPage.getContent(), searchTerm);
     }
 
     
