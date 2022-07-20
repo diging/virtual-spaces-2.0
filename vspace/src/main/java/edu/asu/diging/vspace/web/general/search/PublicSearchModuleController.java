@@ -33,26 +33,7 @@ public class PublicSearchModuleController  {
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);                
-        SearchModuleResults publicSearchModule  =  publicSearchManager.getSearchModuleResults(moduleList);
-        return new ResponseEntity<SearchModuleResults>(publicSearchModule, HttpStatus.OK);
-    }
-
-
-
-    /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) and return the module corresponding to the page number
-     * specified in the input parameter(spacePagenum) whose name or description
-     * contains the search string. This also filters modules which are linked to the spaces.
-     * 
-     * @param modulePagenum current page number sent as request parameter in the
-     *                      URL.
-     * @param searchTerm    This is the search string which is being searched.
-     */
-    private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = publicSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));    
-        return  publicSearchManager.updateModuleListWithSpaceInfo(modulePage);
+        return new ResponseEntity<SearchModuleResults>(publicSearchManager.searchForModule(modulePagenum, searchTerm), HttpStatus.OK);
     }
 
 }

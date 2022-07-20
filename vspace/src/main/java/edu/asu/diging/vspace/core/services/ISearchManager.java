@@ -56,6 +56,12 @@ public interface ISearchManager {
     SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
 
     SearchSpaceResults getSearchSpaceResults(List<ISpace> spaceList);
-    
 
+    SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm);
+
+    SearchModuleResults searchForModule(String modulePagenum, String searchTerm);
+
+    SearchSlideResults searchForSlide(String slidePagenum, String searchTerm);
+
+    SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm);
 }

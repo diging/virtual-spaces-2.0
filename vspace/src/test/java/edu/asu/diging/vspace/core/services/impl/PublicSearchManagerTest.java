@@ -27,6 +27,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -38,6 +39,9 @@ public class PublicSearchManagerTest {
 
     @Mock
     private IModuleManager moduleManager;
+    
+    @Mock
+    private IModuleLinkManager moduleLinkManager;
 
     @Mock
     private ISlideManager slideManager;
@@ -48,8 +52,6 @@ public class PublicSearchManagerTest {
     @InjectMocks
     private PublicSearchManager serviceToTest;
     
-    @InjectMocks
-    private StaffSearchManager staffSearchManager;
 
     private List<ISpace> spaces;
     
@@ -112,7 +114,7 @@ public class PublicSearchManagerTest {
         String search = "space";
         when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage, SpaceStatus.PUBLISHED, search))
             .thenReturn(new PageImpl<ISpace>(spaces, requestedPage, 12));
-        Page<ISpace> tempResult = serviceToTest.searchInSpaces(search, 1);
+        Page<ISpace> tempResult = serviceToTest.paginationInSpaces(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_1", idList.get(0));
@@ -129,7 +131,7 @@ public class PublicSearchManagerTest {
         Pageable requestedPage1 = PageRequest.of(1, 10);
         when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage1, SpaceStatus.PUBLISHED, search))
             .thenReturn(new PageImpl<ISpace>(spaces,requestedPage1, 12));
-        Page<ISpace> tempResult = serviceToTest.searchInSpaces(search, 7);
+        Page<ISpace> tempResult = serviceToTest.paginationInSpaces(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_1", idList.get(0));
@@ -144,7 +146,7 @@ public class PublicSearchManagerTest {
         String search = "space";
         when(spaceManager.findBySpaceStatusAndNameOrDescription(requestedPage, SpaceStatus.PUBLISHED, search))
             .thenReturn(new PageImpl<ISpace>(spaces, requestedPage, 12));
-        Page<ISpace> tempResult = serviceToTest.searchInSpaces(search, -1);
+        Page<ISpace> tempResult = serviceToTest.paginationInSpaces(search, -1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(space -> space.getId()).collect(Collectors.toList());
         assertEquals("SPACE_ID_1", idList.get(0));
@@ -156,130 +158,130 @@ public class PublicSearchManagerTest {
     public void test_searchInModules_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
-        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
-        Page<IModule> tempResult = staffSearchManager.searchInModules(search, 1);
+        when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
+        Page<IModule> tempResult = serviceToTest.paginationInModules(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager).findByNameOrDescriptionLinkedToSpace(requestedPage, search);
     }
 
     @Test
     public void test_searchInModules_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "module";
-        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IModule>(new ArrayList<IModule>()));
+        when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<IModule>(new ArrayList<IModule>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
-        when(moduleManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<IModule>(modules));
-        Page<IModule> tempResult = staffSearchManager.searchInModules(search, 7);
+        when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage1, search)).thenReturn(new PageImpl<IModule>(modules));
+        Page<IModule> tempResult = serviceToTest.paginationInModules(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager).findByNameOrDescription(requestedPage, search);
-        verify(moduleManager).findByNameOrDescription(requestedPage1, search);
+        verify(moduleManager).findByNameOrDescriptionLinkedToSpace(requestedPage, search);
+        verify(moduleManager).findByNameOrDescriptionLinkedToSpace(requestedPage1, search);
     }
 
     @Test
     public void test_searchInModules_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
-        when(moduleManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
-        Page<IModule> tempResult = staffSearchManager.searchInModules(search, -2);
+        when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
+        Page<IModule> tempResult = serviceToTest.paginationInModules(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
         assertEquals("MODULE_ID_1", idList.get(0));
         assertEquals("MODULE_ID_2", idList.get(1));
-        verify(moduleManager).findByNameOrDescription(requestedPage, search);
+        verify(moduleManager).findByNameOrDescriptionLinkedToSpace(requestedPage, search);
     }
 
     @Test
     public void test_searchInSlides_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
-        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
-        Page<ISlide> tempResult = staffSearchManager.searchInSlides(search, 1);
+        when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
+        Page<ISlide> tempResult = serviceToTest.paginationInSlides(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager).findByNameOrDescription(requestedPage, search);
+        verify(slideManager).findByNameOrDescriptionLinkedToSpace(requestedPage, search);
     }
 
     @Test
     public void test_searchInSlides_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "slide";
-        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
+        when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
-        when(slideManager.findByNameOrDescription(requestedPage1, search)).thenReturn(new PageImpl<ISlide>(slides));
-        Page<ISlide> tempResult = staffSearchManager.searchInSlides(search, 7);
+        when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage1, search)).thenReturn(new PageImpl<ISlide>(slides));
+        Page<ISlide> tempResult = serviceToTest.paginationInSlides(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager).findByNameOrDescription(requestedPage, search);
-        verify(slideManager).findByNameOrDescription(requestedPage1, search);
+        verify(slideManager).findByNameOrDescriptionLinkedToSpace(requestedPage, search);
+        verify(slideManager).findByNameOrDescriptionLinkedToSpace(requestedPage1, search);
     }
 
     @Test
     public void test_searchInSlides_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
-        when(slideManager.findByNameOrDescription(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
-        Page<ISlide> tempResult = staffSearchManager.searchInSlides(search, -2);
+        when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
+        Page<ISlide> tempResult = serviceToTest.paginationInSlides(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDE_ID_1", idList.get(0));
         assertEquals("SLIDE_ID_2", idList.get(1));
-        verify(slideManager).findByNameOrDescription(requestedPage, search);
+        verify(slideManager).findByNameOrDescriptionLinkedToSpace(requestedPage, search);
     }
 
     @Test
     public void test_searchInSlideTexts_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
-        Page<ISlide> tempResult = staffSearchManager.searchInSlideTexts(search, 1);
+        Page<ISlide> tempResult = serviceToTest.paginationInSlideTexts(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search);
     }
 
     @Test
     public void test_searchInSlideTexts_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search))
                 .thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage1, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage1, search))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
-        Page<ISlide> tempResult = staffSearchManager.searchInSlideTexts(search, 7);
+        Page<ISlide> tempResult = serviceToTest.paginationInSlideTexts(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
-        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage1, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage1, search);
     }
 
     @Test
     public void test_searchInSlideTexts_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescription(requestedPage, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
-        Page<ISlide> tempResult = staffSearchManager.searchInSlideTexts(search, -2);
+        Page<ISlide> tempResult = serviceToTest.paginationInSlideTexts(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo).findWithNameOrDescription(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search);
     }
    
 }

@@ -28,22 +28,9 @@ public class PublicSearchSpaceController {
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
 
-        SearchSpaceResults publicSearch = paginationForSpace(spacePagenum, searchTerm);      
+        SearchSpaceResults publicSearch = publicSearchManager.searchForSpace(spacePagenum, searchTerm);      
         return new ResponseEntity<SearchSpaceResults>(publicSearch, HttpStatus.OK);
     }
 
-    /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) and return the published spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    private SearchSpaceResults paginationForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = publicSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));     
-        return publicSearchManager.getSearchSpaceResults(spacePage.getContent());
-    }
-  
+   
 }

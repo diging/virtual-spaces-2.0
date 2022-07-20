@@ -28,24 +28,7 @@ public class PublicSearchSlideTextController {
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);       
-        SearchSlideTextBlockResults publicSearch  = publicSearchManager.getSearchSlideTextBlockResults(slideTextList, searchTerm);       
-        return new ResponseEntity<SearchSlideTextBlockResults>(publicSearch, HttpStatus.OK);
+        return new ResponseEntity<SearchSlideTextBlockResults>(publicSearchManager.searchForSlideText(slideTextPagenum, searchTerm), HttpStatus.OK);
     }
-
-    /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) and return the slides corresponding to the page number
-     * specified in the input parameter(spacePagenum) whose text block contains the
-     * search string. This also filters Slides from modules which are linked to the spaces.
-     * 
-     * @param slideTextPagenum current page number sent as request parameter in the
-     *                         URL.
-     * @param searchTerm       This is the search string which is being searched.
-     */
-    private List<ISlide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<ISlide> slideTextPage = publicSearchManager.paginationInSlideTexts(searchTerm,
-                Integer.parseInt(slideTextPagenum));
-        return publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage);
-    }
+  
 }

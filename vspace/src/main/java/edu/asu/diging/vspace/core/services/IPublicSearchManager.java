@@ -10,7 +10,10 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
+import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 public interface IPublicSearchManager extends ISearchManager{
 
@@ -19,5 +22,8 @@ public interface IPublicSearchManager extends ISearchManager{
     public List<IModule> updateModuleListWithSpaceInfo(Page<IModule> modulePage);
 
     public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
+
+
+
 
 }

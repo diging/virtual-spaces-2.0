@@ -28,25 +28,8 @@ public class StaffSearchSlideTextController {
             @RequestParam(value = "slideTextPagenum", required = false, defaultValue = "1") String slideTextPagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<ISlide> slideTextList = paginationForSlideText(slideTextPagenum, searchTerm);
-
-        SearchSlideTextBlockResults staffSearch  = staffSearchManager.getSearchSlideTextBlockResults(slideTextList, searchTerm);
-        return new ResponseEntity<SearchSlideTextBlockResults>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<SearchSlideTextBlockResults>(staffSearchManager.searchForSlideText(slideTextPagenum, searchTerm), HttpStatus.OK);
     }
 
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the slides corresponding to the page number
-     * specified in the input parameter(spacePagenum) whose text block contains the
-     * search string
-     * 
-     * @param slideTextPagenum current page number sent as request parameter in the
-     *                         URL.
-     * @param searchTerm       This is the search string which is being searched.
-     */
-    private List<ISlide> paginationForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<ISlide> slideTextPage = staffSearchManager.paginationInSlideTexts(searchTerm,
-                Integer.parseInt(slideTextPagenum));
-        return slideTextPage.getContent();
-    }
+  
 }

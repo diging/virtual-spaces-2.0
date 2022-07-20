@@ -33,24 +33,8 @@ public class StaffSearchModuleController {
             @RequestParam(value = "modulePagenum", required = false, defaultValue = "1") String modulePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) {
 
-        List<IModule> moduleList = paginationForModule(modulePagenum, searchTerm);        
-        SearchModuleResults staffSearch = staffSearchManager.getSearchModuleResults(moduleList);
-        return new ResponseEntity<SearchModuleResults>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<SearchModuleResults>(staffSearchManager.searchForModule(modulePagenum, searchTerm), HttpStatus.OK);
     }
 
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the module corresponding to the page number
-     * specified in the input parameter(spacePagenum) whose name or description
-     * contains the search string.
-     * 
-     * @param modulePagenum current page number sent as request parameter in the
-     *                      URL.
-     * @param searchTerm    This is the search string which is being searched.
-     */
-    private List<IModule> paginationForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = staffSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));
-        return modulePage.getContent();
-    }
 
 }

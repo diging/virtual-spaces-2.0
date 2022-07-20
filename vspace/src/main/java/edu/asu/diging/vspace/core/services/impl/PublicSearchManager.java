@@ -149,6 +149,76 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     }
 
 
+    /**
+     * This method is used to search the searched string specified in the input
+     * parameter(searchTerm) and return the published spaces corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string.
+     * 
+     * @param spacePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    @Override
+    public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
+        Page<ISpace> spacePage = paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));     
+        return getSearchSpaceResults(spacePage.getContent());
+    }
+
+
+    /**
+     * This method is used to search the searched string specified in the input
+     * parameter(searchTerm) and return the module corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string. This also filters modules which are linked to the spaces.
+     * 
+     * @param modulePagenum current page number sent as request parameter in the
+     *                      URL.
+     * @param searchTerm    This is the search string which is being searched.
+     */
+    @Override
+    public SearchModuleResults searchForModule(String modulePagenum, String searchTerm) {
+        Page<IModule> modulePage = paginationInModules(searchTerm, Integer.parseInt(modulePagenum));    
+        List<IModule> moduleList =  updateModuleListWithSpaceInfo(modulePage);
+        return getSearchModuleResults(moduleList);
+        
+    }
+
+    /**
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string. This also filters Slides from modules 
+     * which are linked to the spaces.
+     * 
+     * @param slidePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    @Override
+    public SearchSlideResults searchForSlide(String slidePagenum, String searchTerm) {
+        Page<ISlide> slidePage = paginationInSlides(searchTerm, Integer.parseInt(slidePagenum));      
+        List<ISlide> slideList = updateSlidePageWithSpaceInfo(slidePage);       
+        return getSearchSlideResults(slideList);     
+    }
+   
+
+    /**
+     * This method is used to search the searched string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose text block contains the
+     * search string. This also filters Slides from modules which are linked to the spaces.
+     * 
+     * @param slideTextPagenum current page number sent as request parameter in the
+     *                         URL.
+     * @param searchTerm       This is the search string which is being searched.
+     */
+    @Override
+    public SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm) {
+        Page<ISlide> slideTextPage = paginationInSlideTexts(searchTerm,
+                Integer.parseInt(slideTextPagenum));
+        List<ISlide> slideTextList = updateSlideTextPageWithSpaceInfo(slideTextPage);
+        return getSearchSlideTextBlockResults(slideTextList, searchTerm);     
+        
+    }
 
 
     

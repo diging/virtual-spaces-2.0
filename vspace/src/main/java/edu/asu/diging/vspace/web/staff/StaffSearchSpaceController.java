@@ -27,23 +27,8 @@ public class StaffSearchSpaceController {
     public ResponseEntity<SearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
-
-        List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);
-        SearchSpaceResults staffSearch = staffSearchManager.getSearchSpaceResults(spaceList);
-        return new ResponseEntity<SearchSpaceResults>(staffSearch, HttpStatus.OK);
+        return new ResponseEntity<SearchSpaceResults>(staffSearchManager.searchForSpace(spacePagenum, searchTerm), HttpStatus.OK);
     }
 
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = staffSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));
-        return spacePage.getContent();
-    }
+
 }
