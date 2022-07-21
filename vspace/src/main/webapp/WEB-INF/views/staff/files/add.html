@@ -6,25 +6,43 @@
 <script th:inline="javascript">
 
 	function addFile() {
-		var form = $("#addFileForm");
-		var formData = new FormData(form[0]);
+				
+		if(validate()) {
+					
+			var form = $("#addFileForm");
+			var formData = new FormData(form[0]);
+			
+			$.ajax({
+				type : "POST",
+				url : "[(@{'/staff/files/add?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+				cache : false,
+				enctype : 'multipart/form-data',
+				contentType : false,
+				processData : false,
+				data : formData,
+				success : function(data) {
+					window.location.href = "[(@{'/staff/files/list/'})]";
+				},
+				error : function(data) {
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.errorAdd').append(alert);
+				}
+			});
 		
-		$.ajax({
-			type : "POST",
-			url : "[(@{'/staff/files/add?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
-			cache : false,
-			enctype : 'multipart/form-data',
-			contentType : false,
-			processData : false,
-			data : formData,
-			success : function(data) {
-				window.location.href = "[(@{'/staff/files/list/'})]";
-			},
-			error : function(data) {
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.errorAdd').append(alert);
-			}
-		});
+		} else {
+			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>File name and File cannot be empty.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			$('.errorAdd').append(alert);
+		}		
+		
+	}
+	
+	function validate() {
+		var fileName = document.getElementById('fileName').value;
+		var file = document.getElementById('file').files.length;
+		 if(fileName == "" || fileName == null || file == 0) {
+			 return false;
+		 }
+		 return true;
 	}
 </script>
 </head>

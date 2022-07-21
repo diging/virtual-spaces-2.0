@@ -60,7 +60,7 @@
 			            <a class="nav-link"
 			               th:style="${currentPage == 'files' ? 'active' : '' }"
 			               th:href="@{/staff/files/list}"> 
-			               <span class="icon-2x2-grid secondary"></span><span class="custom_Text">&nbsp;Files</span>
+			               <span class="icon-folder-open"></span><span class="custom_Text">&nbsp;Files</span>
 					<li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'graph' ? 'active' : '' }"

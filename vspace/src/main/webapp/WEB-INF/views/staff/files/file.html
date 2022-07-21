@@ -34,6 +34,8 @@ function deleteFile(){
 
 <body>
     <div  layout:fragment="content" class="main-content">
+    <input action="action" class="btn primary-btn" type="button" onclick="history.go(-1);" value= "Back" > </input>
+    
     <span class = "errorDelete"></span>
  		<div class="flex-spacing">
  			<div>
@@ -72,7 +74,7 @@ function deleteFile(){
 				</div>
 				<button class="btn primary-btn" type="submit" value="submit">Save
 					File</button>
-				<a th:if="${file.getOriginalFileName!=null}" th:href="@{/staff/files/download/{id}(id=${file.id})}"
+				<a  th:href="@{/staff/files/download/{id}(id=${file.id})}"
 					class="download btn primary-btn">Download file</a>
 			</form>
 		</div>
