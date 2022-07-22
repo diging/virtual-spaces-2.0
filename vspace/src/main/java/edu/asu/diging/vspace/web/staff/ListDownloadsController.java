@@ -32,10 +32,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
 import org.apache.commons.io.IOUtils;
@@ -52,9 +54,13 @@ public class ListDownloadsController {
     @Autowired
     DownloadsManager downloadsManager;
     
+    @Autowired
+    ExhibitionDownloadRepository exhibitionDownloadRepository;
+    
     @RequestMapping("/staff/downloads/list")
     public String listDownloads(Model model) {
         
+        model.addAttribute("downloadsList" , exhibitionDownloadRepository.findAll());
         return "exhibition/downloads/downloadList";
     }
     
@@ -84,6 +90,39 @@ public class ListDownloadsController {
 
         }
     }
+    
+    @RequestMapping(value = "/exhibition/downloadFolder/{id}", method = RequestMethod.GET) 
+    public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, HttpServletRequest request) {
+        
+        Resource resource = null; 
+        
+        
+       
+        try {
+            byte[] byteArrayResource = downloadsManager.downloadZipFolder(id);
+            resource = new ByteArrayResource(byteArrayResource);
+            return  ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=exhibitionFolderName.zip")
+                    .contentLength(resource.contentLength())
+                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+                    .body(resource);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+        
+        
+    }
+
+
 
   
 

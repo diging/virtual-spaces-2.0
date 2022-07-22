@@ -47,8 +47,29 @@ function downloadFile(){
 <div layout:fragment="content" class="main-content">
 	<a th:href="@{/staff/download}" class="download btn primary-btn" style="float: right" >Download</a>
 	 <h2>Downloads</h2>
-	 <table>
-	 </table>
+	 <table class="table">
+	  <thead>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a
+                        href="#">Creation date</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Created by</a></th>
+                
+                     <th scope="col" >View</th>
+
+
+                </tr>
+            </thead>
+	 <tbody class="tableBody">
+                <tr th:each="exhibitionDownload:  ${downloadsList}">
+                    <th scope="row">[[${exhibitionDownload.creationDate}]]</th>
+                 
+                    <td>[[${exhibitionDownload.createdBy}]]</td>
+         
+                    <td><a th:href="@{'/exhibition/downloadFolder/'+${exhibitionDownload.id}}" ><span class="btn primary-btn btn-sm">Download</span></a></td>
+                </tr>
+            </tbody>
+	 
+</table>
 </div>
 </body>
 </html>

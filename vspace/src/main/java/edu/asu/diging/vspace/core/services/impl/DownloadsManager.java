@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -34,6 +35,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
@@ -47,6 +49,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -68,6 +71,9 @@ public class DownloadsManager {
     private String path;
     
     
+    @Autowired
+    private ExhibitionDownloadRepository exhibitionDownloadRepo;
+    
     public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName) throws IOException {       
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, path);
@@ -78,8 +84,21 @@ public class DownloadsManager {
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderPath);                
         }        
-        resource = createZipFolder(exhibitionFolderPath, path + File.separator + exhibitionFolderName +".zip");      
+        
+        String zipFolderPath = path + File.separator + exhibitionFolderName +".zip";
+        resource = createZipFolder(exhibitionFolderPath, zipFolderPath);  
+        
+        saveExhibitionDownload(exhibitionFolderPath);
         return resource;
+    }
+
+    private void saveExhibitionDownload(String exhibitionFolderPath) {
+        
+        
+        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
+        exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        exhibitionDownloadRepo.save(exhibitionDownload);
+        
     }
 
     private byte[] createZipFolder(String exhibitionFolderPath, String zipFolderPath) throws IOException {
@@ -257,6 +276,66 @@ public class DownloadsManager {
          
         
      }
+
+    public byte[] downloadZipFolder(String id) throws Exception {
+        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
+        
+        if(exhibitionDownlaod.isPresent()) {
+//            byte[] folderByteArray =  download(exhibitionDownlaod.get().getFolderPath());
+
+            Path zipFile = Paths.get(exhibitionDownlaod.get().getFolderPath());
+            try (           
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                    ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+
+                    Stream<Path> paths = Files.walk(zipFile)) {
+                paths
+                .filter(path -> !Files.isDirectory(path))
+                .forEach(path -> {
+                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                    try {
+//                        zipOutputStream.putNextEntry(zipEntry);
+//                        Files.copy(path, zipOutputStream);
+//                        zipOutputStream.closeEntry();
+
+                        responseZipStream.putNextEntry(zipEntry);
+                        Files.copy(path, responseZipStream);
+                        responseZipStream.closeEntry();
+
+                    } catch (IOException e) {
+                        System.err.println(e);
+                    }
+                });
+
+
+//                if (zipOutputStream != null) {
+//                    zipOutputStream.finish();
+//                    zipOutputStream.flush();
+//                   
+//                }
+                IOUtils.close(responseZipStream);
+                IOUtils.close(bufferedOutputStream);
+                IOUtils.close(byteArrayOutputStream);
+
+                return byteArrayOutputStream.toByteArray();
+
+            } catch (IOException e) {
+                logger.error("Could not create zip folder" + e);
+                throw new IOException(e);
+            } 
+            
+            
+            
+            
+        }else {
+            throw new Exception("Zip folder not found");
+        }
+        
+    }
+    
+    
+    
     
 
 }
