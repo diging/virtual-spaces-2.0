@@ -69,17 +69,15 @@ public class DownloadsManager {
     StorageEngine storageEngine;
     
     @Value("${downloads_path}")
-    private String path;
-    
-
-    
+    private String downloadsPath;
+       
     
     @Autowired
     private ExhibitionDownloadRepository exhibitionDownloadRepo;
     
     public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName, String localAddress) throws IOException {       
         byte[] resource = null;
-        String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, path);
+        String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
@@ -87,60 +85,10 @@ public class DownloadsManager {
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderPath, localAddress);                
         }               
-        String zipFolderPath = path + File.separator + exhibitionFolderName +".zip";
-//        resource = createZipFolder(exhibitionFolderPath, zipFolderPath);  
         resource = generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath));
         return resource;
     }
-
-//    private byte[] createZipFolder(String exhibitionFolderPath, String zipFolderPath) throws IOException {
-//
-//
-//
-//        Path zipFile = Files.createFile(Paths.get(zipFolderPath));
-//        Path sourceDirPath = Paths.get(exhibitionFolderPath);
-//        try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipFile));            
-//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-//                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-//
-//                Stream<Path> paths = Files.walk(sourceDirPath)) {
-//            paths
-//            .filter(path -> !Files.isDirectory(path))
-//            .forEach(path -> {
-//                ZipEntry  zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
-//                try {
-//                    zipOutputStream.putNextEntry(zipEntry);
-//                    Files.copy(path, zipOutputStream);
-//                    zipOutputStream.closeEntry();
-//
-//                    responseZipStream.putNextEntry(zipEntry);
-//                    Files.copy(path, responseZipStream);
-//                    responseZipStream.closeEntry();
-//
-//                } catch (IOException e) {
-//                    System.err.println(e);
-//                }
-//            });
-//
-//
-//            if (zipOutputStream != null) {
-//                zipOutputStream.finish();
-//                zipOutputStream.flush();
-//                IOUtils.close(responseZipStream);
-//            }
-//            IOUtils.close(bufferedOutputStream);
-//            IOUtils.close(byteArrayOutputStream);
-//
-//            return byteArrayOutputStream.toByteArray();
-//
-//        } catch (IOException e) {
-//            logger.error("Could not create zip folder" + e);
-//            throw new IOException(e);
-//        }
-//        
-//    }
 
     private void downloadSpace(Space space, String exhibitionFolderPath, String localAddress) {
 

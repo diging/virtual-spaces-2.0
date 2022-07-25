@@ -74,9 +74,7 @@ public class ListDownloadsController {
         Resource resource = null; 
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
-String serverUrl = "http://" +request.getServerName() + ":" +request.getServerPort();
-            ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromRequest(request);
-
+            String serverUrl = "http://" +request.getServerName() + ":" +request.getServerPort();
             String exhibitionFolderName= "Exhibition"+ LocalDateTime.now();
 
             byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, serverUrl);
