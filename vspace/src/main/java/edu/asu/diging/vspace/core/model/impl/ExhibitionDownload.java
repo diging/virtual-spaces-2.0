@@ -20,6 +20,16 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     private String folderPath;
     
 
+    public ExhibitionDownload() {
+        super();
+    }
+    
+    public ExhibitionDownload(String folderPath) {
+        super();
+        this.folderPath = folderPath;
+    }
+    
+    
     @Override
     public String getId() {
         return this.id;    }

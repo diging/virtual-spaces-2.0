@@ -97,42 +97,5 @@ public class ExhibitionSpaceController {
         }
        
     }
-//    
-//    @RequestMapping(value = "/exhibit/space/download/{id}")
-//    public String spaceDownload(@PathVariable("id") String id, Model model) {
-//        ISpace space = spaceManager.getSpace(id);
-//        List<ISpaceLinkDisplay> spaceLinks;
-//        Boolean isSpacePublished = true;
-//        /* (non-Javadoc)
-//         * Below null check is added to accommodate already existing spaces with null space status
-//         */
-//        if (space.getSpaceStatus() != null && space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
-//            if (authenticationFacade.getAuthenticatedUser() != null) {
-//                isSpacePublished = false;
-//            } else {
-//                return "redirect:/exhibit/404";
-//            }
-//        }
-//        model.addAttribute("isSpacePublished", isSpacePublished);
-//        IExhibition exhibition = exhibitManager.getStartExhibition();
-//        model.addAttribute("exhibitionConfig", exhibition);
-//        model.addAttribute("space", space);
-//        model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
-//        if (space.isShowUnpublishedLinks()) {
-//            spaceLinks = spaceLinkManager.getLinkDisplays(id);
-//        } else {
-//            spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
-//        }
-//        List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
-//                spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
-//                .collect(Collectors.toList());
-//        model.addAttribute("spaceLinks", filteredSpaceLinks);
-//        model.addAttribute("display", spaceDisplayManager.getBySpace(space));
-//        model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));
-//
-//        if (sequenceHistory.hasHistory()) {
-//            sequenceHistory.flushFromHistory();
-//        }
-//        return "exhibition/downloads/spaceDownloadTemplate";
-//    }
+
 }

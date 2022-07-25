@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
@@ -69,12 +70,16 @@ public class ListDownloadsController {
     public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request) {
 
 
+
         Resource resource = null; 
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
+String serverUrl = "http://" +request.getServerName() + ":" +request.getServerPort();
+            ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromRequest(request);
+
             String exhibitionFolderName= "Exhibition"+ LocalDateTime.now();
 
-            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName);
+            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, serverUrl);
             resource = new ByteArrayResource(byteArrayResource);
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
@@ -94,36 +99,22 @@ public class ListDownloadsController {
     @RequestMapping(value = "/exhibition/downloadFolder/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, HttpServletRequest request) {
         
-        Resource resource = null; 
-        
-        
+        Resource resource = null;      
        
         try {
-            byte[] byteArrayResource = downloadsManager.downloadZipFolder(id);
+            byte[] byteArrayResource = downloadsManager.downloadExhibitionFolder(id);
             resource = new ByteArrayResource(byteArrayResource);
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=exhibitionFolderName.zip")
                     .contentLength(resource.contentLength())
                     .header(HttpHeaders.CONTENT_TYPE, "application/zip")
                     .body(resource);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
-
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Could not download exhibition", e);
             return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-
-        
-        
+   
     }
-
-
-
-  
 
 }

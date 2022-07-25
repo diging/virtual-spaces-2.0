@@ -11,6 +11,7 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +79,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    @Value("${uploads_path}")
+    private String uploadsPath;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -116,7 +120,7 @@ public class SpaceManager implements ISpaceManager {
         if (bgImage != null) {
             String relativePath = null;
             try {
-                relativePath = storage.storeFile(image, filename, bgImage.getId());
+                relativePath = storage.storeFile(image, filename, bgImage.getId(), uploadsPath);
             } catch (FileStorageException e) {
                 returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
             }

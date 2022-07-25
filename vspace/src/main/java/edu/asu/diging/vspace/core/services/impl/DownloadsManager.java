@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
@@ -70,11 +71,13 @@ public class DownloadsManager {
     @Value("${downloads_path}")
     private String path;
     
+
+    
     
     @Autowired
     private ExhibitionDownloadRepository exhibitionDownloadRepo;
     
-    public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName) throws IOException {       
+    public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName, String localAddress) throws IOException {       
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, path);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
@@ -82,78 +85,68 @@ public class DownloadsManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderPath);                
-        }        
-        
+            downloadSpace(space, exhibitionFolderPath, localAddress);                
+        }               
         String zipFolderPath = path + File.separator + exhibitionFolderName +".zip";
-        resource = createZipFolder(exhibitionFolderPath, zipFolderPath);  
-        
-        saveExhibitionDownload(exhibitionFolderPath);
+//        resource = createZipFolder(exhibitionFolderPath, zipFolderPath);  
+        resource = generateZipFolder(exhibitionFolderPath);
+        exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath));
         return resource;
     }
 
-    private void saveExhibitionDownload(String exhibitionFolderPath) {
-        
-        
-        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
-        exhibitionDownload.setFolderPath(exhibitionFolderPath);
-        exhibitionDownloadRepo.save(exhibitionDownload);
-        
-    }
+//    private byte[] createZipFolder(String exhibitionFolderPath, String zipFolderPath) throws IOException {
+//
+//
+//
+//        Path zipFile = Files.createFile(Paths.get(zipFolderPath));
+//        Path sourceDirPath = Paths.get(exhibitionFolderPath);
+//        try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipFile));            
+//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+//                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+//
+//                Stream<Path> paths = Files.walk(sourceDirPath)) {
+//            paths
+//            .filter(path -> !Files.isDirectory(path))
+//            .forEach(path -> {
+//                ZipEntry  zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
+//                try {
+//                    zipOutputStream.putNextEntry(zipEntry);
+//                    Files.copy(path, zipOutputStream);
+//                    zipOutputStream.closeEntry();
+//
+//                    responseZipStream.putNextEntry(zipEntry);
+//                    Files.copy(path, responseZipStream);
+//                    responseZipStream.closeEntry();
+//
+//                } catch (IOException e) {
+//                    System.err.println(e);
+//                }
+//            });
+//
+//
+//            if (zipOutputStream != null) {
+//                zipOutputStream.finish();
+//                zipOutputStream.flush();
+//                IOUtils.close(responseZipStream);
+//            }
+//            IOUtils.close(bufferedOutputStream);
+//            IOUtils.close(byteArrayOutputStream);
+//
+//            return byteArrayOutputStream.toByteArray();
+//
+//        } catch (IOException e) {
+//            logger.error("Could not create zip folder" + e);
+//            throw new IOException(e);
+//        }
+//        
+//    }
 
-    private byte[] createZipFolder(String exhibitionFolderPath, String zipFolderPath) throws IOException {
-
-
-
-        Path zipFile = Files.createFile(Paths.get(zipFolderPath));
-        Path sourceDirPath = Paths.get(exhibitionFolderPath);
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipFile));            
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-
-                Stream<Path> paths = Files.walk(sourceDirPath)) {
-            paths
-            .filter(path -> !Files.isDirectory(path))
-            .forEach(path -> {
-                ZipEntry  zipEntry = new ZipEntry(sourceDirPath.relativize(path).toString());
-                try {
-                    zipOutputStream.putNextEntry(zipEntry);
-                    Files.copy(path, zipOutputStream);
-                    zipOutputStream.closeEntry();
-
-                    responseZipStream.putNextEntry(zipEntry);
-                    Files.copy(path, responseZipStream);
-                    responseZipStream.closeEntry();
-
-                } catch (IOException e) {
-                    System.err.println(e);
-                }
-            });
-
-
-            if (zipOutputStream != null) {
-                zipOutputStream.finish();
-                zipOutputStream.flush();
-                IOUtils.close(responseZipStream);
-            }
-            IOUtils.close(bufferedOutputStream);
-            IOUtils.close(byteArrayOutputStream);
-
-            return byteArrayOutputStream.toByteArray();
-
-        } catch (IOException e) {
-            logger.error("Could not create zip folder" + e);
-            throw new IOException(e);
-        }
-        
-    }
-
-    private void downloadSpace(Space space, String exhibitionFolderPath) {
+    private void downloadSpace(Space space, String exhibitionFolderPath, String localAddress) {
 
         String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
 
-        addHtmlPage(space.getId(), spaceFolderPath , getApiToDownloadSpace(space) );
+        addHtmlPage(space.getId(), spaceFolderPath , getApiToDownloadSpace(space,localAddress) );
 
         String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
 
@@ -164,22 +157,22 @@ public class DownloadsManager {
         moduleLinks.forEach(moduleLink -> {
                      
             IModule module =   moduleLink.getModule();
-            downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
+            downloadModule(module, space,  imagesFolderPath, spaceFolderPath, localAddress);
             
         });        
     }
 
-    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, String localAddress) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
-            downloadSequence(startSequence, module, space, spaceFolderPath,imagesFolderPath );
+            downloadSequence(startSequence, module, space, spaceFolderPath,imagesFolderPath , localAddress);
            
         }
 
     }
 
     private void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
-            String imagesFolderPath) {
+            String imagesFolderPath, String localAddress) {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
             if(slide instanceof BranchingPoint) {
@@ -187,25 +180,26 @@ public class DownloadsManager {
                 List<IChoice> choices  =  branchingPoint.getChoices();
                 choices.forEach(choice -> {
                     if(!choice.getSequence().getId().equals(startSequence.getId())) {
-                        downloadSequence(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath); 
+                        downloadSequence(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath, localAddress); 
                     }
                 });
             }
             else {
                 IVSImage image = slide.getFirstImageBlock().getImage();
                 copyImageToFolder(image, imagesFolderPath);
-                String api = getApiToDownloadSlide(space, module, startSequence , slide);
-                addHtmlPage(slide.getId(), spaceFolderPath ,"/" +space.getId() + "/module/" + module.getId() + "/sequence/"+ startSequence.getId()+"/slide/"+slide.getId() + "?isDownload=true");
+                String api = getApiToDownloadSlide(space, module, startSequence , slide, localAddress);
+                addHtmlPage(slide.getId(), spaceFolderPath , api);
             }
 
         });
         
     }
 
-    private String getApiToDownloadSlide(ISpace space, IModule module, ISequence startSequence, ISlide slide) {
+    private String getApiToDownloadSlide(ISpace space, IModule module, ISequence startSequence, ISlide slide, String localAddress) {
 
         StringBuilder apiStringBuilder = new StringBuilder();
-        apiStringBuilder.append("/");
+        apiStringBuilder.append(localAddress);
+        apiStringBuilder.append("/vspace/exhibit/");
         apiStringBuilder.append(space.getId());
         apiStringBuilder.append("/module/");
         apiStringBuilder.append(module.getId());
@@ -217,9 +211,10 @@ public class DownloadsManager {
         return apiStringBuilder.toString();
     }
 
-    private String getApiToDownloadSpace(ISpace space) {
+    private String getApiToDownloadSpace(ISpace space, String localAddress) {
         StringBuilder apiStringBuilder = new StringBuilder();
-        apiStringBuilder.append("/space/");
+        apiStringBuilder.append(localAddress);
+        apiStringBuilder.append("/vspace/exhibit/space/");
         apiStringBuilder.append(space.getId());
         apiStringBuilder.append("?isDownload=true");
         return apiStringBuilder.toString();
@@ -228,16 +223,10 @@ public class DownloadsManager {
     private void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
 
         try {
-
-
             FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + "resources")); //TODO: constant
-
-
         } catch (IOException e) {
             logger.error("Could not copy resources" , e);
         } 
-
-
     }
 
 
@@ -257,7 +246,9 @@ public class DownloadsManager {
     private void addHtmlPage(String directory, String spaceFolderPath, String api) {
         try {          
             
-            byte[] fileContent = download("http://localhost:8080/vspace/exhibit"+api);        
+//            byte[] fileContent = download("http://localhost:8080/vspace/exhibit"+api);        
+ 
+            byte[] fileContent = download(api);
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 
          
@@ -277,65 +268,50 @@ public class DownloadsManager {
         
      }
 
-    public byte[] downloadZipFolder(String id) throws Exception {
+    public byte[] downloadExhibitionFolder(String id) throws Exception {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
-        
+
         if(exhibitionDownlaod.isPresent()) {
-//            byte[] folderByteArray =  download(exhibitionDownlaod.get().getFolderPath());
-
-            Path zipFile = Paths.get(exhibitionDownlaod.get().getFolderPath());
-            try (           
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                    ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-
-                    Stream<Path> paths = Files.walk(zipFile)) {
-                paths
-                .filter(path -> !Files.isDirectory(path))
-                .forEach(path -> {
-                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                    try {
-//                        zipOutputStream.putNextEntry(zipEntry);
-//                        Files.copy(path, zipOutputStream);
-//                        zipOutputStream.closeEntry();
-
-                        responseZipStream.putNextEntry(zipEntry);
-                        Files.copy(path, responseZipStream);
-                        responseZipStream.closeEntry();
-
-                    } catch (IOException e) {
-                        System.err.println(e);
-                    }
-                });
-
-
-//                if (zipOutputStream != null) {
-//                    zipOutputStream.finish();
-//                    zipOutputStream.flush();
-//                   
-//                }
-                IOUtils.close(responseZipStream);
-                IOUtils.close(bufferedOutputStream);
-                IOUtils.close(byteArrayOutputStream);
-
-                return byteArrayOutputStream.toByteArray();
-
-            } catch (IOException e) {
-                logger.error("Could not create zip folder" + e);
-                throw new IOException(e);
-            } 
-            
-            
-            
-            
+            return  generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
         }else {
             throw new Exception("Zip folder not found");
         }
+
+    }
+
+    public byte[] generateZipFolder(String folderPath) throws IOException {
+        Path zipFile = Paths.get(folderPath);
+        
+        try (           
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+
+                Stream<Path> paths = Files.walk(zipFile)) {
+            paths
+            .filter(path -> !Files.isDirectory(path))
+            .forEach(path -> {
+                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                try {
+                    responseZipStream.putNextEntry(zipEntry);
+                    Files.copy(path, responseZipStream);
+                    responseZipStream.closeEntry();
+
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            });
+            IOUtils.close(responseZipStream);
+            IOUtils.close(bufferedOutputStream);
+            IOUtils.close(byteArrayOutputStream);
+
+            return byteArrayOutputStream.toByteArray();
+
+        } catch (IOException e) {
+            logger.error("Could not create zip folder" + e);
+            throw new IOException(e);
+        }      
         
     }
-    
-    
-    
-    
 
 }
