@@ -1,28 +1,18 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -30,29 +20,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IChoice;
-import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
-import edu.asu.diging.vspace.core.model.impl.Module;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
@@ -90,7 +72,7 @@ public class DownloadsManager {
         return resource;
     }
 
-    private void downloadSpace(Space space, String exhibitionFolderPath, String localAddress) {
+    public void downloadSpace(Space space, String exhibitionFolderPath, String localAddress) {
 
         String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
 
@@ -110,7 +92,7 @@ public class DownloadsManager {
         });        
     }
 
-    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, String localAddress) {
+    public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, String localAddress) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             downloadSequence(startSequence, module, space, spaceFolderPath,imagesFolderPath , localAddress);
@@ -119,7 +101,7 @@ public class DownloadsManager {
 
     }
 
-    private void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    public void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath, String localAddress) {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
@@ -168,7 +150,7 @@ public class DownloadsManager {
         return apiStringBuilder.toString();
     }
 
-    private void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
+    public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
 
         try {
             FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + "resources")); //TODO: constant
@@ -178,12 +160,10 @@ public class DownloadsManager {
     }
 
 
-    private void copyImageToFolder(IVSImage image, String imagesFolderPath) {
+    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
         try {
             byte[] byteArray = storageEngine.getImageContent(image.getId(), image.getFilename());
-
             storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
-
 
         } catch (IOException | FileStorageException e) {
             logger.error("Could not copy images" , e);
@@ -191,7 +171,7 @@ public class DownloadsManager {
     }
 
 
-    private void addHtmlPage(String directory, String spaceFolderPath, String api) {
+    public void addHtmlPage(String directory, String spaceFolderPath, String api) {
         try {          
             
 //            byte[] fileContent = download("http://localhost:8080/vspace/exhibit"+api);        
@@ -222,7 +202,7 @@ public class DownloadsManager {
         if(exhibitionDownlaod.isPresent()) {
             return  generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
         }else {
-            throw new Exception("Zip folder not found");
+            throw new Exception("Exhibition folder not found");
         }
 
     }
