@@ -27,10 +27,15 @@ import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 
@@ -140,6 +145,86 @@ public class DownloadsManagerTest {
         
         verify(serviceToTest, times(1)).downloadModule(module1, space, imagesFolderPath, spaceFolderPath, "");
         verify(serviceToTest, times(1)).downloadModule(module2, space, imagesFolderPath, spaceFolderPath, "");
+
+    }
+    
+    @Test
+    public void test_downloadModule_success() {
+        Space space = new Space();
+        space.setId("SPACE_ID");
+        space.setModuleLinks(new ArrayList());
+        ModuleLink moduleLink1 = new ModuleLink();
+        
+        IModule module1 = new Module();
+        
+        ISequence sequence1 = new Sequence();
+        sequence1.setSlides(new ArrayList());
+        module1.setStartSequence(sequence1);
+        moduleLink1.setId("MODULE_LINK_1");
+        moduleLink1.setModule(module1);
+        
+        space.getModuleLinks().add(moduleLink1);       
+        
+        String exhibitionFolderPath = "/Exhibition"; 
+        String spaceFolderPath = exhibitionFolderPath + File.separator+ space.getId();
+        String imagesFolderPath = exhibitionFolderPath + File.separator+ "images";
+        serviceToTest.downloadModule(module1, space, imagesFolderPath, spaceFolderPath, "");
+        
+        verify(serviceToTest, times(1)).downloadSequence(sequence1, module1, space, spaceFolderPath,imagesFolderPath, "");
+
+    }
+    
+    @Test
+    public void test_downloadSequence_success() {
+        Space space = new Space();
+        space.setId("SPACE_ID");
+        space.setModuleLinks(new ArrayList());
+        ModuleLink moduleLink1 = new ModuleLink();
+        
+        IModule module1 = new Module();
+        
+        ISequence sequence1 = new Sequence();
+        sequence1.setId("SEQ_1");
+        ISequence sequence2 = new Sequence(); //for  branching point
+        sequence2.setId("SEQ_2");
+        
+        sequence2.setSlides(new ArrayList());
+        
+        sequence1.setSlides(new ArrayList());
+        BranchingPoint branchingPoint = new BranchingPoint();
+        branchingPoint.setId("SLIDE1");
+        branchingPoint.setChoices(new ArrayList());       
+        
+        Choice choice = new Choice();
+        choice.setSequence(sequence2);
+        branchingPoint.getChoices().add(choice);      
+        sequence1.getSlides().add(branchingPoint);
+        
+        
+        Slide slide1 = new Slide();
+        slide1.setId("SLIDE2" );
+        sequence1.getSlides().add(slide1);
+        //TODO: set first image block
+        module1.setStartSequence(sequence1);
+        
+        
+        moduleLink1.setId("MODULE_LINK_1");
+        moduleLink1.setModule(module1);
+        
+        space.getModuleLinks().add(moduleLink1);       
+        
+        String exhibitionFolderPath = "/Exhibition"; 
+        String spaceFolderPath = exhibitionFolderPath + File.separator+ space.getId();
+        String imagesFolderPath = exhibitionFolderPath + File.separator+ "images";
+        
+        
+        serviceToTest.downloadSequence(sequence1, module1, space, spaceFolderPath, imagesFolderPath, imagesFolderPath);
+        
+        // to test recursive call because of branching point
+        verify(serviceToTest, times(1)).downloadSequence(sequence2, module1, space, spaceFolderPath,imagesFolderPath, "");
+        
+        //to test if html page is added fro given slide
+        verify(serviceToTest, times(1)).addHtmlPage(slide1.getId(),  spaceFolderPath,"");
 
     }
     

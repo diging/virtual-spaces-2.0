@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -21,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -52,6 +57,9 @@ public class DownloadsManager {
     
     @Value("${downloads_path}")
     private String downloadsPath;
+    
+    @Autowired
+    SpringTemplateEngine springTemplateEngine;
        
     
     @Autowired
@@ -171,11 +179,15 @@ public class DownloadsManager {
     }
 
 
-    public void addHtmlPage(String directory, String spaceFolderPath, String api) {
+    public void addHtmlPage(String directory, String spaceFolderPath, String api ) {
         try {          
             
 //            byte[] fileContent = download("http://localhost:8080/vspace/exhibit"+api);        
  
+      
+            
+//            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" , new Context());
+            
             byte[] fileContent = download(api);
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 
