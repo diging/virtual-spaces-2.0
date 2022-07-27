@@ -328,6 +328,7 @@ public class ReferenceManagerTest {
     @Test
     public void test_getReferencesForBiblio_success() {
         List<IReference> refList = new ArrayList<>();
+        refList.add(ref1);
         Mockito.when(refRepo.findByBiblios_Id("BiblioId")).thenReturn(refList);
         assertEquals(refList, refManagerToTest.getReferencesForBiblio("BiblioId"));
 

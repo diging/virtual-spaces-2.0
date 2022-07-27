@@ -18,7 +18,6 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
         String volume = reference.getVolume();
         String issue = reference.getIssue();
         String pages = reference.getPages();
-        
         ReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
         refFormatter.addAuthors(author).addYear(year).addTitle(title).addJournal(journal).addPages(pages).addVolume(volume).addIssue(issue).addUrl(url);
         

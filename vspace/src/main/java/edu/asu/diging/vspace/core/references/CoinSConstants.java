@@ -10,15 +10,23 @@ public interface CoinSConstants {
     
     String DEFAULT_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:dissertation";
     
+    String BOOK_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:book";
+    
     String RFR_ID_TAG = "&rfr_id=";
     
     String RFT_VAL_FMT_TAG = "&rft_val_fmt=";
     
-    String RFT_TYPE_TAG = "&rft.type=";
+    String RFT_TYPE_TAG = "&rft.genre=";
     
     String RFT_TITLE_TAG = "&rft.title=";
     
+    String RFT_BOOKTITLE_TAG = "&rft.btitle=";
+    
+    String RFT_TITLE_TAG_BOOK = "&rft.btitle=";
+    
     String RFT_AUTHOR_TAG = "&rft.au=";
+    
+    String RFT_LASTAUTHOR_TAG = "&rft.aulast=";
     
     String RFT_DATE_TAG = "&rft.date=";
     

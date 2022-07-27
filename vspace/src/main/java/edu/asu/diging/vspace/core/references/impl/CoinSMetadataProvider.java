@@ -37,18 +37,32 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         String urlEncodedReferenceMetaData = CoinSConstants.DEFAULT_URL_VERSION + "&" + CoinSConstants.DEFAULT_CTX_VERSION;
         try {
             urlEncodedReferenceMetaData += CoinSConstants.RFR_ID_TAG + URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name());
-            urlEncodedReferenceMetaData += CoinSConstants.RFT_VAL_FMT_TAG
-                    + URLEncoder.encode(CoinSConstants.DEFAULT_RFT_VAL_FMT, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += CoinSConstants.RFT_VAL_FMT_TAG;
+            if(reference.getType().equals("book")) {
+                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.BOOK_RFT_VAL_FMT, StandardCharsets.UTF_8.name());
+                
+            }else {
+                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.DEFAULT_RFT_VAL_FMT, StandardCharsets.UTF_8.name());        
+            }
+                   
+            
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }
-        
-        urlEncodedReferenceMetaData += getRefTypeEncoded(env.getProperty(reference.getType())) + getRefTitleEncoded(reference.getTitle()) + getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
+       
+        if(reference.getType().equals("book")) {
+            urlEncodedReferenceMetaData +=  getRefTitleEncodedBook(reference.getTitle()) +getRefLastAuthorEncoded(reference.getAuthor())+ getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
             + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl()) + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue()) + getRefPagesEncoded(reference.getPages())
-            + getRefEditorsEncoded(reference.getEditors()) + getRefNoteEncoded(reference.getNote());
+            + getRefEditorsEncoded(reference.getEditors()) + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
 
+            
+        }else {
+            urlEncodedReferenceMetaData +=  getRefTitleEncoded(reference.getTitle()) +getRefLastAuthorEncoded(reference.getAuthor())+ getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
+            + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl()) + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue()) + getRefPagesEncoded(reference.getPages())
+            + getRefEditorsEncoded(reference.getEditors()) + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());     
+        }
+        
         urlEncodedReferenceMetaData += CoinSConstants.RFT_DEFAULT_LANGUAGE;
-
         return urlEncodedReferenceMetaData;
     }
     
@@ -58,6 +72,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         }
         
         try {
+            
             return CoinSConstants.RFT_TYPE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
@@ -76,6 +91,18 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         }  
     }
     
+    private String getRefTitleEncodedBook(String title) throws ReferenceMetadataEncodingException {
+        if(title==null || title.trim().equals("")) {
+            return "";
+        }
+        
+        try {
+            return CoinSConstants.RFT_BOOKTITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
     private String getRefAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
         if(author==null || author.trim().equals("")) {
             return "";
@@ -83,6 +110,18 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         
         try {
             return CoinSConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }  
+    }
+    
+    private String getRefLastAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
+        if(author==null || author.trim().equals("")) {
+            return "";
+        }
+        
+        try {
+            return CoinSConstants.RFT_LASTAUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }  
