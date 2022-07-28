@@ -19,14 +19,14 @@ import edu.asu.diging.vspace.core.references.IReferenceMetadataProvider;
 import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Service
-@PropertySource({"classpath:config_reference.properties"})
+@PropertySource({ "classpath:config_reference.properties" })
 public class CoinSMetadataProvider implements IReferenceMetadataProvider {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     private Environment env;
-    
+
     @Override
     public ReferenceMetadataType getReferenceMetadataType() {
         return ReferenceMetadataType.DEFAULT;
@@ -34,161 +34,171 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
     @Override
     public String getReferenceMetadata(Reference reference) throws ReferenceMetadataEncodingException {
-        String urlEncodedReferenceMetaData = CoinSConstants.DEFAULT_URL_VERSION + "&" + CoinSConstants.DEFAULT_CTX_VERSION;
+        String urlEncodedReferenceMetaData = CoinSConstants.DEFAULT_URL_VERSION + "&"
+                + CoinSConstants.DEFAULT_CTX_VERSION;
         try {
-            urlEncodedReferenceMetaData += CoinSConstants.RFR_ID_TAG + URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name());
+            urlEncodedReferenceMetaData += CoinSConstants.RFR_ID_TAG
+                    + URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name());
             urlEncodedReferenceMetaData += CoinSConstants.RFT_VAL_FMT_TAG;
-            if(reference.getType().equals("book")) {
-                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.BOOK_RFT_VAL_FMT, StandardCharsets.UTF_8.name());
-                
-            }else {
-                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.DEFAULT_RFT_VAL_FMT, StandardCharsets.UTF_8.name());        
+            System.out.println(reference.getType());
+            if (reference.getType().equals(CoinSConstants.BOOK_GENRE)
+                    || reference.getType().equals(CoinSConstants.BOOK_SECTION_GENRE)) {
+                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.BOOK_RFT_VAL_FMT,
+                        StandardCharsets.UTF_8.name());
             }
-                   
-            
+
+            else if (reference.getType().equals(CoinSConstants.JOURNAL_ARTICLE_GENRE)) {
+
+                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.ARTICLE_RFT_VAL_FMT,
+                        StandardCharsets.UTF_8.name());
+            }else if (reference.getType().equals(CoinSConstants.BLOGPOST_TYPE)) {
+
+                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.BLOGPOST_RFT_VAL_FMT,
+                        StandardCharsets.UTF_8.name());
+            }
+            else {
+                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.DEFAULT_RFT_VAL_FMT,
+                        StandardCharsets.UTF_8.name());
+            }
+            urlEncodedReferenceMetaData += getRefTitleEncoded(reference.getTitle(), reference.getType())
+                    + getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
+                    + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl())
+                    + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue())
+                    + getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors())
+                    + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
+            System.out.println(urlEncodedReferenceMetaData);
+
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }
-       
-        if(reference.getType().equals("book")) {
-            urlEncodedReferenceMetaData +=  getRefTitleEncodedBook(reference.getTitle()) +getRefLastAuthorEncoded(reference.getAuthor())+ getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
-            + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl()) + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue()) + getRefPagesEncoded(reference.getPages())
-            + getRefEditorsEncoded(reference.getEditors()) + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
 
-            
-        }else {
-            urlEncodedReferenceMetaData +=  getRefTitleEncoded(reference.getTitle()) +getRefLastAuthorEncoded(reference.getAuthor())+ getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
-            + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl()) + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue()) + getRefPagesEncoded(reference.getPages())
-            + getRefEditorsEncoded(reference.getEditors()) + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());     
-        }
-        
         urlEncodedReferenceMetaData += CoinSConstants.RFT_DEFAULT_LANGUAGE;
         return urlEncodedReferenceMetaData;
     }
-    
+
     private String getRefTypeEncoded(String type) throws ReferenceMetadataEncodingException {
-        if(type==null || type.trim().equals("")) {
+        if (type == null || type.trim().equals("")) {
             return "";
         }
-        
+
         try {
-            
-            return CoinSConstants.RFT_TYPE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
+
+            if (type.equals(CoinSConstants.BLOGPOST_TYPE)) {
+                return CoinSConstants.RFT_TYPE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
+
+            }
+
+            return CoinSConstants.RFT_GENRE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
-    private String getRefTitleEncoded(String title) throws ReferenceMetadataEncodingException {
-        if(title==null || title.trim().equals("")) {
+
+    private String getRefTitleEncoded(String title, String type) throws ReferenceMetadataEncodingException {
+        if (title == null || title.trim().equals("")) {
             return "";
         }
-        
+        System.out.println("*****************----------" + type);
         try {
+            if (type.equals(CoinSConstants.BOOK_GENRE)) {
+                System.out.println(type + CoinSConstants.RFT_BOOKTITLE_TAG);
+                return CoinSConstants.RFT_BOOKTITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+            } else if (type.equals(CoinSConstants.JOURNAL_ARTICLE_GENRE)
+                    || type.equals(CoinSConstants.BOOK_SECTION_GENRE)) {
+                return CoinSConstants.RFT_ARTICLETITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+            }
             return CoinSConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
-    }
-    
-    private String getRefTitleEncodedBook(String title) throws ReferenceMetadataEncodingException {
-        if(title==null || title.trim().equals("")) {
-            return "";
         }
-        
-        try {
-            return CoinSConstants.RFT_BOOKTITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new ReferenceMetadataEncodingException(e);
-        }  
     }
-    
+
     private String getRefAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
-        if(author==null || author.trim().equals("")) {
+        if (author == null || author.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefLastAuthorEncoded(String author) throws ReferenceMetadataEncodingException {
-        if(author==null || author.trim().equals("")) {
+        if (author == null || author.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_LASTAUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefYearEncoded(String year) throws ReferenceMetadataEncodingException {
-        
-        if(year==null || year.trim().equals("")) {
+
+        if (year == null || year.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefJournalEncoded(String journal) throws ReferenceMetadataEncodingException {
-        
-        if(journal==null || journal.trim().equals("")) {
+
+        if (journal == null || journal.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_JOURNAL_TAG + URLEncoder.encode(journal, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefUrlEncoded(String url) throws ReferenceMetadataEncodingException {
-        if(url==null || url.trim().equals("")) {
+        if (url == null || url.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefVolumeEncoded(String volume) throws ReferenceMetadataEncodingException {
-        if(volume==null || volume.trim().equals("")) {
+        if (volume == null || volume.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_VOLUME_TAG + URLEncoder.encode(volume, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefIssueEncoded(String issue) throws ReferenceMetadataEncodingException {
-        if(issue==null || issue.trim().equals("")) {
+        if (issue == null || issue.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_ISSUE_TAG + URLEncoder.encode(issue, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefPagesEncoded(String pages) throws ReferenceMetadataEncodingException {
         String refPagesEncoded = "";
         if (pages != null && !pages.trim().equals("")) {
@@ -196,11 +206,11 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                 refPagesEncoded += CoinSConstants.RFT_ISSUE_TAG
                         + URLEncoder.encode(pages, StandardCharsets.UTF_8.name());
                 String[] tokens = pages.split("-");
-                if(tokens.length >=2) {
+                if (tokens.length >= 2) {
                     tokens = pages.split("-", 2);
-                    
+
                 }
-           
+
                 if (tokens.length > 1) {
                     refPagesEncoded += CoinSConstants.RFT_START_PAGE_TAG
                             + URLEncoder.encode(tokens[0], StandardCharsets.UTF_8.name());
@@ -213,29 +223,29 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         }
         return refPagesEncoded;
     }
-    
+
     private String getRefEditorsEncoded(String editors) throws ReferenceMetadataEncodingException {
-        if(editors==null || editors.trim().equals("")) {
+        if (editors == null || editors.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_EDITOR_TAG + URLEncoder.encode(editors, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
-    
+
     private String getRefNoteEncoded(String note) throws ReferenceMetadataEncodingException {
-        if(note==null || note.trim().equals("")) {
+        if (note == null || note.trim().equals("")) {
             return "";
         }
-        
+
         try {
             return CoinSConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
-        }  
+        }
     }
 
 }

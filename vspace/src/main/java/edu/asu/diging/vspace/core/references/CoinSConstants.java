@@ -12,17 +12,25 @@ public interface CoinSConstants {
     
     String BOOK_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:book";
     
+    String ARTICLE_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:journal";
+    
+    String BLOGPOST_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:dc";
+     
     String RFR_ID_TAG = "&rfr_id=";
     
     String RFT_VAL_FMT_TAG = "&rft_val_fmt=";
     
-    String RFT_TYPE_TAG = "&rft.genre=";
+    String RFT_GENRE_TAG = "&rft.genre=";
+    
+    String RFT_TYPE_TAG = "&rft.type=";
     
     String RFT_TITLE_TAG = "&rft.title=";
     
     String RFT_BOOKTITLE_TAG = "&rft.btitle=";
     
-    String RFT_TITLE_TAG_BOOK = "&rft.btitle=";
+    String RFT_ARTICLETITLE_TAG = "&rft.atitle=";
+    
+    String RFT_TITLE_TAG_BOOK = "&rft.bstitle=";
     
     String RFT_AUTHOR_TAG = "&rft.au=";
     
@@ -49,5 +57,13 @@ public interface CoinSConstants {
     String RFT_NOTE_TAG = "&rft.note=";
     
     String RFT_DEFAULT_LANGUAGE = "&rft.language=en";
+    
+    String BOOK_GENRE = "book";
+    
+    String BOOK_SECTION_GENRE = "bookitem";
+    
+    String JOURNAL_ARTICLE_GENRE = "article";
+    
+    String BLOGPOST_TYPE = "blogPost";
     
 }
