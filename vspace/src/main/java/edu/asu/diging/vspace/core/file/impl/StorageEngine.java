@@ -8,7 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -181,5 +188,39 @@ public class StorageEngine implements IStorageEngine {
         }
         
         return path;
+    }
+    
+    public byte[] generateZipFolder(String folderPath) throws IOException {
+        Path zipFile = Paths.get(folderPath);
+        
+        try (           
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+
+                Stream<Path> paths = Files.walk(zipFile)) {
+            paths
+            .filter(path -> !Files.isDirectory(path))
+            .forEach(path -> {
+                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                try {
+                    responseZipStream.putNextEntry(zipEntry);
+                    Files.copy(path, responseZipStream);
+                    responseZipStream.closeEntry();
+
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            });
+            IOUtils.close(responseZipStream);
+            IOUtils.close(bufferedOutputStream);
+            IOUtils.close(byteArrayOutputStream);
+
+            return byteArrayOutputStream.toByteArray();
+
+        } catch (IOException e) {
+            throw new IOException(e);
+        }      
+        
     }
 }

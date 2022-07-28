@@ -291,133 +291,9 @@
 	    </div>
     <div id="mainDivContent" layout:fragment="content" style="margin: 60px 0 60px auto">
         <script th:inline="javascript">
-		//# sourceURL=click.js
-			
-		function toggleImgSize(isClicked){
-			var maxImgWidth = $(window).width();
-			var spaceWidth = $("#bgImage").css("width");
-			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
-			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
-			
-			if(isClicked) {
-				isResizeImgBtnClicked = -isResizeImgBtnClicked;
-				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
-			}
-			// resize the image to max width
-			if ( isResizeImgBtnClicked == 1) {
-				$("#toggleImgClass").attr('class', "icon-collapse secondary");
-				if(maxImgWidthOrig > maxImgWidth) {
-					$(".spaceClass").css("display", ""); 
-					$(".spaceClass").css("justify-content", "");
-					$("#bgImage").css("width", maxImgWidth);
-					$(".spaceClass").css("height", "");
-					$("#Module_1").css("height", "");
-					$("#Module_1").css("min-height", "0");
-					$("#Module_1").css("margin-bottom", "0px");
-				}
-        		}
-			else {
-				$("#toggleImgClass").attr('class', "icon-expand secondary");
-				if(maxImgWidthOrig > maxImgWidth) {
-					$(".spaceClass").css("display", "flex"); 
-					$(".spaceClass").css("justify-content", "");
-					$("#bgImage").css("width", spaceWidth);
-					$('#bgImage').width('100%');
-					$(".spaceClass").css("height", "800px");
-					$("#Module_1").css("margin-bottom", "60px");
-				}
-			}
-			$("#space a").remove();        
-			drawLinks();
-		}
-		
-		function imageFullScreen(){
-			   var elem = document.getElementById("spaceDiv");
-			   $(".text-Div").hide();
-			   if (elem.requestFullscreen) {
-				    elem.requestFullscreen();
-			   }else if (elem.webkitRequestFullscreen) { 
-				    elem.webkitRequestFullscreen();
-			   }else if (elem.msRequestFullscreen) { 
-				    elem.msRequestFullscreen();
-			   }
-			   $('#bgImage').width('100%');
-			   $('#spaceDiv').css("padding-top", "0px");
-			   $("#space").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
-		}
-
-		function exitFullScreen()
-		{
-			$(".exitfullscreen").remove();
-			$(".text-Div").show();
-			$('#spaceDiv').css("padding-top", "10px");
-			if (document.exitFullscreen) {
-			    document.exitFullscreen();
-			  } else if (document.webkitExitFullscreen) { /* Safari */
-				    document.webkitExitFullscreen();
-			  } else if (document.msExitFullscreen) { /* IE11 */
-				    document.msExitFullscreen();
-			  }
-			toggleImgSize(false);
-		}
+		//# sourceURL=click.js 
 		let maxWidth='(max-width: 1200px)';
-		function openNav(){
-		  $("#mySidenav").css("width", "250px");
-		}
-        function closeNav(){
-        	$("#mySidenav").css("width", "0");
-		}
-		function openModuleNav(){
-		    if (window.matchMedia(maxWidth).matches){
-		        $("#mySideModulenav").css("width", "170px");
-		        $("#mySideModulenav").css("height", "auto");
-		    }
-		    else{
-		        $("#mySideModulenav").css("width", "240px");
-		        $("#mySideModulenav").css("height", "auto");
-		    }
-		}
-		function closeModuleNav(){
-		    $("#mySideModulenav").css("width", "0");
-		}
-		
-		function closeSpaceDescription(){
-		    $("#rightContent").css("width", "0");
-		    $("#rightContent").css("height", "0");
-		}
-		
-		function openSpaceDescription(){
-		    if (window.matchMedia(maxWidth).matches){
-		        $("#rightContent").css("height", "170px");
-		        $("#rightContent").css("width", "260px");
-		    }
-		    else{
-		        $("#rightContent").css("width", "300px");
-		        $("#rightContent").css("height", "[(${display.height})]px");
-		    }
-		}
-		
-		function setCookie(name,value,days) {
-		    var expires = "";
-		    if (days) {
-		        var date = new Date();
-		        date.setTime(date.getTime() + (days*24*60*60*1000));
-		        expires = "; expires=" + date.toUTCString();
-		    }
-		    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-		}
-		
-		function getCookie(name) {
-		    var nameEq = name + "=";
-		    var cookieArray = document.cookie.split(';');
-		    for(var i=0;i < cookieArray.length;i++) {
-		        var currCookie = cookieArray[i].trim();
-		        if (currCookie.startsWith(nameEq)) {
-		        	return currCookie.substring(nameEq.length,currCookie.length);
-		        }
-		    }
-		    return null;
-		}
+
 		
 		$(window).on("load", function() {
 			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
@@ -665,7 +541,10 @@
                                     th:if="${!#strings.isEmpty(space.description)}"
                                     class="icon-info-circle"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
-                                    th:onclick="openSpaceDescription()"></span>
+<!--                                     th:onclick="openSpaceDescription()"
+ -->                                >
+                                    
+                                    </span>
                                 <a sec:authorize="isAuthenticated()"
                                     th:href="@{|/staff/space/${space?.id}|}"><span
                                     style="display: inline-block; color: rgba(150, 45, 62, 1);">
@@ -683,7 +562,10 @@
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">
-                        <span class="icon-circle-close closebtn" th:onclick="closeSpaceDescription()"></span>
+                        <span class="icon-circle-close closebtn" 
+<!--                         th:onclick="closeSpaceDescription()"
+ -->                        
+                        ></span>
                         <div class="spaceDescription">[[${space.description}]]</div>
                     </div>
                 </div>

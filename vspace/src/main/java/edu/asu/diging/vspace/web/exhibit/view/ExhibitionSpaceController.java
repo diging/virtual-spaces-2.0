@@ -53,8 +53,7 @@ public class ExhibitionSpaceController {
     private SequenceHistory sequenceHistory;
 
     @RequestMapping(value = "/exhibit/space/{id}")
-    public String space(@PathVariable("id") String id, Model model,
-            @RequestParam(required= false , name= "isDownload") Boolean isDownload) {
+    public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
         Boolean isSpacePublished = true;
@@ -90,11 +89,9 @@ public class ExhibitionSpaceController {
         }
         
 
-        if(Boolean.TRUE.equals(isDownload)) {
-            return "exhibition/downloads/spaceDownloadTemplate";
-        }else {
-            return "exhibition/space";
-        }
+
+        return "exhibition/space";
+        
        
     }
 

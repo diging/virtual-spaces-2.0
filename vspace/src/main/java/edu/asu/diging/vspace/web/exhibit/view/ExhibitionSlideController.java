@@ -52,8 +52,7 @@ public class ExhibitionSlideController {
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
             @RequestParam(required=false, name="back") boolean back,
             @RequestParam(required = false, name="branchingPoint") String branchingPointId,
-            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId,
-            @RequestParam(required= false , name= "isDownload") Boolean isDownload)
+            @RequestParam(required = false, name="previousSequenceId") String previousSequenceId)
                     throws ModuleNotFoundException, SequenceNotFoundException,
                     SlidesInSequenceNotFoundException, SlideNotFoundException, SpaceDoesNotExistException,
                     SpaceNotFoundException {
@@ -129,12 +128,9 @@ public class ExhibitionSlideController {
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
-        
-        if(Boolean.TRUE.equals(isDownload)) {
-            return "exhibition/downloads/moduleDownloadTemplate";
-        }else {
-            return "exhibition/module";
-        }
-      
+
+        return "exhibition/module";
+
+
     }
 }

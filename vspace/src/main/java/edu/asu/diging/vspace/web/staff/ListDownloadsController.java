@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
@@ -67,17 +68,19 @@ public class ListDownloadsController {
     
     
     @RequestMapping(value = "/staff/download", method = RequestMethod.GET) 
-    public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request) {
+    public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
 
         Resource resource = null; 
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
-            String serverUrl = "http://" +request.getServerName() + ":" +request.getServerPort();
             String exhibitionFolderName= "Exhibition"+ LocalDateTime.now();
-
-            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, serverUrl);
+          
+            WebContext context = new WebContext(request, response, request.getServletContext());
+            
+            
+            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
             resource = new ByteArrayResource(byteArrayResource);
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
