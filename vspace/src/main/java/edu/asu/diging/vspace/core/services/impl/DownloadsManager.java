@@ -1,37 +1,23 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
@@ -67,18 +53,15 @@ public class DownloadsManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    SpaceRepository spaceRepository;
-    
+    private SpaceRepository spaceRepository;
+
     @Autowired
-    StorageEngine storageEngine;
-    
-    @Value("${downloads_path}")
-    private String downloadsPath;
-    
+    private StorageEngine storageEngine;
+
     @Autowired
-    SpringTemplateEngine springTemplateEngine;
-    
-    
+    private SpringTemplateEngine springTemplateEngine;
+
+
     @Autowired
     private ISpaceManager spaceManager;
 
@@ -96,8 +79,8 @@ public class DownloadsManager {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
-    
+
+
     @Autowired
     private IModuleManager moduleManager;
 
@@ -106,15 +89,31 @@ public class DownloadsManager {
 
     @Autowired
     private ISequenceManager sequenceManager;
-    
+
 
     @Autowired
     private SequenceHistory sequenceHistory;
-       
-    
+
+
     @Autowired
     private ExhibitionDownloadRepository exhibitionDownloadRepo;
-    
+
+    @Value("${downloads_path}")
+    private String downloadsPath;
+
+    public final static String IMAGES_FOLDER_NAME = "images";
+
+    private static final String RESOURCES_FOLDER_NAME = "resources";
+
+    /**
+     * Downloads all the published spaces and related modules into a folder and returns the byte array.
+     * 
+     * @param resourcesPath
+     * @param exhibitionFolderName
+     * @param context
+     * @return
+     * @throws IOException
+     */
     public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {       
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
@@ -126,39 +125,65 @@ public class DownloadsManager {
             downloadSpace(space, exhibitionFolderPath, context);                
         }               
         resource = storageEngine.generateZipFolder(exhibitionFolderPath);
-        exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath));
+        exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
         return resource;
     }
 
+    /**
+     * 
+     * Download given space and related modules into exhibitionFolderPath
+     * @param space
+     * @param exhibitionFolderPath
+     * @param context
+     */
     public void downloadSpace(Space space, String exhibitionFolderPath, WebContext context) {
 
         String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
 
-        addHtmlPageForSpace(space.getId(), spaceFolderPath , context);
+        storeTemplateForSpace(space.getId(), spaceFolderPath , context);
 
-        String imagesFolderPath = storageEngine.createFolder("images" , spaceFolderPath);
+        String imagesFolderPath = storageEngine.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath); 
 
-        copyImageToFolder(space.getImage(),imagesFolderPath) ;
+        //Copies the space image
+        storageEngine.copyImageToFolder(space.getImage(),imagesFolderPath) ;
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 
         moduleLinks.forEach(moduleLink -> {
-                     
+
             IModule module =   moduleLink.getModule();
             downloadModule(module, space,  imagesFolderPath, spaceFolderPath,  context);
-            
+
         });        
     }
 
+    /**
+     * 
+     * Downloads given module and related slides into spacefolderpath.
+     * @param module
+     * @param space
+     * @param imagesFolderPath
+     * @param spaceFolderPath
+     * @param context
+     */
     public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             downloadSequence(startSequence, module, space, spaceFolderPath,imagesFolderPath , context);
-           
         }
 
     }
 
+    /**
+     * 
+     * Downloads given sequence into spacefolderPath.
+     * @param startSequence
+     * @param module
+     * @param space
+     * @param spaceFolderPath
+     * @param imagesFolderPath
+     * @param context
+     */
     public void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath,  WebContext context) {
         List<ISlide> slides = startSequence.getSlides();
@@ -174,15 +199,25 @@ public class DownloadsManager {
             }
             else {
                 IVSImage image = slide.getFirstImageBlock().getImage();
-                copyImageToFolder(image, imagesFolderPath);
-                addHtmlPageForSlide(slide.getId(), spaceFolderPath ,  context, space.getId(), module.getId(), startSequence.getId());
+                storageEngine.copyImageToFolder(image, imagesFolderPath);
+                storeTemplateForSlide(slide.getId(), spaceFolderPath ,  context, space.getId(), module.getId(), startSequence.getId());
             }
 
         });
-        
+
     }
 
-    private void addHtmlPageForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
+    /**
+     * 
+     * Stores the processed template for slide into spaceFolderPath
+     * @param slideId
+     * @param spaceFolderPath
+     * @param context
+     * @param spaceId
+     * @param moduleId
+     * @param sequenceId
+     */
+    private void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
         try {      
             populateContextForSlide( context, spaceId, moduleId, sequenceId, slideId );
             String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , context);
@@ -196,23 +231,24 @@ public class DownloadsManager {
         }       
     }
 
+    /**
+     * Populates the context with variables for slide template.
+     * 
+     * @param context
+     * @param spaceId
+     * @param moduleId
+     * @param sequenceId
+     * @param slideId
+     * @throws SlidesInSequenceNotFoundException
+     * @throws SequenceNotFoundException
+     * @throws SlideNotFoundException
+     */
     private void populateContextForSlide(WebContext context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
 
-        ISpace space = spaceManager.getSpace(spaceId);
-//        if (space == null) {
-//            return "redirect:/exhibit/404";
-//        }
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);
-//        if (module == null) {
-//            return "redirect:/exhibit/404";
-//        }
-//        if (module.getStartSequence() == null) {
-//            context.setVariable("showAlert", true);
-//            context.setVariable("message", "Sorry, module has not been configured yet.");
-//            return "/exhibition/module";
-//        }
         String startSequenceId = module.getStartSequence().getId();
+
         context.setVariable("startSequenceId", startSequenceId);
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist==null) {
@@ -250,15 +286,7 @@ public class DownloadsManager {
         context.setVariable("prevSlide", prevSlideId);
 
         context.setVariable("currentSlideCon", currentSlide);
-//        if(currentSlide instanceof BranchingPoint) {
-//            context.setVariable("choices", ((BranchingPoint)currentSlide).getChoices());
-//            if(back && sequenceHistory.peekBranchingPointId().equalsIgnoreCase(slideId)) {
-//                sequenceHistory.popFromHistory();
-//            }
-//        }
-//        if(branchingPointId!=null && !branchingPointId.isEmpty()){
-//            sequenceHistory.addToHistory(previousSequenceId,branchingPointId);
-//        }
+
         if(sequenceHistory.hasHistory()) {
             context.setVariable("showBackToPreviousChoice", true);
             context.setVariable("previousSequenceId", sequenceHistory.peekSequenceId());
@@ -269,61 +297,56 @@ public class DownloadsManager {
         context.setVariable("currentNumOfSlide", slideIndex + 1);
         context.setVariable("spaceId", spaceId);
         context.setVariable("spaceName", spaceManager.getSpace(spaceId).getName());
-        
-        
+
+
     }
 
+    /**
+     * Copies the resources folder into the exhibitionFolderPath
+     * @param exhibitionFolderPath
+     * @param resourcesPath
+     */
     public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
 
         try {
-            FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + "resources")); //TODO: constant
+            FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
         } catch (IOException e) {
             logger.error("Could not copy resources" , e);
         } 
     }
 
-
-    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-        try {
-            byte[] byteArray = storageEngine.getImageContent(image.getId(), image.getFilename());
-            storageEngine.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
-
-        } catch (IOException | FileStorageException e) {
-            logger.error("Could not copy images" , e);
-        }     
-    }
-
-
-    public void addHtmlPageForSpace(String directory, String spaceFolderPath,  WebContext context ) {
+    /**
+     * Stores the processed template for space into spaceFolderPath.
+     * 
+     * @param directory
+     * @param spaceFolderPath
+     * @param context
+     */
+    public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context ) {
         try {      
             populateContextForSpace( context, directory);
             String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" , context);
             byte[] fileContent = response.getBytes();
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
-         
+
         } catch ( FileStorageException e) {
             logger.error("Could not copy template" , e);
         }   
-      
+
     }
-    
-    
-    private void populateContextForSpace(WebContext context, String id) {
-        
+
+
+    /** Populates context with variables to process space template
+     * 
+     * @param context
+     * @param id
+     */
+    public void populateContextForSpace(WebContext context, String id) {
 
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
         Boolean isSpacePublished = true;
-        /* (non-Javadoc)
-         * Below null check is added to accommodate already existing spaces with null space status
-         */
-//        if (space.getSpaceStatus() != null && space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
-//            if (authenticationFacade.getAuthenticatedUser() != null) {
-//                isSpacePublished = false;
-//            } else {
-//                return "redirect:/exhibit/404";
-//            }
-//        }
+
         context.setVariable("isSpacePublished", isSpacePublished);
         IExhibition exhibition = exhibitManager.getStartExhibition();
         context.setVariable("exhibitionConfig", exhibition);
@@ -346,13 +369,21 @@ public class DownloadsManager {
         }
     }
 
-    public byte[] downloadExhibitionFolder(String id) throws Exception {
+    /**
+     * Downloads the given exhibition folder by the given ExhibitionDownload id
+     * 
+     * @param id
+     * @return
+     * @throws ExhibitionDownloadNotFoundException
+     * @throws IOException
+     */
+    public byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
 
         if(exhibitionDownlaod.isPresent()) {
             return  storageEngine.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
         }else {
-            throw new Exception("Exhibition folder not found");
+            throw new ExhibitionDownloadNotFoundException(id);
         }
 
     }

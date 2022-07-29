@@ -16,20 +16,22 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     @GeneratedValue(generator = "exhibit_download_id_generator")
     @GenericGenerator(name = "exhibit_download_id_generator", parameters = @Parameter(name = "prefix", value = "EXHDWNLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-    
+
     private String folderPath;
-    
+
+    private String folderName;
+
 
     public ExhibitionDownload() {
         super();
     }
-    
-    public ExhibitionDownload(String folderPath) {
+
+    public ExhibitionDownload(String folderPath, String folderName) {
         super();
         this.folderPath = folderPath;
+        this.folderName = folderName;
     }
-    
-    
+
     @Override
     public String getId() {
         return this.id;    }
@@ -47,5 +49,15 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     public void setFolderPath(String folderPath) {
         this.folderPath = folderPath;
     }
+
+
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
+
 
 }

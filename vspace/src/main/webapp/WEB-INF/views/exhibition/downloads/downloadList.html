@@ -6,20 +6,6 @@
 <script th:inline="javascript">
 
 
-function downloadFile(){
-	$.ajax({
-        url: "[(@{'/staff/download/'})]",
-        type: 'GET',
-        cache       : false,
-        contentType : false,
-        success: function(data) {
-        	console.log('success');
-        },
-        error: function(data) {
-        	console.log('could not download')
-        }
-    });
-}
 </script>
 <style>
 .pagination>li>a {
@@ -45,7 +31,9 @@ function downloadFile(){
 </head>
 <body>
 <div layout:fragment="content" class="main-content">
-	<a th:href="@{/staff/download}" class="download btn primary-btn" style="float: right" >Download</a>
+	<span class = "errorAdd"></span>
+
+	<a th:href="@{/staff/exhibit/download}" class="download btn primary-btn" style="float: right" >Download</a>
 	 <h2>Downloads</h2>
 	 <table class="table">
 	  <thead>
@@ -64,9 +52,8 @@ function downloadFile(){
                     <th scope="row">[[${exhibitionDownload.creationDate}]]</th>
                  
                     <td>[[${exhibitionDownload.createdBy}]]</td>
-         
-                    <td><a th:href="@{'/exhibition/downloadFolder/'+${exhibitionDownload.id}}" ><span class="btn primary-btn btn-sm">Download</span></a></td>
-                </tr>
+                    <td><a th:href="@{'/staff/exhibit/download/'+${exhibitionDownload.id}(folderName=${exhibitionDownload.folderName})}" ><span class="btn primary-btn btn-sm">Download</span></a></td>
+               </tr>
             </tbody>
 	 
 </table>

@@ -16,6 +16,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -27,35 +29,10 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 @Component
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class StorageEngine implements IStorageEngine {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Value("${uploads_path}")
 	private String path;
-//	
-//	/* (non-Javadoc)
-//	 * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
-//	 */
-//	@Override
-//	public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-//		File parent = new File(path + File.separator + directory);
-//		if (!parent.exists()) {
-//			parent.mkdir();
-//		}
-//		File file = new File(parent.getAbsolutePath() + File.separator + filename);
-//        BufferedOutputStream stream;
-//        try {
-//            stream = new BufferedOutputStream(new FileOutputStream(file));
-//        } catch (FileNotFoundException e) {
-//            throw new FileStorageException("Could not store file.", e);
-//        }
-//        try {
-//            stream.write(fileContent);
-//            stream.close();
-//        } catch (IOException e) {
-//            throw new FileStorageException("Could not store file.", e);
-//        }
-//        
-//        return directory;
-//	}
 	
 	/* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
@@ -222,5 +199,23 @@ public class StorageEngine implements IStorageEngine {
             throw new IOException(e);
         }      
         
+    }
+    
+    
+
+    /**
+     * Copies given image to imagesFolderPath
+     * 
+     * @param image
+     * @param imagesFolderPath
+     */
+    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
+        try {
+            byte[] byteArray = getImageContent(image.getId(), image.getFilename());
+            storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
+
+        } catch (IOException | FileStorageException e) {
+            logger.error("Could not copy images" , e);
+        }     
     }
 }
