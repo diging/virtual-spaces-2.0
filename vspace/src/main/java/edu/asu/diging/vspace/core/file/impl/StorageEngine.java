@@ -106,116 +106,73 @@ public class StorageEngine implements IStorageEngine {
 	
 	
     
-    public String createFolder(String folderName, String path ) {
-        File folder = new File(path + File.separator + folderName);
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-        
-        return folder.getAbsolutePath();
-        
-    }
-    
-    @Override
-    public byte[] getFileContent(String path) throws IOException {
-        File fileObject = new File(path );
-        URLConnection con = fileObject.toURI().toURL().openConnection();
-        
-        InputStream input = con.getInputStream();
+	public String createFolder(String folderName, String path ) {
+	    File folder = new File(path + File.separator + folderName);
+	    if (!folder.exists()) {
+	        folder.mkdir();
+	    }
 
-        byte[] buffer = new byte[4096];
-        
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
-       
-        int n = -1;
-        while ((n = input.read(buffer)) != -1) {
-            output.write(buffer, 0, n);
-        }
-        input.close();
-        output.flush();
-        output.close();
-        
-        byteOutput.flush();
-        byte[] bytes = byteOutput.toByteArray();
-        byteOutput.close();
-        return bytes;
-    }
-    
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
-     */
-    @Override
-    public String storeFolder(byte[] fileContent, String path) throws FileStorageException {
-        File parent = new File(path );
-        if (!parent.exists()) {
-            parent.mkdir();
-        }
-        BufferedOutputStream stream;
-        try {
-            stream = new BufferedOutputStream(new FileOutputStream(parent));
-        } catch (FileNotFoundException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-        try {
-            stream.write(fileContent);
-            stream.close();
-        } catch (IOException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-        
-        return path;
-    }
-    
-    public byte[] generateZipFolder(String folderPath) throws IOException {
-        Path zipFile = Paths.get(folderPath);
-        
-        try (           
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+	    return folder.getAbsolutePath();
 
-                Stream<Path> paths = Files.walk(zipFile)) {
-            paths
-            .filter(path -> !Files.isDirectory(path))
-            .forEach(path -> {
-                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                try {
-                    responseZipStream.putNextEntry(zipEntry);
-                    Files.copy(path, responseZipStream);
-                    responseZipStream.closeEntry();
+	}
+   
 
-                } catch (IOException e) {
-                    System.err.println(e);
-                }
-            });
-            IOUtils.close(responseZipStream);
-            IOUtils.close(bufferedOutputStream);
-            IOUtils.close(byteArrayOutputStream);
+	/**
+	 * Converts the given folder into a zip folder and returna byte array.
+	 * 
+	 * @param folderPath
+	 * @return
+	 * @throws IOException
+	 */
+	public byte[] generateZipFolder(String folderPath) throws IOException {
+	    Path zipFile = Paths.get(folderPath);
 
-            return byteArrayOutputStream.toByteArray();
+	    try (           
+	            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+	            ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
 
-        } catch (IOException e) {
-            throw new IOException(e);
-        }      
-        
-    }
-    
-    
+	            Stream<Path> paths = Files.walk(zipFile)) {
+	        paths
+	        .filter(path -> !Files.isDirectory(path))
+	        .forEach(path -> {
+	            ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+	            try {
+	                responseZipStream.putNextEntry(zipEntry);
+	                Files.copy(path, responseZipStream);
+	                responseZipStream.closeEntry();
 
-    /**
-     * Copies given image to imagesFolderPath
-     * 
-     * @param image
-     * @param imagesFolderPath
-     */
-    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-        try {
-            byte[] byteArray = getImageContent(image.getId(), image.getFilename());
-            storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
+	            } catch (IOException e) {
+	                System.err.println(e);
+	            }
+	        });
+	        IOUtils.close(responseZipStream);
+	        IOUtils.close(bufferedOutputStream);
+	        IOUtils.close(byteArrayOutputStream);
 
-        } catch (IOException | FileStorageException e) {
-            logger.error("Could not copy images" , e);
-        }     
-    }
+	        return byteArrayOutputStream.toByteArray();
+
+	    } catch (IOException e) {
+	        throw new IOException(e);
+	    }      
+
+	}
+
+
+
+	/**
+	 * Copies given image to imagesFolderPath
+	 * 
+	 * @param image
+	 * @param imagesFolderPath
+	 */
+	public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
+	    try {
+	        byte[] byteArray = getImageContent(image.getId(), image.getFilename());
+	        storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
+
+	    } catch (IOException | FileStorageException e) {
+	        logger.error("Could not copy images" , e);
+	    }     
+	}
 }

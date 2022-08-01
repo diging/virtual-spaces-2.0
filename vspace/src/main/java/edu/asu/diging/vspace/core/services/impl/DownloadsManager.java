@@ -217,7 +217,7 @@ public class DownloadsManager {
      * @param moduleId
      * @param sequenceId
      */
-    private void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
+    public void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
         try {      
             populateContextForSlide( context, spaceId, moduleId, sequenceId, slideId );
             String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , context);
@@ -305,13 +305,16 @@ public class DownloadsManager {
      * Copies the resources folder into the exhibitionFolderPath
      * @param exhibitionFolderPath
      * @param resourcesPath
+     * @throws IOException 
      */
-    public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) {
+    public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException {
 
         try {
             FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
         } catch (IOException e) {
             logger.error("Could not copy resources" , e);
+            throw new IOException(e);
+            
         } 
     }
 
