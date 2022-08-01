@@ -385,7 +385,7 @@ public class DownloadsManager {
 
         if(exhibitionDownlaod.isPresent()) {
             return  storageEngine.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
-        }else {
+        } else {
             throw new ExhibitionDownloadNotFoundException(id);
         }
 
