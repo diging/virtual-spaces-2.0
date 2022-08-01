@@ -106,13 +106,13 @@ public class StorageEngine implements IStorageEngine {
 	
 	
     
-	public String createFolder(String folderName, String path ) {
-	    File folder = new File(path + File.separator + folderName);
-	    if (!folder.exists()) {
-	        folder.mkdir();
-	    }
+    public String createFolder(String folderName, String path ) {
+        File folder = new File(path + File.separator + folderName);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
 
-	    return folder.getAbsolutePath();
+        return folder.getAbsolutePath();
 
 	}
    
@@ -124,16 +124,16 @@ public class StorageEngine implements IStorageEngine {
 	 * @return
 	 * @throws IOException
 	 */
-	public byte[] generateZipFolder(String folderPath) throws IOException {
-	    Path zipFile = Paths.get(folderPath);
+    public byte[] generateZipFolder(String folderPath) throws IOException {
+        Path zipFile = Paths.get(folderPath);
 
-	    try (           
+        try (           
 	            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
 	            ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
 
 	            Stream<Path> paths = Files.walk(zipFile)) {
-	        paths
+            paths
 	        .filter(path -> !Files.isDirectory(path))
 	        .forEach(path -> {
 	            ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
@@ -146,17 +146,17 @@ public class StorageEngine implements IStorageEngine {
 	                System.err.println(e);
 	            }
 	        });
-	        IOUtils.close(responseZipStream);
-	        IOUtils.close(bufferedOutputStream);
-	        IOUtils.close(byteArrayOutputStream);
+            IOUtils.close(responseZipStream);
+            IOUtils.close(bufferedOutputStream);
+            IOUtils.close(byteArrayOutputStream);
 
-	        return byteArrayOutputStream.toByteArray();
+            return byteArrayOutputStream.toByteArray();
 
-	    } catch (IOException e) {
+        } catch (IOException e) {
 	        throw new IOException(e);
 	    }      
 
-	}
+    }
 
 
 
@@ -166,13 +166,13 @@ public class StorageEngine implements IStorageEngine {
 	 * @param image
 	 * @param imagesFolderPath
 	 */
-	public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-	    try {
-	        byte[] byteArray = getImageContent(image.getId(), image.getFilename());
-	        storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
+    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
+        try {
+            byte[] byteArray = getImageContent(image.getId(), image.getFilename());
+            storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath );
 
-	    } catch (IOException | FileStorageException e) {
-	        logger.error("Could not copy images" , e);
-	    }     
-	}
+        } catch (IOException | FileStorageException e) {
+            logger.error("Could not copy images" , e);
+        }     
+    }
 }
