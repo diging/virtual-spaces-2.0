@@ -153,7 +153,7 @@ public class StorageEngine implements IStorageEngine {
             return byteArrayOutputStream.toByteArray();
 
         } catch (IOException e) {
-	        throw new IOException(e);
+            throw new IOException(e);
 	    }      
 
     }
