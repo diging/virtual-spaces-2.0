@@ -89,6 +89,22 @@
     visibility: visible;
 }
 
+.previewModeAlert {
+	position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 80%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.previewModeAlert:hover .tooltiptextforpreviewmodealert {
+    visibility: visible;
+}
+
+
 .exitfullscreen:hover .tooltiptextForExitFullscreen {
     visibility: visible;
 }
@@ -105,6 +121,36 @@
     left: -38px;
     top: 46px;
     background: rgba(0, 0, 0, 0.6);
+}
+
+.tooltiptextforpreviewmodealert {
+    visibility: hidden;
+    width: 250px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 6px 6px;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+    left: -50px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.exhModeAlert {
+	position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 75%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.exhModeAlert:hover .tooltiptextforpreviewmodealert {
+    visibility: visible;
 }
 
 
@@ -489,6 +535,20 @@
 		</div>
 		
 		</div>
+		 <div th:if="${isExhPreview} == true" class="previewModeAlert">
+                <button class="btn circle-btn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;">
+                    <span class="icon-visible secondary"
+                         style="float:right;left: -4px;"></span> <span
+                        class="tooltiptextforpreviewmodealert">You’re currently viewing a preview of this virtual space.</span>
+                </button>
+            </div> 
+             <div th:if="${exhibitionConfig.mode == 'OFFLINE' || exhibitionConfig.mode == 'MAINTENANCE'  }" class="exhModeAlert">
+                <button class="btn circle-btn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;">
+                    <span class="icon-visible secondary"
+                         style="float:right;left: -4px;"></span> <span
+                        class="tooltiptextforpreviewmodealert">The virtual space is currently in [[${exhibitionConfig.mode}]] and cannot be viewed via its public url.</span>
+                </button>
+            </div> 
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">
@@ -507,6 +567,7 @@
                 </button>
             </div>
             
+           
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
