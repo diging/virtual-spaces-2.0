@@ -100,7 +100,7 @@
     cursor: pointer;
 }
 
-.previewModeAlert:hover .tooltiptextforpreviewmodealert {
+.previewModeAlert:hover .tooltiptextforPreviewModeAlert {
     visibility: visible;
 }
 
@@ -123,13 +123,13 @@
     background: rgba(0, 0, 0, 0.6);
 }
 
-.tooltiptextforpreviewmodealert {
+.tooltiptextforPreviewModeAlert {
     visibility: hidden;
     width: 250px;
     color: white;
     text-align: center;
     font-size: 12px;
-    padding: 6px 6px;
+    padding: 6px 6pt;
     border-radius: 6px;
     position: relative;
     z-index: 1;
@@ -155,7 +155,7 @@
     color: white;
     text-align: center;
     font-size: 12px;
-    padding: 6px 6px;
+    padding: 6px 6pt;
     border-radius: 6px;
     position: relative;
     z-index: 1;
@@ -554,7 +554,7 @@
                 <button class="btn circle-btn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;">
                     <span class="icon-info secondary"
                          style="float:right;left: -4px;"></span> <span
-                        class="tooltiptextforpreviewmodealert">You’re currently viewing a preview of this virtual space.</span>
+                        class="tooltiptextforPreviewModeAlert">You’re currently viewing a preview of this virtual space.</span>
                 </button>
             </div> 
              <div th:unless="${exhibitionConfig.mode == 'MAINTENANCE' OR exhibitionConfig.mode == 'OFFLINE'}" class="exhModeAlert">
