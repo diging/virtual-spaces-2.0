@@ -38,7 +38,6 @@ public class AddReferenceController {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.saveReference(biblio, reference);
-       
         String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
         ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
         return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
