@@ -658,8 +658,9 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     $("#externalLinkLabelEdit").val(linkName);
     $("#externalLinkIdValueEdit").val(linkId);
     $("#externalLinkURLEdit").val(externalLinkURL);
-    $('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
-    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').attr("selected", "selected");
+    $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').prop("selected",true);
+    
     resetHighlighting();
 
     $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
