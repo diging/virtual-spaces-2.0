@@ -33,6 +33,13 @@ public class ReferenceDisplayFormatter {
         return this;
     }
     
+    public ReferenceDisplayFormatter addType(String type) {
+        if(type!=null && !type.equals("")) {
+            this.referenceDisplayText.append(type + ". ");
+        }
+        return this;
+    }
+    
     public ReferenceDisplayFormatter addJournal(String journal) {
         if(journal!=null && !journal.equals("")) {
             this.referenceDisplayText.append("In: " + journal + ". ");
@@ -64,6 +71,20 @@ public class ReferenceDisplayFormatter {
     public ReferenceDisplayFormatter addUrl(String url) {
         if(url!=null && !url.equals("")) {
             this.referenceDisplayText.append(url);
+        }
+        return this;
+    }
+    
+    public ReferenceDisplayFormatter addAbstracts(String abstracts) {
+        if(abstracts!=null && !abstracts.equals("")) {
+            this.referenceDisplayText.append(abstracts);
+        }
+        return this;
+    }
+    
+    public ReferenceDisplayFormatter addCompanyName(String companyName) {
+        if(companyName!=null && !companyName.equals("")) {
+            this.referenceDisplayText.append(companyName);
         }
         return this;
     }

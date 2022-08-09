@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import javax.security.auth.Refreshable;
+
 import org.hibernate.sql.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,9 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.ARTICLE_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
             } else if (reference.getType().equals(CoinSConstants.BLOGPOST_TYPE)
-                    || (reference.getType().equals(CoinSConstants.ART_TYPE))) {
+                    || (reference.getType().equals(CoinSConstants.ART_TYPE)) || reference.getType().equals(CoinSConstants.PODCAST)
+                    || reference.getType().equals(CoinSConstants.PRESENTATION)||
+                    reference.getType().equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
 
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.BLOGPOST_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
@@ -61,13 +65,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.PATENT_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
-            } else if (reference.getType().equals(CoinSConstants.PODCAST)
-                    || reference.getType().equals(CoinSConstants.PRESENTATION)||
-                    reference.getType().equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
-
-                urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.PODCAST_RFT_VAL_FMT,
-                        StandardCharsets.UTF_8.name());
-            } else {
+            }  else {
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.DEFAULT_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
             }
@@ -76,8 +74,9 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                     + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl())
                     + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue())
                     + getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors())
-                    + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
-            System.out.println(urlEncodedReferenceMetaData);
+                    + getRefNoteEncoded(reference.getNote()) +  getRefAbstractEncoded(reference.getAbstracts()) + getRefTypeEncoded(reference.getType());
+                    
+            
 
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
@@ -255,6 +254,18 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
         try {
             return CoinSConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new ReferenceMetadataEncodingException(e);
+        }
+    }
+    
+    private String getRefAbstractEncoded(String abstracts) throws ReferenceMetadataEncodingException {
+        if (abstracts == null || abstracts.trim().equals("")) {
+            return "";
+        }
+
+        try {
+            return CoinSConstants.RFT_ABSTRACT_TAG + URLEncoder.encode(abstracts, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }

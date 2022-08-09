@@ -48,7 +48,9 @@ public class EditReferenceController {
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.POST)
     public String save(@ModelAttribute Reference refData, @PathVariable("referenceId") String referenceId, 
             RedirectAttributes attributes) {
+        System.out.println(attributes);
         IReference reference = referenceManager.getReferenceById(referenceId);
+        System.out.println(reference);
         if(reference!=null) {
             refData.setId(reference.getId());
             refData.setCreatedBy(reference.getCreatedBy());
@@ -70,6 +72,7 @@ public class EditReferenceController {
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
             @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
         IReference reference = referenceManager.getReference(refId);
+        System.out.println("*********-----------************"+ref);
         if(reference!=null) {
             ref.setId(reference.getId());
             ref.setCreatedBy(reference.getCreatedBy());

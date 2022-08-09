@@ -35,7 +35,7 @@ public class AddReferenceController {
     public ResponseEntity<ReferenceBlock> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
             @RequestBody Reference reference) throws JsonProcessingException {
-        
+        System.out.println(reference);
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.saveReference(biblio, reference);
         String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);

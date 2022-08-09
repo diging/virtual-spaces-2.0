@@ -55,6 +55,11 @@ public class Reference extends VSpaceElement implements IReference {
 
     private String note;
     
+    
+    private String abstracts;
+    
+    private String companyName;
+    
     @Override
     public String getTitle() {
         return title;
@@ -183,11 +188,33 @@ public class Reference extends VSpaceElement implements IReference {
         this.biblios = biblios;
     }
     
+    
+    
+    @Override
+    public String getAbstracts() {
+        return abstracts;
+    }
+
+    @Override
+    public void setAbstracts(String abstracts) {
+        this.abstracts = abstracts;
+    }
+
+    @Override
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    @Override
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     @Override
     public String toString() {
         return "Reference title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal + ", url=" + url
                 + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors=" + editors + ", type="
-                + type + ", note=" + note;
+                + type + ", note=" + note + ", companyName=" +companyName + ", abstracts=" +abstracts;
     }
 
 }

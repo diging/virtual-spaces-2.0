@@ -132,8 +132,8 @@
     	      				$(alert).attr( 'value', biblioBlockId);
     	      				$('.modal-footer').append(alert); 
     	      	
-    	      	    			$("#editTitleRef").val(data.title);
-	              			$("#editAuthorRef").val(data.author);
+    	      	    $("#editTitleRef").val(data.title);
+	              	$("#editAuthorRef").val(data.author);
 					$("#editYearRef").val(data.year);
 					$("#editJournalRef").val(data.journal);
 					$("#editUrlRef").val(data.url);
@@ -143,6 +143,8 @@
 					$("#editEditorsRef").val(data.editors);
 					$("#editTypeRef").val(data.type);
 					$("#editNoteRef").val(data.note);
+					$("#editAbstractRef").val(data.abstracts);
+					$("#editCompanyNameRef").val(data.companyName);
 	              
 				},
 				error: function(data) {
@@ -698,6 +700,15 @@
 			
 		});
 		
+		$('#closeEditReferenceAlert').on('click',function(){
+			$('#currentBiblioId').remove();
+			$("#editReferenceAlert").hide();
+			var refId = $(".open").attr("id");
+			updateReferenceBox(refId, defaultValue);
+		});
+		
+		
+		
 		
 		
 	
@@ -1010,6 +1021,8 @@
 		var editors = $("#editorsRef").val();
 		var type = $("#typeRef").val();
 		var note = $("#noteRef").val();
+		var abstracts = $("#abstractsRef").val();
+		var companyName = $("#companyNameRef").val();
 		
 		
 
@@ -1024,6 +1037,8 @@
 		formData.append('editors', editors);
 		formData.append('type', type);
 		formData.append('note', note);
+		formData.append('abstracts', abstracts);
+		formData.append('companyName', companyName);
 		var biblioBlockId = $('#currentBiblioId').attr('value');
 		
 		$("#titleRef").val('');
@@ -1037,6 +1052,8 @@
 		$("#editorsRef").val('');
 		$("#typeRef").val('');
 		$("#noteRef").val('');
+		$("#abstractsRef").val('');
+		$("#companyNameRef").val('');
 		$("#addReferenceAlert").hide();
 
 		var object = {};
@@ -1044,6 +1061,7 @@
 		var jsonData = JSON.stringify(object);
 		
 		$.ajax({
+			
 		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/add'],
 		    type: 'POST',
 		    cache       : false,
@@ -1054,6 +1072,7 @@
 			},
 		    data: jsonData,
 		    success: function(data) {
+		    	console.log(jsonData);
 			var referenceblock = $('<div id="'+ data.reference.id +'" class="referenceDivStaff row" style="padding-left: 25px;"><p class="col-md-10 offset-md-1" >' + data.refDisplayText
 					+ '</p><input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference " href="javascript:;"><span class="icon-trash error" ></span></a></div>');
 
@@ -1317,6 +1336,8 @@
 			var editors = $("#editEditorsRef").val();
 			var type = $("#editTypeRef").val();
 			var note = $("#editNoteRef").val();
+			var abstracts = $("#editAbstractRef").val();
+			var companyName = $("#editCompanyNameRef").val();
 			var refBlockId = $(".open").attr("id");
 
 			formData.append('title', title);
@@ -1330,6 +1351,8 @@
 			formData.append('editors', editors);
 			formData.append('type', type);
 			formData.append('note', note);
+			formData.append('abstracts', abstracts);
+			formData.append('companyName', companyName);
 
 			$("#editReferenceAlert").hide();
 			var biblioBlockId = $('#currentBiblioId').attr('value');
@@ -1820,6 +1843,17 @@
 							<label for="name" class="col-md-3 col-form-label">Note:</label>
 							<input type="text" class="form-control col-md-8" id="noteRef" name="noteRef" />
 						</div>
+						
+						<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Abstracts :</label>
+							<input type="text" class="form-control col-md-8" id="abstractsRef" name="abstractsRef" />
+						</div>
+						
+						<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Company Name:</label>
+							<input type="text" class="form-control col-md-8" id="companyNameRef" name="companyNameRef" />
+						</div>
+						
 					</div>
 					<div class="modal-footer">
 						<button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
@@ -1866,7 +1900,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Edit Reference</h5>
-					<button type="button" class="close" data-dismiss="modal"
+					<button type="button" class="close" data-dismiss="modal" id = "closeEditReferenceAlert"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -1922,6 +1956,16 @@
 						<div class="form-group row">
 							<label for="name" class="col-md-3 col-form-label">Note:</label>
 							<input type="text" class="form-control col-md-8" id="editNoteRef" name="editNoteRef" />
+						</div>
+						
+						<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Abstract:</label>
+							<input type="text" class="form-control col-md-8" id="editAbstractRef" name="editAbstractRef" />
+						</div>
+						
+						<div class="form-group row">
+							<label for="name" class="col-md-3 col-form-label">Company Name:</label>
+							<input type="text" class="form-control col-md-8" id="editCompanyNameRef" name="editCompanyNameRef" />
 						</div>
 					</div>
 					<div class="modal-footer">

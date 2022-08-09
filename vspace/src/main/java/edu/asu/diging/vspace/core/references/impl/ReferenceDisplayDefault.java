@@ -11,6 +11,7 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
     
     public String getReferenceDisplayText(IReference reference) {
         String title = reference.getTitle();
+        String type = reference.getType();
         String author = reference.getAuthor();
         String year = reference.getYear();
         String journal = reference.getJournal();
@@ -18,8 +19,11 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
         String volume = reference.getVolume();
         String issue = reference.getIssue();
         String pages = reference.getPages();
+        String abstracts = reference.getAbstracts();
+        String companyName = reference.getCompanyName();
         ReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
-        refFormatter.addAuthors(author).addYear(year).addTitle(title).addJournal(journal).addPages(pages).addVolume(volume).addIssue(issue).addUrl(url);
+        refFormatter.addType(
+                type).addAuthors(author).addYear(year).addTitle(title).addJournal(journal).addPages(pages).addVolume(volume).addIssue(issue).addUrl(url).addAbstracts(abstracts).addCompanyName(companyName);
         
         return refFormatter.getReferenceDisplayText();
     }

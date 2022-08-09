@@ -27,6 +27,8 @@
         <p><b>Editors:</b> [[${reference.editors}]] </p>
         <p><b>Type:</b> [[${@environment.getProperty('reference_type_' + reference.type)}]] </p>
         <p><b>Note:</b> [[${reference.note}]] </p>
+        <p><b>Version:</b> [[${reference.version}]] </p>
+        <p><b>Version:</b> [[${reference.companyName}]] </p>
         
 	<a th:href="@{'/staff/reference/'+${reference.id}+'/edit'}"
 		class="btn primary-btn">Edit Reference</a>

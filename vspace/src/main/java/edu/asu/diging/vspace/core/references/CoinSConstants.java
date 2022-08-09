@@ -16,8 +16,6 @@ public interface CoinSConstants {
 
     String BLOGPOST_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:dc";
     
-    String PODCAST_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:dc";
-
     String PATENT_RFT_VAL_FMT = "info:ofi/fmt:kev:mtx:patent";
 
     String RFR_ID_TAG = "&rfr_id=";
@@ -59,7 +57,9 @@ public interface CoinSConstants {
     String RFT_EDITOR_TAG = "&rft.editors=";
 
     String RFT_NOTE_TAG = "&rft.note=";
-
+    
+    String RFT_ABSTRACT_TAG = "&rft.description=";
+    
     String RFT_DEFAULT_LANGUAGE = "&rft.language=en";
 
     String BOOK_GENRE = "book";
