@@ -48,7 +48,7 @@ public class StaffSearchController extends SearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     private void searchInSpaces(String spacePagenum, Model model, String searchTerm) {
-        Page<ISpace> spacePage = staffSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+        Page<ISpace> spacePage = staffSearchManager.searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
         updateModelWithSpaceSearchResult(model, spacePage, spacePagenum);
     }
 
@@ -65,7 +65,7 @@ public class StaffSearchController extends SearchController {
      */
 
     protected Page<IModule> searchInModules(String modulePagenum, Model model, String searchTerm) {   
-        Page<IModule> modulePage = staffSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage = staffSearchManager.searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));
         updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent() );
         return modulePage;
 
@@ -83,7 +83,7 @@ public class StaffSearchController extends SearchController {
      */
 
     protected Page<ISlide>  searchInSlides(String slidePagenum, Model model, String searchTerm) {       
-        Page<ISlide> slidePage  =  staffSearchManager.paginationInSlides(searchTerm, Integer.parseInt(slidePagenum)) ;
+        Page<ISlide> slidePage  =  staffSearchManager.searchSlidesAndPaginate(searchTerm, Integer.parseInt(slidePagenum)) ;
         
         super.updateModelWithSlideSearchResults(slidePagenum, model, slidePage, slidePage.getContent());
         model.addAttribute("slideSearchResults", slidePage.getContent());
@@ -105,7 +105,7 @@ public class StaffSearchController extends SearchController {
 
     protected Page<ISlide>  searchInSlideTexts(String slideTextPagenum, Model model, String searchTerm) {  
      
-        Page<ISlide> slideTextPage = staffSearchManager.paginationInSlideTexts(searchTerm,  Integer.parseInt(slideTextPagenum));
+        Page<ISlide> slideTextPage = staffSearchManager.searchSlideTextsAndPaginate(searchTerm,  Integer.parseInt(slideTextPagenum));
         super.updateModelWithSlideTextSearchResults(slideTextPagenum, model, searchTerm, slideTextPage, slideTextPage.getContent())  ;      
         return slideTextPage;
     }

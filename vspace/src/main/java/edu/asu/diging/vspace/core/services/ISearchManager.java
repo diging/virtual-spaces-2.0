@@ -14,7 +14,7 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 public interface ISearchManager {
     
-    public Page<ISpace> paginationInSpaces(String searchTerm, int page);
+    public Page<ISpace> searchSpacesAndPaginate(String searchTerm, int page);
 
     /**
      * Method to return the requested modules whose name or description contains the
@@ -25,7 +25,7 @@ public interface ISearchManager {
      * @return set of modules whose name or description contains the search string
      *         in the requested page.
      */
-    Page<IModule> paginationInModules(String searchTerm, int page);
+    Page<IModule> searchModulesAndPaginate(String searchTerm, int page);
 
     /**
      * Method to return the requested slides whose name or description contains the
@@ -36,7 +36,7 @@ public interface ISearchManager {
      * @return set of slides whose name or description contains the search string in
      *         the requested page.
      */
-    Page<ISlide> paginationInSlides(String searchTerm, int page);
+    Page<ISlide> searchSlidesAndPaginate(String searchTerm, int page);
 
     /**
      * Method to return the requested slides whose text blocks contains the search
@@ -47,7 +47,7 @@ public interface ISearchManager {
      * @return list of slides whose text blocks contains the search string in the
      *         requested page.
      */
-    Page<ISlide> paginationInSlideTexts(String searchTerm, int page);
+    Page<ISlide> searchSlideTextsAndPaginate(String searchTerm, int page);
 
     SearchModuleResults getSearchModuleResults(List<IModule> moduleList);
 

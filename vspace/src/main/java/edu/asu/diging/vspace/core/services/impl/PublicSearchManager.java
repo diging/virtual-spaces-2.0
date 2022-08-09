@@ -55,7 +55,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     private TextContentBlockRepository textContentBlockRepo;
     
     @Override
-    protected Page<ISpace> spaceSearch(Pageable requestedPageForSpace, String searchTerm) {
+    protected Page<ISpace> searchSpaces(Pageable requestedPageForSpace, String searchTerm) {
         return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
     }
     
@@ -129,7 +129,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
 
     @Override
-    protected Page<IModule> moduleSearch(Pageable requestedPageForModule, String searchTerm) {
+    protected Page<IModule> searchModules(Pageable requestedPageForModule, String searchTerm) {
         Page<IModule> modulePage =  moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPageForModule, searchTerm);
         updateModuleListWithSpaceInfo(modulePage);
         return modulePage;
@@ -138,13 +138,13 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
 
     @Override
-    protected Page<ISlide> slideSearch(Pageable requestedPageForSlide, String searchTerm) {
+    protected Page<ISlide> searchSlides(Pageable requestedPageForSlide, String searchTerm) {
         return slideManager.findByNameOrDescriptionLinkedToSpace(requestedPageForSlide, searchTerm);
     }
 
 
     @Override
-    protected Page<ISlide> slideTextSearch(Pageable requestedPageForSlideText, String searchTerm) {
+    protected Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText, String searchTerm) {
         return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm);
     }
 
@@ -160,7 +160,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
      */
     @Override
     public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));     
+        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));     
         return getSearchSpaceResults(spacePage.getContent());
     }
 
@@ -177,7 +177,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
      */
     @Override
     public SearchModuleResults searchForModule(String modulePagenum, String searchTerm) {
-        Page<IModule> modulePage = paginationInModules(searchTerm, Integer.parseInt(modulePagenum));    
+        Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));    
         List<IModule> moduleList =  updateModuleListWithSpaceInfo(modulePage);
         return getSearchModuleResults(moduleList);
         
@@ -195,7 +195,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
      */
     @Override
     public SearchSlideResults searchForSlide(String slidePagenum, String searchTerm) {
-        Page<ISlide> slidePage = paginationInSlides(searchTerm, Integer.parseInt(slidePagenum));      
+        Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, Integer.parseInt(slidePagenum));      
         List<ISlide> slideList = updateSlidePageWithSpaceInfo(slidePage);       
         return getSearchSlideResults(slideList);     
     }
@@ -213,7 +213,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
      */
     @Override
     public SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm) {
-        Page<ISlide> slideTextPage = paginationInSlideTexts(searchTerm,
+        Page<ISlide> slideTextPage = searchSlideTextsAndPaginate(searchTerm,
                 Integer.parseInt(slideTextPagenum));
         List<ISlide> slideTextList = updateSlideTextPageWithSpaceInfo(slideTextPage);
         return getSearchSlideTextBlockResults(slideTextList, searchTerm);     

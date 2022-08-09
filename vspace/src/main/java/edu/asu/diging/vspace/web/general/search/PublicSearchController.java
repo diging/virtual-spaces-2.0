@@ -52,7 +52,7 @@ public class PublicSearchController extends SearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     public Page<ISpace> searchInSpaces(String spacePagenum, Model model, String searchTerm) {
-        Page<ISpace> spacePage = publicSearchManager.paginationInSpaces(searchTerm, Integer.parseInt(spacePagenum));
+        Page<ISpace> spacePage = publicSearchManager.searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
         updateModelWithSpaceSearchResult(model, spacePage, spacePagenum);
         return spacePage;
     }
@@ -71,7 +71,7 @@ public class PublicSearchController extends SearchController {
 
 
     public Page<IModule> searchInModules(String modulePagenum, Model model, String searchTerm) {
-        Page<IModule> modulePage  = publicSearchManager.paginationInModules(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage  = publicSearchManager.searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));
         updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
         return modulePage;
     }
@@ -90,7 +90,7 @@ public class PublicSearchController extends SearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     public Page<ISlide> searchInSlides(String slidePagenum, Model model, String searchTerm) {     
-        Page<ISlide> slidePage = publicSearchManager.paginationInSlides( searchTerm, Integer.parseInt(slidePagenum));
+        Page<ISlide> slidePage = publicSearchManager.searchSlidesAndPaginate( searchTerm, Integer.parseInt(slidePagenum));
         updateModelWithSlideSearchResults(slidePagenum, model, slidePage, publicSearchManager.updateSlidePageWithSpaceInfo(slidePage));
         return slidePage;
     }
@@ -109,7 +109,7 @@ public class PublicSearchController extends SearchController {
      * @param searchTerm       This is the search string which is being searched.
      */
     public Page<ISlide> searchInSlideTexts(String slideTextPagenum, Model model, String searchTerm) {       
-        Page<ISlide> slideTextPage = publicSearchManager.paginationInSlideTexts(searchTerm, Integer.parseInt(slideTextPagenum));
+        Page<ISlide> slideTextPage = publicSearchManager.searchSlideTextsAndPaginate(searchTerm, Integer.parseInt(slideTextPagenum));
         updateModelWithSlideTextSearchResults(slideTextPagenum, model, searchTerm, slideTextPage, publicSearchManager.updateSlideTextPageWithSpaceInfo(slideTextPage));
         return  slideTextPage;
     }
