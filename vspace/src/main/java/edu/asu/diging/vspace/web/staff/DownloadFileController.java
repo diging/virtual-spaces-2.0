@@ -27,7 +27,7 @@ public class DownloadFileController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
     
-    @RequestMapping(value = "/staff/files/download/{fileId}", method = RequestMethod.GET )
+    @RequestMapping(value = "/staff/files/{fileId}/download", method = RequestMethod.GET )
     public ResponseEntity<Resource> downloadFile(Model model, @PathVariable String fileId) throws IOException {
         Resource resource = null;  
         IVSFile file= null;

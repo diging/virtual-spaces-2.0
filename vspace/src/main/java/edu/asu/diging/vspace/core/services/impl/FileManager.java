@@ -27,6 +27,8 @@ import edu.asu.diging.vspace.core.services.IFileManager;
 @Service
 public class FileManager implements IFileManager {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IStorageEngine storageEngine;
     
@@ -35,10 +37,7 @@ public class FileManager implements IFileManager {
     
     @Autowired
     private FileRepository fileRepo; 
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    
+       
     @Override
     public CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription) {
         IVSFile file = null;

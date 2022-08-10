@@ -12,7 +12,7 @@
 function deleteFile(){
 	var token = [[${_csrf.token}]];
 	$.ajax({
-        url: "[(@{'/staff/files/delete/'+${file.id}})]",
+        url: "[(@{'/staff/files/'+${file.id} +'/delete'})]",
         type: 'POST',
         headers:{
 			'X-CSRF-Token':token
@@ -55,7 +55,7 @@ function deleteFile(){
 		<div>
 
 			<form method="POST"
-				th:action='@{|/staff/files/edit/${file.id}?${_csrf.parameterName}=${_csrf.token}|}'
+				th:action='@{|/staff/files/${file.id}/edit?${_csrf.parameterName}=${_csrf.token}|}'
 				th:object="${fileForm}" enctype="multipart/form-data"
 				style="margin-top: 40px">
 
@@ -74,7 +74,7 @@ function deleteFile(){
 				</div>
 				<button class="btn primary-btn" type="submit" value="submit">Save
 					File</button>
-				<a  th:href="@{/staff/files/download/{id}(id=${file.id})}"
+				<a  th:href="@{/staff/files/{id}/download(id=${file.id})}"
 					class="download btn primary-btn">Download file</a>
 			</form>
 		</div>

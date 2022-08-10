@@ -73,8 +73,7 @@ public class StorageEngine implements IStorageEngine {
         return new ByteArrayResource(Files.readAllBytes(path));   
     }
 
-    @Override
-    public byte[] getFileContent(File fileObject) throws IOException  {
+    private byte[] getFileContent(File fileObject) throws IOException  {
         URLConnection con = fileObject.toURI().toURL().openConnection();
 
         InputStream input = con.getInputStream();

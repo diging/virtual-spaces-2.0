@@ -13,7 +13,6 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IVSFile;
 
 @Entity
-
 public class VSFile extends VSMedia implements IVSFile {
 
     @Id

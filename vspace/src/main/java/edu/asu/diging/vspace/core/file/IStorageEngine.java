@@ -20,8 +20,6 @@ public interface IStorageEngine {
     boolean deleteFile(String fileName, String directory);
 
     File getFile(String fileUploadDir, String fileName);
-
-    byte[] getFileContent(File fileObject) throws IOException;
     
     File getDirectoryPath(String directory);
 }

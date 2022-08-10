@@ -17,7 +17,7 @@ public class DeleteFileController {
     @Autowired
     private FileManager fileManager;
     
-    @RequestMapping(value = "/staff/files/delete/{fileId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/files/{fileId}/delete", method = RequestMethod.POST)
     public ResponseEntity<String> deleteFile(Model model, @PathVariable String fileId) {
         if(!fileManager.deleteFile(fileId)) {
             return new ResponseEntity<String>("Could not delete file", HttpStatus.INTERNAL_SERVER_ERROR);

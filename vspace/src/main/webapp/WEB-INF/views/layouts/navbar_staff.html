@@ -61,6 +61,8 @@
 			               th:style="${currentPage == 'files' ? 'active' : '' }"
 			               th:href="@{/staff/files/list}"> 
 			               <span class="icon-folder-open secondary"></span><span class="custom_Text">&nbsp;Files</span>
+			            </a>
+			         </li>
 					<li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'graph' ? 'active' : '' }"
