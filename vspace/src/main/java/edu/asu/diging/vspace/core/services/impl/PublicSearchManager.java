@@ -82,7 +82,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
         return slideList;
     }
 
-    public List<IModule> updateModuleListWithSpaceInfo(Page<IModule> modulePage) {
+    public List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
         List<IModule> moduleList = new ArrayList<>();
 
         //Adding space info for each module
@@ -131,7 +131,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     @Override
     protected Page<IModule> searchModules(Pageable requestedPageForModule, String searchTerm) {
         Page<IModule> modulePage =  moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPageForModule, searchTerm);
-        updateModuleListWithSpaceInfo(modulePage);
+        updateModulePageWithSpaceInfo(modulePage);
         return modulePage;
         
     }
@@ -178,7 +178,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     @Override
     public SearchModuleResults searchForModule(String modulePagenum, String searchTerm) {
         Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));    
-        List<IModule> moduleList =  updateModuleListWithSpaceInfo(modulePage);
+        List<IModule> moduleList =  updateModulePageWithSpaceInfo(modulePage);
         return getSearchModuleResults(moduleList);
         
     }

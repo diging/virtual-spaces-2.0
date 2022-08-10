@@ -72,7 +72,7 @@ public class PublicSearchController extends SearchController {
 
     public Page<IModule> searchInModules(String modulePagenum, Model model, String searchTerm) {
         Page<IModule> modulePage  = publicSearchManager.searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));
-        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModuleListWithSpaceInfo(modulePage));
+        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, publicSearchManager.updateModulePageWithSpaceInfo(modulePage));
         return modulePage;
     }
 

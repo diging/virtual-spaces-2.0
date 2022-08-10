@@ -19,7 +19,7 @@ public interface IPublicSearchManager extends ISearchManager{
 
     public List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
     
-    public List<IModule> updateModuleListWithSpaceInfo(Page<IModule> modulePage);
+    public List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage);
 
     public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
 
