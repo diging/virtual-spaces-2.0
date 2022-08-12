@@ -23,9 +23,9 @@
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
-        <db.user>vspace</db.user>
-        <db.password>vspace</db.password>
-        <uploaded.files.path></uploaded.files.path>
+        <db.user>root</db.user>
+        <db.password></db.password>
+        <uploaded.files.path>/Users/prachikharge/virtual-spaces-2.0/vspace/uploads</uploaded.files.path>
 
         <email.user></email.user>
         <email.password></email.password>
@@ -299,8 +299,8 @@
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.3.2.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.0.0.Final</version>
         </dependency>
 
         <dependency>
