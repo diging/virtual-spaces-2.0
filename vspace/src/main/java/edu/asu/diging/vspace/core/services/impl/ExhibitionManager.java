@@ -139,4 +139,11 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
+    
+    @Override
+    public IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode) {
+        Exhibition exhibition = (Exhibition) getStartExhibition();
+        exhibition.setSpaceOrderMode(mode);
+        return exhibitRepo.save(exhibition);
+    }
 }
