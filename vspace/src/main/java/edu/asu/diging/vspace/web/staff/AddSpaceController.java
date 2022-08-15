@@ -80,9 +80,10 @@ public class AddSpaceController {
         }else {
             creationValue = spaceManager.storeSpace(space, bgImage, filename);
         }
+
         
         //add new space to all custom space orders
-        spacesCustomOrderManager.addSpaceToCustomOrders(space);
+        spaceManager.addSpaceToCustomOrders(space);
         
         if (creationValue != null) {
             return "redirect:/staff/space/" + creationValue.getElement().getId();

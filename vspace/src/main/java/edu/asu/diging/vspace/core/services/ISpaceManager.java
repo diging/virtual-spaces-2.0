@@ -40,4 +40,6 @@ public interface ISpaceManager {
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
     
     List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces);
+    
+    void addSpaceToCustomOrders(ISpace space);
 }

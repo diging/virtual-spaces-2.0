@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.aspects;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +27,7 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
 
+
 @Component
 @Aspect
 public class ExhibitionDataAspect {
@@ -44,9 +43,11 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private AuthenticationFacade authFacade;
+
     
     @Autowired
     private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
+
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {

@@ -55,7 +55,8 @@ public class SpaceController {
     private IExternalLinkManager externalLinkManager;
     
     @Autowired
-    IExhibitionManager exhibitionManager;
+    private IExhibitionManager exhibitionManager;
+
 
     @RequestMapping(STAFF_SPACE_PATH+"{id}")
     public String showSpace(@PathVariable String id, Model model) {
@@ -87,18 +88,18 @@ public class SpaceController {
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-    
-    @RequestMapping(value = "/staff/space/spaceordermode", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/staff/space/space/order/mode", method = RequestMethod.POST)
     public String updateSpaceOrderMode(String mode, @RequestParam String spaceOrderMode) {
-        IExhibition exhibition;
         if(spaceOrderMode.equalsIgnoreCase("ALPHABETICAL")) {
-            exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.ALPHABETICAL);
+            exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.ALPHABETICAL);
         } else if(spaceOrderMode.equalsIgnoreCase("CREATION_DATE")) {
-            exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CREATION_DATE);
+            exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CREATION_DATE);
         } else if(spaceOrderMode.equalsIgnoreCase("CUSTOM")) {
-            exhibition = exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CUSTOM);
+            exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CUSTOM);
         }
         return "redirect:/staff/space/list";
     }
+
 
 }
