@@ -37,4 +37,6 @@ public interface IExhibitionManager {
     
     IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode);
 
+    void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
+
 }

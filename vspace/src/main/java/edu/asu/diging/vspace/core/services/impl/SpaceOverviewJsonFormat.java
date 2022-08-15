@@ -95,11 +95,13 @@ public class SpaceOverviewJsonFormat {
         linkPathBuilder.append(SpaceController.STAFF_SPACE_PATH);
         linkPathBuilder.append(space.getId());
         spaceOverview.setLink(linkPathBuilder.toString());
-        StringBuilder imagePathBuilder = new StringBuilder();
-        imagePathBuilder.append(contextPath);
-        imagePathBuilder.append(ImageApiController.API_IMAGE_PATH);
-        imagePathBuilder.append(space.getImage().getId());
-        spaceOverview.setImg(imagePathBuilder.toString());
+        if(space.getImage() != null) {
+            StringBuilder imagePathBuilder = new StringBuilder();
+            imagePathBuilder.append(contextPath);
+            imagePathBuilder.append(ImageApiController.API_IMAGE_PATH);
+            imagePathBuilder.append(space.getImage().getId());
+            spaceOverview.setImg(imagePathBuilder.toString());
+        }
         spaceOverview.setModule(false);
         if (space.getSpaceStatus() != null && (space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED))) {
             spaceOverview.setUnpublished(true);
