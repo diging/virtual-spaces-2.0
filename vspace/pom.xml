@@ -14,7 +14,7 @@
         <spring-data.version>Kay-SR8</spring-data.version>
         <spring-security-version>5.5.7</spring-security-version>
         <thymeleaf.version>3.0.13.RELEASE</thymeleaf.version>
-        <javers.version>5.11.1</javers.version>
+        <javers.version>5.15.0</javers.version>
         <simple-users-version>0.5</simple-users-version>
         <admin.username>admin</admin.username>
         <admin.password>$2a$04$ug2wdYfAW8Ey/DwjUdPuLufgrMqbhNnTmr1QEUNZnoWF1xGitSBae</admin.password>
@@ -23,9 +23,9 @@
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
-        <db.user>root</db.user>
-        <db.password></db.password>
-        <uploaded.files.path>/Users/prachikharge/virtual-spaces-2.0/vspace/uploads</uploaded.files.path>
+        <db.user>vspace</db.user>
+        <db.password>vspace</db.password>
+        <uploaded.files.path></uploaded.files.path>
 
         <email.user></email.user>
         <email.password></email.password>
@@ -300,7 +300,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.0.0.Final</version>
+            <version>5.4.12.Final</version>
         </dependency>
 
         <dependency>
