@@ -67,7 +67,7 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.css('transform', 'rotate('+link.rotation+'deg)');
     modalLink.find("span").css('fill', 'grey');
     modalLink.css('color', 'rgba(128,128,128,1)');
-    modalLink.css('font-size', "12px");
+    modalLink.css('font-size', "16px");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
@@ -198,7 +198,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
     if(block != null){
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none;" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4);" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
         setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
         $(divId).append(textBlock);
         if(spanId === "textBlockId-"){
@@ -207,6 +207,29 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                 var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
                 makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"]);
             });
+        }
+        
+        if(block.spaceTextBlock.id === selectedTextBlockId) {
+        	var textModalBlock = document.getElementById("textModalBlockId-"+selectedTextBlockId);
+        	textModalBlock = textModalBlock.getElementsByTagName("textarea")[0];
+        	
+        	tHeight = textModalBlock.clientHeight,
+            tWidth = textModalBlock.clientWidth;
+            
+            var height = parseInt($("#bgImage").css("height"));
+            var width = parseInt($("#bgImage").css("width"));
+            textModalBlock.style["resize"] = "both";
+            textModalBlock.onmouseup = function (e) {
+                if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
+                    tHeight = textModalBlock.clientHeight;
+                    tWidth = textModalBlock.clientWidth;
+                    let percentileHeight = (tHeight*100)/height;
+                    let percentileWidth = (tWidth*100)/width;
+                    $("#textBoxWidthIDEdit").val(percentileWidth);
+                    $("#textBoxHeightIDEdit").val(percentileHeight);
+                    $("#textContentIDForEdit").val(textModalBlock.value);
+                }
+            };
         }
     }
 }
@@ -795,7 +818,7 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     $("#textBoxWidthIDEdit").val(width);
     $("#textBoxHeightIDEdit").val(height);
     $("#textContentIDForEdit").val(text);
-    resetHighlighting(); 
+    resetHighlighting();
     $("#bgImage").on("click", function(e){
         e.preventDefault();
         var posX = $(this).position().left;
@@ -822,7 +845,7 @@ function resetHighlighting() {
 function getTextArea(x,y) {
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both;"></textarea></span>');
+    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
     text.css('position', 'absolute');
     text.css('left', x + posX);
     text.css('top', y);
