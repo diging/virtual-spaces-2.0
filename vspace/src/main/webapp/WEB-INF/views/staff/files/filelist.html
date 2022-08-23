@@ -22,9 +22,34 @@
     width: 140px;
 }
 </style>
+<script th:inline="javascript">
+
+function deleteFile(fileid){
+	var token = [[${_csrf.token}]];
+	$.ajax({
+        url: "[(@{'/staff/files/'})]"+fileid +'/delete',
+        type: 'POST',
+        headers:{
+			'X-CSRF-Token':token
+		},
+        cache: false,
+        contentType : false,
+        success: function(data) {
+        	window.location.href = "[(@{'/staff/files/list/'})]";
+        },
+        error: function(data) {
+        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.errorDelete').append(alert);
+        }
+    });
+}
+
+</script>
+
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
+     <span class = "errorDelete"></span>
     <a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ Upload File</a>
         <h2>Files</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
@@ -35,6 +60,7 @@
                     <th scope="col" sort-prop="filename"><a
                         href="#">Filename</a></th>
                     <th scope="col" sort-prop="name"><a href="#">Original File Name</a></th>
+                    <th scope="col" sort-prop="type"><a href="#">File Type</a></th>
                     <th scope="col" sort-prop="createdBy"><a
                         href="#">Created By</a></th>
                     <th scope="col" sort-prop="creationDate"><a
@@ -50,10 +76,12 @@
                 <tr th:each="file: ${files}">
                     <th scope="row">[[${file.filename}]]</th>
                     <td>[[${file.originalFileName}]]</td>
+                    <td>[[${file.fileType}]]</td>
                     <td>[[${file.createdBy}]]</td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
-                    <td><a th:href="@{'/staff/files/'+${file.id}}" ><span class="btn primary-btn btn-sm">Show</span></a></td>
+                    <td><a th:href="@{'/staff/files/'+${file.id}}" ><span class="icon-write secondary"></span></a></td>
+                    <td><span th:onclick = "deleteFile([[${file.id}]])" class="icon-trash secondary"></span></td>
                 </tr>
             </tbody>
         </table>
