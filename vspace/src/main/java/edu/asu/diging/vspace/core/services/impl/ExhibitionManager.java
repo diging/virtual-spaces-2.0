@@ -90,6 +90,7 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return null;
     }
+    
 
     /**
      * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.

@@ -44,7 +44,6 @@ import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
 
 @Transactional
@@ -87,12 +86,13 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
-    
+
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepo;
+
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -242,6 +242,15 @@ public class SpaceManager implements ISpaceManager {
             Optional<Space> space = spaceRepo.findById(id);
             if (space.isPresent()) {
                 fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
+                
+                //To remove the current space from all existing custom orders
+                List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
+                for(SpacesCustomOrder spaceCustomOrder : spacesCustomOrder) {
+                    List<ISpace> customOrderedSpaces = spaceCustomOrder.getCustomOrderedSpaces();
+                    if(spaceCustomOrder.getCustomOrderedSpaces().remove(space.get())) {
+                        spacesCustomOrderRepo.save(spaceCustomOrder);
+                    }
+                }   
             } 
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
@@ -264,7 +273,7 @@ public class SpaceManager implements ISpaceManager {
             }
             // When space has no other links attached to it
             spaceDisplayRepo.deleteBySpaceId(id);
-            
+
             //To delete all spaces that exist in custom orders
             if(space.isPresent()) {
                 List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
@@ -279,7 +288,6 @@ public class SpaceManager implements ISpaceManager {
             
             //Delete the space
             spaceRepo.deleteById(id);
-            
         }
     }
 
@@ -338,5 +346,12 @@ public class SpaceManager implements ISpaceManager {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         return exhibitionSpaceOrderUtility.retrieveSpacesListInGivenOrder(publishedSpaces, exhibition.getSpaceOrderMode());
     }
+
+    @Override
+    public void addSpaceToCustomOrders(ISpace space) {
+        spacesCustomOrderManager.addSpaceToCustomOrders(space);
+        
+    }
+
 
 }

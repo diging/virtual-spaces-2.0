@@ -29,6 +29,8 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Service
 @Transactional(rollbackFor = { Exception.class })
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
+    
+    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderManager.class);
 
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepository;
@@ -38,8 +40,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     
     @Autowired
     private IExhibitionManager exhibitionManager;
-    
-    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderManager.class);
     
     @Override
     public SpacesCustomOrder createNewCustomOrder(List<String> spaceOrders,
@@ -71,7 +71,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     @Override
     public void saveCustomOrders(List<SpacesCustomOrder> spacesCustomOrder) {
         spacesCustomOrderRepository.saveAll(spacesCustomOrder);
-        return;
     }
 
     /**
@@ -85,7 +84,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
             spaceCustomOrder.getCustomOrderedSpaces().add(space);
         }
         saveCustomOrders(spacesCustomOrders);
-        return; 
     }
     
     @Override
@@ -93,7 +91,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderName(name);
         spacesCustomOrderRepository.save(spaceCustomOrder);
-        return;
     }
     
     @Override
@@ -101,7 +98,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
         spaceCustomOrder.setDescription(name);
         spacesCustomOrderRepository.save(spaceCustomOrder);
-        return;
     }
 
 
@@ -114,7 +110,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
         spacesCustomOrderRepository.save(spaceCustomOrder);
-        return;
         
     }
     
@@ -124,7 +119,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
                 .findById(customOrderId);
         exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
-        return;
     }
     
     @Override
