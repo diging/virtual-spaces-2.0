@@ -44,8 +44,118 @@ function deleteFile(fileid){
     });
 }
 
-</script>
+$(document).ready(function($) {
+	$("#files").addClass("active");
+	
+	$('.filePage-selection').bootpag({
+	total: [[${filesTotalPages}]],
+	page: [[${filesCurrentPageNumber}]],
+	maxVisible: 10,
+    leaps: true,
+	firstLastUse: true,
+	first: '|<',
+	last: '>|',
+	wrapClass: 'pagination',
+	activeClass: 'active',
+	disabledClass: 'disabled',
+	nextClass: 'next',
+	prevClass: 'prev',
+	lastClass: 'last',
+	firstClass: 'first'
+	}).on("page", function(event, num){
+		console.log(num);
+	
+	$.ajax({
+		url: "[(@{'/staff/files/list'})]"+'?'+"filesPagenum="+num,
+		type: 'GET',
+		cache : false,
+		contentType : false,
+		processData : false,
+	    beforeSend: function () {
+	    	$(".loader").show();
+	        },
+	    complete: function () {
+	        $(".loader").hide();
+	        },
+		success: function(data) {
+	 		files = data['files'];
+			
+			console.log(data); 
+		/* 	console.log([[${filesTotalPages}]]); */
+			/* for(int i=0; i< files.length; i++) {
+				
+			}
+			 */
+			
+	/* 	slideTextList = data['slidesWithMatchedTextBlock'];
+		slideToFirstImageMap = data['slideToFirstImageMap'];
+		slideToFirstTextBlockMap = data['slideToFirstTextBlockMap'];
+		$("#slideTextResultDisplay").empty();
+		for(let i=0;i<slideTextList.length;i++)
+		{
+			var divtag = $("<div></div>");
+			divtag.attr('id',slideTextList[i].id);
+			var anchor = $("<a></a>");
+			 anchor.attr('href',"[(@{'/staff/module/'})]"+slideTextList[i].module.id+'/slide/'+slideTextList[i].id);
+			anchor.attr('class',"textDivStaff tab  btn btn-light");
+			anchor.css('width','100%');
+			var img = $("<img></img>");
+			var slideTextFirstImageId = slideToFirstImageMap[slideTextList[i].id];
+			if(slideTextFirstImageId == null)
+			{
+				img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+			}
+			else
+			{
+				img.attr('src',"[(@{'/api/image/'})]"+slideTextFirstImageId);
+			}
+			img.attr('class',"searchImg");
+			anchor.append(img);
+			var span1 = $("<span></span>");
+			span1.attr('class',"card-title");
+			span1.css('white-space',"pre-wrap");
+			span1.css('line-break',"anywhere");
+			var span2 = $("<span>"+'Slide:'+"</span>");
+			span2.css('color','var(--dark-grey)');
+			span1.append(span2);
+			span1.append(slideTextList[i].name+'<br>');
+			anchor.append(span1);
+			firstMatchedTextBlock = slideToFirstTextBlockMap[slideTextList[i].id];
+			var span4 = $("<span></span>");
+			span4.append(firstMatchedTextBlock);
+			span1.append(span4);
+			anchor.append(span1);
+			divtag.append(anchor);
+			$("#slideTextResultDisplay").append(divtag); */
+		}
+});
+});
+});
 
+</script>
+</script>
+<style>
+.pagination>li>a {
+	border: 1px solid #A55941;
+	padding: 5px;
+	color: #A55941;
+	font-size: 15px;
+}
+
+.pagination>li.active>a {
+	background: #A55941;
+	color: #fff;
+	font-size: 15px;
+}
+
+a.nav-link.active.show {
+	border-color: transparent;
+	border-bottom: 4px solid var(--primary);
+	color: var(--primary) !important;
+	background: transparent;
+	font-weight: 600;
+}
+</style>
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
@@ -54,6 +164,8 @@ function deleteFile(fileid){
         <h2>Files</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following files.</div>
+            <div id= "files">
+        <div id="filePage-selection"></div>
         <table class="table">
             <thead>
                 <tr>
@@ -85,7 +197,8 @@ function deleteFile(fileid){
                 </tr>
             </tbody>
         </table>
-        <div id="page-selection"></div>
+        <div id="filePage-selection"></div>
+        </div>
     </div>
 </body>
 </html>
