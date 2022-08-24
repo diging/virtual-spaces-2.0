@@ -1,7 +1,7 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-	<script th:inline="javascript">
+<script th:inline="javascript">
 		$(document).ready(function() {
 		    var offlineMessage = $('#offlineMessage');
 		    if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
@@ -20,14 +20,39 @@
 		    else {
 		        offlineMessage.hide();
 		    }
-		}
-	</script>
+	
+	}
+</script>
+<style>
+.tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	color: white;
+	text-align: center;
+	font-size: 12px;
+	padding: 3px 0;
+	border-radius: 6px;
+	position: absolute;
+	z-index: 1;
+	left: 238px;
+	top: 146px;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.previewExhb:hover .tooltiptext {
+	visibility: visible;
+}
+</style>
 </head>
 
 <body>
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition Configuration</h2>
-	
+		<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${exhibition!=null && exhibition.previewId!=null}">
+	     <p><a class="previewExhb" target="_blank" th:href="@{|/preview/${exhibition.previewId}|}"><span class="icon-visible secondary"></span> 
+	     <span class="tooltiptext">Preview Exhibition</span></a>To share the Exhibition Preview provide the link 
+	     <a style="color:blue;" th:href="@{|/preview/${exhibition.previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${exhibition.previewId}|}]]</a></p>
+	    </div>
 		<div style="padding: 30px 0;">
 		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -41,12 +66,27 @@
 		        </select>
 		        <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Title:</label> 
-		            <input type="text" class="form-control" name="title" th:value="${exhibition.title}" />
+		            <input th:if="${exhibition!=null}" type="text" class="form-control" name="title" th:value="${exhibition.title}" />
+		            <input th:if="${exhibition==null}" type="text" class="form-control" name="title" th:value="" />
 		        </div>
 		        <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Mode:</label>
 		            <select class="form-control" name="exhibitMode" onChange="modeChange(exhibitMode.value)">
 		                <option th:each="mode: ${exhibitionModes}" th:id=${mode} th:value=${mode} th:selected="${#strings.equals(mode,exhibition.mode)}">[[${mode}]]</option>
+		            </select>
+		        </div>
+		         <div style="padding-top: 20px;">
+		            <label for="title">Exhibition Languages:</label>
+		            <select class="form-control" name="exhibitLanguage" multiple="multiple" >
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${savedExhibitionLanguages!=null && savedExhibitionLanguages.contains(language.label)}">[[${language.label}]]</option>
+		            </select>
+		        </div>
+		        
+		        <div style="padding-top: 20px;">
+		            <label for="title">Default Exhibition Language:</label>
+		            <select class="form-control" name="defaultExhibitLanguage" >
+		           		<option th:value="null" >----</option>
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${ defaultLanguage!=null && #strings.equals(defaultLanguage.label, language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>
 		        <div id="offlineMessage" style="padding-top: 20px;" th:style="${exhibition.mode != 'OFFLINE' ? 'display: none;' : '' }">

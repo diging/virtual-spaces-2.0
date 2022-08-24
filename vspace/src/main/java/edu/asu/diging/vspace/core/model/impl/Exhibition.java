@@ -1,16 +1,27 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
@@ -47,6 +58,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private SpacesCustomOrder spacesCustomOrder;
     
     private boolean aboutPageConfigured;
+    
+    @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval=true)
+    private List<IExhibitionLanguage> languages = new ArrayList<IExhibitionLanguage>();
+
+    private String previewId;
 
     /*
      * (non-Javadoc)
@@ -99,7 +115,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     public ExhibitionModes getMode() {
         return mode;
     }
@@ -146,4 +162,35 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.aboutPageConfigured = aboutPageConfigured;
     }
 
+    public List<IExhibitionLanguage> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<IExhibitionLanguage> languages) {
+        this.languages = languages;
+    }
+   
+    public String getPreviewId() {
+        return previewId;
+    }
+
+    public void setPreviewId(String previewId) {
+        this.previewId = previewId;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        return Objects.equals(id, ((Exhibition) obj).id);
+    }
 }
