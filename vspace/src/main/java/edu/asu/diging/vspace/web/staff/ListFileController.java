@@ -21,7 +21,7 @@ public class ListFileController {
     private FileManager fileManager;
     
     @RequestMapping(value = "/staff/files/list", method = RequestMethod.GET)
-    public String getFilesList(Model model,   @RequestParam(value = "filesPagenum", required = false, defaultValue = "1") String filesPagenum) {
+    public String getFilesList(Model model, @RequestParam(value = "filesPagenum", required = false, defaultValue = "1") String filesPagenum) {
                
         Page<VSFile> filesPage = fileManager.getAllFiles(Integer.parseInt(filesPagenum));
 //        model.addAttribute("files", files);

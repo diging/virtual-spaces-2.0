@@ -78,14 +78,17 @@ $(document).ready(function($) {
 	        $(".loader").hide();
 	        },
 		success: function(data) {
-	 		files = data['files'];
+	 		var fileList = data['files'];
+	 		
+			console.log([[${files}]]); 
+/* 			$("#files").empty();
+ */			
 			
-			console.log(data); 
 		/* 	console.log([[${filesTotalPages}]]); */
 			/* for(int i=0; i< files.length; i++) {
 				
 			}
-			 */
+		*/
 			
 	/* 	slideTextList = data['slidesWithMatchedTextBlock'];
 		slideToFirstImageMap = data['slideToFirstImageMap'];
@@ -165,8 +168,8 @@ a.nav-link.active.show {
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following files.</div>
             <div id= "files">
-        <div id="filePage-selection"></div>
-        <table class="table">
+        <div class="filePage-selection"></div>
+        <table class="table" >
             <thead>
                 <tr>
                     <th scope="col" sort-prop="filename"><a
@@ -184,7 +187,7 @@ a.nav-link.active.show {
                      
                 </tr>
             </thead>
-            <tbody class="tableBody">
+            <tbody class="tableBody" id="files">
                 <tr th:each="file: ${files}">
                     <th scope="row">[[${file.filename}]]</th>
                     <td>[[${file.originalFileName}]]</td>
@@ -197,7 +200,7 @@ a.nav-link.active.show {
                 </tr>
             </tbody>
         </table>
-        <div id="filePage-selection"></div>
+        <div class="filePage-selection"></div>
         </div>
     </div>
 </body>
