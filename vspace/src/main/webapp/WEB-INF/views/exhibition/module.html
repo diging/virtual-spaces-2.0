@@ -274,7 +274,6 @@
                         let startSequence = json['startSequence'];
 			let otherSequences = json['otherSequences'];
 			let startSequenceslides = [];
-			console.log(startSequence);
 			let isStartSequence = true;
 			treeData = createFromSequence(startSequence, treeData, isStartSequence);
 			isStartSequence = false;
@@ -282,7 +281,6 @@
 			treeData = createFromSequence(sequence, treeData,isStartSequence);
 			}
 			for(branch of branchingPointsSet){
-				console.log(branch);
 				for(branchSequence of branch.branchSequences){
 					if(branch.sequence === branchSequence.name) continue;
 					branch.children.push(sequencesMap.get(branchSequence.name))
