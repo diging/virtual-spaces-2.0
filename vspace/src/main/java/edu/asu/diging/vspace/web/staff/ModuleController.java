@@ -19,6 +19,8 @@ import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Controller
 public class ModuleController {
+	
+	public static final String STAFF_MODULE_PATH = "/staff/module/";
 
     @Autowired
     private IModuleManager moduleManager;
