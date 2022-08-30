@@ -1,4 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
+
 import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,30 +20,29 @@ import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 
 @Controller
 public class ModuleController {
-	
-    public static final String STAFF_MODULE_PATH = "/staff/module/";
 
-    @Autowired
-    private IModuleManager moduleManager;
-      
-    @Autowired
-    private IModuleLinkManager moduleLink;
-       
-    @RequestMapping("/staff/module/{id}")
-    public String showModule(@PathVariable String id, Model model) {
-        IModule module = moduleManager.getModule(id);
-        model.addAttribute("module", module);
-        model.addAttribute("slides", moduleManager.getModuleSlides(id));
-        model.addAttribute("sequences", moduleManager.getModuleSequences(id));
-        model.addAttribute("moduleStatus", module.getModuleStatus());        
-        HashSet<ISpace> spaces=moduleLink.findModuleLinksFromModuleId(id);
-        if (spaces.isEmpty()) {
-            model.addAttribute("message", "Sorry, No spaces has been linked to this Module");          
-        }
-        else
-        {
-        model.addAttribute("spacesList", spaces);
-        }     
-        return "staff/modules/module";
-    }
+	public static final String STAFF_MODULE_PATH = "/staff/module/";
+
+	@Autowired
+	private IModuleManager moduleManager;
+
+	@Autowired
+	private IModuleLinkManager moduleLink;
+
+	@RequestMapping("/staff/module/{id}")
+	public String showModule(@PathVariable String id, Model model) {
+		IModule module = moduleManager.getModule(id);
+		model.addAttribute("module", module);
+		model.addAttribute("slides", moduleManager.getModuleSlides(id));
+		model.addAttribute("sequences", moduleManager.getModuleSequences(id));
+		model.addAttribute("moduleStatus", module.getModuleStatus());
+		HashSet<ISpace> spaces = moduleLink.findModuleLinksFromModuleId(id);
+		if (spaces.isEmpty()) {
+			model.addAttribute("message", "Sorry, No spaces has been linked to this Module");
+		} else {
+			model.addAttribute("spacesList", spaces);
+		}
+
+		return "staff/modules/module";
+	}
 }
