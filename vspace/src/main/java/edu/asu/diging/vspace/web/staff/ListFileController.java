@@ -24,7 +24,6 @@ public class ListFileController {
     public String getFilesList(Model model, @RequestParam(value = "filesPagenum", required = false, defaultValue = "1") String filesPagenum) {
                
         Page<VSFile> filesPage = fileManager.getAllFiles(Integer.parseInt(filesPagenum));
-//        model.addAttribute("files", files);
         model.addAttribute("filesCurrentPageNumber", Integer.parseInt(filesPagenum));
         model.addAttribute("filesTotalPages", filesPage.getTotalPages());
         model.addAttribute("files", filesPage.getContent());
