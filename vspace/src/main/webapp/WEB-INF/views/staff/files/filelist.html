@@ -50,7 +50,7 @@ $(document).ready(function($) {
 	total: [[${filesTotalPages}]],
 	page: [[${filesCurrentPageNumber}]],
 	maxVisible: 10,
-    leaps: true,
+	leaps: true,
 	firstLastUse: true,
 	first: '|<',
 	last: '>|',
@@ -63,7 +63,7 @@ $(document).ready(function($) {
 	firstClass: 'first'
 	}).on("page", function(event, num){
 		console.log(num);
-        window.location.assign("[(@{'/staff/files/list'})]"+'?'+"filesPagenum="+num);
+		window.location.assign("[(@{'/staff/files/list'})]"+'?'+"filesPagenum="+num);
 	});
 });
 
