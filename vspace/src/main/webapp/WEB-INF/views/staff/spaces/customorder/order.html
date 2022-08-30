@@ -59,7 +59,7 @@ $("#submitDescription").click(function() {
     var formData = new FormData();
     formData.append('description', $("#newDescription").val());
     $.ajax({
-    url: "[(@{'/staff/spaceordering/'+${customSpaceOrder.id}+'/edit/description'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/description'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
     type: 'POST',
     cache       : false,
     contentType : false,
@@ -126,7 +126,7 @@ $("#submitTitle").click(function() {
     var formData = new FormData();
     formData.append('title', $("#newTitle").val());
     $.ajax({
-        url: "[(@{'/staff/spaceordering/'+${customSpaceOrder.id}+'/edit/title'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/title'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'POST',
         cache       : false,
         contentType : false,
@@ -183,7 +183,7 @@ $("#saveOrder").click(function() {
 	var formData = new FormData();
     formData.append('spaceOrder', spaceDivs);
     $.ajax({
-        url: "[(@{'/staff/spaceordering/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
         type: 'POST',
         cache       : false,
         contentType : false,

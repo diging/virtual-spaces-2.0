@@ -33,7 +33,7 @@ $(document).ready(function() {
 	    formData.append('description', description);
 	    formData
 	    $.ajax({
-	        url: "[(@{'/staff/spaceordering/customorder/add'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	        url: "[(@{'/staff/space/order/customorder/add'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 	        type: 'POST',
 	        cache       : false,
 	        contentType : false,

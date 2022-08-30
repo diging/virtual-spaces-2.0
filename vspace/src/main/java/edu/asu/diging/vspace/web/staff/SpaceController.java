@@ -4,21 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -31,8 +27,6 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class SpaceController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final String STAFF_SPACE_PATH = "/staff/space/";
 
@@ -89,7 +83,7 @@ public class SpaceController {
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/staff/space/space/order/mode", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/mode", method = RequestMethod.POST)
     public String updateSpaceOrderMode(String mode, @RequestParam String spaceOrderMode) {
         if(spaceOrderMode.equalsIgnoreCase("ALPHABETICAL")) {
             exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.ALPHABETICAL);

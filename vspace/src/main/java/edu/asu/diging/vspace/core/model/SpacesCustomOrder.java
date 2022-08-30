@@ -30,16 +30,8 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
-    @Column(unique=true)
+    @Column(nullable=false)
     private String customOrderName;
-    
-    public String getCustomOrderName() {
-        return customOrderName;
-    }
-
-    public void setCustomOrderName(String customOrderName) {
-        this.customOrderName = customOrderName;
-    }
 
     @ManyToMany(targetEntity = Space.class)
     @JoinTable(name = "spaces_custom_orders",
@@ -63,6 +55,14 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
 
     public void setCustomOrderedSpaces(List<ISpace> customOrderedSpaces) {
         this.customOrderedSpaces = customOrderedSpaces;
+    }
+    
+    public String getCustomOrderName() {
+        return customOrderName;
+    }
+
+    public void setCustomOrderName(String customOrderName) {
+        this.customOrderName = customOrderName;
     }
 
 

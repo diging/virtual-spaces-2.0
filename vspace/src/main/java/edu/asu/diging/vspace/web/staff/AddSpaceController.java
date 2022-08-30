@@ -22,9 +22,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.core.services.impl.SpacesCustomOrderManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
@@ -40,9 +38,6 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
-    
-    @Autowired
-    private ISpacesCustomOrderManager spacesCustomOrderManager;
 
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)

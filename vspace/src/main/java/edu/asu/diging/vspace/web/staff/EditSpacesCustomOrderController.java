@@ -23,19 +23,19 @@ public class EditSpacesCustomOrderController {
     
     private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderController.class);
     
-    @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/description", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description, @PathVariable("customOrderId") String spacesCustomOrderId) {
-        spacesCustomOrderManager.updateSpacesCustomOrderDescription(spacesCustomOrderId, description);
+        spacesCustomOrderManager.updateSpacesCustomOrderNameDescription(spacesCustomOrderId, description, "description");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/title", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/title", method = RequestMethod.POST)
     public ResponseEntity<String> saveTitle(@RequestParam("title") String name, @PathVariable("customOrderId") String spacesCustomOrderId) {
-        spacesCustomOrderManager.updateSpacesCustomOrderName(spacesCustomOrderId, name);
+        spacesCustomOrderManager.updateSpacesCustomOrderNameDescription(spacesCustomOrderId, name, "name");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/staff/spaceordering/{customOrderId}/edit/spaceorders", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/spaceorders", method = RequestMethod.POST)
     public ResponseEntity<String> saveOrder(@PathVariable("customOrderId") String spacesCustomOrderId, @RequestParam("spaceOrder") List<String> spaceOrders) {
         logger.info("space order is {}", spaceOrders.get(0));
         spacesCustomOrderManager.editSpacesCustomOrder(spacesCustomOrderId, spaceOrders);

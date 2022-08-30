@@ -61,9 +61,6 @@ public class Space extends VSpaceElement implements ISpace {
 
     @Transient
     private Boolean incomingLinks;
-    
-    @ManyToMany(mappedBy="customOrderedSpaces",targetEntity = SpacesCustomOrder.class)
-    private List<SpacesCustomOrder> spacesCustomOrder;
 
     /*
      * (non-Javadoc)

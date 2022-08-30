@@ -31,7 +31,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderUtility;
+import edu.asu.diging.vspace.core.model.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 @Component
@@ -52,7 +52,7 @@ public class ExhibitionDataAspect {
 
     
     @Autowired
-    private ExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
+    private IExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")

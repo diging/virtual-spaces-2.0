@@ -28,7 +28,7 @@
 </head>
 <body>
     <div class="main-content" layout:fragment="content">
-    	<a th:href="@{/staff/spaceordering/add}" method="GET" class="btn primary-btn btn-sm" style="float: right">+ New Order</a>
+    	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm" style="float: right">+ New Order</a>
         <h2>Custom Orders for Spaces</h2>
         <div>This virtual exhibition contains the following custom orders for spaces.</div>
         
@@ -39,7 +39,7 @@
         		<span class="icon-grid-block"></span></button>
         </div>
         <div class="startSequence" style="padding-bottom: 10px;">
-        <form th:action="@{'/staff/spaceordering/setDefault'}" method ="POST" name="f" style="text-align: right;">
+        <form th:action="@{'/staff/space/order/setDefault'}" method ="POST" name="f" style="text-align: right;">
           <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<p>Select Custom Order to be used.</p>
 					<select class="form-control col-md-8" name="selectedCustomOrderId" style="display: inline-block !important; height:auto;">
@@ -56,7 +56,7 @@
 			</div>
       <div id="list" style="margin-top: 0">
             <ul class="list-group list-group-flush" th:each="order: ${customSpaceOrders}">
-               <li class="list-group-item"><a th:href="@{'/staff/spaceordering/'+${order.id}}">
+               <li class="list-group-item"><a th:href="@{'/staff/space/order/'+${order.id}}">
                    <span class="icon-2x2-grid"></span>&emsp;[[${order.customOrderName}]]</a>
                </li>
             </ul>

@@ -8,24 +8,21 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 
 @Component
-public class ExhibitionSpaceOrderUtility {
+public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility {
     
     @Autowired
-    ExhibitionRepository exhibitRepo;
+    private  IExhibitionManager  exhibitionManager;
     
-    @Autowired
-    IExhibitionManager exhibitionManager;
-    
-    private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
+    @Override
+    public List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {
@@ -35,7 +32,8 @@ public class ExhibitionSpaceOrderUtility {
         return publishedSpaces;
     }
     
-    private List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
+    @Override
+    public List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {
@@ -45,7 +43,8 @@ public class ExhibitionSpaceOrderUtility {
         return publishedSpaces;
     }
     
-    public List<ISpace> getCustomSpaceOrder(List<ISpace> publishedSpaces){
+    @Override
+    public List<ISpace>  sortSpacesByCustomOrder(List<ISpace> publishedSpaces){
         IExhibition exhibition  = exhibitionManager.getStartExhibition();
         SpacesCustomOrder spacesCustomOrder = exhibition.getSpacesCustomOrder();
         if(spacesCustomOrder == null) {
@@ -62,14 +61,15 @@ public class ExhibitionSpaceOrderUtility {
         return spacesToPublish;
     }
     
-    public List<ISpace> retrieveSpacesListInGivenOrder(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
+    @Override
+    public List<ISpace> sortSpaces(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
         if(mode == null || mode == ExhibitionSpaceOrderMode.ALPHABETICAL) {
             return sortSpacesAlphabetically(publishedSpaces);
         }
         else if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
             return sortSpacesOnCreationDate(publishedSpaces);
         }else {
-            return getCustomSpaceOrder(publishedSpaces);
+            return  sortSpacesByCustomOrder(publishedSpaces);
         }
     }
 }

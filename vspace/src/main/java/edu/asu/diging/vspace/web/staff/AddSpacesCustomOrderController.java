@@ -2,8 +2,6 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +25,14 @@ public class AddSpacesCustomOrderController {
     @Autowired
     private ISpaceManager spaceManager;
     
-    private static Logger logger = LoggerFactory.getLogger(AddSpacesCustomOrderController.class);
-    
-    @RequestMapping(value = "/staff/spaceordering/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/space/order/add", method = RequestMethod.GET)
     public String addSpacesCustomOrders(Model model) {
         List<ISpace> spaces = spaceManager.getAllSpaces();
         model.addAttribute("spaces", spaces);
         return "staff/spaces/customorder/add";
     }
     
-    @RequestMapping(value = "/staff/spaceordering/customorder/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/customorder/add", method = RequestMethod.POST)
     public ResponseEntity<String> createCustomOrder(Model model, @RequestParam("spaceOrder") List<String> spaceOrders,
             @RequestParam("name") String name,
             @RequestParam("description") String description) {

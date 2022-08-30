@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +27,6 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Service
 @Transactional(rollbackFor = { Exception.class })
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
-    
-    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderManager.class);
 
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepository;
@@ -86,17 +82,17 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         saveCustomOrders(spacesCustomOrders);
     }
     
+    /**
+     *This method updates the custom order name or description
+     */
     @Override
-    public void updateSpacesCustomOrderName(String spacesCustomOrderId, String name) {
+    public void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String value, String field) {
         SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
-        spaceCustomOrder.setCustomOrderName(name);
-        spacesCustomOrderRepository.save(spaceCustomOrder);
-    }
-    
-    @Override
-    public void updateSpacesCustomOrderDescription(String spacesCustomOrderId, String name) {
-        SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
-        spaceCustomOrder.setDescription(name);
+        if(field == "name") {
+            spaceCustomOrder.setCustomOrderName(value);
+        } else {
+            spaceCustomOrder.setDescription(value);
+        }
         spacesCustomOrderRepository.save(spaceCustomOrder);
     }
 
@@ -119,12 +115,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
                 .findById(customOrderId);
         exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
-    }
-    
-    @Override
-    public SpacesCustomOrder getExhibitionCurrentSpacesCustomOrder() {
-        IExhibition exhibition = exhibitionManager.getStartExhibition();
-        return exhibition.getSpacesCustomOrder();
     }
     
     @Override
