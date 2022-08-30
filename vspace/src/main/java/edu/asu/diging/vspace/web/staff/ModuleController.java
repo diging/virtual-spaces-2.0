@@ -41,7 +41,7 @@ public class ModuleController {
         }
         else
         {
-        	model.addAttribute("spacesList", spaces);
+        model.addAttribute("spacesList", spaces);
         }     
         return "staff/modules/module";
     }
