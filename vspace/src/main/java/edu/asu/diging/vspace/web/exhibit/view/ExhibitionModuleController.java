@@ -6,14 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.exception.ModuleNotFoundException;
-import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 
 @Controller
@@ -25,9 +25,11 @@ public class ExhibitionModuleController {
     @Autowired
     private ISpaceManager spaceManager;
 
-    @RequestMapping(value = "/exhibit/{spaceId}/module/{id}")
-    public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId, Model model)
+    @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{id}" })
+    public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId,
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {
+
         ISpace space = spaceManager.getSpace(spaceId);
         if (space == null) {
             return "redirect:/exhibit/404";
@@ -42,6 +44,10 @@ public class ExhibitionModuleController {
             return "/exhibition/module";
         }
         String startSequenceID = module.getStartSequence().getId();
-        return "redirect:/exhibit/{spaceId}/module/" + id + "/sequence/" + startSequenceID;
+        if (previewId != null) {
+            return "redirect:/preview/" + previewId + "/" + spaceId + "/module/" + id + "/sequence/" + startSequenceID;
+        } else {
+            return "redirect:/exhibit/" + spaceId + "/module/" + id + "/sequence/" + startSequenceID;
+        }
     }
 }
