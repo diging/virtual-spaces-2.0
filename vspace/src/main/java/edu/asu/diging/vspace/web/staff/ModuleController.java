@@ -20,7 +20,7 @@ import edu.asu.diging.vspace.web.exception.SpaceNotFoundException;
 @Controller
 public class ModuleController {
 	
-	public static final String STAFF_MODULE_PATH = "/staff/module/";
+    public static final String STAFF_MODULE_PATH = "/staff/module/";
 
     @Autowired
     private IModuleManager moduleManager;
@@ -41,7 +41,7 @@ public class ModuleController {
         }
         else
         {
-        	model.addAttribute("spacesList", spaces);     	
+             model.addAttribute("spacesList", spaces);     	
         }      
         return "staff/modules/module";
     }
