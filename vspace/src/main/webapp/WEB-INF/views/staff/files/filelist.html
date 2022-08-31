@@ -126,7 +126,7 @@ a.nav-link.active.show {
                     <td>[[${file.createdBy}]]</td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
-                    <td><a th:href="@{'/staff/files/'+${file.id}}" ><span class="icon-write secondary"></span></a></td>
+                    <td><a th:href="@{'/staff/files/'+${file.id}} +'/edit'" ><span class="icon-write secondary"></span></a></td>
                     <td><span th:onclick = "deleteFile([[${file.id}]])" class="icon-trash secondary"></span></td>
                 </tr>
             </tbody>

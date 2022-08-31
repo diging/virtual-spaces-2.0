@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.FileRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -27,6 +37,7 @@ import edu.asu.diging.vspace.core.factory.IFileFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 public class FileManagerTest {
     
@@ -42,38 +53,62 @@ public class FileManagerTest {
     @InjectMocks
     private FileManager serviceToTest;
     
-    private final String fileId = "FILE_ID";
+    final String fileId = "FILE_ID";
     private final String fileName = "fileName";
     private final String fileDescription = "fileName";
     private final String fileContentString = "file content";
-    
-    
+       
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(serviceToTest, "pageSize", 10);
+
     }
     
     @Test
     public void test_getFileById_success() {
         VSFile file = new VSFile();
+        file.setId(fileId);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        serviceToTest.getFileById(fileId);
-        verify(fileRepo).findById(fileId);
+        IVSFile fileResponse = serviceToTest.getFileById(fileId);
+        assertEquals(fileResponse.getId(), "FILE_ID");
+        
     }
     
     @Test
     public void test_getAllFiles_success() {
-        serviceToTest.getAllFiles();
-        verify(fileRepo).findAll();
+        List<VSFile> files = new ArrayList();
+        VSFile file = new VSFile();
+        file.setId(fileId);
+        files.add(file);
+        Pageable requestedPageForFiles = PageRequest.of(0, 10);
+
+        when(fileRepo.findAll(requestedPageForFiles)).thenReturn( new PageImpl<VSFile>(files));
+
+        Page<VSFile> filesResponse = serviceToTest.getAllFiles(1);
+        assertEquals(filesResponse.getNumberOfElements(), 1);
+        assertEquals(filesResponse.getContent().get(0).getId(), fileId);
+
     }
     
     @Test
     public void test_editFile_success() {
         VSFile file = new VSFile();
         file.setFilename(fileName);
+        file.setId(fileId);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.renameFile(file.getFilename(), fileName, null)).thenReturn(true);
-        IVSFile returnedFile = serviceToTest.editFile(fileId, fileName, fileDescription);
+        when(storageEngine.renameFile(file.getFilename(), "NEW_FILENAME", fileId)).thenReturn(true);
+        IVSFile returnedFile = serviceToTest.editFile(fileId, "NEW_FILENAME", fileDescription);                
+        assertEquals("NEW_FILENAME", returnedFile.getFilename());
+    }
+    
+    @Test
+    public void test_editFile_failure() {
+        VSFile file = new VSFile();
+        file.setFilename(fileName);
+        when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
+        when(storageEngine.renameFile(file.getFilename(), "NEW_FILENAME", fileId)).thenReturn(false);
+        IVSFile returnedFile = serviceToTest.editFile(fileId, "NEW_FILENAME", fileDescription);
         assertEquals(file.getFilename(), returnedFile.getFilename());
     }
     
@@ -88,16 +123,26 @@ public class FileManagerTest {
     }
     
     @Test
+    public void test_deleteFile_failure() {
+        VSFile file = new VSFile();
+        when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
+        when(storageEngine.deleteFile(file.getFilename(), "")).thenReturn(false);
+        assertFalse(serviceToTest.deleteFile(fileId));
+    }
+    
+    @Test
     public void test_storeFile_success() throws FileStorageException {
         String fileId = "fileId";
         VSFile file = new VSFile();
+        file.setId(fileId);
         String relativePath = "relativePath";
         byte[] fileBytes = fileContentString.getBytes();
         when(storageEngine.deleteFile(file.getFilename(), null)).thenReturn(true);
-        when(fileFactory.createFile(fileName, fileId)).thenReturn(file);
+        when(fileFactory.createFile(fileName, "text/plain")).thenReturn(file);
         when(storageEngine.storeFile(fileBytes, fileName, fileContentString)).thenReturn(relativePath);
         CreationReturnValue returnValue = serviceToTest.storeFile(fileBytes, fileName, fileDescription, fileId);
         verify(fileFactory).createFile(fileName, "text/plain");
+        assertEquals(returnValue.getElement().getId(), fileId);
     }
     
     @Test
@@ -112,26 +157,8 @@ public class FileManagerTest {
         CreationReturnValue returnValue = serviceToTest.storeFile(fileBytes, fileName, fileDescription, fileId);
 
         Assert.assertTrue(returnValue.getErrorMsgs().get(0).contains("File could not be stored: "));
-        verify(fileFactory).createFile(fileName, "text/plain");
     }
-    
-    @Test
-    public void test_deleteFile_failure() {
-        VSFile file = new VSFile();
-        when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.deleteFile(file.getFilename(), "")).thenReturn(false);
-        assertFalse(serviceToTest.deleteFile(fileId));
-    }
-    
-    @Test
-    public void test_editFile_failure() {
-        VSFile file = new VSFile();
-        file.setFilename(fileName);
-        when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
-        when(storageEngine.renameFile(file.getFilename(), fileName, null)).thenReturn(true);
-        IVSFile returnedFile = serviceToTest.editFile(fileId, fileName, fileDescription);
-        assertEquals(file.getFilename(), returnedFile.getFilename());
-    }
+   
     @Test
     public void test_downloadFile_failure() throws IOException {
         String fileId = "fileId";

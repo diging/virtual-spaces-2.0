@@ -66,6 +66,7 @@ public class FileManager implements IFileManager {
             file.setFileDescription(fileDescription);
             file.setOriginalFileName(originalFileName);
             fileRepo.save((VSFile) file);
+            returnValue.setElement(file);
         }
         return returnValue;
         

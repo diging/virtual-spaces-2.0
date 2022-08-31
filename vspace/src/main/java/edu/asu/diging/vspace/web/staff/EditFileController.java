@@ -18,10 +18,17 @@ public class EditFileController {
     @Autowired
     private FileManager fileManager;
 
-    @RequestMapping(value = "/staff/files/{fileId}/edit", method = RequestMethod.POST)
-    public String editFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
+    @RequestMapping(value = "/staff/files/{fileId}/update", method = RequestMethod.POST)
+    public String updateFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
         IVSFile file = fileManager.editFile(fileId, fileForm.getFileName(), fileForm.getDescription());
         return "redirect:/staff/files/"+file.getId();
+    }
+    
+    @RequestMapping(value = "/staff/files/{id}/edit", method = RequestMethod.GET)
+    public String editFile(Model model, @PathVariable String id) {
+        IVSFile file = fileManager.getFileById(id);
+        model.addAttribute("file", file);
+        return "staff/files/file";
     }
 
 }
