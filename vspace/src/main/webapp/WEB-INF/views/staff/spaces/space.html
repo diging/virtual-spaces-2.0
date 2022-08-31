@@ -26,12 +26,14 @@ var selectedModuleLinkId;
 var selectedSpaceLinkId;
 var selectedExternalLinkId;
 var selectedTextBlockId;
-const displaceUnpublishedOnX = 25
-const displaceUnpublishedOnY = 13
-const displaceUnpublishedOnXModal = 50
-const displaceUnpublishedOnYModal = 13
-const displaceLableOnX = 10
-const displaceLableOnY = 35
+const displaceUnpublishedOnX = 25;
+const displaceUnpublishedOnY = 13;
+const displaceUnpublishedOnXModal = 50;
+const displaceUnpublishedOnYModal = 13;
+const displaceLableOnX = 10;
+const displaceLableOnY = 35;
+var modalBgImageHeight;
+var modalBgImageWidth;
 
 //link icons for space links
 var linkIconReader = new FileReader();
@@ -210,14 +212,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
         }
         
         if(block.spaceTextBlock.id === selectedTextBlockId) {
-        	var textModalBlock = document.getElementById("textModalBlockId-"+selectedTextBlockId);
-        	textModalBlock = textModalBlock.getElementsByTagName("textarea")[0];
+        	var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea")[0];
         	
         	tHeight = textModalBlock.clientHeight,
             tWidth = textModalBlock.clientWidth;
             
-            var height = parseInt($("#bgImage").css("height"));
-            var width = parseInt($("#bgImage").css("width"));
+            var height = modalBgImageHeight;
+            var width = modalBgImageWidth;
             textModalBlock.style["resize"] = "both";
             textModalBlock.onmouseup = function (e) {
                 if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
@@ -303,8 +304,8 @@ function drawLinks(){
             textBlocks.forEach(function(block,index){
                 var spanId= "textModalBlockId-";
                 var divId = "#space";
-                var imageHeight = parseInt($("#bgImage").css("height"));
-                var imageWidth = parseInt($("#bgImage").css("width"));
+                var imageHeight = modalBgImageHeight;
+                var imageWidth = modalBgImageWidth;
                 generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
             })
             
@@ -325,8 +326,8 @@ function showTextBlock(textBlock, show){
     $("#text").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var imageHeight = parseInt($("#bgImage").css("height"));
-    var imageWidth = parseInt($("#bgImage").css("width"));
+    var imageHeight = modalBgImageHeight;
+    var imageWidth = modalBgImageWidth;
     var textArea = $("<textarea class='textBlock' type='textarea'></textarea>");
     textArea.css('width', (textBlock["width"]*imageWidth)/100);
     textArea.css('height', (textBlock["height"]*imageHeight)/100);
@@ -357,8 +358,8 @@ function showTextBlockEdit(textBlock){
     var selectedTextArea = "#textModalBlockId-"+selectedTextBlockId+" .textBlock";
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var imageHeight = parseInt($("#bgImage").css("height"));
-    var imageWidth = parseInt($("#bgImage").css("width"));
+    var imageHeight = modalBgImageHeight;
+    var imageWidth = modalBgImageWidth;
     $(selectedClass).css('left', textBlock["x"]+posX);
     $(selectedClass).css('top', textBlock["y"]);
     $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
@@ -740,6 +741,8 @@ function displayForms(formToShow){
     drawLinks();
     $("#space").css("display", "-webkit-box");
     $(formToShow).css("display", "flex");
+    modalBgImageHeight = parseInt($("#bgImage").css("height"));
+	modalBgImageWidth = parseInt($("#bgImage").css("width"));
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
@@ -851,12 +854,12 @@ function getTextArea(x,y) {
     text.css('top', y);
     $("#space").append(text);
     
-    var textB = document.getElementById('textB'),
+    var textB = $('#textB')[0],
     tHeight = textB.clientHeight,
     tWidth = textB.clientWidth;
     
-    var height = parseInt($("#bgImage").css("height"));
-    var width = parseInt($("#bgImage").css("width"));
+    var height = modalBgImageHeight;
+    var width = modalBgImageWidth;
     
     $("#textBoxWidthID").val(tWidth);
     $("#textBoxHeightID").val(tHeight);
