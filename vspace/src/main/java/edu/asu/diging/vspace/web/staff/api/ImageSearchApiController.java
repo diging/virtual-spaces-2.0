@@ -25,12 +25,11 @@ public class ImageSearchApiController {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             images = imageService.findByFilenameOrNameContains(searchTerm);}
         else {
-            images = imageService.getImages(1);
-        }
+            images = imageService.getImages(1);}
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode idArray = mapper.createArrayNode();
         for (IVSImage image : images) {
-	    ObjectNode imageNode = mapper.createObjectNode();
+            ObjectNode imageNode = mapper.createObjectNode();
             imageNode.put("id", image.getId());
             if (image.getName() != null && !image.getName().isEmpty()) {
             	imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
