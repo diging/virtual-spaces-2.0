@@ -26,19 +26,19 @@ public class ImageSearchApiController {
             images = imageService.findByFilenameOrNameContains(searchTerm);}
         else {
             images = imageService.getImages(1);
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode idArray = mapper.createArrayNode();
+	}
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode idArray = mapper.createArrayNode();
         for (IVSImage image : images) {
 	    ObjectNode imageNode = mapper.createObjectNode();
             imageNode.put("id", image.getId());
             if (image.getName() != null && !image.getName().isEmpty()) {
-            imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
+            	imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
             } else {
-            imageNode.put("text", image.getFilename());
+            	imageNode.put("text", image.getFilename());
             }
             idArray.add(imageNode);
-            }
+	}
         return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
         }
 }
