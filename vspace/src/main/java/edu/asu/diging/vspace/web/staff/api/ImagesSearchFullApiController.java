@@ -30,7 +30,7 @@ public class ImagesSearchFullApiController {
         return String.format("redirect:/staff/images/search/full/1?searchText=%s");
     }
 
-        @RequestMapping("/staff/images/search/full/{page}")
+    @RequestMapping("/staff/images/search/full/{page}")
 	public String imageSeacrhDescription(@PathVariable(required = false) String page,
 			@RequestParam(value = "searchText", required = false) String searchTerm, Model model,
 			RedirectAttributes attributes) {
