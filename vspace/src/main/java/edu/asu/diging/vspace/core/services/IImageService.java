@@ -12,37 +12,37 @@ import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 
 public interface IImageService {
 
-	ImageData getImageData(byte[] image);
+    ImageData getImageData(byte[] image);
 
-	ImageData getImageDimensions(IVSImage image, int width, int height);
+    ImageData getImageDimensions(IVSImage image, int width, int height);
 
-	List<IVSImage> getImages(int pageNo, ImageCategory filter);
+    List < IVSImage > getImages(int pageNo, ImageCategory filter);
 
-	List<IVSImage> getImages(int pageNo);
+    List < IVSImage > getImages(int pageNo);
 
-	List<IVSImage> getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
+    List < IVSImage > getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
 
-	long getTotalImageCount(ImageCategory filter);
+    long getTotalImageCount(ImageCategory filter);
 
-	long getTotalPages(ImageCategory filter);
+    long getTotalPages(ImageCategory filter);
 
-	long getTotalPages(List<IVSImage> images);
+    long getTotalPages(List < IVSImage > images);
 
-	int validatePageNumber(int pageNo, ImageCategory filter);
+    int validatePageNumber(int pageNo, ImageCategory filter);
 
-	int validatePageNumber(int pageNo, List<IVSImage> images);
+    int validatePageNumber(int pageNo, List < IVSImage > images);
 
-	void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
+    void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
 
-	IVSImage getImageById(String imageId) throws ImageDoesNotExistException;
+    IVSImage getImageById(String imageId) throws ImageDoesNotExistException;
 
-	void addCategory(IVSImage image, ImageCategory category);
+    void addCategory(IVSImage image, ImageCategory category);
 
-	void removeCategory(IVSImage image, ImageCategory category);
+    void removeCategory(IVSImage image, ImageCategory category);
 
-	List<IVSImage> findByFilenameOrNameContains(String searchTerm);
+    List < IVSImage > findByFilenameOrNameContains(String searchTerm);
 
-	List<IVSImage> search(String searchTerm);
+    List < IVSImage > search(String searchTerm);
 
-	List<IVSImage> getImagesForPagination(int pageNo, List<IVSImage> images, String searchTerm);
+    List < IVSImage > getImagesForPagination(int pageNo, List < IVSImage > images, String searchTerm);
 }
