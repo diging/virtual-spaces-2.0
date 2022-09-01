@@ -26,7 +26,7 @@ public class ImageSearchApiController {
             images = imageService.findByFilenameOrNameContains(searchTerm);}
         else {
             images = imageService.getImages(1);
-	}
+        }
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode idArray = mapper.createArrayNode();
         for (IVSImage image : images) {
