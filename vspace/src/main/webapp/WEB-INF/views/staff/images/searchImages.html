@@ -12,8 +12,7 @@
                 }).done(function() {
                      $("#category-badge-" + imageId + "-" + category).remove();
                 });
-         }
-         
+         }      
          function toggleChange(form, imageId) {
          	var catValue = $(form).find("option:selected").val();
              $.post($(form).attr('action') + "&tag=" + catValue, function( data ) {
