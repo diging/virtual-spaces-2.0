@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 
@@ -137,7 +138,7 @@ public class ModuleManager implements IModuleManager {
     
     public Page<IModule> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage,String searchText){
               
-        return moduleRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText, searchText);
+        return moduleRepo.findDistinctByModuleStatusNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, ModuleStatus.PUBLISHED,searchText,  searchText);
         
     }
 }

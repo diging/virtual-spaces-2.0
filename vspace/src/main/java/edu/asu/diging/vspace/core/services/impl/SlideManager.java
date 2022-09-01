@@ -28,6 +28,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
+import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -177,6 +178,6 @@ public class SlideManager implements ISlideManager {
     @Override
     public Page<ISlide> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage, String searchText) {
 
-        return slideRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText,searchText);
+        return slideRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText,searchText, ModuleStatus.PUBLISHED);
     }
 }

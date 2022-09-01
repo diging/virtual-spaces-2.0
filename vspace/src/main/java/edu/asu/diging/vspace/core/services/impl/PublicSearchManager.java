@@ -19,6 +19,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
+import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -145,7 +146,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
     @Override
     protected Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText, String searchTerm) {
-        return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm);
+        return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm, ModuleStatus.PUBLISHED);
     }
 
 
