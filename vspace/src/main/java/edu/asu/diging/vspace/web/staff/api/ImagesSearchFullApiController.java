@@ -61,7 +61,7 @@ public class ImagesSearchFullApiController {
             if (spaces != null && spaces.size() > 0) {
                 imageToSpaces.put(image.getId(), spaces);
             }
-		}
+	}
         model.addAttribute("imageToSpaces", imageToSpaces);
         model.addAttribute("images", imageResults);
         model.addAttribute("searchTerm", searchTerm);
