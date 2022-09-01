@@ -28,7 +28,7 @@ public class ImagesSearchFullApiController {
 	public String imageSearchFull(Model model,
 			@RequestParam(value = "searchText", required = false) String searchTerm) {
         return String.format("redirect:/staff/images/search/full/1?searchText=%s");
-	}
+    }
 
     @RequestMapping("/staff/images/search/full/{page}")
 	public String imageSeacrhDescription(@PathVariable(required = false) String page,
