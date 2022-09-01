@@ -13,19 +13,19 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 @Repository
 @JaversSpringDataAuditable
-public interface ImageRepository extends PagingAndSortingRepository<VSImage, String> {
+public interface ImageRepository extends PagingAndSortingRepository < VSImage, String > {
 
-    List<VSImage> findByFilenameLikeOrNameLike(String filename, String name);
-    
-    List<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
-    
-    Page<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(Pageable pageable, String filename, String name, String description);
+    List < VSImage > findByFilenameLikeOrNameLike(String filename, String name);
 
-    List<VSImage> findByFilenameLike(String filename);
+    List < VSImage > findByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
 
-    Page<VSImage> findByCategories(Pageable pageable, ImageCategory category);
+    Page < VSImage > findByFilenameLikeOrNameLikeOrDescriptionLike(Pageable pageable, String filename, String name, String description);
 
-    List<IVSImage> findByCategories(ImageCategory category);
-        
-    long countByCategories(ImageCategory category);  
+    List < VSImage > findByFilenameLike(String filename);
+
+    Page < VSImage > findByCategories(Pageable pageable, ImageCategory category);
+
+    List < IVSImage > findByCategories(ImageCategory category);
+
+    long countByCategories(ImageCategory category);
 }
