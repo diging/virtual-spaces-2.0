@@ -2,7 +2,14 @@
 <head>
 	<script>
 		$(document).ready(function() {
-
+			$("#successMsgAdded").hide();
+			if(localStorage.getItem("prevUrl").includes("/space/order/add")) {
+				localStorage.setItem("prevUrl", "");
+				$("#successMsgAdded").show();
+	        	 /* setTimeout(function() {
+	        		 $("#successMsgAdded").hide();
+	        	 }, 5000); */
+			}
 	        $("#grid").hide();
 	        $("#list-btn").hide();
 	        
@@ -24,10 +31,21 @@
 	    	$("#grid-btn").hide();
 	    	$("#grid").show();
 	    }
+	    
+	    $("#closeAlertAdded").click(function() {
+			$("#successMsgAdded").hide();
+		});
 	</script>
 </head>
 <body>
     <div class="main-content" layout:fragment="content">
+    	<div id="successMsgAdded" class="alert customWindow alert-success">
+			<button type="button" class="close" id="closeAlertAdded"
+	               aria-label="Close">
+	        	<span aria-hidden="true">&times;</span>
+	        </button>
+			"Custom Order has been Added"
+		</div>
     	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm" style="float: right">+ New Order</a>
         <h2>Custom Orders for Spaces</h2>
         <div>This virtual exhibition contains the following custom orders for spaces.</div>

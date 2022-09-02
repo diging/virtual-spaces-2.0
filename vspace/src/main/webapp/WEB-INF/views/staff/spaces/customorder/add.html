@@ -1,126 +1,139 @@
 <html layout:decorate="~{layouts/main_staff}">
-<head>
-<link th:href="@{/resources/multiselect/css/multiselect.css}"
-    type="text/css" rel="stylesheet">
-<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-
-<script th:inline="javascript">
-var spaceDivs = []
-$(document).ready(function() {
-	$("#errorMsgFailed").hide();
-	 $("#errorMsgAdded").hide();
-	var vals = []
-	
-	spaceDivs = document.getElementById('sortableSpaces').children;
-	var spaceIds = [];
-	let index =0;
-	 for(ele of spaceDivs){
-		spaceIds.push(spaceDivs[index].children[0].id);
-		index++;
-	} 
-	 spaceDivs=[];
-	 spaceDivs = spaceIds;
-	//save order
-	$("#createOrder").click(function() {
-		var formData = new FormData();
-		var name = $("#name").val();
-		//console.log(document.getElementById("description").val());
-		var descriptonText = $("#description").val();
-		console.log(descriptonText);
-	    formData.append('spaceOrder', spaceDivs);
-	    formData.append('name', name);
-	    formData.append('description', description);
-	    formData
-	    $.ajax({
-	        url: "[(@{'/staff/space/order/customorder/add'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-	        type: 'POST',
-	        cache       : false,
-	        contentType : false,
-	        processData : false,
-	        data: formData,
-	        enctype: 'multipart/form-data',
-	        beforeSend: function(){
-	        	$("#errorMsgAdded").hide();
-	        	$("#errorMsgFailed").hide();
-	        },
-	        complete: function(){
-	        	
-	        },
-	        success: function(data) {
-	        	$("#errorMsgAdded").show();
-	        	document.getElementById("name").value = "";
-	        	document.getElementById("description").value = "";
-	        	
-	        },
-	        error: function(data) {
-	        	console.log(data);
-	        	$("#errorMsgFailed").show();
-	        	
-	        }
-	    });
-	            
-	  });
-	
-	$("#sortableSpaces").sortable({
-	  	update: function(event,ui) {
-	  		spaceDivs = [];
-	      	$(this).children().each(function(index,element){
-	      		spaceDivs.push(element.children[0].id);
-	      		
-	            	//updatedSpaceOrder.push(item);
-	      	});
-	  	}
-		});
-	
-	$("#closeAlertAdded").click(function() {
-		$("#errorMsgAdded").hide();
-	});
-
-	$("#closeAlertFailed").click(function() {
-		$("#errorMsgFailed").hide();
-	});
-	
-});
-</script>
-</head>
-<body>
-    <div class="main-content" layout:fragment="content">
-	    <div id="errorMsgFailed" class="alert customWindow alert-danger">
-	    <button type="button" class="close" id="closeAlertFailed"
-                aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-			"Custom order name already exists, try another name."
-			
-			</div>
-			<div id="errorMsgAdded" class="alert customWindow alert-success">
-			<button type="button" class="close" id="closeAlertAdded"
-                aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-			"Custom Order has been Added"
-		</div>
-        <h2>Add New Custom Order</h2>
-        <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="name">Order Name</label>
-                <input placeholder="Name" class="form-control col-md-6" type="text" id="name" name="name" />
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="description">Order Description</label>
-                <textarea placeholder="Description" rows="5" class="form-control col-md-6" id="description" name="description"></textarea>
-            </div>
-            <span>Drag and drop to arrange spaces</span>
-        <div class="form-group row" id="sortableSpaces">
-		<div th:each="selectedSpace: ${spaces}"  class="main-content" >
-	    	<div  style="cursor: pointer;" th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row" >
-	             <p class="col-md-10">[[${selectedSpace.name}]]</p>
-		    </div>
-    	</div>
-		</div>
-		<button id="createOrder" type="button" class="btn primary-btn"
-					style="float: left; margin-right: 1%;">Create Order</button>
+	<head>
+		<style>
+			.addNewCustomOrder {
+				background: white;
+				padding: 30px 40px;
+			}
+			.orderName, .orderDescription {
+				border: 1px solid;
+			}
+			.dragDropText {
+				margin-bottom: 10px;
+			}
+			.sortableSpaces {
+				max-height: 205px;
+				overflow-y: scroll;
+			}
+			.paraContent {
+				cursor: pointer;
+				border: 1px solid;
+				padding: 15px;
+			}
+			.para {
+				margin: 0;
+			}
+			.errorMsgFailed {
+				position: absolute;
+    			top: 8%;
+    			width: 65%;
+			}
+		</style>
+		<link th:href="@{/resources/multiselect/css/multiselect.css}" type="text/css" rel="stylesheet">		    
+		<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		
-    </div>
-</body>
+		<script th:inline="javascript">
+		var spaceDivs = []
+		$(document).ready(function() {
+			$("#errorMsgFailed").hide();
+			var vals = []
+			
+			spaceDivs = document.getElementById('sortableSpaces').children;
+			var spaceIds = [];
+			let index =0;
+			 for(ele of spaceDivs){
+				spaceIds.push(spaceDivs[index].children[0].id);
+				index++;
+			} 
+			 spaceDivs=[];
+			 spaceDivs = spaceIds;
+			//save order
+			$("#createOrder").click(function() {
+				var formData = new FormData();
+				var name = $("#name").val();
+				var descriptionText = $("#description").val();
+			    formData.append('spaceOrder', spaceDivs);
+			    formData.append('name', name);
+			    formData.append('description', descriptionText);
+			    formData
+			    $.ajax({
+			        url: "[(@{'/staff/space/order/customorder/add'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			        type: 'POST',
+			        cache       : false,
+			        contentType : false,
+			        processData : false,
+			        data: formData,
+			        enctype: 'multipart/form-data',
+			        beforeSend: function(){
+			        	$("#errorMsgFailed").hide();
+			        },
+			        complete: function(){
+			        	
+			        },
+			        success: function(data) {
+			        	document.getElementById("name").value = "";
+			        	document.getElementById("description").value = "";
+			        	localStorage.setItem("prevUrl", window.location.pathname);
+			        	window.location.href = "[(@{'/staff/space/order'})]";
+			        },
+			        error: function(data) {
+			        	$("#errorMsgFailed").show();
+			        	setTimeout(function() {
+			        		$("#errorMsgFailed").hide();
+			        	 }, 10000);
+			        	
+			        }
+			    });
+			            
+			  });
+			
+			$("#sortableSpaces").sortable({
+			  	update: function(event,ui) {
+			  		spaceDivs = [];
+			      	$(this).children().each(function(index,element){
+			      		spaceDivs.push(element.children[0].id);
+			            	//updatedSpaceOrder.push(item);
+			      	});
+			  	}
+				});
+		
+			$("#closeAlertFailed").click(function() {
+				$("#errorMsgFailed").hide();
+			});
+			
+		});
+		</script>
+	</head>
+	<body>
+	    <div id="addNewCustomOrder" class="main-content addNewCustomOrder" layout:fragment="content">
+		    <div id="errorMsgFailed" class="alert customWindow alert-danger errorMsgFailed">
+		    <button type="button" class="close" id="closeAlertFailed"
+	                aria-label="Close">
+	                <span aria-hidden="true">&times;</span>
+	            </button>
+				"Custom order name already exists, try another name."
+				</div>
+	        <h2>Add New Custom Order</h2>
+	        <div class="form-group row">
+	                <label class="col-md-2 col-form-label" for="name">Order Name</label>
+	                <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" />
+	            </div>
+	            <div class="form-group row">
+	                <label class="col-md-2 col-form-label" for="description">Order Description</label>
+	                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description"></textarea>
+	            </div>
+	            <div class="dragDropText">Drag and drop to arrange spaces</div>
+	        <div class="form-group row sortableSpaces" id="sortableSpaces">
+			<div th:each="selectedSpace: ${spaces}"  class="main-content">
+		    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+		             <p class="para">[[${selectedSpace.name}]]</p>
+			    </div>
+	    	</div>
+			</div>
+			<div>
+				<button id="createOrder" type="button" class="btn primary-btn">Create Order</button>
+			</div>		
+	    </div>
+	</body>
 </html>

@@ -18,10 +18,10 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Controller
 public class EditSpacesCustomOrderController {
     
+    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderController.class);
+    
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
-    
-    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderController.class);
     
     @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description, @PathVariable("customOrderId") String spacesCustomOrderId) {
