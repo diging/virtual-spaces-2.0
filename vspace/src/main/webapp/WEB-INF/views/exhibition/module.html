@@ -30,10 +30,19 @@
 	.imgFullScreen:hover .tooltiptext {
    	 visibility: visible;
 	}
+	
+	.imgFullScreen:hover .tooltiptext {
+   	 visibility: visible;
+	}
 
 	.exitfullscreen:hover .tooltiptextForExitFullscreen {
    	 visibility: visible;
 	}
+	
+	.module_map:hover .tooltiptext {
+   	 visibility: visible;
+	}
+	
 
 	.tooltiptextForExitFullscreen {
 	    visibility: hidden;
@@ -61,7 +70,6 @@
          });
          
 	function showModuleMapModal(){
-		console.log("Button clicked");
 		$("#moduleOverviewModal").show();
 	}
          
@@ -169,10 +177,10 @@
                   </button>
             </div>
          </a>
-         <div class="module_map" style="position: fixed; position: absolute; width: 50px; height: 44px; left: 4%; overflow: visible; ">
+         <div class="module_map" style="position: fixed; z-index:110 ;left: 4%;top: 50.3%;width:50px;">
          <button class="btn circle-btn" onClick="showModuleMapModal()">
          <span class="icon-map" ></span>
-         <span class="tooltiptext">View Module Map</span>
+         <span class="tooltiptext">view Module Map</span>
          </button>
          
          </div>
