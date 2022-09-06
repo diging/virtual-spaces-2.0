@@ -146,7 +146,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
     @Override
     protected Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText, String searchTerm) {
-        return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm, ModuleStatus.PUBLISHED);
+        return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
 
 

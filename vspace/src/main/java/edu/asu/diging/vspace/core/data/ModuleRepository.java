@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 
 @Repository
@@ -31,7 +32,7 @@ public interface ModuleRepository extends PagingAndSortingRepository<Module, Str
     
     List<ISequence> findAllByStartSequenceNotNull();
        
-    @Query("SELECT DISTINCT module from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id where module.moduleStatus =?1 AND ( module.name like %?2% OR module.description like %?3% )") 
-    Page<IModule> findDistinctByModuleStatusNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, ModuleStatus moduleStatus, String name,
+    @Query("SELECT DISTINCT module from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id JOIN Space space on space.id = moduleLink.space.id where module.moduleStatus =?1 AND space.spaceStatus = ?2 AND ( module.name like %?3% OR module.description like %?4% )") 
+    Page<IModule> findDistinctByModuleStatusNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, ModuleStatus moduleStatus, SpaceStatus spaceStatus, String name,
            String description);
 }

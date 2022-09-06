@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
@@ -178,6 +179,6 @@ public class SlideManager implements ISlideManager {
     @Override
     public Page<ISlide> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage, String searchText) {
 
-        return slideRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText,searchText, ModuleStatus.PUBLISHED);
+        return slideRepo.findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, searchText,searchText, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
 }

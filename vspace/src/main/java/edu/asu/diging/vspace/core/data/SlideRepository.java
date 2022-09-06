@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 @Repository
 @JaversSpringDataAuditable
@@ -32,7 +33,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     Set<String> findAllSlidesFromStartSequences();
 
     
-    @Query("SELECT DISTINCT s from Slide s where  s.module.id IN (SELECT DISTINCT module.id from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id AND module.moduleStatus = ?3) AND s.name like %?1% OR s.description like %?2%")
+    @Query("SELECT DISTINCT s from Slide s where  s.module.id IN (SELECT DISTINCT module.id from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id JOIN Space space on space.id = moduleLink.space.id WHERE space.spaceStatus = ?3 AND module.moduleStatus = ?4) AND s.name like %?1% OR s.description like %?2%")
     Page<ISlide> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
-            String description, ModuleStatus moduleStatus);
+            String description, SpaceStatus spaceStatus, ModuleStatus moduleStatus);
 }
