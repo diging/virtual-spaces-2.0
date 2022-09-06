@@ -346,3 +346,351 @@
 	</div>
 </body>
 </html>
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<link th:href="@{/resources/extra/Sequence.css}"
+    type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<script th:inline="javascript">
+	$(document).ready(function() {
+	    var vals = []
+		var slides = []
+	    
+	    if (localStorage.getItem("newSequence") == null) {
+			guidedTour();
+			localStorage.setItem("newSequence", false);
+		}
+	    
+		$('#ordered-slides').multiSelect({
+			keepOrder : true,
+			dblClick : true,
+			afterInit : function(container) {
+				$("#ordered-slides").find("option").each(function() {
+					vals.push($(this).val());
+				});
+				$(".ms-selection ul").find("li").each(function(index) {
+					$(this).attr('value', vals[index]);
+				});
+				$('.ms-selection ul li.ms-selected').each(function(index, value) {
+					slides.push($(this).attr('value'));					
+				});
+				$("#orderedSlides").val(slides);
+			},
+			afterSelect : function(value) {
+				slides = [];
+				$('.ms-selection ul li.ms-selected').each(function(index, value) {
+					slides.push($(this).attr('value'));					
+				});
+				$("#orderedSlides").val(slides);
+			},
+			afterDeselect : function(value, text) {
+				for (var i=slides.length-1; i>=0; i--) {
+	    			if (String(slides[i]) === String(value)) {
+	    				slides.splice(i, 1);
+	    				break;
+	        		}
+	    		}
+				$("#orderedSlides").val(slides); 
+			}
+		})
+		$('.ms-selection ul').sortable({
+			distance : 5,
+			stop : function(event, ui) {
+				var new_val = []
+				$('.ms-selection ul li.ms-selected').each(function(index, value) {
+					new_val.push($(this).attr('value'));					
+				});
+				$("#orderedSlides").val(new_val);
+			}
+		});
+		
+	    //-------- edit contentblock description Sequence starts --------
+	    $("#submitDescription").hide()
+	    $("#cancelEditDescription").hide()	
+	    
+	    $("#editDescription").click(function() {
+	    	
+	    	// using data-attributes
+	    	var description = $("#description").text()  // gets value
+	        $('<textarea id="newDescription" style="margin-top: 1%; border: 1px solid #ced4da;padding: 0.375rem 0.5rem;" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
+	        $("#description").hide()
+	        $("#newDescription").val(description)
+	        $("#editDescription").hide()
+	        $("#submitDescription").show()
+	        $("#cancelEditDescription").show()
+	        
+	        
+	    });
+
+	    
+	    // --- Submit Description ------
+	    
+	    $("#submitDescription").click(function() {
+	        var formData = new FormData();
+	        formData.append('description', $("#newDescription").val());
+	        $.ajax({
+	        url: "[(@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}+'/edit/description'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData,
+	        enctype: 'multipart/form-data',
+	        success: function(data) {
+	            // replace text box with new description
+	            $("#submitDescription").hide()
+	            $("#cancelEditDescription").hide()
+	            $("#editDescription").show()
+	            var val = $("#newDescription").val();
+	            $("#description").text(val);
+	            $("#editDescription").show()
+	            $("#description").show() 
+	            $("#description").data('value',val);
+	            $("#newDescription").remove()
+	        },
+	        error: function(data) {
+	            $(".open").removeClass("open");
+	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	                $('.error').append(alert);
+	            }
+	        });
+	        
+	   });
+	    
+	    // ---- Cancel Edited Description ----
+	    
+	    $("#cancelEditDescription").click(function(){
+	        $("#submitDescription").hide()
+	        $("#editDescription").show()
+	        $("#cancelEditDescription").hide()
+	        $("#newDescription").remove()
+	        $("#description").show()
+	        
+	    });
+	    
+	    // ------- Edit/Save/Cancel Description ends --------
+	    
+	    
+	    
+	    //------- edit title of Sequence starts --------
+	    
+	    $("#submitTitle").hide();
+	    $("#cancelEditTitle").hide();
+	    
+	    $("#editTitle").click(function() {
+	    	// Using data attribute
+	    	var sequenceTitle = $("#title").text()  // gets value without using trim function
+	        $('<div id = "editSequenceTitle"><input id="newTitle" style="margin-top: 1%; padding: 0.375rem 0.75rem; border: 1px solid #ced4da;" type="text"></div>').insertAfter( "#title" );
+	    	$('#title').text()
+	        $("#newTitle").val(sequenceTitle.split(": ")[1])
+	        $("#editTitle").hide()
+	        $("#submitTitle").show()
+	        $("#cancelEditTitle").show()
+	    });
+	    	
+	    	
+	    	
+	    // ------ Submit title Sequence -------
+	    	
+	    $("#submitTitle").click(function() {
+	        var formData = new FormData();
+	        formData.append('title', $("#newTitle").val());
+	        $.ajax({
+	            url: "[(@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}+'/edit/title'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	            type: 'POST',
+	            cache       : false,
+	            contentType : false,
+	            processData : false,
+	            data: formData,
+	            enctype: 'multipart/form-data',
+	            beforeSend: function(){
+	            	$(".blur").css("filter","blur(3px)");
+	            	$("#spinner").show();
+	            },
+	            complete: function(){
+	            	$("#spinner").hide();
+	            	$(".blur").css("filter","none");
+	            },
+	            success: function(data) {
+	                // replace text box with new description
+	                $("#submitTitle").hide()
+	                $("#cancelEditTitle").hide();
+	                $("#editTitle").show()
+	                var val = $("#newTitle").val();
+	                $("#editSequenceTitle").remove()
+	                $("#title").text("Sequence: " + val)
+	                $("#title").data('value', val)  // sets value
+	            },
+	            error: function(data) {
+	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	                $('.error').append(alert);
+	            }
+	        });
+	                
+	      });
+	    
+	    
+	   // ------  Edit Title Sequence ------
+	   
+	   $("#cancelEditTitle").click(function(){
+	        $("#submitTitle").hide()
+	        $("#editTitle").show()
+	        $("#cancelEditTitle").hide()
+	        var sequenceTitle = $("#title").text()  // gets value
+	        $("#editSequenceTitle").remove()
+	        $("#title").text(sequenceTitle)
+	  
+	    });
+	});
+	
+	function guidedTour() {
+		const tour = new Shepherd.Tour({
+			  defaultStepOptions: {
+			    cancelIcon: {
+			      enabled: true
+			    },
+			    classes: '',
+			    scrollTo: { behavior: 'smooth', block: 'center' },
+			  },
+			  useModalOverlay: true,
+			});
+
+		tour.addStep({
+		  title: 'Welcome to the Sequence editor!',
+		  text: `Add or edit the content you want to show in your module.`,
+		  buttons: [
+		    {
+		      action() {
+		        return this.next();
+		      },
+		      text: 'Next'
+		    }
+		  ],
+		  id: 'creating1'
+		});
+		
+		tour.addStep({
+		  title: 'Easy navigation',
+		  text: `Keep track of your location in the module or navigate back.`,
+		  attachTo: {
+		    element: '.breadcrumb',
+		    on: 'bottom'
+		  },
+		  buttons: [
+		    {
+		      action() {
+		        return this.back();
+		      },
+		      classes: 'shepherd-button-secondary',
+		      text: 'Back'
+		    },
+		    {
+		      action() {
+		        return this.next();
+		      },
+		      classes: 'btn primary-btn',
+		      text: 'Next'
+		    }
+		  ],
+		  id: 'creating2'
+		});
+		
+		tour.addStep({
+		  title: 'Select the slides in your sequence.',
+		  text: `Choose the slides you want in the sequence by double clicking the slide title. Drag to reorder. `,
+		  attachTo: {
+		    element: '.form-group',
+		    on: 'bottom'
+		  },
+		  buttons: [
+		    {
+		      action() {
+		        return this.back();
+		      },
+		      classes: 'shepherd-button-secondary',
+		      text: 'Back'
+		    },
+		    {
+		      action() {
+		        return this.next();
+		      },
+		      text: 'Done'
+		    }
+		  ],
+		  id: 'creating4'
+		});
+		
+		
+		tour.start();
+	}
+	</script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="main-content">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a th:href="@{/staff/dashboard}">Dashboard</a></li>
+			<li class="breadcrumb-item"><a th:href="@{/staff/module/list}">Modules</a></li>
+			<li class="breadcrumb-item"><a th:href="@{'/staff/module/'+${module.id}}">[[${module.name}]]</a></li>
+			<li class="breadcrumb-item active">[[${sequence.name}]]</li>
+		</ol>
+		
+		<div class ="blur">
+			<div style="display: flex; margin-bottom: 20px">
+				<div>		
+					<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Sequence:</span> [[${sequence.name}]]</h2>
+					<p id="description"> [[${sequence.description}]]</p>
+					<button id="submitDescription" type="button"
+						class="btn primary-btn btn-sm"
+						style="position:absolute; margin-left:1.3rem; margin-top:1.5%;">Save</button>
+					<button id="cancelEditDescription" type="button"
+						class="btn btn-light cancelSpaceLinkBtn btn-sm"
+						style="position:absolute;margin-left:5.3rem;margin-top:1.5%;">Cancel</button>
+				</div>				
+					
+				<div class="dropdown">
+					<button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="icon-caret-down" style="font-size: 16px"></span>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a id="editTitle" class="dropdown-item" href="#"><span class="icon-edit"></span>&emsp; Edit sequence title</a>
+						<a id="editDescription" class="dropdown-item" href="#"><span class="icon-edit"></span>&emsp; Edit sequence description</a>
+						<a class="dropdown-item" style="cursor: pointer" th:onclick="guidedTour()"><span class="icon-map"></span>&emsp; Start tour</a>
+					</div>
+				</div>
+					
+				<button id="submitTitle" type="button" class="btn primary-btn btn-sm"
+					style="position: absolute;margin-top: 3.1rem;margin-left: 13.3rem; ">Save</button>
+				<button id="cancelEditTitle" type="button" class="btn btn-light cancelSpaceLinkBtn btn-sm"
+					style="position: absolute;margin-left: 17.3rem;margin-top: 3.1rem;">Cancel</button>
+			</div>
+			<div class="alert alert-light" role="alert">
+				Created on <span class="date">[[${sequence.creationDate}]]</span> by
+				[[${sequence.createdBy}]].<br> Modified on <span class="date">[[${sequence.modificationDate}]]</span>
+				by [[${sequence.modifiedBy}]].
+			</div>
+		</div>
+		
+		<div id="slideSpace" class="blur">
+			<form th:action="@{|/staff/module/${moduleId}/sequence/${sequence.id}/edit/slides?${_csrf.parameterName}=${_csrf.token}|}" method="POST" th:object="${sequenceForm}">
+				<div class="form-group row" style="width: fit-content; margin-left: 0">
+					<label for="Slides" style="margin-right: 15px">Select
+						Slides: <br> <small>(Double click to select and drag to reorder)</small>
+					</label> 
+					<select multiple="multiple" id="ordered-slides" name="selectSequence">
+						<option th:each="slide: ${allSlides}" th:if="${!#lists.contains(selectedSlides,slide)}"  th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
+
+						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
+					</select>
+					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
+				</div>
+				<button class="btn primary-btn btn-sm" type="submit" value="submit">Save Changes</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

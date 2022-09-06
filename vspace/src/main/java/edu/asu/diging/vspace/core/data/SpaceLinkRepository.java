@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 
 @Repository
@@ -21,6 +22,8 @@ public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLin
     @Query("delete from SpaceLink where source_space_id = ?1")
     void deleteBySourceSpaceId(String id);
     
+    void deleteBySourceSpaceIdIsNull();
+    
     @Modifying
     @Query("delete from SpaceLink where target_space_id = ?1")
     void deleteByTargetSpaceId(String id);
@@ -29,4 +32,8 @@ public interface SpaceLinkRepository extends PagingAndSortingRepository<SpaceLin
     List<SpaceLink> getLinkedSpaces(String id);
         
     List<SpaceLink> findByTargetSpace(ISpace space);
+
+    List<ISpaceLink> findBySourceSpaceIsNull();
+
+    Long countBySourceSpaceIsNull();
 }
