@@ -5,20 +5,12 @@ import java.util.List;
 import edu.asu.diging.vspace.core.model.ISlide;
 
 public class SequenceOverview {
- 
+
     private String name;
 
     private String id;
-    
-    private List<SlideOverview> slideOverview;
 
-    public List<SlideOverview> getSlides() {
-        return slideOverview;
-    }
-
-    public void setSlides(List<SlideOverview> slideOverview) {
-        this.slideOverview = slideOverview;
-    }
+    private List<SlideOverview> slideOverviews;
 
     public String getName() {
         return name;
@@ -35,6 +27,13 @@ public class SequenceOverview {
     public void setId(String id) {
         this.id = id;
     }
-    
-    
+
+    public List<SlideOverview> getSlideOverviews() {
+        return slideOverviews;
+    }
+
+    public void setSlideOverviews(List<SlideOverview> slideOverviews) {
+        this.slideOverviews = slideOverviews;
+    }
+
 }
