@@ -33,7 +33,11 @@ public class DownloadFileController {
         IVSFile file= null;
         try {        
             file = fileManager.getFileById(fileId);
-            resource = fileManager.downloadFile(file.getFilename(), fileId);                  
+            if(file!=null) {
+                resource = fileManager.downloadFile(file.getFilename(), fileId);   
+            } else {
+                logger.error("Could not find file " + fileId);
+            }
         } catch (IOException e) {
             logger.error("Could not download file", e);
             return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);

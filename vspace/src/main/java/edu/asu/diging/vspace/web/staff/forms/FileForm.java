@@ -2,11 +2,11 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 public class FileForm {
 
-    String fileName;
-    String description;
-    
-    
-    
+    private String fileName;
+    private String description;
+
+
+
     public String getFileName() {
         return fileName;
     }

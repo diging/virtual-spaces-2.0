@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -73,20 +74,22 @@ public class FileManager implements IFileManager {
     }
     
     @Override
-    public Page<VSFile> getAllFiles(int filesPagenum){
+    public Page<IVSFile> getAllFiles(int filesPagenum){
         
         if (filesPagenum < 1) {
             filesPagenum = 1;
         }
         Pageable requestedPageForFiles = PageRequest.of(filesPagenum - 1, pageSize);
 
-        return fileRepo.findAll(requestedPageForFiles);
+        Page<VSFile> page =  fileRepo.findAll(requestedPageForFiles);        
+        return page.map(file-> { return (IVSFile) file; } );
+        
     }
     
     @Override
     public IVSFile getFileById(String id) {
         Optional<VSFile> optional = fileRepo.findById(id);
-        return optional.get();
+        return optional.isPresent() ? optional.get() : null;
     }
     
     @Override
@@ -112,7 +115,7 @@ public class FileManager implements IFileManager {
     @Override
     public boolean deleteFile(String fileId) {
         IVSFile file = getFileById(fileId);
-        if(storageEngine.deleteFile(file.getFilename(), fileId)) {
+        if(file!=null && storageEngine.deleteFile(file.getFilename(), fileId)) {
             fileRepo.delete((VSFile) file);
             return true;
         }

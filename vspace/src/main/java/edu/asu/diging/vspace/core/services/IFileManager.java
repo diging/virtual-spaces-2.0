@@ -16,7 +16,7 @@ public interface IFileManager {
 
     CreationReturnValue storeFile(byte[] fileContent, String originalFileName, String fileName, String fileDescription);
 
-    Page<VSFile> getAllFiles(int page);
+    Page<IVSFile> getAllFiles(int page);
     
     IVSFile getFileById(String id);
 

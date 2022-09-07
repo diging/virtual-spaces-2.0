@@ -82,10 +82,8 @@ public class FileManagerTest {
         file.setId(fileId);
         files.add(file);
         Pageable requestedPageForFiles = PageRequest.of(0, 10);
-
         when(fileRepo.findAll(requestedPageForFiles)).thenReturn( new PageImpl<VSFile>(files));
-
-        Page<VSFile> filesResponse = serviceToTest.getAllFiles(1);
+        Page<IVSFile> filesResponse = serviceToTest.getAllFiles(1);
         assertEquals(filesResponse.getNumberOfElements(), 1);
         assertEquals(filesResponse.getContent().get(0).getId(), fileId);
 
@@ -100,6 +98,7 @@ public class FileManagerTest {
         when(storageEngine.renameFile(file.getFilename(), "NEW_FILENAME", fileId)).thenReturn(true);
         IVSFile returnedFile = serviceToTest.editFile(fileId, "NEW_FILENAME", fileDescription);                
         assertEquals("NEW_FILENAME", returnedFile.getFilename());
+        assertEquals(fileDescription, returnedFile.getFileDescription());
     }
     
     @Test
