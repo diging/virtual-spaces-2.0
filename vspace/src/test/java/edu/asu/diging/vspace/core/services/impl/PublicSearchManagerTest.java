@@ -24,6 +24,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -242,46 +243,46 @@ public class PublicSearchManagerTest {
     public void test_searchInSlideTexts_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
         Page<ISlide> tempResult = serviceToTest.searchSlideTextsAndPaginate(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
 
     @Test
     public void test_searchInSlideTexts_pageGreaterThanTotalPages() {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
-        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage1, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage1, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
         Page<ISlide> tempResult = serviceToTest.searchSlideTextsAndPaginate(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search);
-        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage1, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage1, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
 
     @Test
     public void test_searchInSlideTexts_negativePage() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "test";
-        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search))
+        when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
         Page<ISlide> tempResult = serviceToTest.searchSlideTextsAndPaginate(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
         assertEquals("SLIDETEXT_ID_1", idList.get(0));
         assertEquals("SLIDETEXT_ID_2", idList.get(1));
-        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search);
+        verify(textContentBlockRepo).findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
    
 }
