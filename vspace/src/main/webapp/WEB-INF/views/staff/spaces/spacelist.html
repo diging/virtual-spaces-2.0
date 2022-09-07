@@ -11,8 +11,10 @@
         onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
         $("#list").hide();
         $("#grid-btn").hide();
+        
         var spaceOrderElement = document.getElementById('spaceOrderMode');
         spaceOrderElement.value=currentCustomMode;
+        
         $(function () {
 	  		  $('[data-toggle="tooltip"]').tooltip()
 	  	});
@@ -59,6 +61,17 @@
 .noIncomingLinks:hover+.noIncomingLinkMessage {
     display: block;
 }
+
+.customOrderLinkContainer {
+	text-align: right;
+	padding-top: 10px;
+}
+
+.customOrderLink:hover {
+	text-decoration: underline;
+	color: blue;
+}
+
 </style>
 </head>
 
@@ -84,17 +97,14 @@
           </select>
           <button type="submit" id="changeOrder" class="btn primary-btn btn-sm">Change Order</button>
 				</form>
+				
+			<div sec:authorize="hasRole('ADMIN')" class="customOrderLinkContainer">
+	            <a th:style="${currentPage == 'users' ? 'active' : '' }"
+	               th:href="@{/staff/space/order}"> 
+	               <span class="customOrderLink">Manage Custom Order</span>
+	            </a>
+			</div>
     	</div>
-        <!-- <div class = "addSequence">
-        <form th:action="@{/staff/space/spaceordermode}" method="POST" name="f" class="form-control col-md-8">
-         <select name="spaceOrderMode" id="spaceOrderMode" style="display: inline-block; height:auto;">
-		  <option value="ALPHABETICAL">Alphabetical</option>
-		  <option value="CREATION_DATE">Creation Date</option>
-		  <option value="CUSTOM">Custom</option>
-		</select>
-		<button type="submit" id="changeOrder" class="btn primary-btn">Change Order</button>
-        </form>
-        </div> -->
         
         </div>           
         

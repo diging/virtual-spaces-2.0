@@ -1,88 +1,74 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+	<style>
+		.customOrderContainer {
+			background: white; 
+			padding: 25px;
+		}
+		.newOrder {
+			float: right;
+		}
+		.customOrderText {
+			padding-bottom:10px;
+		}
+	</style>
 	<script>
 		$(document).ready(function() {
 			$("#successMsgAdded").hide();
 			if(localStorage.getItem("prevUrl").includes("/space/order/add")) {
 				localStorage.setItem("prevUrl", "");
 				$("#successMsgAdded").show();
-	        	 /* setTimeout(function() {
+	        	 setTimeout(function() {
 	        		 $("#successMsgAdded").hide();
-	        	 }, 5000); */
+	        	 }, 5000);
 			}
-	        $("#grid").hide();
-	        $("#list-btn").hide();
 	        
 	        $(function () {
 	  		  $('[data-toggle="tooltip"]').tooltip()
 	  		});
+	        
+	        $("#closeAlertAdded").click(function() {
+				$("#successMsgAdded").hide();
+			});
 	    });
-	    
-	    function list() {
-	    	$("#list").show();
-	    	$("#grid").hide();
-	    	$("#list-btn").hide();
-	    	$("#grid-btn").show();
-	    }
-	    
-	    function grid() {
-	    	$("#list").hide();
-	    	$("#list-btn").show();
-	    	$("#grid-btn").hide();
-	    	$("#grid").show();
-	    }
-	    
-	    $("#closeAlertAdded").click(function() {
-			$("#successMsgAdded").hide();
-		});
 	</script>
 </head>
-<body>
-    <div class="main-content" layout:fragment="content">
-    	<div id="successMsgAdded" class="alert customWindow alert-success">
-			<button type="button" class="close" id="closeAlertAdded"
-	               aria-label="Close">
-	        	<span aria-hidden="true">&times;</span>
-	        </button>
-			"Custom Order has been Added"
-		</div>
-    	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm" style="float: right">+ New Order</a>
-        <h2>Custom Orders for Spaces</h2>
-        <div>This virtual exhibition contains the following custom orders for spaces.</div>
-        
-        <div style="text-align: right">
-        	<button class="btn btn-sm" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
-        		<span class="icon-bulleted-list"></span></button>
-        	<button class="btn btn-sm" onclick="grid()" style="background: white; margin-right: 15px" id="grid-btn">
-        		<span class="icon-grid-block"></span></button>
-        </div>
-        <div class="startSequence" style="padding-bottom: 10px;">
-        <form th:action="@{'/staff/space/order/setDefault'}" method ="POST" name="f" style="text-align: right;">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-					<p>Select Custom Order to be used.</p>
-					<select class="form-control col-md-8" name="selectedCustomOrderId" style="display: inline-block !important; height:auto;">
-						  <option th:value="Select" th:text="Select"></option>
-              <option th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
-          </select>
-          <button type="submit" class="btn primary-btn btn-sm">Submit</button>
-				</form>
-    	</div>
-        <div class="tab sequences" style="margin-top: 0;">
-        
-        <div style="display: flex; justify-content: space-between">
-				<h4>Custom Orders</h4>			
+	<body>
+	    <div class="main-content customOrderContainer" layout:fragment="content">
+	    	<div id="successMsgAdded" class="alert customWindow alert-success">
+				<button type="button" class="close" id="closeAlertAdded" aria-label="Close">
+		        	<span aria-hidden="true">&times;</span>
+		        </button>
+				"Custom Order has been Added"
 			</div>
-      <div id="list" style="margin-top: 0">
-            <ul class="list-group list-group-flush" th:each="order: ${customSpaceOrders}">
-               <li class="list-group-item"><a th:href="@{'/staff/space/order/'+${order.id}}">
-                   <span class="icon-2x2-grid"></span>&emsp;[[${order.customOrderName}]]</a>
-               </li>
-            </ul>
-        </div>
-        
-    </div>
-    </div>
-</body>
+	    	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm newOrder">+ New Order</a>
+	        <h2>Custom Orders for Spaces</h2>
+	        <div class="customOrderText">This virtual exhibition contains the following custom orders for spaces.</div>	        
+	        <div class="startSequence" style="padding-bottom: 10px;">
+		        <form th:action="@{'/staff/space/order/setDefault'}" method ="POST" name="f" style="text-align: right;">
+		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<div style="padding-bottom:10px;">Select Custom Order to be used.</div>
+					<select class="form-control col-md-8" name="selectedCustomOrderId" onfocus='size=10;' onblur='this.size=1;' onchange='this.size=1; this.blur();' style="display: inline-block !important; height:auto; border: 1px solid; width: max-content; margin-right: 6px; position: absolute; right: 10%; z-index: 999;">
+						<option th:value="Select" th:text="Select"></option>
+		            	<option th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
+		          	</select>
+		        	<button type="submit" class="btn primary-btn btn-sm">Submit</button>
+				</form>
+	    	</div>
+	        <div class="tab sequences" style="margin-top: 0;">    
+			    <div style="display: flex; justify-content: space-between">
+					<h4>Custom Orders</h4>			
+				</div>
+			    <div id="list" style="margin-top: 0; overflow-y: scroll; max-height: 315px;">
+		            <ul class="list-group list-group-flush" th:each="order: ${customSpaceOrders}">
+		               <li class="list-group-item"><a th:href="@{'/staff/space/order/'+${order.id}}">
+		                   <span class="icon-2x2-grid"></span>&emsp;[[${order.customOrderName}]]</a>
+		               </li>
+		            </ul>
+			    </div>
+		    </div>
+	    </div>
+	</body>
 </html>
 
 
