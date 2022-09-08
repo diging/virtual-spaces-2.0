@@ -27,6 +27,14 @@
 				position: absolute;
     			top: 8%;
     			width: 65%;
+    			display:none;
+			}
+			.goBackContainer {
+				float: right;
+			}
+			.goBackContainer:hover {
+				cursor: pointer;
+				font-weight: bold;
 			}
 		</style>
 		<link th:href="@{/resources/multiselect/css/multiselect.css}" type="text/css" rel="stylesheet">		    
@@ -101,12 +109,18 @@
 			$("#closeAlertFailed").click(function() {
 				$("#errorMsgFailed").hide();
 			});
-			
+			$("#goBackContainer").click(function() {
+				window.location.href = "[(@{'/staff/space/order'})]";
+			});
 		});
 		</script>
 	</head>
 	<body>
 	    <div id="addNewCustomOrder" class="main-content addNewCustomOrder" layout:fragment="content">
+	    	<div id="goBackContainer" class="goBackContainer">
+		    	<span class="icon-arrow-left" style="font-size: 28px"></span>
+		    	<span style="vertical-align: middle;">Go Back</span>
+	    	</div>
 		    <div id="errorMsgFailed" class="alert customWindow alert-danger errorMsgFailed">
 		    <button type="button" class="close" id="closeAlertFailed"
 	                aria-label="Close">
@@ -116,20 +130,20 @@
 				</div>
 	        <h2>Add New Custom Order</h2>
 	        <div class="form-group row">
-	                <label class="col-md-2 col-form-label" for="name">Order Name</label>
-	                <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" />
-	            </div>
-	            <div class="form-group row">
-	                <label class="col-md-2 col-form-label" for="description">Order Description</label>
-	                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description"></textarea>
-	            </div>
-	            <div class="dragDropText">Drag and drop to arrange spaces</div>
+	            <label class="col-md-2 col-form-label" for="name">Order Name</label>
+	            <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" />
+	        </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="description">Order Description</label>
+                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description"></textarea>
+            </div>
+            <div class="dragDropText">Drag and drop to arrange spaces</div>
 	        <div class="form-group row sortableSpaces" id="sortableSpaces">
-			<div th:each="selectedSpace: ${spaces}"  class="main-content">
-		    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
-		             <p class="para">[[${selectedSpace.name}]]</p>
-			    </div>
-	    	</div>
+				<div th:each="selectedSpace: ${spaces}"  class="main-content">
+			    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+			             <p class="para">[[${selectedSpace.name}]]</p>
+				    </div>
+		    	</div>
 			</div>
 			<div>
 				<button id="createOrder" type="button" class="btn primary-btn">Create Order</button>

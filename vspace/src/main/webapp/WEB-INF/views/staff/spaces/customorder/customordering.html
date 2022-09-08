@@ -11,16 +11,23 @@
 		.customOrderText {
 			padding-bottom:10px;
 		}
+		.successMsgAdded {
+			position: absolute;
+   			top: 8%;
+   			width: 65%;
+   			display:none;
+		}
 	</style>
 	<script>
 		$(document).ready(function() {
-			$("#successMsgAdded").hide();
 			if(localStorage.getItem("prevUrl").includes("/space/order/add")) {
+				$("#successText").text("Custom Order has been successfully added.");
+				showSuccessPopUp();
 				localStorage.setItem("prevUrl", "");
-				$("#successMsgAdded").show();
-	        	 setTimeout(function() {
-	        		 $("#successMsgAdded").hide();
-	        	 }, 5000);
+			} else if(localStorage.getItem("changedCustomOrder") == "true") {
+				$("#successText").text("Custom order has been successfully changed.");
+				showSuccessPopUp();
+				localStorage.setItem("changedCustomOrder", false);
 			}
 	        
 	        $(function () {
@@ -30,16 +37,25 @@
 	        $("#closeAlertAdded").click(function() {
 				$("#successMsgAdded").hide();
 			});
+	        $("#selectCustomOrder").click(function() {
+	        	localStorage.setItem("changedCustomOrder", true);
+	        });
 	    });
+		function showSuccessPopUp() {
+			$("#successMsgAdded").show();
+			setTimeout(function() {
+				$("#successMsgAdded").hide();
+			}, 5000);
+		}
 	</script>
 </head>
 	<body>
 	    <div class="main-content customOrderContainer" layout:fragment="content">
-	    	<div id="successMsgAdded" class="alert customWindow alert-success">
+	    	<div id="successMsgAdded" class="alert customWindow alert-success successMsgAdded">
 				<button type="button" class="close" id="closeAlertAdded" aria-label="Close">
 		        	<span aria-hidden="true">&times;</span>
 		        </button>
-				"Custom Order has been Added"
+				<span id="successText"></span>
 			</div>
 	    	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm newOrder">+ New Order</a>
 	        <h2>Custom Orders for Spaces</h2>
@@ -52,7 +68,7 @@
 						<option th:value="Select" th:text="Select"></option>
 		            	<option th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
 		          	</select>
-		        	<button type="submit" class="btn primary-btn btn-sm">Submit</button>
+		        	<button id="selectCustomOrder" type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 	    	</div>
 	        <div class="tab sequences" style="margin-top: 0;">    
