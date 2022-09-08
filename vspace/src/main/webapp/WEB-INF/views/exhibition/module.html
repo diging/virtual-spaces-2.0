@@ -220,8 +220,10 @@
 				startNodeSequence.name = sequence.name;
 				startNodeSequence.id = sequence.id;
 				startNodeSequence.group = "sequence";
-				//we will use parent identifier as id instead of name
+				
+				
 				startNodeSequence.parent = json.id;
+				
 				let slideIndex = 0;
 				for(slide of sequence.slides){
 					let slideNode = {}
@@ -243,8 +245,10 @@
 							slideNode.sequence = sequence.name;
 						}
 						branchingPointsSet.add(slideNode);
-
+						
+						
 					}
+					
 					slideNode.name = slide.name;
 					slideNode.group = "slide";
 					slideNode.sequenceId = sequence.id;
@@ -269,20 +273,28 @@
 				}
 				if(isStartSequence == true){
 					treeData.children.push(startNodeSequence);
+					
 				}
 				sequencesMap.set(sequence.name, startNodeSequence)
+				
 				return treeData;
 
 			}
                         let treeData = [];
                         treeData.children=[];
                         let startSequence = json['startSequence'];
+                        
 			let otherSequences = json['otherSequences'];
+			
 			let startSequenceslides = [];
 			let isStartSequence = true;
+			
 			treeData = createFromSequence(startSequence, treeData, isStartSequence);
+			
 			isStartSequence = false;
+			
 			for (sequence of otherSequences) {
+			
 			treeData = createFromSequence(sequence, treeData,isStartSequence);
 			}
 			for(branch of branchingPointsSet){
@@ -304,7 +316,7 @@
 
 			var tree = d3.layout.tree()
 				.size([height, width]);
-
+			
 			var diagonal = d3.svg.diagonal()
 				.projection(function(d) { return [d.y, d.x]; });
 
@@ -315,11 +327,12 @@
 				.attr("transform", "translate(" + 208 + "," + margin.top + ")");
 
 			root = treeData;
+			
 			root.x0 = height / 2;
 			root.y0 = 0;
 
 			update(root);
-
+			
 			d3.select(self.frameElement).style("height", "500px");
 
 			function update(source) {
@@ -327,7 +340,12 @@
 			  // Compute the new tree layout.
 			  var nodes = tree.nodes(root).reverse(),
 				  links = tree.links(nodes);
-
+			  console.log("TREE NODE :", nodes);
+			  console.log("LINK :", links);
+			  node = (nodes. splice(nodes. length - 2, 2));
+			  links = (links. splice(0,nodes. length-1));
+			  
+			  console.log("LINK :", links);
 			  // Normalize for fixed-depth.
 			  nodes.forEach(function(d) { d.y = d.depth * 110; });
 
