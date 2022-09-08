@@ -21,7 +21,9 @@ public class EditFileController {
     @RequestMapping(value = "/staff/files/{fileId}/edit", method = RequestMethod.POST)
     public String updateFile(Model model, @PathVariable String fileId, @ModelAttribute FileForm fileForm) {
         IVSFile file = fileManager.editFile(fileId, fileForm.getFileName(), fileForm.getDescription());
-        return "redirect:/staff/files/"+file.getId();
+        model.addAttribute("file", file);
+
+        return "staff/files/file";
     }
     
     @RequestMapping(value = "/staff/files/{fileId}/edit", method = RequestMethod.GET)
