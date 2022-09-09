@@ -2,344 +2,372 @@
 <head>
 <link th:href="@{/resources/multiselect/css/multiselect.css}"
     type="text/css" rel="stylesheet">
-    <link rel="stylesheet"
-            href="https://unpkg.com/easymde/dist/easymde.min.css">
-             <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<link rel="stylesheet"
+        href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <link th:href="@{/resources/extra/Sequence.css}"
     type="text/css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <style type="text/css">
-            .hova {
-            background-color: #f2f2f2;
-            }
-            .EasyMDEContainer .CodeMirror-wrap{
-            overflow-y: scroll;
-            height: 400px;
-            }
-        </style>
+	.hova {
+		background-color: #f2f2f2;
+	}
+	.EasyMDEContainer .CodeMirror-wrap{
+		 overflow-y: scroll;
+		 height: 400px;
+	}
+	.editCustomOrder {
+		background: white;
+		padding: 25px 40px;
+	}
+	.sortableSpaces {
+		max-height: 385px;
+		overflow-y: scroll;
+	}
+	.paraContent {
+		cursor: pointer;
+		border: 1px solid;
+		padding: 15px;
+		margin-top: 20px;
+	}
+	.para {
+		margin: 0;
+	}
+	.createdDates {
+		margin-bottom: 0;
+	}
+	.goBackContainer {
+		float: right;
+	}
+	.goBackContainer:hover {
+		cursor: pointer;
+		font-weight: bold;
+	}
+</style>
 
 <script th:inline="javascript">
-let spaceDivs=[];
- $(document).ready(function() {
-	 $("#errorMsgDelete").hide();
-	 $("#errorMsgSave").hide();
- spaceDivs = document.getElementById('sortableSpaces').children;
-	var spaceIds = [];
-	let index =0;
-	 for(ele of spaceDivs){
-		spaceIds.push(spaceDivs[index].children[0].id);
-		index++;
-	} 
-	 spaceDivs=[];
-	 spaceDivs = spaceIds;
+	let spaceDivs=[];
+	 $(document).ready(function() {
+		 $("#errorMsgDelete").hide();
+		 $("#errorMsgSave").hide();
+	 spaceDivs = document.getElementById('sortableSpaces').children;
+		var spaceIds = [];
+		let index =0;
+		 for(ele of spaceDivs){
+			spaceIds.push(spaceDivs[index].children[0].id);
+			index++;
+		} 
+		 spaceDivs=[];
+		 spaceDivs = spaceIds;
+		
+	//-------- edit contentblock description custom order Space starts --------
+	$("#submitDescription").hide()
+	$("#cancelEditDescription").hide()	
 	
-//-------- edit contentblock description custom order Space starts --------
-$("#submitDescription").hide()
-$("#cancelEditDescription").hide()	
-
-$("#editDescription").click(function() {
-	
-	// using data-attributes
-	var description = $("#description").text()  // gets value
-    $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
-    $("#description").hide()
-    $("#newDescription").val(description)
-    $("#editDescription").hide()
-    $("#submitDescription").show()
-    $("#cancelEditDescription").show()
-    
-    
-});
-
-//--- Submit Description ------
-
-$("#submitDescription").click(function() {
-    var formData = new FormData();
-    formData.append('description', $("#newDescription").val());
-    $.ajax({
-    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/description'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-    type: 'POST',
-    cache       : false,
-    contentType : false,
-    processData : false,
-    data: formData,
-    enctype: 'multipart/form-data',
-    success: function(data) {
-        // replace text box with new description
-        $("#submitDescription").hide()
-        $("#cancelEditDescription").hide()
-        $("#editDescription").show()
-        var val = $("#newDescription").val();
-        $("#description").text(val);
-        $("#editDescription").show()
-        $("#description").show() 
-        $("#description").data('value',val);
-        $("#newDescription").remove()
-    },
-    error: function(data) {
-        $(".open").removeClass("open");
-            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            $('.error').append(alert);
-        }
-    });
-    
-});
-
-// ---- Cancel Edited Description ----
-
-$("#cancelEditDescription").click(function(){
-    $("#submitDescription").hide()
-    $("#editDescription").show()
-    $("#cancelEditDescription").hide()
-    $("#newDescription").remove()
-    $("#description").show()
-    
-});
-
-// ------- Edit/Save/Cancel Description ends --------
-
-
-
-//------- edit name of custom space order starts --------
-
-$("#submitTitle").hide();
-$("#cancelEditTitle").hide();
-
-$("#editTitle").click(function() {
-	// Using data attribute
-	var spaceCustomOrderTitle = $("#title").text()  // gets value without using trim function
-    $('<div class="col-4" id = "editSpaceCustomOrderTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-	$('#title').text()
-    $("#newTitle").val(spaceCustomOrderTitle.split(": ")[1])
-    $("#editTitle").hide()
-    $("#submitTitle").show()
-    $("#cancelEditTitle").show()
-});
-	
-	
-	
-// ------ Submit title Custom Space Order -------
-	
-$("#submitTitle").click(function() {
-    var formData = new FormData();
-    formData.append('title', $("#newTitle").val());
-    $.ajax({
-        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/title'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-        type: 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        enctype: 'multipart/form-data',
-        beforeSend: function(){
-        	$(".blur").css("filter","blur(3px)");
-        	$("#spinner").show();
-        },
-        complete: function(){
-        	$("#spinner").hide();
-        	$(".blur").css("filter","none");
-        },
-        success: function(data) {
-            // replace text box with new description
-            $("#submitTitle").hide()
-            $("#cancelEditTitle").hide();
-            $("#editTitle").show()
-            var val = $("#newTitle").val();
-            $("#editSpaceCustomOrderTitle").remove()
-            $("#title").text("SpaceCustomOrder: " + val)
-            $("#title").data('value', val)  // sets value
-        },
-        error: function(data) {
-            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            $('.error').append(alert);
-        }
-    });
-            
-  });
-  
-$("#cancelEditTitle").click(function(){
-    $("#submitTitle").hide()
-    $("#editTitle").show()
-    $("#editSpaceCustomOrderTitle").hide()
-    $("#cancelEditTitle").hide()
-    var spaceCustomOrderTitle = $("#title").text()  // gets value
-    $("#editSequenceTitle").remove()
-    $("#title").text(spaceCustomOrderTitle)
-    
-    });
-$("#sortableSpaces").sortable({
-  	update: function(event,ui) {
-  		spaceDivs = [];
-      	$(this).children().each(function(index,element){
-      		spaceDivs.push(element.children[0].id);
-      	});
-  	}
+	$("#editDescription").click(function() {
+		
+		// using data-attributes
+		var description = $("#description").text()  // gets value
+	    $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text" data-value="">'+description+'</textarea>').insertBefore( "#description" );
+	    $("#description").hide()
+	    $("#newDescription").val(description)
+	    $("#editDescription").hide()
+	    $("#submitDescription").show()
+	    $("#cancelEditDescription").show()
+	    
+	    
 	});
 	
-//save order
-$("#saveOrder").click(function() {
-	var formData = new FormData();
-    formData.append('spaceOrder', spaceDivs);
-    $.ajax({
-        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-        type: 'POST',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        enctype: 'multipart/form-data',
-        beforeSend: function(){
-        	$(".blur").css("filter","blur(3px)");
-        	$("#spinner").show();
-        },
-        complete: function(){
-        	$("#spinner").hide();
-        	$(".blur").css("filter","none");
-        },
-        success: function(data) {
-        	$("#errorMsgSave").show();
-        	},
-        error: function(data) {
-            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            $('.error').append(alert);
-        }
-    });
-            
-  });
-  
-  
-//save order
-$("#deleteOrder").click(function() {
-	var formData = new FormData();
-    $.ajax({
-        url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-        type: 'DELETE',
-        cache       : false,
-        contentType : false,
-        processData : false,
-        data: formData,
-        enctype: 'multipart/form-data',
-        beforeSend: function(){
-        	$(".blur").css("filter","blur(3px)");
-        	$("#spinner").show();
-        },
-        complete: function(){
-        	$("#spinner").hide();
-        	$(".blur").css("filter","none");
-        },
-        success: function(data) {
-        	$("#title").hide();
-        	$("#description").hide();
-        	$("#sortableSpaces").hide();
-        	$("#saveOrder").hide();
-        	$("#deleteOrder").hide();
-        	$("#createdDates").hide();
-        	$("#draganddrop").hide();
-        	$("#dropdowns").hide();
-        	$("#errorMsgDelete").show();
-        	
-        	
-        },
-        error: function(data) {
-            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            $('.error').append(alert);
-        }
-    });
-            
-  });
-  
-$("#closeAlertDelete").click(function() {
-    $('#errorMsgDelete').hide();
-});
-
-$("#closeAlertSave").click(function() {
-    $('#errorMsgSave').hide();
-});
+	//--- Submit Description ------
 	
-});
- 
-
-  
-
-
-
-// ------  Edit Title Space Custom Order ------
-
-
-
-
-
-	</script>
+	$("#submitDescription").click(function() {
+	    var formData = new FormData();
+	    formData.append('description', $("#newDescription").val());
+	    $.ajax({
+	    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/description'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	    type: 'POST',
+	    cache       : false,
+	    contentType : false,
+	    processData : false,
+	    data: formData,
+	    enctype: 'multipart/form-data',
+	    success: function(data) {
+	        // replace text box with new description
+	        $("#submitDescription").hide()
+	        $("#cancelEditDescription").hide()
+	        $("#editDescription").show()
+	        var val = $("#newDescription").val();
+	        $("#description").text(val);
+	        $("#editDescription").show()
+	        $("#description").show() 
+	        $("#description").data('value',val);
+	        $("#newDescription").remove()
+	    },
+	    error: function(data) {
+	        $(".open").removeClass("open");
+	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	            $('.error').append(alert);
+	        }
+	    });
+	    
+	});
+	
+	// ---- Cancel Edited Description ----
+	
+	$("#cancelEditDescription").click(function(){
+	    $("#submitDescription").hide()
+	    $("#editDescription").show()
+	    $("#cancelEditDescription").hide()
+	    $("#newDescription").remove()
+	    $("#description").show()
+	    
+	});
+	
+	// ------- Edit/Save/Cancel Description ends --------
+	
+	
+	
+	//------- edit name of custom space order starts --------
+	
+	$("#submitTitle").hide();
+	$("#cancelEditTitle").hide();
+	
+	$("#editTitle").click(function() {
+		// Using data attribute
+		var spaceCustomOrderTitle = $("#title").text()  // gets value without using trim function
+	    $('<div class="col-4" id = "editSpaceCustomOrderTitle"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+		$('#title').text()
+	    $("#newTitle").val(spaceCustomOrderTitle.split(": ")[1])
+	    $("#editTitle").hide()
+	    $("#submitTitle").show()
+	    $("#cancelEditTitle").show()
+	});
+		
+		
+		
+	// ------ Submit title Custom Space Order -------
+		
+	$("#submitTitle").click(function() {
+	    var formData = new FormData();
+	    formData.append('title', $("#newTitle").val());
+	    $.ajax({
+	        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/title'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData,
+	        enctype: 'multipart/form-data',
+	        beforeSend: function(){
+	        	$(".blur").css("filter","blur(3px)");
+	        	$("#spinner").show();
+	        },
+	        complete: function(){
+	        	$("#spinner").hide();
+	        	$(".blur").css("filter","none");
+	        },
+	        success: function(data) {
+	            // replace text box with new description
+	            $("#submitTitle").hide()
+	            $("#cancelEditTitle").hide();
+	            $("#editTitle").show()
+	            var val = $("#newTitle").val();
+	            $("#editSpaceCustomOrderTitle").remove()
+	            $("#title").text("SpaceCustomOrder: " + val)
+	            $("#title").data('value', val)  // sets value
+	        },
+	        error: function(data) {
+	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	            $('.error').append(alert);
+	        }
+	    });
+	            
+	  });
+	  
+	$("#cancelEditTitle").click(function(){
+	    $("#submitTitle").hide()
+	    $("#editTitle").show()
+	    $("#editSpaceCustomOrderTitle").hide()
+	    $("#cancelEditTitle").hide()
+	    var spaceCustomOrderTitle = $("#title").text()  // gets value
+	    $("#editSequenceTitle").remove()
+	    $("#title").text(spaceCustomOrderTitle)
+	    
+	    });
+	$("#sortableSpaces").sortable({
+	  	update: function(event,ui) {
+	  		spaceDivs = [];
+	      	$(this).children().each(function(index,element){
+	      		spaceDivs.push(element.children[0].id);
+	      	});
+	  	}
+		});
+		
+	//save order
+	$("#saveOrder").click(function() {
+		var formData = new FormData();
+	    formData.append('spaceOrder', spaceDivs);
+	    $.ajax({
+	        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	        type: 'POST',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData,
+	        enctype: 'multipart/form-data',
+	        beforeSend: function(){
+	        	$(".blur").css("filter","blur(3px)");
+	        	$("#spinner").show();
+	        },
+	        complete: function(){
+	        	$("#spinner").hide();
+	        	$(".blur").css("filter","none");
+	        },
+	        success: function(data) {
+	        	$("#errorMsgSave").show();
+	        	},
+	        error: function(data) {
+	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	            $('.error').append(alert);
+	        }
+	    });
+	            
+	  });
+	  
+	  
+	//save order
+	$("#deleteOrder").click(function() {
+		var formData = new FormData();
+	    $.ajax({
+	        url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+	        type: 'DELETE',
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        data: formData,
+	        enctype: 'multipart/form-data',
+	        beforeSend: function(){
+	        	$(".blur").css("filter","blur(3px)");
+	        	$("#spinner").show();
+	        },
+	        complete: function(){
+	        	$("#spinner").hide();
+	        	$(".blur").css("filter","none");
+	        },
+	        success: function(data) {
+	        	$("#title").hide();
+	        	$("#description").hide();
+	        	$("#sortableSpaces").hide();
+	        	$("#saveOrder").hide();
+	        	$("#deleteOrder").hide();
+	        	$("#createdDates").hide();
+	        	$("#draganddrop").hide();
+	        	$("#dropdowns").hide();
+	        	$("#errorMsgDelete").show();
+	        	
+	        	
+	        },
+	        error: function(data) {
+	            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+	            $('.error').append(alert);
+	        }
+	    });
+	            
+	  });
+	  
+		$("#closeAlertDelete").click(function() {
+		    $('#errorMsgDelete').hide();
+		});
+		
+		$("#closeAlertSave").click(function() {
+		    $('#errorMsgSave').hide();
+		});
+		
+		$("#goBackContainer").click(function() {
+			window.location.href = "[(@{'/staff/space/order'})]";
+		});
+		
+		if([[${customSpaceOrder.description}]] == "") {
+			$("#description").hide();
+		}
+	});
+</script>
 </head>
 
-<body>
-	<div layout:fragment="content" class="main-content">
-		<div id="errorMsgDelete" class="alert customWindow alert-success">
-		"Custom Order has been deleted"
-		 <button type="button" class="close" id="closeAlertDelete"
-                aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-		</div>
-		<div id="errorMsgSave" class="alert customWindow alert-success">
-		"Custom Order has been Saved"
-		<button type="button" class="close" id="closeAlertSave"
-                aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-		</div>
-		<div class ="blur">
-			<div style="display: flex; margin-bottom: 20px">
-				<div>		
-					<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Custom Space Order:</span> [[${customSpaceOrder.customOrderName}]]</h2>
-					<p id="description"> [[${customSpaceOrder.description}]]</p>
-					<button id="submitDescription" type="button"
-						class="btn primary-btn btn-sm"
-						style="margin-top: 1%; margin-bottom: 1%;">Save</button>
-					<button id="cancelEditDescription" type="button"
-						class="btn primary-btn btn-sm"
-						style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
-				</div>				
-					
-				<div id="dropdowns" class="dropdown">
-					<button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="icon-caret-down" style="font-size: 16px"></span>
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<a id="editTitle" class="dropdown-item" href="#"><span class="icon-edit"></span>&emsp; Edit Spaces Custom Order title</a>
-						<a id="editDescription" class="dropdown-item" href="#"><span class="icon-edit"></span>&emsp; Edit slide description</a>
+	<body>
+		<div layout:fragment="content" class="main-content editCustomOrder">
+			<div id="goBackContainer" class="goBackContainer">
+		    	<span class="icon-arrow-left" style="font-size: 28px"></span>
+		    	<span style="vertical-align: middle;">Go Back</span>
+	    	</div>
+			<div id="errorMsgDelete" class="alert customWindow alert-success">
+				"Custom Order has been deleted"
+				<button type="button" class="close" id="closeAlertDelete" aria-label="Close">
+	                <span aria-hidden="true">&times;</span>
+	            </button>
+			</div>
+			<div id="errorMsgSave" class="alert customWindow alert-success">
+			"Custom Order has been Saved"
+			<button type="button" class="close" id="closeAlertSave"
+	                aria-label="Close">
+	                <span aria-hidden="true">&times;</span>
+	            </button>
+			</div>
+			<div class ="blur">
+				<div style="display: flex;">
+					<div>		
+						<h2 id="title" style="margin-right: 20px"><span style="color: var(--dark-grey)">Custom Space Order:</span> [[${customSpaceOrder.customOrderName}]]</h2>
+						<p id="description" class="para">[[${customSpaceOrder.description}]]</p>
+						<button id="submitDescription" type="button"
+							class="btn primary-btn btn-sm"
+							style="margin-top: 1%; margin-bottom: 1%;">Save</button>
+						<button id="cancelEditDescription" type="button"
+							class="btn primary-btn btn-sm"
+							style="margin-top: 1%; margin-bottom: 1%; margin-left: 1%;">Cancel</button>
+					</div>				
+						
+					<!-- <div id="dropdowns" class="dropdown">
+						<button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="icon-caret-down" style="font-size: 16px"></span>
+						</button>
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<a id="editTitle" class="dropdown-item" href="#"><span class="icon-edit"></span>Edit title</a>
+							<a id="editDescription" class="dropdown-item" href="#"><span class="icon-edit"></span>Edit description</a>
+						</div>
+					</div> -->
+					<div>
+						<a href="#"><span class="icon-edit"></span>Edit</a>
 					</div>
+						
+					<button id="submitTitle" type="button" class="btn primary-btn"
+						style="float: left; margin-right: 1%;">Save</button>
+					<button id="cancelEditTitle" type="button" class="btn primary-btn"
+						style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
 				</div>
-					
-				<button id="submitTitle" type="button" class="btn primary-btn"
-					style="float: left; margin-right: 1%;">Save</button>
-				<button id="cancelEditTitle" type="button" class="btn primary-btn"
-					style="margin-top: 1%; margin-bottom: 1%; margin-left: .5rem;">Cancel</button>
+				<div id="createdDates" class="alert alert-light createdDates" role="alert">
+					Created on <span class="date">[[${customSpaceOrder.creationDate}]]</span> by
+					[[${customSpaceOrder.createdBy}]].<br> Modified on <span class="date">[[${customSpaceOrder.modificationDate}]]</span>
+					by [[${customSpaceOrder.modifiedBy}]].
+				</div>
 			</div>
-			<div id="createdDates" class="alert alert-light" role="alert">
-				Created on <span class="date">[[${customSpaceOrder.creationDate}]]</span> by
-				[[${customSpaceOrder.createdBy}]].<br> Modified on <span class="date">[[${customSpaceOrder.modificationDate}]]</span>
-				by [[${customSpaceOrder.modifiedBy}]].
+			<div id="draganddrop">
+			<span>Drag and drop to arrange spaces</span>
 			</div>
+			<div id="sortableSpaces" class="sortableSpaces">
+				<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
+			    	<div  th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+			             <p class="para">[[${selectedSpace.name}]]</p>
+				    </div>
+		    	</div>
+			</div>
+			<div style="padding-top:20px;">
+				<button id="saveOrder" type="button" class="btn primary-btn" style="float: left; margin-right: 1%;">Save Order</button>
+		        <button type="button" id="deleteOrder"  class="btn primary-btn ">
+		        	<i class="icon-trash" style="font-size: 1.3rem;vertical-align: text-bottom;padding-right: 3px;"></i>Delete Order
+		        </button>
+	        </div>
 		</div>
-		<div id="draganddrop">
-		<span>Drag and drop to arrange spaces</span>
-		</div>
-		<div id="sortableSpaces">
-		<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
-	    	<div  style="cursor: pointer;" th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row" >
-	             <p class="col-md-10">[[${selectedSpace.name}]]</p>
-		    </div>
-    	</div>
-		</div>
-		<button id="saveOrder" type="button" class="btn primary-btn"
-					style="float: left; margin-right: 1%;">Save Order</button>
-            <button type="button" id="deleteOrder"  class="btn primary-btn "><i class="fa fa-trash"></i>&emsp;Delete Order</button>
-        
-		
-		</div>
-	</div>
-</body>
+	</body>
 </html>
