@@ -23,15 +23,15 @@ public class ImageSearchApiController {
 	public ResponseEntity<String> searchImage(@RequestParam(value = "term", required = false) String searchTerm) {
         List<IVSImage> images = null;
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-        	images = imageService.findByFilenameOrNameContains(searchTerm);
+            images = imageService.findByFilenameOrNameContains(searchTerm);
         }
         else {
-        	images = imageService.getImages(1);
+            images = imageService.getImages(1);
         }
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode idArray = mapper.createArrayNode();
         for (IVSImage image : images) {
-        	ObjectNode imageNode = mapper.createObjectNode();
+            ObjectNode imageNode = mapper.createObjectNode();
             imageNode.put("id", image.getId());
             if (image.getName() != null && !image.getName().isEmpty()) {
             	imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");

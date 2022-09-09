@@ -216,7 +216,7 @@ public class ImageService implements IImageService {
      */
     @Override
     public int validatePageNumber(int pageNo, List < IVSImage > images) {
-        long totalPages = getTotalPages(images);;
+        long totalPages = getTotalPages(images);
         if (pageNo < 1) {
             return 1;
         } else if (pageNo > totalPages) {

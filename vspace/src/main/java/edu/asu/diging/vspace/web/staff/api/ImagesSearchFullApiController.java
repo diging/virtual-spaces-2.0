@@ -36,18 +36,18 @@ public class ImagesSearchFullApiController {
 			RedirectAttributes attributes) {
     	List<IVSImage> images = null;
     	if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-    		images = imageService.search(searchTerm);
+            images = imageService.search(searchTerm);
     	}
     	else {
-    		images = imageService.getImages(1);
+            images = imageService.getImages(1);
     	}
     	int pageNo;
     	page = StringUtils.isEmpty(page) ? "1" : page;
     	try {
-    		pageNo = imageService.validatePageNumber(Integer.parseInt(page), images);
+            pageNo = imageService.validatePageNumber(Integer.parseInt(page), images);
     	}
     	catch (NumberFormatException numberFormatException) {
-    		pageNo = 1;
+            pageNo = 1;
     	}
     	model.addAttribute("totalPages", imageService.getTotalPages(images));
         model.addAttribute("currentPageNumber", pageNo);
@@ -55,10 +55,10 @@ public class ImagesSearchFullApiController {
         List<IVSImage> imageResults = imageService.getImagesForPagination(pageNo, images, searchTerm);
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for (IVSImage image : imageResults) {
-        	List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
-        	if (spaces != null && spaces.size() > 0) {
-        		imageToSpaces.put(image.getId(), spaces);
-        	}
+            List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
+            if (spaces != null && spaces.size() > 0) {
+                imageToSpaces.put(image.getId(), spaces);
+            }
         }
         model.addAttribute("imageToSpaces", imageToSpaces);
         model.addAttribute("images", imageResults);
