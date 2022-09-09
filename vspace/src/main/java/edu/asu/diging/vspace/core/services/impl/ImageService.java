@@ -136,7 +136,7 @@ public class ImageService implements IImageService {
         }
         List < IVSImage > results = new ArrayList < > ();
         if (images != null) {
-            images.getContent().forEach(i - > results.add(i));
+            images.getContent().forEach(i -> results.add(i));
         }
         return results;
     }
@@ -249,7 +249,7 @@ public class ImageService implements IImageService {
      */
     @Override
     public IVSImage getImageById(String imageId) throws ImageDoesNotExistException {
-        Optional < VSImage > imageOptional = imageRepo.findById(imageId);
+        Optional <VSImage> imageOptional = imageRepo.findById(imageId);
         if (imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
@@ -258,18 +258,18 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public List < IVSImage > findByFilenameOrNameContains(String searchTerm) {
+    public List <IVSImage> findByFilenameOrNameContains(String searchTerm) {
         String likeSearchTerm = "%" + searchTerm + "%";
-        List < VSImage > results = imageRepo.findByFilenameLikeOrNameLike(likeSearchTerm, likeSearchTerm);
-        List < IVSImage > imageResults = new ArrayList < > ();
-        results.forEach(r - > imageResults.add(r));
+        List <VSImage> results = imageRepo.findByFilenameLikeOrNameLike(likeSearchTerm, likeSearchTerm);
+        List <IVSImage> imageResults = new ArrayList <> ();
+        results.forEach(r -> imageResults.add(r));
         return imageResults;
     }
 
     @Override
     public void addCategory(IVSImage image, ImageCategory category) {
         if (image.getCategories() == null) {
-            image.setCategories(new ArrayList < > ());
+            image.setCategories(new ArrayList <> ());
         }
 
         if (!image.getCategories().contains(category)) {
@@ -291,12 +291,12 @@ public class ImageService implements IImageService {
      * @return list of images based on the search string.
      */
     @Override
-    public List < IVSImage > search(String searchTerm) {
+    public List <IVSImage> search(String searchTerm) {
         String likeSearchTerm = "%" + searchTerm + "%";
-        List < VSImage > results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,
+        List <VSImage> results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm,
             likeSearchTerm);
-        List < IVSImage > imageResults = new ArrayList < > ();
-        results.forEach(r - > imageResults.add(r));
+        List <IVSImage> imageResults = new ArrayList <> ();
+        results.forEach(r -> imageResults.add(r));
         return imageResults;
     }
 
@@ -310,15 +310,15 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List < IVSImage > getImagesForPagination(int pageNo, List < IVSImage > images, String searchTerm) {
+    public List <IVSImage> getImagesForPagination(int pageNo, List <IVSImage> images, String searchTerm) {
         pageNo = validatePageNumber(pageNo, images);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize);
         String likeSearchTerm = "%" + searchTerm + "%";
-        Page < VSImage > result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
+        Page <VSImage> result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
             likeSearchTerm, likeSearchTerm, likeSearchTerm);
-        List < IVSImage > imageResults = new ArrayList < > ();
+        List <IVSImage> imageResults = new ArrayList <> ();
         if (result != null) {
-            result.getContent().forEach(i - > imageResults.add(i));
+            result.getContent().forEach(i -> imageResults.add(i));
         }
         return imageResults;
     }
