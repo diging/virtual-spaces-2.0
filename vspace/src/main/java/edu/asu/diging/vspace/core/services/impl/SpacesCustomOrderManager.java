@@ -86,13 +86,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      *This method updates the custom order name or description
      */
     @Override
-    public void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String value, String field) {
+    public void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String title, String description) {
         SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
-        if(field == "name") {
-            spaceCustomOrder.setCustomOrderName(value);
-        } else {
-            spaceCustomOrder.setDescription(value);
-        }
+        spaceCustomOrder.setCustomOrderName(title);
+        spaceCustomOrder.setDescription(description);
         spacesCustomOrderRepository.save(spaceCustomOrder);
     }
 

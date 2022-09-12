@@ -15,7 +15,7 @@ public interface ISpacesCustomOrderManager {
 
     SpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId);
 
-    void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String value, String field);
+    void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String title, String description);
 
     void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spaceOrders);
 
