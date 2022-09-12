@@ -280,6 +280,7 @@
 				return treeData;
 
 			}
+			 console.log(json);
                         let treeData = [];
                         treeData.children=[];
                         let startSequence = json['startSequence'];
@@ -340,10 +341,11 @@
 			  // Compute the new tree layout.
 			  var nodes = tree.nodes(root).reverse(),
 				  links = tree.links(nodes);
+			  
 			  console.log("TREE NODE :", nodes);
 			  console.log("LINK :", links);
-			  node = (nodes. splice(nodes. length - 2, 2));
-			  links = (links. splice(0,nodes. length-1));
+			 //node = (nodes. splice(nodes. length - 2, 2));
+			 //links = (links. splice(0,nodes. length-1));
 			  
 			  console.log("LINK :", links);
 			  // Normalize for fixed-depth.

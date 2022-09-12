@@ -32,10 +32,13 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
     public ModuleOverview showModuleMap(String id) {
         IModule module = moduleManager.getModule(id);
         ISequence startSequence = module.getStartSequence();
+        
         List<ISequence> sequences = moduleManager.getModuleSequences(id);
+        
         SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
         List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
         for(ISequence sequence : sequences) {
+            
             if(sequence != startSequence) {
                 otherSequences.add(createSequenceOverviewNode(sequence));
             }
@@ -43,6 +46,8 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
         ModuleOverview moduleOverviewJson = new ModuleOverview();
         moduleOverviewJson.setStartSequence(startSequenceNode);
         moduleOverviewJson.setOtherSequences(otherSequences);
+        System.out.println(moduleOverviewJson.getStartSequence().getName());
+        System.out.println(otherSequences.get(0));
         return moduleOverviewJson;
     }
     
@@ -74,6 +79,7 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
             
             
             slideOverviews.add(slideOverview);
+            
         } 
         return slideOverviews;
     }
