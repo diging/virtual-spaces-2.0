@@ -17,11 +17,36 @@
    			width: 65%;
    			display:none;
 		}
+		.spaceDropdownSelect {
+			display: inline-block !important; 
+			height: auto; 
+			border: 1px solid; 
+			width: 11%; 
+			margin-right: 6px; 
+			position: absolute; 
+			right: 10%; 
+			z-index: 999; 
+			padding: 0;
+			border-radius: 4px;
+		}
+		.customOrderList:hover, .spaceDropdownOption:hover {
+			background: #D3D3D3;	
+		}
+		.spaceListItem {
+			vertical-align: text-top;
+		}
+		.spaceListItem:hover {
+			font-weight: bold;
+		}
 	</style>
 	<script>
 		$(document).ready(function() {
-			if(localStorage.getItem("prevUrl").includes("/space/order/add")) {
-				$("#successText").text("Custom Order has been successfully added.");
+			if(localStorage.getItem("prevUrl")) {
+				if(localStorage.getItem("prevUrl").includes("/space/order/add")) {
+					$("#successText").text("Custom Order has been successfully added.");
+				} else if(localStorage.getItem("prevUrl").includes("/space/order/deletedOrder")) {
+					$("#successText").text("Custom Order has been successfully deleted.");
+				}
 				showSuccessPopUp();
 				localStorage.setItem("prevUrl", "");
 			} else if(localStorage.getItem("changedCustomOrder") == "true") {
@@ -63,10 +88,10 @@
 	        <div class="startSequence" style="padding-bottom: 10px;">
 		        <form th:action="@{'/staff/space/order/setDefault'}" method ="POST" name="f" style="text-align: right;">
 		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-					<div style="padding-bottom:10px;">Select Custom Order to be used.</div>
-					<select class="form-control col-md-8" name="selectedCustomOrderId" onfocus='size=10;' onblur='this.size=1;' onchange='this.size=1; this.blur();' style="display: inline-block !important; height:auto; border: 1px solid; width: max-content; margin-right: 6px; position: absolute; right: 10%; z-index: 999;">
-						<option th:value="Select" th:text="Select"></option>
-		            	<option th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
+					<div style="padding-bottom:10px; padding-right: 6px;">Select Custom Order to be used</div>
+					<select class="spaceDropdownSelect" name="selectedCustomOrderId" onfocus='size=10;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+						<option class="spaceDropdownOption" th:value="Select" th:text="Select"></option>
+		            	<option class="spaceDropdownOption" th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
 		          	</select>
 		        	<button id="selectCustomOrder" type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
@@ -77,9 +102,12 @@
 				</div>
 			    <div id="list" style="margin-top: 0; overflow-y: scroll; max-height: 315px;">
 		            <ul class="list-group list-group-flush" th:each="order: ${customSpaceOrders}">
-		               <li class="list-group-item"><a th:href="@{'/staff/space/order/'+${order.id}}">
-		                   <span class="icon-2x2-grid"></span>&emsp;[[${order.customOrderName}]]</a>
-		               </li>
+		            	<li class="list-group-item customOrderList">
+		               		<a th:href="@{'/staff/space/order/'+${order.id}}">
+		                   		<span class="icon-2x2-grid">&emsp;</span>
+		                   		<span class="spaceListItem">[[${order.customOrderName}]]</span>
+		               		</a>
+		            	</li>
 		            </ul>
 			    </div>
 		    </div>

@@ -38,41 +38,41 @@
     
 </script>
 <style>
-.unpublishedtooltiptext {
-    display: none;
-    color: var(--secondary);
-    font-weight: bold;
-    font-size: 0.875rem;
-    float: left;
-}
-
-.unpublishedSpaceClass:hover+.unpublishedtooltiptext {
-    display: block;
-}
-
-.noIncomingLinkMessage {
-    display: none;
-    color: var(--secondary);
-    font-weight: bold;
-    font-size: 0.875rem;
-    float: left;
-}
-
-.noIncomingLinks:hover+.noIncomingLinkMessage {
-    display: block;
-}
-
-.customOrderLinkContainer {
-	text-align: right;
-	padding: 15px 0;
-}
-
-.customOrderLink {
-	text-decoration: underline;
-}
-.customOrderLink:hover {
-	color: blue;
-}
+	.unpublishedtooltiptext {
+	    display: none;
+	    color: var(--secondary);
+	    font-weight: bold;
+	    font-size: 0.875rem;
+	    float: left;
+	}
+	
+	.unpublishedSpaceClass:hover+.unpublishedtooltiptext {
+	    display: block;
+	}
+	
+	.noIncomingLinkMessage {
+	    display: none;
+	    color: var(--secondary);
+	    font-weight: bold;
+	    font-size: 0.875rem;
+	    float: left;
+	}
+	
+	.noIncomingLinks:hover+.noIncomingLinkMessage {
+	    display: block;
+	}
+	
+	.customOrderLinkContainer {
+		text-align: right;
+		padding: 15px 0;
+	}
+	
+	.customOrderLink {
+		text-decoration: underline;
+	}
+	.customOrderLink:hover {
+		color: blue;
+	}
 
 </style>
 </head>
@@ -154,9 +154,8 @@
         	<ul class="list-group list-group-flush" th:each="space: ${spaces}">
 	            <li class="list-group-item"><span class="icon-play-circle secondary"
 	                th:if="${startSpace != null and space.id == startSpace.id}"></span>
-	                <a  th:href="@{'/staff/space/'+${space.id}}"> <span
-	                    data-feather="box"
-	                    th:if="${startSpace != null and space.id != startSpace.id}"></span>
+	                <a th:href="@{'/staff/space/'+${space.id}}"> 
+	                <span data-feather="box" th:if="${startSpace != null and space.id != startSpace.id}"></span>
 	                    &emsp;[[${space.name}]]
 	            	</a> (Created on <span class="date">[[${space.creationDate}]]</span>
 	                by [[${space.createdBy}]])
