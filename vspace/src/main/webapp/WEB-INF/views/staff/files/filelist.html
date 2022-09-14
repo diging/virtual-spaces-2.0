@@ -46,23 +46,39 @@ function deleteFile(fileid){
 
 $(document).ready(function($) {
 	
-	   $(function () {
-	  		  $('[data-toggle="tooltip"]').tooltip()
-	  		});
-	        
-	
-    var editFileTooltip = document.getElementById('editFileTooltip');    
-    editFileTooltip.title="Edit File";
-    var deleteFileTooltip = document.getElementById('deleteFileTooltip');    
-    deleteFileTooltip.title="Delete File";
-	
-    var downloadFileTooltip = document.getElementById('downloadFileTooltip');    
-    downloadFileTooltip.title="Download File";
-    
-    
-    $("#deleteFileButton").on("click", function() {
-		$('#deleteFileAlert').modal('show');
+   	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
 	});
+        
+	
+    var editFileTooltips = document.getElementsByClassName('editFileTooltip'); 
+    var deleteFileTooltips = document.getElementsByClassName('deleteFileTooltip'); 
+    var downloadFileTooltips = document.getElementsByClassName('downloadFileTooltip');    
+
+    
+    for (let i = 0; i < editFileTooltips.length; i++) {
+    	  editFileTooltips[i].title =  "Edit File";
+    	  deleteFileTooltips[i].title = "Delete File";
+    	  downloadFileTooltips[i].title = "Download File";
+    }
+    
+  	var fileId;
+    $(".deleteFileTooltip").on("click", function() {
+		$('#deleteFileAlert').modal('show');
+		 fileId = $(this).attr("value");
+	});
+    
+    $("#deleteFileButtonConfirm").on("click", function() {
+		$('#deleteFileAlert').modal('hide');
+		deleteFile(fileId);
+	});
+    
+    
+    $("#cancelFileDelButton").click(function () {
+        $("#deleteFileAlert").data('value', 0);
+        $("#deleteFileAlert").modal('hide');
+	});
+	
     
 	$("#files").addClass("active");	
 	$('.filePage-selection').bootpag({
@@ -145,9 +161,9 @@ a.nav-link.active.show {
                     <td>[[${file.createdBy}]]</td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
-                    <td><a data-toggle="tooltip" id="editFileTooltip" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}} +'/edit'" ><span class="icon-write secondary" ></span> </a></td>
-                    <td><a  data-toggle="tooltip" id="deleteFileTooltip" data-html="true" data-placement="top"  href="#"  ><span id= "deleteFileButton" class="icon-trash secondary"></span></a></td>
-                    <td><a data-toggle="tooltip" id="downloadFileTooltip" data-html="true" data-placement="top"  th:href="@{/staff/files/{id}/download(id=${file.id})}" ><span class="icon-arrow-down secondary" ></span> </a></td>
+                    <td><a data-toggle="tooltip" class="editFileTooltip" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}} +'/edit'" ><span class="icon-write secondary" ></span> </a></td>
+                    <td><a data-toggle="tooltip" class="deleteFileTooltip"  th:value=${file.getId()}  data-html="true" data-placement="top"  href="#" ><span id= "deleteFileButton" class="icon-trash secondary" ></span></a></td>
+                    <td><a data-toggle="tooltip" class="downloadFileTooltip" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}+'/download?id='+${file.id}}" ><span class="icon-arrow-down secondary" ></span> </a></td>
                 
                 </tr>
             </tbody>
@@ -168,7 +184,7 @@ a.nav-link.active.show {
 		            <div class="modal-footer">
 		                <button type="button" id="cancelFileDelButton"
 		                    class="btn btn-default" data-dismiss="modal">Cancel</button>
-		                <button id="deleteFileButtonConfirm" th:onclick = "deleteFile([[${file.id}]])" type="submit"
+		                <button id="deleteFileButtonConfirm"  type="submit"
 		                    class="btn btn-danger btn-ok">Delete</button>
 		            </div>
 		        </div>
