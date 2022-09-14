@@ -76,6 +76,16 @@ public class FileManagerTest {
     }
     
     @Test
+    public void test_getFileById_failure() {
+        VSFile file = new VSFile();
+        file.setId(fileId);
+        when(fileRepo.findById(fileId)).thenReturn(Optional.ofNullable(null));
+        IVSFile fileResponse = serviceToTest.getFileById(fileId);
+        assertEquals(fileResponse, null);
+        
+    }
+    
+    @Test
     public void test_getAllFiles_success() {
         List<VSFile> files = new ArrayList();
         VSFile file = new VSFile();
