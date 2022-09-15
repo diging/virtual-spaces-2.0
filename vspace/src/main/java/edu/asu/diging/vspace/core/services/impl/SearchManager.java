@@ -43,6 +43,37 @@ public abstract class SearchManager implements ISearchManager {
 
     protected abstract  Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText ,  String searchTerm);   
     
+    protected abstract List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage);
+    
+    protected abstract List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
+    
+    protected abstract List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
+    
+    
+    public SearchSpaceResults searchSpacesAndProcessResults(String searchTerm, int page)  {
+        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, page);
+        return convertToSearchSpaceResults(spacePage.getContent());
+    }
+    
+    public SearchModuleResults searchModulesAndProcessResults(String searchTerm, int page) {
+        Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, page);
+        List<IModule> moduleList =  updateModulePageWithSpaceInfo(modulePage);
+        return convertToSearchModuleResults(moduleList);
+    }
+    
+    public SearchSlideResults searchSlidesAndProcessResults(String searchTerm, int page) {        
+        Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, page);
+        List<ISlide> slideList = updateSlidePageWithSpaceInfo(slidePage);      
+        return convertToSearchSlideResults(slideList);
+    }
+    
+    public SearchSlideTextBlockResults searchSlideTextBlockAndProcessResults(String searchTerm, int page) {
+               
+        Page<ISlide> slideTextPage = searchSlideTextsAndPaginate(searchTerm, page);
+        List<ISlide> slideTextList = updateSlideTextPageWithSpaceInfo(slideTextPage);
+        return  convertToSearchSlideTextBlockResults(slideTextList, searchTerm);
+    }
+    
     /**
      * Method to return the requested spaces whose name or description contains the
      * search string
@@ -184,7 +215,7 @@ public abstract class SearchManager implements ISearchManager {
 
     
     @Override
-    public SearchModuleResults getSearchModuleResults(List<IModule> moduleList) {
+    public SearchModuleResults convertToSearchModuleResults(List<IModule> moduleList) {
 
         SearchModuleResults searchModuleResults = new SearchModuleResults();
         searchModuleResults.setModules(moduleList);
@@ -221,7 +252,7 @@ public abstract class SearchManager implements ISearchManager {
 
     
     @Override
-    public SearchSlideResults getSearchSlideResults(List<ISlide> slideList) {
+    public SearchSlideResults convertToSearchSlideResults(List<ISlide> slideList) {
         SearchSlideResults searchSlideResults = new SearchSlideResults();
         searchSlideResults.setSlides(slideList);
         
@@ -238,7 +269,7 @@ public abstract class SearchManager implements ISearchManager {
     
     
     @Override
-    public SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
+    public SearchSlideTextBlockResults convertToSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
         SearchSlideTextBlockResults staffSearchSlideTextBlockResults = new SearchSlideTextBlockResults();
         staffSearchSlideTextBlockResults.setSlidesWithMatchedTextBlock(slideTextList);
         
@@ -262,7 +293,7 @@ public abstract class SearchManager implements ISearchManager {
     }
     
     @Override
-    public SearchSpaceResults getSearchSpaceResults(List<ISpace> spaceList) {
+    public SearchSpaceResults convertToSearchSpaceResults(List<ISpace> spaceList) {
         SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
         staffSearchSpaceResults.setSpaces(spaceList);
         return staffSearchSpaceResults;

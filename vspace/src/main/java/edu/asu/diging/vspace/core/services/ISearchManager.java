@@ -49,13 +49,13 @@ public interface ISearchManager {
      */
     Page<ISlide> searchSlideTextsAndPaginate(String searchTerm, int page);
 
-    SearchModuleResults getSearchModuleResults(List<IModule> moduleList);
+    SearchModuleResults convertToSearchModuleResults(List<IModule> moduleList);
 
-    SearchSlideResults getSearchSlideResults(List<ISlide> slideList);
+    SearchSlideResults convertToSearchSlideResults(List<ISlide> slideList);
 
-    SearchSlideTextBlockResults getSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
+    SearchSlideTextBlockResults convertToSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm);
 
-    SearchSpaceResults getSearchSpaceResults(List<ISpace> spaceList);
+    SearchSpaceResults convertToSearchSpaceResults(List<ISpace> spaceList);
 
     SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm);
 
