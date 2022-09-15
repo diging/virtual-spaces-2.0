@@ -1429,7 +1429,8 @@ $(function(){
 		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
 						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
 		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
-		        </h2>
+		            <a th:href="@{'/exhibit/space/'+${space?.id}}"><span class="icon-link"></span></a>
+		            </h2>
 		        <p>[[${space.description}]]</p>
 		        <div class="flex-spacing">
 		        	<div class="dropdown">
@@ -1515,7 +1516,6 @@ $(function(){
             <button type="button" id="changeBgImgButton"  class="btn primary-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top">
             	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
             &nbsp;
-            <a th:href="@{'/exhibit/space/'+${space?.id}}" class="btn primary-btn" style="float: right; margin-right: 39rem">Public Space</a>
         </div>
         <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
         <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" />
