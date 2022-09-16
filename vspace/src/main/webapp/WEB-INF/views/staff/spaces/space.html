@@ -214,22 +214,22 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
         if(block.spaceTextBlock.id === selectedTextBlockId) {
         	var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea")[0];
         	
-        	tHeight = textModalBlock.clientHeight,
-            tWidth = textModalBlock.clientWidth;
+        	tHeight = textModalBlock.clientHeight;
+        	tWidth = textModalBlock.clientWidth;
             
             var height = modalBgImageHeight;
             var width = modalBgImageWidth;
             textModalBlock.style["resize"] = "both";
             textModalBlock.onmouseup = function (e) {
-                if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
-                    tHeight = textModalBlock.clientHeight;
-                    tWidth = textModalBlock.clientWidth;
-                    let percentileHeight = (tHeight*100)/height;
-                    let percentileWidth = (tWidth*100)/width;
-                    $("#textBoxWidthIDEdit").val(percentileWidth);
-                    $("#textBoxHeightIDEdit").val(percentileHeight);
-                    $("#textContentIDForEdit").val(textModalBlock.value);
-                }
+	            if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
+	                tHeight = textModalBlock.clientHeight;
+	                tWidth = textModalBlock.clientWidth;
+	                let percentileHeight = (tHeight*100)/height;
+	                let percentileWidth = (tWidth*100)/width;
+	                $("#textBoxWidthIDEdit").val(percentileWidth);
+	                $("#textBoxHeightIDEdit").val(percentileHeight);
+	                $("#textContentIDForEdit").val(textModalBlock.value);
+	            }
             };
         }
     }
@@ -242,7 +242,7 @@ function drawLinks(){
     $(".ellipse_class").remove();
     $(".unpublishedSpaceClass").remove();
     $(".textBlockClass").remove();
-	$(".deletedSpaceClass").remove();
+    $(".deletedSpaceClass").remove();
     
     $.ajax({
         type: "GET",
@@ -742,7 +742,7 @@ function displayForms(formToShow){
     $("#space").css("display", "-webkit-box");
     $(formToShow).css("display", "flex");
     modalBgImageHeight = parseInt($("#bgImage").css("height"));
-	modalBgImageWidth = parseInt($("#bgImage").css("width"));
+    modalBgImageWidth = parseInt($("#bgImage").css("width"));
 }
 
 function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {

@@ -233,7 +233,8 @@
 					$("#Module_1").css("margin-bottom", "60px");
 				}
 			}
-			$("#space a").remove();        
+			$("#space a").remove(); 
+			$(".Info_cz_Class").remove();
 			drawLinks();
 		}
 		
@@ -333,9 +334,9 @@
 		    	let spaceHeight = $("#bgImage").css("height");
 		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-				$("#space a").remove();
-				$(".Info_cz_Class").remove();
-		    		drawLinks();
+					$("#space a").remove();
+					$(".Info_cz_Class").remove();
+			    	drawLinks();
 		    	});
 		    	drawLinks();
 		    	toggleImgSize(false);
@@ -350,7 +351,7 @@
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
 			let relativeHeight = ([(${display?.width})]/width)*height;
-			spaceLinks.forEach(function(link,index){
+			spaceLinks.forEach(function(link,index) {
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;

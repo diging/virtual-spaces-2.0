@@ -122,7 +122,7 @@ public class SpaceTextBlockManagerTest {
     }
     
     @Test
-    public void test_updateTextBlock_textblockIdempty_failed(){
+    public void test_updateTextBlock_textBlockIdEmpty_failed(){
         
         SpaceTextBlock spaceTextBlock = new SpaceTextBlock();
         spaceTextBlock.setId("SPB001");
@@ -141,11 +141,12 @@ public class SpaceTextBlockManagerTest {
         Mockito.when(spaceTextBlockRepo.findById(spaceTextBlock.getId())).thenReturn(Optional.empty());
         Mockito.when(spaceTextBlockDisplayRepo.findById(spaceTextBlockDisplay.getId())).thenReturn(mockSpaceTextBlockDisplay);
         
+        managerToTest.updateTextBlock("", 10, 30, "SPB001", "STBD001", "test", 50, 40);
         Mockito.verify(spaceTextBlockRepo, Mockito.never()).save(spaceTextBlock);
     }
     
     @Test
-    public void test_updateTextBlock_textblocDisplayIdempty_failed(){
+    public void test_updateTextBlock_textBlockDisplayIdEmpty_failed(){
         
         SpaceTextBlock spaceTextBlock = new SpaceTextBlock();
         spaceTextBlock.setId("SPB001");
@@ -163,6 +164,7 @@ public class SpaceTextBlockManagerTest {
         Mockito.when(spaceTextBlockRepo.findById(spaceTextBlock.getId())).thenReturn(mockSpaceTextBlock);
         Mockito.when(spaceTextBlockDisplayRepo.findById(spaceTextBlockDisplay.getId())).thenReturn(Optional.empty());
         
+        managerToTest.updateTextBlock("", 10, 30, "SPB001", "STBD001", "test", 50, 40);
         Mockito.verify(spaceTextBlockDisplayRepo, Mockito.never()).save(spaceTextBlockDisplay);
     }
     
