@@ -46,8 +46,6 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
         ModuleOverview moduleOverviewJson = new ModuleOverview();
         moduleOverviewJson.setStartSequence(startSequenceNode);
         moduleOverviewJson.setOtherSequences(otherSequences);
-        System.out.println(moduleOverviewJson.getStartSequence().getName());
-        System.out.println(otherSequences.get(0));
         return moduleOverviewJson;
     }
     
@@ -76,8 +74,6 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
             }
             slideOverview.setId(slide.getId());
             slideOverview.setName(slide.getName());
-            
-            
             slideOverviews.add(slideOverview);
             
         } 
