@@ -22,6 +22,7 @@ public class ListReferencesController {
 
     @Autowired
     private IReferenceManager referenceManager;
+    
 
     @RequestMapping(value="/staff/references/list")
     public String listReferences(@RequestParam(value = "page", required = false, defaultValue="1") String page,
@@ -33,6 +34,7 @@ public class ListReferencesController {
             pageNo = referenceManager.validatePageNumber(Integer.parseInt(page));
         } catch (NumberFormatException numberFormatException){
             pageNo = 1;
+            logger.warn("There is number format issue.", numberFormatException);
         }
         List<IReference> references = referenceManager.getReferences(pageNo, sortedBy, order);
         

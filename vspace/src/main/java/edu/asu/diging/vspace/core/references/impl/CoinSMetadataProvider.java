@@ -42,7 +42,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             urlEncodedReferenceMetaData += CoinSConstants.RFR_ID_TAG
                     + URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name());
             urlEncodedReferenceMetaData += CoinSConstants.RFT_VAL_FMT_TAG;
-            System.out.println(reference.getType());
+
             if (reference.getType().equals(CoinSConstants.BOOK_GENRE)
                     || reference.getType().equals(CoinSConstants.BOOK_SECTION_GENRE)
                     || reference.getType().equals(CoinSConstants.CONFERENCE_PAPER)) {
@@ -55,9 +55,10 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.ARTICLE_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
             } else if (reference.getType().equals(CoinSConstants.BLOGPOST_TYPE)
-                    || (reference.getType().equals(CoinSConstants.ART_TYPE)) || reference.getType().equals(CoinSConstants.PODCAST)
-                    || reference.getType().equals(CoinSConstants.PRESENTATION)||
-                    reference.getType().equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
+                    || (reference.getType().equals(CoinSConstants.ART_TYPE))
+                    || reference.getType().equals(CoinSConstants.PODCAST)
+                    || reference.getType().equals(CoinSConstants.PRESENTATION)
+                    || reference.getType().equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
 
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.BLOGPOST_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
@@ -65,7 +66,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.PATENT_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
-            }  else {
+            } else {
                 urlEncodedReferenceMetaData += URLEncoder.encode(CoinSConstants.DEFAULT_RFT_VAL_FMT,
                         StandardCharsets.UTF_8.name());
             }
@@ -74,9 +75,8 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                     + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl())
                     + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue())
                     + getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors())
-                    + getRefNoteEncoded(reference.getNote()) +  getRefAbstractEncoded(reference.getAbstracts()) + getRefTypeEncoded(reference.getType());
-                    
-            
+                    + getRefNoteEncoded(reference.getNote()) + getRefAbstractEncoded(reference.getAbstracts())
+                    + getRefTypeEncoded(reference.getType());
 
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
@@ -94,7 +94,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
 
             if (type.equals(CoinSConstants.BLOGPOST_TYPE) || type.equals(CoinSConstants.PODCAST)
-                    || type.equals(CoinSConstants.PRESENTATION) ||  type.equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
+                    || type.equals(CoinSConstants.PRESENTATION) || type.equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
                 return CoinSConstants.RFT_TYPE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
 
             }
@@ -109,10 +109,10 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         if (title == null || title.trim().equals("")) {
             return "";
         }
-        System.out.println("*****************----------" + type);
+
         try {
             if (type.equals(CoinSConstants.BOOK_GENRE)) {
-                System.out.println(type + CoinSConstants.RFT_BOOKTITLE_TAG);
+
                 return CoinSConstants.RFT_BOOKTITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
             } else if (type.equals(CoinSConstants.JOURNAL_ARTICLE_GENRE)
                     || type.equals(CoinSConstants.BOOK_SECTION_GENRE)) {
@@ -217,17 +217,20 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                 refPagesEncoded += CoinSConstants.RFT_ISSUE_TAG
                         + URLEncoder.encode(pages, StandardCharsets.UTF_8.name());
                 String[] tokens = pages.split("-");
-                if (tokens.length >= 2) {
+                if (tokens.length > 2) {
                     tokens = pages.split("-", 2);
 
-                }
-
-                if (tokens.length > 1) {
+                }else {
                     refPagesEncoded += CoinSConstants.RFT_START_PAGE_TAG
                             + URLEncoder.encode(tokens[0], StandardCharsets.UTF_8.name());
                     refPagesEncoded += CoinSConstants.RFT_END_PAGE_TAG
                             + URLEncoder.encode(tokens[1], StandardCharsets.UTF_8.name());
+                    
                 }
+
+                
+                    
+                
             } catch (UnsupportedEncodingException e) {
                 throw new ReferenceMetadataEncodingException(e);
             }
@@ -258,7 +261,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             throw new ReferenceMetadataEncodingException(e);
         }
     }
-    
+
     private String getRefAbstractEncoded(String abstracts) throws ReferenceMetadataEncodingException {
         if (abstracts == null || abstracts.trim().equals("")) {
             return "";
