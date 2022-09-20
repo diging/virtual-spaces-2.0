@@ -528,8 +528,7 @@ a.nav-link.active.show {
 								<div th:if="${not #lists.isEmpty(contents.contents)}">
 									<div th:if="${contents?.firstImageBlock !=null}">
 										<img
-											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
-											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
+ 											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
 											alt="Slide image" />
 									</div>
 									<div th:if="${contents?.firstImageBlock ==null}">
@@ -579,7 +578,6 @@ a.nav-link.active.show {
 								<div th:if="${not #lists.isEmpty(contents.contents)}">
 									<div th:if="${contents?.firstImageBlock !=null}">
 										<img
-											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
 											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
 											alt="Slide image" />
 									</div>
