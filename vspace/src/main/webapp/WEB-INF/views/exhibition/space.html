@@ -233,7 +233,8 @@
 					$("#Module_1").css("margin-bottom", "60px");
 				}
 			}
-			$("#space a").remove();        
+			$("#space a").remove(); 
+			$(".Info_cz_Class").remove();
 			drawLinks();
 		}
 		
@@ -333,8 +334,9 @@
 		    	let spaceHeight = $("#bgImage").css("height");
 		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-				$("#space a").remove();
-		    		drawLinks();
+					$("#space a").remove();
+					$(".Info_cz_Class").remove();
+			    	drawLinks();
 		    	});
 		    	drawLinks();
 		    	toggleImgSize(false);
@@ -345,10 +347,11 @@
 			var moduleLinks = [[${moduleList}]];
 			var isExhPreview  =[[${isExhPreview}]];
 			var externalLinks = [[${externalLinkList}]];
+			var spaceTextBlocks = [[${spaceTextBlocks}]];
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
 			let relativeHeight = ([(${display?.width})]/width)*height;
-		    spaceLinks.forEach(function(link,index){
+			spaceLinks.forEach(function(link,index) {
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
@@ -467,6 +470,22 @@
     		            'color': 'rgba(150, 45, 62, 1)',
     		            'font-size': '12px'
   		          });
+                }
+            })
+            
+            spaceTextBlocks.forEach(function(block,index){
+                if(block!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
+                    var posY = $("#space").position().top;
+                    var heightText = (block.height*height)/100;
+                    var widthText = (block.width*width)/100;
+                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none;" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
+                    textBlock.css('position', 'absolute');
+                    var	linkPosX=(width*block.positionX)/[(${display.width})];
+                    var	linkPosY=(height*block.positionY)/relativeHeight;
+                    textBlock.css('left', linkPosX + posX);
+                    textBlock.css('top', linkPosY + posY);
+                    $("#space").append(textBlock);
                 }
             })
 		}

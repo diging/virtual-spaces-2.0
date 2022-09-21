@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @Controller
 public class SpaceController {
@@ -46,6 +47,9 @@ public class SpaceController {
     @Autowired
     private IExternalLinkManager externalLinkManager;
 
+    @Autowired
+    private ISpaceTextBlockManager spaceTextBlockManager;
+
     @RequestMapping(STAFF_SPACE_PATH+"{id}")
     public String showSpace(@PathVariable String id, Model model) {
 
@@ -59,6 +63,7 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
+        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return "staff/spaces/space";
     }
 
@@ -74,7 +79,8 @@ public class SpaceController {
         responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
         responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
+        responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-    
+
 }
