@@ -33,4 +33,7 @@ public interface IExhibitionManager {
     List<IExhibition> findAll();
 
     IExhibition getStartExhibition();
+
+    void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
+
 }

@@ -1,7 +1,7 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-	<script th:inline="javascript">
+<script th:inline="javascript">
 		$(document).ready(function() {
 		    var offlineMessage = $('#offlineMessage');
 		    if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
@@ -20,27 +20,29 @@
 		    else {
 		        offlineMessage.hide();
 		    }
-		}
-	</script>
-	<style>
-	.tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    color: white;
-    text-align: center;
-    font-size: 12px;
-    padding: 3px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: 238px;
-    top: 146px;
-    background: rgba(0, 0, 0, 0.6);
+	
+	}
+</script>
+<style>
+.tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	color: white;
+	text-align: center;
+	font-size: 12px;
+	padding: 3px 0;
+	border-radius: 6px;
+	position: absolute;
+	z-index: 1;
+	left: 238px;
+	top: 146px;
+	background: rgba(0, 0, 0, 0.6);
 }
+
 .previewExhb:hover .tooltiptext {
-    visibility: visible;
+	visibility: visible;
 }
-	</style>
+</style>
 </head>
 
 <body>
@@ -71,6 +73,20 @@
 		            <label for="title">Exhibition Mode:</label>
 		            <select class="form-control" name="exhibitMode" onChange="modeChange(exhibitMode.value)">
 		                <option th:each="mode: ${exhibitionModes}" th:id=${mode} th:value=${mode} th:selected="${#strings.equals(mode,exhibition.mode)}">[[${mode}]]</option>
+		            </select>
+		        </div>
+		         <div style="padding-top: 20px;">
+		            <label for="title">Exhibition Languages:</label>
+		            <select class="form-control" name="exhibitLanguage" multiple="multiple" >
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${savedExhibitionLanguages!=null && savedExhibitionLanguages.contains(language.label)}">[[${language.label}]]</option>
+		            </select>
+		        </div>
+		        
+		        <div style="padding-top: 20px;">
+		            <label for="title">Default Exhibition Language:</label>
+		            <select class="form-control" name="defaultExhibitLanguage" >
+		           		<option th:value="null" >----</option>
+		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${ defaultLanguage!=null && #strings.equals(defaultLanguage.label, language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>
 		        <div id="offlineMessage" style="padding-top: 20px;" th:style="${exhibition.mode != 'OFFLINE' ? 'display: none;' : '' }">
