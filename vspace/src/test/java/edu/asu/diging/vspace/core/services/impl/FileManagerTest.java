@@ -10,6 +10,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +28,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -96,7 +101,14 @@ public class FileManagerTest {
         Page<IVSFile> filesResponse = serviceToTest.getAllFiles(1);
         assertEquals(filesResponse.getNumberOfElements(), 1);
         assertEquals(filesResponse.getContent().get(0).getId(), fileId);
-
+    }
+    
+    @Test
+    public void test_getAllFiles_failure() {
+        Pageable requestedPageForFiles = PageRequest.of(0, 10);
+        when(fileRepo.findAll(requestedPageForFiles)).thenReturn( new PageImpl<VSFile>(new ArrayList()));
+        Page<IVSFile> filesResponse = serviceToTest.getAllFiles(1);
+        assertEquals(filesResponse.getNumberOfElements(), 0);
     }
     
     @Test
@@ -168,6 +180,17 @@ public class FileManagerTest {
         Assert.assertTrue(returnValue.getErrorMsgs().get(0).contains("File could not be stored: "));
     }
    
+    @Test
+    public void test_downloadFile_success() throws IOException {
+        String fileId = "fileId";
+        VSFile vsFile = new VSFile();
+        when(storageEngine.downloadFile(Mockito.any(String.class), Mockito.any( String.class))).thenReturn(new ByteArrayResource(fileContentString.getBytes()));      
+        when(fileRepo.findById(fileId)).thenReturn(Optional.of(vsFile));
+        Resource fileResponse = serviceToTest.downloadFile("filename", fileId);
+        assertEquals(fileResponse ,new ByteArrayResource(fileContentString.getBytes()) );
+            
+    }
+    
     @Test
     public void test_downloadFile_failure() throws IOException {
         String fileId = "fileId";

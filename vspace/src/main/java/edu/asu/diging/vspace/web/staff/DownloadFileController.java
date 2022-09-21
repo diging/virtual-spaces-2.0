@@ -37,6 +37,7 @@ public class DownloadFileController {
                 resource = fileManager.downloadFile(file.getFilename(), fileId);   
             } else {
                 logger.error("Could not find file " + fileId);
+                return new ResponseEntity<Resource>(resource, HttpStatus.NOT_FOUND);
             }
         } catch (IOException e) {
             logger.error("Could not download file", e);
