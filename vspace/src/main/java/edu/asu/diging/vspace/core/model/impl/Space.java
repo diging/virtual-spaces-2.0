@@ -59,9 +59,14 @@ public class Space extends VSpaceElement implements ISpace {
     private Boolean incomingLinks;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "space", targetEntity = SpaceExhibitionLanguage.class)
-    private List<SpaceExhibitionLanguage> spaceExhibitionLanguage;
+    @OneToMany(mappedBy = "space", targetEntity = SpaceTitle.class)
+    private List<SpaceTitle> spaceTitle;
 
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "space", targetEntity = SpaceDescription.class)
+    private List<SpaceDescription> spaceDescription;
+    
     /*
      * (non-Javadoc)
      * 

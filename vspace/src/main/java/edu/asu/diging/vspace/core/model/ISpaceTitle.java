@@ -1,0 +1,5 @@
+package edu.asu.diging.vspace.core.model;
+
+public interface ISpaceTitle extends IVSpaceElement {
+
+}
