@@ -214,5 +214,15 @@ public class Space extends VSpaceElement implements ISpace {
     public void setHideIncomingLinks(boolean hideIncomingLinks) {
         this.hideIncomingLinks = hideIncomingLinks;
     }
+    
+    @Override 
+    public void setDescription(String description) {
+        
+    }
+    
+    @Override 
+    public void setName(String title) {
+        
+    }
 
 }
