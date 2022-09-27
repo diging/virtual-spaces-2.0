@@ -23,7 +23,7 @@ public class EditSpacesCustomOrderController {
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
-    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/titleDescription", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/info", method = RequestMethod.POST)
     public ResponseEntity<String> saveTitleDescription(@RequestParam("title") String title, @RequestParam("description") String description, @PathVariable("customOrderId") String spacesCustomOrderId) {
         spacesCustomOrderManager.updateSpacesCustomOrderNameDescription(spacesCustomOrderId, title, description);
         return new ResponseEntity<String>(HttpStatus.OK);

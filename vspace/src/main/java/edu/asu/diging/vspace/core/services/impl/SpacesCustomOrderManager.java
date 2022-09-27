@@ -93,7 +93,11 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         spacesCustomOrderRepository.save(spaceCustomOrder);
     }
 
-
+    /**
+     * This method edits the custom order
+     * @param spacesCustomOrderId
+     * @param spacesIds
+     */
     @Override
     public void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spacesIds) {
         List<ISpace> spaces = new ArrayList<ISpace>();
@@ -106,6 +110,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         
     }
     
+    /**
+     * This method sets the custom order to be used on exhibition page
+     * @param customOrderId
+     */
     @Override
     public void setExhibitionSpacesCustomOrder(String customOrderId) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
@@ -114,6 +122,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
     }
     
+    /**
+     * This method deletes the custom order by id
+     * @param id
+     */
     @Override
     public void deleteSpacesCustomOrderById(String id) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();

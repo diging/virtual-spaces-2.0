@@ -96,7 +96,7 @@
 		    formData.append('title', title);
 		    formData.append('description', description);
 		    $.ajax({
-			    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/titleDescription'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/info'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			    type: 'POST',
 			    cache       : false,
 			    contentType : false,
@@ -106,6 +106,11 @@
 			    success: function(data) {
 			        $("#customOrderTitle").text(title);
 			        $("#description").text(description);
+			        if(description == "") {
+			        	$("#description").hide();
+			        } else {
+			        	$("#description").show();
+			        }
 			        $('#myModal').modal('hide');
 			        $("#successText").text("Custom order details have been successfully updated.");
 		        	showSuccessPopUp();
@@ -217,6 +222,7 @@
 	function showErrorPopUp() {
 		$("#failedPopUp").show();
 	}
+	
 </script>
 </head>
 

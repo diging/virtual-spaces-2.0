@@ -31,18 +31,13 @@ public class SpacesCustomOrderController {
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
     @Autowired
-    private ISpaceManager spaceManager;
-    
-    @Autowired
     private IExhibitionManager exhibitionManager;
     
     @RequestMapping(value = "/staff/space/order/{orderId}", method = RequestMethod.GET)
     public String displaySpacesCustomOrder(Model model, @PathVariable("orderId") String customSpaceOrderId) {
         SpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.getSpaceCustomOrderById(customSpaceOrderId);
-        List<ISpace> spaces = spaceManager.getAllSpaces();
         model.addAttribute("customSpaceOrder", spacesCustomOrder);
         model.addAttribute("selectedSpaces", spacesCustomOrder.getCustomOrderedSpaces());
-        model.addAttribute("allSpaces", spaces);
         return "/staff/spaces/customorder/order";
     }
     
@@ -56,10 +51,10 @@ public class SpacesCustomOrderController {
         return "/staff/spaces/customorder/customordering";
     }
     
-    @RequestMapping(value = "/staff/space/order/setDefault", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/setExhibitionCustomOrder", method = RequestMethod.POST)
     public String setExhibitionSpacesCustomOrder(Model model,
-            @RequestParam("selectedCustomOrderId") String sequenceId) {
-        spacesCustomOrderManager.setExhibitionSpacesCustomOrder(sequenceId);
+            @RequestParam("selectedCustomOrderId") String orderId) {
+        spacesCustomOrderManager.setExhibitionSpacesCustomOrder(orderId);
         return "redirect:/staff/space/order";
     }
     

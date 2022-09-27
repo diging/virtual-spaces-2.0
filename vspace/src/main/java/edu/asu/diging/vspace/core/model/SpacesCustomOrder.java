@@ -12,6 +12,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -37,6 +38,7 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
     @JoinTable(name = "spaces_custom_orders",
                joinColumns = @JoinColumn(name = "SpacesCustomOrder_Id", referencedColumnName="id"),
                inverseJoinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"))
+    @OrderColumn
     private List<ISpace> customOrderedSpaces;
 
     @Override
@@ -49,14 +51,6 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
         this.id = id;
     }
     
-    public List<ISpace> getCustomOrderedSpaces() {
-        return customOrderedSpaces;
-    }
-
-    public void setCustomOrderedSpaces(List<ISpace> customOrderedSpaces) {
-        this.customOrderedSpaces = customOrderedSpaces;
-    }
-    
     public String getCustomOrderName() {
         return customOrderName;
     }
@@ -64,6 +58,13 @@ public class SpacesCustomOrder extends VSpaceElement implements ISpacesCustomOrd
     public void setCustomOrderName(String customOrderName) {
         this.customOrderName = customOrderName;
     }
+    
+    public List<ISpace> getCustomOrderedSpaces() {
+        return customOrderedSpaces;
+    }
 
+    public void setCustomOrderedSpaces(List<ISpace> customOrderedSpaces) {
+        this.customOrderedSpaces = customOrderedSpaces;
+    }
 
 }
