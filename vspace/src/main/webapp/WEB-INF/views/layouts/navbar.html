@@ -5,7 +5,7 @@
 	
 	<body>
 		<div th:if="${isExhPreview} == null OR ${isExhPreview} == false" th:fragment="navbar">
-			<nav class="nav-bar" style="height:48px">
+			<nav class="nav-bar" >
 		      <a class="navbar-brand" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
 		      <div th:if="${isLoginPage}==null" class="searchInput">

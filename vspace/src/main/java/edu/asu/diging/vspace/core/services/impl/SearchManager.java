@@ -28,52 +28,199 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 
 public abstract class SearchManager implements ISearchManager {
-    
+
     @Value("${page_size}")
     private int pageSize;
-    
+
     @Autowired
     private ISequenceManager sequenceManager;
-    
+
     protected abstract  Page<ISpace> searchSpaces(Pageable requestedPageForSpace ,  String searchTerm);
-    
+
     protected abstract  Page<IModule> searchModules(Pageable requestedPageForModule ,  String searchTerm);
-    
+
     protected abstract  Page<ISlide> searchSlides(Pageable requestedPageForSlide ,  String searchTerm);
 
     protected abstract  Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText ,  String searchTerm);   
-    
+
     protected abstract List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage);
-    
+
     protected abstract List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
-    
+
     protected abstract List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
+
     
+    protected SearchSpaceResults convertToSearchSpaceResults(List<ISpace> spaceList) {
+        SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
+        staffSearchSpaceResults.setSpaces(spaceList);
+        return staffSearchSpaceResults;
+    }
     
+    protected SearchModuleResults convertToSearchModuleResults(List<IModule> moduleList) {
+
+        SearchModuleResults searchModuleResults = new SearchModuleResults();
+        searchModuleResults.setModules(moduleList);
+
+        Map<String, String> moduleFirstSlideImage = new HashMap<>();
+        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
+
+        for (IModule module : moduleList) {
+            if (module.getStartSequence() == null) {
+                isModuleConfiguredMap.put(module.getId(), false);
+                moduleFirstSlideImage.put(module.getId(), null);
+            } else {
+                isModuleConfiguredMap.put(module.getId(), true);
+                String startSequenceID = module.getStartSequence().getId();
+                List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
+                        ? sequenceManager.getSequence(startSequenceID).getSlides()
+                                : null;
+
+                Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
+                String firstSlideImageId = null;
+
+                if (slide != null && slide.getFirstImageBlock() != null) {
+                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
+                }
+                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
+            }
+
+        }
+        searchModuleResults.setModuleImageIdMap(moduleFirstSlideImage);
+        searchModuleResults.setModuleAlertMessages(isModuleConfiguredMap);
+
+        return searchModuleResults;
+    }
+
+    protected SearchSlideResults convertToSearchSlideResults(List<ISlide> slideList) {
+        SearchSlideResults searchSlideResults = new SearchSlideResults();
+        searchSlideResults.setSlides(slideList);
+
+        Map<String, String> slideFirstImage = new HashMap<>();
+
+        for (ISlide slide : slideList) {
+            if (slide != null && slide.getFirstImageBlock() != null) {
+                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
+            }
+        }
+        searchSlideResults.setFirstImageOfSlide(slideFirstImage);
+        return searchSlideResults;
+    }
+
+    protected SearchSlideTextBlockResults convertToSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
+        SearchSlideTextBlockResults staffSearchSlideTextBlockResults = new SearchSlideTextBlockResults();
+        staffSearchSlideTextBlockResults.setSlidesWithMatchedTextBlock(slideTextList);
+
+        Map<String, String> slideTextFirstImageMap = new HashMap<>();
+        Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
+
+        for (ISlide slide : slideTextList) {
+            if (slide != null) {
+                if (slide.getFirstImageBlock() != null) {
+                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
+                }
+                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
+                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
+                }
+            }
+        }
+        staffSearchSlideTextBlockResults.setSlideToFirstImageMap(slideTextFirstImageMap);
+        staffSearchSlideTextBlockResults.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
+
+        return staffSearchSlideTextBlockResults;
+    }
+
+    /**
+     * This method is used to search the searched string specified in the input
+     * parameter(searchTerm) and return the published spaces corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string.
+     * 
+     * @param spacePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    @Override
+    public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
+
+        return searchSpacesAndProcessResults(searchTerm, Integer.parseInt(spacePagenum));
+
+    }
+
+
+    /**
+     * This method is used to search the searched string specified in the input
+     * parameter(searchTerm) and return the module corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose name or description
+     * contains the search string. This also filters modules which are linked to the spaces.
+     * 
+     * @param modulePagenum current page number sent as request parameter in the
+     *                      URL.
+     * @param searchTerm    This is the search string which is being searched.
+     */
+    @Override
+    public SearchModuleResults searchForModule(String modulePagenum, String searchTerm) {
+        return searchModulesAndProcessResults(searchTerm, Integer.parseInt(modulePagenum));
+
+    }
+
+    /**
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string. This also filters Slides from modules 
+     * which are linked to the spaces.
+     * 
+     * @param slidePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    @Override
+    public SearchSlideResults searchForSlide(String slidePagenum, String searchTerm) {
+
+        return searchSlidesAndProcessResults(searchTerm, Integer.parseInt(slidePagenum));
+
+    }
+
+
+    /**
+     * This method is used to search the searched string specified in the input
+     * parameter(searchTerm) and return the slides corresponding to the page number
+     * specified in the input parameter(spacePagenum) whose text block contains the
+     * search string. This also filters Slides from modules which are linked to the spaces.
+     * 
+     * @param slideTextPagenum current page number sent as request parameter in the
+     *                         URL.
+     * @param searchTerm       This is the search string which is being searched.
+     */
+    @Override
+    public SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm) {
+
+        return searchSlideTextBlockAndProcessResults(searchTerm, Integer.parseInt(slideTextPagenum)); 
+
+    }
+
     public SearchSpaceResults searchSpacesAndProcessResults(String searchTerm, int page)  {
         Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, page);
         return convertToSearchSpaceResults(spacePage.getContent());
     }
-    
+
     public SearchModuleResults searchModulesAndProcessResults(String searchTerm, int page) {
         Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, page);
         List<IModule> moduleList =  updateModulePageWithSpaceInfo(modulePage);
         return convertToSearchModuleResults(moduleList);
     }
-    
+
     public SearchSlideResults searchSlidesAndProcessResults(String searchTerm, int page) {        
         Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, page);
         List<ISlide> slideList = updateSlidePageWithSpaceInfo(slidePage);      
         return convertToSearchSlideResults(slideList);
     }
-    
+
     public SearchSlideTextBlockResults searchSlideTextBlockAndProcessResults(String searchTerm, int page) {
-               
+
         Page<ISlide> slideTextPage = searchSlideTextsAndPaginate(searchTerm, page);
         List<ISlide> slideTextList = updateSlideTextPageWithSpaceInfo(slideTextPage);
         return  convertToSearchSlideTextBlockResults(slideTextList, searchTerm);
     }
-    
+
     /**
      * Method to return the requested spaces whose name or description contains the
      * search string
@@ -90,7 +237,7 @@ public abstract class SearchManager implements ISearchManager {
         }
         Pageable requestedPageForSpace = PageRequest.of(page - 1, pageSize);       
         Page<ISpace> spacePage =  searchSpaces(requestedPageForSpace, searchTerm);
-        
+
         int totalSpacePage = spacePage.getTotalPages();
         /* if page>total pages,last page is returned */
         if (page > totalSpacePage) {
@@ -98,11 +245,11 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForSpace = PageRequest.of(totalSpacePage - 1, pageSize);   
             spacePage = searchSpaces(requestedPageForSpace,  searchTerm);
         }
-        
-        
+
+
         return spacePage;
     }
-    
+
     /**
      * Method to return the requested modules whose name or description contains the
      * search string
@@ -191,7 +338,7 @@ public abstract class SearchManager implements ISearchManager {
         Pageable requestedPageForSlideText = PageRequest.of(page - 1, pageSize);
         Page<ISlide> slidetextPage = searchSlideTexts(requestedPageForSlideText,
                 searchTerm);
-        
+
         int totalSlideTextPage = slidetextPage.getTotalPages();
         /*
          * spring will just return an empty dataset if a page that is greater than the
@@ -210,92 +357,8 @@ public abstract class SearchManager implements ISearchManager {
         }
         return slidetextPage;
     }
-    
 
 
-    
-    @Override
-    public SearchModuleResults convertToSearchModuleResults(List<IModule> moduleList) {
 
-        SearchModuleResults searchModuleResults = new SearchModuleResults();
-        searchModuleResults.setModules(moduleList);
 
-        Map<String, String> moduleFirstSlideImage = new HashMap<>();
-        Map<String, Boolean> isModuleConfiguredMap = new HashMap<>();
-
-        for (IModule module : moduleList) {
-            if (module.getStartSequence() == null) {
-                isModuleConfiguredMap.put(module.getId(), false);
-                moduleFirstSlideImage.put(module.getId(), null);
-            } else {
-                isModuleConfiguredMap.put(module.getId(), true);
-                String startSequenceID = module.getStartSequence().getId();
-                List<ISlide> slides = sequenceManager.getSequence(startSequenceID) != null
-                        ? sequenceManager.getSequence(startSequenceID).getSlides()
-                                : null;
-
-                Slide slide = slides != null && !slides.isEmpty() ? (Slide) slides.get(0) : null;
-                String firstSlideImageId = null;
-
-                if (slide != null && slide.getFirstImageBlock() != null) {
-                    firstSlideImageId = slide.getFirstImageBlock().getImage().getId();
-                }
-                moduleFirstSlideImage.put(module.getId(), firstSlideImageId);
-            }
-
-        }
-        searchModuleResults.setModuleImageIdMap(moduleFirstSlideImage);
-        searchModuleResults.setModuleAlertMessages(isModuleConfiguredMap);
-
-        return searchModuleResults;
-    }
-
-    
-    @Override
-    public SearchSlideResults convertToSearchSlideResults(List<ISlide> slideList) {
-        SearchSlideResults searchSlideResults = new SearchSlideResults();
-        searchSlideResults.setSlides(slideList);
-        
-        Map<String, String> slideFirstImage = new HashMap<>();
-        
-        for (ISlide slide : slideList) {
-            if (slide != null && slide.getFirstImageBlock() != null) {
-                slideFirstImage.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
-            }
-        }
-        searchSlideResults.setFirstImageOfSlide(slideFirstImage);
-        return searchSlideResults;
-    }
-    
-    
-    @Override
-    public SearchSlideTextBlockResults convertToSearchSlideTextBlockResults(List<ISlide> slideTextList, String searchTerm) {
-        SearchSlideTextBlockResults staffSearchSlideTextBlockResults = new SearchSlideTextBlockResults();
-        staffSearchSlideTextBlockResults.setSlidesWithMatchedTextBlock(slideTextList);
-        
-        Map<String, String> slideTextFirstImageMap = new HashMap<>();
-        Map<String, String> slideTextFirstTextBlockMap = new HashMap<>();
-        
-        for (ISlide slide : slideTextList) {
-            if (slide != null) {
-                if (slide.getFirstImageBlock() != null) {
-                    slideTextFirstImageMap.put(slide.getId(), slide.getFirstImageBlock().getImage().getId());
-                }
-                if (slide.getFirstMatchedTextBlock(searchTerm) != null) {
-                    slideTextFirstTextBlockMap.put(slide.getId(), slide.getFirstMatchedTextBlock(searchTerm).htmlRenderedText());
-                }
-            }
-        }
-        staffSearchSlideTextBlockResults.setSlideToFirstImageMap(slideTextFirstImageMap);
-        staffSearchSlideTextBlockResults.setSlideToFirstTextBlockMap(slideTextFirstTextBlockMap);
-        
-        return staffSearchSlideTextBlockResults;
-    }
-    
-    @Override
-    public SearchSpaceResults convertToSearchSpaceResults(List<ISpace> spaceList) {
-        SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
-        staffSearchSpaceResults.setSpaces(spaceList);
-        return staffSearchSpaceResults;
-    }
 }

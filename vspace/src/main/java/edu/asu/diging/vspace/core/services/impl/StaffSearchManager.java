@@ -42,68 +42,7 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
     @Autowired
     private TextContentBlockRepository textContentBlockRepo;
 
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the slides corresponding to the page number
-     * specified in the input parameter(spacePagenum) whose text block contains the
-     * search string
-     * 
-     * @param slideTextPagenum current page number sent as request parameter in the
-     *                         URL.
-     * @param searchTerm       This is the search string which is being searched.
-     */
-    public SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm) {
 
-        return searchSlideTextBlockAndProcessResults(searchTerm, Integer.parseInt(slideTextPagenum));
-
-    }
-
-    
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {      
-        return searchSpacesAndProcessResults(searchTerm, Integer.parseInt(spacePagenum));
-    }
-
-
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the module corresponding to the page number
-     * specified in the input parameter(spacePagenum) whose name or description
-     * contains the search string.
-     * 
-     * @param modulePagenum current page number sent as request parameter in the
-     *                      URL.
-     * @param searchTerm    This is the search string which is being searched.
-     */
-    @Override
-    public SearchModuleResults searchForModule(String modulePagenum, String searchTerm) {
-        
-        return searchModulesAndProcessResults(searchTerm, Integer.parseInt(modulePagenum));
-
-    }
-
-
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the slides corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param slidePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    @Override
-    public SearchSlideResults searchForSlide(String slidePagenum, String searchTerm) {
-        return searchSlidesAndProcessResults(searchTerm, Integer.parseInt(slidePagenum));
-    }
     
     @Override
     protected Page<ISpace> searchSpaces(Pageable requestedPageForSpace, String searchTerm) {
@@ -125,7 +64,6 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
         return textContentBlockRepo.findWithNameOrDescription(requestedPageForSlideText,
                 searchTerm);
     }
-
 
     @Override
     protected List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
