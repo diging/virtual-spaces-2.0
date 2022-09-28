@@ -29,9 +29,9 @@ import edu.asu.diging.vspace.core.model.IdPrefix;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.model.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 @Component

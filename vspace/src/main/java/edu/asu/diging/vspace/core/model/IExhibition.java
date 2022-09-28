@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
-import java.util.Set;
 
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 
 public interface IExhibition extends IVSpaceElement {
 

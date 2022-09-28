@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff;
+package edu.asu.diging.vspace.core.model;
 
 public enum ExhibitionSpaceOrderMode {
     ALPHABETICAL,

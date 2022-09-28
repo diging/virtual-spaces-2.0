@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff;
+package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,12 +8,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 
 @Component
 public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility {

@@ -11,8 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
@@ -38,7 +39,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     private IExhibitionManager exhibitionManager;
     
     @Override
-    public SpacesCustomOrder createNewCustomOrder(List<String> spaceOrders,
+    public ISpacesCustomOrder createNewCustomOrder(List<String> spaceOrders,
             String name,
             String description) {
         List<ISpace> orderedSpaces= new ArrayList<ISpace>();
@@ -54,18 +55,18 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
 
     
     @Override
-    public List<SpacesCustomOrder> findAll(){
-        return (List<SpacesCustomOrder>) spacesCustomOrderRepository.findAll();
+    public Iterable<SpacesCustomOrder> findAll(){
+        return spacesCustomOrderRepository.findAll();
     }
     
     @Override
-    public SpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId) {
+    public ISpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId) {
         Optional<SpacesCustomOrder> spacesCustomOrderOptional = spacesCustomOrderRepository.findById(customSpaceOrderId);
         return spacesCustomOrderOptional.get();
     }
     
     @Override
-    public void saveCustomOrders(List<SpacesCustomOrder> spacesCustomOrder) {
+    public void saveCustomOrders(Iterable<SpacesCustomOrder> spacesCustomOrder) {
         spacesCustomOrderRepository.saveAll(spacesCustomOrder);
     }
 
@@ -75,8 +76,8 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void addSpaceToCustomOrders(ISpace space) {
-        List<SpacesCustomOrder> spacesCustomOrders = findAll();
-        for(SpacesCustomOrder spaceCustomOrder :  spacesCustomOrders) {
+        Iterable<SpacesCustomOrder> spacesCustomOrders = findAll();
+        for(ISpacesCustomOrder spaceCustomOrder :  spacesCustomOrders) {
             spaceCustomOrder.getCustomOrderedSpaces().add(space);
         }
         saveCustomOrders(spacesCustomOrders);
@@ -87,10 +88,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String title, String description) {
-        SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+        ISpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderName(title);
         spaceCustomOrder.setDescription(description);
-        spacesCustomOrderRepository.save(spaceCustomOrder);
+        spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);
     }
 
     /**
@@ -104,9 +105,9 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         for(String id : spacesIds) {
             spaces.add(spaceManager.getSpace(id));
         }
-        SpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+        ISpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
-        spacesCustomOrderRepository.save(spaceCustomOrder);
+        spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);
         
     }
     

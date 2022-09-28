@@ -3,23 +3,24 @@ package edu.asu.diging.vspace.core.services;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 
 public interface ISpacesCustomOrderManager {
 
-    List<SpacesCustomOrder> findAll();
+    Iterable<SpacesCustomOrder> findAll();
 
     void addSpaceToCustomOrders(ISpace space);
 
-    void saveCustomOrders(List<SpacesCustomOrder> spacesCustomOrder);
+    void saveCustomOrders(Iterable<SpacesCustomOrder> spacesCustomOrder);
 
-    SpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId);
+    ISpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId);
 
     void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String title, String description);
 
     void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spaceOrders);
 
-    SpacesCustomOrder createNewCustomOrder(List<String> spaceOrders, String name, String description);
+    ISpacesCustomOrder createNewCustomOrder(List<String> spaceOrders, String name, String description);
 
     void setExhibitionSpacesCustomOrder(String customOrderId);
 

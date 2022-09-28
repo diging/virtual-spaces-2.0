@@ -96,8 +96,11 @@
 		    formData.append('title', title);
 		    formData.append('description', description);
 		    $.ajax({
-			    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/info'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/info'})]",
 			    type: 'POST',
+			    headers: {
+			    	'X-CSRF-Token': [[${_csrf.token}]]
+			    },
 			    cache       : false,
 			    contentType : false,
 			    processData : false,
@@ -136,8 +139,11 @@
 			var formData = new FormData();
 		    formData.append('spaceOrder', spaceDivs);
 		    $.ajax({
-		        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+		        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'})]",
 		        type: 'POST',
+		        headers: {
+			    	'X-CSRF-Token': [[${_csrf.token}]]
+			    },
 		        cache       : false,
 		        contentType : false,
 		        processData : false,
@@ -165,8 +171,11 @@
 		$("#deleteOrder").click(function() {
 			var formData = new FormData();
 		    $.ajax({
-		        url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+		        url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]",
 		        type: 'DELETE',
+		        headers: {
+			    	'X-CSRF-Token': [[${_csrf.token}]]
+			    },
 		        cache       : false,
 		        contentType : false,
 		        processData : false,

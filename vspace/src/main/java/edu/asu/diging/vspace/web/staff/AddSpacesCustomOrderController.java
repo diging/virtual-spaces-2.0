@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
@@ -39,7 +39,7 @@ public class AddSpacesCustomOrderController {
         if(name == null || name.isEmpty()) {
             return new ResponseEntity<String>("Cannot leave the name field empty", HttpStatus.BAD_REQUEST);
         }
-        SpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.createNewCustomOrder(spaceOrders, name, description);
+        ISpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.createNewCustomOrder(spaceOrders, name, description);
         return new ResponseEntity<String>(spacesCustomOrder.getId(), HttpStatus.OK);
     }
 

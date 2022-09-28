@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,13 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Optional;
-
 import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -48,14 +47,14 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_deleteSpaceCustomOrderByIdWithNullSpacesCustomOrder_forSuccess() { 
+    public void test_deleteSpaceCustomOrderById_withNullSpacesCustomOrder() { 
         Mockito.when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
         serviceToTest.deleteSpacesCustomOrderById(spaceCustomOrderId1);
         Mockito.verify(spacesCustomOrderRepository).deleteById(spaceCustomOrderId1);
     }
     
     @Test
-    public void test_deleteSpaceCustomOrderByIdWithNotNullSpacesCustomOrder_forSuccess() { 
+    public void test_deleteSpaceCustomOrderById_withNotNullSpacesCustomOrder() { 
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setId(spaceCustomOrderId1);
         exhibition.setSpacesCustomOrder(spacesCustomOrder);
@@ -66,7 +65,7 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_editSpacesCustomOrders_Success() {
+    public void test_editSpacesCustomOrders_success() {
         String spaceId1 = "SPC001";
         String spaceId2 = "SPC002";
         List<String> spaceIdList = new ArrayList<String>();
@@ -79,7 +78,7 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_addSpacesToCustomOrders_Success() {
+    public void test_addSpacesToCustomOrders_success() {
         Space space = new Space();
         List<SpacesCustomOrder> spacesCustomOrders = new ArrayList<SpacesCustomOrder>();
         when(spacesCustomOrderRepository.findAll()).thenReturn(spacesCustomOrders);
@@ -89,7 +88,7 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_updateSpacesCustomOrderName_Success() {
+    public void test_updateSpacesCustomOrderNameDescription_updateName() {
         String spaceId1 = "SPC001";
         String spaceId2 = "SPC002";
         List<String> spaceIdList = new ArrayList<String>();
@@ -103,7 +102,7 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_updateSpacesCustomOrderDescription_Success() {
+    public void test_updateSpacesCustomOrderNameDescription_updateDescription() {
         String spaceId1 = "SPC001";
         String spaceId2 = "SPC002";
         List<String> spaceIdList = new ArrayList<String>();

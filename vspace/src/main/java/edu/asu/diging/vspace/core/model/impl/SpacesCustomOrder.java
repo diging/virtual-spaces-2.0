@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.model;
+package edu.asu.diging.vspace.core.model.impl;
 
 
 import java.util.List;
@@ -17,8 +17,8 @@ import javax.persistence.OrderColumn;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

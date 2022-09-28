@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 /**
@@ -35,7 +32,7 @@ public class SpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/space/order/{orderId}", method = RequestMethod.GET)
     public String displaySpacesCustomOrder(Model model, @PathVariable("orderId") String customSpaceOrderId) {
-        SpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.getSpaceCustomOrderById(customSpaceOrderId);
+        ISpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.getSpaceCustomOrderById(customSpaceOrderId);
         model.addAttribute("customSpaceOrder", spacesCustomOrder);
         model.addAttribute("selectedSpaces", spacesCustomOrder.getCustomOrderedSpaces());
         return "/staff/spaces/customorder/order";
@@ -43,7 +40,7 @@ public class SpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/space/order", method = RequestMethod.GET)
     public String displayCustomOrders(Model model) {
-        List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
+        Iterable<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         SpacesCustomOrder currentExhibitionCurrentSpacesCustomOrder = exhibition.getSpacesCustomOrder();
         model.addAttribute("customSpaceOrders", spacesCustomOrder);

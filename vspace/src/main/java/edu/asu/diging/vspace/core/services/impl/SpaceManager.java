@@ -29,18 +29,18 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
@@ -244,7 +244,7 @@ public class SpaceManager implements ISpaceManager {
                 fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
                 
                 //To remove the current space from all existing custom orders
-                List<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
+                Iterable<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
                 for(SpacesCustomOrder spaceCustomOrder : spacesCustomOrder) {
                     if(spaceCustomOrder.getCustomOrderedSpaces().remove(space.get())) {
                         spacesCustomOrderRepo.save(spaceCustomOrder);

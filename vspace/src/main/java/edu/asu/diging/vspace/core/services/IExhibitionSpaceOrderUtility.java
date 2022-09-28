@@ -1,8 +1,9 @@
-package edu.asu.diging.vspace.core.model;
+package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.web.staff.ExhibitionSpaceOrderMode;
+import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
+import edu.asu.diging.vspace.core.model.ISpace;
 
 public interface IExhibitionSpaceOrderUtility {
 
