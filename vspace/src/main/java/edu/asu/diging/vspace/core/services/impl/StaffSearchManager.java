@@ -66,21 +66,20 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
     }
 
     @Override
-    protected List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
-        return modulePage.getContent();
+    protected Page<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
+        return modulePage;
     }
 
 
     @Override
-    protected List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
+    protected Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
        
-        return slideTextPage.getContent();
+        return slideTextPage;
     }
 
 
     @Override
-    protected List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
-       
-        return slidePage.getContent();
+    protected Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
+        return slidePage;
     }
 }

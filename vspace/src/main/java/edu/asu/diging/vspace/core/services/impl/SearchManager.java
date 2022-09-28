@@ -43,11 +43,11 @@ public abstract class SearchManager implements ISearchManager {
 
     protected abstract  Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText ,  String searchTerm);   
 
-    protected abstract List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage);
+    protected abstract Page<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage);
 
-    protected abstract List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
+    protected abstract Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
 
-    protected abstract List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
+    protected abstract Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
 
     
     protected SearchSpaceResults convertToSearchSpaceResults(List<ISpace> spaceList) {
@@ -204,21 +204,19 @@ public abstract class SearchManager implements ISearchManager {
 
     public SearchModuleResults searchModulesAndProcessResults(String searchTerm, int page) {
         Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, page);
-        List<IModule> moduleList =  updateModulePageWithSpaceInfo(modulePage);
-        return convertToSearchModuleResults(moduleList);
+        return convertToSearchModuleResults(modulePage.getContent());
+        
     }
 
     public SearchSlideResults searchSlidesAndProcessResults(String searchTerm, int page) {        
         Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, page);
-        List<ISlide> slideList = updateSlidePageWithSpaceInfo(slidePage);      
-        return convertToSearchSlideResults(slideList);
+        return convertToSearchSlideResults(slidePage.getContent());
     }
 
     public SearchSlideTextBlockResults searchSlideTextBlockAndProcessResults(String searchTerm, int page) {
 
         Page<ISlide> slideTextPage = searchSlideTextsAndPaginate(searchTerm, page);
-        List<ISlide> slideTextList = updateSlideTextPageWithSpaceInfo(slideTextPage);
-        return  convertToSearchSlideTextBlockResults(slideTextList, searchTerm);
+        return  convertToSearchSlideTextBlockResults(slideTextPage.getContent(), searchTerm);
     }
 
     /**
@@ -282,7 +280,9 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
             modulePage = searchModules(requestedPageForModule, searchTerm);
         }
-        return modulePage;
+//        return modulePage;
+        
+        return updateModulePageWithSpaceInfo(modulePage);
     }
 
     /**
@@ -317,7 +317,8 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
             slidePage = searchSlides(requestedPageForSlide, searchTerm);
         }
-        return slidePage;
+//        return slidePage;
+        return updateSlidePageWithSpaceInfo(slidePage);      
     }
 
     /**

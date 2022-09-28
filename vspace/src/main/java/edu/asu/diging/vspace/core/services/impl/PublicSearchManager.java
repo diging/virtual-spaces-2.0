@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -62,7 +63,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     
     
     @Override
-    public List<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
+    public Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
 
         List<ISlide> slideList = new ArrayList<>();
 
@@ -81,11 +82,12 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
                 slideList.add(slideWithSpace);
             }
         }
-        return slideList;
+        
+        return new PageImpl<>(slideList, slidePage.getPageable(), slidePage.getTotalElements());
     }
 
     @Override
-    public List<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
+    public Page<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
         List<IModule> moduleList = new ArrayList<>();
 
         //Adding space info for each module
@@ -103,12 +105,12 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
             }
         }
 
-        return moduleList;
+        return new PageImpl<>(moduleList, modulePage.getPageable(), modulePage.getTotalElements());
     }
 
 
     @Override
-    public List<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
+    public Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
 
         List<ISlide> slideTextList = new ArrayList<>();
 
@@ -127,7 +129,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
                 slideTextList.add(slideWithSpace);
             }
         }
-        return slideTextList;
+        return new PageImpl<>(slideTextList, slideTextPage.getPageable(), slideTextPage.getTotalElements());
     }
 
 
