@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -143,8 +145,8 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
 
     @Override
-    protected Page<ISlide> searchSlides(Pageable requestedPageForSlide, String searchTerm) {
-        return slideManager.findByNameOrDescriptionLinkedToSpace(requestedPageForSlide, searchTerm);
+    protected Page<ISlide> searchSlides(Pageable requestedPageForSlide, String searchTerm) { 
+        return slideManager.findByNameOrDescriptionLinkedToSpace(requestedPageForSlide, searchTerm);      
     }
 
 
