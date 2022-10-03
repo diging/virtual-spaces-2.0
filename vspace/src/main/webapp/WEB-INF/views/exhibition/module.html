@@ -1,62 +1,61 @@
 <html layout:decorate="~{layouts/main}">
-   <head>
-      <style type="text/css">
-      .link  {
-	  stroke: #999;
-	  stroke-opacity: 0.6;
-	  stroke-width: 2px;
-	}
+<head>
+<style type="text/css">
+.link {
+	stroke: #999;
+	stroke-opacity: 0.6;
+	stroke-width: 2px;
+}
 
-	.nodes circle {
-	  stroke: #fff;
-	  stroke-width: 1.5px;
-	}
-      	
-      	.modal-content{
-      	width:1200px;
-      	height:1200px;
-      	margin-left:-400px;
-      	}
-      	
-      	.modal-dialog{
-      	width:800px;
-      	height:800px;
-      	}
-      	
-      	.text{
-      	font-size:11px;
-      	}
-      
-	.imgFullScreen:hover .tooltiptext {
-   	 visibility: visible;
-	}
-	
-	.exitfullscreen:hover .tooltiptextForExitFullscreen {
-   	 visibility: visible;
-	}
-	
-	.module_map:hover .tooltiptext {
-   	 visibility: visible;
-	}
-	
+.nodes circle {
+	stroke: #fff;
+	stroke-width: 1.5px;
+}
 
-	.tooltiptextForExitFullscreen {
-	    visibility: hidden;
-	    width: 120px;
-	    color: white;
-	    text-align: center;
-	    font-size: 12px;
-	    padding: 3px 0;
-	    border-radius: 6px;
-	    position: absolute;
-	    z-index: 1;
-	    left: -138px;
-	    top: -15px;
-	    background: rgba(0, 0, 0, 0.6);
-	}
-      </style>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-      <script th:inline="javascript">
+.modal-content {
+	width: 1200px;
+	height: 1200px;
+	margin-left: -400px;
+}
+
+.modal-dialog {
+	width: 800px;
+	height: 800px;
+}
+
+.text {
+	font-size: 11px;
+}
+
+.imgFullScreen:hover .tooltiptext {
+	visibility: visible;
+}
+
+.exitfullscreen:hover .tooltiptextForExitFullscreen {
+	visibility: visible;
+}
+
+.module_map:hover .tooltiptext {
+	visibility: visible;
+}
+
+.tooltiptextForExitFullscreen {
+	visibility: hidden;
+	width: 120px;
+	color: white;
+	text-align: center;
+	font-size: 12px;
+	padding: 3px 0;
+	border-radius: 6px;
+	position: absolute;
+	z-index: 1;
+	left: -138px;
+	top: -15px;
+	background: rgba(0, 0, 0, 0.6);
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script th:inline="javascript">
       var json =[[${overview}]];
       var currentSlide = [[${currentSlideCon}]];
       var sequenceId = [[${currentSequenceId}]];
@@ -106,111 +105,133 @@
 		  }
 	}
       </script>
-   </head>
-   <body>
-    <div layout:fragment="content">
-        <div th:if="${showAlert == true}"
-            class="alert alert-warning center col-md-12"
-            style="text-align: center;">[[${message}]] <a
-                th:href="@{'/exhibit/space/'+${spaceId}}">
-                <button class="btn circle-btn" style="margin-left: 10px;">
-                    <span class="icon-double-chevron-left"></span> <span
-                        class="tooltiptext">Go To Space</span>
-                </button>
-            </a>
-        </div>
-        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
-        <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
-            <h3 class="textDiv">[[${module.name}]]</h3>
-            <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
-        </div>
-         <div class="Group_7_Class" >
-            <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
-               <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
-                  <button class="btn circle-btn-slide-nav">
-                         <span class="icon-chevron-left slide-nav"></span>
-                         <span class="tooltiptext">Previous slide</span>
-                  </button>
-               </div>
-           </a>
-            <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
-                    <button class="btn circle-btn-slide-nav">
-                         <span class="icon-chevron-right slide-nav"></span>
-                         <span class="tooltiptext">Next slide</span>
-                    </button>  
-               </div>
-            </a>
-            <div class="slideshow_next imgFullScreen" style="position: fixed; z-index:110; right: 11%;top: 50.3%;width:50px;">
-	            <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 33px; height: 33px;padding: 3px;"
-	                onclick="imageFullScreen()">
-	                    <span class="icon-visible secondary"></span>
-	                <span class="tooltiptext">Full screen option</span>
-	            </button>
-             </div>
-         </div>
-         <a th:href="@{'/exhibit/space/'+${spaceId}}">
-            <div class="exit_to_space_Class" style="position: fixed;  z-index:120;">
-                  <button class="btn circle-btn">
-                      <span class="icon-double-chevron-left"></span>
-                      <span class="tooltiptext">Go To Space</span>
-                  </button>
-            </div>
-         </a>
-         <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
-            <div class="exit_to_branchingPoint_Class" style="position: fixed;  z-index:110;">
-                  <button class="btn circle-btn">
-                      <span class="icon-rewind-end"></span>
-                      <span class="tooltiptext">Go To Start Sequence of Module</span>
-                  </button>
-            </div>
-         </a>
-         <a th:if="${showBackToPreviousChoice eq true}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
-            <div class="exit_to_previousChoice_Class" style="position: fixed; z-index:110;">
-                  <button class="btn circle-btn">
-                      <span class="icon-caret-left"></span>
-                      <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
-                  </button>
-            </div>
-         </a>
-         <div class="module_map" style="position: fixed; z-index:110 ;left: 4%;top: 50.3%;width:50px;">
-         <button class="btn circle-btn" onClick="showModuleMapModal()">
-         <span class="icon-map" ></span>
-         <span class="tooltiptext">view Module Map</span>
-         </button>
-         
-         </div>
-         
-         <div style="position: relative;top: 6.5%;">
-            <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
-                    <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                        <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-                    </div>
-                    <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
-                        <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </div>
-       <div id="moduleOverviewModal" class="modal" role="dialog">
-        	<div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Module Map</h5>
-                            <button type="button" class="close" id ="close"
-                                data-dismiss="modal" aria-label="Close" onClick="closeModal()">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div id="graph" class="modal-body" style="width:2000px;height:2000px">
-			<script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div th:if="${showAlert == true}"
+			class="alert alert-warning center col-md-12"
+			style="text-align: center;">
+			[[${message}]] <a th:href="@{'/exhibit/space/'+${spaceId}}">
+				<button class="btn circle-btn" style="margin-left: 10px;">
+					<span class="icon-double-chevron-left"></span> <span
+						class="tooltiptext">Go To Space</span>
+				</button>
+			</a>
+		</div>
+		<div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
+			<div th:if="${showAlert != true}"
+				style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
+				<h3 class="textDiv">[[${module.name}]]</h3>
+				<p class="slideNumberClass">Slide
+					[[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
+			</div>
+			<div class="Group_7_Class">
+				<a th:if="${!#strings.isEmpty(prevSlide)}"
+					th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
+					<div class="Slideshow_previous_Class"
+						style="position: fixed; z-index: 110; left: 13%; top: 40.3%;">
+						<button class="btn circle-btn-slide-nav">
+							<span class="icon-chevron-left slide-nav"></span> <span
+								class="tooltiptext">Previous slide</span>
+						</button>
+					</div>
+				</a> <a th:if="${!#strings.isEmpty(nextSlide)}"
+					th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
+					<div class="slideshow_next slideshow_next_Class"
+						style="position: fixed; z-index: 110; right: 11%; top: 40.3%;">
+						<button class="btn circle-btn-slide-nav">
+							<span class="icon-chevron-right slide-nav"></span> <span
+								class="tooltiptext">Next slide</span>
+						</button>
+					</div>
+				</a>
+				<div class="slideshow_next imgFullScreen"
+					style="position: fixed; z-index: 110; right: 11%; top: 50.3%; width: 50px;">
+					<button class="btn circle-btn" id="toggleFullscreenBtn"
+						style="width: 33px; height: 33px; padding: 3px;"
+						onclick="imageFullScreen()">
+						<span class="icon-visible secondary"></span> <span
+							class="tooltiptext">Full screen option</span>
+					</button>
+				</div>
+			</div>
+			<a th:href="@{'/exhibit/space/'+${spaceId}}">
+				<div class="exit_to_space_Class"
+					style="position: fixed; z-index: 120;">
+					<button class="btn circle-btn">
+						<span class="icon-double-chevron-left"></span> <span
+							class="tooltiptext">Go To Space</span>
+					</button>
+				</div>
+			</a> <a
+				th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
+				<div class="exit_to_branchingPoint_Class"
+					style="position: fixed; z-index: 110;">
+					<button class="btn circle-btn">
+						<span class="icon-rewind-end"></span> <span class="tooltiptext">Go
+							To Start Sequence of Module</span>
+					</button>
+				</div>
+			</a> <a th:if="${showBackToPreviousChoice eq true}"
+				th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
+				<div class="exit_to_previousChoice_Class"
+					style="position: fixed; z-index: 110;">
+					<button class="btn circle-btn">
+						<span class="icon-caret-left"></span> <span class="tooltiptext">Go
+							back to [[${previousBranchingPoint.name} ]]</span>
+					</button>
+				</div>
+			</a>
+			<div class="module_map"
+				style="position: fixed; z-index: 110; left: 4%; top: 50.3%; width: 50px;">
+				<button class="btn circle-btn" onClick="showModuleMapModal()">
+					<span class="icon-map"></span> <span class="tooltiptext">view
+						Module Map</span>
+				</button>
+
+			</div>
+
+			<div style="position: relative; top: 6.5%;">
+				<h3 style="text-align: center;">[[${currentSlideCon.name}]]</h3>
+				<div id="blocks" class="Group_8_Class"
+					th:each="contents: ${currentSlideCon.contents}">
+					<img th:if="${contents['class'].simpleName ==  'ImageBlock'}"
+						id="${contents.id}" class="imgDiv"
+						th:src="@{'/api/image/'+${contents.image.id}}"
+						style="max-width: 57%">
+					<div th:if="${contents['class'].simpleName ==  'TextBlock'}"
+						id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+					<div th:if="${contents['class'].simpleName == 'ChoiceBlock'}"
+						id="${contents.id}" class="textDiv" style="margin: 1%;">
+						<div th:if="${contents.showsAll eq true}"
+							th:each="choice: ${choices}" class="list-group">
+							<a
+								th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+								class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+						</div>
+						<div class="list-group" th:if="${contents.showsAll eq false}"
+							th:each="choice: ${contents.choices}">
+							<a
+								th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+								class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="moduleOverviewModal" class="modal" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Module Map</h5>
+						<button type="button" class="close" id="close"
+							data-dismiss="modal" aria-label="Close" onClick="closeModal()">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div id="graph" class="modal-body"
+						style="width: 2000px; height: 2000px">
+						<script>
 			 const branchingPointsSet = new Set();
 			 const sequencesMap = new Map();
 			 function createFromSequence(sequence, treeData, isStartSequence){
@@ -342,12 +363,11 @@
 			  var nodes = tree.nodes(root).reverse(),
 				  links = tree.links(nodes);
 			  
-			  console.log("TREE NODE :", nodes);
-			  console.log("LINK :", links);
-			 //node = (nodes. splice(nodes. length - 2, 2));
-			 //links = (links. splice(0,nodes. length-1));
+			 
+			 node = (nodes. splice(nodes. length - 2, 2));
+			 links = (links. splice(0,nodes. length-1));
 			  
-			  console.log("LINK :", links);
+			  
 			  // Normalize for fixed-depth.
 			  nodes.forEach(function(d) { d.y = d.depth * 110; });
 
@@ -462,10 +482,10 @@
 			}  */
 				        
                         </script>
-         </div>
-         </div>
-         </div>
-         </div>
-      </div>
-    </body>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
 </html>
