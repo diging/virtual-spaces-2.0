@@ -48,9 +48,9 @@ public class ExhibitionConfigurationController {
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
     
-
-
+    
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
+    public static String aboutPageLang = null;
     
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
@@ -92,13 +92,11 @@ public class ExhibitionConfigurationController {
             @RequestParam("exhibitLanguage") String selectedLanguage,
             RedirectAttributes attributes) throws IOException {
     	
-    	System.out.println("title"+title);
-    	System.out.println("language"+languages.hashCode());
+   
     	System.out.println("S language  "+selectedLanguage);
-    	System.out.println("D language  "+defaultLanguage);
+    	aboutPageLang = selectedLanguage;
+    	System.out.println("G language  "+aboutPageLang);
     	
-
-
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;

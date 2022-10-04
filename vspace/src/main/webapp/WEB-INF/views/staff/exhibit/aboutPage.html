@@ -33,11 +33,14 @@
 					<label for="title">About Page Title:</label> <input type="text"
 						class="form-control" name="title" th:value="${aboutPage.title}" />
 				</div>
+				<span th:if="${selectedLanguage!=NULL}">[[${selectedLanguage}]]</span>
+				
+				<div id="${selectedLanguage}" >
 				<div style="padding-top: 20px;">
-				<p><span lang="hi">Bonjour</span></p>
 					<label for="text">Text:</label>
 					<textarea  id="textBlockText" rows="3"
 						name="aboutPageText" th:text="${aboutPage.aboutPageText}"></textarea>
+				</div>
 				</div>
 
 				<p style="padding-top: 20px;">
@@ -45,6 +48,8 @@
 				</p>
 			</form>
 		</div>
+			
+		
 	</div>
 </body>
 </html>

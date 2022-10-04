@@ -30,11 +30,14 @@ public class ExhibitionAboutPageController {
 
     @Autowired
     private IExhibitionAboutPageManager aboutPageManager;
-
+   
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+        String language = ExhibitionConfigurationController.aboutPageLang;
+        System.out.println("sdfghfj "+language);
+        model.addAttribute("selectedLanguage", language);
         model.addAttribute("aboutPage", exhibitionAboutPage);
         return "staff/exhibit/aboutPage";
     }
