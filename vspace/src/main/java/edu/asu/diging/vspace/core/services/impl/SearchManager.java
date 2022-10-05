@@ -356,7 +356,7 @@ public abstract class SearchManager implements ISearchManager {
             slidetextPage = searchSlideTexts(requestedPageForSlideText,
                     searchTerm);
         }
-        return slidetextPage;
+        return updateSlideTextPageWithSpaceInfo(slidetextPage);
     }
 
 
