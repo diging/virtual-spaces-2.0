@@ -85,7 +85,6 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        System.out.println("********************************"+spaceImage);
         exhibition.setSpacelinkImage(spaceImage);
         
         
@@ -113,6 +112,7 @@ public class ExhibitionConfigurationController {
         if (spacelinkImage != null) {
         	spaceImage = spacelinkImage.getBytes();
         	spaceLinkFilename = spacelinkImage.getOriginalFilename();
+        	System.out.println("space Image name :"+spaceImage);
             
         }
         

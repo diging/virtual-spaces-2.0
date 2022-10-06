@@ -10,6 +10,7 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.DefaultImageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -17,6 +18,7 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.DefaultImages;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -38,6 +40,9 @@ public class ExhibitionManager implements IExhibitionManager {
 
 	@Autowired
 	private ImageRepository imageRepo;
+	
+	@Autowired
+    private DefaultImageRepository defaultImageRepository;
 
 	@Autowired
 	private IStorageEngine storage;
@@ -90,14 +95,15 @@ public class ExhibitionManager implements IExhibitionManager {
 
 	@Override
 	public void storeDefaultImage(byte[] image, String filename) {
+	    System.out.println("Filename :     "+filename);
 
 		IVSImage defaultImage = null;
 		if (image != null && image.length > 0) {
 			Tika tika = new Tika();
 			String contentType = tika.detect(image);
 
-			defaultImage = imageFactory.createImage(filename, contentType);
-			defaultImage = imageRepo.save((VSImage) defaultImage);
+			defaultImage = imageFactory.createDefaultImage(filename, contentType);
+			defaultImage = defaultImageRepository.save((DefaultImages) defaultImage);
 		}
 
 		CreationReturnValue returnValue = new CreationReturnValue();
@@ -116,7 +122,8 @@ public class ExhibitionManager implements IExhibitionManager {
 				defaultImage.setHeight(imageData.getHeight());
 				defaultImage.setWidth(imageData.getWidth());
 			}
-			imageRepo.save((VSImage) defaultImage);
+			System.out.println("***********---------just before saving");
+			defaultImageRepository.save((DefaultImages) defaultImage);
 
 		}
 
