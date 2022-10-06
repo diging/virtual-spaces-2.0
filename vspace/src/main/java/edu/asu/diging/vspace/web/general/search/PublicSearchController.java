@@ -72,8 +72,7 @@ public class PublicSearchController extends SearchController {
 
     public Page<IModule> searchInModules(String modulePagenum, Model model, String searchTerm) {
         Page<IModule> modulePage  = publicSearchManager.searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));
-      updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent());
-
+        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent());
         return modulePage;
     }
 
@@ -91,10 +90,8 @@ public class PublicSearchController extends SearchController {
      * @param searchTerm   This is the search string which is being searched.
      */
     public Page<ISlide> searchInSlides(String slidePagenum, Model model, String searchTerm) {     
-        Page<ISlide> slidePage = publicSearchManager.searchSlidesAndPaginate( searchTerm, Integer.parseInt(slidePagenum));
-        
-      updateModelWithSlideSearchResults(slidePagenum, model, slidePage, slidePage.getContent());
-
+        Page<ISlide> slidePage = publicSearchManager.searchSlidesAndPaginate( searchTerm, Integer.parseInt(slidePagenum));        
+        updateModelWithSlideSearchResults(slidePagenum, model, slidePage, slidePage.getContent());
         return slidePage;
     }
 
@@ -114,7 +111,7 @@ public class PublicSearchController extends SearchController {
     public Page<ISlide> searchInSlideTexts(String slideTextPagenum, Model model, String searchTerm) {       
         Page<ISlide> slideTextPage = publicSearchManager.searchSlideTextsAndPaginate(searchTerm, Integer.parseInt(slideTextPagenum));
         updateModelWithSlideTextSearchResults(slideTextPagenum, model, searchTerm, slideTextPage, slideTextPage.getContent());
-        return  slideTextPage;
+        return slideTextPage;
     }
 
     
