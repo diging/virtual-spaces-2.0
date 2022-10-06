@@ -62,7 +62,7 @@ public class Space extends VSpaceElement implements ISpace {
     @OneToMany(mappedBy = "space", targetEntity = SpaceTitle.class)
     private List<SpaceTitle> spaceTitle;
 
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "space", targetEntity = SpaceDescription.class)
     private List<SpaceDescription> spaceDescription;
@@ -215,14 +215,34 @@ public class Space extends VSpaceElement implements ISpace {
         this.hideIncomingLinks = hideIncomingLinks;
     }
     
+    public List<SpaceTitle> getSpaceTitle() {
+        return spaceTitle;
+    }
+
+    public void setSpaceTitle(List<SpaceTitle> spaceTitle) {
+        this.spaceTitle = spaceTitle;
+    }
+
+    public List<SpaceDescription> getSpaceDescription() {
+        return spaceDescription;
+    }
+
+    public void setSpaceDescription(List<SpaceDescription> spaceDescription) {
+        this.spaceDescription = spaceDescription;
+    }
+    
     @Override 
     public void setDescription(String description) {
-        
+        SpaceDescription spaceDescription = new SpaceDescription();
+        spaceDescription.setDescription(description);
+        this.getSpaceDescription().add(spaceDescription);
     }
     
     @Override 
     public void setName(String title) {
-        
+        SpaceTitle spaceTitle = new SpaceTitle();
+        spaceTitle.setName(title);
+        this.getSpaceTitle().add(spaceTitle);
     }
 
 }
