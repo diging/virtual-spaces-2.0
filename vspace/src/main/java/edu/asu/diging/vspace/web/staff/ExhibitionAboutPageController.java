@@ -36,8 +36,10 @@ public class ExhibitionAboutPageController {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         String language = ExhibitionConfigurationController.aboutPageLang;
+        String dlanguage=ExhibitionConfigurationController.aboutPageDefaultLang;
         System.out.println("sdfghfj "+language);
         model.addAttribute("selectedLanguage", language);
+        model.addAttribute("defaultLanguage", dlanguage);
         model.addAttribute("aboutPage", exhibitionAboutPage);
         return "staff/exhibit/aboutPage";
     }

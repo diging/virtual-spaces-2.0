@@ -51,6 +51,7 @@ public class ExhibitionConfigurationController {
     
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
     public static String aboutPageLang = null;
+    public static String aboutPageDefaultLang = null;
     
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
@@ -95,6 +96,7 @@ public class ExhibitionConfigurationController {
    
     	System.out.println("S language  "+selectedLanguage);
     	aboutPageLang = selectedLanguage;
+    	aboutPageDefaultLang= defaultLanguage;
     	System.out.println("G language  "+aboutPageLang);
     	
         ISpace startSpace = spaceManager.getSpace(spaceID);
