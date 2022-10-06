@@ -5,10 +5,10 @@
 	
 	<body>
 		<div th:if="${isExhPreview} == null OR ${isExhPreview} == false" th:fragment="navbar">
-			<nav class="nav-bar" >
+			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" title="Go to exhibition" th:href="@{/}"><img th:src="@{/resources/maintenance/img/logo-11.png}" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
-		      <div th:if="${isLoginPage}==null" class="searchInput" style="height:40px;">
+		      <div th:if="${isLoginPage}==null" class="searchInput" >
     			  <input class="form-control" style="background: none; margin-right: 4px;" type="text" id="searchField" placeholder="Search..." th:value="${searchWord}"><a id="searchLink"><button class="btn primary-btn" type="submit" id="searchButton" style="height:40px; padding: 8px;"><span class="icon-search"></span></button></a>
 			  </div>
 		      <div class="nav" id="navbarCollapse">
