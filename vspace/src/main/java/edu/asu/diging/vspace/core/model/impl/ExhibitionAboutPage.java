@@ -6,10 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -32,6 +36,15 @@ public class ExhibitionAboutPage {
     
     @Lob
     private String aboutPageText;
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "exhibitionAboutPage", targetEntity = ExhibitionTitle.class)
+    private List<ExhibitionTitle> exhibitionTitle;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "exhibitionAboutPage", targetEntity = ExhibitionDescription.class)
+    private List<ExhibitionDescription> exhibitionAboutPageDescription;
 
     public String getId() {
         return id;
