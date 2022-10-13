@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-public class LanguageObject {
+public class LanguageObject implements ILanguageObject {
     
     
     @Id

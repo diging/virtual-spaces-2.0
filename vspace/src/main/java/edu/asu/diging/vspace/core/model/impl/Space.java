@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -59,10 +60,10 @@ public class Space extends VSpaceElement implements ISpace {
     private Boolean incomingLinks;
     
     @OneToMany(mappedBy = "text", targetEntity = LanguageObject.class)
-    private List<LanguageObject> spaceTitles;
+    private List<ILanguageObject> spaceTitles;
     
     @OneToMany(mappedBy = "text", targetEntity = LanguageObject.class)
-    private List<LanguageObject> spaceDescriptions;
+    private List<ILanguageObject> spaceDescriptions;
     
 
 
@@ -234,7 +235,10 @@ public class Space extends VSpaceElement implements ISpace {
     public void setDescription(String description) {             
         LanguageObject languageObject = new LanguageObject();
         languageObject.setText(description);    
-        languageObject.setExhibitionLanguage(null);       
+        languageObject.setExhibitionLanguage(null);  
+        if(this.getSpaceDescriptions() == null) {
+            this.setSpaceDescriptions(new ArrayList());
+        }
         this.getSpaceDescriptions().add(languageObject);
     }
     
@@ -242,7 +246,10 @@ public class Space extends VSpaceElement implements ISpace {
     public void setName(String title) {
         LanguageObject languageObject = new LanguageObject();
         languageObject.setText(title);    
-        languageObject.setExhibitionLanguage(null);       
+        languageObject.setExhibitionLanguage(null); 
+        if(this.getSpaceTitles() == null) {
+            this.setSpaceTitles(new ArrayList());
+        }
         this.getSpaceTitles().add(languageObject);
     }
 
