@@ -13,32 +13,27 @@ import edu.asu.diging.vspace.core.model.IExhibitionDescription;
 
 
 @Entity
-public class ExhibitionDescription extends VSpaceElement implements IExhibitionDescription{
+public class LanguageDescriptionObject {
 	
 	@Id
-    @GeneratedValue(generator = "exhibition_description_id_generator")
-    @GenericGenerator(name = "exhibition_description_id_generator", parameters = @Parameter(name = "prefix", value = "EXHDES"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GeneratedValue(generator = "language_description_id_generator")
+    @GenericGenerator(name = "language_description_id_generator", parameters = @Parameter(name = "prefix", value = "EXHLANGOBJ"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = ExhibitionLanguage.class)
     private ExhibitionLanguage exhibitionLanguage; 
 
-    String description;
+    String userText;
 
-    @ManyToOne(targetEntity = ExhibitionAboutPage.class)
-    private ExhibitionAboutPage exhibitionAboutPage;
+    public String getUserText() {
+		return userText;
+	}
 
-    @Override
-    public String getId() {
-        return null;
-    }
+	public void setUserText(String userText) {
+		this.userText = userText;
+	}
 
-    @Override
-    public void setId(String id) {
-
-    }
-
-    public ExhibitionLanguage getExhibitionLanguage() {
+	public ExhibitionLanguage getExhibitionLanguage() {
         return exhibitionLanguage;
     }
 

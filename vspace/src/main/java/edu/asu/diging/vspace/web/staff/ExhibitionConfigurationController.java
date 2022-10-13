@@ -50,9 +50,7 @@ public class ExhibitionConfigurationController {
     
     
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
-    public static String aboutPageLang = null;
-    public static String aboutPageDefaultLang = null;
-    
+  
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
@@ -90,15 +88,8 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
-            @RequestParam("exhibitLanguage") String selectedLanguage,
             RedirectAttributes attributes) throws IOException {
-    	
-   
-    	System.out.println("S language  "+selectedLanguage);
-    	aboutPageLang = selectedLanguage;
-    	aboutPageDefaultLang= defaultLanguage;
-    	System.out.println("G language  "+aboutPageLang);
-    	
+    	  	
         ISpace startSpace = spaceManager.getSpace(spaceID);
 
         Exhibition exhibition;

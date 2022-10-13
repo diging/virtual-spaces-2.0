@@ -14,6 +14,9 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import edu.asu.diging.vspace.core.model.IExhibitionDescription;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
+
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -25,7 +28,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
  *
  */
 @Entity
-public class ExhibitionAboutPage {
+public class ExhibitionAboutPage extends VSpaceElement{
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -37,16 +40,30 @@ public class ExhibitionAboutPage {
     @Lob
     private String aboutPageText;
     
-    @JsonIgnore
-    @OneToMany(mappedBy = "exhibitionAboutPage", targetEntity = ExhibitionTitle.class)
-    private List<ExhibitionTitle> exhibitionTitle;
+    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
+    private List<LanguageDescriptionObject> exhibitionTitles;
+
+    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
+    private List<LanguageDescriptionObject> exhibitionTextDescriptions;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "exhibitionAboutPage", targetEntity = ExhibitionDescription.class)
-    private List<ExhibitionDescription> exhibitionAboutPageDescription;
+    public List<LanguageDescriptionObject> getExhibitionTitles() {
+		return exhibitionTitles;
+	}
 
-    public String getId() {
+	public void setExhibitionTitles(List<LanguageDescriptionObject> exhibitionTitles) {
+		this.exhibitionTitles = exhibitionTitles;
+	}
+
+	public List<LanguageDescriptionObject> getExhibitionTextDescriptions() {
+		return exhibitionTextDescriptions;
+	}
+
+	public void setExhibitionTextDescriptions(List<LanguageDescriptionObject> exhibitionTextDescriptions) {
+		this.exhibitionTextDescriptions = exhibitionTextDescriptions;
+	}
+
+	public String getId() {
         return id;
     }
 
@@ -68,6 +85,22 @@ public class ExhibitionAboutPage {
 
     public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
+    }
+    
+    @Override 
+    public void setDescription(String description) {             
+    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+        languageObject.setUserText(description);    
+        languageObject.setExhibitionLanguage(null);       
+        this.getExhibitionTextDescriptions().add(languageObject);
+    }
+    
+    @Override 
+    public void setName(String title) {
+    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+        languageObject.setUserText(title);    
+        languageObject.setExhibitionLanguage(null);       
+        this.getExhibitionTitles().add(languageObject);
     }
     
     /*
