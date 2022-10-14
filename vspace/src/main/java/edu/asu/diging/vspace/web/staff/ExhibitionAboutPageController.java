@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -30,17 +31,17 @@ public class ExhibitionAboutPageController {
 
     @Autowired
     private IExhibitionAboutPageManager aboutPageManager;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
    
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        String language = ExhibitionConfigurationController.aboutPageLang;
-        String dlanguage=ExhibitionConfigurationController.aboutPageDefaultLang;
-        System.out.println("sdfghfj "+language);
-        model.addAttribute("selectedLanguage", language);
-        model.addAttribute("defaultLanguage", dlanguage);
         model.addAttribute("aboutPage", exhibitionAboutPage);
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
+        model.addAttribute("exhibitionLanguages" , startExhibtion.getLanguages());
         return "staff/exhibit/aboutPage";
     }
 
