@@ -20,6 +20,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.ILanguageObject;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -215,42 +216,45 @@ public class Space extends VSpaceElement implements ISpace {
         this.hideIncomingLinks = hideIncomingLinks;
     }
     
-    public List<LanguageObject> getSpaceTitles() {
+    public List<ILanguageObject> getSpaceTitles() {
         return spaceTitles;
     }
 
-    public void setSpaceTitles(List<LanguageObject> spaceTitles) {
+    public void setSpaceTitles(List<ILanguageObject> spaceTitles) {
         this.spaceTitles = spaceTitles;
     }
 
-    public List<LanguageObject> getSpaceDescriptions() {
+    public List<ILanguageObject> getSpaceDescriptions() {
         return spaceDescriptions;
     }
 
-    public void setSpaceDescriptions(List<LanguageObject> spaceDescriptions) {
+    public void setSpaceDescriptions(List<ILanguageObject> spaceDescriptions) {
         this.spaceDescriptions = spaceDescriptions;
     }
     
-    @Override 
-    public void setDescription(String description) {             
-        LanguageObject languageObject = new LanguageObject();
-        languageObject.setText(description);    
-        languageObject.setExhibitionLanguage(null);  
-        if(this.getSpaceDescriptions() == null) {
-            this.setSpaceDescriptions(new ArrayList());
-        }
-        this.getSpaceDescriptions().add(languageObject);
-    }
-    
-    @Override 
-    public void setName(String title) {
-        LanguageObject languageObject = new LanguageObject();
-        languageObject.setText(title);    
-        languageObject.setExhibitionLanguage(null); 
-        if(this.getSpaceTitles() == null) {
-            this.setSpaceTitles(new ArrayList());
-        }
-        this.getSpaceTitles().add(languageObject);
-    }
+//    @Override 
+//    public void setDescription(String description) {             
+////        LanguageObject languageObject = new LanguageObject();
+////        languageObject.setText(description);    
+////        languageObject.setExhibitionLanguage(null);  
+////        if(this.getSpaceDescriptions() == null) {
+////            this.setSpaceDescriptions(new ArrayList());
+////        }
+////        this.getSpaceDescriptions().add(languageObject);
+//        this.setDescription(description);    
+//        }
+//    
+//    @Override 
+//    public void setName(String title) {
+////        LanguageObject languageObject = new LanguageObject();
+////        languageObject.setText(title);    
+////        languageObject.setExhibitionLanguage(null); 
+////        if(this.getSpaceTitles() == null) {
+////            this.setSpaceTitles(new ArrayList());
+////        }
+////        this.getSpaceTitles().add(languageObject);
+//        
+//        this.title = title;
+//    }
 
 }

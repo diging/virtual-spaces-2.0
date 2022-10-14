@@ -52,6 +52,7 @@ public class AddSpaceController {
         model.addAttribute("images", imageService.getImages(1));      
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
         model.addAttribute("exhibitionLanguages" , startExhibtion.getLanguages());
+        
 
         return "staff/spaces/add";
     }

@@ -8,6 +8,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import edu.asu.diging.vspace.core.model.ILanguageObject;
+
 @Entity
 public class LanguageObject implements ILanguageObject {
     
