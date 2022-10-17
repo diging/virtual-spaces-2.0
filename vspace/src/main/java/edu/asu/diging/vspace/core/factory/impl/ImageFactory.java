@@ -28,10 +28,11 @@ public class ImageFactory implements IImageFactory {
     }
     
     @Override
-    public IVSImage createDefaultImage(String filename, String fileType) {
+    public IVSImage createDefaultImage(String filename, String fileType, String spaceId) {
         IVSImage defaultImage = new DefaultImages();
         defaultImage.setFilename(filename);
         defaultImage.setFileType(fileType);
+        defaultImage.setDescription(spaceId);
         return defaultImage;
         
         

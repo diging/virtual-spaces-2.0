@@ -35,6 +35,6 @@ public interface IExhibitionManager {
 
     IExhibition getStartExhibition();
     
-    public void storeDefaultImage(byte[] image, String filename);
+    public void storeDefaultImage(byte[] image, String filename,String spacdeId);
 
 }

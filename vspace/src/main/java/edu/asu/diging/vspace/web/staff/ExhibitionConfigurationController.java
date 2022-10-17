@@ -105,22 +105,25 @@ public class ExhibitionConfigurationController {
     		@RequestParam("externalLinkImage") MultipartFile externalLinkImage,
     		@RequestParam("spacelinkImage")  MultipartFile spacelinkImage,
     		@RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
+    		@RequestParam("spaceParam") String spaceID,
             Principal principal, RedirectAttributes attributes) throws IOException {
     	
-    	
+    	System.out.println(spaceID);
         String spaceLinkFilename = null;
         if (spacelinkImage != null) {
         	spaceImage = spacelinkImage.getBytes();
         	spaceLinkFilename = spacelinkImage.getOriginalFilename();
-        	System.out.println("space Image name :"+spaceImage);
-            
+        	exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename,spaceID);
+        	
         }
         
         byte[] moduleImage = null;
         String moduleLinkFilename = null;
-        if (spacelinkImage != null) {
+        if (moduleImage != null) {
         	moduleImage = moduleLinkImage.getBytes();
         	moduleLinkFilename = moduleLinkImage.getOriginalFilename();
+        	exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,spaceID);
+        	
             
         }
     	
@@ -129,10 +132,12 @@ public class ExhibitionConfigurationController {
         if (externalLinkImage != null) {
         	externalImage = externalLinkImage.getBytes();
         	externalLinkFilename = externalLinkImage.getOriginalFilename();
+        	exhibitManager.storeDefaultImage(externalImage, externalLinkFilename,spaceID);
             
         }
        
-        exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename);
+        //exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename);
+        
         
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }

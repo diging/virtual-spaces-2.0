@@ -34,6 +34,8 @@ public class DefaultImages extends VSpaceElement implements IVSImage {
 
     private int height;
     private int width;
+    
+    private String spaceId;
 
     @OneToMany(targetEntity = Tag.class)
     private List<ITag> tags;
@@ -153,5 +155,15 @@ public class DefaultImages extends VSpaceElement implements IVSImage {
     public void setCategories(List<ImageCategory> categories) {
         this.categories = categories;
     }
+
+    public String getSpaceId() {
+        return spaceId;
+    }
+
+    public void setSpaceId(String spaceId) {
+        this.spaceId = spaceId;
+    }
+    
+    
 
 }
