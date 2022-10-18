@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -15,7 +16,9 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IExhibitionDescription;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
+import edu.asu.diging.vspace.core.model.display.impl.AboutPageData;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -28,7 +31,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
  *
  */
 @Entity
-public class ExhibitionAboutPage extends VSpaceElement{
+public class ExhibitionAboutPage extends AboutPageData{
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -41,25 +44,25 @@ public class ExhibitionAboutPage extends VSpaceElement{
     private String aboutPageText;
     
     @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
-    private List<LanguageDescriptionObject> exhibitionTitles;
+    private List<ILanguageDescriptionObject> exhibitionTitles;
 
     @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
-    private List<LanguageDescriptionObject> exhibitionTextDescriptions;
+    private List<ILanguageDescriptionObject> exhibitionTextDescriptions;
 
 
-    public List<LanguageDescriptionObject> getExhibitionTitles() {
+    public List<ILanguageDescriptionObject> getExhibitionTitles() {
 		return exhibitionTitles;
 	}
 
-	public void setExhibitionTitles(List<LanguageDescriptionObject> exhibitionTitles) {
+	public void setExhibitionTitles(List<ILanguageDescriptionObject> exhibitionTitles) {
 		this.exhibitionTitles = exhibitionTitles;
 	}
 
-	public List<LanguageDescriptionObject> getExhibitionTextDescriptions() {
+	public List<ILanguageDescriptionObject> getExhibitionTextDescriptions() {
 		return exhibitionTextDescriptions;
 	}
 
-	public void setExhibitionTextDescriptions(List<LanguageDescriptionObject> exhibitionTextDescriptions) {
+	public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
 		this.exhibitionTextDescriptions = exhibitionTextDescriptions;
 	}
 
@@ -75,31 +78,30 @@ public class ExhibitionAboutPage extends VSpaceElement{
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getAboutPageText() {
         return aboutPageText;
     }
 
-    public void setAboutPageText(String aboutPageText) {
-        this.aboutPageText = aboutPageText;
-    }
     
     @Override 
-    public void setDescription(String description) {             
+    public void setAboutPageText(String description) {             
     	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
         languageObject.setUserText(description);    
-        languageObject.setExhibitionLanguage(null);       
+        languageObject.setExhibitionLanguage(null); 
+        if(this.getExhibitionTextDescriptions() == null) {
+            this.setExhibitionTextDescriptions(new ArrayList());
+        }
         this.getExhibitionTextDescriptions().add(languageObject);
     }
     
     @Override 
-    public void setName(String title) {
+    public void setTitle(String title) {
     	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
         languageObject.setUserText(title);    
-        languageObject.setExhibitionLanguage(null);       
+        languageObject.setExhibitionLanguage(null);
+        if(this.getExhibitionTitles() == null) {
+            this.setExhibitionTitles(new ArrayList());
+        }
         this.getExhibitionTitles().add(languageObject);
     }
     
