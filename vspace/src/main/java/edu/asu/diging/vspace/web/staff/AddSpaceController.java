@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.LanguageObject;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -51,8 +54,15 @@ public class AddSpaceController {
         model.addAttribute("space", new SpaceForm());
         model.addAttribute("images", imageService.getImages(1));      
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
-        model.addAttribute("exhibitionLanguages" , startExhibtion.getLanguages());
+       
+        List<LanguageObject> languageObjectList = new ArrayList();
+        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
+            LanguageObject languageObject = new LanguageObject();
+            languageObject.setExhibitionLanguage(exhibitionLanguage);
+            languageObjectList.add(languageObject);
+        });
         
+        model.addAttribute("languageObjectList" , languageObjectList);
 
         return "staff/spaces/add";
     }
