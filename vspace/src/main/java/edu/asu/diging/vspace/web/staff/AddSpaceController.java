@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LanguageObject;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -58,11 +59,11 @@ public class AddSpaceController {
         List<LanguageObject> languageObjectList = new ArrayList();
         startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
             LanguageObject languageObject = new LanguageObject();
-            languageObject.setExhibitionLanguage(exhibitionLanguage);
+            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
             languageObjectList.add(languageObject);
         });
         
-        model.addAttribute("languageObjectList" , languageObjectList);
+        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 
         return "staff/spaces/add";
     }

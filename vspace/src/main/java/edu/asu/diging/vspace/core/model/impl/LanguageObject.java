@@ -24,7 +24,7 @@ public class LanguageObject implements ILanguageObject {
 
 
     @OneToOne(targetEntity = ExhibitionLanguage.class)
-    private IExhibitionLanguage exhibitionLanguage; 
+    ExhibitionLanguage exhibitionLanguage; 
 
     String text;
 
@@ -38,12 +38,12 @@ public class LanguageObject implements ILanguageObject {
     }
 
 
-    public IExhibitionLanguage getExhibitionLanguage() {
+    public ExhibitionLanguage getExhibitionLanguage() {
         return exhibitionLanguage;
     }
 
 
-    public void setExhibitionLanguage(IExhibitionLanguage exhibitionLanguage) {
+    public void setExhibitionLanguage(ExhibitionLanguage exhibitionLanguage) {
         this.exhibitionLanguage = exhibitionLanguage;
     }
 
