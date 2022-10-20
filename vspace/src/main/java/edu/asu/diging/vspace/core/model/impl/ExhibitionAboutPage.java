@@ -31,7 +31,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
  *
  */
 @Entity
-public class ExhibitionAboutPage extends AboutPageData{
+public class ExhibitionAboutPage {
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -81,31 +81,17 @@ public class ExhibitionAboutPage extends AboutPageData{
     public String getAboutPageText() {
         return aboutPageText;
     }
-
     
-    @Override 
-    public void setAboutPageText(String description) {             
-    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-        languageObject.setUserText(description);    
-        languageObject.setExhibitionLanguage(null); 
-        if(this.getExhibitionTextDescriptions() == null) {
-            this.setExhibitionTextDescriptions(new ArrayList());
-        }
-        this.getExhibitionTextDescriptions().add(languageObject);
-    }
     
-    @Override 
     public void setTitle(String title) {
-    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-        languageObject.setUserText(title);    
-        languageObject.setExhibitionLanguage(null);
-        if(this.getExhibitionTitles() == null) {
-            this.setExhibitionTitles(new ArrayList());
-        }
-        this.getExhibitionTitles().add(languageObject);
-    }
-    
-    /*
+		this.title = title;
+	}
+
+	public void setAboutPageText(String aboutPageText) {
+		this.aboutPageText = aboutPageText;
+	}
+
+	/*
      * (non-Javadoc)
      * 
      * @see

@@ -8,12 +8,14 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import edu.asu.diging.vspace.core.model.IExhibitionDescription;
 
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.IExhibitionDescription;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 
 @Entity
-public class LanguageDescriptionObject {
+public class LanguageDescriptionObject implements ILanguageDescriptionObject{
 	
 	@Id
     @GeneratedValue(generator = "language_description_id_generator")
@@ -21,11 +23,20 @@ public class LanguageDescriptionObject {
     private String id;
 
     @OneToOne(targetEntity = ExhibitionLanguage.class)
-    private ExhibitionLanguage exhibitionLanguage; 
+    ExhibitionLanguage exhibitionLanguage; 
 
     String userText;
+    
 
-    public String getUserText() {
+    public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUserText() {
 		return userText;
 	}
 
