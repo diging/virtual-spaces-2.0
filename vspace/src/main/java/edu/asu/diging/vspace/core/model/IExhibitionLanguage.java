@@ -9,5 +9,7 @@ public interface IExhibitionLanguage extends IVSpaceElement {
     boolean isDefault();
     
     void setDefault(boolean isDefault);
+    
+    void setLabel(String label);
           
 }

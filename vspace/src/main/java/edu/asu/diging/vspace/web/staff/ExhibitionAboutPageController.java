@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +18,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
+import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+
 
 /**
  * 
@@ -40,8 +44,16 @@ public class ExhibitionAboutPageController {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         model.addAttribute("aboutPage", exhibitionAboutPage);
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
-        model.addAttribute("exhibitionLanguages" , startExhibtion.getLanguages());
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+        
+        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
+        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
+        	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+            languageObject.setExhibitionLanguage((ExhibitionLanguage)exhibitionLanguage);
+            languageObjectList.add(languageObject);
+        });
+        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
+        model.addAttribute("aboutPageForm", new AboutPageForm());
         return "staff/exhibit/aboutPage";
     }
 
