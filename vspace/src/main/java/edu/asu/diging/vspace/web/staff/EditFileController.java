@@ -23,7 +23,7 @@ public class EditFileController {
         IVSFile file = fileManager.editFile(fileId, fileForm.getFileName(), fileForm.getDescription());
         model.addAttribute("file", file);
 
-        return "staff/files/file";
+        return "redirect:/staff/files/list";
     }
     
     @RequestMapping(value = "/staff/files/{fileId}/edit", method = RequestMethod.GET)

@@ -53,10 +53,9 @@ function deleteFile(){
  		<h3 >Edit File</h3>
  		</div>
 		<div>
-
-			<form method="POST"
-				th:action='@{|/staff/files/${file.id}/edit?${_csrf.parameterName}=${_csrf.token}|}'
-				th:object="${fileForm}" enctype="multipart/form-data"
+			<form method="POST" 
+				th:action='@{|/staff/files/${file.id}/edit?${_csrf.parameterName}=${_csrf.token}|}'							
+ 				th:object="${fileForm}" enctype="multipart/form-data"
 				style="margin-top: 40px">
 
 				<div class="form-group row">
