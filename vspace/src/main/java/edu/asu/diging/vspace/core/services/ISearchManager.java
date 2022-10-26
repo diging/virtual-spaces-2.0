@@ -58,4 +58,6 @@ public interface ISearchManager {
     SearchSlideResults searchForSlide(String slidePagenum, String searchTerm);
 
     SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm);
+    
+    
 }

@@ -280,7 +280,6 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForModule = PageRequest.of(totalModulePage - 1, pageSize);
             modulePage = searchModules(requestedPageForModule, searchTerm);
         }
-//        return modulePage;
         
         return updateModulePageWithSpaceInfo(modulePage);
     }
@@ -317,7 +316,7 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForSlide = PageRequest.of(totalSlidePage - 1, pageSize);
             slidePage = searchSlides(requestedPageForSlide, searchTerm);
         }
-//        return slidePage;
+
         return updateSlidePageWithSpaceInfo(slidePage);      
     }
 

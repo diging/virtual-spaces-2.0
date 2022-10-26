@@ -65,7 +65,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     
     
     @Override
-    public Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
+    protected Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
 
         List<ISlide> slideList = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
                 try {
                     BeanUtils.copyProperties(slideWithSpace, slide);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
+                    logger.error("Could not create slideWithSpace.", e);
                 }
                 slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
                 slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
@@ -89,7 +89,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     }
 
     @Override
-    public Page<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
+    protected Page<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage) {
         List<IModule> moduleList = new ArrayList<>();
 
         //Adding space info for each module
@@ -112,7 +112,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
 
     @Override
-    public Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
+    protected Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
 
         List<ISlide> slideTextList = new ArrayList<>();
 
@@ -124,7 +124,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
                 try {
                     BeanUtils.copyProperties(slideWithSpace, slide);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Could not create moduleWithSpace.", e);
+                    logger.error("Could not create slideTextWithSpace.", e);
                 }
                 slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
                 slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());

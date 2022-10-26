@@ -17,10 +17,5 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 public interface IPublicSearchManager extends ISearchManager{
 
-    Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
-    
-    Page<IModule> updateModulePageWithSpaceInfo(Page<IModule> modulePage);
-
-    Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
 
 }

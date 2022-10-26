@@ -20,14 +20,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Module;
+import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
+import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -62,6 +67,8 @@ public class PublicSearchManagerTest {
 
     private List<ISlide> slideTexts;
     
+    private List<IModuleLink> moduleLinks;
+    
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -79,8 +86,15 @@ public class PublicSearchManagerTest {
         Module module1 = new Module();
         module1.setId("MODULE_ID_1");
         
+        Sequence sequence1 = new Sequence();
+        sequence1.setId("START_SEQEUNCE_1");
+        module1.setStartSequence(sequence1);
+        
+        Sequence sequence2 = new Sequence();
+        sequence2.setId("START_SEQEUNCE_2");
         Module module2 = new Module();
         module2.setId("MODULE_ID_2");
+        module2.setStartSequence(sequence2);
         
         modules = new ArrayList<>();
         modules.add(module1);
@@ -88,9 +102,16 @@ public class PublicSearchManagerTest {
         
         Slide slide1 = new Slide();
         slide1.setId("SLIDE_ID_1");
+        slide1.setModule(module1);
+        List<IContentBlock> contentList = new ArrayList();
+        contentList.add(new TextBlock());
+        slide1.setContents(contentList);
         
         Slide slide2 = new Slide();
         slide2.setId("SLIDE_ID_2");
+        slide2.setModule(module2);
+        slide2.setContents(contentList);
+    
         
         slides = new ArrayList<>();
         slides.add(slide1);
@@ -98,13 +119,30 @@ public class PublicSearchManagerTest {
         
         Slide slideText1 = new Slide();
         slideText1.setId("SLIDETEXT_ID_1");
+        slideText1.setModule(module1);
+        slideText1.setContents(contentList);
         
         Slide slideText2 = new Slide();
         slideText2.setId("SLIDETEXT_ID_2");
+        slideText2.setModule(module2);
+        slideText2.setContents(contentList);
         
         slideTexts = new ArrayList<>();
         slideTexts.add(slideText1);
         slideTexts.add(slideText2);
+        
+        ModuleLink moduleLink1 = new ModuleLink();
+        moduleLink1.setSpace(spaces.get(0));
+        moduleLink1.setModule(modules.get(0));
+        
+        ModuleLink moduleLink2 = new ModuleLink();
+        moduleLink2.setSpace(spaces.get(1));
+        moduleLink2.setModule(modules.get(1));
+        
+        moduleLinks = new ArrayList();
+        moduleLinks.add(moduleLink1);      
+        moduleLinks.add(moduleLink2);
+
         
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 10);
     }
@@ -160,6 +198,10 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
+  
+        
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<IModule> tempResult = serviceToTest.searchModulesAndPaginate(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
@@ -173,8 +215,12 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(6, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<IModule>(new ArrayList<IModule>()));
+       
+        
         Pageable requestedPage1 = PageRequest.of(0, 10);
         when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage1, search)).thenReturn(new PageImpl<IModule>(modules));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<IModule> tempResult = serviceToTest.searchModulesAndPaginate(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
@@ -189,6 +235,8 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "module";
         when(moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<IModule>(modules));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<IModule> tempResult = serviceToTest.searchModulesAndPaginate(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(module -> module.getId()).collect(Collectors.toList());
@@ -201,7 +249,10 @@ public class PublicSearchManagerTest {
     public void test_searchInSlides_success() {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
+
         when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<ISlide> tempResult = serviceToTest.searchSlidesAndPaginate(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
@@ -217,6 +268,8 @@ public class PublicSearchManagerTest {
         when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
         when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage1, search)).thenReturn(new PageImpl<ISlide>(slides));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<ISlide> tempResult = serviceToTest.searchSlidesAndPaginate(search, 7);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
@@ -231,6 +284,8 @@ public class PublicSearchManagerTest {
         Pageable requestedPage = PageRequest.of(0, 10);
         String search = "slide";
         when(slideManager.findByNameOrDescriptionLinkedToSpace(requestedPage, search)).thenReturn(new PageImpl<ISlide>(slides));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<ISlide> tempResult = serviceToTest.searchSlidesAndPaginate(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
@@ -245,6 +300,8 @@ public class PublicSearchManagerTest {
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<ISlide> tempResult = serviceToTest.searchSlideTextsAndPaginate(search, 1);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
@@ -260,6 +317,8 @@ public class PublicSearchManagerTest {
         when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(new ArrayList<ISlide>()));
         Pageable requestedPage1 = PageRequest.of(0, 10);
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage1, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
         Page<ISlide> tempResult = serviceToTest.searchSlideTextsAndPaginate(search, 7);
@@ -277,6 +336,8 @@ public class PublicSearchManagerTest {
         String search = "test";
         when(textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPage, search, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED))
                 .thenReturn(new PageImpl<ISlide>(slideTexts));
+        when(moduleLinkManager.findFirstByModule(modules.get(0))).thenReturn((ModuleLink) moduleLinks.get(0));
+        when(moduleLinkManager.findFirstByModule(modules.get(1))).thenReturn((ModuleLink) moduleLinks.get(1));
         Page<ISlide> tempResult = serviceToTest.searchSlideTextsAndPaginate(search, -2);
         assertEquals(2, tempResult.getContent().size());
         List<String> idList = tempResult.stream().map(slide -> slide.getId()).collect(Collectors.toList());
