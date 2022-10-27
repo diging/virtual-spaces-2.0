@@ -1,282 +1,4 @@
 <html layout:decorate="~{layouts/main_staff}">
-   <head>
-      <script src="https://unpkg.com/moment"></script>
-      <script th:inline="javascript">
-         //# sourceURL=click.js
-         //------------Deleting Slides-------------------
-         function deleteSlide(slideId) {
-             $.ajax({
-                 url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+ slideId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-                 type: 'DELETE',
-                 cache       : false,
-                 contentType : false,
-                 success: function(data) {
-                     $("#"+slideId).closest('.slide').remove();
-                 },
-                 error: function(data) {
-                     var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                     $('.error').append(alert);
-                 }
-             });
-         } 
-         
-         function checkSlideInSequence(slideId) {
-         	$.ajax({
-                 url: "[(@{'/staff/module/'+${module.id}+'/slide/'})]"+slideId+'/sequences?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-                 type: 'GET',
-                 cache       : false,
-                 contentType : false,
-                 success: function(data) {
-                     if(data.length > 0){
-                         
-                         $("#orderedList").empty();
-                         $.each(data, function (index, sequenceData) {
-                             $('#orderedList').append("<li>"+sequenceData.name+"</li>");
-                         });
-                         $('#deleteSlideAlert').modal('show'); // popup #myModal id modal
-                         $("#deleteSlideAlert").data('value', slideId); // setter
-                     }
-                     else{
-                       deleteSlide(slideId);
-                       }	
-                     }
-             });
-         }
-         
-         function loadSlidesInSequences(sequenceId) {
-         		var moduleId=[[${module.id}]];
-         		$('.slidesInSeq').empty();
-         		$.ajax({
-         			type: "GET",
-         			url: "[(@{'/staff/module/'+${module.id}+'/sequence/'})]"+sequenceId+'/slides?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-         			async: false,
-         			success: function(response) {
-         				$.each(response, function (index, slide) {
-         					$('.slidesInSeq').append(
-         							'<a class="dropdown-item" href="/vspace/staff/module/[(${module.id})]/slide/'+slide.id+'">'+slide.name+'</a>'
-         						);
-         					});
-         				}
-         		});
-         }
-         
-         function guidedTour() {
-         	const tour = new Shepherd.Tour({
-         		  defaultStepOptions: {
-         		    cancelIcon: {
-         		      enabled: true
-         		    },
-         		    classes: '',
-         		    scrollTo: { behavior: 'smooth', block: 'center' },
-         		  },
-         		  useModalOverlay: true,
-         		});
-         
-         	tour.addStep({
-         	  title: 'Welcome to the Module editor!',
-         	  text: `Add or edit the content you want to show in your module.`,
-         	  buttons: [
-         	    {
-         	      action() {
-         	        return this.next();
-         	      },
-         	      text: 'Next'
-         	    }
-         	  ],
-         	  id: 'creating1'
-         	});
-         	
-         	tour.addStep({
-         	  title: 'Slide board',
-         	  text: `Create slides you want to show in your Module. You can create two types of slides: slides and branching points. A slide is like a power point slide, it can contain images, texts, and other content. A branching point is a slide that can link to other sequences in the module giving the user options what to look at next.`,
-         	  attachTo: {
-         	    element: '.slides',
-         	    on: 'bottom'
-         	  },
-         	  buttons: [
-         	    {
-         	      action() {
-         	        return this.back();
-         	      },
-         	      classes: 'shepherd-button-secondary',
-         	      text: 'Back'
-         	    },
-         	    {
-         	      action() {
-         	        return this.next();
-         	      },
-         	      classes: 'btn primary-btn',
-         	      text: 'Next'
-         	    }
-         	  ],
-         	  id: 'creating2'
-         	});
-         	
-         	tour.addStep({
-         	  title: 'Sequence board',
-         	  text: `Create sequences to set the order of slides. You can add or remove existing slides or you can change their order in a sequence.`,
-         	  attachTo: {
-         	    element: '.sequences',
-         	    on: 'bottom'
-         	  },
-         	  buttons: [
-         	    {
-         	      action() {
-         	        return this.back();
-         	      },
-         	      classes: 'shepherd-button-secondary',
-         	      text: 'Back'
-         	    },
-         	    {
-         	      action() {
-         	        return this.next();
-         	      },
-         	      text: 'Next'
-         	    }
-         	  ],
-         	  id: 'creating3'
-         	});
-         	
-         	tour.addStep({
-         	  title: 'Last step',
-         	  text: `Choose the sequence you want to show first and you are all set!`,
-         	  attachTo: {
-         	    element: '.startSequence',
-         	    on: 'bottom'
-         	  },
-         	  buttons: [
-         	    {
-         	      action() {
-         	        return this.back();
-         	      },
-         	      classes: 'shepherd-button-secondary',
-         	      text: 'Back'
-         	    },
-         	    {
-         	      action() {
-         	        return this.next();
-         	      },
-         	      text: 'Done'
-         	    }
-         	  ],
-         	  id: 'creating4'
-         	});
-         	
-         	
-         	tour.start();
-         }
-         
-         
-         $(document).ready(function() {
-         	
-         	if (localStorage.getItem("newModule") == null) {
-         		guidedTour();
-         		localStorage.setItem("newModule", false);
-         	}
-             
-             var dateFormat = 'MM-DD-YYYY hh:mm:ss A';
-             var date = document.getElementById('creationDate').value;
-             var localDate = moment(moment.utc(date)).local();
-             var dateInfo = document.getElementById('dateInfo');
-             dateInfo.title="Created on "+ localDate.format(dateFormat) +" by "+ [[${module.createdBy}]];
-         	
-         	$("#addSlideButton").on("click", function(e) {
-         		$("#createSlideAlert").show();
-         	});
-         	
-             $("#closeSlide").click(function (){
-                 $("#deleteSlideAlert").data('value', 0);
-                 $('#deleteSlideAlert').modal('hide'); 
-         	});
-         	
-             $("#cancelSlideDelButton").click(function () {
-                 $("#deleteSlideAlert").data('value', 0);
-                 $("#deleteSlideAlert").modal('hide');
-         	});
-         	
-         	
-         	$(".sequence").on("click", function(e) {
-         	    var sequenceId = this.id;
-         	    loadSlidesInSequences(sequenceId);
-         	});
-         	
-         	$("#deleteSlideFromSequence").on("click", function() {
-         		$('#deleteSlideAlert').modal('hide');
-         		var slideId = $("#deleteSlideAlert").data('value'); // getter
-         		deleteSlide(slideId);
-         	});
-         	
-         	$(function () {
-         		$('[data-toggle="tooltip"]').tooltip();
-         	});
-         				
-         });
-         
-      </script>
-   </head>
-   <body>
-      <div class="main-content" layout:fragment="content">
-         <div class="flex-spacing" style="margin-bottom: 10px;">
-            <div style="display: flex">
-               <div style="margin-right: 20px">
-                  <h2>
-                     <span style="color: var(--dark-grey)">Module:</span> [[${module.name}]]
-                  </h2>
-                  <p>[[${module.description}]]</p>
-               </div>
-               <div class="dropdown">
-                  <button class="btn btn-outline-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="icon-caret-down" style="font-size: 16px"></span>
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                     <a class="dropdown-item" data-toggle="tooltip" id="dateInfo" data-html="true" data-placement="top"><span class="icon-info-circle"></span>&emsp;Module info</a>
-                     <a class="dropdown-item" data-toggle="tooltip" title="Edit Module" th:href="@{'/staff/module/'+${module.id}+'/edit'}"><span class="icon-edit"></span>&emsp;Edit Module</a>
-                     <a class="dropdown-item" style="cursor: pointer" th:onclick="guidedTour()"><span class="icon-map"></span>&emsp; Start tour</a>
-                  </div>
-               </div>
-            </div>
-            <div class="startSequence" style="padding-bottom: 10px;">
-               <form th:action="@{'/staff/module/'+${module.id}+'/sequence/start'}" method ="POST" name="f" style="text-align: right;">
-                  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                  <p>Select the start sequence of the Module</p>
-                  <select class="form-control col-md-8" name="sequenceParam" style="display: inline-block !important; height:auto;">
-                     <option th:value="Select" th:text="Select"></option>
-                     <option th:each="sequences: ${sequences}" th:value=${sequences.id} th:selected="${sequences==module.startSequence}">[[${sequences.name}]]</option>
-                  </select>
-                  <button type="submit" style="margin-left:15px" class="btn primary-btn btn-sm">Submit</button>
-               </form>
-            </div>
-         </div>
-         <div class="flex-spacing" style="justify-content: right; margin-top:0;">
-            <div style="display:flex-right;">
-               <label style="text-align: right;">Module Status</label>
-               <form method="POST" th:action="@{'/staff/module/'+${module?.id}+'/status'}">
-               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
-               <select  class="form-control-sm" name="statusParam" style="width: 200px; display: inline; ">
-                  <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(moduleStatus,'PUBLISHED')}">Published</option>
-                  <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(moduleStatus,'UNPUBLISHED')}">Unpublished</option>
-               </select>
-               <p style="display: inline; padding-left: 10px;">
-                  <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-               </p>
-            </div>
-         </div>
-         <div class="tab sequences" style="margin-top: 0;">
-            <div style="display: flex; justify-content: space-between">
-               <h4>Sequences</h4>
-               <a th:href="@{${module.id}+'/sequence/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Sequence</a>				
-            </div>
-            <div id="list" style="margin-top: 0">
-               <ul class="list-group list-group-flush" th:each="sequence: ${sequences}">
-                  <li class="list-group-item"><a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${sequence.id}}">
-                     <span class="icon-2x2-grid"></span>&emsp;[[${sequence.name}]]</a>
-                     (Created on <span class="date">[[${sequence.creationDate}]]</span>
-                     by [[${sequence.createdBy}]])
-                  </li>
-               </ul>
-            </div>
-         </div>
-         <div class="tab slides" style="margin-top: 10px">
 <head>
 <script src="https://unpkg.com/moment"></script>
 <script th:inline="javascript">
@@ -598,67 +320,12 @@ $(document).ready(function() {
         
         <div id="slides" class="tab slides" style="margin-top: 10px">
             <div style="display: flex; justify-content: space-between">
-               <h4>All Slides</h4>
-               <!-- Commenting as this is planned for future development -->
-               <!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
-               <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Slide</a>
+                <h4>All Slides</h4>
+                <!-- Commenting as this is planned for future development -->
+                <!-- <button class="btn" style="background: var(--base-grey)"><i class="fas fa-filter black"></i></button> -->
+                <a th:href="@{${module.id}+'/slide/add'}" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Slide</a>
             </div>
             <div class="grid" id="grid" style="margin-top: 10px;">
-               <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
-                  <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 80%;">
-                  <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
-                  <span class="icon-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></span><br> 
-                  <span class="card-text" style="white-space: pre-wrap; max-height: 70px; overflow-y: scroll;">[[${slide.description}]]</span>
-                  </a>
-                  <button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
-                     th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">
-                  <span class="icon-trash error"></span>
-                  </button>
-               </div>
-            </div>
-         </div>
-         <div class="tab sequences" style="margin-top: 10px;">
-            <div style="display: flex; justify-content: space-between">
-               <h4>List of Spaces Linked to a Module</h4>
-            </div>
-            <span th:if="${spacesList==NULL}">[[${message}]]</span>
-            <div id="list" style="margin-top: 0">
-               <ul class="list-group list-group-flush" th:each="space: ${spacesList}">
-                  <li class="list-group-item">
-                     <span class="icon-2x2-grid"></span>&emsp;[[${space.name}]]
-                  </li>
-               </ul>
-            </div>
-         </div>
-         <div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
-            <div class="modal-dialog">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     <h4 class="modal-title" id="deleteModalTitle">Confirm Deletion?</h4>
-                     <button type="button" id="closeSlide" class="close"
-                        data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
-                  </div>
-                  <div class="modal-body">
-                     <p>
-                        This Slide is a part of Sequences shown below. Are you sure you want to delete it?
-                     </p>
-                     <ol id="orderedList">
-                     </ol>
-                  </div>
-                  <div class="modal-footer">
-                     <button type="button" id="cancelSlideDelButton"
-                        class="btn btn-default" data-dismiss="modal">Cancel</button>
-                     <button id="deleteSlideFromSequence" type="submit"
-                        class="btn btn-danger btn-ok checkSlideInSequence">Delete</button>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <input type="hidden" th:id="creationDate" th:value=${module.creationDate}>
-      </div>
-   </body>
-</html>
-
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
                     <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 80%;">
                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
@@ -672,6 +339,19 @@ $(document).ready(function() {
                 </div>
             </div>              
         </div>
+        <div class="tab sequences" style="margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between">
+               <h4>List of Spaces Linked to a Module</h4>
+            </div>
+            <span th:if="${spacesList==NULL}">This module has not been linked from a space yet.</span>
+            <div id="list" style="margin-top: 0">
+               <ul class="list-group list-group-flush" th:each="space: ${spacesList}">
+                  <li class="list-group-item">
+                     <span class="icon-2x2-grid"></span>&emsp;[[${space.name}]]
+                  </li>
+               </ul>
+            </div>
+         </div>
 			
 		<div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
 		    <div class="modal-dialog">

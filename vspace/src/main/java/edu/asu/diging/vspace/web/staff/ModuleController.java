@@ -29,17 +29,16 @@ public class ModuleController {
     @Autowired
     private IModuleLinkManager moduleLink;
 
-    @RequestMapping("/staff/module/{id}")
+    @RequestMapping(STAFF_MODULE_PATH+"{id}")
     public String showModule(@PathVariable String id, Model model) {
         IModule module = moduleManager.getModule(id);
         model.addAttribute("module", module);
         model.addAttribute("slides", moduleManager.getModuleSlides(id));
         model.addAttribute("sequences", moduleManager.getModuleSequences(id));
         model.addAttribute("moduleStatus", module.getModuleStatus());
-        HashSet < ISpace > spaces = moduleLink.findModuleLinksFromModuleId(id);
-        if (spaces.isEmpty()) {
-            model.addAttribute("message", "Sorry, No spaces has been linked to this Module");
-        } else {
+        HashSet <ISpace> spaces = moduleLink.findModuleLinksFromModuleId(id);
+        if (!spaces.isEmpty()) {
+            
             model.addAttribute("spacesList", spaces);
         }
 

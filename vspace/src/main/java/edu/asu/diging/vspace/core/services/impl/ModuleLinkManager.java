@@ -51,7 +51,7 @@ public class ModuleLinkManager extends LinkManager < IModuleLink, IModule, IModu
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public List < IModuleLinkDisplay > getLinkDisplays(String spaceId) {
+    public List <IModuleLinkDisplay> getLinkDisplays(String spaceId) {
         return moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId);
     }
 
@@ -74,7 +74,7 @@ public class ModuleLinkManager extends LinkManager < IModuleLink, IModule, IModu
 
     @Override
     protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId) {
-        Optional < ModuleLinkDisplay > moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        Optional <ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
         if (moduleLinkDisplay.isPresent()) {
             return moduleLinkDisplay.get();
         }
@@ -83,7 +83,7 @@ public class ModuleLinkManager extends LinkManager < IModuleLink, IModule, IModu
 
     @Override
     protected IModuleLink getLink(String moduleLinkID) {
-        Optional < ModuleLink > moduleLink = moduleLinkRepo.findById(moduleLinkID);
+        Optional <ModuleLink> moduleLink = moduleLinkRepo.findById(moduleLinkID);
         if (moduleLink.isPresent()) {
             return moduleLink.get();
         }
@@ -111,16 +111,13 @@ public class ModuleLinkManager extends LinkManager < IModuleLink, IModule, IModu
     }
 
     @Override
-    public HashSet < ISpace > findModuleLinksFromModuleId(String moduleId) {
-        List < ModuleLink > moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
-        List < ISpace > spaces = new ArrayList < > ();
-        for (ModuleLink ml: moduleLinks) {
-            String spaceId = moduleLinkRepo.getSpaceIdFromModuleLink(ml.getId());
-            ISpace space = spaceManager.getSpace(spaceId);
-            spaces.add(space);
+    public HashSet <ISpace> findModuleLinksFromModuleId(String moduleId) {
+        List <ModuleLink> moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
+        HashSet <ISpace> spaces = new HashSet <>();
+        for (ModuleLink link: moduleLinks) {
+            spaces.add(link.getSpace());
         }
-        HashSet < ISpace > uniqueSpaces = new HashSet < ISpace > (spaces);
-        return uniqueSpaces;
+        return spaces;
     }
 
 }
