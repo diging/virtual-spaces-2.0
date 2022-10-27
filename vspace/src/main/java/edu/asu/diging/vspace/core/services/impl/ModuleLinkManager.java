@@ -30,7 +30,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager < IModuleLink, IModule, IModuleLinkDisplay > implements IModuleLinkManager {
+public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModuleLinkDisplay> implements IModuleLinkManager {
 
     @Autowired
     private ISpaceManager spaceManager;
