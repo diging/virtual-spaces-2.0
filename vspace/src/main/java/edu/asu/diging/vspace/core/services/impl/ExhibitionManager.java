@@ -10,7 +10,6 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.DefaultImageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -18,7 +17,6 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.DefaultImages;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -41,8 +39,7 @@ public class ExhibitionManager implements IExhibitionManager {
 	@Autowired
 	private ImageRepository imageRepo;
 	
-	@Autowired
-    private DefaultImageRepository defaultImageRepository;
+	
 
 	@Autowired
 	private IStorageEngine storage;
@@ -101,9 +98,8 @@ public class ExhibitionManager implements IExhibitionManager {
 		if (image != null && image.length > 0) {
 			Tika tika = new Tika();
 			String contentType = tika.detect(image);
-
 			defaultImage = imageFactory.createDefaultImage(filename, contentType, spaceId);
-			defaultImage = defaultImageRepository.save((DefaultImages) defaultImage);
+			defaultImage = imageRepo.save((VSImage) defaultImage);
 		}
 
 		CreationReturnValue returnValue = new CreationReturnValue();
@@ -122,8 +118,7 @@ public class ExhibitionManager implements IExhibitionManager {
 				defaultImage.setHeight(imageData.getHeight());
 				defaultImage.setWidth(imageData.getWidth());
 			}
-			System.out.println("***********---------just before saving");
-			defaultImageRepository.save((DefaultImages) defaultImage);
+			imageRepo.save((VSImage) defaultImage);
 
 		}
 

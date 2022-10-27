@@ -105,7 +105,7 @@ public class ExhibitionConfigurationController {
     		@RequestParam("externalLinkImage") MultipartFile externalLinkImage,
     		@RequestParam("spacelinkImage")  MultipartFile spacelinkImage,
     		@RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
-    		@RequestParam("spaceParam") String spaceID,
+    		@RequestParam("spaceParamExihibit") String spaceID,
             Principal principal, RedirectAttributes attributes) throws IOException {
     	
     	System.out.println(spaceID);
