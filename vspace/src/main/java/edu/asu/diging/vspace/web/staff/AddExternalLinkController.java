@@ -52,6 +52,9 @@ public class AddExternalLinkController {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
         }
+        else {
+            System.out.println("Check for defaultImage");
+        }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
