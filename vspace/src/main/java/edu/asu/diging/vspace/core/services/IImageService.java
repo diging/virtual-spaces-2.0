@@ -44,5 +44,5 @@ public interface IImageService {
 
     List < IVSImage > search(String searchTerm);
 
-    List < IVSImage > getImagesForPagination(int pageNo, List < IVSImage > images, String searchTerm);
+    List < IVSImage > getImagesForPagination(int pageNo, String searchTerm);
 }

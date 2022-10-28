@@ -52,7 +52,7 @@ public class ImagesSearchFullApiController {
     	model.addAttribute("totalPages", imageService.getTotalPages(images));
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", images.size());
-        List<IVSImage> imageResults = imageService.getImagesForPagination(pageNo, images, searchTerm);
+        List<IVSImage> imageResults = imageService.getImagesForPagination(pageNo, searchTerm);
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for (IVSImage image : imageResults) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());

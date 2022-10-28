@@ -310,8 +310,7 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List <IVSImage> getImagesForPagination(int pageNo, List <IVSImage> images, String searchTerm) {
-        pageNo = validatePageNumber(pageNo, images);
+    public List <IVSImage> getImagesForPagination(int pageNo, String searchTerm) {
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize);
         String likeSearchTerm = "%" + searchTerm + "%";
         Page <VSImage> result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
