@@ -1429,7 +1429,7 @@ $(function(){
 		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
 						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
 		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
-		            <a th:href="@{'/exhibit/space/'+${space?.id}}"><span class="icon-link"></span></a>
+		            <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
 		            </h2>
 		        <p>[[${space.description}]]</p>
 		        <div class="flex-spacing">
