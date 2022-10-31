@@ -2,8 +2,14 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +19,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -28,6 +35,8 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Service
 @Transactional(rollbackFor = { Exception.class })
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepository;
@@ -39,16 +48,16 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     private IExhibitionManager exhibitionManager;
     
     @Override
-    public ISpacesCustomOrder createNewCustomOrder(List<String> spaceOrders,
+    public ISpacesCustomOrder create(List<String> spaceOrders,
             String name,
             String description) {
-        List<ISpace> orderedSpaces= new ArrayList<ISpace>();
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setCustomOrderName(name);
         spacesCustomOrder.setDescription(description);
-        for(String spaceId : spaceOrders) {
-            orderedSpaces.add(spaceManager.getSpace(spaceId));
-        }
+        List<ISpace> orderedSpaces = new ArrayList<ISpace>();        
+        orderedSpaces = spaceOrders.stream()
+                .map(spaceId -> spaceManager.getSpace(spaceId))
+                .collect(Collectors.toList());
         spacesCustomOrder.setCustomOrderedSpaces(orderedSpaces);
         return spacesCustomOrderRepository.save(spacesCustomOrder);
     }
@@ -60,13 +69,18 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     }
     
     @Override
-    public ISpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId) {
-        Optional<SpacesCustomOrder> spacesCustomOrderOptional = spacesCustomOrderRepository.findById(customSpaceOrderId);
-        return spacesCustomOrderOptional.get();
+    public ISpacesCustomOrder get(String customSpaceOrderId) {
+        try {
+            Optional<SpacesCustomOrder> spacesCustomOrderOptional = spacesCustomOrderRepository.findById(customSpaceOrderId);
+            return spacesCustomOrderOptional.get();
+        } catch (NoSuchElementException e) {
+            logger.error("Custom order id does not exist" + e);
+            return null;
+        }
     }
     
     @Override
-    public void saveCustomOrders(Iterable<SpacesCustomOrder> spacesCustomOrder) {
+    public void save(Iterable<SpacesCustomOrder> spacesCustomOrder) {
         spacesCustomOrderRepository.saveAll(spacesCustomOrder);
     }
 
@@ -80,15 +94,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         for(ISpacesCustomOrder spaceCustomOrder :  spacesCustomOrders) {
             spaceCustomOrder.getCustomOrderedSpaces().add(space);
         }
-        saveCustomOrders(spacesCustomOrders);
+        save(spacesCustomOrders);
     }
     
     /**
      *This method updates the custom order name or description
      */
     @Override
-    public void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String title, String description) {
-        ISpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+    public void updateNameAndDescription(String spacesCustomOrderId, String title, String description) {
+        ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderName(title);
         spaceCustomOrder.setDescription(description);
         spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);
@@ -100,15 +114,14 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      * @param spacesIds
      */
     @Override
-    public void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spacesIds) {
+    public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {
         List<ISpace> spaces = new ArrayList<ISpace>();
         for(String id : spacesIds) {
             spaces.add(spaceManager.getSpace(id));
         }
-        ISpacesCustomOrder spaceCustomOrder = getSpaceCustomOrderById(spacesCustomOrderId);
+        ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
         spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);
-        
     }
     
     /**
@@ -117,10 +130,14 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void setExhibitionSpacesCustomOrder(String customOrderId) {
-        IExhibition exhibition = exhibitionManager.getStartExhibition();
-        Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
-                .findById(customOrderId);
-        exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
+        try {
+            IExhibition exhibition = exhibitionManager.getStartExhibition();
+            Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
+                    .findById(customOrderId);
+            exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
+        } catch (NoSuchElementException e) {
+            logger.error("Custom order id does not exist" + e);
+        }
     }
     
     /**
@@ -128,7 +145,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      * @param id
      */
     @Override
-    public void deleteSpacesCustomOrderById(String id) {
+    public void delete(String id) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         SpacesCustomOrder spaceCustomOrder = exhibition
                 .getSpacesCustomOrder();
@@ -138,5 +155,4 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         }
         spacesCustomOrderRepository.deleteById(id);
     }
-
 }

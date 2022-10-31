@@ -19,7 +19,7 @@ public class DeleteSpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/space/customorder/{orderId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteSpacesCustomOrder(@PathVariable String orderId, Model model) {
-        spacesCustomOrderManager.deleteSpacesCustomOrderById(orderId);
+        spacesCustomOrderManager.delete(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

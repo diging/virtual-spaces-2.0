@@ -12,18 +12,18 @@ public interface ISpacesCustomOrderManager {
 
     void addSpaceToCustomOrders(ISpace space);
 
-    void saveCustomOrders(Iterable<SpacesCustomOrder> spacesCustomOrder);
+    void save(Iterable<SpacesCustomOrder> spacesCustomOrder);
 
-    ISpacesCustomOrder getSpaceCustomOrderById(String customSpaceOrderId);
+    ISpacesCustomOrder get(String customSpaceOrderId);
 
-    void updateSpacesCustomOrderNameDescription(String spacesCustomOrderId, String title, String description);
+    void updateNameAndDescription(String spacesCustomOrderId, String title, String description);
 
-    void editSpacesCustomOrder(String spacesCustomOrderId, List<String> spaceOrders);
+    void updateSpaces(String spacesCustomOrderId, List<String> spaceOrders);
 
-    ISpacesCustomOrder createNewCustomOrder(List<String> spaceOrders, String name, String description);
+    ISpacesCustomOrder create(List<String> spaceOrders, String name, String description);
 
     void setExhibitionSpacesCustomOrder(String customOrderId);
 
-    void deleteSpacesCustomOrderById(String id);
+    void delete(String id);
 
 }

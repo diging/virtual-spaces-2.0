@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,12 +54,11 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
         }
         List<ISpace> allSpaces = spacesCustomOrder.getCustomOrderedSpaces();
         List<ISpace> spacesToPublish = new ArrayList<ISpace>();
-        //only show published spaces
-        for(ISpace space : allSpaces) {
-            if(space.getSpaceStatus() == SpaceStatus.PUBLISHED) {
-                spacesToPublish.add(space);
-            }
-        }
+        
+        //only show published spaces        
+        spacesToPublish = allSpaces.stream()
+                .filter(space -> space.getSpaceStatus() == SpaceStatus.PUBLISHED)
+                .collect(Collectors.toList());
         return spacesToPublish;
     }
     

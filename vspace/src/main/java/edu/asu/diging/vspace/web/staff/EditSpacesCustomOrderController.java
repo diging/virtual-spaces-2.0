@@ -18,21 +18,18 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Controller
 public class EditSpacesCustomOrderController {
     
-    private static Logger logger = LoggerFactory.getLogger(SpacesCustomOrderController.class);
-    
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
     @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/info", method = RequestMethod.POST)
     public ResponseEntity<String> saveTitleDescription(@RequestParam("title") String title, @RequestParam("description") String description, @PathVariable("customOrderId") String spacesCustomOrderId) {
-        spacesCustomOrderManager.updateSpacesCustomOrderNameDescription(spacesCustomOrderId, title, description);
+        spacesCustomOrderManager.updateNameAndDescription(spacesCustomOrderId, title, description);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/spaceorders", method = RequestMethod.POST)
     public ResponseEntity<String> saveOrder(@PathVariable("customOrderId") String spacesCustomOrderId, @RequestParam("spaceOrder") List<String> spaceOrders) {
-        logger.info("space order is {}", spaceOrders.get(0));
-        spacesCustomOrderManager.editSpacesCustomOrder(spacesCustomOrderId, spaceOrders);
+        spacesCustomOrderManager.updateSpaces(spacesCustomOrderId, spaceOrders);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

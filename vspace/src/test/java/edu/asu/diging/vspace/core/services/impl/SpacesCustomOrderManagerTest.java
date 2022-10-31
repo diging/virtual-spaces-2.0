@@ -49,7 +49,7 @@ public class SpacesCustomOrderManagerTest{
     @Test
     public void test_deleteSpaceCustomOrderById_withNullSpacesCustomOrder() { 
         Mockito.when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
-        serviceToTest.deleteSpacesCustomOrderById(spaceCustomOrderId1);
+        serviceToTest.delete(spaceCustomOrderId1);
         Mockito.verify(spacesCustomOrderRepository).deleteById(spaceCustomOrderId1);
     }
     
@@ -59,13 +59,13 @@ public class SpacesCustomOrderManagerTest{
         spacesCustomOrder.setId(spaceCustomOrderId1);
         exhibition.setSpacesCustomOrder(spacesCustomOrder);
         Mockito.when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
-        serviceToTest.deleteSpacesCustomOrderById(spaceCustomOrderId1);
+        serviceToTest.delete(spaceCustomOrderId1);
         Mockito.verify(spacesCustomOrderRepository).deleteById(spaceCustomOrderId1);
         Mockito.verify(exhibitionManager).storeExhibition((Exhibition)exhibition);
     }
     
     @Test
-    public void test_editSpacesCustomOrders_success() {
+    public void test_updateSpaces_success() {
         String spaceId1 = "SPC001";
         String spaceId2 = "SPC002";
         List<String> spaceIdList = new ArrayList<String>();
@@ -73,7 +73,7 @@ public class SpacesCustomOrderManagerTest{
         spaceIdList.add(spaceId2);
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         when(spacesCustomOrderRepository.findById(spaceCustomOrderId1)).thenReturn(Optional.of(spacesCustomOrder));
-        serviceToTest.editSpacesCustomOrder(spaceCustomOrderId1, spaceIdList);
+        serviceToTest.updateSpaces(spaceCustomOrderId1, spaceIdList);
         Mockito.verify(spacesCustomOrderRepository).save(spacesCustomOrder);
     }
     
@@ -97,7 +97,7 @@ public class SpacesCustomOrderManagerTest{
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setCustomOrderName("hello");
         when(spacesCustomOrderRepository.findById(spaceCustomOrderId1)).thenReturn(Optional.of(spacesCustomOrder));
-        serviceToTest.updateSpacesCustomOrderNameDescription(spaceCustomOrderId2, "updated", "name");
+        serviceToTest.updateNameAndDescription(spaceCustomOrderId2, "updated", "name");
         Mockito.verify(spacesCustomOrderRepository).save(spacesCustomOrder);
     }
     
@@ -111,7 +111,7 @@ public class SpacesCustomOrderManagerTest{
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setCustomOrderName("hello");
         when(spacesCustomOrderRepository.findById(spaceCustomOrderId1)).thenReturn(Optional.of(spacesCustomOrder));
-        serviceToTest.updateSpacesCustomOrderNameDescription(spaceCustomOrderId2, "updated", "description");
+        serviceToTest.updateNameAndDescription(spaceCustomOrderId2, "updated", "description");
         Mockito.verify(spacesCustomOrderRepository).save(spacesCustomOrder);
     }
     

@@ -32,7 +32,7 @@ public class SpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/space/order/{orderId}", method = RequestMethod.GET)
     public String displaySpacesCustomOrder(Model model, @PathVariable("orderId") String customSpaceOrderId) {
-        ISpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.getSpaceCustomOrderById(customSpaceOrderId);
+        ISpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.get(customSpaceOrderId);
         model.addAttribute("customSpaceOrder", spacesCustomOrder);
         model.addAttribute("selectedSpaces", spacesCustomOrder.getCustomOrderedSpaces());
         return "/staff/spaces/customorder/order";
@@ -40,11 +40,8 @@ public class SpacesCustomOrderController {
     
     @RequestMapping(value = "/staff/space/order", method = RequestMethod.GET)
     public String displayCustomOrders(Model model) {
-        Iterable<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
-        IExhibition exhibition = exhibitionManager.getStartExhibition();
-        SpacesCustomOrder currentExhibitionCurrentSpacesCustomOrder = exhibition.getSpacesCustomOrder();
-        model.addAttribute("customSpaceOrders", spacesCustomOrder);
-        model.addAttribute("currentSelectedCustomOrder", currentExhibitionCurrentSpacesCustomOrder);
+        model.addAttribute("customSpaceOrders", spacesCustomOrderManager.findAll());
+        model.addAttribute("currentSelectedCustomOrder", exhibitionManager.getStartExhibition().getSpacesCustomOrder());
         return "/staff/spaces/customorder/customordering";
     }
     
