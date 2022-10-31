@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.diging.simpleusers.core.model.Role;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISetupManager;
@@ -37,7 +38,8 @@ public class HomeController {
             if (previewId != null) {
                 return "redirect:/preview/{previewId}/space/" + exhibition.getStartSpace().getId();
             } else {
-                if (!(authentication instanceof AnonymousAuthenticationToken)) {
+                if (!(authentication instanceof AnonymousAuthenticationToken) &&
+                        (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN) || r.getAuthority().equals("ROLE_STAFF")))) {
                     return "redirect:/staff/dashboard/";
                 } else {
                     return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
