@@ -16,21 +16,21 @@ public interface IImageService {
 
     ImageData getImageDimensions(IVSImage image, int width, int height);
 
-    List < IVSImage > getImages(int pageNo, ImageCategory filter);
+    List <IVSImage> getImages(int pageNo, ImageCategory filter);
 
-    List < IVSImage > getImages(int pageNo);
+    List <IVSImage> getImages(int pageNo);
 
-    List < IVSImage > getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
+    List <IVSImage> getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
 
     long getTotalImageCount(ImageCategory filter);
 
     long getTotalPages(ImageCategory filter);
 
-    long getTotalPages(List < IVSImage > images);
+    long getTotalPages(List <IVSImage> images);
 
     int validatePageNumber(int pageNo, ImageCategory filter);
 
-    int validatePageNumber(int pageNo, List < IVSImage > images);
+    int validatePageNumber(int pageNo, List <IVSImage> images);
 
     void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
 
@@ -40,9 +40,9 @@ public interface IImageService {
 
     void removeCategory(IVSImage image, ImageCategory category);
 
-    List < IVSImage > findByFilenameOrNameContains(String searchTerm);
+    List <IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    List < IVSImage > search(String searchTerm);
+    List <IVSImage> search(String searchTerm);
 
-    List < IVSImage > getImagesForPagination(int pageNo, String searchTerm);
+    List <IVSImage> getImagesForPagination(int pageNo, String searchTerm);
 }

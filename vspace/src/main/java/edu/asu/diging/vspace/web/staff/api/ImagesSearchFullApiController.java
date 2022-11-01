@@ -44,8 +44,8 @@ public class ImagesSearchFullApiController {
     	int pageNo;
     	page = StringUtils.isEmpty(page) ? "1" : page;
     	try {
-            pageNo = imageService.validatePageNumber(Integer.parseInt(page), images);
-    	}
+            pageNo = Integer.parseInt(page);
+    	} 	
     	catch (NumberFormatException numberFormatException) {
             pageNo = 1;
     	}

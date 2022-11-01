@@ -106,12 +106,12 @@ public class ImageService implements IImageService {
      * @return list of images for the requested pageNo and category
      */
     @Override
-    public List < IVSImage > getImages(int pageNo, ImageCategory category) {
+    public List <IVSImage> getImages(int pageNo, ImageCategory category) {
         return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
 
     @Override
-    public List < IVSImage > getImages(int pageNo) {
+    public List <IVSImage> getImages(int pageNo) {
         return getImages(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
 
@@ -124,17 +124,17 @@ public class ImageService implements IImageService {
      */
 
     @Override
-    public List < IVSImage > getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
+    public List <IVSImage> getImages(int pageNo, ImageCategory category, String sortedBy, String order) {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page < VSImage > images;
+        Page <VSImage> images;
         if (category == null) {
             images = imageRepo.findAll(sortByRequestedField);
         } else {
             images = imageRepo.findByCategories(sortByRequestedField, category);
         }
-        List < IVSImage > results = new ArrayList < > ();
+        List <IVSImage> results = new ArrayList < > ();
         if (images != null) {
             images.getContent().forEach(i -> results.add(i));
         }
@@ -178,7 +178,7 @@ public class ImageService implements IImageService {
      * @return totalPages required to display all images in DB
      */
     @Override
-    public long getTotalPages(List < IVSImage > images) {
+    public long getTotalPages(List <IVSImage> images) {
         if (images == null) {
             return (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize :
                 (imageRepo.count() / pageSize) + 1;
@@ -215,7 +215,7 @@ public class ImageService implements IImageService {
      *         totalPages.
      */
     @Override
-    public int validatePageNumber(int pageNo, List < IVSImage > images) {
+    public int validatePageNumber(int pageNo, List <IVSImage> images) {
         long totalPages = getTotalPages(images);
         if (pageNo < 1) {
             return 1;
