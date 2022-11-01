@@ -37,6 +37,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IDownloadsManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -48,7 +49,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 
 @Service
-public class DownloadsManager {
+public class DownloadsManager  implements  IDownloadsManager {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -114,6 +115,7 @@ public class DownloadsManager {
      * @return
      * @throws IOException
      */
+    @Override
     public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {       
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
@@ -136,6 +138,7 @@ public class DownloadsManager {
      * @param exhibitionFolderPath
      * @param context
      */
+    @Override
     public void downloadSpace(Space space, String exhibitionFolderPath, WebContext context) {
 
         String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
@@ -166,6 +169,7 @@ public class DownloadsManager {
      * @param spaceFolderPath
      * @param context
      */
+    @Override
     public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
@@ -184,6 +188,7 @@ public class DownloadsManager {
      * @param imagesFolderPath
      * @param context
      */
+    @Override
     public void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath,  WebContext context) {
         List<ISlide> slides = startSequence.getSlides();
@@ -217,6 +222,7 @@ public class DownloadsManager {
      * @param moduleId
      * @param sequenceId
      */
+    @Override
     public void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
         try {      
             populateContextForSlide( context, spaceId, moduleId, sequenceId, slideId );
@@ -243,7 +249,8 @@ public class DownloadsManager {
      * @throws SequenceNotFoundException
      * @throws SlideNotFoundException
      */
-    private void populateContextForSlide(WebContext context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
+    @Override
+    public void populateContextForSlide(WebContext context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
 
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);

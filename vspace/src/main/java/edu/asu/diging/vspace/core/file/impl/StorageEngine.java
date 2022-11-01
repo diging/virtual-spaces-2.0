@@ -143,29 +143,25 @@ public class StorageEngine implements IStorageEngine {
 	                responseZipStream.closeEntry();
 
 	            } catch (IOException e) {
-	                System.err.println(e);
+	                
 	            }
 	        });
-            IOUtils.close(responseZipStream);
-            IOUtils.close(bufferedOutputStream);
-            IOUtils.close(byteArrayOutputStream);
+            
 
             return byteArrayOutputStream.toByteArray();
 
-        } catch (IOException e) {
-            throw new IOException(e);
-        }      
+        } 
 
     }
 
 
 
-	/**
-	 * Copies given image to imagesFolderPath
-	 * 
-	 * @param image
-	 * @param imagesFolderPath
-	 */
+    /**
+     * Copies given image to imagesFolderPath
+     * 
+     * @param image
+     * @param imagesFolderPath
+     */
     public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
         try {
             byte[] byteArray = getImageContent(image.getId(), image.getFilename());
