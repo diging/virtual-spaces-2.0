@@ -2,8 +2,10 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -61,7 +64,6 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     @Autowired
     private SpringTemplateEngine springTemplateEngine;
-
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -115,8 +117,31 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @return
      * @throws IOException
      */
+    @Async
     @Override
-    public byte[] downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {       
+    public ExhibitionDownload downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
+        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
+        
+        byte[] resource = null;
+        String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
+        copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
+
+        List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
+
+        for(Space space : spaces) {
+            downloadSpace(space, exhibitionFolderPath, context);                
+        }               
+        resource = storageEngine.generateZipFolder(exhibitionFolderPath);
+        exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        exhibitionDownload.setFolderName(exhibitionFolderName);
+        exhibitionDownloadRepo.save(exhibitionDownload);
+//        return resource;
+       return  exhibitionDownload;
+        
+    }
+
+    @Override
+    public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context)  throws IOException {
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
@@ -130,7 +155,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
         return resource;
     }
-
+    
     /**
      * 
      * Download given space and related modules into exhibitionFolderPath
@@ -314,6 +339,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param resourcesPath
      * @throws IOException 
      */
+    @Override
     public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException {
 
         try {
@@ -332,6 +358,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param spaceFolderPath
      * @param context
      */
+    @Override
     public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context ) {
         try {      
             populateContextForSpace( context, directory);
@@ -351,6 +378,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param context
      * @param id
      */
+    @Override
     public void populateContextForSpace(WebContext context, String id) {
 
         ISpace space = spaceManager.getSpace(id);
@@ -387,6 +415,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws ExhibitionDownloadNotFoundException
      * @throws IOException
      */
+    @Override
     public byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
 
@@ -397,7 +426,11 @@ public class DownloadsManager  implements  IDownloadsManager {
         }
 
     }
+    
+    public String getExhibitionFolderName() {
 
+        return  "Exhibition"+ LocalDateTime.now();
+    }
 
 
 }

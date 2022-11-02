@@ -230,7 +230,7 @@ public class DownloadsManagerTest {
         when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
         when(storageEngine.generateZipFolder(Mockito.anyString())).thenThrow(IOException.class);
         
-        assertThrows(IOException.class, ()-> serviceToTest.downloadExhibition(resourcesPath, exhibitionFolderPath, null));
+        assertThrows(IOException.class, ()-> serviceToTest.createExhibitionSnapshot(resourcesPath, exhibitionFolderPath, null));
     }
 
     
@@ -242,6 +242,6 @@ public class DownloadsManagerTest {
 //        when(storageEngine.generateZipFolder(Mockito.anyString()).return;
         doThrow(new IOException()).when(serviceToTest).copyResourcesToExhibition(exhibitionFolderPath, resourcesPath );
         
-        assertThrows(IOException.class, ()-> serviceToTest.downloadExhibition(resourcesPath, exhibitionFolderPath, null));
+        assertThrows(IOException.class, ()-> serviceToTest.createExhibitionSnapshot(resourcesPath, exhibitionFolderPath, null));
     }
 }

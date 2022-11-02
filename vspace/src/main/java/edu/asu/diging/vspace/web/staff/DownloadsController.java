@@ -51,11 +51,12 @@ public class DownloadsController {
     public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
-
         Resource resource = null; 
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
-            String exhibitionFolderName= "Exhibition"+ LocalDateTime.now();
+            
+            String exhibitionFolderName= downloadsManager.getExhibitionFolderName();
+         
           
             WebContext context = new WebContext(request, response, request.getServletContext());
             
@@ -77,6 +78,9 @@ public class DownloadsController {
         }
     }
     
+  
+
+
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
             throws ExhibitionDownloadNotFoundException , IOException {
