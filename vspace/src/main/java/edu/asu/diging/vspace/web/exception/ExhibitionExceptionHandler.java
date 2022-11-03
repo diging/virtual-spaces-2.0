@@ -8,6 +8,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
+import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
+
 @ControllerAdvice
 public class ExhibitionExceptionHandler {
 
@@ -17,6 +24,7 @@ public class ExhibitionExceptionHandler {
     private static final String sequence_not_found="sequence_not_found";
     private static final String slide_not_found="slide_not_found";
     private static final String slide_not_found_in_sequence="slide_not_found_in_sequence";
+    private static final String language_list_configuration_not_found="language_list_configuration_not_found";
     
     @ExceptionHandler({ ModuleNotFoundException.class })
     protected ModelAndView handleModuleNotFoundException(HttpServletRequest request, ModuleNotFoundException ex) {
@@ -80,6 +88,20 @@ public class ExhibitionExceptionHandler {
         modelAndView.addObject("message", ex.getMessage());
         logger.info("SpaceNotFoundException Occured:: URL=" + request.getRequestURL());
         logger.info("Code:: "+space_not_found+" Message:: " + ex.getMessage());
+        modelAndView.addObject("url", request.getRequestURL());
+        modelAndView.setViewName("module");
+        return modelAndView;
+    }
+    
+    @ExceptionHandler({ LanguageListConfigurationNotFoundException.class })
+    protected ModelAndView handleLanguageListConfigurationNotFoundException(HttpServletRequest request,
+            LanguageListConfigurationNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("error_code", language_list_configuration_not_found);
+        modelAndView.addObject("showAlert", true);
+        modelAndView.addObject("message", ex.getMessage());
+        logger.error("LanguageListConfigurationNotFound Occured:: URL=" + request.getRequestURL());
+        logger.error("Code:: "+language_list_configuration_not_found+" Cause:: " + ex);
         modelAndView.addObject("url", request.getRequestURL());
         modelAndView.setViewName("module");
         return modelAndView;
