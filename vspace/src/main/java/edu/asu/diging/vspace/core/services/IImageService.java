@@ -26,11 +26,7 @@ public interface IImageService {
 
     long getTotalPages(ImageCategory filter);
 
-    long getTotalPages(List <IVSImage> images);
-
     int validatePageNumber(int pageNo, ImageCategory filter);
-
-    int validatePageNumber(int pageNo, List <IVSImage> images);
 
     void editImage(String imageId, ImageForm imageForm) throws ImageDoesNotExistException;
 
@@ -42,7 +38,5 @@ public interface IImageService {
 
     List <IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    List <IVSImage> search(String searchTerm);
-
-    List <IVSImage> getImagesForPagination(int pageNo, String searchTerm);
+    List <IVSImage> getImagesForPagination(int pageNo, ImageCategory category, String searchTerm);
 }
