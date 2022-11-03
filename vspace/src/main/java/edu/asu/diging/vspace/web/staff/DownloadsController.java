@@ -24,6 +24,7 @@ import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
 @Controller
@@ -48,31 +49,38 @@ public class DownloadsController {
     
     
     @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.GET) 
-    public ResponseEntity<Resource> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity<ExhibitionDownload> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
         Resource resource = null; 
+        ExhibitionDownload exhibitionDownload = null;
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
-            
-            String exhibitionFolderName= downloadsManager.getExhibitionFolderName();
-         
-          
+
+            String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
+
             WebContext context = new WebContext(request, response, request.getServletContext());
-            
-            
-            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
-            resource = new ByteArrayResource(byteArrayResource);
+
+
+            //            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
+            //            resource = new ByteArrayResource(byteArrayResource);
+            //            return  ResponseEntity.ok()
+            //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+            //                    .contentLength(resource.contentLength())
+            //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+            //                    .body(resource);
+
+            exhibitionDownload = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
             return  ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+                    //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
                     .contentLength(resource.contentLength())
-                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-                    .body(resource);
+                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                    .body(exhibitionDownload);
 
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         }

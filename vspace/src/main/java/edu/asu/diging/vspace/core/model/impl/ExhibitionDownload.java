@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.concurrent.Future;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,6 +22,8 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     private String folderPath;
 
     private String folderName;
+    
+    private Future<byte[]> futureTask;
 
 
     public ExhibitionDownload() {
@@ -57,6 +61,14 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
 
     public void setFolderName(String folderName) {
         this.folderName = folderName;
+    }
+
+    public Future<byte[]> getFutureTask() {
+        return futureTask;
+    }
+
+    public void setFutureTask(Future<byte[]> futureTask) {
+        this.futureTask = futureTask;
     }
 
 

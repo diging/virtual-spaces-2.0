@@ -5,7 +5,30 @@
 </script>
 <script th:inline="javascript">
 
+const triggerExhibitionDownload = async () => {
 
+    const request = await fetch("@{/staff/exhibit/download}");
+    
+    const data = await request.json();
+    return data;
+  };
+  
+  const getExhibitionDownload = async (newUrl) => {
+      const request = await fetch(newUrl);
+      const data = await request.json();
+      return data;
+    }
+	  
+  triggerExhibitionDownload.then(response => {
+	  console.log(response);
+	  getExhibitionDownload.then(resource  => {
+		  console.log(resource);
+	  })
+	  
+  })
+
+  
+  
 </script>
 <style>
 .pagination>li>a {

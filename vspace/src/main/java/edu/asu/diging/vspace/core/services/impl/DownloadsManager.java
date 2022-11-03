@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -121,23 +122,14 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     public ExhibitionDownload downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
         ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
-        
-        byte[] resource = null;
-        String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
-        copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
-        List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
-
-        for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderPath, context);                
-        }               
-        resource = storageEngine.generateZipFolder(exhibitionFolderPath);
-        exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        //        exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
+        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
         exhibitionDownloadRepo.save(exhibitionDownload);
-//        return resource;
-       return  exhibitionDownload;
-        
+        //        return resource;
+        return  exhibitionDownload;
+
     }
 
     @Override
