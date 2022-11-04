@@ -297,14 +297,15 @@
 					
 				}
 				sequencesMap.set(sequence.name, startNodeSequence)
-				
+				console.log("created Tree Data",treeData)
 				return treeData;
 
 			}
-			 console.log(json);
+			 console.log("JSON is : ",json);
                         let treeData = [];
                         treeData.children=[];
                         let startSequence = json['startSequence'];
+            
                         
 			let otherSequences = json['otherSequences'];
 			
@@ -360,11 +361,29 @@
 			function update(source) {
 
 			  // Compute the new tree layout.
-			  var nodes = tree.nodes(root).reverse(),
-				  links = tree.links(nodes);
-			  
 			 
+			  var nodes = tree.nodes(root).reverse(),
+			  links = tree.links(nodes);
+			  
+			  
+			  
+			 var nodes1 = []
+			 var links1 = []
+			  const keys = Object.keys(nodes);
+			  for (let i = 0; i < keys.length; i++) {
+			    const key = keys[i];
+			    
+			    if (nodes[key].group == 'slide'){
+			    	nodes1.push(nodes[key])
+			    	links1.push(tree.links(nodes))
+			    }
+			    
+			    //console.log("key is :", nodes[key]);
+			  }
+			 console.log("key is :", nodes1);
+			 console.log("link is :", links1);
 			 node = (nodes. splice(nodes. length - 2, 2));
+			 
 			 links = (links. splice(0,nodes. length-1));
 			  
 			  
