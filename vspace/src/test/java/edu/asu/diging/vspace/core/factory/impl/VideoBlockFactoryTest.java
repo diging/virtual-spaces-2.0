@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.services.impl;
+package edu.asu.diging.vspace.core.factory.impl;
 
 import org.junit.Assert;
 import org.junit.Test;

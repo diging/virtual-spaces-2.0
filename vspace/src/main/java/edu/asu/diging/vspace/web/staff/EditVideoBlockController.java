@@ -42,7 +42,7 @@ public class EditVideoBlockController {
 
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
         if (videoTitle != null && (videoUrl == null || file == null)) {
-            IVSVideo slideContentVideo =  videoBlock.getVideo();
+            IVSVideo slideContentVideo = videoBlock.getVideo();
             slideContentVideo.setTitle(videoTitle);
             contentBlockManager.saveVideoBlock(videoBlock);
         } else {
@@ -65,5 +65,4 @@ public class EditVideoBlockController {
         }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-
 }
