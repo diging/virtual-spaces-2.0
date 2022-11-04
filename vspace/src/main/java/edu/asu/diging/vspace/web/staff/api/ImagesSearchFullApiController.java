@@ -2,6 +2,9 @@ package edu.asu.diging.vspace.web.staff.api;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -23,36 +27,43 @@ public class ImagesSearchFullApiController {
 
     @Autowired
 	private ISpaceManager spaceManager;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping("/staff/images/search/full")
 	public String imageSearchFull(Model model,
 	@RequestParam(value = "searchText", required = false) String searchTerm) {
-    	return String.format("redirect:/staff/images/search/full/1?searchText=%s");
+    	return String.format("redirect:/staff/images/search/full/1?searchText=%s",(searchTerm==null?"":searchTerm));
     }
     
     @RequestMapping("/staff/images/search/full/{page}")
 	public String imageSeacrhDescription(@PathVariable(required = false) String page,
 			@RequestParam(value = "searchText", required = false) String searchTerm, Model model,
 			RedirectAttributes attributes) {
-    	List<IVSImage> images = null;
-    	if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            images = imageService.search(searchTerm);
-    	}
-    	else {
-            images = imageService.getImages(1);
-    	}
     	int pageNo;
     	page = StringUtils.isEmpty(page) ? "1" : page;
+    	ImageCategory category = null;
+        if(searchTerm!=null && !searchTerm.isEmpty()) {
+            try {
+                category = ImageCategory.valueOf(searchTerm);
+            }catch(IllegalArgumentException e) {
+                logger.error("Wrong argument for image category",e);
+                category=null;
+            }
+            
+        }
+    	
     	try {
             pageNo = Integer.parseInt(page);
     	} 	
     	catch (NumberFormatException numberFormatException) {
             pageNo = 1;
     	}
-    	model.addAttribute("totalPages", imageService.getTotalPages(images));
+    	model.addAttribute("totalPages", imageService.getTotalPages(category));
         model.addAttribute("currentPageNumber", pageNo);
-        model.addAttribute("totalImageCount", images.size());
-        List<IVSImage> imageResults = imageService.getImagesForPagination(pageNo, searchTerm);
+        model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
+    	
+        List<IVSImage> imageResults = imageService.getImagesForPagination(pageNo, category, searchTerm);
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for (IVSImage image : imageResults) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
@@ -60,6 +71,7 @@ public class ImagesSearchFullApiController {
                 imageToSpaces.put(image.getId(), spaces);
             }
         }
+        
         model.addAttribute("imageToSpaces", imageToSpaces);
         model.addAttribute("images", imageResults);
         model.addAttribute("searchTerm", searchTerm);

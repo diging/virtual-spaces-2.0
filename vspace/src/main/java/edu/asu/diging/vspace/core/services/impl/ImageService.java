@@ -259,8 +259,7 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List <IVSImage> getImagesForPagination(int pageNo, ImageCategory category, String searchTerm) {
-    	
+    public List <IVSImage> getImagesForPagination(int pageNo, ImageCategory category, String searchTerm) {    	
     	Sort sortingParameters = getSortingParameters(searchTerm, searchTerm);
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
