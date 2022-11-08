@@ -7,7 +7,7 @@
 
 const triggerExhibitionDownload = async () => {
 
-    const request = await fetch("@{/staff/exhibit/download}");
+    const request = await fetch("@{/staff/exhibit/download/trigger}");
     
     const data = await request.json();
     return data;
@@ -56,8 +56,10 @@ const triggerExhibitionDownload = async () => {
 <div layout:fragment="content" class="main-content">
 	<span class = "errorAdd"></span>
 
-	<a th:href="@{/staff/exhibit/download}" class="download btn primary-btn" style="float: right" >Download</a>
-	 <h2>Downloads</h2>
+<!-- 	<a th:href="@{/staff/exhibit/download}" class="download btn primary-btn" style="float: right" >Download</a>
+ -->	
+ 	<button class="download btn primary-btn" onclick=triggerExhibitionDownload()>Download</button>
+ 	 <h2>Downloads</h2>
 	 <table class="table">
 	  <thead>
                 <tr>

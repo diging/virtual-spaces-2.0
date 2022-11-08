@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -120,18 +122,34 @@ public class DownloadsManager  implements  IDownloadsManager {
      */
     @Async
     @Override
-    public ExhibitionDownload downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
+    public AsyncResult<byte[]> triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
         ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
 
         //        exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
-        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
+//        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
         exhibitionDownloadRepo.save(exhibitionDownload);
         //        return resource;
-        return  exhibitionDownload;
+        return  new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context));
 
     }
 
+    @Override
+    public byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException {                 
+        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
+
+        //        exhibitionDownload.setFolderPath(exhibitionFolderPath);
+//        exhibitionDownload.setFolderName(exhibitionFolderName);
+//        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
+//        exhibitionDownloadRepo.save(exhibitionDownload);
+        //        return resource;
+        if(asyncResult.isDone()) { return  asyncResult.get() ;};
+        
+        return  null ;
+
+    }
+
+    
     @Override
     public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context)  throws IOException {
         byte[] resource = null;

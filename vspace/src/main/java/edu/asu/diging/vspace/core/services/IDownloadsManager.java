@@ -1,7 +1,10 @@
 package edu.asu.diging.vspace.core.services;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
@@ -15,7 +18,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IDownloadsManager {
-    ExhibitionDownload downloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException ;
+    AsyncResult<byte[]> triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException ;
 
     void downloadSpace(Space space, String exhibitionFolderPath, WebContext context);
 
@@ -41,4 +44,6 @@ public interface IDownloadsManager {
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;
 
     byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException ;
+
+    byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException;
 }

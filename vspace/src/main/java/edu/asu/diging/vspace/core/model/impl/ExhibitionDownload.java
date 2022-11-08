@@ -22,9 +22,6 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     private String folderPath;
 
     private String folderName;
-    
-    private Future<byte[]> futureTask;
-
 
     public ExhibitionDownload() {
         super();
@@ -62,14 +59,5 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
-
-    public Future<byte[]> getFutureTask() {
-        return futureTask;
-    }
-
-    public void setFutureTask(Future<byte[]> futureTask) {
-        this.futureTask = futureTask;
-    }
-
 
 }

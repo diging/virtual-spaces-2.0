@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,12 +49,12 @@ public class DownloadsController {
     }
     
     
-    @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.GET) 
-    public ResponseEntity<ExhibitionDownload> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
+    @RequestMapping(value = "/staff/exhibit/download/trigger", method = RequestMethod.GET) 
+    public ResponseEntity<AsyncResult<byte[]>> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
         Resource resource = null; 
-        ExhibitionDownload exhibitionDownload = null;
+        AsyncResult<byte[]> exhibitionDownload = null;
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
@@ -70,7 +71,7 @@ public class DownloadsController {
             //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
             //                    .body(resource);
 
-            exhibitionDownload = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
+            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
             return  ResponseEntity.ok()
                     //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
                     .contentLength(resource.contentLength())
@@ -80,7 +81,45 @@ public class DownloadsController {
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<AsyncResult<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+        }
+    }
+    
+    @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.GET) 
+    public ResponseEntity<AsyncResult<byte[]>> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+
+        Resource resource = null; 
+        AsyncResult<byte[]> exhibitionDownload = null;
+        try {     
+            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
+
+            String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
+
+            WebContext context = new WebContext(request, response, request.getServletContext());
+
+
+            //            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
+            //            resource = new ByteArrayResource(byteArrayResource);
+            //            return  ResponseEntity.ok()
+            //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+            //                    .contentLength(resource.contentLength())
+            //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+            //                    .body(resource);
+
+            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+            return  ResponseEntity.ok()
+                    //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+                    .contentLength(resource.contentLength())
+                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                    .body(exhibitionDownload);
+
+        } 
+        catch (Exception e) {
+            logger.error("Could not download exhibition", e);
+            return new ResponseEntity<AsyncResult<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         }
