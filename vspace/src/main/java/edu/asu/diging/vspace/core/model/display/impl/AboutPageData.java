@@ -6,8 +6,8 @@ public class AboutPageData {
 
     private String id;
 
-    private String title;
+    private String titles;
 
-    @Lob private String aboutPageText;
+    @Lob private String aboutPageTexts;
    
 }

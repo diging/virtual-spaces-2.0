@@ -64,6 +64,10 @@ public class ExhibitionAboutPageController {
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+        System.out.println(aboutPageForm.getTitles());
+        System.out.println(aboutPageForm.getAboutPageTexts());
+        //exhibitionAboutPage.setTitles(aboutPageForm.getTitles());
+        //exhibitionAboutPage.setAboutPageTexts(aboutPageForm.getAboutPageTexts());
         exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");

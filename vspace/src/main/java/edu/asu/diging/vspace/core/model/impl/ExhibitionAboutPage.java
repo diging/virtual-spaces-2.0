@@ -43,6 +43,12 @@ public class ExhibitionAboutPage {
     @Lob
     private String aboutPageText;
     
+    @Lob
+    private List<LanguageDescriptionObject> titles;
+	
+    @Lob
+	private List<LanguageDescriptionObject> aboutPageTexts;
+    
     @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
     private List<ILanguageDescriptionObject> exhibitionTitles;
 
@@ -89,6 +95,22 @@ public class ExhibitionAboutPage {
 
 	public void setAboutPageText(String aboutPageText) {
 		this.aboutPageText = aboutPageText;
+	}
+	
+	public List<LanguageDescriptionObject> getTitles() {
+		return titles;
+	}
+
+	public void setTitles(List<LanguageDescriptionObject> titles) {
+		this.titles = titles;
+	}
+
+	public List<LanguageDescriptionObject> getAboutPageTexts() {
+		return aboutPageTexts;
+	}
+
+	public void setAboutPageTexts(List<LanguageDescriptionObject> aboutPageTexts) {
+		this.aboutPageTexts = aboutPageTexts;
 	}
 
 	/*
