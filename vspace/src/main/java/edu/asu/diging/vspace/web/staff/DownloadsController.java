@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ import org.thymeleaf.context.WebContext;
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
+import edu.asu.diging.vspace.core.services.IDownloadsManager;
 import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
 @Controller
@@ -36,7 +38,7 @@ public class DownloadsController {
     
     
     @Autowired
-    DownloadsManager downloadsManager;
+    IDownloadsManager downloadsManager;
     
     @Autowired
     ExhibitionDownloadRepository exhibitionDownloadRepository;
@@ -50,11 +52,11 @@ public class DownloadsController {
     
     
     @RequestMapping(value = "/staff/exhibit/download/trigger", method = RequestMethod.GET) 
-    public ResponseEntity<AsyncResult<byte[]>> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity<ExhibitionDownload> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
         Resource resource = null; 
-        AsyncResult<byte[]> exhibitionDownload = null;
+        ExhibitionDownload exhibitionDownload = null;
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
@@ -74,25 +76,26 @@ public class DownloadsController {
             exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
             return  ResponseEntity.ok()
                     //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
-                    .contentLength(resource.contentLength())
+//                    .contentLength(resource.contentLength())
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(exhibitionDownload);
+            
 
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<AsyncResult<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         }
     }
     
     @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.GET) 
-    public ResponseEntity<AsyncResult<byte[]>> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity<ExhibitionDownload> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
         Resource resource = null; 
-        AsyncResult<byte[]> exhibitionDownload = null;
+        ExhibitionDownload exhibitionDownload = null;
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
@@ -119,7 +122,7 @@ public class DownloadsController {
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<AsyncResult<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Future<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         }

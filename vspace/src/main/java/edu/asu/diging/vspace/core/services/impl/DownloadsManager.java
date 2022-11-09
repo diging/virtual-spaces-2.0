@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -122,7 +123,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      */
     @Async
     @Override
-    public AsyncResult<byte[]> triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
+    public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
         ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
 
         //        exhibitionDownload.setFolderPath(exhibitionFolderPath);
@@ -130,7 +131,10 @@ public class DownloadsManager  implements  IDownloadsManager {
 //        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
         exhibitionDownloadRepo.save(exhibitionDownload);
         //        return resource;
-        return  new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context));
+        CompletableFuture<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context));
+       
+        exhibitionDownload.setDownloadComplete(false);
+        return exhibitionDownload;
 
     }
 
@@ -437,6 +441,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     }
     
+    @Override
     public String getExhibitionFolderName() {
 
         return  "Exhibition"+ LocalDateTime.now();

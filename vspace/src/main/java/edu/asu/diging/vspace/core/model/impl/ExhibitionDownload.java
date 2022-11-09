@@ -22,7 +22,10 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     private String folderPath;
 
     private String folderName;
+    
+    private boolean isDownloadComplete;
 
+ 
     public ExhibitionDownload() {
         super();
     }
@@ -59,5 +62,14 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
+    
+    public boolean isDownloadComplete() {
+        return isDownloadComplete;
+    }
+
+    public void setDownloadComplete(boolean isDownloadComplete) {
+        this.isDownloadComplete = isDownloadComplete;
+    }
+
 
 }
