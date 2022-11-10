@@ -15,7 +15,7 @@ import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 
 @Entity
-public class LanguageDescriptionObject implements ILanguageDescriptionObject{
+public class LanguageDescriptionObject {
 	
 	@Id
     @GeneratedValue(generator = "language_description_id_generator")
