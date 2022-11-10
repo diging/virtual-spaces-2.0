@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -19,7 +20,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IDownloadsManager {
-    ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException ;
+    byte[] triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException ;
 
     void downloadSpace(Space space, String exhibitionFolderPath, WebContext context);
 
@@ -44,7 +45,7 @@ public interface IDownloadsManager {
 
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;
 
-    byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException ;
+    byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException ;
 
     byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException;
 

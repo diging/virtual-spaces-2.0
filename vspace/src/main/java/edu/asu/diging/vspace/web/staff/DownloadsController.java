@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,11 +53,11 @@ public class DownloadsController {
     
     
     @RequestMapping(value = "/staff/exhibit/download/trigger", method = RequestMethod.GET) 
-    public ResponseEntity<ExhibitionDownload> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity<Resource> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response, Model model) {
 
 
         Resource resource = null; 
-        ExhibitionDownload exhibitionDownload = null;
+        byte[] exhibitionDownload = null;
         try {     
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
@@ -64,69 +65,73 @@ public class DownloadsController {
 
             WebContext context = new WebContext(request, response, request.getServletContext());
 
-
-            //            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
-            //            resource = new ByteArrayResource(byteArrayResource);
-            //            return  ResponseEntity.ok()
-            //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
-            //                    .contentLength(resource.contentLength())
-            //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-            //                    .body(resource);
-
-            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
-            return  ResponseEntity.ok()
-                    //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+                        long contentLength =0 ;
+                        byte[] byteArrayResource = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+                        if(byteArrayResource!=null) {
+                            resource = new ByteArrayResource(byteArrayResource);
+                            contentLength= resource.contentLength();
+                        }
+                            
+                            return  ResponseEntity.ok()
+                                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+                                    .contentLength(contentLength)
+                                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+                                    .body(resource);
+                            
+//            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+//            return  ResponseEntity.ok()
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
 //                    .contentLength(resource.contentLength())
-                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                    .body(exhibitionDownload);
-            
+//                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
+//                    .body(exhibitionDownload);
+//            
 
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         }
     }
     
-    @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.GET) 
-    public ResponseEntity<ExhibitionDownload> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
-
-
-        Resource resource = null; 
-        ExhibitionDownload exhibitionDownload = null;
-        try {     
-            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
-
-            String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
-
-            WebContext context = new WebContext(request, response, request.getServletContext());
-
-
-            //            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
-            //            resource = new ByteArrayResource(byteArrayResource);
-            //            return  ResponseEntity.ok()
-            //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
-            //                    .contentLength(resource.contentLength())
-            //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-            //                    .body(resource);
-
-            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
-            return  ResponseEntity.ok()
-                    //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
-                    .contentLength(resource.contentLength())
-                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                    .body(exhibitionDownload);
-
-        } 
-        catch (Exception e) {
-            logger.error("Could not download exhibition", e);
-            return new ResponseEntity<Future<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
-
-
-        }
-    }
+//    @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.GET) 
+//    public ResponseEntity<CompletableFuture<byte[]>> downloadExhibition(HttpServletRequest request, HttpServletResponse response, Model model) {
+//
+//
+//        Resource resource = null; 
+//        CompletableFuture<byte[]> exhibitionDownload = null;
+//        try {     
+//            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
+//
+//            String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
+//
+//            WebContext context = new WebContext(request, response, request.getServletContext());
+//
+//
+//            //            byte[] byteArrayResource = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
+//            //            resource = new ByteArrayResource(byteArrayResource);
+//            //            return  ResponseEntity.ok()
+//            //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+//            //                    .contentLength(resource.contentLength())
+//            //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+//            //                    .body(resource);
+//
+//            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+//            return  ResponseEntity.ok()
+//                    //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+//                    .contentLength(resource.contentLength())
+//                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
+//                    .body(exhibitionDownload);
+//
+//        } 
+//        catch (Exception e) {
+//            logger.error("Could not download exhibition", e);
+//            return new ResponseEntity<CompletableFuture<byte[]>>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+//
+//
+//        }
+//    }
     
   
 

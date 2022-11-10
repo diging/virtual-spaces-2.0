@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -120,21 +121,33 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param context
      * @return
      * @throws IOException
+     * @throws InterruptedException 
+     * @throws ExecutionException 
      */
     @Async
     @Override
-    public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException {                 
-        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
+    public byte[] triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
+//        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);
+//        
+//        
+//        if(exhibitionDownload ==null ) {
+//            exhibitionDownload = new ExhibitionDownload();
+//        }
 
         //        exhibitionDownload.setFolderPath(exhibitionFolderPath);
-        exhibitionDownload.setFolderName(exhibitionFolderName);
+//        exhibitionDownload.setFolderName(exhibitionFolderName);
 //        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
-        exhibitionDownloadRepo.save(exhibitionDownload);
+//        exhibitionDownloadRepo.save(exhibitionDownload);
         //        return resource;
-        CompletableFuture<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context));
-       
-        exhibitionDownload.setDownloadComplete(false);
-        return exhibitionDownload;
+        Future<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context));
+
+        if(futureTask.isDone()) {
+            return futureTask.get();
+        }
+        
+        return null;
+//        exhibitionDownload.setDownloadComplete(false);
+//        return CompletableFuture.completedFuture(createSnapShot(resourcesPath, exhibitionFolderName, context));
 
     }
 
@@ -155,7 +168,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     
     @Override
-    public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context)  throws IOException {
+    public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context)  throws IOException, InterruptedException {
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
@@ -167,6 +180,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         }               
         resource = storageEngine.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
+        Thread.sleep(5000);   
         return resource;
     }
     

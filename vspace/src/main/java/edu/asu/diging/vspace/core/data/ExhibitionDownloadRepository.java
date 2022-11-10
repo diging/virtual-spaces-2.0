@@ -10,4 +10,6 @@ public interface ExhibitionDownloadRepository extends PagingAndSortingRepository
 
     List<ExhibitionDownload> findAllByOrderByCreationDateDesc();
 
+    ExhibitionDownload findByFolderName(String exhibitionFolderName);
+
 }
