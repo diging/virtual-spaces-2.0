@@ -3,15 +3,12 @@ package edu.asu.diging.vspace.core.services.impl;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.tika.Tika;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -269,6 +266,26 @@ public class ContentBlockManagerTest {
         when(videoBlockRepo.save((VideoBlock) vidBlock)).thenReturn(videoBlock);
         CreationReturnValue returnValue = managerToTest.createVideoBlock("slideId_1", null, 200L, null, "https://www.youtube.com/watch?v=cF6katdKoVM", 1,
                 "video_title");
+        VideoBlock vblk = (VideoBlock) returnValue.getElement();
+        assertEquals(vblk.getId(), "videoBlock_1");
+    }
+    
+    @Test
+    public void test_createVideoBlock_withVideo()
+            throws BlockDoesNotExistException, FileStorageException, VideoCouldNotBeStoredException, IOException {
+        ISlide slide = new Slide();
+        slide.setId("slideId_1");
+        when(slideManager.getSlide("slideId_1")).thenReturn(slide);
+        IVSVideo slideContentVideo = new VSVideo();
+        slideContentVideo.setId("videoId_1");
+        when(videoFactory.createVideo("newFile.mp4", 200L, "application/octet-stream")).thenReturn(slideContentVideo);
+        IVideoBlock vidBlock = new VideoBlock();
+        when(videoBlockFactory.createVideoBlock(slide, slideContentVideo)).thenReturn(vidBlock);
+        when(videoRepo.save((VSVideo) slideContentVideo)).thenReturn((VSVideo) slideContentVideo);
+        VideoBlock videoBlock = new VideoBlock();
+        videoBlock.setId("videoBlock_1");
+        when(videoBlockRepo.save((VideoBlock) vidBlock)).thenReturn(videoBlock);
+        CreationReturnValue returnValue = managerToTest.createVideoBlock("slideId_1", new byte[20], 200L, "newFile.mp4", null, 1,"video_title");
         VideoBlock vblk = (VideoBlock) returnValue.getElement();
         assertEquals(vblk.getId(), "videoBlock_1");
     }

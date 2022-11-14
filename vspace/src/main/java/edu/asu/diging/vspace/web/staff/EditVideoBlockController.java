@@ -41,27 +41,21 @@ public class EditVideoBlockController {
             RedirectAttributes attributes) throws IOException {
 
         IVideoBlock videoBlock = contentBlockManager.getVideoBlock(blockId);
-        if (videoTitle != null && (videoUrl == null || file == null)) {
-            IVSVideo slideContentVideo = videoBlock.getVideo();
-            slideContentVideo.setTitle(videoTitle);
-            contentBlockManager.saveVideoBlock(videoBlock);
-        } else {
-            byte[] video = null;
-            String filename = null;
-            if (file != null) {
-                video = file.getBytes();
-                filename = file.getOriginalFilename();
-            }
-            try {
-                contentBlockManager.updateVideoBlock(videoBlock, video, (file != null) ? file.getSize() : null,
-                        videoUrl, filename, videoTitle);
-            } catch (VideoCouldNotBeStoredException e) {
-                logger.error("Video block could not be stored, bad request.", e);
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put("errorMessage", "Video Content block cannot be stored.");
-                return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        byte[] video = null;
+        String filename = null;
+        if (videoTitle != null && file != null) {
+            video = file.getBytes();
+            filename = file.getOriginalFilename();
+        }
+        try {
+            contentBlockManager.updateVideoBlock(videoBlock, video, (file != null) ? file.getSize() : null,
+                    videoUrl, filename, videoTitle);
+        } catch (VideoCouldNotBeStoredException e) {
+            logger.error("Video block could not be stored, bad request.", e);
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "Video Content block cannot be stored.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
