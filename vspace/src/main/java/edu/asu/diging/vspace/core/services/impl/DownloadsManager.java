@@ -139,7 +139,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 //        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
 //        exhibitionDownloadRepo.save(exhibitionDownload);
         //        return resource;
-        Future<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context));
+        Future<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory));
 
         if(futureTask.isDone()) {
             return futureTask.get();
@@ -168,7 +168,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     
     @Override
-    public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context)  throws IOException, InterruptedException {
+    public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory)  throws IOException, InterruptedException {
         byte[] resource = null;
         String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
@@ -176,7 +176,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderPath, context);                
+            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
         }               
         resource = storageEngine.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
@@ -192,11 +192,11 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param context
      */
     @Override
-    public void downloadSpace(Space space, String exhibitionFolderPath, WebContext context) {
+    public void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory) {
 
         String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
 
-        storeTemplateForSpace(space.getId(), spaceFolderPath , context);
+        storeTemplateForSpace(space.getId(), spaceFolderPath , context, sequenceHistory);
 
         String imagesFolderPath = storageEngine.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath); 
 
@@ -347,11 +347,11 @@ public class DownloadsManager  implements  IDownloadsManager {
 
         context.setVariable("currentSlideCon", currentSlide);
 
-        if(sequenceHistory.hasHistory()) {
-            context.setVariable("showBackToPreviousChoice", true);
-            context.setVariable("previousSequenceId", sequenceHistory.peekSequenceId());
-            context.setVariable("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
-        }
+//        if(sequenceHistory.hasHistory()) {
+//            context.setVariable("showBackToPreviousChoice", true);
+//            context.setVariable("previousSequenceId", sequenceHistory.peekSequenceId());
+//            context.setVariable("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
+//        }
 
         context.setVariable("numOfSlides", sequenceSlides.size());
         context.setVariable("currentNumOfSlide", slideIndex + 1);
@@ -387,9 +387,9 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param context
      */
     @Override
-    public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context ) {
+    public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context , SequenceHistory sequenceHistory) {
         try {      
-            populateContextForSpace( context, directory);
+            populateContextForSpace( context, directory, sequenceHistory);
             String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" , context);
             byte[] fileContent = response.getBytes();
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
@@ -407,7 +407,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param id
      */
     @Override
-    public void populateContextForSpace(WebContext context, String id) {
+    public void populateContextForSpace(WebContext context, String id, SequenceHistory sequenceHistory) {
 
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
@@ -430,9 +430,9 @@ public class DownloadsManager  implements  IDownloadsManager {
         context.setVariable("display", spaceDisplayManager.getBySpace(space));
         context.setVariable("externalLinkList", externalLinkManager.getLinkDisplays(id));
 
-        if (sequenceHistory.hasHistory()) {
-            sequenceHistory.flushFromHistory();
-        }
+//        if (sequenceHistory.hasHistory()) {
+//            sequenceHistory.flushFromHistory();
+//        }
     }
 
     /**

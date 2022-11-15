@@ -17,12 +17,13 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
+import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IDownloadsManager {
     byte[] triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException ;
 
-    void downloadSpace(Space space, String exhibitionFolderPath, WebContext context);
+    void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory);
 
     void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context);
 
@@ -39,15 +40,17 @@ public interface IDownloadsManager {
  
     void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException;
 
-    void storeTemplateForSpace(String directory, String spaceFolderPath, WebContext context);
+    void storeTemplateForSpace(String directory, String spaceFolderPath, WebContext context, SequenceHistory sequenceHistory);
 
-    void populateContextForSpace(WebContext context, String id);
+    void populateContextForSpace(WebContext context, String id, SequenceHistory sequenceHistory);
 
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;
 
-    byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException ;
+    byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory) throws IOException, InterruptedException ;
 
     byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException;
 
     String getExhibitionFolderName();
+
+
 }
