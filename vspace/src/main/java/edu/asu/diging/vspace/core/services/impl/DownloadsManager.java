@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.beans.Beans;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -20,8 +21,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.expression.ThymeleafEvaluationContext;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -176,7 +179,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
+//            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
         }               
         resource = storageEngine.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
@@ -390,6 +393,13 @@ public class DownloadsManager  implements  IDownloadsManager {
     public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context , SequenceHistory sequenceHistory) {
         try {      
             populateContextForSpace( context, directory, sequenceHistory);
+            Context thymeleafContext = new Context(context.getLocale());
+//            thymeleafContext.setVariable("beans", ); 
+
+//                    // Set the Thymeleaf evaluation context to allow access to Spring beans with @beanName in SpEL expressions
+//            thymeleafContext.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
+//                            ThymeleafEvaluationContext(context, null));
+
             String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" , context);
             byte[] fileContent = response.getBytes();
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );

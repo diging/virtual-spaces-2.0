@@ -5,18 +5,51 @@
 </script>
 <script th:inline="javascript">
 
+function base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+       var ascii = binaryString.charCodeAt(i);
+       bytes[i] = ascii;
+    }
+    return bytes;
+ }
+
+function saveByteArray(reportName, byte) {
+
+ var fileType = "application/zip";
+    var blob = new Blob([byte], {type: fileType});
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+};
+
 	function triggerDownload() {
 		
 		const validateResponse = (result) => {
-			console.log(result.body);
-			if(result.body!=null) return false;
+			if(result.status== 200)
+				console.log(result);
+				console.log(result.body);
+				console.log(result.data);
+				
+			
+				var data = result.body;
+	 			var sampleArr = base64ToArrayBuffer(result.body); 
+	         	var fileName = "nme.zip";
+	        	console.log(fileName)
+	        	saveByteArray(fileName, sampleArr);
+				return true;
 			return false;
 		}
 		
 		const triggerExhibitionDownload = () => {
 		
 			maxAttempts = 10;
-			interval= 1000;
+			interval= 3000;
 			  console.log('Start poll...');
 			  let attempts = 0;
 
@@ -26,7 +59,7 @@
 				    console.log("attemps");
 				    attempts++;
 
-				    if (validateResponse(result)) {
+				    if ( validateResponse(result)  ) {
 				    	console.log("succes");
 				    	
 				    	
@@ -35,9 +68,10 @@
 		
 				      return reject(new Error('Exceeded max attempts'));
 				    } else {
-				    	console.log('timeout');
-/* 				      setTimeout(executePoll, interval, resolve, reject);
- */				    }
+      					setTimeout( executePoll, interval, resolve, reject  );
+
+ 
+ 			    }
 				  };
 
 				  return new Promise(executePoll);
