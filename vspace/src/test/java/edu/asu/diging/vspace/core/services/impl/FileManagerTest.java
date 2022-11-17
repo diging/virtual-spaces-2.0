@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -104,7 +105,7 @@ public class FileManagerTest {
     }
     
     @Test
-    public void test_getAllFiles_failure() {
+    public void test_getAllFiles_emptyResult() {
         Pageable requestedPageForFiles = PageRequest.of(0, 10);
         when(fileRepo.findAll(requestedPageForFiles)).thenReturn( new PageImpl<VSFile>(new ArrayList()));
         Page<IVSFile> filesResponse = serviceToTest.getAllFiles(1);
@@ -130,7 +131,7 @@ public class FileManagerTest {
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
         when(storageEngine.renameFile(file.getFilename(), "NEW_FILENAME", fileId)).thenReturn(false);
         IVSFile returnedFile = serviceToTest.editFile(fileId, "NEW_FILENAME", fileDescription);
-        assertEquals(file.getFilename(), returnedFile.getFilename());
+        assertNotEquals("NEW_FILENAME", returnedFile.getFilename());
     }
     
     @Test

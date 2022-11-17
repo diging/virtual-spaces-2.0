@@ -100,6 +100,15 @@ $(document).ready(function($) {
 		console.log(num);
 		window.location.assign("[(@{'/staff/files/list'})]"+'?'+"filesPagenum="+num);
 	});
+	
+
+	const urlParams = new URLSearchParams(window.location.search);
+
+	if(urlParams.has('uploadFileSuccess') && urlParams.get('uploadFileSuccess') ) {
+		var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>File uploaded successfully.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		$('.successAlert').append(alert); 		
+	}
+
 });
 
 </script>
@@ -130,6 +139,7 @@ a.nav-link.active.show {
 <body>
     <div layout:fragment="content" class="main-content">
      <span class = "errorDelete"></span>
+      <span class = "successAlert"></span>
     <a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ Upload File</a>
         <h2>Files</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition

@@ -21,7 +21,7 @@
 				processData : false,
 				data : formData,
 				success : function(data) {
-					window.location.href = "[(@{'/staff/files/list/'})]";
+					window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"uploadFileSuccess=true";
 				},
 				error : function(data) {
 					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
