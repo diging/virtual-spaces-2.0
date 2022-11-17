@@ -10,12 +10,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
-import edu.asu.diging.vspace.core.model.IExhibitionDescription;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 
 @Entity
-public class LanguageDescriptionObject {
+public class LanguageDescriptionObject implements ILanguageDescriptionObject {
 	
 	@Id
     @GeneratedValue(generator = "language_description_id_generator")

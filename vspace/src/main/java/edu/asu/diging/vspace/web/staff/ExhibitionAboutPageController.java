@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.ILanguageDescriptionObjectManager;
 import edu.asu.diging.vspace.core.services.impl.LanguageDescriptionObjectManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 
@@ -41,13 +42,18 @@ public class ExhibitionAboutPageController {
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-    private LanguageDescriptionObjectManager languageObjectManager;
+    private ILanguageDescriptionObjectManager languageObjectManager;
+    
+
    
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        model.addAttribute("aboutPage", exhibitionAboutPage);
+        AboutPageForm aboutPageForm=new AboutPageForm();
+        aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
+        aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
+        model.addAttribute("aboutPage", aboutPageForm);
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
         
         List<LanguageDescriptionObject> languageObjectList = new ArrayList();
@@ -57,7 +63,6 @@ public class ExhibitionAboutPageController {
             languageObjectList.add(languageObject);
         });
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
-        model.addAttribute("aboutPageForm", new AboutPageForm());
         return "staff/exhibit/aboutPage";
     }
 
@@ -66,12 +71,10 @@ public class ExhibitionAboutPageController {
     public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, AboutPageForm languageAboutPage, RedirectAttributes attributes) throws IOException {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+        
+        exhibitionAboutPage=languageObjectManager.storeAboutPageData(aboutPageForm,languageAboutPage);
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-        languageAboutPage.setTitles(languageAboutPage.getTitles());
-        languageAboutPage.setAboutPageTexts(languageAboutPage.getAboutPageTexts());
-        languageAboutPage=languageObjectManager.store(languageAboutPage);
-        System.out.println(languageAboutPage.getTitles());
         exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
