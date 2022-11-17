@@ -104,6 +104,9 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public List<IContentBlock> getAllContentBlocks(String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
+        if(slide == null) {
+            return null;
+        }
         return slide.getContents();
     }
 
@@ -189,7 +192,6 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException {
-
         ISlide slide = slideManager.getSlide(slideId);
         IVSImage slideContentImage = saveImage(image, filename);
         CreationReturnValue returnValue = new CreationReturnValue();
