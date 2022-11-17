@@ -90,7 +90,7 @@
 }
 
 .previewModeAlert {
-	position: absolute;
+    position: absolute;
     z-index: 1;
     width: 50px;
     height: 44px;
@@ -139,7 +139,7 @@
 }
 
 .exhModeAlert {
-	position: absolute;
+    position: absolute;
     z-index: 1;
     width: 50px;
     height: 44px;
@@ -558,12 +558,12 @@
                 </button>
         </div> 
         <div th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} OR ${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" 
-						class="exhModeAlert">
+			   class="exhModeAlert">
 				<button class="btn circle-btn"
 					style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;">
 					<span class="icon-warning secondary"
-						style="float: right; left: -4px;"></span> <span
-						class="tooltiptextforExhModeAlert">The virtual space is currently [[${exhibitionConfig.mode}]] and cannot be viewed via
+						style="float: right; left: -4px;"></span> 
+					<span class="tooltiptextforExhModeAlert">The virtual space is currently [[${exhibitionConfig.mode}]] and cannot be viewed via
 						its public url.</span>
 				</button>
         </div>
