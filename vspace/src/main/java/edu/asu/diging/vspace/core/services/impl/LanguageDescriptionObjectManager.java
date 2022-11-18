@@ -1,35 +1,45 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.services.ILanguageDescriptionObjectManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 
 @Transactional
 @Service
-public class LanguageDescriptionObjectManager implements ILanguageDescriptionObject {
-	@Autowired
-    private LanguageDescriptionObjectRepository repo;
+public class LanguageDescriptionObjectManager implements ILanguageDescriptionObjectManager {
 	
-	@Autowired
-	private ExhibitionAboutPage exhibitionAboutPage;
+	 @Autowired
+	 private ExhibitionRepository exhibitRepo;
 
 	@Override
-	public AboutPageForm store(AboutPageForm aboutPageLanguage) {
+	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
 		// TODO Auto-generated method stub
-		List<LanguageDescriptionObject> titles=aboutPageLanguage.getTitles();
-		List<LanguageDescriptionObject> texts=aboutPageLanguage.getAboutPageTexts();
-		//exhibitionAboutPage.setExhibitionTitles();
-		aboutPageLanguage.getTitles();
-		return null;
-	}
+	
+		for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
+		{
+			exhibitionAboutPage.setAboutPageTitle(titles.getUserText());
+		}
+		for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
+		{
+			exhibitionAboutPage.setAboutPageDescription(texts.getUserText());
+		}
+		
+		return exhibitionAboutPage;
+		//System.out.println(exhibitionAboutPage.getExhibitionTitles());
 
+		
+		
+	}
+		
 }

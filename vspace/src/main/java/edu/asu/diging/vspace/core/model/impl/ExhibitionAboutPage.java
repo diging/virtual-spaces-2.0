@@ -15,7 +15,7 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.asu.diging.vspace.core.model.IExhibitionDescription;
+import edu.asu.diging.vspace.core.model.IExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.impl.AboutPageData;
@@ -31,7 +31,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
  *
  */
 @Entity
-public class ExhibitionAboutPage {
+public class ExhibitionAboutPage implements IExhibitionAboutPage{
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -42,6 +42,7 @@ public class ExhibitionAboutPage {
     
     @Lob
     private String aboutPageText;
+    
     
     
     @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
@@ -91,8 +92,31 @@ public class ExhibitionAboutPage {
 	public void setAboutPageText(String aboutPageText) {
 		this.aboutPageText = aboutPageText;
 	}
+	
 
-
+	@Override 
+    public void setAboutPageTitle(String title) {
+    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+        languageObject.setUserText(title);    
+        languageObject.setExhibitionLanguage(null);
+        if(this.getExhibitionTitles() == null) {
+            this.setExhibitionTitles(new ArrayList());
+        }
+        this.getExhibitionTitles().add(languageObject);
+    }
+	
+	@Override
+	public void setAboutPageDescription(String aboutPageTexts) {             
+	  LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+      languageObject.setUserText(aboutPageTexts);    
+      languageObject.setExhibitionLanguage(null);  
+      if(this.getExhibitionTextDescriptions() == null) {
+    	  this.setExhibitionTextDescriptions(new ArrayList());
+      }
+      this.getExhibitionTextDescriptions().add(languageObject);
+	}
+      
+	
 	/*
      * (non-Javadoc)
      * 
