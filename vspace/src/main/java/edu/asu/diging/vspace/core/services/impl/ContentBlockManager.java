@@ -104,9 +104,6 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public List<IContentBlock> getAllContentBlocks(String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        if(slide == null) {
-            return null;
-        }
         return slide.getContents();
     }
 

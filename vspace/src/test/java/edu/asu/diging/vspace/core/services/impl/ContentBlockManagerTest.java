@@ -135,12 +135,6 @@ public class ContentBlockManagerTest {
     }
     
     @Test
-    public void test_getAllContentBlocks_failure() {
-        when(slideManager.getSlide("Slide1")).thenReturn(null);
-        assertEquals(managerToTest.getAllContentBlocks("Slide1"), null);
-    }
-    
-    @Test
     public void test_createTextBlock_success() {
         ISlide slide = new Slide();
         slide.setId("Slide1");
