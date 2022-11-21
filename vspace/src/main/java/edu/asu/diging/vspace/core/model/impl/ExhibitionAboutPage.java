@@ -97,6 +97,7 @@ public class ExhibitionAboutPage implements IExhibitionAboutPage{
 	@Override 
     public void setAboutPageTitle(String title) {
     	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+    	languageObject.setId(languageObject.getId());
         languageObject.setUserText(title);    
         languageObject.setExhibitionLanguage(null);
         if(this.getExhibitionTitles() == null) {
@@ -108,6 +109,7 @@ public class ExhibitionAboutPage implements IExhibitionAboutPage{
 	@Override
 	public void setAboutPageDescription(String aboutPageTexts) {             
 	  LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+	  languageObject.setId(languageObject.getId());
       languageObject.setUserText(aboutPageTexts);    
       languageObject.setExhibitionLanguage(null);  
       if(this.getExhibitionTextDescriptions() == null) {
