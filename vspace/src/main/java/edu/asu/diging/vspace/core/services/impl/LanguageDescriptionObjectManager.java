@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +22,50 @@ import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 public class LanguageDescriptionObjectManager implements ILanguageDescriptionObjectManager {
 	
 	 @Autowired
-	 private ExhibitionRepository exhibitRepo;
+	 private LanguageDescriptionObjectRepository repo;
 
 	@Override
 	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
-		// TODO Auto-generated method stub
-	
+			
 		for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
 		{
-			exhibitionAboutPage.setAboutPageTitle(titles.getUserText());
+			setAboutPageTitle(titles.getUserText(),exhibitionAboutPage);
 		}
 		for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
 		{
-			exhibitionAboutPage.setAboutPageDescription(texts.getUserText());
+			setAboutPageDescription(texts.getUserText(),exhibitionAboutPage);
 		}
-		
-		return exhibitionAboutPage;
-		//System.out.println(exhibitionAboutPage.getExhibitionTitles());
-
-		
+		return exhibitionAboutPage;				
 		
 	}
+	
+	public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
+    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+        languageObject.setUserText(title);
+        //languageObject.setExhibitionLanguage(null);
+        if(exhibitionAboutPage.getExhibitionTitles() == null) {
+        	exhibitionAboutPage.setExhibitionTitles(new ArrayList());
+        }
+        exhibitionAboutPage.getExhibitionTitles().add(languageObject);
+        storeLanguageObject(languageObject);
+    }
+
+	public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {             
+	  LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+      languageObject.setUserText(aboutPageTexts);    
+      //languageObject.setExhibitionLanguage(null);  
+      if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
+    	  exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
+      }
+      exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
+      storeLanguageObject(languageObject);
+	}
+	
+	private void storeLanguageObject(LanguageDescriptionObject languageObject) {
+		repo.save(languageObject);
+		
+	}
+
+	
 		
 }

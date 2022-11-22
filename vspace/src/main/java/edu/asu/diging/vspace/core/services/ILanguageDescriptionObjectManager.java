@@ -10,4 +10,6 @@ import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 public interface ILanguageDescriptionObjectManager {
 	ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage);
 
+	//LanguageDescriptionObject store(ExhibitionAboutPage exhibitionAboutPage);
+
 }

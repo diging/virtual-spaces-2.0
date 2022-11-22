@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
  *
  */
 @Entity
-public class ExhibitionAboutPage implements IExhibitionAboutPage{
+public class ExhibitionAboutPage{
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -45,10 +46,10 @@ public class ExhibitionAboutPage implements IExhibitionAboutPage{
     
     
     
-    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
+    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<ILanguageDescriptionObject> exhibitionTitles;
 
-    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class)
+    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<ILanguageDescriptionObject> exhibitionTextDescriptions;
 
 
@@ -92,32 +93,6 @@ public class ExhibitionAboutPage implements IExhibitionAboutPage{
 	public void setAboutPageText(String aboutPageText) {
 		this.aboutPageText = aboutPageText;
 	}
-	
-
-	@Override 
-    public void setAboutPageTitle(String title) {
-    	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-    	languageObject.setId(languageObject.getId());
-        languageObject.setUserText(title);    
-        languageObject.setExhibitionLanguage(null);
-        if(this.getExhibitionTitles() == null) {
-            this.setExhibitionTitles(new ArrayList());
-        }
-        this.getExhibitionTitles().add(languageObject);
-    }
-	
-	@Override
-	public void setAboutPageDescription(String aboutPageTexts) {             
-	  LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-	  languageObject.setId(languageObject.getId());
-      languageObject.setUserText(aboutPageTexts);    
-      languageObject.setExhibitionLanguage(null);  
-      if(this.getExhibitionTextDescriptions() == null) {
-    	  this.setExhibitionTextDescriptions(new ArrayList());
-      }
-      this.getExhibitionTextDescriptions().add(languageObject);
-	}
-      
 	
 	/*
      * (non-Javadoc)

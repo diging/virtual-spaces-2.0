@@ -71,10 +71,15 @@ public class ExhibitionAboutPageController {
     public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, AboutPageForm languageAboutPage, RedirectAttributes attributes) throws IOException {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        
+
         exhibitionAboutPage=languageObjectManager.storeAboutPageData(aboutPageForm,languageAboutPage);
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+        
+       
+        
+        
+        
         exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
