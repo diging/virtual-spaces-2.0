@@ -54,8 +54,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setCustomOrderName(name);
         spacesCustomOrder.setDescription(description);
-        List<ISpace> orderedSpaces = new ArrayList<ISpace>();        
-        orderedSpaces = spaceOrders.stream()
+        List<ISpace> orderedSpaces = spaceOrders.stream()
                 .map(spaceId -> spaceManager.getSpace(spaceId))
                 .collect(Collectors.toList());
         spacesCustomOrder.setCustomOrderedSpaces(orderedSpaces);
@@ -70,13 +69,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     
     @Override
     public ISpacesCustomOrder get(String customSpaceOrderId) {
-        try {
-            Optional<SpacesCustomOrder> spacesCustomOrderOptional = spacesCustomOrderRepository.findById(customSpaceOrderId);
+        Optional<SpacesCustomOrder> spacesCustomOrderOptional = spacesCustomOrderRepository.findById(customSpaceOrderId);
+        if(spacesCustomOrderOptional.isPresent())
             return spacesCustomOrderOptional.get();
-        } catch (NoSuchElementException e) {
-            logger.error("Custom order id does not exist" + e);
-            return null;
-        }
+        return null;
     }
     
     @Override
@@ -117,7 +113,8 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {
         List<ISpace> spaces = new ArrayList<ISpace>();
         for(String id : spacesIds) {
-            spaces.add(spaceManager.getSpace(id));
+            if(spaceManager.getSpace(id) != null)
+                spaces.add(spaceManager.getSpace(id));
         }
         ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
@@ -130,14 +127,11 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void setExhibitionSpacesCustomOrder(String customOrderId) {
-        try {
-            IExhibition exhibition = exhibitionManager.getStartExhibition();
-            Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
-                    .findById(customOrderId);
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
+                .findById(customOrderId);
+        if(spacesCustomOrder.isPresent())
             exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
-        } catch (NoSuchElementException e) {
-            logger.error("Custom order id does not exist" + e);
-        }
     }
     
     /**

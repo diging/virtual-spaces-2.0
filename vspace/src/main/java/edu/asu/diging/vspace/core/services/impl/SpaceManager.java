@@ -272,8 +272,6 @@ public class SpaceManager implements ISpaceManager {
             }
             // When space has no other links attached to it
             spaceDisplayRepo.deleteBySpaceId(id);
-            
-            //Delete the space
             spaceRepo.deleteById(id);
         }
     }

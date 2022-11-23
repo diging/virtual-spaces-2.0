@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,10 +20,12 @@ import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility {
     
     @Autowired
-    private  IExhibitionManager  exhibitionManager;
+    private  IExhibitionManager exhibitionManager;
     
-    @Override
-    public List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
+    /**
+     * used to sort spaces alphabetically
+     */
+    private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {
@@ -34,8 +35,10 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
         return publishedSpaces;
     }
     
-    @Override
-    public List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
+    /**
+     * used to sort spaces based on creation date
+     */
+    private List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {
@@ -45,32 +48,34 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
         return publishedSpaces;
     }
     
-    @Override
-    public List<ISpace>  sortSpacesByCustomOrder(List<ISpace> publishedSpaces){
+    /**
+     * used to sort spaces based on user defined order
+     */
+    private List<ISpace>  sortSpacesByCustomOrder(List<ISpace> publishedSpaces){
         IExhibition exhibition  = exhibitionManager.getStartExhibition();
         SpacesCustomOrder spacesCustomOrder = exhibition.getSpacesCustomOrder();
         if(spacesCustomOrder == null) {
             return sortSpacesAlphabetically(publishedSpaces);
         }
         List<ISpace> allSpaces = spacesCustomOrder.getCustomOrderedSpaces();
-        List<ISpace> spacesToPublish = new ArrayList<ISpace>();
         
         //only show published spaces        
-        spacesToPublish = allSpaces.stream()
+        return allSpaces.stream()
                 .filter(space -> space.getSpaceStatus() == SpaceStatus.PUBLISHED)
                 .collect(Collectors.toList());
-        return spacesToPublish;
     }
     
+    /**
+     * used to sort spaces based on the selected mode
+     */
     @Override
     public List<ISpace> sortSpaces(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
         if(mode == null || mode == ExhibitionSpaceOrderMode.ALPHABETICAL) {
             return sortSpacesAlphabetically(publishedSpaces);
-        }
-        else if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
+        } else if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
             return sortSpacesOnCreationDate(publishedSpaces);
-        }else {
-            return  sortSpacesByCustomOrder(publishedSpaces);
+        } else {
+            return sortSpacesByCustomOrder(publishedSpaces);
         }
     }
 }
