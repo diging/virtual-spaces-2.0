@@ -608,19 +608,15 @@
                     </ul>
                 </div>
               	   
-                  <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
-                    <a href="javascript:void(0)" class="closebtn"
-                        onclick="closeNav()">&times;</a>
+                <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
+                  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item" id="previewNavBarItem"
-                            th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
                             <div th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} OR ${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" 
 								   class="exhModeAlert">
-										<span class="icon-warning secondary"
-											style="float: right; left: -4px;"></span> 
-										<span class="tooltiptextforExhModeAlert">The virtual space is currently [[${exhibitionConfig.mode}]] and cannot be viewed via
-											its public url.</span>
-						
+								<span class="icon-warning secondary" style="float: right; left: -4px;"></span> 
+								<span class="tooltiptextforExhModeAlert">The virtual space is currently [[${exhibitionConfig.mode}]] and cannot be viewed via
+									its public url.</span>				
 					        </div>
 					        </a>
                         </li>
