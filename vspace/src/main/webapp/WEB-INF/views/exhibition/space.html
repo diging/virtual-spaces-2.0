@@ -31,6 +31,7 @@
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+
 }
 
 .sidenav a {
@@ -40,6 +41,7 @@
     color: #818181;
     display: block;
     transition: 0.3s;
+  
 }
 
 .sidenav .closebtn {
@@ -53,6 +55,7 @@
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
+  
     }
     .sidenav a {
         font-size: 18px;
@@ -139,11 +142,10 @@
 }
 
 .exhModeAlert {
-    position: absolute;
+    position: relative;
     z-index: 1;
     width: 50px;
     height: 44px;
-
     overflow: visible;
     cursor: pointer;
 }
@@ -158,8 +160,7 @@
     border-radius: 6px;
     position: relative;
     z-index: 1;
-    left: -100px;
- 	top: 46px;
+    left: 70px;
     background: rgba(0, 0, 0, 0.6);
 }
 
@@ -185,6 +186,9 @@
 
 .barPosition {
     top: 25px;
+}
+#previewNavBarItem {
+	display: inline-flex;
 }
 
 @media only screen and (max-width: 800px) { /* For mobile phones: */
@@ -224,6 +228,7 @@
     /* top layer */
     z-index: 9999;
     transition: all 0.5s;
+
 }
 
 #sidebar.active {
@@ -329,9 +334,12 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		  $("#mySidenav").css("width", "250px");
+		  $("#mySidenav").css("overflow", "visible");
+		  
 		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
+        	 $("#mySidenav").css("overflow", "hidden");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -604,7 +612,7 @@
                     <a href="javascript:void(0)" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item"
+                        <li><a class="dropdown-item" id="previewNavBarItem"
                             th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
                             <div th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} OR ${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" 
 								   class="exhModeAlert">
