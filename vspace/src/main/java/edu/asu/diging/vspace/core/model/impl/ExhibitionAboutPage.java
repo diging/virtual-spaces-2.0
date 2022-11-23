@@ -1,29 +1,22 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import edu.asu.diging.vspace.core.model.IExhibitionAboutPage;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
-import edu.asu.diging.vspace.core.model.IVSpaceElement;
-import edu.asu.diging.vspace.core.model.display.impl.AboutPageData;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 
 /**
  * Model for Exhibition About Page
@@ -46,10 +39,12 @@ public class ExhibitionAboutPage{
     
     
     
-    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="AboutPage_LangObj_titles")
     private List<ILanguageDescriptionObject> exhibitionTitles;
 
-    @OneToMany(mappedBy = "userText", targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="AboutPage_LangObj_descriptions")
     private List<ILanguageDescriptionObject> exhibitionTextDescriptions;
 
 
