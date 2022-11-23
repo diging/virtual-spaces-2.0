@@ -140,9 +140,8 @@ public abstract class SearchManager implements ISearchManager {
      */
     @Override
     public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
-
-        return searchSpacesAndProcessResults(searchTerm, Integer.parseInt(spacePagenum));
-
+        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
+        return convertToSearchSpaceResults(spacePage.getContent());
     }
 
 
@@ -158,7 +157,8 @@ public abstract class SearchManager implements ISearchManager {
      */
     @Override
     public SearchModuleResults searchForModule(String modulePagenum, String searchTerm) {
-        return searchModulesAndProcessResults(searchTerm, Integer.parseInt(modulePagenum));
+        Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));
+        return convertToSearchModuleResults(modulePage.getContent());
 
     }
 
@@ -174,9 +174,8 @@ public abstract class SearchManager implements ISearchManager {
      */
     @Override
     public SearchSlideResults searchForSlide(String slidePagenum, String searchTerm) {
-
-        return searchSlidesAndProcessResults(searchTerm, Integer.parseInt(slidePagenum));
-
+        Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, Integer.parseInt(slidePagenum));
+        return convertToSearchSlideResults(slidePage.getContent());
     }
 
 
@@ -192,31 +191,9 @@ public abstract class SearchManager implements ISearchManager {
      */
     @Override
     public SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm) {
-
-        return searchSlideTextBlockAndProcessResults(searchTerm, Integer.parseInt(slideTextPagenum)); 
-
-    }
-
-    public SearchSpaceResults searchSpacesAndProcessResults(String searchTerm, int page)  {
-        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, page);
-        return convertToSearchSpaceResults(spacePage.getContent());
-    }
-
-    public SearchModuleResults searchModulesAndProcessResults(String searchTerm, int page) {
-        Page<IModule> modulePage = searchModulesAndPaginate(searchTerm, page);
-        return convertToSearchModuleResults(modulePage.getContent());
-        
-    }
-
-    public SearchSlideResults searchSlidesAndProcessResults(String searchTerm, int page) {        
-        Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, page);
-        return convertToSearchSlideResults(slidePage.getContent());
-    }
-
-    public SearchSlideTextBlockResults searchSlideTextBlockAndProcessResults(String searchTerm, int page) {
-
-        Page<ISlide> slideTextPage = searchSlideTextsAndPaginate(searchTerm, page);
+        Page<ISlide> slideTextPage = searchSlideTextsAndPaginate(searchTerm, Integer.parseInt(slideTextPagenum));
         return  convertToSearchSlideTextBlockResults(slideTextPage.getContent(), searchTerm);
+
     }
 
     /**
