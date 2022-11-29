@@ -51,8 +51,9 @@ public class ExhibitionAboutPageController {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         AboutPageForm aboutPageForm=new AboutPageForm();
-        aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
-        aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
+        //aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
+        //aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
+        
         model.addAttribute("aboutPage", aboutPageForm);
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
         
@@ -70,17 +71,13 @@ public class ExhibitionAboutPageController {
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
     public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, AboutPageForm languageAboutPage, RedirectAttributes attributes) throws IOException {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+        ExhibitionAboutPage exhibitionAboutPage = new ExhibitionAboutPage();
 
+        
+        exhibitionAboutPage.setTitle(languageAboutPage.getTitle());
+        exhibitionAboutPage.setAboutPageText(languageAboutPage.getAboutPageText());
         exhibitionAboutPage=languageObjectManager.storeAboutPageData(aboutPageForm,languageAboutPage);
-        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
-        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-        
-       
-        
-        
-        
-        exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
+        aboutPageManager.store(exhibitionAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");

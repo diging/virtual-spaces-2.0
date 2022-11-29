@@ -17,8 +17,8 @@ public class LanguageDescriptionObjectManager implements ILanguageDescriptionObj
 	 @Autowired
 	 private LanguageDescriptionObjectRepository repo;
 	 
-	  @Autowired
-	  private IExhibitionAboutPageManager aboutPageManager;
+	 @Autowired
+	 private IExhibitionAboutPageManager aboutPageManager;
 
 	@Override
 	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
