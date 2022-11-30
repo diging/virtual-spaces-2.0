@@ -73,8 +73,6 @@
 <script th:inline="javascript">
 	let spaceDivs=[];
 	$(document).ready(function() {
-		$("#successMsgDelete").hide();
-		$("#successMsgSave").hide();
 	 	spaceDivs = document.getElementById('sortableSpaces').children;
 		var spaceIds = [];
 		let index =0;
@@ -84,46 +82,10 @@
 		} 
 		spaceDivs=[];
 		spaceDivs = spaceIds;
+		$("#spaceOrder").val(spaceDivs);
 		if([[${customSpaceOrder.description}]] == "") {
 			$("#description").hide();
 		}
-		
-		
-		$("#editCustomOrderSubmit").click(function() {
-			var description = $("#editSpaceCustomOrderDescription").val();
-		    var title = $("#editSpaceCustomOrderTitle").val();	    
-		    var formData = new FormData();
-		    formData.append('title', title);
-		    formData.append('description', description);
-		    $.ajax({
-			    url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/info'})]",
-			    type: 'POST',
-			    headers: {
-			    	'X-CSRF-Token': [[${_csrf.token}]]
-			    },
-			    cache       : false,
-			    contentType : false,
-			    processData : false,
-			    data: formData,
-			    enctype: 'multipart/form-data',
-			    success: function(data) {
-			        $("#customOrderTitle").text(title);
-			        $("#description").text(description);
-			        if(description == "") {
-			        	$("#description").hide();
-			        } else {
-			        	$("#description").show();
-			        }
-			        $('#myModal').modal('hide');
-			        $("#successText").text("Custom order details have been successfully updated.");
-		        	showSuccessPopUp();
-			    },
-			    error: function(data) {
-			    		$('#myModal').modal('hide');
-			    		showErrorPopUp();
-			    }
-		    });
-		});
 	 
 		$("#sortableSpaces").sortable({
 		  	update: function(event,ui) {
@@ -131,79 +93,8 @@
 		      	$(this).children().each(function(index,element){
 		      		spaceDivs.push(element.children[0].id);
 		      	});
+		      	$("#spaceOrder").val(spaceDivs);
 		  	}
-		});
-			
-		//save order
-		$("#saveOrder").click(function() {
-			var formData = new FormData();
-		    formData.append('spaceOrder', spaceDivs);
-		    $.ajax({
-		        url: "[(@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'})]",
-		        type: 'POST',
-		        headers: {
-			    	'X-CSRF-Token': [[${_csrf.token}]]
-			    },
-		        cache       : false,
-		        contentType : false,
-		        processData : false,
-		        data: formData,
-		        enctype: 'multipart/form-data',
-		        beforeSend: function(){
-		        	$("#spinner").show();
-		        },
-		        complete: function(){
-		        	$("#spinner").hide();
-		        },
-		        success: function(data) {
-		        	$("#successText").text("Space order has been successfully changed.");
-		        	showSuccessPopUp();
-		        },
-		        error: function(data) {
-		        	showErrorPopUp();
-		        }
-		    });
-		            
-		  });
-		  
-		  
-		//delete order
-		$("#deleteOrder").click(function() {
-			var formData = new FormData();
-		    $.ajax({
-		        url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]",
-		        type: 'DELETE',
-		        headers: {
-			    	'X-CSRF-Token': [[${_csrf.token}]]
-			    },
-		        cache       : false,
-		        contentType : false,
-		        processData : false,
-		        data: formData,
-		        enctype: 'multipart/form-data',
-		        beforeSend: function(){
-		        	$("#spinner").show();
-		        },
-		        complete: function(){
-		        	$("#spinner").hide();
-		        },
-		        success: function(data) {
-		        	localStorage.setItem("prevUrl", "/space/order/deletedOrder");
-		        	window.location.href = "[(@{'/staff/space/order'})]";
-		        },
-		        error: function(data) {
-		        	showErrorPopUp();
-		        }
-		    });
-		            
-		});
-		  
-		$("#closeAlertDelete").click(function() {
-		    $('#successMsgDelete').hide();
-		});
-		
-		$("#closeAlertSave").click(function() {
-		    $('#successMsgSave').hide();
 		});
 		
 		$("#goBackContainer").click(function() {
@@ -212,25 +103,8 @@
 		$("#editTitleDescription").click(function() {
 			$('#myModal').modal('show');
 		});
-		$("#closeSuccessPopUp").click(function() {
-			$("#successPopUp").hide();
-		});
-		$("#closeErrorPopUp").click(function() {
-			$("#failedPopUp").hide();
-		});
 
 	});
-	 
-	function showSuccessPopUp() {
-		$("#successPopUp").show();
-		setTimeout(function() {
-			$("#successPopUp").hide();
-		}, 5000);
-	}
-	
-	function showErrorPopUp() {
-		$("#failedPopUp").show();
-	}
 	
 </script>
 </head>
@@ -276,46 +150,57 @@
 			<div id="draganddrop">
 			<span>Drag and drop to arrange spaces</span>
 			</div>
-			<div id="sortableSpaces" class="sortableSpaces">
-				<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
-			    	<div  th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
-			             <p class="para">[[${selectedSpace.name}]]</p>
-				    </div>
-		    	</div>
-			</div>
-			<div style="padding-top:20px;">
-				<button id="saveOrder" type="button" class="btn primary-btn" style="float: left; margin-right: 1%;">Change Space Order</button>
-		        <button type="button" id="deleteOrder"  class="btn primary-btn ">
+			<form th:action="@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'}" method ="POST">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
+				<div id="sortableSpaces" class="sortableSpaces">
+					<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
+				    	<div  th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+				             <p class="para">[[${selectedSpace.name}]]</p>
+					    </div>
+			    	</div>
+				</div>
+				<div style="padding-top:20px;">
+					<button id="saveOrder" type="submit" class="btn primary-btn" style="float: left; margin-right: 1%;">Change Space Order</button>
+		        </div>
+			</form>
+	        
+	        <form th:action="@{'/staff/space/customorder/'+${customSpaceOrder.id}}" method ="POST">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+		        <button type="submit" id="deleteOrder" class="btn primary-btn ">
 		        	<i class="icon-trash" style="font-size: 1.3rem;vertical-align: text-bottom;padding-right: 3px;"></i>Delete Custom Order
 		        </button>
-	        </div>
+			</form>
 	        
 	        
 	        <!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		        <div class="modal-dialog modal-lg" role="document">
 		            <div class="modal-content">
-		                <div class="modal-header">
-		                    <h3 class="modal-title">Edit Custom Order</h3>
-		                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline: none;">
-		                    <span aria-hidden="true">&times;</span>
-		                    </button>
-		                </div>
-		                <div class="modal-body">
-		                    <div class="flexContainer">
-		                    	<span style="flex: 1;">Title: </span>
-		                    	<input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">
-		                    	
-		                    </div>
-		                    <div class="flexContainer">
-		                    	<span style="flex: 1;">Description: </span>
-		                    	<textarea id="editSpaceCustomOrderDescription" rows=5 class="form-control editSpaceCustomOrderDescription" th:text="${customSpaceOrder.description}"></textarea>
-		                    </div>
-		                </div>
-		                <div class="modal-footer">
-		                    <button id="editCustomOrderSubmit" type="button" class="btn primary-btn btn-md editSaveBtn">Save</button>
-							<button id="cancel" type="button" class="btn primary-btn btn-md editSaveBtn" data-dismiss="modal" style="margin-left: 1%;">Cancel</button>
-		                </div>
+		            	<form th:action="@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/info'}" method ="POST">
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+			                <div class="modal-header">
+			                    <h3 class="modal-title">Edit Custom Order</h3>
+			                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline: none;">
+			                    <span aria-hidden="true">&times;</span>
+			                    </button>
+			                </div>
+			                <div class="modal-body">
+			                    <div class="flexContainer">
+			                    	<span style="flex: 1;">Title: </span>
+			                    	<input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" name="title" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">
+			                    	
+			                    </div>
+			                    <div class="flexContainer">
+			                    	<span style="flex: 1;">Description: </span>
+			                    	<textarea id="editSpaceCustomOrderDescription" name="description" rows=5 class="form-control editSpaceCustomOrderDescription" th:text="${customSpaceOrder.description}"></textarea>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button id="editCustomOrderSubmit" type="submit" class="btn primary-btn btn-md editSaveBtn">Save</button>
+								<button id="cancel" type="button" class="btn primary-btn btn-md editSaveBtn" data-dismiss="modal" style="margin-left: 1%;">Cancel</button>
+			                </div>
+		                </form>
 		            </div>
 		        </div>
 	        </div>        

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
@@ -17,10 +18,13 @@ public class DeleteSpacesCustomOrderController {
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
-    @RequestMapping(value = "/staff/space/customorder/{orderId}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteSpacesCustomOrder(@PathVariable String orderId, Model model) {
+    @RequestMapping(value = "/staff/space/customorder/{orderId}", method = RequestMethod.POST)
+    public String deleteSpacesCustomOrder(@PathVariable String orderId, Model model, RedirectAttributes attributes) {
         spacesCustomOrderManager.delete(orderId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        attributes.addFlashAttribute("alertType", "success");
+        attributes.addFlashAttribute("message", "Custom Order has been successfully deleted.");
+        attributes.addFlashAttribute("showAlert", "true");
+        return "redirect:/staff/space/order";
     }
 
 }

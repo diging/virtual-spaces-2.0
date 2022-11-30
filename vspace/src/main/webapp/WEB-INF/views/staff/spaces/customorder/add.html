@@ -27,12 +27,6 @@
 			.para {
 				margin: 0;
 			}
-			.errorMsgFailed {
-				position: absolute;
-    			top: 8%;
-    			width: 65%;
-    			display:none;
-			}
 			.goBackContainer {
 				float: right;
 			}
@@ -48,7 +42,6 @@
 		<script th:inline="javascript">
 		var spaceDivs = []
 		$(document).ready(function() {
-			$("#errorMsgFailed").hide();
 			var vals = []
 			
 			spaceDivs = document.getElementById('sortableSpaces').children;
@@ -60,58 +53,16 @@
 			} 
 			 spaceDivs=[];
 			 spaceDivs = spaceIds;
-			//save order
-			$("#createOrder").click(function() {
-				var formData = new FormData();
-				var name = $("#name").val();
-				var descriptionText = $("#description").val();
-			    formData.append('spaceOrder', spaceDivs);
-			    formData.append('name', name);
-			    formData.append('description', descriptionText);
-			    formData
-			    $.ajax({
-			        url: "[(@{'/staff/space/order/customorder/add'})]"+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-			        type: 'POST',
-			        cache       : false,
-			        contentType : false,
-			        processData : false,
-			        data: formData,
-			        enctype: 'multipart/form-data',
-			        beforeSend: function(){
-			        	$("#errorMsgFailed").hide();
-			        },
-			        complete: function(){
-			        	
-			        },
-			        success: function(data) {
-			        	document.getElementById("name").value = "";
-			        	document.getElementById("description").value = "";
-			        	localStorage.setItem("prevUrl", window.location.pathname);
-			        	window.location.href = "[(@{'/staff/space/order'})]";
-			        },
-			        error: function(data) {
-			        	$("#errorMsgFailed").show();
-			        	setTimeout(function() {
-			        		$("#errorMsgFailed").hide();
-			        	 }, 10000);
-			        	
-			        }
-			    });
-			            
-			  });
+			 $("#spaceOrder").val(spaceDivs);
 			
 			$("#sortableSpaces").sortable({
 			  	update: function(event,ui) {
 			  		spaceDivs = [];
 			      	$(this).children().each(function(index,element){
 			      		spaceDivs.push(element.children[0].id);
-			            	//updatedSpaceOrder.push(item);
 			      	});
+			      	$("#spaceOrder").val(spaceDivs);
 			  	}
-				});
-		
-			$("#closeAlertFailed").click(function() {
-				$("#errorMsgFailed").hide();
 			});
 			$("#goBackContainer").click(function() {
 				window.location.href = "[(@{'/staff/space/order'})]";
@@ -125,33 +76,31 @@
 		    	<span class="icon-arrow-left" style="font-size: 28px"></span>
 		    	<span style="vertical-align: middle;">Go Back</span>
 	    	</div>
-		    <div id="errorMsgFailed" class="alert customWindow alert-danger errorMsgFailed">
-		    <button type="button" class="close" id="closeAlertFailed"
-	                aria-label="Close">
-	                <span aria-hidden="true">&times;</span>
-	            </button>
-				Custom order name already exists, try another name.
-				</div>
 	        <h2>Add New Custom Order</h2>
-	        <div class="form-group row">
-	            <label class="col-md-2 col-form-label" for="name">Order Name</label>
-	            <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" />
-	        </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="description">Order Description</label>
-                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description"></textarea>
-            </div>
-            <div class="dragDropText">Drag and drop to arrange spaces</div>
-	        <div class="form-group row sortableSpaces" id="sortableSpaces">
-				<div th:each="selectedSpace: ${spaces}"  class="main-content">
-			    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
-			             <p class="para">[[${selectedSpace.name}]]</p>
-				    </div>
-		    	</div>
-			</div>
-			<div>
-				<button id="createOrder" type="button" class="btn primary-btn">Create Order</button>
-			</div>		
+	        
+	        <form method="POST" th:action="@{|/staff/space/order/customorder/add?${_csrf.parameterName}=${_csrf.token}|}" enctype="multipart/form-data">
+	        	<input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+		        <div class="form-group row">
+		            <label class="col-md-2 col-form-label" for="name">Order Name</label>
+		            <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" />
+		        </div>
+	            <div class="form-group row">
+	                <label class="col-md-2 col-form-label" for="description">Order Description</label>
+	                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description"></textarea>
+	            </div>
+	            <div class="dragDropText">Drag and drop to arrange spaces</div>
+	            <input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
+		        <div class="form-group row sortableSpaces" id="sortableSpaces">
+					<div th:each="selectedSpace: ${spaces}"  class="main-content">
+				    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+				             <p class="para">[[${selectedSpace.name}]]</p>
+					    </div>
+			    	</div>
+				</div>
+				<div>
+					<button id="createOrder" type="submit" class="btn primary-btn">Create Order</button>
+				</div>
+			</form>		
 	    </div>
 	</body>
 </html>

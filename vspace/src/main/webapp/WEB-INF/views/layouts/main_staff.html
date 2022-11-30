@@ -68,12 +68,27 @@
 <script>
   feather.replace()
 </script>
+<style type="text/css">
+	.alertPopup {
+		position: absolute;
+	    top: 8%;
+	    width: 60%;
+	    margin-left: 6%;
+	}
+</style>
 </head>
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
     <div style="width: 80%; margin: 0 0 0 auto;">
-    <div th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert customWindow" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
+    <div th:if="${#strings.equals(#request.getParameter('showAlert'),'true')}" id="errorMsg" class="alert customWindow alertPopup" th:classappend="${#strings.equals(#request.getParameter('alertType'),'success')} ? alert-success : alert-danger">
          [[${#request.getParameter('message')}]]
+         <button type="button" class="close" id="closeAlert"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+         </button>
+    </div>
+    <div th:if="${showAlert} == 'true'" id="errorMsg" class="alert customWindow alertPopup" th:classappend="${alertType} == 'success' ? alert-success : alert-danger">
+         [[${message}]]
          <button type="button" class="close" id="closeAlert"
                 aria-label="Close">
                 <span aria-hidden="true">&times;</span>

@@ -3,16 +3,14 @@ package edu.asu.diging.vspace.web.staff;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
@@ -33,14 +31,20 @@ public class AddSpacesCustomOrderController {
     }
     
     @RequestMapping(value = "/staff/space/order/customorder/add", method = RequestMethod.POST)
-    public ResponseEntity<String> createCustomOrder(Model model, @RequestParam("spaceOrder") List<String> spaceOrders,
+    public String createCustomOrder(Model model, @RequestParam("spaceOrder") List<String> spaceOrders,
             @RequestParam("name") String name,
-            @RequestParam("description") String description) {
+            @RequestParam("description") String description, RedirectAttributes attributes) {
         if(name == null || name.isEmpty()) {
-            return new ResponseEntity<String>("Cannot leave the name field empty", HttpStatus.BAD_REQUEST);
+            attributes.addFlashAttribute("alertType", "danger");
+            attributes.addFlashAttribute("message", "Custom order could not be saved. Please enter the name of the order.");
+            attributes.addFlashAttribute("showAlert", "true");
+            return "redirect:/staff/space/order/add";
         }
-        ISpacesCustomOrder spacesCustomOrder = spacesCustomOrderManager.create(spaceOrders, name, description);
-        return new ResponseEntity<String>(spacesCustomOrder.getId(), HttpStatus.OK);
+        spacesCustomOrderManager.create(spaceOrders, name, description);
+        attributes.addFlashAttribute("alertType", "success");
+        attributes.addFlashAttribute("message", "Custom Order has been successfully added.");
+        attributes.addFlashAttribute("showAlert", "true");
+        return "redirect:/staff/space/order";
     }
 
 }

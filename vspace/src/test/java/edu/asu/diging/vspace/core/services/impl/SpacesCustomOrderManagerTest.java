@@ -43,18 +43,17 @@ public class SpacesCustomOrderManagerTest{
         MockitoAnnotations.initMocks(this);
         spaceCustomOrderId1 = "SPC000000001";
         spaceCustomOrderId2 = "SPC000000001";
-
     }
     
     @Test
-    public void test_deleteSpaceCustomOrderById_withNullSpacesCustomOrder() { 
+    public void test_deleteSpaceCustomOrderById_customOrderNotSet() { 
         Mockito.when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
         serviceToTest.delete(spaceCustomOrderId1);
         Mockito.verify(spacesCustomOrderRepository).deleteById(spaceCustomOrderId1);
     }
     
     @Test
-    public void test_deleteSpaceCustomOrderById_withNotNullSpacesCustomOrder() { 
+    public void test_deleteSpaceCustomOrderById_customOrderSet() { 
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setId(spaceCustomOrderId1);
         exhibition.setSpacesCustomOrder(spacesCustomOrder);
@@ -88,7 +87,7 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_updateSpacesCustomOrderNameDescription_updateName() {
+    public void test_updateSpacesCustomOrder_updateName() {
         String spaceId1 = "SPC001";
         String spaceId2 = "SPC002";
         List<String> spaceIdList = new ArrayList<String>();
@@ -102,7 +101,7 @@ public class SpacesCustomOrderManagerTest{
     }
     
     @Test
-    public void test_updateSpacesCustomOrderNameDescription_updateDescription() {
+    public void test_updateSpacesCustomOrder_updateDescription() {
         String spaceId1 = "SPC001";
         String spaceId2 = "SPC002";
         List<String> spaceIdList = new ArrayList<String>();

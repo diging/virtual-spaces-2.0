@@ -11,12 +11,6 @@
 		.customOrderText {
 			padding-bottom:10px;
 		}
-		.successMsgAdded {
-			position: absolute;
-   			top: 8%;
-   			width: 65%;
-   			display:none;
-		}
 		.spaceDropdownSelect {
 			display: inline-block !important; 
 			height: auto; 
@@ -41,47 +35,14 @@
 	</style>
 	<script>
 		$(document).ready(function() {
-			if(localStorage.getItem("prevUrl")) {
-				if(localStorage.getItem("prevUrl").includes("/space/order/add")) {
-					$("#successText").text("Custom Order has been successfully added.");
-				} else if(localStorage.getItem("prevUrl").includes("/space/order/deletedOrder")) {
-					$("#successText").text("Custom Order has been successfully deleted.");
-				}
-				showSuccessPopUp();
-				localStorage.setItem("prevUrl", "");
-			} else if(localStorage.getItem("changedCustomOrder") == "true") {
-				$("#successText").text("Custom order has been successfully changed.");
-				showSuccessPopUp();
-				localStorage.setItem("changedCustomOrder", false);
-			}
-	        
 	        $(function () {
 	  		  $('[data-toggle="tooltip"]').tooltip()
 	  		});
-	        
-	        $("#closeAlertAdded").click(function() {
-				$("#successMsgAdded").hide();
-			});
-	        $("#selectCustomOrder").click(function() {
-	        	localStorage.setItem("changedCustomOrder", true);
-	        });
 	    });
-		function showSuccessPopUp() {
-			$("#successMsgAdded").show();
-			setTimeout(function() {
-				$("#successMsgAdded").hide();
-			}, 5000);
-		}
 	</script>
 </head>
 	<body>
 	    <div class="main-content customOrderContainer" layout:fragment="content">
-	    	<div id="successMsgAdded" class="alert customWindow alert-success successMsgAdded">
-				<button type="button" class="close" id="closeAlertAdded" aria-label="Close">
-		        	<span aria-hidden="true">&times;</span>
-		        </button>
-				<span id="successText"></span>
-			</div>
 	    	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm newOrder">+ New Order</a>
 	        <h2>Custom Orders for Spaces</h2>
 	        <div class="customOrderText">This virtual exhibition contains the following custom orders for spaces.</div>	        
