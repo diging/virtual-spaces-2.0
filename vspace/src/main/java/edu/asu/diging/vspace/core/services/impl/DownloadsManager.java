@@ -17,14 +17,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.IContext;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.expression.ThymeleafEvaluationContext;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.templateresolver.DefaultTemplateResolver;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -104,7 +108,8 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     @Autowired
     private SequenceHistory sequenceHistory;
-
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     private ExhibitionDownloadRepository exhibitionDownloadRepo;
@@ -179,7 +184,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-//            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
+            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
         }               
         resource = storageEngine.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
@@ -392,15 +397,21 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context , SequenceHistory sequenceHistory) {
         try {      
-            populateContextForSpace( context, directory, sequenceHistory);
+            populateContextForSpace(context, directory, sequenceHistory);
             Context thymeleafContext = new Context(context.getLocale());
 //            thymeleafContext.setVariable("beans", ); 
 
-//                    // Set the Thymeleaf evaluation context to allow access to Spring beans with @beanName in SpEL expressions
+////                    // Set the Thymeleaf evaluation context to allow access to Spring beans with @beanName in SpEL expressions
+//            
+            
+            
+            
+            
 //            thymeleafContext.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
-//                            ThymeleafEvaluationContext(context, null));
-
-            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" , context);
+//                      new ThymeleafEvaluationContext(applicationContext, null));
+//            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().stream().findAny( ITemplateResolver resolver -> resolver.getName().equals("org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver")).orElse(null);
+//            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().(0);
+            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,(IContext) context);
             byte[] fileContent = response.getBytes();
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 

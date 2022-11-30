@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,7 +55,7 @@ public class DownloadsController {
     
     
     @RequestMapping(value = "/staff/exhibit/download/trigger", method = RequestMethod.GET) 
-    public ResponseEntity<Resource> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity<Resource> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response,  Model model) {
 
 
         Resource resource = null; 
@@ -62,6 +64,7 @@ public class DownloadsController {
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
             String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
+//            AsyncContext aCtx = request.startAsync(request, response); 
 
             WebContext context = new WebContext(request, response, request.getServletContext());
 

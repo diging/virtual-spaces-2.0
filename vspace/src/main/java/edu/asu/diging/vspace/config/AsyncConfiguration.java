@@ -9,7 +9,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
-@EnableAsync
+
 public class AsyncConfiguration implements AsyncConfigurer  {
     
     @Override
