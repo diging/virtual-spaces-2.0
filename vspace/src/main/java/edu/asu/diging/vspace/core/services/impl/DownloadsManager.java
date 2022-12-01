@@ -12,6 +12,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +135,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws ExecutionException 
      */
     @Async
+    @Transactional
     @Override
     public byte[] triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
 //        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);
@@ -405,13 +408,13 @@ public class DownloadsManager  implements  IDownloadsManager {
 //            
             
             
-            
+           
             
 //            thymeleafContext.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
 //                      new ThymeleafEvaluationContext(applicationContext, null));
 //            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().stream().findAny( ITemplateResolver resolver -> resolver.getName().equals("org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver")).orElse(null);
 //            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().(0);
-            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,(IContext) context);
+            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,context);
             byte[] fileContent = response.getBytes();
             storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 

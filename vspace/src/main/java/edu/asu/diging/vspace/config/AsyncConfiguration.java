@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 
 @Configuration
 
@@ -23,6 +24,8 @@ public class AsyncConfiguration implements AsyncConfigurer  {
         executor.setWaitForTasksToCompleteOnShutdown(true);
 //        executor.setTaskDecorator(new MdcTaskDecorator());
         executor.initialize();
-        return executor;
+        
+        return new DelegatingSecurityContextAsyncTaskExecutor(executor); 
     }
+    
 }
