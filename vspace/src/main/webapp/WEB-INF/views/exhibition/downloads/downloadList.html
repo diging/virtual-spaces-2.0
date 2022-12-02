@@ -35,11 +35,10 @@ function saveByteArray(reportName, byte) {
 				console.log(result);
 				console.log(result.body);
 				console.log(result.data);
-				
-			
+							
 				var data = result.body;
-	 			var sampleArr = base64ToArrayBuffer(result.body); 
-	         	var fileName = "nme.zip";
+/* 	 			var sampleArr = base64ToArrayBuffer(result.body); 
+ */	         	var fileName = "nme.zip";
 	        	console.log(fileName)
 	        	saveByteArray(fileName, sampleArr);
 				return true;
