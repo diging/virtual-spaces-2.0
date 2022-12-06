@@ -94,6 +94,18 @@ public class ExhibitionAboutPageController {
         exhibitionAboutPage.setTitle(languageAboutPage.getTitle());
         exhibitionAboutPage.setAboutPageText(languageAboutPage.getAboutPageText());
         exhibitionAboutPage=languageObjectManager.storeAboutPageData(aboutPageForm,languageAboutPage);
+        List<ILanguageDescriptionObject> titleList = new ArrayList();
+        List<ILanguageDescriptionObject> textList = new ArrayList();
+        for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
+		{
+        	titleList.add(titles);
+		}
+		for(ILanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
+		{
+			textList.add(texts);
+		}
+		exhibitionAboutPage.setExhibitionTitles(titleList);
+		exhibitionAboutPage.setExhibitionTextDescriptions(textList);
         aboutPageManager.store(exhibitionAboutPage);
         System.out.println(exhibitionAboutPage.getExhibitionTitles());
         attributes.addAttribute("alertType", "success");
