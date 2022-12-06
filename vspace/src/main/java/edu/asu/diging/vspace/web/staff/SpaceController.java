@@ -13,12 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
-import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -49,9 +46,6 @@ public class SpaceController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
-    @Autowired
-    private IExhibitionManager exhibitionManager;
 
 
     @Autowired
@@ -88,12 +82,6 @@ public class SpaceController {
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/staff/space/order/mode", method = RequestMethod.POST)
-    public String updateSpaceOrderMode(String mode, @RequestParam ExhibitionSpaceOrderMode spaceOrderMode) {
-        exhibitionManager.updateSpaceOrderMode(spaceOrderMode);
-        return "redirect:/staff/space/list";
     }
 
 
