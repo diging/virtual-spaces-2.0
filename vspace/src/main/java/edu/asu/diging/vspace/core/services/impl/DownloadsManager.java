@@ -39,6 +39,7 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -74,7 +75,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     private SpaceRepository spaceRepository;
 
     @Autowired
-    private StorageEngine storageEngine;
+    private IStorageEngine storageEngineDownloads;
 
     @Autowired
     private SpringTemplateEngine springTemplateEngine;
@@ -115,9 +116,6 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     @Autowired
     private ExhibitionDownloadRepository exhibitionDownloadRepo;
-
-    @Value("${downloads_path}")
-    private String downloadsPath;
 
     public final static String IMAGES_FOLDER_NAME = "images";
 
@@ -179,7 +177,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory)  throws IOException, InterruptedException {
         byte[] resource = null;
-        String exhibitionFolderPath =  storageEngine.createFolder(exhibitionFolderName, downloadsPath);
+        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
@@ -187,7 +185,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         for(Space space : spaces) {
 //            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
         }               
-        resource = storageEngine.generateZipFolder(exhibitionFolderPath);
+        resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
         Thread.sleep(5000);   
         return resource;
@@ -203,14 +201,14 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     public void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory) {
 
-        String spaceFolderPath = storageEngine.createFolder(space.getId(), exhibitionFolderPath);
+        String spaceFolderPath = storageEngineDownloads.createFolder(space.getId(), exhibitionFolderPath);
 
         storeTemplateForSpace(space.getId(), spaceFolderPath , context, sequenceHistory);
 
-        String imagesFolderPath = storageEngine.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath); 
+        String imagesFolderPath = storageEngineDownloads.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath); 
 
         //Copies the space image
-        storageEngine.copyImageToFolder(space.getImage(),imagesFolderPath) ;
+        storageEngineDownloads.copyImageToFolder(space.getImage(),imagesFolderPath) ;
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 
@@ -235,7 +233,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
-            downloadSequence(startSequence, module, space, spaceFolderPath,imagesFolderPath , context);
+            downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath , context);
         }
 
     }
@@ -251,7 +249,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param context
      */
     @Override
-    public void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    public void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath,  WebContext context) {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
@@ -265,13 +263,13 @@ public class DownloadsManager  implements  IDownloadsManager {
                         
                         
                         
-                        downloadSequence(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath,  context); 
+                        downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath,  context); 
                     }
                 });
             }
             else {
                 IVSImage image = slide.getFirstImageBlock().getImage();
-                storageEngine.copyImageToFolder(image, imagesFolderPath);
+                storageEngineDownloads.copyImageToFolder(image, imagesFolderPath);
                 storeTemplateForSlide(slide.getId(), spaceFolderPath ,  context, space.getId(), module.getId(), startSequence.getId());
             }
 
@@ -295,7 +293,7 @@ public class DownloadsManager  implements  IDownloadsManager {
             populateContextForSlide( context, spaceId, moduleId, sequenceId, slideId );
             String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , context);
             byte[] fileContent = response.getBytes();
-            storageEngine.storeFile(fileContent, slideId+".html",null, spaceFolderPath );
+            storageEngineDownloads.storeFile(fileContent, slideId+".html",null, spaceFolderPath );
 
         } catch ( FileStorageException e) {
             logger.error("Could not add html page for slide" , e);
@@ -419,7 +417,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 //            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().(0);
             String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,context);
             byte[] fileContent = response.getBytes();
-            storageEngine.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+            storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 
         } catch ( FileStorageException e) {
             logger.error("Could not copy template" , e);

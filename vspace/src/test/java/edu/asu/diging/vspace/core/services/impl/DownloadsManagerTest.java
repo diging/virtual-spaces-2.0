@@ -149,7 +149,7 @@ public class DownloadsManagerTest {
         String imagesFolderPath = exhibitionFolderPath + File.separator+ "images";
         serviceToTest.downloadModule(module1, space, imagesFolderPath, spaceFolderPath, null);
 
-        verify(serviceToTest, times(1)).downloadSequence(sequence1, module1, space, spaceFolderPath,imagesFolderPath, null);
+        verify(serviceToTest, times(1)).downloadSequences(sequence1, module1, space, spaceFolderPath,imagesFolderPath, null);
 
     }
 
@@ -204,10 +204,10 @@ public class DownloadsManagerTest {
         String imagesFolderPath = exhibitionFolderPath + File.separator+ "images";
         doNothing().when(serviceToTest).storeTemplateForSlide(slide1.getId(), spaceFolderPath, null,space.getId(), module1.getId(),sequence1.getId() );
 
-        serviceToTest.downloadSequence(sequence1, module1, space, spaceFolderPath, imagesFolderPath, null);
+        serviceToTest.downloadSequences(sequence1, module1, space, spaceFolderPath, imagesFolderPath, null);
 
         // to test recursive call because of branching point
-        verify(serviceToTest, times(1)).downloadSequence(sequence2, module1, space, spaceFolderPath,imagesFolderPath, null);
+        verify(serviceToTest, times(1)).downloadSequences(sequence2, module1, space, spaceFolderPath,imagesFolderPath, null);
 
         //to test if html page is added for given slide
         verify(serviceToTest, times(1)).storeTemplateForSlide(slide1.getId(),  spaceFolderPath,null, space.getId(), module1.getId(),sequence1.getId() );

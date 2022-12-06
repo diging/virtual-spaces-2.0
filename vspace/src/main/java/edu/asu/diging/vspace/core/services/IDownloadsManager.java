@@ -27,7 +27,7 @@ public interface IDownloadsManager {
 
     void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context);
 
-    void downloadSequence(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath,  WebContext context) ;
 
     void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context, String spaceId,

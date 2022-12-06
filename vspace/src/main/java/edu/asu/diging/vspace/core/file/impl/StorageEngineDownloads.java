@@ -28,10 +28,10 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Component
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
-public class StorageEngine implements IStorageEngine {
+public class StorageEngineDownloads implements IStorageEngine {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${uploads_path}")
+    @Value("${downloads_path}")
     private String path;
 
     /* (non-Javadoc)
@@ -106,7 +106,7 @@ public class StorageEngine implements IStorageEngine {
 
 
 
-    public String createFolder(String folderName, String path ) {
+    public String createFolder(String folderName) {
         File folder = new File(path + File.separator + folderName);
         if (!folder.exists()) {
             folder.mkdir();
@@ -155,17 +155,31 @@ public class StorageEngine implements IStorageEngine {
     }
 
 
-    @Override
+
+    /**
+     * Copies given image to imagesFolderPath
+     * 
+     * @param image
+     * @param imagesFolderPath
+     */
     public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-        // TODO Auto-generated method stub
-        
+        try {
+            byte[] byteArray = getImageContent(image.getId(), image.getFilename());
+            storeFile(byteArray, image.getFilename(),image.getId());
+
+        } catch (IOException | FileStorageException e) {
+            logger.error("Could not copy images" , e);
+        }     
     }
 
 
     @Override
-    public String createFolder(String exhibitionFolderName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public String createFolder(String folderName, String path) {
+        File folder = new File(path + File.separator + folderName);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
 
+        return folder.getAbsolutePath();
+    }
 }
