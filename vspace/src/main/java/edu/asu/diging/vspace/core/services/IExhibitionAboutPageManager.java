@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 /**
  * IExhibitionAboutPageManager allows to store and manage {@link ExhibitionAboutPage}.
  * @author Avirup Biswas
@@ -23,4 +24,6 @@ public interface IExhibitionAboutPageManager {
     ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage);
 
     ExhibitionAboutPage getExhibitionAboutPage();
+    
+    ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage);
 }

@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 /**
  * 
  * @author Avirup Biswas
@@ -27,6 +30,9 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Autowired
     private IExhibitionManager exhibitionManager;
     
+    @Autowired
+	 private LanguageDescriptionObjectRepository languageObjectRepo;
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
      */
@@ -37,6 +43,22 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         aboutpages.forEach(e -> results.add(e));
         return results;
     }
+    
+    @Override
+	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
+			
+		for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
+		{
+			setAboutPageTitle(titles.getUserText(),exhibitionAboutPage);
+		}
+		for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
+		{
+			setAboutPageDescription(texts.getUserText(),exhibitionAboutPage);
+		}
+		store(exhibitionAboutPage);
+		return exhibitionAboutPage;				
+		
+	}
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
@@ -62,5 +84,40 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         List<ExhibitionAboutPage> aboutPageList = findAll();
         return aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
     }
+    
+    public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
+		if(title!=null || title.length()!=0)
+		{
+			LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+	        languageObject.setUserText(title);
+	        if(exhibitionAboutPage.getExhibitionTitles() == null) {
+	        	exhibitionAboutPage.setExhibitionTitles(new ArrayList());
+	        }
+	        exhibitionAboutPage.getExhibitionTitles().add(languageObject);
+	        storeLanguageObject(languageObject);
+		}
+        
+    }
+
+	public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
+		if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
+		{
+			LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+		    languageObject.setUserText(aboutPageTexts);
+		    if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
+		    	  exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
+		      }
+		      exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
+		      storeLanguageObject(languageObject);
+		}
+      
+	}
+	
+	private void storeLanguageObject(LanguageDescriptionObject languageObject) {
+		
+		languageObjectRepo.save(languageObject);
+		
+		
+	}
     
 }
