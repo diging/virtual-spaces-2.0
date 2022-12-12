@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Component
+@Qualifier("storageEngineDownloads")
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class StorageEngineDownloads implements IStorageEngine {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -38,7 +40,7 @@ public class StorageEngineDownloads implements IStorageEngine {
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
      */
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
+    public String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException {
         File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
         if (!parent.exists()) {
             parent.mkdir();
@@ -165,7 +167,7 @@ public class StorageEngineDownloads implements IStorageEngine {
     public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
         try {
             byte[] byteArray = getImageContent(image.getId(), image.getFilename());
-            storeFile(byteArray, image.getFilename(),image.getId());
+            storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath);
 
         } catch (IOException | FileStorageException e) {
             logger.error("Could not copy images" , e);

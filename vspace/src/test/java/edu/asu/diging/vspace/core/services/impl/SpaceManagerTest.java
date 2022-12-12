@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
@@ -55,6 +56,7 @@ public class SpaceManagerTest {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Mock
+    @Qualifier("storageEngine")
     private IStorageEngine storage;
 
     @Mock

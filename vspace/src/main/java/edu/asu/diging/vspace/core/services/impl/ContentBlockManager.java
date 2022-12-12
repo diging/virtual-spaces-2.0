@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,7 @@ public class ContentBlockManager implements IContentBlockManager {
     private ChoiceContentBlockRepository choiceBlockRepo;
 
     @Autowired
+    @Qualifier("storageEngine")
     private IStorageEngine storage;
 
     @Autowired

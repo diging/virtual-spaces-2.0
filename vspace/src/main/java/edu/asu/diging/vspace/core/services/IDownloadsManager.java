@@ -7,6 +7,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
@@ -42,7 +43,7 @@ public interface IDownloadsManager {
 
     void storeTemplateForSpace(String directory, String spaceFolderPath, WebContext context, SequenceHistory sequenceHistory);
 
-    void populateContextForSpace(WebContext context, String id, SequenceHistory sequenceHistory);
+    void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory);
 
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;
 

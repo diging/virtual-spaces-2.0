@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
@@ -75,6 +76,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     private SpaceRepository spaceRepository;
 
     @Autowired
+    @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
 
     @Autowired
@@ -183,7 +185,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-//            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
+            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
         }               
         resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
@@ -401,24 +403,32 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context , SequenceHistory sequenceHistory) {
         try {      
-            populateContextForSpace(context, directory, sequenceHistory);
-            Context thymeleafContext = new Context(context.getLocale());
-//            thymeleafContext.setVariable("beans", ); 
-
-////                    // Set the Thymeleaf evaluation context to allow access to Spring beans with @beanName in SpEL expressions
+//            populateContextForSpace(context, directory, sequenceHistory);
+//            Context thymeleafContext = new Context(context.getLocale());
+////            thymeleafContext.setVariable("beans", ); 
+//
+//////                    // Set the Thymeleaf evaluation context to allow access to Spring beans with @beanName in SpEL expressions
+////            
 //            
-            
-            
-           
-            
-//            thymeleafContext.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
-//                      new ThymeleafEvaluationContext(applicationContext, null));
-//            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().stream().findAny( ITemplateResolver resolver -> resolver.getName().equals("org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver")).orElse(null);
-//            DefaultTemplateResolver templateResolver = springTemplateEngine.getTemplateResolvers().(0);
-            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,context);
-            byte[] fileContent = response.getBytes();
-            storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+//            
+//           
+//            
+////            thymeleafContext.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
+////                      new ThymeleafEvaluationContext(applicationContext, null));
+//            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,context);
+//            byte[] fileContent = response.getBytes();
+//            storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 
+            
+            Context thymeleafContext = new Context();
+            populateContextForSpace(thymeleafContext, directory, sequenceHistory);
+         // add attributes to context
+         String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate", thymeleafContext);
+       byte[] fileContent = response.getBytes();
+       storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+
+         
+            
         } catch ( FileStorageException e) {
             logger.error("Could not copy template" , e);
         }   
@@ -432,7 +442,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param id
      */
     @Override
-    public void populateContextForSpace(WebContext context, String id, SequenceHistory sequenceHistory) {
+    public void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory) {
 
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
@@ -473,7 +483,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
 
         if(exhibitionDownlaod.isPresent()) {
-            return  storageEngine.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
+            return  storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
         } else {
             throw new ExhibitionDownloadNotFoundException(id);
         }

@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,8 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
-@Component
+@Component("storageEngine")
+//@Qualifier("storageEngine")
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class StorageEngine implements IStorageEngine {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -38,7 +40,7 @@ public class StorageEngine implements IStorageEngine {
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
      */
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
+    public String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException {
         File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
         if (!parent.exists()) {
             parent.mkdir();

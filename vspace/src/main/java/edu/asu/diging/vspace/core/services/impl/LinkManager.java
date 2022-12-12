@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     private ImageRepository imageRepo;
 
     @Autowired
+    @Qualifier("storageEngine")
     private IStorageEngine storage;
     
     @Value("${uploads_path}")
