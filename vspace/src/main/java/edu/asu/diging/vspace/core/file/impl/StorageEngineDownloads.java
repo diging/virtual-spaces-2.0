@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -35,6 +36,10 @@ public class StorageEngineDownloads implements IStorageEngine {
 
     @Value("${downloads_path}")
     private String path;
+    
+    @Autowired
+    @Qualifier("storageEngine")
+    StorageEngine storageEngineUploads;
 
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
@@ -166,7 +171,7 @@ public class StorageEngineDownloads implements IStorageEngine {
      */
     public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
         try {
-            byte[] byteArray = getImageContent(image.getId(), image.getFilename());
+            byte[] byteArray = storageEngineUploads.getImageContent(image.getId(), image.getFilename());
             storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath);
 
         } catch (IOException | FileStorageException e) {

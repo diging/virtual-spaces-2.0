@@ -284,8 +284,8 @@
     		            linkDisplay = $('<div class="InfoSpace_'+index+' alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.link.name+'</span></div>');
     		        }
     		        else if(link.type=="IMAGE" && link.image != null){
-                        //var spaceImageURL = [[@{/api/image/}]]+link.image.id; //TODO: FIX URL
-                        linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
+    		            var spaceImageURL = '/api/image/'+link.image.id; //TODO: FIX URL
+    		            linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
     		        else{
                         linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
@@ -315,12 +315,12 @@
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var moduleLink = $('<a></a>');
-/*     		        var moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id; //TODO: fix url
- */    		        moduleLink.attr("href", moduleLinkURL);
+     		        var moduleLinkURL = '/exhibit/'${space?.id}+'/module/'+link.link.module.id; //TODO: fix url
+     		        moduleLink.attr("href", moduleLinkURL);
     		        var linkDisplay;
     		        if(link.type=="IMAGE" && link.image != null){
-/*                         var moduleImageURL = [[@{/api/image/}]]+link.image.id; //TODO: FIX URL
- */                        linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
+                         var moduleImageURL = '/api/image/'+link.image.id; //TODO: FIX URL
+                         linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
     		        } else {
     		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
                 	}
@@ -358,8 +358,8 @@
     		        	linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
                 	}
                     else if(link.type=="IMAGE" && link.image != null){
-/*     		        	var extImageURL = [[@{/api/image/}]]+link.image.id; // TODO: 
- */    		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
+     		        	var extImageURL = '/api/image/'+link.image.id; // TODO: 
+     		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
                 	}
                     else{
     		        	var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');

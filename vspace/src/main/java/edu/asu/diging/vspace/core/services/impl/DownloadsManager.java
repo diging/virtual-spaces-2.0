@@ -80,6 +80,10 @@ public class DownloadsManager  implements  IDownloadsManager {
     private IStorageEngine storageEngineDownloads;
 
     @Autowired
+    @Qualifier("storageEngine")
+    private IStorageEngine storageEngineUploads;
+    
+    @Autowired
     private SpringTemplateEngine springTemplateEngine;
 
     @Autowired
