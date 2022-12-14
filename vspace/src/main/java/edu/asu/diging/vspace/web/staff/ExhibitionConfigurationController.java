@@ -47,8 +47,7 @@ public class ExhibitionConfigurationController {
     
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
-    
-    
+     
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
   
     @RequestMapping("/staff/exhibit/config")
@@ -88,10 +87,8 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
-            RedirectAttributes attributes) throws IOException {
-    	  	
+            RedirectAttributes attributes) throws IOException {  	
         ISpace startSpace = spaceManager.getSpace(spaceID);
-
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
