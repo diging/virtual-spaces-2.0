@@ -62,7 +62,6 @@ public class ExhibitionAboutPageController {
         aboutPageForm.setAboutPageTexts(textList);
         model.addAttribute("aboutPage", aboutPageForm);
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        
         List<LanguageDescriptionObject> languageObjectList = new ArrayList();
         startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
         	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
@@ -77,9 +76,7 @@ public class ExhibitionAboutPageController {
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
     public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, AboutPageForm languageAboutPage, RedirectAttributes attributes) throws IOException {
         List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        //ExhibitionAboutPage exhibitionAboutPage = new ExhibitionAboutPage();
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
         exhibitionAboutPage=aboutPageManager.storeAboutPageData(aboutPageForm,languageAboutPage);

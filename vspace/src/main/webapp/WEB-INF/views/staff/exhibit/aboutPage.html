@@ -44,15 +44,12 @@
 					<p >[[${exhibitionLanguage.label}]]</p>
 					<div>
 						<label for="titles">About Page Title:</label>
-						<!-- <input type="hidden" th:field="${aboutPageForm.titles[__${exhibitionLanguageStat.index}__].exhibitionLanguage.label}" th:value="${exhibitionLanguage?.label}"/>
- 						<input type="text" class="form-control col-md-10" name="titles" th:field= "${aboutPageForm.titles[__${exhibitionLanguageStat.index}__].userText}"/> -->
  						<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="title='titles'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
 						<input type="text" class="form-control" name="titles" id="title" th:field= "${aboutPage.titles[__${exhibitionLanguageStat.index}__].userText}"></input>
 					</div>
 
 					<div style="padding-top: 20px;">
 						<label for="description">Text:</label>
-						<!-- <input hidden="true" th:field="${aboutPageForm.aboutPageTexts[__${exhibitionLanguageStat.index}__].exhibitionLanguage.label}" th:value="${exhibitionLanguage?.label}"/> -->
 						<textarea class="form-control" rows="5" cols="30" name="aboutPageTexts" th:field= "${aboutPage.aboutPageTexts[__${exhibitionLanguageStat.index}__].userText}"></textarea>
 					</div>
 				</div>

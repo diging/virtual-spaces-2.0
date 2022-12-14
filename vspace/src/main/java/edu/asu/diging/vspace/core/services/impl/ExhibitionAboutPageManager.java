@@ -44,6 +44,9 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         return results;
     }
     
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#storeAboutPageData()
+     */
     @Override
 	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
 			
@@ -85,6 +88,10 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         return aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
     }
     
+    /**
+     * This method maps the title in ExhibitionAboutPage, and add that to
+     * exhibitionTitles list for each user selected Exhibition Language.
+    */
     public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
 		if(title!=null || title.length()!=0)
 		{
@@ -98,7 +105,10 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 		}
         
     }
-
+    /**
+     * This method maps the description in ExhibitionAboutPage, and add that to
+     * exhibitionTextDescriptions list for each user selected Exhibition Language.
+    */
 	public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
 		if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
 		{
@@ -112,7 +122,9 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 		}
       
 	}
-	
+	/**
+     * This method save the LanguageDescriptionObject in database.
+    */
 	private void storeLanguageObject(LanguageDescriptionObject languageObject) {
 		
 		languageObjectRepo.save(languageObject);

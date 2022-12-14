@@ -25,5 +25,12 @@ public interface IExhibitionAboutPageManager {
 
     ExhibitionAboutPage getExhibitionAboutPage();
     
+
+    /**
+     * This method stores LanguageDescriptionObject page information and returns the {@link ExhibitionAboutPage} which is being stored
+     * @param {@link ExhibitionAboutPage} This object contains Exhibition about page values to be stored.
+     * @param {@link AboutPageForm} This object contains Exhibition about page form values to map in ExhihibitionAboutPage lists.
+     * @return {@link ExhibitionAboutPage} Returns the object after being stored. Object will now have an ID.
+     */
     ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage);
 }
