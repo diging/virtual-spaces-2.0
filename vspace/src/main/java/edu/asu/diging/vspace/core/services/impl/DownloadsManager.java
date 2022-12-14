@@ -43,6 +43,7 @@ import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
@@ -141,7 +142,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Transactional
     @Async
     @Override
-    public byte[] triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
+    public AsyncResult<byte[]> triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
 //        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
 //        if(exhibitionDownload ==null ) {
 //            exhibitionDownload = new ExhibitionDownload();
@@ -152,13 +153,14 @@ public class DownloadsManager  implements  IDownloadsManager {
 //        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
 //        exhibitionDownloadRepo.save(exhibitionDownload);
         //        return resource;
-        Future<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory));
+        AsyncResult<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory));
 
-        if(futureTask.isDone()) {
-            return futureTask.get();
-        }
         
-        return null;
+        return futureTask;
+        
+       
+        
+//        return null;
 //        exhibitionDownload.setDownloadComplete(false);
 //        return CompletableFuture.completedFuture(createSnapShot(resourcesPath, exhibitionFolderName, context));
 
@@ -263,20 +265,21 @@ public class DownloadsManager  implements  IDownloadsManager {
                 BranchingPoint branchingPoint = (BranchingPoint) slide;
                 List<IChoice> choices  =  branchingPoint.getChoices();
                 choices.forEach(choice -> {
-                    
+
                     if(!choice.getSequence().getId().equals(startSequence.getId())) {
-                        
-                        
-                        
-                        
+
                         downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath,  context); 
                     }
                 });
-            }
-            else {
-                IVSImage image = slide.getFirstImageBlock().getImage();
-                storageEngineDownloads.copyImageToFolder(image, imagesFolderPath);
+            } else {
+                IContentBlock contentBlock = slide.getFirstImageBlock();
+                if(contentBlock!= null) {
+                    IVSImage image = slide.getFirstImageBlock().getImage();
+                    storageEngineDownloads.copyImageToFolder(image, imagesFolderPath);
+
+                } 
                 storeTemplateForSlide(slide.getId(), spaceFolderPath ,  context, space.getId(), module.getId(), startSequence.getId());
+
             }
 
         });
@@ -296,8 +299,10 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     public void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
         try {      
-            populateContextForSlide( context, spaceId, moduleId, sequenceId, slideId );
-            String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , context);
+            Context thymeleafContext = new Context();
+
+            populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );
+            String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , thymeleafContext);
             byte[] fileContent = response.getBytes();
             storageEngineDownloads.storeFile(fileContent, slideId+".html",null, spaceFolderPath );
 
@@ -321,7 +326,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws SlideNotFoundException
      */
     @Override
-    public void populateContextForSlide(WebContext context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
+    public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
 
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);

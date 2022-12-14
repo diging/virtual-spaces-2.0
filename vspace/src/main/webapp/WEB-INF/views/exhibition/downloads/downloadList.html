@@ -31,17 +31,19 @@ function saveByteArray(reportName, byte) {
 	function triggerDownload() {
 		
 		const validateResponse = (result) => {
-			if(result.status== 200)
+			console.log("in validate response" + result.headers.get("Content-Length"));
+			if(result.headers.get("Content-Length") !=0) {
 				console.log(result);
 				console.log(result.body);
-				console.log(result.data);
-							
+				console.log(result.data);							
 				var data = result.body;
-/* 	 			var sampleArr = base64ToArrayBuffer(result.body); 
- */	         	var fileName = "nme.zip";
+ 	 			var sampleArr = base64ToArrayBuffer(result.body); 
+          	    var fileName = "nme.zip";
 	        	console.log(fileName)
 	        	saveByteArray(fileName, sampleArr);
 				return true;
+			}
+				
 			return false;
 		}
 		
@@ -55,7 +57,7 @@ function saveByteArray(reportName, byte) {
 			  const executePoll = async (resolve, reject) => {
 				    console.log('- poll');
 				    const result = await fetch([[@{/staff/exhibit/download/trigger?}]]+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]]);
-				    console.log("attemps");
+				    console.log("attemps" + attempts);
 				    attempts++;
 
 				    if ( validateResponse(result)  ) {
@@ -78,7 +80,7 @@ function saveByteArray(reportName, byte) {
 		};
 		
 		triggerExhibitionDownload()
-		.then(value => console.log("then " + value.data))
+		.then(value => console.log("then " + value))
 		.catch(err => console.error(err))
 	
 

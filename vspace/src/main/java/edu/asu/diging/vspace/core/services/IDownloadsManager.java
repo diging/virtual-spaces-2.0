@@ -22,7 +22,7 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IDownloadsManager {
-    byte[] triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException ;
+    AsyncResult<byte[]> triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException ;
 
     void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory);
 
@@ -35,7 +35,7 @@ public interface IDownloadsManager {
             String moduleId, String sequenceId);
 
  
-    void populateContextForSlide(WebContext context, String spaceId, String moduleId, String sequenceId, String slideId)
+    void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId)
             throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException;
 
  

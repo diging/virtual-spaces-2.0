@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletContext;
@@ -64,12 +65,18 @@ public class DownloadsController {
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
             String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
-//            AsyncContext aCtx = request.startAsync(request, response); 
-
             WebContext context = new WebContext(request, response, request.getServletContext());
 
                         long contentLength =0 ;
-                        byte[] byteArrayResource = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+                        
+                        
+                        byte[] byteArrayResource = null;
+                        AsyncResult<byte[]> futureTask =
+                                downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+                        
+                        if(futureTask.isDone()) {
+                            byteArrayResource = futureTask.get();
+                        }
                         if(byteArrayResource!=null) {
                             resource = new ByteArrayResource(byteArrayResource);
                             contentLength= resource.contentLength();
