@@ -140,23 +140,25 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws ExecutionException 
      */
     @Transactional
-    @Async
+    @Async("asyncExecutor")
     @Override
-    public AsyncResult<byte[]> triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
-//        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
-//        if(exhibitionDownload ==null ) {
-//            exhibitionDownload = new ExhibitionDownload();
-//        }
+    public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
+        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
+        if(exhibitionDownload ==null ) {
+            exhibitionDownload = new ExhibitionDownload();
+        }
 
-        //        exhibitionDownload.setFolderPath(exhibitionFolderPath);
-//        exhibitionDownload.setFolderName(exhibitionFolderName);
+//                exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        exhibitionDownload.setFolderName(exhibitionFolderName);
 //        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
-//        exhibitionDownloadRepo.save(exhibitionDownload);
+        exhibitionDownloadRepo.save(exhibitionDownload);
+        
+        
         //        return resource;
         AsyncResult<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory));
 
-        
-        return futureTask;
+        return exhibitionDownload;
+//        return futureTask;
         
        
         

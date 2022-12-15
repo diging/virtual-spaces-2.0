@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.config;
 
 import java.util.concurrent.Executor;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -13,6 +14,7 @@ import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecu
 
 public class AsyncConfiguration implements AsyncConfigurer  {
     
+    @Bean(name="asyncExecutor")
     @Override
     public Executor getAsyncExecutor() {
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
@@ -25,7 +27,8 @@ public class AsyncConfiguration implements AsyncConfigurer  {
 //        executor.setTaskDecorator(new MdcTaskDecorator());
         executor.initialize();
         
-        return new DelegatingSecurityContextAsyncTaskExecutor(executor); 
+        return executor;
+//        return new DelegatingSecurityContextAsyncTaskExecutor(executor); 
     }
     
 }

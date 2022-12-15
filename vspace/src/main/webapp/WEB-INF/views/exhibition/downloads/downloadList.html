@@ -31,7 +31,7 @@ function saveByteArray(reportName, byte) {
 	function triggerDownload() {
 		
 		const validateResponse = (result) => {
-			console.log("in validate response" + result.headers.get("Content-Length"));
+			console.log("in validate response" + result.body);
 			if(result.headers.get("Content-Length") !=0) {
 				console.log(result);
 				console.log(result.body);
