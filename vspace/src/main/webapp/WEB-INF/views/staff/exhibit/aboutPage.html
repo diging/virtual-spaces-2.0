@@ -41,26 +41,22 @@
 				</div>
 				
 				<div style="padding-top: 20px;" th:each= "exhibitionLanguage : ${languageObjectList}" > 
-					<p >[[${exhibitionLanguage.label}]]</p>
+					<p>[[${exhibitionLanguage.label}]]</p>
 					<div>
 						<label for="titles">About Page Title:</label>
  						<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="title='titles'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
 						<input type="text" class="form-control" name="titles" id="title" th:field= "${aboutPage.titles[__${exhibitionLanguageStat.index}__].userText}"></input>
 					</div>
-
 					<div style="padding-top: 20px;">
 						<label for="description">Text:</label>
 						<textarea class="form-control" rows="5" cols="30" name="aboutPageTexts" th:field= "${aboutPage.aboutPageTexts[__${exhibitionLanguageStat.index}__].userText}"></textarea>
 					</div>
-				</div>
-				
-				
+				</div>	
 				<p style="padding-top: 20px;">
 					<button class="btn primary-btn" type="submit" value="submit">Submit</button>
 				</p>
 			</form>
 		</div>
-		
 	</div>
 </body>
 </html>
