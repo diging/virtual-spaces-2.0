@@ -31,7 +31,7 @@ public class AboutPageForm {
 	}
 
 	public List<LanguageDescriptionObject> getTitles() {
-		return titles;
+        return titles;
 	}
 
 	public void setTitles(List<LanguageDescriptionObject> titles) {

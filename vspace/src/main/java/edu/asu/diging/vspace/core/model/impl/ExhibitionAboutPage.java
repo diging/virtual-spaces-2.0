@@ -50,7 +50,7 @@ public class ExhibitionAboutPage{
 
     public List<ILanguageDescriptionObject> getExhibitionTitles() {
 		return exhibitionTitles;
-	}
+    }
 
 	public void setExhibitionTitles(List<ILanguageDescriptionObject> exhibitionTitles) {
 		this.exhibitionTitles = exhibitionTitles;
@@ -61,8 +61,8 @@ public class ExhibitionAboutPage{
 	}
 
 	public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
-		this.exhibitionTextDescriptions = exhibitionTextDescriptions;
-	}
+        this.exhibitionTextDescriptions = exhibitionTextDescriptions;
+    }
 
 	public String getId() {
         return id;
@@ -87,7 +87,7 @@ public class ExhibitionAboutPage{
 
 	public void setAboutPageText(String aboutPageText) {
 		this.aboutPageText = aboutPageText;
-	}
+    }
 	
 	/*
      * (non-Javadoc)

@@ -50,13 +50,13 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Override
 	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
 			
-		for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
-		{
-			setAboutPageTitle(titles.getUserText(),exhibitionAboutPage);
+        for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
+        {
+            setAboutPageTitle(titles.getUserText(),exhibitionAboutPage);
 		}
 		for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
-		{
-			setAboutPageDescription(texts.getUserText(),exhibitionAboutPage);
+        {
+            setAboutPageDescription(texts.getUserText(),exhibitionAboutPage);
 		}
 		store(exhibitionAboutPage);
 		return exhibitionAboutPage;				
@@ -93,7 +93,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTitles list for each user selected Exhibition Language.
     */
     public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
-		if(title!=null || title.length()!=0)
+        if(title!=null || title.length()!=0)
 		{
 			LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
 	        languageObject.setUserText(title);
@@ -112,7 +112,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 	public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
 		if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
 		{
-			LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
 		    languageObject.setUserText(aboutPageTexts);
 		    if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
 		    	  exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
@@ -121,15 +121,11 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 		      storeLanguageObject(languageObject);
 		}
       
-	}
+    }
 	/**
      * This method save the LanguageDescriptionObject in database.
     */
-	private void storeLanguageObject(LanguageDescriptionObject languageObject) {
-		
-		languageObjectRepo.save(languageObject);
-		
-		
-	}
-    
+    private void storeLanguageObject(LanguageDescriptionObject languageObject) {
+        languageObjectRepo.save(languageObject);		
+	}   
 }
