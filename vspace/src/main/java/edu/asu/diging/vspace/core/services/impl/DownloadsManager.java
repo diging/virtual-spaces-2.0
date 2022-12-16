@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.beans.Beans;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystemNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -140,7 +141,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws ExecutionException 
      */
     @Transactional
-    @Async("asyncExecutor")
+    
     @Override
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
@@ -167,6 +168,10 @@ public class DownloadsManager  implements  IDownloadsManager {
 //        return CompletableFuture.completedFuture(createSnapShot(resourcesPath, exhibitionFolderName, context));
 
     }
+    
+    
+    
+    
 
     @Override
     public byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException {                 
@@ -183,7 +188,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     }
 
-  
+    @Async("asyncExecutor")
     @Override
     public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory)  throws IOException, InterruptedException {
         byte[] resource = null;
@@ -494,7 +499,14 @@ public class DownloadsManager  implements  IDownloadsManager {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
 
         if(exhibitionDownlaod.isPresent()) {
-            return  storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
+            
+            try {
+                return storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
+            }catch(FileSystemNotFoundException e) {
+                logger.error("Zip folder not yet created", e);
+                throw new ExhibitionDownloadNotFoundException(id);
+            }
+              
         } else {
             throw new ExhibitionDownloadNotFoundException(id);
         }

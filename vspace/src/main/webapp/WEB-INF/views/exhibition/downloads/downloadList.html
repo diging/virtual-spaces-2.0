@@ -5,50 +5,50 @@
 </script>
 <script th:inline="javascript">
 
-function base64ToArrayBuffer(base64) {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-       var ascii = binaryString.charCodeAt(i);
-       bytes[i] = ascii;
-    }
-    return bytes;
- }
-
-function saveByteArray(reportName, byte) {
-
- var fileType = "application/zip";
-    var blob = new Blob([byte], {type: fileType});
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    var fileName = reportName;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-};
-
-	function triggerDownload() {
+	function triggerExhibitionDownload()
+	{ 
+		 console.log("abc");
+		 $.ajax({
+			   type: "GET",
+		        url: "[[@{/staff/exhibit/download/trigger}]]",       
+		        cache: false,
+		        contentType : false,
+		        success: function(data) {
+		        	console.log(data);
+		        	downloadExhibitionFolder(data);
+		        },
+		        error: function(data) {
+					console.log("error");
+		        }
+		    });
 		
-		const validateResponse = (result) => {
-			console.log("in validate response" + result.body);
-			if(result.headers.get("Content-Length") !=0) {
-				console.log(result);
-				console.log(result.body);
-				console.log(result.data);							
-				var data = result.body;
- 	 			var sampleArr = base64ToArrayBuffer(result.body); 
-          	    var fileName = "nme.zip";
-	        	console.log(fileName)
-	        	saveByteArray(fileName, sampleArr);
-				return true;
-			}
-				
-			return false;
-		}
-		
-		const triggerExhibitionDownload = () => {
-		
+	}
+	function base64ToArrayBuffer(base64) {
+	    var binaryString = window.atob(base64);
+	    var binaryLen = binaryString.length;
+	    var bytes = new Uint8Array(binaryLen);
+	    for (var i = 0; i < binaryLen; i++) {
+	       var ascii = binaryString.charCodeAt(i);
+	       bytes[i] = ascii;
+	    }
+	    return bytes;
+	 }
+
+	function saveByteArray(reportName, byte) {
+
+	 var fileType = "application/zip";
+	    var blob = new Blob([byte], {type: fileType});
+	    var link = document.createElement('a');
+	    link.href = window.URL.createObjectURL(blob);
+	    var fileName = reportName;
+	    link.download = fileName;
+	    document.body.appendChild(link);
+	    link.click();
+	};
+	
+	function downloadExhibitionFolder(data){
+		const download = () => {
+			
 			maxAttempts = 10;
 			interval= 3000;
 			  console.log('Start poll...');
@@ -79,43 +79,11 @@ function saveByteArray(reportName, byte) {
 		
 		};
 		
-		triggerExhibitionDownload()
+		download()
 		.then(value => console.log("then " + value))
-		.catch(err => console.error(err))
-	
-
-/* 		triggerExhibitionDownload.then((value) => {
-			  console.log(value);
-			  // expected output: "Success!"
-			});
-
+		.catch(err => console.error(err)) 
 		
-	/* 	const triggerExhibitionDownload = async () => {
-			console.log("trigger")
-			    const request = await fetch("@{/staff/exhibit/download/trigger}");
-			    
-			    const data = await request.json();
-			    return data;
-			  }; 
-			  const getExhibitionDownload = async (newUrl) => {
-			      const request = await fetch(newUrl);
-			      const data = await request.json();
-			      return data;
-			    }
-		console.log("in")
-		triggerExhibitionDownload.then(response => {
-			  console.log(response);
-			  getExhibitionDownload.then(resource  => {
-				  console.log(resource);
-			  })
-			  
-		}) */
 	}
-  
-
-
-  
-  
 </script>
 <style>
 .pagination>li>a {
@@ -142,10 +110,7 @@ function saveByteArray(reportName, byte) {
 <body>
 <div layout:fragment="content" class="main-content">
 	<span class = "errorAdd"></span>
-
-<!-- 	<a th:href="@{/staff/exhibit/download}" class="download btn primary-btn" style="float: right" >Download</a>
- -->	
- 	<button class="download btn primary-btn" onclick="triggerDownload()">Download</button>
+ 	<button class="download btn primary-btn" onclick="triggerExhibitionDownload()">Download</button>
  	 <h2>Downloads</h2>
 	 <table class="table">
 	  <thead>

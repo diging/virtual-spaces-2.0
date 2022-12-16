@@ -132,6 +132,7 @@ public class StorageEngineDownloads implements IStorageEngine {
      * @throws IOException
      */
     public byte[] generateZipFolder(String folderPath) throws IOException {
+     
         Path zipFile = Paths.get(folderPath);
 
         try (           

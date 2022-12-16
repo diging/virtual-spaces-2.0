@@ -63,18 +63,19 @@ public class DownloadsController {
             String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
             WebContext context = new WebContext(request, response, request.getServletContext());
 
-            long contentLength =0 ;
-
-
-            byte[] byteArrayResource = null;
+//            long contentLength =0 ;
+//
+//
+//            byte[] byteArrayResource = null;
             exhibitionDownload =
                     downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
 
 
             return  ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
-                    .contentLength(contentLength)
-                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
+//                  .header(exhibitionFolderName, null)
+//                    .contentLength(contentLength)
+                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(exhibitionDownload);
 
 //      exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
@@ -170,7 +171,7 @@ public class DownloadsController {
 //            //                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
 //            //                    .body(resource);
 //
-//            exhibitionDownload = downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+//            exhibitionDownload = downloadsManager.downloadExhibition(pathToResources, exhibitionFolderName, context);
 //            return  ResponseEntity.ok()
 //                    //                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
 //                    .contentLength(resource.contentLength())
