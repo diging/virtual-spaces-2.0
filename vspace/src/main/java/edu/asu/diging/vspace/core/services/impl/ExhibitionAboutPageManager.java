@@ -53,15 +53,15 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
         {
             setAboutPageTitle(titles.getUserText(),exhibitionAboutPage);
-		}
-		for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
+        }
+        for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
         {
             setAboutPageDescription(texts.getUserText(),exhibitionAboutPage);
-		}
-		store(exhibitionAboutPage);
-		return exhibitionAboutPage;				
+        }
+        store(exhibitionAboutPage);
+        return exhibitionAboutPage;				
 		
-	}
+    }
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
@@ -97,12 +97,12 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 		{
 			LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
 	        languageObject.setUserText(title);
-	        if(exhibitionAboutPage.getExhibitionTitles() == null) {
+            if(exhibitionAboutPage.getExhibitionTitles() == null) {
 	        	exhibitionAboutPage.setExhibitionTitles(new ArrayList());
-	        }
+            }
 	        exhibitionAboutPage.getExhibitionTitles().add(languageObject);
 	        storeLanguageObject(languageObject);
-		}
+        }
         
     }
     /**
@@ -110,15 +110,15 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTextDescriptions list for each user selected Exhibition Language.
     */
 	public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
-		if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
+        if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
 		{
             LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
 		    languageObject.setUserText(aboutPageTexts);
-		    if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
+            if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
 		    	  exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
-		      }
+            }
 		      exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
-		      storeLanguageObject(languageObject);
+            storeLanguageObject(languageObject);
 		}
       
     }

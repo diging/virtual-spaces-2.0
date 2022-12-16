@@ -49,22 +49,22 @@ public class ExhibitionAboutPage{
 
 
     public List<ILanguageDescriptionObject> getExhibitionTitles() {
-		return exhibitionTitles;
+        return exhibitionTitles;
     }
 
-	public void setExhibitionTitles(List<ILanguageDescriptionObject> exhibitionTitles) {
-		this.exhibitionTitles = exhibitionTitles;
-	}
+    public void setExhibitionTitles(List<ILanguageDescriptionObject> exhibitionTitles) {
+        this.exhibitionTitles = exhibitionTitles;
+    }
 
 	public List<ILanguageDescriptionObject> getExhibitionTextDescriptions() {
 		return exhibitionTextDescriptions;
-	}
+    }
 
-	public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
+    public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
         this.exhibitionTextDescriptions = exhibitionTextDescriptions;
     }
 
-	public String getId() {
+    public String getId() {
         return id;
     }
 
@@ -86,7 +86,7 @@ public class ExhibitionAboutPage{
 	}
 
 	public void setAboutPageText(String aboutPageText) {
-		this.aboutPageText = aboutPageText;
+        this.aboutPageText = aboutPageText;
     }
 	
 	/*

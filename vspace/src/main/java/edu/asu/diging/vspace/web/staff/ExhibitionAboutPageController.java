@@ -51,12 +51,12 @@ public class ExhibitionAboutPageController {
         List<LanguageDescriptionObject> titleList = new ArrayList();
         List<LanguageDescriptionObject> textList = new ArrayList();
         for(ILanguageDescriptionObject titles:exhibitionAboutPage.getExhibitionTitles())
-		{
-        	titleList.add((LanguageDescriptionObject) titles);
+        {
+            titleList.add((LanguageDescriptionObject) titles);
 		}
         for(ILanguageDescriptionObject texts:exhibitionAboutPage.getExhibitionTextDescriptions())
 		{
-			textList.add((LanguageDescriptionObject) texts);
+            textList.add((LanguageDescriptionObject) texts);
         }
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(textList);

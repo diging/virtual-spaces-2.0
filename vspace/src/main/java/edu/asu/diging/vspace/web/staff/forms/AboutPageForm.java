@@ -6,44 +6,44 @@ import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 
 public class AboutPageForm {
 	
-	private String title;
+    private String title;
 
     private String aboutPageText;
     
-	private List<LanguageDescriptionObject> titles;
+    private List<LanguageDescriptionObject> titles;
 	
-	private List<LanguageDescriptionObject> aboutPageTexts;
+    private List<LanguageDescriptionObject> aboutPageTexts;
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getAboutPageText() {
-		return aboutPageText;
-	}
+    public String getAboutPageText() {
+        return aboutPageText;
+    }
 
-	public void setAboutPageText(String aboutPageText) {
-		this.aboutPageText = aboutPageText;
-	}
+    public void setAboutPageText(String aboutPageText) {
+        this.aboutPageText = aboutPageText;
+    }
 
-	public List<LanguageDescriptionObject> getTitles() {
+    public List<LanguageDescriptionObject> getTitles() {
         return titles;
-	}
+    }
 
-	public void setTitles(List<LanguageDescriptionObject> titles) {
-		this.titles = titles;
-	}
+    public void setTitles(List<LanguageDescriptionObject> titles) {
+        this.titles = titles;
+    }
 
-	public List<LanguageDescriptionObject> getAboutPageTexts() {
-		return aboutPageTexts;
-	}
+    public List<LanguageDescriptionObject> getAboutPageTexts() {
+        return aboutPageTexts;
+    }
 
-	public void setAboutPageTexts(List<LanguageDescriptionObject> aboutPageTexts) {
-		this.aboutPageTexts = aboutPageTexts;
-	}	
+    public void setAboutPageTexts(List<LanguageDescriptionObject> aboutPageTexts) {
+        this.aboutPageTexts = aboutPageTexts;
+    }	
 
 }

@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 @Entity
 public class LanguageDescriptionObject implements ILanguageDescriptionObject {
 	
-	@Id
+    @Id
     @GeneratedValue(generator = "language_description_id_generator")
     @GenericGenerator(name = "language_description_id_generator", parameters = @Parameter(name = "prefix", value = "EXHLANGOBJ"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
@@ -31,15 +31,15 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
 		return id;
     }
 
-	public void setId(String id) {
-		this.id = id;
+    public void setId(String id) {
+        this.id = id;
 	}
 
     public String getUserText() {
-		return userText;
+        return userText;
     }
 
-	public void setUserText(String userText) {
+    public void setUserText(String userText) {
         this.userText = userText;
 	}
 
