@@ -109,7 +109,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * This method maps the description in ExhibitionAboutPage, and add that to
      * exhibitionTextDescriptions list for each user selected Exhibition Language.
     */
-	public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
+    public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
         if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
 		{
             LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
