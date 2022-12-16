@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 
 @Controller
 public class AddExternalLinkController {
@@ -33,6 +36,12 @@ public class AddExternalLinkController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
+    
+    @Autowired
+    private IImageFactory imageFactory;
+
+    @Autowired
+    private IImageService imageService;
 
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
@@ -45,7 +54,7 @@ public class AddExternalLinkController {
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-
+        IVSImage defaultImage = null;
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -54,6 +63,17 @@ public class AddExternalLinkController {
         }
         else {
             System.out.println("Check for defaultImage");
+            String string = "GeeksForGeeks"
+                    + " - A Computer Science"
+                    + " Portal for geeks";// This is dummy image , it will actually call the repository function to access the files.
+            byte[] image = string.getBytes() ;
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            defaultImage = imageFactory.createDefaultImage(filename, contentType, "defaultImage");
+            linkImage = file.getBytes();
+            filename = file.getOriginalFilename();
+            
+            
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
