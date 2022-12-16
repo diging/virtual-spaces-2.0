@@ -212,10 +212,13 @@ function drawLinks(){
             $("#loader").hide();
             },
         success: function(data) {
+        	console.log(data)
             var spaceLinks = data['spaceLinks'];
             var externalLinks = data['externalLinks'];
             var moduleLinks = data['moduleLinks'];
+            console.log($("#bgImage"))
             if($("#bgImage")[0] == null){
+            	
             	console.log("Default Image required")
             	var posXModal = 25;
                 var posYModal = 25;
@@ -224,7 +227,7 @@ function drawLinks(){
             	
             }
             else{
-            	console.log($("#bgImage").position().top)
+            	
                 var posXModal = $("#bgImage").position().left;
                 var posYModal = $("#bgImage").position().top;
                 var posX = $("#main-bgImage").position().left;
@@ -719,6 +722,7 @@ $(function(){
 
         // -------- buttons that open modals (e.g. to create space links) ------
         $("#addSpaceLinkButton").click(function(e) {
+        	
             $("#createExternalLinkAlert").hide();
             $("#changeBgImgAlert").hide();
             $("#bgImage").off("click");
