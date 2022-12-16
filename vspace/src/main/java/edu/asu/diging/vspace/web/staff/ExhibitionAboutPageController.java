@@ -53,7 +53,7 @@ public class ExhibitionAboutPageController {
         for(ILanguageDescriptionObject titles:exhibitionAboutPage.getExhibitionTitles())
         {
             titleList.add((LanguageDescriptionObject) titles);
-		}
+        }
         for(ILanguageDescriptionObject texts:exhibitionAboutPage.getExhibitionTextDescriptions())
 		{
             textList.add((LanguageDescriptionObject) texts);
@@ -64,7 +64,7 @@ public class ExhibitionAboutPageController {
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
         List<LanguageDescriptionObject> languageObjectList = new ArrayList();
         startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-        	LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
             languageObject.setExhibitionLanguage((ExhibitionLanguage)exhibitionLanguage);
             languageObjectList.add(languageObject);
         });

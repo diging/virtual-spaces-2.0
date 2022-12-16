@@ -95,13 +95,13 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
         if(title!=null || title.length()!=0)
 		{
-			LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-	        languageObject.setUserText(title);
+            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+            languageObject.setUserText(title);
             if(exhibitionAboutPage.getExhibitionTitles() == null) {
-	        	exhibitionAboutPage.setExhibitionTitles(new ArrayList());
+                exhibitionAboutPage.setExhibitionTitles(new ArrayList());
             }
-	        exhibitionAboutPage.getExhibitionTitles().add(languageObject);
-	        storeLanguageObject(languageObject);
+            exhibitionAboutPage.getExhibitionTitles().add(languageObject);
+            storeLanguageObject(languageObject);
         }
         
     }
@@ -113,11 +113,11 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
 		{
             LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-		    languageObject.setUserText(aboutPageTexts);
+            languageObject.setUserText(aboutPageTexts);
             if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
-		    	  exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
+                exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
             }
-		      exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
+            exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
             storeLanguageObject(languageObject);
 		}
       

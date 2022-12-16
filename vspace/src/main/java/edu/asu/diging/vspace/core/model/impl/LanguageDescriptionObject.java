@@ -28,12 +28,12 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
     
 
     public String getId() {
-		return id;
-    }
+        return id;
+     }
 
     public void setId(String id) {
         this.id = id;
-	}
+    }
 
     public String getUserText() {
         return userText;

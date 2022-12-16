@@ -56,8 +56,8 @@ public class ExhibitionAboutPage{
         this.exhibitionTitles = exhibitionTitles;
     }
 
-	public List<ILanguageDescriptionObject> getExhibitionTextDescriptions() {
-		return exhibitionTextDescriptions;
+    public List<ILanguageDescriptionObject> getExhibitionTextDescriptions() {
+        return exhibitionTextDescriptions;
     }
 
     public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
@@ -82,10 +82,10 @@ public class ExhibitionAboutPage{
     
     
     public void setTitle(String title) {
-		this.title = title;
+        this.title = title;
 	}
 
-	public void setAboutPageText(String aboutPageText) {
+    public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
     }
 	
