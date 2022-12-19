@@ -31,7 +31,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-	 private LanguageDescriptionObjectRepository languageObjectRepo;
+    private LanguageDescriptionObjectRepository languageObjectRepo;
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
@@ -94,7 +94,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     */
     public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
         if(title!=null || title.length()!=0)
-		{
+	{
             LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
             languageObject.setUserText(title);
             if(exhibitionAboutPage.getExhibitionTitles() == null) {
@@ -111,7 +111,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     */
     public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
         if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
-		{
+	{
             LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
             languageObject.setUserText(aboutPageTexts);
             if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
@@ -119,7 +119,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             }
             exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
             storeLanguageObject(languageObject);
-		}
+	}
       
     }
 	/**
@@ -127,5 +127,5 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     */
     private void storeLanguageObject(LanguageDescriptionObject languageObject) {
         languageObjectRepo.save(languageObject);
-	}   
+    }   
 }
