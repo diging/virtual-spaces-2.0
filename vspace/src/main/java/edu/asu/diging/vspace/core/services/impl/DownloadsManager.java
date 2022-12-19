@@ -148,24 +148,17 @@ public class DownloadsManager  implements  IDownloadsManager {
         if(exhibitionDownload ==null ) {
             exhibitionDownload = new ExhibitionDownload();
         }
+        
+        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
 
-//                exhibitionDownload.setFolderPath(exhibitionFolderPath);
+
+                exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
-//        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
         exhibitionDownloadRepo.save(exhibitionDownload);
-        
-        
-        //        return resource;
-        AsyncResult<byte[]> futureTask =   new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory));
+   
+        AsyncResult<String> futureTask =   new AsyncResult<String>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory, exhibitionFolderPath));
 
         return exhibitionDownload;
-//        return futureTask;
-        
-       
-        
-//        return null;
-//        exhibitionDownload.setDownloadComplete(false);
-//        return CompletableFuture.completedFuture(createSnapShot(resourcesPath, exhibitionFolderName, context));
 
     }
     
@@ -190,9 +183,8 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     @Async("asyncExecutor")
     @Override
-    public byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory)  throws IOException, InterruptedException {
+    public String createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath)  throws IOException, InterruptedException {
         byte[] resource = null;
-        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
@@ -200,10 +192,10 @@ public class DownloadsManager  implements  IDownloadsManager {
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
         }               
-        resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
+//        resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
         Thread.sleep(5000);   
-        return resource;
+        return exhibitionFolderPath;
     }
     
     /**

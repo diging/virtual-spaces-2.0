@@ -7,9 +7,30 @@
 
 	function triggerExhibitionDownload()
 	{ 
-		 console.log("abc");
+			
+	
+
 		 $.ajax({
-			   type: "GET",
+				type : "GET",
+				url : "[(@{'/staff/exhibit/download/trigger?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+				cache : false,
+				
+				contentType : false,
+				processData : false,
+				
+				success : function(data) {
+					console.log(data.id);
+ 					downloadExhibitionFolder(data.id, data.folderName);
+ 		
+
+				
+				},
+				error : function(data) {
+	
+				}
+			});
+	/* 	 $.ajax({
+			    type: "GET",
 		        url: "[[@{/staff/exhibit/download/trigger}]]",       
 		        cache: false,
 		        contentType : false,
@@ -20,7 +41,7 @@
 		        error: function(data) {
 					console.log("error");
 		        }
-		    });
+		    }); */
 		
 	}
 	function base64ToArrayBuffer(base64) {
@@ -44,46 +65,67 @@
 	    link.download = fileName;
 	    document.body.appendChild(link);
 	    link.click();
-	};
-	
-	function downloadExhibitionFolder(data){
-		const download = () => {
-			
-			maxAttempts = 10;
-			interval= 3000;
-			  console.log('Start poll...');
-			  let attempts = 0;
-
-			  const executePoll = async (resolve, reject) => {
-				    console.log('- poll');
-				    const result = await fetch([[@{/staff/exhibit/download/trigger?}]]+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]]);
-				    console.log("attemps" + attempts);
-				    attempts++;
-
-				    if ( validateResponse(result)  ) {
-				    	console.log("succes");
-				    	
-				    	
-				      return resolve(result);
-				    } else if (maxAttempts && attempts === maxAttempts) {
-		
-				      return reject(new Error('Exceeded max attempts'));
-				    } else {
-      					setTimeout( executePoll, interval, resolve, reject  );
-
- 
- 			    }
-				  };
-
-				  return new Promise(executePoll);
-		
-		};
-		
-		download()
-		.then(value => console.log("then " + value))
-		.catch(err => console.error(err)) 
-		
 	}
+	function downloadExhibitionFolder(id, folderName) {
+		
+		
+		const validateResponse = (result) => {
+			console.log("in validate" + result);
+			if(result.status == 200) {
+				var data = result.body;
+ 	 			var sampleArr = base64ToArrayBuffer(result.body); 
+          	    var fileName = "nme.zip";
+	        	console.log(fileName)
+	        	saveByteArray(fileName, sampleArr);
+				return true;
+
+			}
+			return false;
+		}
+		
+		
+		 const download = (id, folderName) => {
+
+				
+				maxAttempts = 2;
+				interval= 3000;
+				  console.log('Start poll...');
+				  let attempts = 0;
+
+				  const executePoll = async (resolve, reject) => {
+					    console.log('- poll');
+						console.log("id" + id);
+						console.log("folderName" + folderName);
+					  	const  url = "[(@{'/staff/exhibit/download/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
+						const result = await fetch(url);
+						console.log("attemps" + attempts);
+					    attempts++;
+
+					    if ( validateResponse(result)  ) {
+					    	console.log("succes");
+					    	
+					    	
+					      return resolve(result);
+					    } else if (maxAttempts && attempts === maxAttempts) {
+			
+					      return reject(new Error('Exceeded max attempts'));
+					    } else {
+		  					setTimeout( executePoll, interval, resolve, reject  );
+
+
+					    }
+					  };
+
+					  return new Promise(executePoll);
+			
+			};
+			
+			download(id, folderName)
+			.then(value => console.log("then " + value))
+			.catch(err => console.error(err)) 
+		 
+	}
+
 </script>
 <style>
 .pagination>li>a {
@@ -110,7 +152,7 @@
 <body>
 <div layout:fragment="content" class="main-content">
 	<span class = "errorAdd"></span>
- 	<button class="download btn primary-btn" onclick="triggerExhibitionDownload()">Download</button>
+ 	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Download</button>
  	 <h2>Downloads</h2>
 	 <table class="table">
 	  <thead>

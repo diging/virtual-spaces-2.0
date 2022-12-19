@@ -47,7 +47,7 @@ public interface IDownloadsManager {
 
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;
 
-    byte[] createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory) throws IOException, InterruptedException ;
+    String createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath) throws IOException, InterruptedException ;
 
     byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException;
 
