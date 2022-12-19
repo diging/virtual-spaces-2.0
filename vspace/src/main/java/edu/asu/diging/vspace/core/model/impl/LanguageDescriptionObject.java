@@ -40,7 +40,7 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
 
     public void setUserText(String userText) {
         this.userText = userText;
-	}
+    }
 
     public ExhibitionLanguage getExhibitionLanguage() {
         return exhibitionLanguage;
