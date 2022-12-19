@@ -83,7 +83,7 @@ public class ExhibitionAboutPage{
     
     public void setTitle(String title) {
         this.title = title;
-	}
+    }
 
     public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
