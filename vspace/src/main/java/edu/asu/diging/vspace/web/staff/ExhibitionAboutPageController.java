@@ -55,7 +55,7 @@ public class ExhibitionAboutPageController {
             titleList.add((LanguageDescriptionObject) titles);
         }
         for(ILanguageDescriptionObject texts:exhibitionAboutPage.getExhibitionTextDescriptions())
-		{
+	{
             textList.add((LanguageDescriptionObject) texts);
         }
         aboutPageForm.setTitles(titleList);
