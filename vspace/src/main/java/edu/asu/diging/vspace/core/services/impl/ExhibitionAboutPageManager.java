@@ -48,7 +48,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#storeAboutPageData()
      */
     @Override
-	public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
+    public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
 			
         for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
         {
@@ -126,6 +126,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * This method save the LanguageDescriptionObject in database.
     */
     private void storeLanguageObject(LanguageDescriptionObject languageObject) {
-        languageObjectRepo.save(languageObject);		
+        languageObjectRepo.save(languageObject);
 	}   
 }
