@@ -7,9 +7,8 @@
 
 	function triggerExhibitionDownload()
 	{ 
-			
-	
-
+		var loader = document.getElementById('downloadLoader');
+		loader.style.visibility="visible";
 		 $.ajax({
 				type : "GET",
 				url : "[(@{'/staff/exhibit/download/trigger?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
@@ -21,9 +20,7 @@
 				success : function(data) {
 					console.log(data.id);
  					downloadExhibitionFolder(data.id, data.folderName);
- 		
-
-				
+ 					
 				},
 				error : function(data) {
 	
@@ -45,8 +42,8 @@
 		
 	}
 	function base64ToArrayBuffer(base64) {
-	    var binaryString = window.atob(base64);
-	    var binaryLen = binaryString.length;
+ 	    var binaryString = window.atob(base64);
+ 	    var binaryLen = base64.length;
 	    var bytes = new Uint8Array(binaryLen);
 	    for (var i = 0; i < binaryLen; i++) {
 	       var ascii = binaryString.charCodeAt(i);
@@ -54,29 +51,24 @@
 	    }
 	    return bytes;
 	 }
-
+	 
 	function saveByteArray(reportName, byte) {
-
-	 var fileType = "application/zip";
+		var fileType = "application/x-zip-compressed";
 	    var blob = new Blob([byte], {type: fileType});
 	    var link = document.createElement('a');
 	    link.href = window.URL.createObjectURL(blob);
 	    var fileName = reportName;
 	    link.download = fileName;
-	    document.body.appendChild(link);
 	    link.click();
-	}
+	};
 	function downloadExhibitionFolder(id, folderName) {
 		
 		
 		const validateResponse = (result) => {
 			console.log("in validate" + result);
 			if(result.status == 200) {
-				var data = result.body;
- 	 			var sampleArr = base64ToArrayBuffer(result.body); 
-          	    var fileName = "nme.zip";
-	        	console.log(fileName)
-	        	saveByteArray(fileName, sampleArr);
+				var loader = document.getElementById('downloadLoader');
+				loader.style.visibility="hidden";
 				return true;
 
 			}
@@ -121,7 +113,15 @@
 			};
 			
 			download(id, folderName)
-			.then(value => console.log("then " + value))
+			.then(value => {
+			console.log("then " + value); 
+ 	 		var sampleArr = base64ToArrayBuffer(value); 
+       	    var fileName = folderName+".zip";
+        	console.log(fileName)
+        	saveByteArray(fileName, sampleArr);
+			}
+			
+        	)
 			.catch(err => console.error(err)) 
 		 
 	}
@@ -145,6 +145,29 @@
     height: 100px;
     width: 140px;
 }
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid blue;
+  border-bottom: 16px solid blue;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  visibility: hidden
+
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -153,6 +176,8 @@
 <div layout:fragment="content" class="main-content">
 	<span class = "errorAdd"></span>
  	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Download</button>
+ 	<div class="loader" id ="downloadLoader"> </div>
+ 	
  	 <h2>Downloads</h2>
 	 <table class="table">
 	  <thead>

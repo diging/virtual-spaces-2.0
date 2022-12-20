@@ -194,7 +194,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         }               
 //        resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
         exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
-        Thread.sleep(5000);   
+//        Thread.sleep(5000);   
         return exhibitionFolderPath;
     }
     

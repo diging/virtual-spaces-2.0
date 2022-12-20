@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -190,24 +191,49 @@ public class DownloadsController {
   
 
 
+//    @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
+//    public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
+//            throws ExhibitionDownloadNotFoundException , IOException {
+//        
+//        Resource resource = null;      
+//       
+//        try {
+//            byte[] byteArrayResource = downloadsManager.downloadExhibitionFolder(id);
+//            resource = new ByteArrayResource(byteArrayResource);
+//            return  ResponseEntity.ok()
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+id+".zip")
+//                    .contentLength(resource.contentLength())
+//                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+//                    .body(resource);
+//        } catch (ExhibitionDownloadNotFoundException |  IOException e) {
+//            logger.error("Could not download exhibition", e);
+//            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
+//
+//        }
+//   
+//    }
+    
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
-    public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
+    public ResponseEntity<byte[]> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
             throws ExhibitionDownloadNotFoundException , IOException {
         
-        Resource resource = null;      
+//        Resource resource = null;  
+        byte[] byteArrayResource = null;
        
         try {
-            byte[] byteArrayResource = downloadsManager.downloadExhibitionFolder(id);
-            resource = new ByteArrayResource(byteArrayResource);
-            return  ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionDownloadFolderName+".zip")
-                    .contentLength(resource.contentLength())
-                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-                    .body(resource);
+             byteArrayResource = downloadsManager.downloadExhibitionFolder(id);
+//            resource = new ByteArrayResource(byteArrayResource);
+//            return  ResponseEntity.ok()
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+id+".zip")
+//                    .contentLength(resource.contentLength())
+//                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+//                    .body(resource);
+             byteArrayResource = Base64.getEncoder().encode(byteArrayResource);
+            return new ResponseEntity<byte[]>(byteArrayResource, HttpStatus.OK);
+            
         } catch (ExhibitionDownloadNotFoundException |  IOException e) {
             logger.error("Could not download exhibition", e);
-            return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<byte[]>(byteArrayResource, HttpStatus.INTERNAL_SERVER_ERROR);
         }
    
     }
