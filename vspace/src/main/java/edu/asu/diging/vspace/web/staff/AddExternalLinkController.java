@@ -54,27 +54,14 @@ public class AddExternalLinkController {
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        IVSImage defaultImage = null;
+        
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
         }
-        else {
-            System.out.println("Check for defaultImage");
-            String string = "GeeksForGeeks"
-                    + " - A Computer Science"
-                    + " Portal for geeks";// This is dummy image , it will actually call the repository function to access the files.
-            byte[] image = string.getBytes() ;
-            Tika tika = new Tika();
-            String contentType = tika.detect(image);
-            defaultImage = imageFactory.createDefaultImage(filename, contentType, "defaultImage");
-            linkImage = file.getBytes();
-            filename = file.getOriginalFilename();
-            
-            
-        }
+        
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);

@@ -92,8 +92,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
 	@Override
 	public void storeDefaultImage(byte[] image, String filename, String spaceId) {
-	    System.out.println("Filename :     "+spaceId);
-
+	    
 		IVSImage defaultImage = null;
 		if (image != null && image.length > 0) {
 			Tika tika = new Tika();

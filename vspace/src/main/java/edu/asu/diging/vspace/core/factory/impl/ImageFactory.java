@@ -31,7 +31,8 @@ public class ImageFactory implements IImageFactory {
         IVSImage defaultImage = new VSImage();
         defaultImage.setFilename(filename);
         defaultImage.setFileType(fileType);
-        defaultImage.setDescription(spaceId);
+        defaultImage.setDescription("DEFAULT IMAGE");
+        defaultImage.setId(spaceId);
         return defaultImage;
         
         
