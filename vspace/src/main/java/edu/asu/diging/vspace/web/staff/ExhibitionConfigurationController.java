@@ -113,7 +113,7 @@ public class ExhibitionConfigurationController {
         if (spacelinkImage != null) {
         	spaceImage = spacelinkImage.getBytes();
         	spaceLinkFilename = spacelinkImage.getOriginalFilename();
-        	exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename,spaceID);
+        	exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename,"SPACELINKIMAGE");
         	
         }
         
@@ -122,7 +122,7 @@ public class ExhibitionConfigurationController {
         if (moduleImage != null) {
         	moduleImage = moduleLinkImage.getBytes();
         	moduleLinkFilename = moduleLinkImage.getOriginalFilename();
-        	exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,spaceID);
+        	exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
         	
             
         }
@@ -132,7 +132,7 @@ public class ExhibitionConfigurationController {
         if (externalLinkImage != null) {
         	externalImage = externalLinkImage.getBytes();
         	externalLinkFilename = externalLinkImage.getOriginalFilename();
-        	exhibitManager.storeDefaultImage(externalImage, externalLinkFilename,spaceID);
+        	exhibitManager.storeDefaultImage(externalImage, externalLinkFilename,"EXTERNALLINKIMAGE");
             
         }
        
