@@ -11,6 +11,6 @@ import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 
 public interface IModuleLinkManager extends ILinkManager <IModuleLink, IModule, IModuleLinkDisplay> {
 
-    HashSet <ISpace> findModuleLinksFromModuleId(String moduleId);
+    HashSet <ISpace> findSpaceLinksFromModuleId(String moduleId);
 
 }

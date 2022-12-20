@@ -343,7 +343,7 @@ $(document).ready(function() {
             <div style="display: flex; justify-content: space-between">
                <h4>List of Spaces Linked to a Module</h4>
             </div>
-            <span th:if="${spacesList==NULL}">This module has not been linked from a space yet.</span>
+            <span th:if="${spacesList.isEmpty()}">This module has not been linked from a space yet.</span>
             <div id="list" style="margin-top: 0">
                <ul class="list-group list-group-flush" th:each="space: ${spacesList}">
                   <li class="list-group-item">

@@ -111,12 +111,10 @@ public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModul
     }
 
     @Override
-    public HashSet <ISpace> findModuleLinksFromModuleId(String moduleId) {
-        List <ModuleLink> moduleLinks = moduleLinkRepo.getModuleLinks(moduleId);
-        HashSet <ISpace> spaces = new HashSet <>();
-        for (ModuleLink link: moduleLinks) {
-            spaces.add(link.getSpace());
-        }
+    public HashSet <ISpace> findSpaceLinksFromModuleId(String moduleId) {
+        List <ModuleLink> moduleLinks = moduleLinkRepo.getByModule(moduleId);
+        HashSet <ISpace> spaces = new HashSet <>(); 
+        moduleLinks.forEach(s -> spaces.add(s.getSpace()));
         return spaces;
     }
 
