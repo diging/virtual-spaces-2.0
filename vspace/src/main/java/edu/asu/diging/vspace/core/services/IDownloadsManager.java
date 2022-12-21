@@ -51,6 +51,9 @@ public interface IDownloadsManager {
 
     byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException;
 
+
+    Boolean checkIfSnapshotCreated(String id);
+
     String getExhibitionFolderName();
 
 

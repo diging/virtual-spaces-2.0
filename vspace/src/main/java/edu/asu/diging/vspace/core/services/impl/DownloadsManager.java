@@ -146,7 +146,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
         if(exhibitionDownload ==null ) {
-            exhibitionDownload = new ExhibitionDownload();
+          exhibitionDownload = new ExhibitionDownload();
         }
         
         String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
@@ -504,10 +504,26 @@ public class DownloadsManager  implements  IDownloadsManager {
         }
 
     }
-    
+ 
+
+
+
+    @Override
+    public Boolean checkIfSnapshotCreated(String id) {
+        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
+        if(exhibitionDownlaod.isPresent()) {
+            return storageEngineDownloads.checkIfFolderExists(id);        
+        }
+
+        return false;
+    }
+
+
+
+
+
     @Override
     public String getExhibitionFolderName() {
-
         return  "Exhibition"+ LocalDateTime.now();
     }
 

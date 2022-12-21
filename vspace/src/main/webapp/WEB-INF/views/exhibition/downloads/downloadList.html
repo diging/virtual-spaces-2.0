@@ -23,7 +23,14 @@
  					
 				},
 				error : function(data) {
-	
+					var loader = document.getElementById('downloadLoader');
+					loader.style.visibility="hidden";
+					
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$('.errorAdd').append(alert);
+					
+					var errorAlert = document.getElementById('downloadError');
+					errorAlert.style.visibility="visible";
 				}
 			});
 	/* 	 $.ajax({
@@ -61,14 +68,19 @@
 	    link.download = fileName;
 	    link.click();
 	};
+	
 	function downloadExhibitionFolder(id, folderName) {
 		
 		
 		const validateResponse = (result) => {
-			console.log("in validate" + result);
-			if(result.status == 200) {
+			console.log("in validate" + result.body);
+/* 			result.text().then(value => console.log(value.data)).catch(err => console.error(err));
+ */			if(result.status == 200 ) {
 				var loader = document.getElementById('downloadLoader');
 				loader.style.visibility="hidden";
+				
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snp</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.errorAdd').append(alert);
 				return true;
 
 			}
@@ -88,7 +100,7 @@
 					    console.log('- poll');
 						console.log("id" + id);
 						console.log("folderName" + folderName);
-					  	const  url = "[(@{'/staff/exhibit/download/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
+					  	const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
 						const result = await fetch(url);
 						console.log("attemps" + attempts);
 					    attempts++;
@@ -103,8 +115,10 @@
 					      return reject(new Error('Exceeded max attempts'));
 					    } else {
 		  					setTimeout( executePoll, interval, resolve, reject  );
-
-
+		  					var loader = document.getElementById('downloadLoader');
+		  					loader.style.visibility="hidden";
+		  					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		  					$('.errorAdd').append(alert);
 					    }
 					  };
 
@@ -115,10 +129,10 @@
 			download(id, folderName)
 			.then(value => {
 			console.log("then " + value); 
- 	 		var sampleArr = base64ToArrayBuffer(value); 
+ 	 		/* var sampleArr = base64ToArrayBuffer(value); 
        	    var fileName = folderName+".zip";
         	console.log(fileName)
-        	saveByteArray(fileName, sampleArr);
+        	saveByteArray(fileName, sampleArr); */
 			}
 			
         	)
@@ -158,6 +172,11 @@
 
 }
 
+
+#downloadSuccess {
+visibility: hidden
+}
+
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); }
@@ -174,7 +193,9 @@
 </head>
 <body>
 <div layout:fragment="content" class="main-content">
-	<span class = "errorAdd"></span>
+	<span class = "errorAdd" id="downloadError"></span>
+		<span class = "downloadSuccess" id="downloadSuccess"></span>
+	
  	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Download</button>
  	<div class="loader" id ="downloadLoader"> </div>
  	
@@ -191,7 +212,7 @@
 
                 </tr>
             </thead>
-	 <tbody class="tableBody">
+	 		<tbody class="tableBody">
                 <tr th:each="exhibitionDownload:  ${downloadsList}">
                     <th scope="row">[[${exhibitionDownload.creationDate}]]</th>
                  
