@@ -108,7 +108,7 @@ public class ExhibitionConfigurationController {
     		@RequestParam("spaceParamExihibit") String spaceID,
             Principal principal, RedirectAttributes attributes) throws IOException {
     	
-    	System.out.println(spaceID);
+    	
         String spaceLinkFilename = null;
         if (spacelinkImage != null) {
         	spaceImage = spacelinkImage.getBytes();
@@ -119,7 +119,7 @@ public class ExhibitionConfigurationController {
         
         byte[] moduleImage = null;
         String moduleLinkFilename = null;
-        if (moduleImage != null) {
+        if (moduleLinkImage != null) {
         	moduleImage = moduleLinkImage.getBytes();
         	moduleLinkFilename = moduleLinkImage.getOriginalFilename();
         	exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
@@ -136,8 +136,7 @@ public class ExhibitionConfigurationController {
             
         }
        
-        //exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename);
-        
+ 
         
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }

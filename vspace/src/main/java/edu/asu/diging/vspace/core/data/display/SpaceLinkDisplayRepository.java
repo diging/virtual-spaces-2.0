@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.ISpaceLink;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -33,7 +34,7 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
     void deleteBySpaceLinkId(String spaceLinkId);
     
     @Query("select * from VSImage where description  like '%DEFAULT IMAGE'")
-    void getImageByDescription(String type);
+    public IVSImage getImageByDescription(String type);
     
     
     

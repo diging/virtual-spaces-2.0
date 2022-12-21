@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -55,6 +56,9 @@ public class SpaceController {
     @Autowired
     private IImageService imageService;
     
+    @Autowired
+    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(STAFF_SPACE_PATH+"{id}")
@@ -63,10 +67,11 @@ public class SpaceController {
         
         IVSImage image;
         try {
-                image = imageService.getImageById("IMG000000045");
+                //image = imageService.getImageById("IMG000000045");
+                image = spaceLinkDisplayRepo.getImageByDescription(id);
                 System.out.println(image);
                 
-        } catch (ImageDoesNotExistException e) {
+        } catch (Exception e) {
                 logger.error("Image does not exist.", e);
                 return "Error Occurred";
             
