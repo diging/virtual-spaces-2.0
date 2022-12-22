@@ -146,56 +146,44 @@ public class DownloadsManager  implements  IDownloadsManager {
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
         if(exhibitionDownload ==null ) {
-          exhibitionDownload = new ExhibitionDownload();
+            exhibitionDownload = new ExhibitionDownload();
         }
-        
+
         String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
 
 
-                exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
+        exhibitionDownload.setDownloadComplete(false);
+
         exhibitionDownloadRepo.save(exhibitionDownload);
-   
-        AsyncResult<String> futureTask =   new AsyncResult<String>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory, exhibitionFolderPath));
+        createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory, exhibitionFolderPath, exhibitionDownload);
+        //        new AsyncResult<String>(createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory, exhibitionFolderPath, exhibitionDownload));
 
         return exhibitionDownload;
 
     }
     
-    
-    
-    
 
+    @Async
     @Override
-    public byte[] downloadExhibition(AsyncResult<byte[]> asyncResult) throws IOException, ExecutionException {                 
-        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
-
-//        exhibitionDownload.setFolderPath(exhibitionFolderPath);
-//        exhibitionDownload.setFolderName(exhibitionFolderName);
-//        exhibitionDownload.setFutureTask(new AsyncResult<byte[]>(createSnapShot(resourcesPath, exhibitionFolderName, context)));  
-//        exhibitionDownloadRepo.save(exhibitionDownload);
-//        return resource;
-        if(asyncResult.isDone()) { return  asyncResult.get() ;};
-        
-        return  null ;
-
-    }
-
-    @Async("asyncExecutor")
-    @Override
-    public String createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath)  throws IOException, InterruptedException {
+    public void createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         byte[] resource = null;
+        Thread.sleep(70000);   
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
-        }               
+        }         
+        
+         exhibitionDownload.setDownloadComplete(true);
+         exhibitionDownloadRepo.save(exhibitionDownload);
 //        resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
-        exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
-//        Thread.sleep(5000);   
-        return exhibitionFolderPath;
+//        exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
+      
+        
     }
     
     /**
@@ -512,7 +500,12 @@ public class DownloadsManager  implements  IDownloadsManager {
     public Boolean checkIfSnapshotCreated(String id) {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
         if(exhibitionDownlaod.isPresent()) {
-            return storageEngineDownloads.checkIfFolderExists(id);        
+     
+                
+                return exhibitionDownlaod.get().isDownloadComplete();
+//                return storageEngineDownloads.checkIfFolderExists(exhibitionDownlaod.get().getFolderPath());        
+            
+            
         }
 
         return false;

@@ -71,27 +71,31 @@
 	
 	function downloadExhibitionFolder(id, folderName) {
 		
-		
+
 		const validateResponse = (result) => {
-			console.log("in validate" + result.body);
-/* 			result.text().then(value => console.log(value.data)).catch(err => console.error(err));
- */			if(result.status == 200 ) {
+			
+			
+			
+			console.log("in validate" + result);
+			if(result == true ) {
 				var loader = document.getElementById('downloadLoader');
 				loader.style.visibility="hidden";
 				
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snp</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.errorAdd').append(alert);
+				var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.successAlert').append(alert);
 				return true;
 
 			}
 			return false;
+			
+			
 		}
 		
 		
 		 const download = (id, folderName) => {
 
 				
-				maxAttempts = 2;
+				maxAttempts = 5;
 				interval= 3000;
 				  console.log('Start poll...');
 				  let attempts = 0;
@@ -104,21 +108,31 @@
 						const result = await fetch(url);
 						console.log("attemps" + attempts);
 					    attempts++;
-
-					    if ( validateResponse(result)  ) {
+					    var text = await result.text();
+					    console.log("text", text);
+					    if ( text) {
 					    	console.log("succes");
-					    	
+					    	var loader = document.getElementById('downloadLoader');
+							loader.style.visibility="hidden";
+							
+							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.successAlert').append(alert);
+							/* var successAlert = document.getElementById('successAlert');
+							successAlert.style.visibility="visible"; */
 					    	
 					      return resolve(result);
 					    } else if (maxAttempts && attempts === maxAttempts) {
-			
+					    	var loader = document.getElementById('downloadLoader');
+		  					loader.style.visibility="hidden";
+		  					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		  					$('.errorAdd').append(alert);
+		  					var errorAlert = document.getElementById('downloadError');
+							errorAlert.style.visibility="visible";
+		  					
 					      return reject(new Error('Exceeded max attempts'));
 					    } else {
 		  					setTimeout( executePoll, interval, resolve, reject  );
-		  					var loader = document.getElementById('downloadLoader');
-		  					loader.style.visibility="hidden";
-		  					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		  					$('.errorAdd').append(alert);
+		  				
 					    }
 					  };
 
@@ -127,15 +141,10 @@
 			};
 			
 			download(id, folderName)
-			.then(value => {
-			console.log("then " + value); 
- 	 		/* var sampleArr = base64ToArrayBuffer(value); 
-       	    var fileName = folderName+".zip";
-        	console.log(fileName)
-        	saveByteArray(fileName, sampleArr); */
-			}
+			.then(value => value)
+			.then(data => console.log(data))
 			
-        	)
+        	
 			.catch(err => console.error(err)) 
 		 
 	}
@@ -164,8 +173,8 @@
   border-radius: 50%;
   border-top: 16px solid blue;
   border-bottom: 16px solid blue;
-  width: 120px;
-  height: 120px;
+  width: 12px;
+  height: 12px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
   visibility: hidden
@@ -173,9 +182,7 @@
 }
 
 
-#downloadSuccess {
-visibility: hidden
-}
+
 
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
@@ -194,7 +201,7 @@ visibility: hidden
 <body>
 <div layout:fragment="content" class="main-content">
 	<span class = "errorAdd" id="downloadError"></span>
-		<span class = "downloadSuccess" id="downloadSuccess"></span>
+		<span class = "successAlert" id="downloadSuccess"></span>
 	
  	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Download</button>
  	<div class="loader" id ="downloadLoader"> </div>

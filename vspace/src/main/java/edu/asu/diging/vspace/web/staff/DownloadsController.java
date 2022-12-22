@@ -66,6 +66,8 @@ public class DownloadsController {
             exhibitionDownload =
                     downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
 
+            
+            
 
             return  ResponseEntity.ok()
 //                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
@@ -218,17 +220,8 @@ public class DownloadsController {
        
         try {
             Boolean isSnapshotCreated = downloadsManager.checkIfSnapshotCreated(id);
-            
             return new ResponseEntity<Boolean>(isSnapshotCreated, HttpStatus.OK);
 
-                    
-                    
-//                    resource = new ByteArrayResource(byteArrayResource);
-//            return  ResponseEntity.ok()
-//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionDownloadFolderName+".zip")
-//                    .contentLength(resource.contentLength())
-//                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-//                    .body(resource);
         } catch (Exception e) {
         
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);

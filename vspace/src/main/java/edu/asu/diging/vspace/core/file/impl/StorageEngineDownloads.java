@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -225,9 +226,15 @@ public class StorageEngineDownloads implements IStorageEngine {
     }
     
     @Override
-    public Boolean checkIfFolderExists(String folderPath) {
-        Path path = Paths.get(folderPath);        
-        return Files.exists(path);
+    public Boolean checkIfFolderExists(String folderPath) throws IOException {
+        Path path = Paths.get(folderPath); 
+        if (Files.isDirectory(path)) {
+            try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
+                return !directory.iterator().hasNext();
+            }
+        }
+
+        return true;
 
     }
 }
