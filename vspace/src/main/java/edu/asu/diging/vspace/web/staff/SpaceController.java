@@ -67,8 +67,8 @@ public class SpaceController {
         
         IVSImage image;
         try {
-                //image = imageService.getImageById("IMG000000045");
-                image = spaceLinkDisplayRepo.getImageByDescription(id);
+                image = imageService.getImageById("IMG000000045");
+                //image = spaceLinkDisplayRepo.getImageByDescription(id);
                 System.out.println(image);
                 
         } catch (Exception e) {

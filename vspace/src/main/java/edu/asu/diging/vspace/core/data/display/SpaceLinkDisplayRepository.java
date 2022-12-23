@@ -33,8 +33,8 @@ public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<S
     @Query("delete from SpaceLinkDisplay d where d.link.id = ?1")
     void deleteBySpaceLinkId(String spaceLinkId);
     
-    @Query("select * from VSImage where description  like '%DEFAULT IMAGE'")
-    public IVSImage getImageByDescription(String type);
+    //@Query("select * from VSImage where description  like '%DEFAULT IMAGE'")
+    //public IVSImage getImageByDescription(String type);
     
     
     
