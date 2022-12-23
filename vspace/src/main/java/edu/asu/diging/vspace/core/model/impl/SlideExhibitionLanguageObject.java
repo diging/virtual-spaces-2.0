@@ -20,7 +20,7 @@ public class SlideExhibitionLanguageObject implements ISlideExhibitionLanguageOb
     @OneToOne(targetEntity = ExhibitionLanguage.class)
     ExhibitionLanguage exhibitionLanguage; 
 
-    String userText;
+    String slideText;
 
     public String getId() {
         return id;
@@ -38,13 +38,15 @@ public class SlideExhibitionLanguageObject implements ISlideExhibitionLanguageOb
         this.exhibitionLanguage = exhibitionLanguage;
     }
 
-    public String getUserText() {
-        return userText;
+    public String getSlideText() {
+        return slideText;
     }
 
-    public void setUserText(String userText) {
-        this.userText = userText;
+    public void setSlideText(String slideText) {
+        this.slideText = slideText;
     }
+
+   
     
     
 }

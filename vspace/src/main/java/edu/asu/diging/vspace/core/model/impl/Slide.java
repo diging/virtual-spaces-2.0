@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISlideExhibitionLanguageObject;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
@@ -44,6 +45,31 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
+    
+    @OneToMany(mappedBy = "slideText", targetEntity = SlideExhibitionLanguageObject.class)
+    private List<ISlideExhibitionLanguageObject> slideTitles;
+    
+    @OneToMany(mappedBy = "slideText", targetEntity = SlideExhibitionLanguageObject.class)
+    private List<ISlideExhibitionLanguageObject> slideDescriptions;
+    
+    
+    
+
+    public List<ISlideExhibitionLanguageObject> getSlideTitles() {
+        return slideTitles;
+    }
+
+    public void setSlideTitles(List<ISlideExhibitionLanguageObject> slideTitles) {
+        this.slideTitles = slideTitles;
+    }
+
+    public List<ISlideExhibitionLanguageObject> getSlideDescriptions() {
+        return slideDescriptions;
+    }
+
+    public void setSlideDescriptions(List<ISlideExhibitionLanguageObject> slideDescriptions) {
+        this.slideDescriptions = slideDescriptions;
+    }
 
     /*
      * (non-Javadoc)

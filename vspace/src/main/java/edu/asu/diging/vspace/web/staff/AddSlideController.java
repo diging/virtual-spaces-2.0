@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -32,12 +34,18 @@ public class AddSlideController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("slide", new SlideForm());
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
+        
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
+        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 
         return "staff/modules/slides/add";
     }
