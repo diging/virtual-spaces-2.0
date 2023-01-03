@@ -71,31 +71,11 @@
 	
 	function downloadExhibitionFolder(id, folderName) {
 		
-
-		const validateResponse = (result) => {
-			
-			
-			
-			console.log("in validate" + result);
-			if(result == true ) {
-				var loader = document.getElementById('downloadLoader');
-				loader.style.visibility="hidden";
-				
-				var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.successAlert').append(alert);
-				return true;
-
-			}
-			return false;
-			
-			
-		}
-		
 		
 		 const download = (id, folderName) => {
 
 				
-				maxAttempts = 5;
+				maxAttempts = 10;
 				interval= 3000;
 				  console.log('Start poll...');
 				  let attempts = 0;
@@ -110,12 +90,12 @@
 					    attempts++;
 					    var text = await result.text();
 					    console.log("text", text);
-					    if ( text) {
+					    if ( text == "true") {
 					    	console.log("succes");
 					    	var loader = document.getElementById('downloadLoader');
 							loader.style.visibility="hidden";
 							
-							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download.<a th:href=@{/staff/exhibit/download/+id+(folderName=folderName)} ><span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 							$('.successAlert').append(alert);
 							/* var successAlert = document.getElementById('successAlert');
 							successAlert.style.visibility="visible"; */

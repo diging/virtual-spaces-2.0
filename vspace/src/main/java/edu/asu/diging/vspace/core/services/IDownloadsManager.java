@@ -24,30 +24,9 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 public interface IDownloadsManager {
     ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException ;
 
-    void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory);
-
-    void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context);
-
-    void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
-            String imagesFolderPath,  WebContext context) ;
-
-    void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context, String spaceId,
-            String moduleId, String sequenceId);
-
  
-    void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId)
-            throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException;
-
- 
-    void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException;
-
-    void storeTemplateForSpace(String directory, String spaceFolderPath, WebContext context, SequenceHistory sequenceHistory);
-
-    void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory);
-
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;
 
-    void createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException ;
 
     Boolean checkIfSnapshotCreated(String id);
 

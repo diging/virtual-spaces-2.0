@@ -225,16 +225,5 @@ public class StorageEngineDownloads implements IStorageEngine {
         return folder.getAbsolutePath();
     }
     
-    @Override
-    public Boolean checkIfFolderExists(String folderPath) throws IOException {
-        Path path = Paths.get(folderPath); 
-        if (Files.isDirectory(path)) {
-            try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
-                return !directory.iterator().hasNext();
-            }
-        }
-
-        return true;
-
-    }
+    
 }

@@ -20,8 +20,6 @@ public interface IStorageEngine {
     String createFolder(String exhibitionFolderName);
 
     byte[] generateZipFolder(String exhibitionFolderPath) throws IOException;
-
-    Boolean checkIfFolderExists(String folderPath) throws IOException;
     
 	
 }
