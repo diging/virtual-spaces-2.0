@@ -43,7 +43,7 @@ public class SpaceLinkManager extends LinkManager<ISpaceLink,ISpace,ISpaceLinkDi
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Override
-    public List<ISpaceLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<ISpaceLinkDisplay> getLinkDisplays(String spaceId) { 
         return spaceLinkDisplayRepo.findSpaceLinkDisplaysForSpace(spaceId);
     }
 

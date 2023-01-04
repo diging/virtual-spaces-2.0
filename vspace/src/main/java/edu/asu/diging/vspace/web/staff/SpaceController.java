@@ -68,8 +68,7 @@ public class SpaceController {
         IVSImage image;
         try {
                 image = imageService.getImageById("IMG000000045");
-                //image = spaceLinkDisplayRepo.getImageByDescription(id);
-                System.out.println(image);
+                
                 
         } catch (Exception e) {
                 logger.error("Image does not exist.", e);
@@ -77,6 +76,7 @@ public class SpaceController {
             
         
         }
+        
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
         model.addAttribute("linksToThisSpace",spaceManager.getIncomingLinks(id));
@@ -108,5 +108,14 @@ public class SpaceController {
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = STAFF_SPACE_PATH+"{id}", method = RequestMethod.GET)
+    public String getSpaceId(@PathVariable String id) {
+        System.out.println("*****************************"+id);
+        return spaceManager.getSpaceId(id);
+        
+    }
+    
+    
     
 }

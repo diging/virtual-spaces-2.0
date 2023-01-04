@@ -17,6 +17,11 @@ public interface SpaceDisplayRepository extends PagingAndSortingRepository<Space
     @Modifying
     @Query("delete from SpaceDisplay where space_id = ?1")
     void deleteBySpaceId(String id);
+    
+    
+    @Modifying
+    @Query("select  from spaceDisplay where id = ?1")
+    String getSpaceId(String id);
 
     public List<SpaceDisplay> getBySpace(ISpace space);
 }
