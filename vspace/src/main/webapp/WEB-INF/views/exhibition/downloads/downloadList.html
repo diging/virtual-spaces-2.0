@@ -4,11 +4,39 @@
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}">
 </script>
 <script th:inline="javascript">
-
+$(document).ready(function($) {
+	$("#downloads").addClass("active");	
+	$('.downloadPage-selection').bootpag({
+	total: [[${downloadsTotalPages}]],
+	page: [[${downloadsCurrentPageNumber}]],
+	maxVisible: 10,
+	leaps: true,
+	firstLastUse: true,
+	first: '|<',
+	last: '>|',
+	wrapClass: 'pagination',
+	activeClass: 'active',
+	disabledClass: 'disabled',
+	nextClass: 'next',
+	prevClass: 'prev',
+	lastClass: 'last',
+	firstClass: 'first'
+	}).on("page", function(event, num){
+		console.log(num);
+		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
+	});
+})
 	function triggerExhibitionDownload()
 	{ 
-		var loader = document.getElementById('downloadLoader');
-		loader.style.visibility="visible";
+	
+	var infoSection = document.getElementById('infoSection');
+	infoSection.style.display= "inline";
+	 	var downloadProgress = document.getElementById('downloadInProgress');
+	 	downloadProgress.style.visibility="visible"; 
+	 	
+	 	
+/* 	 	var loader = document.getElementById('downloadLoader');
+	 	loader.style.visibility="visible";  */
 		 $.ajax({
 				type : "GET",
 				url : "[(@{'/staff/exhibit/download/trigger?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
@@ -33,22 +61,9 @@
 					errorAlert.style.visibility="visible";
 				}
 			});
-	/* 	 $.ajax({
-			    type: "GET",
-		        url: "[[@{/staff/exhibit/download/trigger}]]",       
-		        cache: false,
-		        contentType : false,
-		        success: function(data) {
-		        	console.log(data);
-		        	downloadExhibitionFolder(data);
-		        },
-		        error: function(data) {
-					console.log("error");
-		        }
-		    }); */
 		
 	}
-	function base64ToArrayBuffer(base64) {
+/* 	function base64ToArrayBuffer(base64) {
  	    var binaryString = window.atob(base64);
  	    var binaryLen = base64.length;
 	    var bytes = new Uint8Array(binaryLen);
@@ -67,7 +82,7 @@
 	    var fileName = reportName;
 	    link.download = fileName;
 	    link.click();
-	};
+	}; */
 	
 	function downloadExhibitionFolder(id, folderName) {
 		
@@ -92,11 +107,15 @@
 					    console.log("text", text);
 					    if ( text == "true") {
 					    	console.log("succes");
-					    	var loader = document.getElementById('downloadLoader');
-							loader.style.visibility="hidden";
-							
+					    	
+					    	var downloadInProgress = document.getElementById('downloadInProgress');
+					    	downloadInProgress.style.visibility="hidden";
+							var downloadReady = document.getElementById('downloadReady');
+							downloadReady.style.visibility="visible";
+						
+			/* 			 	
 							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download.<a th:href=@{/staff/exhibit/download/+id+(folderName=folderName)} ><span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.successAlert').append(alert);
+							$('.successAlert').append(alert); */
 							/* var successAlert = document.getElementById('successAlert');
 							successAlert.style.visibility="visible"; */
 					    	
@@ -123,8 +142,7 @@
 			download(id, folderName)
 			.then(value => value)
 			.then(data => console.log(data))
-			
-        	
+			     	
 			.catch(err => console.error(err)) 
 		 
 	}
@@ -132,16 +150,24 @@
 </script>
 <style>
 .pagination>li>a {
-    border: 1px solid var(--primary);
-    padding: 5px;
-    color: var(--primary);
-    font-size: 15px;
+	border: 1px solid #A55941;
+	padding: 5px;
+	color: #A55941;
+	font-size: 15px;
 }
 
 .pagination>li.active>a {
-    background: var(--primary);
-    color: #fff;
-    font-size: 15px;
+	background: #A55941;
+	color: #fff;
+	font-size: 15px;
+}
+
+a.nav-link.active.show {
+	border-color: transparent;
+	border-bottom: 4px solid var(--primary);
+	color: var(--primary) !important;
+	background: transparent;
+	font-weight: 600;
 }
 
 .img-thumbnail {
@@ -157,11 +183,19 @@
   height: 12px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
-  visibility: hidden
+
 
 }
+#downloadInProgress {
+visibility: hidden;
+}
 
-
+#downloadReady {
+visibility: hidden;
+}
+#infoSection {
+display: none;
+}
 
 
 @-webkit-keyframes spin {
@@ -180,26 +214,41 @@
 </head>
 <body>
 <div layout:fragment="content" class="main-content">
-	<span class = "errorAdd" id="downloadError"></span>
-		<span class = "successAlert" id="downloadSuccess"></span>
-	
- 	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Download</button>
- 	<div class="loader" id ="downloadLoader"> </div>
+<!-- 	<span class = "errorAdd" id="downloadError"></span>
+ --><!-- 	<span class = "successAlert" id="downloadSuccess"></span>
+ -->	
+ 	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Create Snapshot</button>
+ 	<div id= "infoSection">
+ 	<div id="downloadInProgress">
+ 	<p>Snapshot creation is in progress.</p>
+ 	<div class="loader" > </div>
+ 	
+ 	</div>
+ 	<div id="downloadReady">
+ 	<p>Snapshot is ready. Please click to download.
+ 	<a th:href="@{/staff/exhibit/download/+id+(folderName=folderName)} "> </a>
+ 	
+ 	</div>
+ 	</div>
+ 	
+ 	
  	
  	 <h2>Downloads</h2>
+ 	 
+ 	 <div class="downloadPage-selection"></div>
 	 <table class="table">
 	  <thead>
                 <tr>
                     <th scope="col" sort-prop="filename"><a
                         href="#">Creation date</a></th>
                     <th scope="col" sort-prop="name"><a href="#">Created by</a></th>
-                
-                     <th scope="col" >View</th>
+
+                    <th scope="col" >View</th>
 
 
                 </tr>
             </thead>
-	 		<tbody class="tableBody">
+	 		<tbody class="tableBody" id="downloads">
                 <tr th:each="exhibitionDownload:  ${downloadsList}">
                     <th scope="row">[[${exhibitionDownload.creationDate}]]</th>
                  
@@ -209,6 +258,8 @@
             </tbody>
 	 
 </table>
+ 	 <div class="downloadPage-selection"></div>
+
 </div>
 </body>
 </html>

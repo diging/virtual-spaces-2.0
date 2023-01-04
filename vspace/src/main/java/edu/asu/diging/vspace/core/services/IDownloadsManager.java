@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
@@ -31,6 +32,9 @@ public interface IDownloadsManager {
     Boolean checkIfSnapshotCreated(String id);
 
     String getExhibitionFolderName();
+
+
+    Page<ExhibitionDownload> getAllExhibitionDownloads(int filesPagenum);
 
 
 }

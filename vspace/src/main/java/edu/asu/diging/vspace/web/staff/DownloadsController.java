@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +45,25 @@ public class DownloadsController {
     
     @Autowired
     IDownloadsManager downloadsManager;
-    
-    @Autowired
-    ExhibitionDownloadRepository exhibitionDownloadRepository;
+
     
     @RequestMapping("/staff/downloads/list")
-    public String listDownloads(Model model) {
+    public String listDownloads(Model model, @RequestParam(value = "downloadsPagenum", required = false, defaultValue = "1") String downloadsPagenum) {
+        Integer pageNum = 1;
+        try {           
+            pageNum =  Integer.parseInt(downloadsPagenum);
+        } catch(NumberFormatException e) {
+            logger.error("Invalid page number", e);
+        }        
         
-        model.addAttribute("downloadsList" , exhibitionDownloadRepository.findAllByOrderByCreationDateDesc());
+        
+        Page<ExhibitionDownload> downloadsPage = downloadsManager.getAllExhibitionDownloads(pageNum);
+        model.addAttribute("downloadsList" , downloadsPage.getContent());
+        model.addAttribute("downloadsCurrentPageNumber", Integer.parseInt(downloadsPagenum));
+        model.addAttribute("downloadsTotalPages", downloadsPage.getTotalPages());
+        model.addAttribute("downloadsCount", downloadsPage.getTotalElements());
+
+
         return "exhibition/downloads/downloadList";
     }
     
