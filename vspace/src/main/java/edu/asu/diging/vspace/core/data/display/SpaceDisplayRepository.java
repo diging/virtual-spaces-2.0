@@ -20,7 +20,7 @@ public interface SpaceDisplayRepository extends PagingAndSortingRepository<Space
     
     
     @Modifying
-    @Query("select  from spaceDisplay where id = ?1")
+    @Query("SELECT space FROM  SpaceDisplay where id = ?1")
     String getSpaceId(String id);
 
     public List<SpaceDisplay> getBySpace(ISpace space);
