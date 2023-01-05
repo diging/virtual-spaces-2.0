@@ -50,7 +50,7 @@ import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Service
-public class SnapshotManagerImpl implements ISnapshotManager {
+public class SnapshotManager implements ISnapshotManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     
@@ -75,8 +75,6 @@ public class SnapshotManagerImpl implements ISnapshotManager {
     
     @Autowired
     private SpringTemplateEngine springTemplateEngine;
-    
-
 
     @Autowired
     private ISpaceDisplayManager spaceDisplayManager;
@@ -103,23 +101,17 @@ public class SnapshotManagerImpl implements ISnapshotManager {
     @Async
     @Override
     @Transactional
-    public void createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
-        byte[] resource = null;
-//        Thread.sleep(3000);   
+    public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderPath, context, sequenceHistory);                
+            downloadSpace(space, exhibitionFolderPath, sequenceHistory);                
         }         
         
          exhibitionDownload.setDownloadComplete(true);
-         exhibitionDownloadRepo.save(exhibitionDownload);
-//        resource = storageEngineDownloads.generateZipFolder(exhibitionFolderPath);
-//        exhibitionDownloadRepo.save( new ExhibitionDownload(exhibitionFolderPath, exhibitionFolderName));
-      
-        
+         exhibitionDownloadRepo.save(exhibitionDownload);   
     }
     
     /**
@@ -148,11 +140,11 @@ public class SnapshotManagerImpl implements ISnapshotManager {
      * @param context
      */
     @Override
-    public void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory) {
+    public void downloadSpace(Space space, String exhibitionFolderPath,  SequenceHistory sequenceHistory) {
 
         String spaceFolderPath = storageEngineDownloads.createFolder(space.getId(), exhibitionFolderPath);
 
-        storeTemplateForSpace(space.getId(), spaceFolderPath , context, sequenceHistory);
+        storeTemplateForSpace(space.getId(), spaceFolderPath , sequenceHistory);
 
         String imagesFolderPath = storageEngineDownloads.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath); 
 
@@ -164,7 +156,7 @@ public class SnapshotManagerImpl implements ISnapshotManager {
         moduleLinks.forEach(moduleLink -> {
 
             IModule module =   moduleLink.getModule();
-            downloadModule(module, space,  imagesFolderPath, spaceFolderPath,  context);
+            downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
 
         });        
     }
@@ -183,25 +175,8 @@ public class SnapshotManagerImpl implements ISnapshotManager {
      * @param context
      */
     @Override
-    public void storeTemplateForSpace(String directory, String spaceFolderPath,  WebContext context , SequenceHistory sequenceHistory) {
-        try {      
-//            populateContextForSpace(context, directory, sequenceHistory);
-//            Context thymeleafContext = new Context(context.getLocale());
-////            thymeleafContext.setVariable("beans", ); 
-//
-//////                    // Set the Thymeleaf evaluation context to allow access to Spring beans with @beanName in SpEL expressions
-////            
-//            
-//            
-//           
-//            
-////            thymeleafContext.setVariable(ThymeleafEvaluationContext.THYMELEAF_EVALUATION_CONTEXT_CONTEXT_VARIABLE_NAME,
-////                      new ThymeleafEvaluationContext(applicationContext, null));
-//            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate" ,context);
-//            byte[] fileContent = response.getBytes();
-//            storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
-
-            
+    public void storeTemplateForSpace(String directory, String spaceFolderPath,  SequenceHistory sequenceHistory) {
+        try {           
             Context thymeleafContext = new Context();
             populateContextForSpace(thymeleafContext, directory, sequenceHistory);
          // add attributes to context
@@ -227,10 +202,10 @@ public class SnapshotManagerImpl implements ISnapshotManager {
      * @param context
      */
     @Override
-    public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context) {
+    public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
-            downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath , context);
+            downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
         }
 
     }
@@ -248,7 +223,7 @@ public class SnapshotManagerImpl implements ISnapshotManager {
      */
     @Override
     public void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
-            String imagesFolderPath,  WebContext context) {
+            String imagesFolderPath) {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
             if(slide instanceof BranchingPoint) {
@@ -258,7 +233,7 @@ public class SnapshotManagerImpl implements ISnapshotManager {
 
                     if(!choice.getSequence().getId().equals(startSequence.getId())) {
 
-                        downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath,  context); 
+                        downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath); 
                     }
                 });
             } else {
@@ -268,7 +243,7 @@ public class SnapshotManagerImpl implements ISnapshotManager {
                     storageEngineDownloads.copyImageToFolder(image, imagesFolderPath);
 
                 } 
-                storeTemplateForSlide(slide.getId(), spaceFolderPath ,  context, space.getId(), module.getId(), startSequence.getId());
+                storeTemplateForSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
 
             }
 
@@ -287,7 +262,7 @@ public class SnapshotManagerImpl implements ISnapshotManager {
      * @param sequenceId
      */
     @Override
-    public void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context,String spaceId, String moduleId, String sequenceId ) {
+    public void storeTemplateForSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) {
         try {      
             Context thymeleafContext = new Context();
 

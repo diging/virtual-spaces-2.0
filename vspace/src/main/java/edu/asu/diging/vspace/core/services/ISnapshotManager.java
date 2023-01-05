@@ -16,19 +16,19 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface ISnapshotManager {
-    void createSnapShot(String resourcesPath, String exhibitionFolderName, WebContext context, SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException ;
+    void createSnapShot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException ;
 
     void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException;
 
     
-    void downloadSpace(Space space, String exhibitionFolderPath, WebContext context, SequenceHistory sequenceHistory);
+    void downloadSpace(Space space, String exhibitionFolderPath,  SequenceHistory sequenceHistory);
 
-    void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath, WebContext context);
+    void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath);
 
     void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
-            String imagesFolderPath,  WebContext context) ;
+            String imagesFolderPath) ;
 
-    void storeTemplateForSlide(String slideId, String spaceFolderPath, WebContext context, String spaceId,
+    void storeTemplateForSlide(String slideId, String spaceFolderPath,  String spaceId,
             String moduleId, String sequenceId);
 
  
@@ -38,7 +38,7 @@ public interface ISnapshotManager {
     
 
 
-    void storeTemplateForSpace(String directory, String spaceFolderPath, WebContext context, SequenceHistory sequenceHistory);
+    void storeTemplateForSpace(String directory, String spaceFolderPath,SequenceHistory sequenceHistory);
 
     void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory);
 
