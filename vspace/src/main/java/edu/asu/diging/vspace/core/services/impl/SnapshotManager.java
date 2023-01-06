@@ -110,7 +110,8 @@ public class SnapshotManager implements ISnapshotManager {
             downloadSpace(space, exhibitionFolderPath, sequenceHistory);                
         }         
         
-         exhibitionDownload.setDownloadComplete(true);
+//         exhibitionDownload.setDownloadComplete(true);
+         exhibitionDownload.getSnapshotTask().setTaskComplete(true);
          exhibitionDownloadRepo.save(exhibitionDownload);   
     }
     

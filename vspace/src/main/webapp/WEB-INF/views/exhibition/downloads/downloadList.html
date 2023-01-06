@@ -25,6 +25,33 @@ $(document).ready(function($) {
 		console.log(num);
 		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
 	});
+	
+	 $.ajax({
+			type : "GET",
+			url : "[(@{'/staff/exhibit/snapshotTask/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+			cache : false,
+			
+			contentType : false,
+			processData : false,
+			
+			success : function(data) {
+				console.log(data.id);
+				downloadExhibitionFolder(data.id, data.folderName);
+				
+			},
+			error : function(data) {
+				var loader = document.getElementById('downloadLoader');
+				loader.style.visibility="hidden";
+				
+				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$('.errorAdd').append(alert);
+				
+				var errorAlert = document.getElementById('downloadError');
+				errorAlert.style.visibility="visible";
+			}
+		});
+	
+	 
 })
 	function triggerExhibitionDownload()
 	{ 
@@ -46,8 +73,11 @@ $(document).ready(function($) {
 				processData : false,
 				
 				success : function(data) {
-					console.log(data.id);
- 					downloadExhibitionFolder(data.id, data.folderName);
+					console.log(data);
+					if(data == "false") {
+	 					pollForExhibitionDownload(data.id, data.folderName);
+
+					}
  					
 				},
 				error : function(data) {
@@ -84,10 +114,10 @@ $(document).ready(function($) {
 	    link.click();
 	}; */
 	
-	function downloadExhibitionFolder(id, folderName) {
+	function pollForExhibitionDownload(id, folderName) {
 		
 		
-		 const download = (id, folderName) => {
+		 const poll = (id, folderName) => {
 
 				
 				maxAttempts = 10;
@@ -139,7 +169,7 @@ $(document).ready(function($) {
 			
 			};
 			
-			download(id, folderName)
+			poll(id, folderName)
 			.then(value => value)
 			.then(data => console.log(data))
 			     	

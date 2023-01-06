@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
+import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.services.IDownloadsManager;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
@@ -78,10 +79,12 @@ public class DownloadsManager  implements  IDownloadsManager {
         String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
         exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
-        exhibitionDownload.setDownloadComplete(false);
-
+//        exhibitionDownload.setDownloadComplete(false);
+        
+        exhibitionDownload.setSnapshotTask(new SnapshotTask()); 
+        
         exhibitionDownloadRepo.save(exhibitionDownload);
-        snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, context, sequenceHistory, exhibitionFolderPath, exhibitionDownload);
+        snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionFolderPath, exhibitionDownload);
         return exhibitionDownload;
 
     }
@@ -122,7 +125,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
         if(exhibitionDownlaod.isPresent()) {
        
-                return exhibitionDownlaod.get().isDownloadComplete();            
+                return exhibitionDownlaod.get().getSnapshotTask().isTaskComplete();            
             
         }
         return false;

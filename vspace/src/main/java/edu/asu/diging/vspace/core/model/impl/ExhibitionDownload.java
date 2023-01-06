@@ -5,11 +5,13 @@ import java.util.concurrent.Future;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
+import edu.asu.diging.vspace.core.model.ISnapshotTask;
 
 @Entity
 public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDownload{
@@ -23,9 +25,19 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
 
     private String folderName;
     
-    private boolean isDownloadComplete;
+//    private boolean isDownloadComplete;
 
- 
+    @OneToOne(targetEntity = SnapshotTask.class)
+    private ISnapshotTask snapshotTask;
+    
+    public ISnapshotTask getSnapshotTask() {
+        return snapshotTask;
+    }
+
+    public void setSnapshotTask(ISnapshotTask snapshotTask) {
+        this.snapshotTask = snapshotTask;
+    }
+
     public ExhibitionDownload() {
         super();
     }
@@ -63,13 +75,13 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
         this.folderName = folderName;
     }
     
-    public boolean isDownloadComplete() {
-        return isDownloadComplete;
-    }
-
-    public void setDownloadComplete(boolean isDownloadComplete) {
-        this.isDownloadComplete = isDownloadComplete;
-    }
+//    public boolean isDownloadComplete() {
+//        return isDownloadComplete;
+//    }
+//
+//    public void setDownloadComplete(boolean isDownloadComplete) {
+//        this.isDownloadComplete = isDownloadComplete;
+//    }
 
 
 }
