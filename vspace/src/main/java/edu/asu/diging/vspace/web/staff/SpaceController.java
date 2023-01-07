@@ -112,7 +112,8 @@ public class SpaceController {
     @RequestMapping(value = STAFF_SPACE_PATH+"{id}", method = RequestMethod.GET)
     public String getSpaceId(@PathVariable String id) {
         System.out.println("*****************************"+id);
-        return spaceManager.getSpaceId(id);
+        System.out.println(spaceManager.getSpaceId("SPD000000002"));
+        return spaceManager.getSpaceId("SPD000000002");
         
     }
     

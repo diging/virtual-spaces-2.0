@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.impl.Space;
 
 @Repository
 @JaversSpringDataAuditable
@@ -19,9 +20,9 @@ public interface SpaceDisplayRepository extends PagingAndSortingRepository<Space
     void deleteBySpaceId(String id);
     
     
-    @Modifying
-    @Query("SELECT space FROM  SpaceDisplay where id = ?1")
-    String getSpaceId(String id);
+    
+    @Query("SELECT space.id FROM  SpaceDisplay where id = ?1")
+    Space getSpaceId(String id);
 
     public List<SpaceDisplay> getBySpace(ISpace space);
 }

@@ -301,6 +301,9 @@ public class SpaceManager implements ISpaceManager {
     
     @Override
     public String getSpaceId(String id) {
-        return spaceDisplayRepo.getSpaceId(id);
+        
+        System.out.println(spaceDisplayRepo.getSpaceId(id));
+        
+        return "";
     }
 }
