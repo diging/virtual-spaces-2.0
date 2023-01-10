@@ -11,6 +11,6 @@ import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 @JaversSpringDataAuditable
 public interface SnapshotTaskRepository extends PagingAndSortingRepository<SnapshotTask, String>{
 
-    SnapshotTask findFirstOrderByCreationTimeDesc();
+    SnapshotTask findFirstByOrderByCreationDateDesc();
     
 }

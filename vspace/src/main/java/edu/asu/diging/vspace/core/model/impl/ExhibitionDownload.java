@@ -2,9 +2,11 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.concurrent.Future;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -25,16 +27,16 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
 
     private String folderName;
     
-//    private boolean isDownloadComplete;
 
-    @OneToOne(targetEntity = SnapshotTask.class)
-    private ISnapshotTask snapshotTask;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private SnapshotTask snapshotTask;
     
-    public ISnapshotTask getSnapshotTask() {
+    public SnapshotTask getSnapshotTask() {
         return snapshotTask;
     }
 
-    public void setSnapshotTask(ISnapshotTask snapshotTask) {
+    public void setSnapshotTask(SnapshotTask snapshotTask) {
         this.snapshotTask = snapshotTask;
     }
 
@@ -74,14 +76,7 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
-    
-//    public boolean isDownloadComplete() {
-//        return isDownloadComplete;
-//    }
-//
-//    public void setDownloadComplete(boolean isDownloadComplete) {
-//        this.isDownloadComplete = isDownloadComplete;
-//    }
+
 
 
 }

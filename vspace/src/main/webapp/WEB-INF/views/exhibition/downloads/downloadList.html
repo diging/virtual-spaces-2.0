@@ -35,8 +35,11 @@ $(document).ready(function($) {
 			processData : false,
 			
 			success : function(data) {
-				console.log(data.id);
-				downloadExhibitionFolder(data.id, data.folderName);
+				console.log(data);
+				if(data.taskComplete ==  "false") {
+					pollForExhibitionDownload(data.exhibitionDownload.id, data.exhibitionDownload.folderName);
+
+				}
 				
 			},
 			error : function(data) {
@@ -74,10 +77,10 @@ $(document).ready(function($) {
 				
 				success : function(data) {
 					console.log(data);
-					if(data == "false") {
+					
 	 					pollForExhibitionDownload(data.id, data.folderName);
 
-					}
+					
  					
 				},
 				error : function(data) {
