@@ -8,6 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
@@ -35,6 +39,14 @@ public class SpaceController {
 
     public static final String STAFF_SPACE_PATH = "/staff/space/";
 
+    public static final String API_IMAGE_PATH = "/api/image/";
+    
+    @Autowired
+    private ImageRepository imageRepo;
+    
+    @Autowired
+    private IStorageEngine storage;
+    
     @Autowired
     private ISpaceManager spaceManager;
 
@@ -115,6 +127,24 @@ public class SpaceController {
         System.out.println(spaceManager.getSpaceId("SPD000000002"));
         return spaceManager.getSpaceId("SPD000000002");
         
+    }
+    
+    @RequestMapping(API_IMAGE_PATH + "{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+        IVSImage image = imageRepo.findById(id).get();
+        byte[] imageContent = null;
+        try {
+            imageContent = storage.getImageContent(image.getId(), image.getFilename());
+        } catch (IOException e) {
+            logger.error("Could not retrieve image.", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.setContentType(MediaType.parseMediaType(image.getFileType()));
+
+        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
     }
     
     
