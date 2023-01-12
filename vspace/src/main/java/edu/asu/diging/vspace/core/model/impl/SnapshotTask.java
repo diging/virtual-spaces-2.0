@@ -1,8 +1,10 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -20,7 +22,8 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
 
     private boolean isTaskComplete = false;
     
-    @OneToOne(mappedBy = "snapshotTask")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "exhibitionDownloadId", referencedColumnName = "id")
     ExhibitionDownload exhibitionDownload;
 
     public String getId() {
@@ -40,7 +43,7 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
     }
     
     
-    public IExhibitionDownload getExhibitionDownload() {
+    public ExhibitionDownload getExhibitionDownload() {
         return exhibitionDownload;
     }
 

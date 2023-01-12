@@ -18,6 +18,7 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
+import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
@@ -37,6 +38,7 @@ import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
+import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -94,13 +96,17 @@ public class SnapshotManager implements ISnapshotManager {
     @Autowired
     private ISpaceManager spaceManager;
     
+    @Autowired
+    SnapshotTaskRepository snapshotTaskRepository;
+    
+    
     public final static String IMAGES_FOLDER_NAME = "images";
 
     private static final String RESOURCES_FOLDER_NAME = "resources";
     
     @Async
     @Override
-    @Transactional
+@Transactional
     public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
 
@@ -111,8 +117,9 @@ public class SnapshotManager implements ISnapshotManager {
         }         
         
 //         exhibitionDownload.setDownloadComplete(true);
-         exhibitionDownload.getSnapshotTask().setTaskComplete(true);
-         exhibitionDownloadRepo.save(exhibitionDownload);   
+         SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
+         snapshotTask.setTaskComplete(true);
+         snapshotTaskRepository.save(snapshotTask);   
     }
     
     /**

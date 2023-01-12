@@ -76,11 +76,8 @@ $(document).ready(function($) {
 				processData : false,
 				
 				success : function(data) {
-					console.log(data);
-					
-	 					pollForExhibitionDownload(data.id, data.folderName);
-
-					
+					console.log(data);					
+	 				pollForExhibitionDownload(data.id, data.folderName);					
  					
 				},
 				error : function(data) {

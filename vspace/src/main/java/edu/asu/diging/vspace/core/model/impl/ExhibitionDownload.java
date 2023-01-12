@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.concurrent.Future;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +11,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
-import edu.asu.diging.vspace.core.model.ISnapshotTask;
 
 @Entity
 public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDownload{
@@ -28,8 +25,7 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     private String folderName;
     
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy="exhibitionDownload")
     private SnapshotTask snapshotTask;
     
     public SnapshotTask getSnapshotTask() {

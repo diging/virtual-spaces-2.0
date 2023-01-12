@@ -15,9 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
+import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
@@ -55,6 +57,10 @@ public class DownloadsManager  implements  IDownloadsManager {
     
     @Autowired
     ExhibitionDownloadRepository exhibitionDownloadRepository;
+    
+    @Autowired
+    SnapshotTaskRepository snapshotTaskRepository;
+    
 
     /**
      * Downloads all the published spaces and related modules into a folder and returns the byte array.
@@ -70,9 +76,10 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     
     @Override
+
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
-        if(exhibitionDownload ==null ) {
+        if(exhibitionDownload == null ) {
             exhibitionDownload = new ExhibitionDownload();
         }
 
@@ -80,10 +87,17 @@ public class DownloadsManager  implements  IDownloadsManager {
         exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
 //        exhibitionDownload.setDownloadComplete(false);
+        SnapshotTask snapshotTask = new SnapshotTask();  
         
-        exhibitionDownload.setSnapshotTask(new SnapshotTask()); 
-        
+        exhibitionDownload.setSnapshotTask(snapshotTask); 
+        snapshotTask.setExhibitionDownload(exhibitionDownload);
+//        snapshotTaskRepository.save(snapshotTask);
         exhibitionDownloadRepo.save(exhibitionDownload);
+        
+//        
+
+//        snapShotTask.setExhibitionDownload(exhibitionDownload);
+
         snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionFolderPath, exhibitionDownload);
         return exhibitionDownload;
 
@@ -121,6 +135,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
 
     @Override
+    @Transactional
     public Boolean checkIfSnapshotCreated(String id) {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
         if(exhibitionDownlaod.isPresent()) {

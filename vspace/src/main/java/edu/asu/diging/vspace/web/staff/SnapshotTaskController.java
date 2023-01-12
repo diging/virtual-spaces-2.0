@@ -30,25 +30,12 @@ public class SnapshotTaskController {
 
     @RequestMapping(value = "/staff/exhibit/snapshotTask/status", method = RequestMethod.GET) 
     public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, HttpServletResponse response,  Model model) {
-        Boolean isSnapshotTaskComplete = false;
         SnapshotTask snapshotTask = null;
         try {     
 //            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
             
             snapshotTask= snapshotTaskRepository.findFirstByOrderByCreationDateDesc();   
-            
-//             isSnapshotTaskComplete = snapshotTask!= null ? snapshotTask.isTaskComplete(): true;
-//            WebContext context = new WebContext(request, response, request.getServletContext());
-//            exhibitionDownload =
-//                    downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
-//
-//            
-            
-
             return  ResponseEntity.ok()
-//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionFolderName+".zip")
-//                  .header(exhibitionFolderName, null)
-//                    .contentLength(contentLength)
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(snapshotTask); 
 
