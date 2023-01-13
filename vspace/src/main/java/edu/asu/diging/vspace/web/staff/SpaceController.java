@@ -77,17 +77,7 @@ public class SpaceController {
     public String showSpace(@PathVariable String id, Model model) throws IOException {
         
         
-        IVSImage image;
-        try {
-                image = imageService.getImageById("IMG000000045");
-                
-                
-        } catch (Exception e) {
-                logger.error("Image does not exist.", e);
-                return "Error Occurred";
-            
-        
-        }
+       
         
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
@@ -99,7 +89,6 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
-        model.addAttribute("defaultImage",image);
         return "staff/spaces/space";
     }
 
