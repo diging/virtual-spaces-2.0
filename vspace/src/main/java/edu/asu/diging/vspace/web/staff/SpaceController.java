@@ -122,15 +122,7 @@ public class SpaceController {
     }
     
     @RequestMapping(value = STAFF_SPACE_PATH+"{id}", method = RequestMethod.GET)
-    public String getSpaceId(@PathVariable String id) {
-        System.out.println("*****************************"+id);
-        System.out.println(spaceManager.getSpaceId("SPD000000002"));
-        return spaceManager.getSpaceId("SPD000000002");
-        
-    }
-    
-    @RequestMapping(API_IMAGE_PATH + "{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+    public ResponseEntity<byte[]> getSpaceId(@PathVariable String id) {
         IVSImage image = imageRepo.findById(id).get();
         byte[] imageContent = null;
         try {
@@ -145,7 +137,11 @@ public class SpaceController {
         headers.setContentType(MediaType.parseMediaType(image.getFileType()));
 
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+        
+        
     }
+    
+    
     
     
     
