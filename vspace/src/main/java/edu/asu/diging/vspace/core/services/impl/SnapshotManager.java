@@ -109,7 +109,7 @@ public class SnapshotManager implements ISnapshotManager {
 @Transactional
     public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
-
+            Thread.sleep(5000);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {

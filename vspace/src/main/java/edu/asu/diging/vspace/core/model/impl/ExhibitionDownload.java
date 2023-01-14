@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
 
 @Entity
@@ -26,6 +28,7 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy="exhibitionDownload")
+    @JsonIgnore
     private SnapshotTask snapshotTask;
     
     public SnapshotTask getSnapshotTask() {

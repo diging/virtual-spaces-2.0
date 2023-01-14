@@ -50,10 +50,6 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     @Autowired
     private SequenceHistory sequenceHistory;
-
-    @Autowired
-    private ExhibitionDownloadRepository exhibitionDownloadRepo;
-
     
     @Autowired
     ExhibitionDownloadRepository exhibitionDownloadRepository;
@@ -76,9 +72,9 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     
     @Override
-
+    @Transactional
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
-        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepo.findByFolderName(exhibitionFolderName);        
+        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionDownload == null ) {
             exhibitionDownload = new ExhibitionDownload();
         }
@@ -88,11 +84,11 @@ public class DownloadsManager  implements  IDownloadsManager {
         exhibitionDownload.setFolderName(exhibitionFolderName);
 //        exhibitionDownload.setDownloadComplete(false);
         SnapshotTask snapshotTask = new SnapshotTask();  
-        
-        exhibitionDownload.setSnapshotTask(snapshotTask); 
         snapshotTask.setExhibitionDownload(exhibitionDownload);
-//        snapshotTaskRepository.save(snapshotTask);
-        exhibitionDownloadRepo.save(exhibitionDownload);
+
+        exhibitionDownload.setSnapshotTask(snapshotTask); 
+        snapshotTaskRepository.save(snapshotTask);
+        exhibitionDownloadRepository.save(exhibitionDownload);
         
 //        
 
@@ -114,7 +110,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      */
     @Override
     public byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException {
-        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
+        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepository.findById(id);
 
         if(exhibitionDownlaod.isPresent()) {
             
@@ -137,7 +133,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     @Transactional
     public Boolean checkIfSnapshotCreated(String id) {
-        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepo.findById(id);
+        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepository.findById(id);
         if(exhibitionDownlaod.isPresent()) {
        
                 return exhibitionDownlaod.get().getSnapshotTask().isTaskComplete();            

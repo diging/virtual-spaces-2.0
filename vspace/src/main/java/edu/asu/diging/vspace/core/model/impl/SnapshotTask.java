@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
 import edu.asu.diging.vspace.core.model.ISnapshotTask;
 
@@ -24,6 +26,7 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "exhibitionDownloadId", referencedColumnName = "id")
+
     ExhibitionDownload exhibitionDownload;
 
     public String getId() {

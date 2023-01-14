@@ -36,7 +36,7 @@ $(document).ready(function($) {
 			
 			success : function(data) {
 				console.log(data);
-				if(data.taskComplete ==  "false") {
+				if(data.taskComplete ==  false) {
 					pollForExhibitionDownload(data.exhibitionDownload.id, data.exhibitionDownload.folderName);
 
 				}
