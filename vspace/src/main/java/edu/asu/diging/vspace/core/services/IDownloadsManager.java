@@ -23,7 +23,7 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IDownloadsManager {
-    ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException ;
+    ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException ;
 
  
     byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException;

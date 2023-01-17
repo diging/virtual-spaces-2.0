@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -41,6 +43,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -54,6 +57,9 @@ public class DownloadsManagerTest {
 
     @Mock
     StorageEngineDownloads storageEngine;
+    
+    @Mock
+    SnapshotManager snapshotManager;
 
     @Spy
     private DownloadsManager serviceToTestSpy;
@@ -96,5 +102,34 @@ public class DownloadsManagerTest {
     }
     
     
+    @Test
+    public void test_triggerDownloadExhibition_success() {
+        String resourcesPath = "/Resources";
+        String exhibitionFolderName = "folderName";
+        try {
+            serviceToTest.triggerDownloadExhibition(resourcesPath, exhibitionFolderName);
+
+            Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
+
+            Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null, exhibitionFolderName, null);
+        } catch(Exception e) {
+
+        }
+    }
   
+    @Test
+    public void test_checkIfSnapshotCreated_success() {
+
+        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
+        exhibitionDownload.setId("ID1");
+        SnapshotTask snapshotTask = new SnapshotTask();
+        snapshotTask.setTaskComplete(true);
+        exhibitionDownload.setSnapshotTask(snapshotTask);
+        when(exhibitionDownloadRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
+
+        assertTrue(serviceToTest.checkIfSnapshotCreated("ID1"));
+
+
+
+    }
 }

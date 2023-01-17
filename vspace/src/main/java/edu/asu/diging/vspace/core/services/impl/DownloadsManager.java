@@ -73,7 +73,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     
     @Override
     @Transactional
-    public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName, WebContext context) throws IOException, InterruptedException, ExecutionException {                 
+    public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException {                 
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionDownload == null ) {
             exhibitionDownload = new ExhibitionDownload();
@@ -88,9 +88,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
         exhibitionDownload.setSnapshotTask(snapshotTask); 
         snapshotTaskRepository.save(snapshotTask);
-        exhibitionDownloadRepository.save(exhibitionDownload);
-        
-//        
+        exhibitionDownloadRepository.save(exhibitionDownload);        
 
 //        snapShotTask.setExhibitionDownload(exhibitionDownload);
 

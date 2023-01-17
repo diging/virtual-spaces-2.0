@@ -39,8 +39,7 @@ $(document).ready(function($) {
 				if(data.taskComplete ==  false) {
 					pollForExhibitionDownload(data.exhibitionDownload.id, data.exhibitionDownload.folderName);
 
-				}
-				
+				}				
 			},
 			error : function(data) {
 				var loader = document.getElementById('downloadLoader');
@@ -58,15 +57,6 @@ $(document).ready(function($) {
 })
 	function triggerExhibitionDownload()
 	{ 
-	
-	var infoSection = document.getElementById('infoSection');
-	infoSection.style.display= "inline";
-	 	var downloadProgress = document.getElementById('downloadInProgress');
-	 	downloadProgress.style.visibility="visible"; 
-	 	
-	 	
-/* 	 	var loader = document.getElementById('downloadLoader');
-	 	loader.style.visibility="visible";  */
 		 $.ajax({
 				type : "GET",
 				url : "[(@{'/staff/exhibit/download/trigger?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
@@ -81,8 +71,8 @@ $(document).ready(function($) {
  					
 				},
 				error : function(data) {
-					var loader = document.getElementById('downloadLoader');
-					loader.style.visibility="hidden";
+			/* 		var loader = document.getElementById('downloadLoader');
+					loader.style.visibility="hidden"; */
 					
 					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 					$('.errorAdd').append(alert);
@@ -93,30 +83,11 @@ $(document).ready(function($) {
 			});
 		
 	}
-/* 	function base64ToArrayBuffer(base64) {
- 	    var binaryString = window.atob(base64);
- 	    var binaryLen = base64.length;
-	    var bytes = new Uint8Array(binaryLen);
-	    for (var i = 0; i < binaryLen; i++) {
-	       var ascii = binaryString.charCodeAt(i);
-	       bytes[i] = ascii;
-	    }
-	    return bytes;
-	 }
-	 
-	function saveByteArray(reportName, byte) {
-		var fileType = "application/x-zip-compressed";
-	    var blob = new Blob([byte], {type: fileType});
-	    var link = document.createElement('a');
-	    link.href = window.URL.createObjectURL(blob);
-	    var fileName = reportName;
-	    link.download = fileName;
-	    link.click();
-	}; */
-	
+
 	function pollForExhibitionDownload(id, folderName) {
 		
-		
+		var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+		$('.successAlert').append(alert); 
 		 const poll = (id, folderName) => {
 
 				
@@ -137,22 +108,13 @@ $(document).ready(function($) {
 					    console.log("text", text);
 					    if ( text == "true") {
 					    	console.log("succes");
-					    	
-					    	var downloadInProgress = document.getElementById('downloadInProgress');
-					    	downloadInProgress.style.visibility="hidden";
-							var downloadReady = document.getElementById('downloadReady');
-							downloadReady.style.visibility="visible";
+						 	
+							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.successAlert').empty();
+							$('.successAlert').append(alert); 
 						
-			/* 			 	
-							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download.<a th:href=@{/staff/exhibit/download/+id+(folderName=folderName)} ><span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.successAlert').append(alert); */
-							/* var successAlert = document.getElementById('successAlert');
-							successAlert.style.visibility="visible"; */
-					    	
 					      return resolve(result);
 					    } else if (maxAttempts && attempts === maxAttempts) {
-					    	var loader = document.getElementById('downloadLoader');
-		  					loader.style.visibility="hidden";
 		  					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 		  					$('.errorAdd').append(alert);
 		  					var errorAlert = document.getElementById('downloadError');
@@ -244,24 +206,10 @@ display: none;
 </head>
 <body>
 <div layout:fragment="content" class="main-content">
-<!-- 	<span class = "errorAdd" id="downloadError"></span>
- --><!-- 	<span class = "successAlert" id="downloadSuccess"></span>
- -->	
- 	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Create Snapshot</button>
- 	<div id= "infoSection">
- 	<div id="downloadInProgress">
- 	<p>Snapshot creation is in progress.</p>
- 	<div class="loader" > </div>
- 	
- 	</div>
- 	<div id="downloadReady">
- 	<p>Snapshot is ready. Please click to download.
- 	<a th:href="@{/staff/exhibit/download/+id+(folderName=folderName)} "> </a>
- 	
- 	</div>
- 	</div>
- 	
- 	
+	<span class = "errorAdd" id="downloadError"></span>
+	<span class = "successAlert" id="downloadSuccess"></span>
+	
+ 	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Create Snapshot</button>	
  	
  	 <h2>Downloads</h2>
  	 

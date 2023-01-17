@@ -1,5 +1,5 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface IExhibitionDownload {
+public interface IExhibitionDownload  extends IVSpaceElement{
 
 }

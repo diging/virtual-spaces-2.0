@@ -74,22 +74,20 @@ public class DownloadsController {
             String pathToResources = request.getServletContext().getRealPath("") + "/resources";
 
             String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
-            WebContext context = new WebContext(request, response, request.getServletContext());
             exhibitionDownload =
-                    downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName, context);
+                    downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName);
 
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(exhibitionDownload);
-     
 
-  } 
-  catch (Exception e) {
-      logger.error("Could not download exhibition", e);
-      return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
+        } 
+        catch (Exception e) {
+            logger.error("Could not download exhibition", e);
+            return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
-  }
+        }
     }
 
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
@@ -113,9 +111,7 @@ public class DownloadsController {
         }
    
     }
-    
-    
-    
+        
     
     @RequestMapping(value = "/staff/exhibit/download/checkStatus/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
