@@ -114,8 +114,10 @@ public class SpaceController {
     public ResponseEntity<byte[]> getSpaceId(@PathVariable String id) {
         IVSImage image = imageRepo.findById(id).get();
         byte[] imageContent = null;
+        
         try {
             imageContent = storage.getImageContent(image.getId(), image.getFilename());
+            
         } catch (IOException e) {
             logger.error("Could not retrieve image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
