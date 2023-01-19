@@ -46,20 +46,20 @@ public class DownloadsManager  implements  IDownloadsManager {
     private IStorageEngine storageEngineUploads;
 
     @Autowired
-    ISnapshotManager snapshotManager;
+    private ISnapshotManager snapshotManager;
 
     @Autowired
     private SequenceHistory sequenceHistory;
-    
+
     @Autowired
-    ExhibitionDownloadRepository exhibitionDownloadRepository;
-    
+    private ExhibitionDownloadRepository exhibitionDownloadRepository;
+
     @Autowired
-    SnapshotTaskRepository snapshotTaskRepository;
-    
+    private SnapshotTaskRepository snapshotTaskRepository;
+
 
     /**
-     * Downloads all the published spaces and related modules into a folder and returns the byte array.
+     * Triggers the snapshot creation process asychronously. 
      * 
      * @param resourcesPath
      * @param exhibitionFolderName
@@ -70,7 +70,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws ExecutionException 
      */
 
-    
+
     @Override
     @Transactional
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException {                 
@@ -79,25 +79,47 @@ public class DownloadsManager  implements  IDownloadsManager {
             exhibitionDownload = new ExhibitionDownload();
         }
 
-        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
-        exhibitionDownload.setFolderPath(exhibitionFolderPath);
-        exhibitionDownload.setFolderName(exhibitionFolderName);
-//        exhibitionDownload.setDownloadComplete(false);
-        SnapshotTask snapshotTask = new SnapshotTask();  
-        snapshotTask.setExhibitionDownload(exhibitionDownload);
+        String exhibitionFolderPath = createFolderAndUpdateExhibitionDownload(exhibitionDownload, exhibitionFolderName);
+
+        SnapshotTask snapshotTask =  createSnapshotTask(exhibitionDownload);
 
         exhibitionDownload.setSnapshotTask(snapshotTask); 
-        snapshotTaskRepository.save(snapshotTask);
-        exhibitionDownloadRepository.save(exhibitionDownload);        
-
-//        snapShotTask.setExhibitionDownload(exhibitionDownload);
+        exhibitionDownloadRepository.save(exhibitionDownload);
 
         snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionFolderPath, exhibitionDownload);
         return exhibitionDownload;
 
     }
-    
-  
+
+    /**
+     * Creates and saves snapshotTask object.
+     * @param exhibitionDownload
+     * @return
+     */
+    private SnapshotTask createSnapshotTask(ExhibitionDownload exhibitionDownload) {
+        SnapshotTask snapshotTask = new SnapshotTask();  
+        snapshotTask.setExhibitionDownload(exhibitionDownload);        
+        snapshotTaskRepository.save(snapshotTask);
+        return snapshotTask;
+
+    }
+
+    /**
+     * 
+     * Creates folder for ExhibitionDownload and updates entity. 
+     * @param exhibitionDownload
+     * @param exhibitionFolderName
+     * @return
+     */
+    private String createFolderAndUpdateExhibitionDownload(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
+        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
+        exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        exhibitionDownload.setFolderName(exhibitionFolderName);
+        exhibitionDownloadRepository.save(exhibitionDownload); 
+        return exhibitionFolderPath;
+    }
+
+
     /**
      * Downloads the given exhibition folder by the given ExhibitionDownload id
      * 
@@ -127,32 +149,30 @@ public class DownloadsManager  implements  IDownloadsManager {
  
 
 
-
+    /**
+     * Return true is corresponding snapshot is created. Else return false.
+     */
     @Override
     @Transactional
     public Boolean checkIfSnapshotCreated(String id) {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepository.findById(id);
         if(exhibitionDownlaod.isPresent()) {
-       
-                return exhibitionDownlaod.get().getSnapshotTask().isTaskComplete();            
-            
+
+            return exhibitionDownlaod.get().getSnapshotTask().isTaskComplete();            
+
         }
         return false;
     }
-
-
-
-
 
     @Override
     public String getExhibitionFolderName() {
         return  "Exhibition"+ LocalDateTime.now();
     }
 
-    
+
     @Override
     public Page<ExhibitionDownload> getAllExhibitionDownloads(int filesPagenum) {
-        
+
         if (filesPagenum < 1) {
             filesPagenum = 1;
         }
@@ -161,8 +181,6 @@ public class DownloadsManager  implements  IDownloadsManager {
         Page<ExhibitionDownload> page =   exhibitionDownloadRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
         return page.map(exhibitionDownload-> { return (ExhibitionDownload) exhibitionDownload; } );
 
-        
-       
     }
 
 }

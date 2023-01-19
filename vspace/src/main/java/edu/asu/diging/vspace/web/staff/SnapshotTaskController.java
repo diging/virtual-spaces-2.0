@@ -13,41 +13,38 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 
 @Controller
 public class SnapshotTaskController {
-    
+
     @Autowired
     SnapshotTaskRepository snapshotTaskRepository;
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @RequestMapping(value = "/staff/exhibit/snapshotTask/status", method = RequestMethod.GET) 
     public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, HttpServletResponse response,  Model model) {
         SnapshotTask snapshotTask = null;
-        try {     
-//            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
+        try {                 
             
             snapshotTask= snapshotTaskRepository.findFirstByOrderByCreationDateDesc();   
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(snapshotTask); 
 
-  } 
-  catch (Exception e) {
-      logger.error("Could not find snapshot task", e);
-      return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);
+        } 
+        catch (Exception e) {
+            logger.error("Could not find snapshot task", e);
+            return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);
 
 
-  }
+        }
     }
-    
-    
+
+
 
 }

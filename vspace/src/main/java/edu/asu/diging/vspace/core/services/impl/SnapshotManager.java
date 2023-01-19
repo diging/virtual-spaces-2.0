@@ -97,7 +97,7 @@ public class SnapshotManager implements ISnapshotManager {
     private ISpaceManager spaceManager;
     
     @Autowired
-    SnapshotTaskRepository snapshotTaskRepository;
+    private SnapshotTaskRepository snapshotTaskRepository;
     
     
     public final static String IMAGES_FOLDER_NAME = "images";
@@ -106,20 +106,20 @@ public class SnapshotManager implements ISnapshotManager {
     
     @Async
     @Override
-@Transactional
+    @Transactional
     public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
-            Thread.sleep(5000);
+        Thread.sleep(5000);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderPath, sequenceHistory);                
         }         
-        
-//         exhibitionDownload.setDownloadComplete(true);
-         SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
-         snapshotTask.setTaskComplete(true);
-         snapshotTaskRepository.save(snapshotTask);   
+
+        //         exhibitionDownload.setDownloadComplete(true);
+        SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
+        snapshotTask.setTaskComplete(true);
+        snapshotTaskRepository.save(snapshotTask);   
     }
     
     /**

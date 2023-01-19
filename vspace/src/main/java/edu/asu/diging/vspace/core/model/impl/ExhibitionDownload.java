@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
 
 @Entity
-public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDownload{
+public class ExhibitionDownload extends VSpaceElement implements IExhibitionDownload{
 
     @Id
     @GeneratedValue(generator = "exhibit_download_id_generator")
@@ -25,30 +25,22 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
     private String folderPath;
 
     private String folderName;
-    
-
+   
     @OneToOne(cascade = CascadeType.ALL, mappedBy="exhibitionDownload")
     @JsonIgnore
     private SnapshotTask snapshotTask;
     
-    public SnapshotTask getSnapshotTask() {
-        return snapshotTask;
-    }
-
-    public void setSnapshotTask(SnapshotTask snapshotTask) {
-        this.snapshotTask = snapshotTask;
-    }
-
+    
     public ExhibitionDownload() {
         super();
-    }
+    }    
 
     public ExhibitionDownload(String folderPath, String folderName) {
         super();
         this.folderPath = folderPath;
         this.folderName = folderName;
     }
-
+    
     @Override
     public String getId() {
         return this.id;    }
@@ -58,24 +50,35 @@ public class ExhibitionDownload extends VSpaceElement  implements IExhibitionDow
         this.id = id;
 
     }
-
+    
+    @Override
     public String getFolderPath() {
         return folderPath;
     }
 
+    @Override
     public void setFolderPath(String folderPath) {
         this.folderPath = folderPath;
     }
 
-
+    @Override
     public String getFolderName() {
         return folderName;
     }
 
+    @Override
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
 
+    @Override
+    public SnapshotTask getSnapshotTask() {
+        return snapshotTask;
+    }
 
+    @Override
+    public void setSnapshotTask(SnapshotTask snapshotTask) {
+        this.snapshotTask = snapshotTask;
+    }
 
 }

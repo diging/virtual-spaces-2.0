@@ -126,9 +126,10 @@ public class StorageEngineDownloads implements IStorageEngine {
 
     public byte[] generateZipFolder(String folderPath) throws IOException {
         Path zipFile = Paths.get(folderPath);
+        ByteArrayOutputStream byteArrayOutputStreamResult = null;
 
         try (           
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
 
@@ -146,57 +147,13 @@ public class StorageEngineDownloads implements IStorageEngine {
                     System.err.println(e);
                 }
             });
-            IOUtils.close(responseZipStream);
-            IOUtils.close(bufferedOutputStream);
-            IOUtils.close(byteArrayOutputStream);
-
-            return byteArrayOutputStream.toByteArray();
-
+            byteArrayOutputStreamResult = byteArrayOutputStream;
         } catch (IOException e) {
             throw new IOException(e);
-        }      
+        }   
+        return byteArrayOutputStreamResult.toByteArray();
 
     }
-    
-//    /**
-//     * Converts the given folder into a zip folder and returna byte array.
-//     * 
-//     * @param folderPath
-//     * @return
-//     * @throws IOException
-//     */
-//    public byte[] generateZipFolder(String folderPath) throws IOException {
-//     
-//        Path zipFile = Paths.get(folderPath);
-//
-//        try (           
-//                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-//                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-//
-//                Stream<Path> paths = Files.walk(zipFile)) {
-//            paths
-//            .filter(path -> !Files.isDirectory(path))
-//            .forEach(path -> {
-//                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-//                try {
-//                    responseZipStream.putNextEntry(zipEntry);
-//                    Files.copy(path, responseZipStream);
-//                    responseZipStream.closeEntry();
-//
-//                } catch (IOException e) {
-//
-//                }
-//            });
-//
-//
-//            return byteArrayOutputStream.toByteArray();
-//
-//        } 
-//
-//    }
-
-
 
     /**
      * Copies given image to imagesFolderPath
@@ -214,7 +171,9 @@ public class StorageEngineDownloads implements IStorageEngine {
         }     
     }
 
-
+    /**
+     * Creates folder given path
+     */
     @Override
     public String createFolder(String folderName, String path) {
         File folder = new File(path + File.separator + folderName);
