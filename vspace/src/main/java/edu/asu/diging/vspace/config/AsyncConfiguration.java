@@ -24,11 +24,9 @@ public class AsyncConfiguration implements AsyncConfigurer  {
         executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("threadAsync");
         executor.setWaitForTasksToCompleteOnShutdown(true);
-//        executor.setTaskDecorator(new MdcTaskDecorator());
         executor.initialize();
         
         return executor;
-//        return new DelegatingSecurityContextAsyncTaskExecutor(executor); 
     }
     
 }

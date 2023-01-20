@@ -44,7 +44,7 @@ public class SpaceDisplayManager implements ISpaceDisplayManager {
     private IImageService imageService;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
 
     /*

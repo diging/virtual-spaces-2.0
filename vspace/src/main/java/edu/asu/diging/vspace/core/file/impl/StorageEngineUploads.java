@@ -27,10 +27,9 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
-@Component("storageEngine")
-//@Qualifier("storageEngine")
+@Component("storageEngineUploads")
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
-public class StorageEngine implements IStorageEngine {
+public class StorageEngineUploads implements IStorageEngine {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${uploads_path}")
@@ -40,7 +39,7 @@ public class StorageEngine implements IStorageEngine {
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
      */
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException {
+    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
         File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
         if (!parent.exists()) {
             parent.mkdir();
@@ -107,13 +106,12 @@ public class StorageEngine implements IStorageEngine {
 
 
 
-
+    @Override
     public String createFolder(String folderName, String path ) {
         File folder = new File(path + File.separator + folderName);
         if (!folder.exists()) {
             folder.mkdir();
         }
-
         return folder.getAbsolutePath();
 
     }
@@ -156,18 +154,48 @@ public class StorageEngine implements IStorageEngine {
 
     }
 
+    @Override
+    public String createFolder(String folderName) {
+        File folder = new File(path + File.separator + folderName);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
+        return folder.getAbsolutePath();
+    }
+
+
+    @Override
+    public String storeFile(byte[] fileContent, String filename, String directory, String path)
+            throws FileStorageException {
+        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+        File file = new File(parent.getAbsolutePath() + File.separator + filename);
+
+
+        BufferedOutputStream stream;
+        try {
+            stream = new BufferedOutputStream(new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        try {
+            stream.write(fileContent);
+            stream.close();
+        } catch (IOException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+
+        return directory;
+    }
+
 
     @Override
     public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
         // TODO Auto-generated method stub
         
-    }
-
-
-    @Override
-    public String createFolder(String exhibitionFolderName) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

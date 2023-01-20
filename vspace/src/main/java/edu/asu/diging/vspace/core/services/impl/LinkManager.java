@@ -39,11 +39,8 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     private ImageRepository imageRepo;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
-    
-    @Value("${uploads_path}")
-    private String uploadsPath;
 
     @Override
     public U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
@@ -124,7 +121,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
             image = imageRepo.save((VSImage) image);
             String relativePath = null;
             try {
-                relativePath = storage.storeFile(linkImage, imageFilename, image.getId(), uploadsPath);
+                relativePath = storage.storeFile(linkImage, imageFilename, image.getId());
             } catch (FileStorageException e) {
                 throw new ImageCouldNotBeStoredException(e);
             }

@@ -72,14 +72,11 @@ public class ContentBlockManager implements IContentBlockManager {
     private ChoiceContentBlockRepository choiceBlockRepo;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
 
     @Autowired
     private ContentBlockRepository contentBlockRepository;
-    
-    @Value("${uploads_path}")
-    private String uploadsPath;
 
     /*
      * (non-Javadoc)
@@ -125,7 +122,7 @@ public class ContentBlockManager implements IContentBlockManager {
         if (slideContentImage != null) {
             String relativePath = null;
             try {
-                relativePath = storage.storeFile(image, filename, slideContentImage.getId(), uploadsPath);
+                relativePath = storage.storeFile(image, filename, slideContentImage.getId());
             } catch (FileStorageException e) {
                 throw new ImageCouldNotBeStoredException(e);
             }

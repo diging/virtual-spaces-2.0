@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -87,12 +86,6 @@ public class ExhibitionSpaceController {
         if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
         }
-        
-
-
-        return "exhibition/space";
-        
-       
+        return "exhibition/space";             
     }
-
 }

@@ -40,7 +40,7 @@ public class ImageServiceTest {
     private ImageRepository imageRepo;
     
     @Mock
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
     
     @InjectMocks

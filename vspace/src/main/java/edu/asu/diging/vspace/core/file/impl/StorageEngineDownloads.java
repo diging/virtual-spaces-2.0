@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +15,6 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +37,8 @@ public class StorageEngineDownloads implements IStorageEngine {
     private String path;
     
     @Autowired
-    @Qualifier("storageEngine")
-    StorageEngine storageEngineUploads;
+    @Qualifier("storageEnginerUploads")
+    StorageEngineUploads storageEngineUploads;
 
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
@@ -183,6 +181,32 @@ public class StorageEngineDownloads implements IStorageEngine {
 
         return folder.getAbsolutePath();
     }
-    
+
+
+    @Override
+    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
+        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+        File file = new File(parent.getAbsolutePath() + File.separator + filename);
+
+
+        BufferedOutputStream stream;
+        try {
+            stream = new BufferedOutputStream(new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        try {
+            stream.write(fileContent);
+            stream.close();
+        } catch (IOException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+
+        return directory;
+    }
+
     
 }

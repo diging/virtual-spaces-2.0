@@ -14,10 +14,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -54,10 +52,6 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Service
 public class SnapshotManager implements ISnapshotManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    
-    @Autowired
-    private ExhibitionDownloadRepository exhibitionDownloadRepo;
     
     @Autowired
     private SpaceRepository spaceRepository;
@@ -116,7 +110,6 @@ public class SnapshotManager implements ISnapshotManager {
             downloadSpace(space, exhibitionFolderPath, sequenceHistory);                
         }         
 
-        //         exhibitionDownload.setDownloadComplete(true);
         SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
         snapshotTask.setTaskComplete(true);
         snapshotTaskRepository.save(snapshotTask);   

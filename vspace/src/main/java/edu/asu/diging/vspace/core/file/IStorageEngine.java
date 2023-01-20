@@ -6,6 +6,7 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 public interface IStorageEngine {
+    String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
 
     String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException;
 
@@ -15,11 +16,12 @@ public interface IStorageEngine {
 
     String createFolder(String id, String exhibitionFolderPath);
 
-    void copyImageToFolder(IVSImage image, String imagesFolderPath);
-
     String createFolder(String exhibitionFolderName);
 
     byte[] generateZipFolder(String exhibitionFolderPath) throws IOException;
+
+    void copyImageToFolder(IVSImage image, String imagesFolderPath);
+
     
 	
 }

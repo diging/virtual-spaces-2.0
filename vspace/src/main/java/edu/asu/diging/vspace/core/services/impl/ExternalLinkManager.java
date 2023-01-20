@@ -57,7 +57,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     private ImageRepository imageRepo;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
 
     @Override

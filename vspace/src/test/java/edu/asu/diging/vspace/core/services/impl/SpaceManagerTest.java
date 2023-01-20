@@ -56,7 +56,7 @@ public class SpaceManagerTest {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Mock
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
 
     @Mock

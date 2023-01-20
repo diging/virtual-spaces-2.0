@@ -38,11 +38,9 @@ import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
 @Controller
 public class DownloadsController {
-
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
-    
+       
     @Autowired
     IDownloadsManager downloadsManager;
 
@@ -55,8 +53,8 @@ public class DownloadsController {
         } catch(NumberFormatException e) {
             logger.error("Invalid page number", e);
         }        
-        
-        
+
+
         Page<ExhibitionDownload> downloadsPage = downloadsManager.getAllExhibitionDownloads(pageNum);
         model.addAttribute("downloadsList" , downloadsPage.getContent());
         model.addAttribute("downloadsCurrentPageNumber", Integer.parseInt(downloadsPagenum));
@@ -66,7 +64,7 @@ public class DownloadsController {
 
         return "exhibition/downloads/downloadList";
     }
-    
+
     @RequestMapping(value = "/staff/exhibit/download/trigger", method = RequestMethod.GET) 
     public ResponseEntity<ExhibitionDownload> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionDownload exhibitionDownload = null;
@@ -93,9 +91,9 @@ public class DownloadsController {
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
             throws ExhibitionDownloadNotFoundException , IOException {
-        
+
         Resource resource = null;      
-       
+
         try {
             byte[] byteArrayResource = downloadsManager.downloadExhibitionFolder(id);
             resource = new ByteArrayResource(byteArrayResource);
@@ -109,26 +107,26 @@ public class DownloadsController {
             return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-   
+
     }
-        
+
     
     @RequestMapping(value = "/staff/exhibit/download/checkStatus/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
-            {
-            
-       
+    {
+
+
         try {
             Boolean isSnapshotCreated = downloadsManager.checkIfSnapshotCreated(id);
             return new ResponseEntity<Boolean>(isSnapshotCreated, HttpStatus.OK);
 
         } catch (Exception e) {
-        
+
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-   
+
     }
-    
+
 
 }

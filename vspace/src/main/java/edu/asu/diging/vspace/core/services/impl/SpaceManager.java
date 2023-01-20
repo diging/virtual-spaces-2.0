@@ -58,7 +58,7 @@ public class SpaceManager implements ISpaceManager {
     private ImageRepository imageRepo;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
 
     @Autowired
@@ -81,9 +81,6 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
-    @Value("${uploads_path}")
-    private String uploadsPath;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -122,7 +119,7 @@ public class SpaceManager implements ISpaceManager {
         if (bgImage != null) {
             String relativePath = null;
             try {
-                relativePath = storage.storeFile(image, filename, bgImage.getId(), uploadsPath);
+                relativePath = storage.storeFile(image, filename, bgImage.getId());
             } catch (FileStorageException e) {
                 returnValue.getErrorMsgs().add("Background image could not be stored: " + e.getMessage());
             }

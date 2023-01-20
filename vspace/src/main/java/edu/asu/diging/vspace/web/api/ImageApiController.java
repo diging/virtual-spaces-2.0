@@ -30,7 +30,7 @@ public class ImageApiController {
     private ImageRepository imageRepo;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEnginerUploads")
     private IStorageEngine storage;
 
     @RequestMapping(API_IMAGE_PATH + "{id}")

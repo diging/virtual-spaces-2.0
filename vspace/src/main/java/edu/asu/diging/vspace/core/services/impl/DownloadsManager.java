@@ -42,7 +42,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     private IStorageEngine storageEngineDownloads;
 
     @Autowired
-    @Qualifier("storageEngine")
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storageEngineUploads;
 
     @Autowired

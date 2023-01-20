@@ -13,14 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
-import edu.asu.diging.vspace.core.file.impl.StorageEngine;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.file.impl.StorageEngineDownloads;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -43,15 +47,21 @@ public class SnapshotManagerTest {
     @Spy 
     @InjectMocks
     private SnapshotManager serviceToTest;
-    
+        
     @Spy
     private FileUtils fileUtils;
 
     @Mock
-    StorageEngine storageEngine;
+    StorageEngineDownloads storageEngine;
     
     @Mock
     SpaceRepository spaceRepository;
+    
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     
     @Test
     public void test_downloadSpace_success() {
