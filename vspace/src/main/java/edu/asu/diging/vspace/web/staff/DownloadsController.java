@@ -43,7 +43,6 @@ public class DownloadsController {
        
     @Autowired
     IDownloadsManager downloadsManager;
-
     
     @RequestMapping("/staff/downloads/list")
     public String listDownloads(Model model, @RequestParam(value = "downloadsPagenum", required = false, defaultValue = "1") String downloadsPagenum) {
@@ -53,8 +52,6 @@ public class DownloadsController {
         } catch(NumberFormatException e) {
             logger.error("Invalid page number", e);
         }        
-
-
         Page<ExhibitionDownload> downloadsPage = downloadsManager.getAllExhibitionDownloads(pageNum);
         model.addAttribute("downloadsList" , downloadsPage.getContent());
         model.addAttribute("downloadsCurrentPageNumber", Integer.parseInt(downloadsPagenum));
@@ -91,7 +88,6 @@ public class DownloadsController {
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
             throws ExhibitionDownloadNotFoundException , IOException {
-
         Resource resource = null;      
 
         try {
@@ -114,8 +110,6 @@ public class DownloadsController {
     @RequestMapping(value = "/staff/exhibit/download/checkStatus/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
     {
-
-
         try {
             Boolean isSnapshotCreated = downloadsManager.checkIfSnapshotCreated(id);
             return new ResponseEntity<Boolean>(isSnapshotCreated, HttpStatus.OK);
@@ -125,8 +119,6 @@ public class DownloadsController {
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-
     }
-
 
 }
