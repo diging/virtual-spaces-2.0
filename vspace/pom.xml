@@ -26,8 +26,8 @@
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path>/Users/prachikharge/newfolder/virtual-spaces-2.0/vspace/uploads</uploaded.files.path>
-        <downloaded.files.path>/Users/prachikharge/newfolder/virtual-spaces-2.0/vspace/downlaods</downloaded.files.path>
+        <uploaded.files.path></uploaded.files.path>
+        <downloaded.files.path></downloaded.files.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -119,7 +119,7 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-config</artifactId>
 		    <version>${spring-security-version}</version>
-		</dependency>
+        </dependency>
 
         <!-- Spring Data -->
         <dependency>
