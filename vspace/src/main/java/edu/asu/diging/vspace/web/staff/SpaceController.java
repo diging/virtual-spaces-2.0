@@ -77,8 +77,6 @@ public class SpaceController {
     public String showSpace(@PathVariable String id, Model model) throws IOException {
         
         
-       
-        
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
         model.addAttribute("linksToThisSpace",spaceManager.getIncomingLinks(id));
@@ -110,9 +108,9 @@ public class SpaceController {
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
     
-    @RequestMapping(value = STAFF_SPACE_PATH+"{id}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getSpaceId(@PathVariable String id) {
-        IVSImage image = imageRepo.findById(id).get();
+    @RequestMapping(value = STAFF_SPACE_PATH, method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getSpaceId() {
+        IVSImage image = imageRepo.findById("IMG000000013").get();
         byte[] imageContent = null;
         
         try {
@@ -122,7 +120,7 @@ public class SpaceController {
             logger.error("Could not retrieve image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+        System.out.println();
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(image.getFileType()));

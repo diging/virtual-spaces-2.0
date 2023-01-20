@@ -250,4 +250,14 @@ public class ImageService implements IImageService {
         image.getCategories().remove(category);
         imageRepo.save((VSImage) image);
     }
+    
+    @Override
+    public IVSImage getImageByDescription(String imageId) throws ImageDoesNotExistException {
+        Optional<VSImage> imageOptional = imageRepo.findById(imageId);
+        if(imageOptional.isPresent()) {
+            return imageOptional.get();
+        } else {
+            throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
+        }
+    }
 }
