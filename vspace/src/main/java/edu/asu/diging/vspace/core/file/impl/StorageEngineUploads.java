@@ -63,7 +63,9 @@ public class StorageEngineUploads implements IStorageEngine {
         return directory;
     }
 
-
+    /**
+     * Get the given image content as a byte array 
+     */
     @Override
     public byte[] getImageContent(String directory, String filename) throws IOException {
         File fileObject = new File(path + File.separator + directory + File.separator + filename);
@@ -124,31 +126,29 @@ public class StorageEngineUploads implements IStorageEngine {
      * @return
      * @throws IOException
      */
+    @Override
     public byte[] generateZipFolder(String folderPath) throws IOException {
         Path zipFile = Paths.get(folderPath);
 
-        try (           
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+             ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
 
-                Stream<Path> paths = Files.walk(zipFile)) {
-                paths
-                .filter(path -> !Files.isDirectory(path))
-                .forEach(path -> {
-                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                    try {
-                        responseZipStream.putNextEntry(zipEntry);
-                        Files.copy(path, responseZipStream);
-                        responseZipStream.closeEntry();
-    
-                    } catch (IOException e) {
-                        logger.error("Could not generate Zip folder" );
-                    }
-                });
-    
-    
-                return byteArrayOutputStream.toByteArray();
+            Stream<Path> paths = Files.walk(zipFile)) {
+            paths
+            .filter(path -> !Files.isDirectory(path))
+            .forEach(path -> {
+                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                try {
+                    responseZipStream.putNextEntry(zipEntry);
+                    Files.copy(path, responseZipStream);
+                    responseZipStream.closeEntry();
+
+                } catch (IOException e) {
+                    logger.error("Could not generate Zip folder" );
+                }
+            });
+            return byteArrayOutputStream.toByteArray();
 
         } 
 
