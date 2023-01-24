@@ -2,16 +2,16 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.LanguageObject;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 
 public class SpaceForm {
 
 	private String name;
 	private String description;
 	
-	private List<LanguageObject> names;
+	private List<LanguageDescriptionObject> names;
 	
-	private List<LanguageObject> descriptions;
+	private List<LanguageDescriptionObject> descriptions;
 	
 	
 	public String getName() {
@@ -26,16 +26,16 @@ public class SpaceForm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-    public List<LanguageObject> getNames() {
+    public List<LanguageDescriptionObject> getNames() {
         return names;
     }
-    public void setNames(List<LanguageObject> names) {
+    public void setNames(List<LanguageDescriptionObject> names) {
         this.names = names;
     }
-    public List<LanguageObject> getDescriptions() {
+    public List<LanguageDescriptionObject> getDescriptions() {
         return descriptions;
     }
-    public void setDescriptions(List<LanguageObject> descriptions) {
+    public void setDescriptions(List<LanguageDescriptionObject> descriptions) {
         this.descriptions = descriptions;
     }
 }

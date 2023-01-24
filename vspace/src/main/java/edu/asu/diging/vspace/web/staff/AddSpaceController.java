@@ -20,10 +20,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LanguageObject;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -56,9 +57,9 @@ public class AddSpaceController {
         model.addAttribute("images", imageService.getImages(1));      
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
        
-        List<LanguageObject> languageObjectList = new ArrayList();
+        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
         startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-            LanguageObject languageObject = new LanguageObject();
+            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
             languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
             languageObjectList.add(languageObject);
         });
@@ -72,7 +73,7 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
-        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {

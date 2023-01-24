@@ -9,10 +9,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILanguageObject;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 
 @Entity
-public class LanguageObject implements ILanguageObject {
+public class LanguageDescriptionObject implements ILanguageDescriptionObject {
     
     
     @Id

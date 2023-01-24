@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -20,7 +19,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
-import edu.asu.diging.vspace.core.model.ILanguageObject;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -60,11 +59,11 @@ public class Space extends VSpaceElement implements ISpace {
     @Transient
     private Boolean incomingLinks;
     
-    @OneToMany(mappedBy = "text", targetEntity = LanguageObject.class)
-    private List<ILanguageObject> spaceTitles;
+    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class)
+    private List<ILanguageDescriptionObject> spaceTitles;
     
-    @OneToMany(mappedBy = "text", targetEntity = LanguageObject.class)
-    private List<ILanguageObject> spaceDescriptions;
+    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class)
+    private List<ILanguageDescriptionObject> spaceDescriptions;
     
 
 
@@ -216,21 +215,23 @@ public class Space extends VSpaceElement implements ISpace {
         this.hideIncomingLinks = hideIncomingLinks;
     }
     
-    public List<ILanguageObject> getSpaceTitles() {
+    public List<ILanguageDescriptionObject> getSpaceTitles() {
         return spaceTitles;
     }
 
-    public void setSpaceTitles(List<ILanguageObject> spaceTitles) {
+    public void setSpaceTitles(List<ILanguageDescriptionObject> spaceTitles) {
         this.spaceTitles = spaceTitles;
     }
 
-    public List<ILanguageObject> getSpaceDescriptions() {
+    public List<ILanguageDescriptionObject> getSpaceDescriptions() {
         return spaceDescriptions;
     }
 
-    public void setSpaceDescriptions(List<ILanguageObject> spaceDescriptions) {
+    public void setSpaceDescriptions(List<ILanguageDescriptionObject> spaceDescriptions) {
         this.spaceDescriptions = spaceDescriptions;
     }
+    
+    
     
 //    @Override 
 //    public void setDescription(String description) {             

@@ -18,6 +18,8 @@ public class SpaceFactory implements ISpaceFactory {
 		ISpace space = new Space();
 		space.setName(form.getName());
 		space.setDescription(form.getDescription());
+		space.setSpaceTitles(form.getNames());
+		space.setSpaceDescriptions(form.getDescriptions());
 		return space;
 	}
 }

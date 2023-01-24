@@ -33,5 +33,16 @@ public interface ISpace extends IVSpaceElement {
     void setShowUnpublishedLinks(Boolean showUnpublishedLinks);
     
     void setHideIncomingLinks(boolean hideIncomingLinks);
+    
+    List<ILanguageDescriptionObject> getSpaceTitles();
+    
+    void setSpaceTitles(List<ILanguageDescriptionObject> spaceTitles);
+    
+    void setSpaceDescriptions(List<ILanguageDescriptionObject> spaceDescriptions);
+    
+    List<ILanguageDescriptionObject> getSpaceDescriptions() ;
+    
+    
+    
 
 }
