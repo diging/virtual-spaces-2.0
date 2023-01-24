@@ -180,13 +180,11 @@ public class SnapshotManager implements ISnapshotManager {
         try {           
             Context thymeleafContext = new Context();
             populateContextForSpace(thymeleafContext, directory, sequenceHistory);
-         // add attributes to context
-         String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate", thymeleafContext);
-       byte[] fileContent = response.getBytes();
-       storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+            // add attributes to context
+            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate", thymeleafContext);
+            byte[] fileContent = response.getBytes();
+            storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
 
-         
-            
         } catch ( FileStorageException e) {
             logger.error("Could not copy template" , e);
         }   

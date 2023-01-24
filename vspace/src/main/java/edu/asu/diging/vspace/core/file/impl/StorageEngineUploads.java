@@ -118,7 +118,7 @@ public class StorageEngineUploads implements IStorageEngine {
 
 
     /**
-     * Converts the given folder into a zip folder and returna byte array.
+     * Converts the given folder into a zip folder and return a byte array.
      * 
      * @param folderPath
      * @return
@@ -133,22 +133,22 @@ public class StorageEngineUploads implements IStorageEngine {
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
 
                 Stream<Path> paths = Files.walk(zipFile)) {
-            paths
-            .filter(path -> !Files.isDirectory(path))
-            .forEach(path -> {
-                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                try {
-                    responseZipStream.putNextEntry(zipEntry);
-                    Files.copy(path, responseZipStream);
-                    responseZipStream.closeEntry();
-
-                } catch (IOException e) {
-
-                }
-            });
-
-
-            return byteArrayOutputStream.toByteArray();
+                paths
+                .filter(path -> !Files.isDirectory(path))
+                .forEach(path -> {
+                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                    try {
+                        responseZipStream.putNextEntry(zipEntry);
+                        Files.copy(path, responseZipStream);
+                        responseZipStream.closeEntry();
+    
+                    } catch (IOException e) {
+                        logger.error("Could not generate Zip folder" );
+                    }
+                });
+    
+    
+                return byteArrayOutputStream.toByteArray();
 
         } 
 
@@ -194,7 +194,6 @@ public class StorageEngineUploads implements IStorageEngine {
 
     @Override
     public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-        // TODO Auto-generated method stub
         
     }
 

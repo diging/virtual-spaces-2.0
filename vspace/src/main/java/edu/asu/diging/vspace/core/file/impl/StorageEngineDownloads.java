@@ -110,49 +110,6 @@ public class StorageEngineDownloads implements IStorageEngine {
     }
 
 
-
-
-    public String createFolder(String folderName) {
-        File folder = new File(path + File.separator + folderName);
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-
-        return folder.getAbsolutePath();
-
-    }
-
-    public byte[] generateZipFolder(String folderPath) throws IOException {
-        Path zipFile = Paths.get(folderPath);
-        ByteArrayOutputStream byteArrayOutputStreamResult = null;
-
-        try (           
-                ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-
-                Stream<Path> paths = Files.walk(zipFile)) {
-            paths
-            .filter(path -> !Files.isDirectory(path))
-            .forEach(path -> {
-                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                try {
-                    responseZipStream.putNextEntry(zipEntry);
-                    Files.copy(path, responseZipStream);
-                    responseZipStream.closeEntry();
-
-                } catch (IOException e) {
-                    System.err.println(e);
-                }
-            });
-            byteArrayOutputStreamResult = byteArrayOutputStream;
-        } catch (IOException e) {
-            throw new IOException(e);
-        }   
-        return byteArrayOutputStreamResult.toByteArray();
-
-    }
-
     /**
      * Copies given image to imagesFolderPath
      * 
@@ -208,5 +165,47 @@ public class StorageEngineDownloads implements IStorageEngine {
         return directory;
     }
 
+    @Override
+    public String createFolder(String folderName) {
+        File folder = new File(path + File.separator + folderName);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
+        return folder.getAbsolutePath();
+
+    }
+
+    @Override
+    public byte[] generateZipFolder(String folderPath) throws IOException {
+        Path zipFile = Paths.get(folderPath);
+        ByteArrayOutputStream byteArrayOutputStreamResult = null;
+
+        try (           
+                ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+
+                Stream<Path> paths = Files.walk(zipFile)) {
+            paths
+            .filter(path -> !Files.isDirectory(path))
+            .forEach(path -> {
+                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                    try {
+                        responseZipStream.putNextEntry(zipEntry);
+                        Files.copy(path, responseZipStream);
+                        responseZipStream.closeEntry();
+    
+                    } catch (IOException e) {
+                        System.err.println(e);
+                    }
+            });
+            byteArrayOutputStreamResult = byteArrayOutputStream;
+        } catch (IOException e) {
+            throw new IOException(e);
+        }   
+        return byteArrayOutputStreamResult.toByteArray();
+
+    }
     
 }
