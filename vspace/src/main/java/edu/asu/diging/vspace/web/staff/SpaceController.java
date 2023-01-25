@@ -110,7 +110,7 @@ public class SpaceController {
     
     @RequestMapping(value = STAFF_SPACE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getSpaceId() {
-        IVSImage image = imageRepo.findById("IMG000000013").get();
+        IVSImage image = imageRepo.findById("IMG000000045").get();
         byte[] imageContent = null;
         
         try {
@@ -120,7 +120,7 @@ public class SpaceController {
             logger.error("Could not retrieve image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        System.out.println();
+        System.out.println(imageContent);
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(image.getFileType()));

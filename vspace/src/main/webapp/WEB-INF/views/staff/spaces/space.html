@@ -135,9 +135,9 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
         	
             
             var spaceImageURL = [[@{/staff/space/}]];
+            //spaceLink= $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" ><svg class="Ellipse_8_c ellipse_class"><ellipse fill=""></ellipse><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"></p></span>');
+            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" width="40" height="50" border-radius = "50%"/>');
         	
-            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
-        
         }
         setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal, false);
         $(divId).append(spaceLink);
