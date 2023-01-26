@@ -1,9 +1,11 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -59,11 +61,11 @@ public class Space extends VSpaceElement implements ISpace {
     @Transient
     private Boolean incomingLinks;
     
-    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class)
-    private List<ILanguageDescriptionObject> spaceTitles;
+    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class,  cascade = CascadeType.ALL)
+    private List<ILanguageDescriptionObject> spaceTitles = new ArrayList();
     
-    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class)
-    private List<ILanguageDescriptionObject> spaceDescriptions;
+    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class,  cascade = CascadeType.ALL)
+    private List<ILanguageDescriptionObject> spaceDescriptions = new ArrayList();
     
 
 

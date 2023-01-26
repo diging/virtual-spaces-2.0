@@ -7,12 +7,18 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 @Entity
 public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLanguage {
 
     @Id
+    @JsonDeserialize()
+    @JsonSerialize()
     @GeneratedValue(generator = "exhibit_language_id_generator")
     @GenericGenerator(name = "exhibit_language_id_generator", parameters = @Parameter(name = "prefix", value = "LANG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;

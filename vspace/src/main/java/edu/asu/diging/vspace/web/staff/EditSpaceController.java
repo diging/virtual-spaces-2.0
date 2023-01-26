@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
@@ -17,6 +24,9 @@ public class EditSpaceController {
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
@@ -27,6 +37,17 @@ public class EditSpaceController {
         model.addAttribute("spaceForm", spaceForm);
         model.addAttribute("spaceId", spaceId);
         
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
+        
+        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
+        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
+            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
+            languageObjectList.add(languageObject);
+        });
+        
+        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
+
         return "staff/spaces/edit";
     }
     
@@ -35,7 +56,8 @@ public class EditSpaceController {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setName(spaceForm.getName());
         space.setDescription(spaceForm.getDescription());
-        
+        spaceForm.getDescriptions().forEach(description -> space.getSpaceDescriptions().add(description));
+        spaceForm.getNames().forEach(name -> space.getSpaceTitles().add(name));
         spaceManager.storeSpace(space, null, null);
         return "redirect:/staff/space/{spaceId}";
     }
