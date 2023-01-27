@@ -17,8 +17,6 @@ import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLanguage {
 
     @Id
-    @JsonDeserialize()
-    @JsonSerialize()
     @GeneratedValue(generator = "exhibit_language_id_generator")
     @GenericGenerator(name = "exhibit_language_id_generator", parameters = @Parameter(name = "prefix", value = "LANG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;

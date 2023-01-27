@@ -89,7 +89,6 @@ public class SpaceManager implements ISpaceManager {
      * diging.vspace.core.model.ISpace,java.util.Arrays, java.lang.String)
      */
     @Override
-    @Transactional
     public CreationReturnValue storeSpace(ISpace space, byte[] image, String filename) {
         IVSImage bgImage = null;
         List<SpaceDisplay> displays = null;
