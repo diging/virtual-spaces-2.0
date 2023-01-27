@@ -120,7 +120,7 @@ public class SpaceController {
             logger.error("Could not retrieve image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        System.out.println(imageContent);
+        
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(image.getFileType()));
