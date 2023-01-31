@@ -10,6 +10,6 @@ import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 
 @Repository
 @JaversSpringDataAuditable
-public interface LanguageObjectRepository extends PagingAndSortingRepository<LanguageDescriptionObject, String>{
+public interface LanguageDescriptionObjectRepository extends PagingAndSortingRepository<LanguageDescriptionObject, String>{
 
 }

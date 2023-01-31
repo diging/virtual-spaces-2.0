@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
@@ -27,11 +29,14 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -40,6 +45,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Transactional
 @Service
@@ -78,8 +84,16 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    @Autowired
+    LanguageDescriptionObjectRepository languageDescriptionObjectRepo;
+    
+    @Autowired
+    ExhibitionLanguageRepository exhibitionLanguageRepository;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+   
+    
 
     /*
      * (non-Javadoc)
@@ -297,5 +311,68 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
+    }
+    
+    private void setSpaceName(ISpace space, List<LanguageDescriptionObject> names) {
+        if(names != null && names.size() >0) {
+            ExhibitionLanguage exhibitionLanguage  = null;
+            for(LanguageDescriptionObject name : names )  {
+                if(exhibitionLanguage == null) {
+                    exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
+
+                }
+//              name.setExhibitionLanguage(exhibitionLanguage); 
+            
+              LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+              languageObject.setText(name.getText());    
+              languageObject.setExhibitionLanguage(exhibitionLanguage); 
+              
+              if(space.getSpaceTitles() == null) {
+                  space.setSpaceTitles(new ArrayList<ILanguageDescriptionObject>());
+              }
+              space.getSpaceTitles().add(languageObject); 
+              
+              storeLanguageDescriptionObject(languageObject);
+            }
+ 
+        }
+   
+        
+        
+        
+    }
+
+    private void storeLanguageDescriptionObject(LanguageDescriptionObject languageObject) {
+        languageDescriptionObjectRepo.save(languageObject);
+    }
+
+    private void setSpaceDescription(ISpace space, LanguageDescriptionObject description) {
+        
+        
+        //todo: refactor for list 
+        ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
+        description.setExhibitionLanguage(exhibitionLanguage);
+        if(space.getSpaceDescriptions() == null) {
+            space.setSpaceDescriptions(new ArrayList<ILanguageDescriptionObject>());
+        }
+       
+        LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+        languageObject.setText(description.getText());
+        
+        languageObject.setExhibitionLanguage(exhibitionLanguage);
+        
+        space.getSpaceDescriptions().add(languageObject);
+        storeLanguageDescriptionObject(languageObject);
+        
+        
+    }
+
+    @Override
+    public void setTitleAndDescription(ISpace space, SpaceForm spaceForm) {
+        
+        
+        setSpaceName(space, spaceForm.getNames());
+        setSpaceDescription(space, spaceForm.getDescriptions());
+        
     }
 }

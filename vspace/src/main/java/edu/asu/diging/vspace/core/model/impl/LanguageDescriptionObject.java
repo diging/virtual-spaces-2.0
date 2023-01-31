@@ -16,13 +16,11 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
     
     
     @Id
-    @GeneratedValue(generator = "language_object_id_generator")
-    @GenericGenerator(name = "language_object_id_generator", parameters = @Parameter(name = "prefix", value = "LANGOBJ"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GeneratedValue(generator = "language_description_id_generator")
+    @GenericGenerator(name = "language_description_id_generator", parameters = @Parameter(name = "prefix", value = "EXHLANGOBJ"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
-    
-
-
+   
     @OneToOne(targetEntity = ExhibitionLanguage.class)
     ExhibitionLanguage exhibitionLanguage; 
 

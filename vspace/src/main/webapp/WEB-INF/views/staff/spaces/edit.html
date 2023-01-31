@@ -12,7 +12,6 @@
 				<div class="form-group row">
 					<label for="name" class="col-md-2 col-form-label">Space Name:</label> 
 					<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
-	   				<input type="hidden"  th:value="${exhibitionLanguage.id}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.id'"></input>
 	 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field= "${spaceForm.names[__${exhibitionLanguageStat.index}__].text}"></input>
 	
 					

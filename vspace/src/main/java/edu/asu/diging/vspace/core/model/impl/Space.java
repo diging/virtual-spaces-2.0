@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -61,14 +62,14 @@ public class Space extends VSpaceElement implements ISpace {
     @Transient
     private Boolean incomingLinks;
     
-    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class,  cascade = CascadeType.ALL)
+    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="Space_LangObj_titles")
     private List<ILanguageDescriptionObject> spaceTitles = new ArrayList();
     
-    @OneToMany(mappedBy = "text", targetEntity = LanguageDescriptionObject.class,  cascade = CascadeType.ALL)
+    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="Space_LangObj_descriptions")
     private List<ILanguageDescriptionObject> spaceDescriptions = new ArrayList();
     
-
-
     /*
      * (non-Javadoc)
      * 
@@ -230,6 +231,7 @@ public class Space extends VSpaceElement implements ISpace {
     }
 
     public void setSpaceDescriptions(List<ILanguageDescriptionObject> spaceDescriptions) {
+        
         this.spaceDescriptions = spaceDescriptions;
     }
     
