@@ -18,11 +18,9 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 @Service
 public class SpaceFactory implements ISpaceFactory {
     
-    @Autowired
-    ExhibitionLanguageRepository exhibitionLanguageRepository;
+
     
-    @Autowired
-    LanguageDescriptionObjectRepository languageDescriptionObjectRepo;
+
 
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.factory.impl.ISpaceFactory#createSpace(edu.asu.diging.vspace.web.staff.forms.SpaceForm)
