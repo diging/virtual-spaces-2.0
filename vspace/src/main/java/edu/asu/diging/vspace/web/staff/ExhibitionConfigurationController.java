@@ -70,12 +70,13 @@ public class ExhibitionConfigurationController {
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
+            @RequestParam("flag") String flag,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             Principal principal,
             RedirectAttributes attributes) throws IOException {
     	
         ISpace startSpace = spaceManager.getSpace(spaceID);
-
+        System.out.println(flag);
         Exhibition exhibition;
         if(exhibitID==null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
