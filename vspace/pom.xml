@@ -13,7 +13,7 @@
         <spring.version>5.0.19.RELEASE</spring.version>
         <spring-data.version>Kay-SR8</spring-data.version>
         <spring-security-version>5.3.10.RELEASE</spring-security-version>
-        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.0.13.RELEASE</thymeleaf.version>
         <javers.version>5.11.1</javers.version>
         <simple-users-version>0.5</simple-users-version>
         <admin.username>admin</admin.username>
@@ -23,11 +23,10 @@
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC</db.url>
-        <db.user>root</db.user>
-        <db.password>Whateverglen17@</db.password>
-        <uploaded.files.path>/Users/glendsouza/Documents/vspace</uploaded.files.path>
-        <files.directory.path>Files</files.directory.path>
+        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
+        <db.user>vspace</db.user>
+        <db.password>vspace</db.password>
+        <uploaded.files.path></uploaded.files.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
