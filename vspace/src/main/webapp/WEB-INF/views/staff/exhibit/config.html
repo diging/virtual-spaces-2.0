@@ -10,6 +10,7 @@
 				var externalLinkImageupload = $('#externalLinkImageupload');
 				var spaceParamExihibit = $('#spaceParamExihibit');
 				var defaultImages = $('#defaultImages');
+				var flag = "${exhibition.flag}" ;
 				if ('[(${exhibition})]' != null
 						&& '[(${exhibition.mode})]' == 'OFFLINE') {
 					offlineMessage.show();
@@ -57,17 +58,20 @@
 	}
 	function defaultLinkSpaceImages() {
 		var spaceLinkImageUpload = $('#spaceLinkImageUpload');
+		flag = 'DEFAULT IMAGE' ;
 		spaceLinkImageUpload.show();
 
 	}
 
 	function defaultLinkModuleImages() {
 		var moduleLinkImageupload = $('#moduleLinkImageupload');
+		flag = 'DEFAULT IMAGE' ;
 		moduleLinkImageupload.show();
 	}
 
 	function defaultLinkExternalImages() {
 		var externalLinkImageupload = $('#externalLinkImageupload');
+		flag = 'DEFAULT IMAGE' ;
 		externalLinkImageupload.show();
 	}
 </script>
@@ -110,8 +114,10 @@
 						th:value="${exhibition.customMessage}"
 						placeholder="This exhibition is currently offline. Please check back later." />
 				</div>
+				<input type="hidden" th:value="${exhibition.customMessage}" id="flag" name = "flag"  />
+				<div>
 				
-				
+				</div>
 					
 				<p style="padding-top: 20px;">
 					<input class="btn primary-btn" type="submit" value="Submit" />
@@ -131,7 +137,7 @@
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" /> <br>
 				
-				<div id = "defaultImages">
+				<div id = "defaultImages" >
 				
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" /> <input type="hidden"
