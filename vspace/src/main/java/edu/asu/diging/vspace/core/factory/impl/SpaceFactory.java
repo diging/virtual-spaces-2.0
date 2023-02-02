@@ -13,12 +13,15 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.SpaceManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Service
 public class SpaceFactory implements ISpaceFactory {
     
-
+@Autowired
+ISpaceManager spaceManager;
     
 
 
@@ -30,18 +33,6 @@ public class SpaceFactory implements ISpaceFactory {
 		ISpace space = new Space();
 		space.setName(form.getName());
 		space.setDescription(form.getDescription());	
-	
-		form.getDescriptions().forEach(description -> {
-		    
-		    setSpaceDescription(space, description ) ;
-		
-		});
-		form.getNames().forEach(name ->  { 
-		    
-		    setSpaceName(space, name);
-		});
-//		space.setSpaceTitles(form.getNames());
-//		space.setSpaceDescriptions(form.getDescriptions());
 		return space;
 	}
 

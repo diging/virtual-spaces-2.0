@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.web.staff.forms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
@@ -9,9 +10,9 @@ public class SpaceForm {
 	private String name;
 	private String description;
 	
-	private List<LanguageDescriptionObject> names;
+	private List<LanguageDescriptionObject> names = new ArrayList();
 	
-	private List<LanguageDescriptionObject> descriptions;
+	private List<LanguageDescriptionObject> descriptions =  new ArrayList();
 	
 	
 	public String getName() {

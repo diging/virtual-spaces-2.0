@@ -301,5 +301,21 @@ public class SpaceManagerTest {
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
+    
+    @Test
+    public void test_setTitleAndDescription_success() {
+        
+    }
+    
+    @Test
+    public void test_setSpaceDescription_success() {
+        
+    }
+    
+    @Test
+    public void test_setSpaceTitle_success() {
+        
+    }
+    
 
 }

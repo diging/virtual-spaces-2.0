@@ -24,7 +24,7 @@
 					<label for="description" class="col-md-2 col-form-label">Description:</label>
  					<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
 <!--  				<input type="hidden"  th:value="${exhibitionLanguage.id}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.id'"></input>
- --> 				
+ --> 				]
 					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${spaceForm.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
 					
 					

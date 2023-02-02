@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -314,27 +316,37 @@ public class SpaceManager implements ISpaceManager {
     }
     
     private void setSpaceName(ISpace space, List<LanguageDescriptionObject> names) {
-        if(names != null && names.size() >0) {
-            ExhibitionLanguage exhibitionLanguage  = null;
+        if(!CollectionUtils.isEmpty(names)) {
+            ExhibitionLanguage exhibitionLanguage = null;
             for(LanguageDescriptionObject name : names )  {
                 if(exhibitionLanguage == null) {
                     exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
 
                 }
-//              name.setExhibitionLanguage(exhibitionLanguage); 
-            
-              LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-              languageObject.setText(name.getText());    
-              languageObject.setExhibitionLanguage(exhibitionLanguage); 
-              
-              if(space.getSpaceTitles() == null) {
-                  space.setSpaceTitles(new ArrayList<ILanguageDescriptionObject>());
-              }
-              space.getSpaceTitles().add(languageObject); 
-              
-              storeLanguageDescriptionObject(languageObject);
+                
+                name.setExhibitionLanguage(exhibitionLanguage); 
+
+                //              LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+                //              languageObject.setText(name.getText());    
+                //              languageObject.setExhibitionLanguage(exhibitionLanguage); 
+
+                if(space.getSpaceTitles() == null) {
+                    space.setSpaceTitles(new ArrayList<ILanguageDescriptionObject>());
+                }
+                String exhibitionLanguageId = exhibitionLanguage.getId();
+                Optional<ILanguageDescriptionObject> spaceTitle = space.getSpaceTitles().stream().filter(title -> exhibitionLanguageId.equals(((LanguageDescriptionObject) title).getExhibitionLanguage().getId())).findAny();
+                if(spaceTitle.isPresent()) {
+                    ((LanguageDescriptionObject) spaceTitle.get()).setText(name.getText()); 
+                }else {
+                    space.getSpaceTitles().add(name); 
+
+                }
+//                space.getSpaceTitles().stream().filter(a -> a.
+                        
+
+                //              storeLanguageDescriptionObject(name);
             }
- 
+
         }
    
         
@@ -346,31 +358,40 @@ public class SpaceManager implements ISpaceManager {
         languageDescriptionObjectRepo.save(languageObject);
     }
 
-    private void setSpaceDescription(ISpace space, LanguageDescriptionObject description) {
-        
-        
-        //todo: refactor for list 
-        ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
-        description.setExhibitionLanguage(exhibitionLanguage);
-        if(space.getSpaceDescriptions() == null) {
-            space.setSpaceDescriptions(new ArrayList<ILanguageDescriptionObject>());
+    private void setSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions) {
+        if(!CollectionUtils.isEmpty(descriptions)) {
+            ExhibitionLanguage exhibitionLanguage  = null;
+            for(LanguageDescriptionObject description : descriptions )  {               
+            exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
+                       
+            description.setExhibitionLanguage(exhibitionLanguage);
+            if(space.getSpaceDescriptions() == null) {
+                space.setSpaceDescriptions(new ArrayList<ILanguageDescriptionObject>());
+            }
+           
+//            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+//            languageObject.setText(description.getText());
+            
+            description.setExhibitionLanguage(exhibitionLanguage);
+            String exhibitionLanguageId = exhibitionLanguage.getId();
+            
+            Optional<ILanguageDescriptionObject> spaceDescription = space.getSpaceDescriptions().stream().filter(desc -> exhibitionLanguageId.equals(((LanguageDescriptionObject) desc).getExhibitionLanguage().getId())).findAny();
+            if(spaceDescription.isPresent()) {
+                ((LanguageDescriptionObject) spaceDescription.get()).setText(description.getText());
+            }else {
+                space.getSpaceDescriptions().add(description);
+
+            }
+//            storeLanguageDescriptionObject(languageObject);
+            }
+            
         }
        
-        LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-        languageObject.setText(description.getText());
-        
-        languageObject.setExhibitionLanguage(exhibitionLanguage);
-        
-        space.getSpaceDescriptions().add(languageObject);
-        storeLanguageDescriptionObject(languageObject);
-        
-        
     }
 
     @Override
     public void setTitleAndDescription(ISpace space, SpaceForm spaceForm) {
-        
-        
+              
         setSpaceName(space, spaceForm.getNames());
         setSpaceDescription(space, spaceForm.getDescriptions());
         

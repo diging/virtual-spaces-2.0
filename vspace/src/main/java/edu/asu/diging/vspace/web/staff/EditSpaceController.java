@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.web.staff;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,16 @@ public class EditSpaceController {
         SpaceForm spaceForm = new SpaceForm();
         spaceForm.setName(space.getName());
         spaceForm.setDescription(space.getDescription());
+//        if(!CollectionUtils.isEmpty(space.getSpaceDescriptions())) {
+            space.getSpaceDescriptions().forEach(description -> {
+                spaceForm.getDescriptions().add((LanguageDescriptionObject) description);
+            });
+//        }
+    
+        space.getSpaceTitles().forEach(title -> {
+            spaceForm.getNames().add((LanguageDescriptionObject) title);
+        });
+ 
         model.addAttribute("spaceForm", spaceForm);
         model.addAttribute("spaceId", spaceId);
         
@@ -56,8 +67,9 @@ public class EditSpaceController {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setName(spaceForm.getName());
         space.setDescription(spaceForm.getDescription());
-        spaceForm.getDescriptions().forEach(description -> space.getSpaceDescriptions().add(description));
-        spaceForm.getNames().forEach(name -> space.getSpaceTitles().add(name));
+        spaceManager.setTitleAndDescription(space, spaceForm);
+//        spaceForm.getDescriptions().forEach(description -> space.getSpaceDescriptions().add(description));
+//        spaceForm.getNames().forEach(name -> space.getSpaceTitles().add(name));
         spaceManager.storeSpace(space, null, null);
         return "redirect:/staff/space/{spaceId}";
     }
