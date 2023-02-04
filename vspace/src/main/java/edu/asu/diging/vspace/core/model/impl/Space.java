@@ -236,30 +236,5 @@ public class Space extends VSpaceElement implements ISpace {
     }
     
     
-    
-//    @Override 
-//    public void setDescription(String description) {             
-////        LanguageObject languageObject = new LanguageObject();
-////        languageObject.setText(description);    
-////        languageObject.setExhibitionLanguage(null);  
-////        if(this.getSpaceDescriptions() == null) {
-////            this.setSpaceDescriptions(new ArrayList());
-////        }
-////        this.getSpaceDescriptions().add(languageObject);
-//        this.setDescription(description);    
-//        }
-//    
-//    @Override 
-//    public void setName(String title) {
-////        LanguageObject languageObject = new LanguageObject();
-////        languageObject.setText(title);    
-////        languageObject.setExhibitionLanguage(null); 
-////        if(this.getSpaceTitles() == null) {
-////            this.setSpaceTitles(new ArrayList());
-////        }
-////        this.getSpaceTitles().add(languageObject);
-//        
-//        this.title = title;
-//    }
 
 }
