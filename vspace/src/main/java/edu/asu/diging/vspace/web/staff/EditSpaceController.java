@@ -31,31 +31,19 @@ public class EditSpaceController {
 
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
-        ISpace space = spaceManager.getSpace(spaceId);
-        SpaceForm spaceForm = new SpaceForm();
-        spaceForm.setName(space.getName());
-        spaceForm.setDescription(space.getDescription());
-//        if(!CollectionUtils.isEmpty(space.getSpaceDescriptions())) {
-            space.getSpaceDescriptions().forEach(description -> {
-                spaceForm.getDescriptions().add((LanguageDescriptionObject) description);
-            });
-//        }
-    
-        space.getSpaceTitles().forEach(title -> {
-            spaceForm.getNames().add((LanguageDescriptionObject) title);
-        });
- 
-        model.addAttribute("spaceForm", spaceForm);
+
+        model.addAttribute("spaceForm", spaceManager.getSpaceForm(spaceId));
         model.addAttribute("spaceId", spaceId);
         
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();   
         
-        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
-        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
-            languageObjectList.add(languageObject);
-        });
+        
+//        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
+//        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
+//            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+//            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
+//            languageObjectList.add(languageObject);
+//        });
         
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 
@@ -67,9 +55,7 @@ public class EditSpaceController {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setName(spaceForm.getName());
         space.setDescription(spaceForm.getDescription());
-        spaceManager.setTitleAndDescription(space, spaceForm);
-//        spaceForm.getDescriptions().forEach(description -> space.getSpaceDescriptions().add(description));
-//        spaceForm.getNames().forEach(name -> space.getSpaceTitles().add(name));
+        spaceManager.updateNameAndDescription(space, spaceForm);
         spaceManager.storeSpace(space, null, null);
         return "redirect:/staff/space/{spaceId}";
     }

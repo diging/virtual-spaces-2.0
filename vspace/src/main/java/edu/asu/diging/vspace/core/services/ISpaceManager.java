@@ -41,13 +41,19 @@ public interface ISpaceManager {
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
 
-    void setTitleAndDescription(ISpace space, SpaceForm spaceForm);
+    void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
 
-    void setDefaultSpaceName(ISpace space);
+    void setNameAsDefaultLanguage(ISpace space);
 
-    void setDefaultSpaceDescription(ISpace space);
+    void setDescriptionAsDefaultLanguage(ISpace space);
 
-    void setSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions);
+    void addSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions);
 
-    void setSpaceName(ISpace space, List<LanguageDescriptionObject> names);
+    void addSpaceName(ISpace space, List<LanguageDescriptionObject> names);
+
+    Iterable<Space> getSpaceList();
+
+    void updateSpacesWithDefaultNameAndDescription(Iterable<Space> spaceList);
+
+    SpaceForm getSpaceForm(String spaceId);
 }

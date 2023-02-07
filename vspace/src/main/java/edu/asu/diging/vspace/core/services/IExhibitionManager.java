@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 
 /*
  * (non-Javadoc)

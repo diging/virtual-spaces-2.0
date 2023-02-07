@@ -212,6 +212,8 @@ public class SpaceManager implements ISpaceManager {
         space.getSpaceLinks().size();
         space.getModuleLinks().size();
         space.getExternalLinks().size();
+        setDescriptionAsDefaultLanguage(space);
+        setNameAsDefaultLanguage(space);
         return space;
     }
 
@@ -306,6 +308,8 @@ public class SpaceManager implements ISpaceManager {
         while (iterator.hasNext()) {
             Space space = iterator.next();
             space.setIncomingLinks((spaceLinkRepo.findByTargetSpace(space)).size() > 0 ? true : false);
+            setDescriptionAsDefaultLanguage(space);
+            setNameAsDefaultLanguage(space);
         }
         return spaces;
     }
@@ -317,39 +321,42 @@ public class SpaceManager implements ISpaceManager {
     
     /**
      * 
+     * Adds name to spaceNames List
+     * 
      * 
      * @param space
      * @param names
      */
     @Override
-    public void setSpaceName(ISpace space, List<LanguageDescriptionObject> names) {
+    public void addSpaceName(ISpace space, List<LanguageDescriptionObject> names) {
         if(!CollectionUtils.isEmpty(names)) {
             for(LanguageDescriptionObject name : names )  {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
                 name.setExhibitionLanguage(exhibitionLanguage); 
-                Optional<ILanguageDescriptionObject> spaceTitle = space.getSpaceTitles().stream()
+                Optional<ILanguageDescriptionObject> spaceTitle = space.getSpaceNames().stream()
                         .filter(title -> exhibitionLanguage.getId().equals(((LanguageDescriptionObject) title).getExhibitionLanguage().getId()))
                         .findAny();
                 if(spaceTitle.isPresent()) {
                     ((LanguageDescriptionObject) spaceTitle.get()).setText(name.getText()); 
                 } else {
-                    space.getSpaceTitles().add(name); 
+                    space.getSpaceNames().add(name); 
 
                 }
 
             }
 
         }
+        setNameAsDefaultLanguage(space);
               
     }
 
     /**
-     * 
+     * Adds description to spaceDescription list.
      * @param space
      * @param descriptions
      */
     @Override
-    public void setSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions) {
+    public void addSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions) {
         if(!CollectionUtils.isEmpty(descriptions)) {
             for(LanguageDescriptionObject description : descriptions )  {               
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
@@ -364,37 +371,68 @@ public class SpaceManager implements ISpaceManager {
 
                 }
             }
-
         }
+        setDescriptionAsDefaultLanguage(space);     
 
     }
 
     @Override
-    public void setTitleAndDescription(ISpace space, SpaceForm spaceForm) {
+    public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {              
+        addSpaceName(space, spaceForm.getNames());
+        addSpaceDescription(space, spaceForm.getDescriptions());             
+    }
+
+    @Override
+    public void setNameAsDefaultLanguage(ISpace space) {
+        String defaultSpaceName = space.getSpaceNames().stream()
+                .filter(title -> Boolean.TRUE.equals(title.getExhibitionLanguage().isDefault()))     
+                .map(ILanguageDescriptionObject::getText)
+                .findAny().orElse(space.getName()) ;
+        space.setName(defaultSpaceName);
+
+    }
+
+    @Override
+    public void setDescriptionAsDefaultLanguage(ISpace space) {
+        String defaultSpaceDescription = space.getSpaceDescriptions().stream()
+                .filter(description -> Boolean.TRUE.equals(description.getExhibitionLanguage().isDefault()))
+                .map(ILanguageDescriptionObject::getText)
+                .findAny().orElse(space.getDescription());       
+        space.setDescription(defaultSpaceDescription);
+
+    }
+    
+    @Override
+    public Iterable<Space> getSpaceList() {
+        Iterable<Space> spaceList = addIncomingLinkInfoToSpaces(spaceRepo.findAll());
+        updateSpacesWithDefaultNameAndDescription(spaceList);        
+        return spaceList;
               
-        setSpaceName(space, spaceForm.getNames());
-        setSpaceDescription(space, spaceForm.getDescriptions());
-        setDefaultSpaceName(space);
-        setDefaultSpaceDescription(space);
-        
     }
 
     @Override
-    public void setDefaultSpaceName(ISpace space) {
-        ILanguageDescriptionObject defaultSpaceName = space.getSpaceTitles().stream()
-                .filter(title -> Boolean.TRUE.equals(((LanguageDescriptionObject) title).getExhibitionLanguage().isDefault()))
-                .findAny().orElse(null);
-        space.setName(defaultSpaceName != null ? ((LanguageDescriptionObject) defaultSpaceName).getText() : null);
-//        return defaultSpaceName != null ? ((LanguageDescriptionObject) defaultSpaceName).getText() : null ;
+    public void updateSpacesWithDefaultNameAndDescription(Iterable<Space> spaceList) {
+        spaceList.forEach(space -> {
+            setDescriptionAsDefaultLanguage(space);
+            setNameAsDefaultLanguage(space);
+        });
     }
 
     @Override
-    public void setDefaultSpaceDescription(ISpace space) {
-        ILanguageDescriptionObject defaultSpaceDescription = space.getSpaceDescriptions().stream()
-                .filter(description -> Boolean.TRUE.equals(((LanguageDescriptionObject) description).getExhibitionLanguage().isDefault()))
-                .findAny().orElse(null);       
-        space.setDescription(defaultSpaceDescription != null ? ((LanguageDescriptionObject) defaultSpaceDescription).getText() : null);
-//        return defaultSpaceDescription != null ? ((LanguageDescriptionObject) defaultSpaceDescription).getText() : null;
+    public SpaceForm getSpaceForm(String spaceId) {
+        ISpace space = getSpace(spaceId);
+        SpaceForm spaceForm = new SpaceForm();
+        spaceForm.setName(space.getName());
+        spaceForm.setDescription(space.getDescription());
+        space.getSpaceDescriptions().forEach(description -> {
+            spaceForm.getDescriptions().add((LanguageDescriptionObject) description);
+        });
+
+        space.getSpaceNames().forEach(title -> {
+            spaceForm.getNames().add((LanguageDescriptionObject) title);
+        });
+
+        return spaceForm;
 
     }
 }

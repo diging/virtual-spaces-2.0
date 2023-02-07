@@ -63,8 +63,8 @@ public class Space extends VSpaceElement implements ISpace {
     private Boolean incomingLinks;
     
     @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name="Space_LangObj_titles")
-    private List<ILanguageDescriptionObject> spaceTitles = new ArrayList();
+    @JoinTable(name="Space_LangObj_names")
+    private List<ILanguageDescriptionObject> spaceNames = new ArrayList();
     
     @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_descriptions")
@@ -218,12 +218,12 @@ public class Space extends VSpaceElement implements ISpace {
         this.hideIncomingLinks = hideIncomingLinks;
     }
     
-    public List<ILanguageDescriptionObject> getSpaceTitles() {
-        return spaceTitles;
+    public List<ILanguageDescriptionObject> getSpaceNames() {
+        return spaceNames;
     }
 
-    public void setSpaceTitles(List<ILanguageDescriptionObject> spaceTitles) {
-        this.spaceTitles = spaceTitles;
+    public void setSpaceNames(List<ILanguageDescriptionObject> spaceNames) {
+        this.spaceNames = spaceNames;
     }
 
     public List<ILanguageDescriptionObject> getSpaceDescriptions() {

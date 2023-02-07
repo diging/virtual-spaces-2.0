@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -25,10 +26,13 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -73,6 +77,9 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+    
+    @Mock
+    private ExhibitionLanguageRepository exhibitionLanguageRepo;
 
 
     @InjectMocks
@@ -301,21 +308,85 @@ public class SpaceManagerTest {
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
-    
+
     @Test
-    public void test_setTitleAndDescription_success() {
-        
+    public void test_addSpaceDescription_success() {
+        Space space=new Space();
+        space.setId(spaceId1);
+
+        List<LanguageDescriptionObject> descriptionList = new ArrayList();
+        LanguageDescriptionObject languageObj = new LanguageDescriptionObject();
+        languageObj.setText("Space description");
+
+        ExhibitionLanguage lang = new ExhibitionLanguage();
+        lang.setLabel("English");
+        languageObj.setExhibitionLanguage(lang);
+        descriptionList.add(languageObj);
+
+        Mockito.when(exhibitionLanguageRepo.findByLabel(lang.getLabel())).thenReturn(lang);
+        managerToTest.addSpaceDescription(space, descriptionList);
+        Assert.assertEquals(space.getSpaceDescriptions().size(), 1);
+
+
     }
     
     @Test
-    public void test_setSpaceDescription_success() {
+    public void test_addSpaceName_success() {
+        Space space=new Space();
+        space.setId(spaceId1);
         
+        List<LanguageDescriptionObject> nameList = new ArrayList();
+        LanguageDescriptionObject languageObj = new LanguageDescriptionObject();
+        languageObj.setText("Space Name");
+
+        ExhibitionLanguage lang = new ExhibitionLanguage();
+        lang.setLabel("English");
+        languageObj.setExhibitionLanguage(lang);
+        nameList.add(languageObj);
+
+        Mockito.when(exhibitionLanguageRepo.findByLabel(lang.getLabel())).thenReturn(lang);
+        managerToTest.addSpaceName(space, nameList);
+        Assert.assertEquals(space.getSpaceNames().size(), 1);
+
     }
     
+    
     @Test
-    public void test_setSpaceTitle_success() {
+    public void setNameAsDefaultLanguage() {
+        Space space=new Space();
+        space.setId(spaceId1);
+        List<ILanguageDescriptionObject> nameList = new ArrayList();
+        
+        LanguageDescriptionObject languageObj1 = new LanguageDescriptionObject();
+        languageObj1.setText("Space Name English");
+        ExhibitionLanguage lang1 = new ExhibitionLanguage();
+        lang1.setLabel("English");
+        lang1.setDefault(false);
+        languageObj1.setExhibitionLanguage(lang1);
+        nameList.add(languageObj1);
+        
+        LanguageDescriptionObject languageObj2 = new LanguageDescriptionObject();
+        languageObj2.setText("Raumname");
+        ExhibitionLanguage lang2 = new ExhibitionLanguage();
+        lang2.setLabel("German");
+        lang2.setDefault(true);
+        languageObj2.setExhibitionLanguage(lang1);
+        nameList.add(languageObj2);
+        
+        Mockito.when(exhibitionLanguageRepo.findByLabel(lang1.getLabel())).thenReturn(lang1);
+        Mockito.when(exhibitionLanguageRepo.findByLabel(lang2.getLabel())).thenReturn(lang2);
+
+        space.setSpaceNames(nameList);
+//        Assert.assertEquals(space.getName(), null);
+        
+        managerToTest.setNameAsDefaultLanguage(space);
+        
+        
+        Assert.assertEquals(space.getName(), "Raumname");
+        
         
     }
+
     
 
 }

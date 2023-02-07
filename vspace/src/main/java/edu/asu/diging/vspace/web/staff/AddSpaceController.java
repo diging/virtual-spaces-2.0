@@ -54,15 +54,17 @@ public class AddSpaceController {
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
         model.addAttribute("space", new SpaceForm());
-        model.addAttribute("images", imageService.getImages(1));      
+        model.addAttribute("images", imageService.getImages(1));          
+        
+//        List<LanguageDescriptionObject> languageObjectList  = exhibitionManager.getLanguageDescriptionObjectList();
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
        
-        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
-        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
-            languageObjectList.add(languageObject);
-        });
+//        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
+//        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
+//            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+//            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
+//            languageObjectList.add(languageObject);
+//        });
         
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 
@@ -73,7 +75,7 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
-        spaceManager.setTitleAndDescription(space, spaceForm);
+        spaceManager.updateNameAndDescription(space, spaceForm);
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
         String filename = null;
