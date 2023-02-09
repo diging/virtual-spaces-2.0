@@ -10,16 +10,15 @@
 
     <properties>
         <org.slf4j-version>1.7.5</org.slf4j-version>
-        <spring.version>5.0.19.RELEASE</spring.version>
+        <spring.version>5.3.0</spring.version>
         <spring-data.version>Kay-SR8</spring-data.version>
-        <spring-security-version>5.3.10.RELEASE</spring-security-version>
+        <spring-security-version>5.5.7</spring-security-version>
         <thymeleaf.version>3.0.13.RELEASE</thymeleaf.version>
-        <javers.version>5.11.1</javers.version>
+        <javers.version>5.15.0</javers.version>
         <simple-users-version>0.5</simple-users-version>
         <admin.username>admin</admin.username>
         <admin.password>$2a$04$ug2wdYfAW8Ey/DwjUdPuLufgrMqbhNnTmr1QEUNZnoWF1xGitSBae</admin.password>
         <staff.password>$2a$04$QhdsxRoZPJw/G06aDkP6COLARKtbdTxVvxtKPZUE0dFlNKFMZsXRe</staff.password>
-
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
@@ -301,8 +300,8 @@
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.3.2.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.24.Final</version>
         </dependency>
 
         <dependency>
