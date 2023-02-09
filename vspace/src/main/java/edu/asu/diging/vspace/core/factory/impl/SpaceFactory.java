@@ -10,7 +10,6 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 @Service
 public class SpaceFactory implements ISpaceFactory {
 
-
 	/* (non-Javadoc)
 	 * @see edu.asu.diging.vspace.core.factory.impl.ISpaceFactory#createSpace(edu.asu.diging.vspace.web.staff.forms.SpaceForm)
 	 */
@@ -20,5 +19,5 @@ public class SpaceFactory implements ISpaceFactory {
 		space.setName(form.getName());
 		space.setDescription(form.getDescription());
 		return space;
-	}   
+	}
 }
