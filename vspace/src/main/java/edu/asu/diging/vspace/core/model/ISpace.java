@@ -41,8 +41,5 @@ public interface ISpace extends IVSpaceElement {
     void setSpaceDescriptions(List<ILanguageDescriptionObject> spaceDescriptions);
     
     List<ILanguageDescriptionObject> getSpaceDescriptions() ;
-    
-    
-    
 
 }

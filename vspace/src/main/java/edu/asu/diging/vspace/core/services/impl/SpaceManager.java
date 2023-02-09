@@ -332,13 +332,13 @@ public class SpaceManager implements ISpaceManager {
         if(!CollectionUtils.isEmpty(names)) {
             for(LanguageDescriptionObject name : names )  {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
-                if(exhibitionLanguage!= null) {
+                if(exhibitionLanguage != null) {
                     name.setExhibitionLanguage(exhibitionLanguage); 
                     Optional<ILanguageDescriptionObject> spaceTitle = space.getSpaceNames().stream()
-                            .filter(title -> exhibitionLanguage.getId().equals(((LanguageDescriptionObject) title).getExhibitionLanguage().getId()))
+                            .filter(title -> exhibitionLanguage.getId().equals(title.getExhibitionLanguage().getId()))
                             .findAny();
                     if(spaceTitle.isPresent()) {
-                        ((LanguageDescriptionObject) spaceTitle.get()).setText(name.getText()); 
+                        spaceTitle.get().setText(name.getText()); 
                     } else {
                         space.getSpaceNames().add(name); 
 
@@ -362,19 +362,18 @@ public class SpaceManager implements ISpaceManager {
         if(!CollectionUtils.isEmpty(descriptions)) {
             for(LanguageDescriptionObject description : descriptions )  {               
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
-                if(exhibitionLanguage!= null) {
+                if(exhibitionLanguage != null) {
                     description.setExhibitionLanguage(exhibitionLanguage);
                     Optional<ILanguageDescriptionObject> spaceDescription = space.getSpaceDescriptions().stream()
-                            .filter(desc -> exhibitionLanguage.getId().equals(((LanguageDescriptionObject) desc).getExhibitionLanguage().getId()))
+                            .filter(desc -> exhibitionLanguage.getId().equals(desc.getExhibitionLanguage().getId()))
                             .findAny();
                     if(spaceDescription.isPresent()) {
-                        ((LanguageDescriptionObject) spaceDescription.get()).setText(description.getText());
+                        spaceDescription.get().setText(description.getText());
                     } else {
                         space.getSpaceDescriptions().add(description);
 
                     }
                 }
-
             }
         }
         setDescriptionAsDefaultLanguage(space);     

@@ -8,5 +8,7 @@ public interface ILanguageDescriptionObject {
 
     ExhibitionLanguage getExhibitionLanguage();
 
+    void setText(String text);
+
      
 }
