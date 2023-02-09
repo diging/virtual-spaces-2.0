@@ -25,7 +25,7 @@ import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
  *
  */
 @Entity
-public class ExhibitionAboutPage{
+public class ExhibitionAboutPage {
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
