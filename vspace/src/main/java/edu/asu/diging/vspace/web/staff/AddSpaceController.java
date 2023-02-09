@@ -55,16 +55,7 @@ public class AddSpaceController {
     public String showAddSpace(Model model) {
         model.addAttribute("space", new SpaceForm());
         model.addAttribute("images", imageService.getImages(1));          
-        
-//        List<LanguageDescriptionObject> languageObjectList  = exhibitionManager.getLanguageDescriptionObjectList();
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
-       
-//        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
-//        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-//            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-//            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
-//            languageObjectList.add(languageObject);
-//        });
         
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 

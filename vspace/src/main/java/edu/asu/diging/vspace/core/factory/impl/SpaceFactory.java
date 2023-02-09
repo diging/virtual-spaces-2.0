@@ -20,8 +20,8 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 @Service
 public class SpaceFactory implements ISpaceFactory {
     
-@Autowired
-ISpaceManager spaceManager;
+    @Autowired
+    ISpaceManager spaceManager;
     
 
 

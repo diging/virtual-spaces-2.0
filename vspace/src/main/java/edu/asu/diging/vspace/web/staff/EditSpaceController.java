@@ -37,14 +37,6 @@ public class EditSpaceController {
         
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();   
         
-        
-//        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
-//        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-//            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-//            languageObject.setExhibitionLanguage((ExhibitionLanguage) exhibitionLanguage);
-//            languageObjectList.add(languageObject);
-//        });
-        
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 
         return "staff/spaces/edit";
