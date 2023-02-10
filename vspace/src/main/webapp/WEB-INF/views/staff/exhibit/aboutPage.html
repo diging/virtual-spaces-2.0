@@ -30,16 +30,19 @@
 				method="POST" name="f">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 				
-				<div style="padding-top: 20px;" th:each= "exhibitionLanguage : ${languageObjectList}" > 
+				<div style="padding-top: 20px;" th:each= "exhibitionLanguage : ${exhibitionLanguageList}" > 
 					<p>[[${exhibitionLanguage.label}]]</p>
 					<div>
 						<label for="titles">About Page Title:</label>
- 						<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="title='titles'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
-						<input type="text" class="form-control" name="titles" id="title" th:field= "${aboutPage.titles[__${exhibitionLanguageStat.index}__].userText}"></input>
+						<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='titles'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+						
+						<input type="text" class="form-control" name="titles" id="title" th:field= "${aboutPage.titles[__${exhibitionLanguageStat.index}__].text}"></input>
 					</div>
 					<div style="padding-top: 20px;">
 						<label for="description">Text:</label>
-						<textarea class="form-control" rows="5" cols="30" name="aboutPageTexts" th:field= "${aboutPage.aboutPageTexts[__${exhibitionLanguageStat.index}__].userText}"></textarea>
+						<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='aboutPageTexts'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+						
+						<textarea class="form-control" rows="5" cols="30" name="aboutPageTexts" th:field= "${aboutPage.aboutPageTexts[__${exhibitionLanguageStat.index}__].text}"></textarea>
 					</div>
 				</div>	
 				<p style="padding-top: 20px;">

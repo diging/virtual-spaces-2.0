@@ -23,7 +23,7 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
     @OneToOne(targetEntity = ExhibitionLanguage.class)
     ExhibitionLanguage exhibitionLanguage; 
 
-    String userText;
+    String text;
     
 
     public String getId() {
@@ -34,12 +34,12 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
         this.id = id;
     }
 
-    public String getUserText() {
-        return userText;
+    public String getText() {
+        return text;
     }
 
-    public void setUserText(String userText) {
-        this.userText = userText;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public ExhibitionLanguage getExhibitionLanguage() {

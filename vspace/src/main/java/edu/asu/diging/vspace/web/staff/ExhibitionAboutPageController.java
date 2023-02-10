@@ -68,7 +68,7 @@ public class ExhibitionAboutPageController {
 //            languageObject.setExhibitionLanguage((ExhibitionLanguage)exhibitionLanguage);
 //            languageObjectList.add(languageObject);
 //        });
-        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
+        model.addAttribute("exhibitionLanguageList" , startExhibtion.getLanguages());
         return "staff/exhibit/aboutPage";
     }
 

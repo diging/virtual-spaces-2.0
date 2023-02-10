@@ -1,9 +1,12 @@
 package edu.asu.diging.vspace.core.model;
 
-import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
-import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 
 public interface ILanguageDescriptionObject {
+    
+    String getText();
 
+    ExhibitionLanguage getExhibitionLanguage();
+
+    void setText(String text);
 }

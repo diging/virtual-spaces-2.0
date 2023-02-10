@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -41,11 +42,11 @@ public class ExhibitionAboutPage {
     
     @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="AboutPage_LangObj_titles")
-    private List<ILanguageDescriptionObject> exhibitionTitles;
+    private List<ILanguageDescriptionObject> exhibitionTitles = new ArrayList<ILanguageDescriptionObject>();
 
     @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="AboutPage_LangObj_descriptions")
-    private List<ILanguageDescriptionObject> exhibitionTextDescriptions;
+    private List<ILanguageDescriptionObject> exhibitionTextDescriptions = new ArrayList<ILanguageDescriptionObject>();
 
 
     public List<ILanguageDescriptionObject> getExhibitionTitles() {
