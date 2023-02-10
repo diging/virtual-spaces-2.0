@@ -28,13 +28,15 @@ public class SequenceOverview {
         this.id = id;
     }
 
-    public List<SlideOverview> getSlides() {
+    public List<SlideOverview> getSlideOverviews() {
         return slideOverviews;
     }
 
-    public void setSlides(List<SlideOverview> slideOverviews) {
+    public void setSlideOverviews(List<SlideOverview> slideOverviews) {
         this.slideOverviews = slideOverviews;
     }
+
+   
 
 
 

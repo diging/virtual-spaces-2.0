@@ -55,7 +55,7 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
         sequenceOverview.setName(sequence.getName());
         sequenceOverview.setId(sequence.getId());
         List<SlideOverview> slideOverviews = createSlideOverviewNode(sequence.getSlides());
-        sequenceOverview.setSlides(slideOverviews);
+        sequenceOverview.setSlideOverviews(slideOverviews);
         return sequenceOverview;  
     }
     
