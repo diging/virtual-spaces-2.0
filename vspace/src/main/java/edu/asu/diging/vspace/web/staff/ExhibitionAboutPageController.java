@@ -74,6 +74,7 @@ public class ExhibitionAboutPageController {
         ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+        //TODO: send exhibitionAboutPage an update it
         exhibitionAboutPage=aboutPageManager.storeAboutPageData(aboutPageForm,languageAboutPage);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");

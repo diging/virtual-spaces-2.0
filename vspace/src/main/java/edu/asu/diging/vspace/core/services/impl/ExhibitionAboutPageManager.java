@@ -36,9 +36,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-    private LanguageDescriptionObjectRepository languageObjectRepo;
-    
-    @Autowired
     private ExhibitionLanguageRepository exhibitionLanguageRepository;
     
     
@@ -76,6 +73,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
      */
     @Override
+    @Transactional
     public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if(!exhibition.isAboutPageConfigured()) {
@@ -108,7 +106,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             if(exhibitionLanguage != null) {
                 title.setExhibitionLanguage(exhibitionLanguage);
             }
-            Optional<ILanguageDescriptionObject> text =   exhibitionAboutPage.getExhibitionTitles().stream().filter(exhibitionTitle-> {
+            Optional<ILanguageDescriptionObject> text = exhibitionAboutPage.getExhibitionTitles().stream().filter(exhibitionTitle-> {
                 return  exhibitionTitle.getExhibitionLanguage().equals(exhibitionLanguage);
             }).findAny();
             if(text.isPresent()) {
@@ -116,8 +114,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             } else {
                 exhibitionAboutPage.getExhibitionTitles().add(title);
             }
-
-            //            storeLanguageObject(languageObject);
         }
 
     }
@@ -142,14 +138,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             } else {
                 exhibitionAboutPage.getExhibitionTextDescriptions().add(aboutPageText);
             }
-            //            storeLanguageObject(languageObject);
         }
 
     }
-	/**
-     * This method save the LanguageDescriptionObject in database.
-    */
-    private void storeLanguageObject(LanguageDescriptionObject languageObject) {
-        languageObjectRepo.save(languageObject);
-    }   
 }
