@@ -62,12 +62,7 @@ public class ExhibitionAboutPageController {
         aboutPageForm.setAboutPageTexts(textList);
         model.addAttribute("aboutPage", aboutPageForm);
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-//        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
-//        startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-//            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-//            languageObject.setExhibitionLanguage((ExhibitionLanguage)exhibitionLanguage);
-//            languageObjectList.add(languageObject);
-//        });
+
         model.addAttribute("exhibitionLanguageList" , startExhibtion.getLanguages());
         return "staff/exhibit/aboutPage";
     }

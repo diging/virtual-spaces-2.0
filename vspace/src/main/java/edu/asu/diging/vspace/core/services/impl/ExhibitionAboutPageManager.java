@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
@@ -99,16 +102,22 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTitles list for each user selected Exhibition Language.
     */
     public void setAboutPageTitle(LanguageDescriptionObject title, ExhibitionAboutPage exhibitionAboutPage) {
-        if(title!=null)
-        {
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-            languageObject.setText(title.getText());
+        if(title!=null) {
+
             ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(title.getExhibitionLanguage().getLabel());
             if(exhibitionLanguage != null) {
-                languageObject.setExhibitionLanguage(exhibitionLanguage);
+                title.setExhibitionLanguage(exhibitionLanguage);
             }
-            exhibitionAboutPage.getExhibitionTitles().add(languageObject);
-            storeLanguageObject(languageObject);
+            Optional<ILanguageDescriptionObject> text =   exhibitionAboutPage.getExhibitionTitles().stream().filter(exhibitionTitle-> {
+                return  exhibitionTitle.getExhibitionLanguage().equals(exhibitionLanguage);
+            }).findAny();
+            if(text.isPresent()) {
+                text.get().setText(title.getText());
+            } else {
+                exhibitionAboutPage.getExhibitionTitles().add(title);
+            }
+
+            //            storeLanguageObject(languageObject);
         }
 
     }
@@ -118,16 +127,22 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTextDescriptions list for each user selected Exhibition Language.
     */
     public void setAboutPageDescription(LanguageDescriptionObject aboutPageText, ExhibitionAboutPage exhibitionAboutPage) {
-        if(aboutPageText!=null)
-        {
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-            languageObject.setText(aboutPageText.getText());
+        if(aboutPageText!=null) {
+
             ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(aboutPageText.getExhibitionLanguage().getLabel());
             if(exhibitionLanguage != null) {
-                languageObject.setExhibitionLanguage(exhibitionLanguage);
+                aboutPageText.setExhibitionLanguage(exhibitionLanguage);
             }
-            exhibitionAboutPage.getExhibitionTextDescriptions().add(languageObject);
-            storeLanguageObject(languageObject);
+            Optional<ILanguageDescriptionObject> text =   exhibitionAboutPage.getExhibitionTextDescriptions().stream().filter(textDescription -> {
+                return  textDescription.getExhibitionLanguage().equals(exhibitionLanguage);
+            }).findAny();
+
+            if(text.isPresent()) {
+                text.get().setText(aboutPageText.getText());
+            } else {
+                exhibitionAboutPage.getExhibitionTextDescriptions().add(aboutPageText);
+            }
+            //            storeLanguageObject(languageObject);
         }
 
     }
