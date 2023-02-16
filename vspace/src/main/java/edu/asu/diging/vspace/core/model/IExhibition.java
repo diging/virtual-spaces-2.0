@@ -25,5 +25,11 @@ public interface IExhibition extends IVSpaceElement {
     boolean isAboutPageConfigured();
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
+    
+    IVSImage getModulelinkImage();
+    
+    IVSImage getSpacelinkImage();
+    
+    IVSImage getExternallinkImage();
 
 }

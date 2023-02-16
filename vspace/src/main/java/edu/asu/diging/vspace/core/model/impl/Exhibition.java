@@ -8,11 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 /**
  * Represents an exhibition that can have a default start space.
@@ -38,11 +41,19 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String customMessage;
     
-    private byte[] spacelinkImage;
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage spacelinkImage;
     
-    private byte[] modulelinkImage;
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage modulelinkImage;
     
-    private byte[] externallinkImage;
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage externallinkImage;
+    
+    
     
     private boolean aboutPageConfigured;
 
@@ -102,13 +113,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     
 
-	public byte[] getSpacelinkImage() {
-		return spacelinkImage;
-	}
-
-	public void setSpacelinkImage(byte[] spacelinkImage) {
-		this.spacelinkImage = spacelinkImage;
-	}
+	
 
 	public ExhibitionModes getMode() {
         return mode;
@@ -136,22 +141,31 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.aboutPageConfigured = aboutPageConfigured;
     }
 
-	public byte[] getModulelinkImage() {
-		return modulelinkImage;
-	}
+    public IVSImage getModulelinkImage() {
+        return modulelinkImage;
+    }
 
-	public void setModulelinkImage(byte[] modulelinkImage) {
-		this.modulelinkImage = modulelinkImage;
-	}
+    public IVSImage getSpacelinkImage() {
+        return spacelinkImage;
+    }
 
-	public byte[] getExternallinkImage() {
-		return externallinkImage;
-	}
+    public void setModulelinkImage(IVSImage modulelinkImage) {
+        this.modulelinkImage = modulelinkImage;
+    }
 
-	public void setExternallinkImage(byte[] externallinkImage) {
-		this.externallinkImage = externallinkImage;
-	}
-    
+    public IVSImage getExternallinkImage() {
+        return externallinkImage;
+    }
+
+    public void setExternallinkImage(IVSImage externallinkImage) {
+        this.externallinkImage = externallinkImage;
+    }
+
+    public void setSpacelinkImage(IVSImage spacelinkImage) {
+        this.spacelinkImage = spacelinkImage;
+    }
+
+	
     
 
 }

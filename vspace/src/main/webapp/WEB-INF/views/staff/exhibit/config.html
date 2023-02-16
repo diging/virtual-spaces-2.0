@@ -82,7 +82,7 @@
 		<h2>Exhibition Configuration</h2>
 
 		<div style="padding: 30px 0;">
-			<form th:action="@{/staff/exhibit/config}" method="post" name="f">
+			<form th:action="@{|/staff/exhibit/config?${_csrf.parameterName}=${_csrf.token}|}" method="post" name="f" enctype="multipart/form-data">
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" /> <input type="hidden"
 					th:value="${exhibition?.id}" name="exhibitionParam" /> <label
@@ -118,39 +118,8 @@
 				<div>
 				
 				</div>
-					
-				<p style="padding-top: 20px;">
-					<input class="btn primary-btn" type="submit" value="Submit" />
-				</p>
 				
-			</form>
-			<div style="padding-top: 20px;">
-						<button id="addDefaultImage" type="button"
-							onClick="defaultLinkImages()" class="btn primary-btn btn-sm">Default
-							 Link Images</button>
-
-					</div>
-
-			<form method="post"
-				th:action="@{|/staff/exhibit/config/images?${_csrf.parameterName}=${_csrf.token}|}"
-				enctype="multipart/form-data">
-				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}" /> <br>
-				
-				<div id = "defaultImages" >
-				
-				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}" /> <input type="hidden"
-					th:value="${exhibition?.id}" name="exhibitionParam" /> <label
-					for="space">Select the start space of the exhibition:</label> <select
-					class="form-control" id = "spaceParamExihibit" name="spaceParamExihibit">
-					<option th:id="${space.id}" th:each="space: ${spacesList}"
-						th:value="${space.id}"
-						th:selected="${#strings.equals(space.id,exhibition?.startSpace?.id)}">
-						[[${space.name}]]</option>
-				</select>
-				
-					<div style="padding-top: 20px;">
+				<div style="padding-top: 20px;">
 						<button id="spaceLinkbtnDisplay" type="button"
 							onClick="defaultLinkSpaceImages()" class="btn primary-btn btn-sm">Default
 							Space Link Image</button>
@@ -168,7 +137,7 @@
 								class="btn light btn-sm btn-sm">Cancel</button>
 						</p>
 					</div>
-
+					
 					<div style="padding-top: 20px;">
 						<button id="moduleLinkbtn" type="button"
 							onClick="defaultLinkModuleImages()"
@@ -186,9 +155,6 @@
 								class="btn light btn-sm btn-sm">Cancel</button>
 						</p>
 					</div>
-
-
-
 					<div style="padding-top: 20px;">
 						<button id="externalLinkbtn" type="button"
 							onClick="defaultLinkExternalImages()"
@@ -207,14 +173,18 @@
 
 
 					</div>
-					<br>
-					<button type="submit" id="changeBgImgBtn"
-						class="btn primary-btn btn-sm btn-sm">Upload</button>
+					
+					
+				<p style="padding-top: 20px;">
+					<input class="btn primary-btn" type="submit" value="Submit" />
+				</p>
+				
 			</form>
-		</div>
-	</div>
+			
+
+			
 
 
-	</div>
+	
 </body>
 </html>
