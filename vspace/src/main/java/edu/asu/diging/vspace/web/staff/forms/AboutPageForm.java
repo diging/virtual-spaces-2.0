@@ -2,7 +2,7 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
 public class AboutPageForm {
 	
@@ -10,9 +10,9 @@ public class AboutPageForm {
 
     private String aboutPageText;
     
-    private List<LanguageDescriptionObject> titles;
+    private List<LocalizedText> titles;
 	
-    private List<LanguageDescriptionObject> aboutPageTexts;
+    private List<LocalizedText> aboutPageTexts;
 
     public String getTitle() {
         return title;
@@ -30,19 +30,19 @@ public class AboutPageForm {
         this.aboutPageText = aboutPageText;
     }
 
-    public List<LanguageDescriptionObject> getTitles() {
+    public List<LocalizedText> getTitles() {
         return titles;
     }
 
-    public void setTitles(List<LanguageDescriptionObject> titles) {
+    public void setTitles(List<LocalizedText> titles) {
         this.titles = titles;
     }
 
-    public List<LanguageDescriptionObject> getAboutPageTexts() {
+    public List<LocalizedText> getAboutPageTexts() {
         return aboutPageTexts;
     }
 
-    public void setAboutPageTexts(List<LanguageDescriptionObject> aboutPageTexts) {
+    public void setAboutPageTexts(List<LocalizedText> aboutPageTexts) {
         this.aboutPageTexts = aboutPageTexts;
     }	
 

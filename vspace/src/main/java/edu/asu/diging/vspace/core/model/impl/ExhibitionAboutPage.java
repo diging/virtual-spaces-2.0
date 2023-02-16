@@ -17,7 +17,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 
 /**
  * Model for Exhibition About Page
@@ -40,30 +40,13 @@ public class ExhibitionAboutPage {
     
     
     
-    @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name="AboutPage_LangObj_titles")
-    private List<ILanguageDescriptionObject> exhibitionTitles = new ArrayList<ILanguageDescriptionObject>();
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="AboutPage_LocText_titles")
+    private List<ILocalizedText> exhibitionTitles = new ArrayList<ILocalizedText>();
 
-    @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name="AboutPage_LangObj_descriptions")
-    private List<ILanguageDescriptionObject> exhibitionTextDescriptions = new ArrayList<ILanguageDescriptionObject>();
-
-
-    public List<ILanguageDescriptionObject> getExhibitionTitles() {
-        return exhibitionTitles;
-    }
-
-    public void setExhibitionTitles(List<ILanguageDescriptionObject> exhibitionTitles) {
-        this.exhibitionTitles = exhibitionTitles;
-    }
-
-    public List<ILanguageDescriptionObject> getExhibitionTextDescriptions() {
-        return exhibitionTextDescriptions;
-    }
-
-    public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
-        this.exhibitionTextDescriptions = exhibitionTextDescriptions;
-    }
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="AboutPage_LocText_descriptions")
+    private List<ILocalizedText> exhibitionTextDescriptions = new ArrayList<ILocalizedText>();
 
     public String getId() {
         return id;
@@ -90,7 +73,23 @@ public class ExhibitionAboutPage {
         this.aboutPageText = aboutPageText;
     }
 	
-	/*
+    public List<ILocalizedText> getExhibitionTitles() {
+        return exhibitionTitles;
+    }
+
+    public void setExhibitionTitles(List<ILocalizedText> exhibitionTitles) {
+        this.exhibitionTitles = exhibitionTitles;
+    }
+
+    public List<ILocalizedText> getExhibitionTextDescriptions() {
+        return exhibitionTextDescriptions;
+    }
+
+    public void setExhibitionTextDescriptions(List<ILocalizedText> exhibitionTextDescriptions) {
+        this.exhibitionTextDescriptions = exhibitionTextDescriptions;
+    }
+
+    /*
      * (non-Javadoc)
      * 
      * @see

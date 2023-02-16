@@ -34,6 +34,8 @@
 					<p>[[${exhibitionLanguage.label}]]</p>
 					<div>
 						<label for="titles">About Page Title:</label>
+						<input type="hidden"  th:value="${exhibitionLanguage.id}" th:attr="name='titles'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.id'"></input>
+						
 						<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='titles'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
 						
 						<input type="text" class="form-control" name="titles" id="title" th:field= "${aboutPage.titles[__${exhibitionLanguageStat.index}__].text}"></input>

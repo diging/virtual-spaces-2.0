@@ -17,10 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
@@ -42,21 +42,20 @@ public class ExhibitionAboutPageController {
     
    
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
-    public String showAboutPage(Model model) {
-        List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(aboutPageList.size()-1):new ExhibitionAboutPage();
+    public String showAboutPage(Model model) {    
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();        
         AboutPageForm aboutPageForm=new AboutPageForm();
         aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
-        List<LanguageDescriptionObject> titleList = new ArrayList();
-        List<LanguageDescriptionObject> textList = new ArrayList();
-        for(ILanguageDescriptionObject titles:exhibitionAboutPage.getExhibitionTitles())
+        List<LocalizedText> titleList = new ArrayList();
+        List<LocalizedText> textList = new ArrayList();
+        for(ILocalizedText titles:exhibitionAboutPage.getExhibitionTitles())
         {
-            titleList.add((LanguageDescriptionObject) titles);
+            titleList.add((LocalizedText) titles);
         }
-        for(ILanguageDescriptionObject texts:exhibitionAboutPage.getExhibitionTextDescriptions())
-	{
-            textList.add((LanguageDescriptionObject) texts);
+        for(ILocalizedText texts:exhibitionAboutPage.getExhibitionTextDescriptions())
+        {
+            textList.add((LocalizedText) texts);
         }
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(textList);
@@ -69,13 +68,12 @@ public class ExhibitionAboutPageController {
 
     
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
-    public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, AboutPageForm languageAboutPage, RedirectAttributes attributes) throws IOException {
-        List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
+    public String createOrUpdateAboutPage(@ModelAttribute AboutPageForm aboutPageForm, RedirectAttributes attributes) throws IOException {
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();       
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-        //TODO: send exhibitionAboutPage an update it
-        exhibitionAboutPage=aboutPageManager.storeAboutPageData(aboutPageForm,languageAboutPage);
+
+        exhibitionAboutPage=aboutPageManager.storeAboutPageData(exhibitionAboutPage, aboutPageForm);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
