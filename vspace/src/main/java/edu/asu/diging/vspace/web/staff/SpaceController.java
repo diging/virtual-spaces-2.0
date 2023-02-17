@@ -19,15 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
-import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
-import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
@@ -39,14 +37,15 @@ public class SpaceController {
 
     public static final String STAFF_SPACE_PATH = "/staff/space/";
 
-    public static final String API_IMAGE_PATH = "/api/image/";
-    
-    @Autowired
-    private ImageRepository imageRepo;
-    
+    public static final String API_DEFAULT_SPACEIMAGE_PATH = "/api/defaultSpaceImage/";
+
+    public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/defaultModuleImage/";
+
+    public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/defaultExternalLinkImage/";
+
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private ISpaceManager spaceManager;
 
@@ -64,22 +63,18 @@ public class SpaceController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
+
     @Autowired
-    private IImageService imageService;
-    
-    @Autowired
-    private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
+    private IExhibitionManager exhibitManager;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(STAFF_SPACE_PATH+"{id}")
+    @RequestMapping(STAFF_SPACE_PATH + "{id}")
     public String showSpace(@PathVariable String id, Model model) throws IOException {
-        
-        
+
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
-        model.addAttribute("linksToThisSpace",spaceManager.getIncomingLinks(id));
+        model.addAttribute("linksToThisSpace", spaceManager.getIncomingLinks(id));
         model.addAttribute("space", space);
         model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
         model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
@@ -95,43 +90,92 @@ public class SpaceController {
         List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
-    
-    @RequestMapping(value = STAFF_SPACE_PATH+"{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String,Object>> showSpaceLinks(@PathVariable String id, Model model) {
-        Map<String,Object> responseData = new HashMap<String,Object>(); 
-        
-        
+
+    @RequestMapping(value = STAFF_SPACE_PATH
+            + "{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> showSpaceLinks(@PathVariable String id, Model model) {
+        Map<String, Object> responseData = new HashMap<String, Object>();
+
         responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
-       
+
         responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-    
-    @RequestMapping(value = STAFF_SPACE_PATH, method = RequestMethod.GET)
+
+    @RequestMapping(value = API_DEFAULT_SPACEIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getSpaceId() {
-        IVSImage image = imageRepo.findById("IMG000000045").get();
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+
+        IVSImage spaceImage = exhibition.getSpacelinkImage();
+        if (spaceImage == null) {
+            return null;
+        }
         byte[] imageContent = null;
-        
+
         try {
-            imageContent = storage.getImageContent(image.getId(), image.getFilename());
-            
+
+            imageContent = storage.getImageContent(spaceImage.getId(), spaceImage.getFilename());
+
         } catch (IOException e) {
             logger.error("Could not retrieve image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(image.getFileType()));
+        headers.setContentType(MediaType.parseMediaType(spaceImage.getFileType()));
 
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-        
-        
+
+    }
+
+    @RequestMapping(value = API_DEFAULT_MODULEIMAGE_PATH, method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getDefaultModuleImage() {
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IVSImage moduleImage = exhibition.getModulelinkImage();
+        if (moduleImage == null) {
+            return null;
+        }
+        byte[] imageContent = null;
+
+        try {
+
+            imageContent = storage.getImageContent(moduleImage.getId(), moduleImage.getFilename());
+
+        } catch (IOException e) {
+            logger.error("Could not retrieve default Module image.", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.setContentType(MediaType.parseMediaType(moduleImage.getFileType()));
+        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+
     }
     
-    
-    
-    
-    
+    @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH, method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getDefaultExternalImage() {
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IVSImage externalLinkImage = exhibition.getExternallinkImage();
+        if (externalLinkImage == null) {
+            return null;
+        }
+        byte[] imageContent = null;
+
+        try {
+
+            imageContent = storage.getImageContent(externalLinkImage.getId(), externalLinkImage.getFilename());
+
+        } catch (IOException e) {
+            logger.error("Could not retrieve default External Link image.", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
+        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+
+    }
+
 }

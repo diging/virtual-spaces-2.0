@@ -3,8 +3,8 @@ package edu.asu.diging.vspace.core.services;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 /*
  * (non-Javadoc)
@@ -35,6 +35,6 @@ public interface IExhibitionManager {
 
     IExhibition getStartExhibition();
     
-    public void storeDefaultImage(byte[] image, String filename,String spacdeId);
+    public IVSImage storeDefaultImage(byte[] image, String filename,String spacdeId);
 
 }

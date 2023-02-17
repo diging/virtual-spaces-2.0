@@ -91,7 +91,7 @@ public class ExhibitionManager implements IExhibitionManager {
 	}
 
 	@Override
-	public void storeDefaultImage(byte[] image, String filename, String id) {
+	public IVSImage storeDefaultImage(byte[] image, String filename, String id) {
 	    
 		IVSImage defaultImage = null;
 		if (image != null && image.length > 0) {
@@ -118,9 +118,9 @@ public class ExhibitionManager implements IExhibitionManager {
 				defaultImage.setWidth(imageData.getWidth());
 			}
 			imageRepo.save((VSImage) defaultImage);
-
+			
 		}
-
+		return defaultImage;
 	}
 
 }
