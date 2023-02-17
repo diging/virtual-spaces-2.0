@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -41,7 +42,7 @@ public class ExhibitionConfigurationController {
     @Autowired
     private ExhibitionFactory exhibitFactory;
     
-    private byte[]  spaceImage;
+    
 
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
@@ -72,26 +73,68 @@ public class ExhibitionConfigurationController {
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
             @RequestParam("flag") String flag,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
+            @RequestParam("externalLinkImage") MultipartFile externalLinkImage,
+            @RequestParam("spacelinkImage")  MultipartFile spacelinkImage,
+            @RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
             Principal principal,
             RedirectAttributes attributes) throws IOException {
     	
         ISpace startSpace = spaceManager.getSpace(spaceID);
-        System.out.println(flag);
+        IVSImage spaceDefaultImage = null;
+        IVSImage moduleDefaultImage = null;
+        IVSImage externalDefaultImage = null;
+        
         Exhibition exhibition;
         if(exhibitID==null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
+        byte[] spaceImage = null;
+        String spaceLinkFilename = null;
+        if (spacelinkImage != null) {
+            spaceImage = spacelinkImage.getBytes();
+            spaceLinkFilename = spacelinkImage.getOriginalFilename();
+            spaceDefaultImage = exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename,"SPACELINKIMAGE");
+            
+        }
+        
+        byte[] moduleImage = null;
+        String moduleLinkFilename = null;
+        
+        if (moduleLinkImage != null) {
+            moduleImage = moduleLinkImage.getBytes();
+            moduleLinkFilename = moduleLinkImage.getOriginalFilename();
+            moduleDefaultImage = exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
+            
+            
+        }
+        
+        byte[] externalImage = null;
+        String externalLinkFilename = null;
+        if (externalLinkImage != null) {
+            externalImage = externalLinkImage.getBytes();
+            externalLinkFilename = externalLinkImage.getOriginalFilename();
+            externalDefaultImage = exhibitManager.storeDefaultImage(externalImage, externalLinkFilename,"EXTERNALLINKIMAGE");
+            
+        }
+        
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        exhibition.setSpacelinkImage(spaceImage);
+        exhibition.setSpacelinkImage(spaceDefaultImage);
+        exhibition.setModulelinkImage(moduleDefaultImage);
+        exhibition.setExternallinkImage(externalDefaultImage);
+        
+        
         
         
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
             exhibition.setCustomMessage(customMessage);
         }
+        
+        
+       
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
@@ -109,7 +152,7 @@ public class ExhibitionConfigurationController {
     		@RequestParam("spaceParamExihibit") String spaceID,
             Principal principal, RedirectAttributes attributes) throws IOException {
     	
-    	
+        byte[] spaceImage = null;
         String spaceLinkFilename = null;
         if (spacelinkImage != null) {
         	spaceImage = spacelinkImage.getBytes();
