@@ -54,6 +54,21 @@ externalLinkIconReader.onload = function(e) {
     showExternalLinks(createExternalLinkInfo());
 }
 
+function checkDefaultImage() {
+	$.ajax({
+		
+        url: "[(@{'/api/getdefaultSpaceImage/'})]",
+        type: 'GET',
+        cache       : false,
+        contentType : false,
+        success: function(data) {
+           console.log(data[0]);
+            
+            }
+    });
+	
+}
+
 function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isModuleLink){
 	modalLink.css('position', 'absolute');
     if(isModal){
@@ -130,7 +145,8 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
             spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
         }
         else{
-        		//var defaultSpaceURL = ""  
+        		 var value = checkDefaultImage();
+        		 console.log("Baishali"+value);
                  var defaultSpaceURL = [[@{/api/defaultSpaceImage/}]];
                  console.log("Inside Link"+defaultSpaceURL);
                  if(defaultSpaceURL == ""){

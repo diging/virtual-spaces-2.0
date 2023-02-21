@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.gson.JsonObject;
+
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -42,6 +44,8 @@ public class SpaceController {
     public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/defaultModuleImage/";
 
     public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/defaultExternalLinkImage/";
+    
+    public static final String API_DEFAULT_SPACEIMAGE = "/api/getdefaultSpaceImage/";
 
     @Autowired
     private IStorageEngine storage;
@@ -175,6 +179,23 @@ public class SpaceController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+
+    }
+    
+    @RequestMapping(value = API_DEFAULT_SPACEIMAGE, method = RequestMethod.GET)
+    public ResponseEntity<String> getDefaultImage() {
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IVSImage defaultImage = exhibition.getSpacelinkImage();
+        System.out.println("********************"+defaultImage);
+        String defaultImageFlag = "";
+        if (defaultImage == null) {
+            defaultImageFlag = "NO IMAGE";
+        }else {
+            defaultImageFlag = "IMAGE";
+        }
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("defaultImageFlag",defaultImageFlag );
+        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
 
     }
 
