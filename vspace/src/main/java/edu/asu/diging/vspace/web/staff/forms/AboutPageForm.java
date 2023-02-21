@@ -5,7 +5,8 @@ import java.util.List;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
 public class AboutPageForm {
-	
+	// new from object with localized text, exhibition language id, localized object id.
+    
     private String title;
 
     private String aboutPageText;

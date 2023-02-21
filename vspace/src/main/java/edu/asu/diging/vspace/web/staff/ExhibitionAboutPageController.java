@@ -43,7 +43,9 @@ public class ExhibitionAboutPageController {
    
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {    
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage();        
+        ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage(); 
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+
         AboutPageForm aboutPageForm=new AboutPageForm();
         aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
@@ -57,10 +59,12 @@ public class ExhibitionAboutPageController {
         {
             textList.add((LocalizedText) texts);
         }
+        if(titleList.size()!= startExhibtion.getLanguages().size()) {
+          
+        }
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(textList);
         model.addAttribute("aboutPage", aboutPageForm);
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
 
         model.addAttribute("exhibitionLanguageList" , startExhibtion.getLanguages());
         return "staff/exhibit/aboutPage";
