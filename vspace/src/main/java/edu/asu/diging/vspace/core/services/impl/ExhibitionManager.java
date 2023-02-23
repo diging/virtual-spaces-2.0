@@ -97,13 +97,15 @@ public class ExhibitionManager implements IExhibitionManager {
 		if (image != null && image.length > 0) {
 			Tika tika = new Tika();
 			String contentType = tika.detect(image);
+			
 			defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
 			defaultImage = imageRepo.save((VSImage) defaultImage);
+			
 		}
 
 		CreationReturnValue returnValue = new CreationReturnValue();
 		returnValue.setErrorMsgs(new ArrayList<>());
-
+		
 		if (defaultImage != null) {
 			String relativePath = null;
 			try {

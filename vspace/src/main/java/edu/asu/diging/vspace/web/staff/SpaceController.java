@@ -45,7 +45,7 @@ public class SpaceController {
 
     public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/defaultExternalLinkImage/";
     
-    public static final String API_DEFAULT_SPACEIMAGE = "/api/getdefaultSpaceImage/";
+    public static final String API_DEFAULT_SPACEIMAGE = "/api/getdefaultImage/";
 
     @Autowired
     private IStorageEngine storage;
@@ -186,8 +186,8 @@ public class SpaceController {
     public ResponseEntity<String> getDefaultImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage defaultSpaceImage = exhibition.getSpacelinkImage();
-        IVSImage defaultModuleImage = exhibition.getSpacelinkImage();
-        IVSImage defaultExternalLinkImage = exhibition.getSpacelinkImage();
+        IVSImage defaultModuleImage = exhibition.getModulelinkImage();
+        IVSImage defaultExternalLinkImage = exhibition.getExternallinkImage();
         
         String defaultSpaceImageFlag = "";
         String defaultModuleImageFlag = "";
