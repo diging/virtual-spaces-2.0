@@ -185,16 +185,35 @@ public class SpaceController {
     @RequestMapping(value = API_DEFAULT_SPACEIMAGE, method = RequestMethod.GET)
     public ResponseEntity<String> getDefaultImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        IVSImage defaultImage = exhibition.getSpacelinkImage();
-        System.out.println("********************"+defaultImage);
-        String defaultImageFlag = "";
-        if (defaultImage == null) {
-            defaultImageFlag = "NO IMAGE";
+        IVSImage defaultSpaceImage = exhibition.getSpacelinkImage();
+        IVSImage defaultModuleImage = exhibition.getSpacelinkImage();
+        IVSImage defaultExternalLinkImage = exhibition.getSpacelinkImage();
+        
+        String defaultSpaceImageFlag = "";
+        String defaultModuleImageFlag = "";
+        String defaultExternalLinkImageFlag = "";
+        if (defaultSpaceImage == null) {
+            defaultSpaceImageFlag = "NO_IMAGE";
         }else {
-            defaultImageFlag = "IMAGE";
+            defaultSpaceImageFlag = "IMAGE";
         }
+        
+        if (defaultModuleImage == null) {
+            defaultModuleImageFlag = "NO_IMAGE";
+        }else {
+            defaultModuleImageFlag = "IMAGE";
+        }
+        
+        if (defaultExternalLinkImage == null) {
+            defaultExternalLinkImageFlag = "NO_IMAGE";
+        }else {
+            defaultExternalLinkImageFlag = "IMAGE";
+        }
+        
         JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("defaultImageFlag",defaultImageFlag );
+        jsonObj.addProperty("defaultSpaceImageFlag",defaultSpaceImageFlag );
+        jsonObj.addProperty("defaultModuleImageFlag",defaultModuleImageFlag );
+        jsonObj.addProperty("defaultExternalLinkImageFlag",defaultExternalLinkImageFlag );
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
 
     }
