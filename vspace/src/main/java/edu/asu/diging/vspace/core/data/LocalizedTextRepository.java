@@ -8,6 +8,6 @@ import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
 @Repository
 @JaversSpringDataAuditable
-public interface LanguageDescriptionObjectRepository extends PagingAndSortingRepository<LocalizedText, String>{
+public interface LocalizedTextRepository extends PagingAndSortingRepository<LocalizedText, String>{
 
 }

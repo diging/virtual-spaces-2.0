@@ -14,7 +14,7 @@ import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 @Entity
 public class LocalizedText implements ILocalizedText {
-	
+
     @Id
     @GeneratedValue(generator = "localized_text_id_generator")
     @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -25,7 +25,16 @@ public class LocalizedText implements ILocalizedText {
 
     private String text;
     
-
+    public LocalizedText() {
+        super();
+    }
+    
+    public LocalizedText(ExhibitionLanguage exhibitionLanguage, String text) {
+        super();
+        this.exhibitionLanguage = exhibitionLanguage;
+        this.text = text;
+    }
+    
     public String getId() {
         return id;
     }

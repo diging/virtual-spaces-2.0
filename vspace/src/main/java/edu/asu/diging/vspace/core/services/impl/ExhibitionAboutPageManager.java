@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
-import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 /**
  * 
  * @author Avirup Biswas
@@ -38,6 +39,9 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Autowired
     private ExhibitionLanguageRepository exhibitionLanguageRepository;
     
+    @Autowired
+    private LocalizedTextRepository localizedTextRepo;
+    
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
@@ -54,17 +58,18 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#storeAboutPageData()
      */
     @Override
-    public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
+    public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm aboutPageForm) {
 			
-        for(ILocalizedText title:languageAboutPage.getTitles())
+        for(LocalizedTextForm title:aboutPageForm.getTitles())
         {
+            
             setAboutPageTitle(title,exhibitionAboutPage);
         }
-        for(ILocalizedText aboutPageText:languageAboutPage.getAboutPageTexts())
+        for(LocalizedTextForm aboutPageText:aboutPageForm.getAboutPageTexts())
         {
             setAboutPageDescription(aboutPageText,exhibitionAboutPage);
         }
-        store(exhibitionAboutPage);
+//        store(exhibitionAboutPage);
         return exhibitionAboutPage;				
 		
     }
@@ -98,21 +103,23 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * This method maps the title in ExhibitionAboutPage, and add that to
      * exhibitionTitles list for each user selected Exhibition Language.
     */
-    public void setAboutPageTitle(ILocalizedText title, ExhibitionAboutPage exhibitionAboutPage) {
+    public void setAboutPageTitle(LocalizedTextForm title, ExhibitionAboutPage exhibitionAboutPage) {
         if(title!=null) {
-
-            ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(title.getExhibitionLanguage().getLabel());
-            if(exhibitionLanguage != null) {
-                title.setExhibitionLanguage(exhibitionLanguage);
-            }
-            Optional<ILocalizedText> text = exhibitionAboutPage.getExhibitionTitles().stream().filter(exhibitionTitle-> {
-                return  exhibitionTitle.getExhibitionLanguage().equals(exhibitionLanguage);
-            }).findAny();
-            if(text.isPresent()) {
-                text.get().setText(title.getText());
-            } else {
-                exhibitionAboutPage.getExhibitionTitles().add(title);
-            }
+            
+         LocalizedText localizedText = localizedTextRepo.findById(title.getLocalisedTextId()).orElse(null);
+         if(localizedText != null) {
+            
+             localizedText.setText(title.getText());
+             
+         } else {
+                          
+             ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(title.getExhibitionLanguageId()).orElse(null);
+             if(exhibitionLanguage != null) {
+                 exhibitionAboutPage.getExhibitionTitles().add(new LocalizedText(exhibitionLanguage, title.getText()));
+             }
+            
+         }
+            
         }
 
     }
@@ -121,22 +128,23 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * This method maps the description in ExhibitionAboutPage, and add that to
      * exhibitionTextDescriptions list for each user selected Exhibition Language.
     */
-    public void setAboutPageDescription(ILocalizedText aboutPageText, ExhibitionAboutPage exhibitionAboutPage) {
+    public void setAboutPageDescription(LocalizedTextForm aboutPageText, ExhibitionAboutPage exhibitionAboutPage) {
         if(aboutPageText!=null) {
-
-            ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(aboutPageText.getExhibitionLanguage().getLabel());
-            if(exhibitionLanguage != null) {
-                aboutPageText.setExhibitionLanguage(exhibitionLanguage);
-            }
-            Optional<ILocalizedText> text =   exhibitionAboutPage.getExhibitionTextDescriptions().stream().filter(textDescription -> {
-                return  textDescription.getExhibitionLanguage().equals(exhibitionLanguage);
-            }).findAny();
-
-            if(text.isPresent()) {
-                text.get().setText(aboutPageText.getText());
+            LocalizedText localizedText = localizedTextRepo.findById(aboutPageText.getLocalisedTextId()).orElse(null);
+            
+            if(localizedText != null) {
+                localizedText.setText(aboutPageText.getText());
+                
             } else {
-                exhibitionAboutPage.getExhibitionTextDescriptions().add(aboutPageText);
+                
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(aboutPageText.getExhibitionLanguageId()).orElse(null);
+                if(exhibitionLanguage != null) {
+                    exhibitionAboutPage.getExhibitionTextDescriptions().add(new LocalizedText(exhibitionLanguage, aboutPageText.getText()));
+                }
             }
+            
+            
+           
         }
 
     }

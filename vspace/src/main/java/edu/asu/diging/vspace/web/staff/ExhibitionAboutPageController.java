@@ -24,6 +24,7 @@ import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 
 
 /**
@@ -44,29 +45,45 @@ public class ExhibitionAboutPageController {
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {    
         ExhibitionAboutPage exhibitionAboutPage = aboutPageManager.getExhibitionAboutPage(); 
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-
         AboutPageForm aboutPageForm=new AboutPageForm();
         aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
-        List<LocalizedText> titleList = new ArrayList();
-        List<LocalizedText> textList = new ArrayList();
-        for(ILocalizedText titles:exhibitionAboutPage.getExhibitionTitles())
-        {
-            titleList.add((LocalizedText) titles);
-        }
-        for(ILocalizedText texts:exhibitionAboutPage.getExhibitionTextDescriptions())
-        {
-            textList.add((LocalizedText) texts);
-        }
-        if(titleList.size()!= startExhibtion.getLanguages().size()) {
-          
-        }
-        aboutPageForm.setTitles(titleList);
-        aboutPageForm.setAboutPageTexts(textList);
+        
+        
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+
+        startExhibtion.getLanguages().forEach(language -> {
+
+
+            ILocalizedText title = exhibitionAboutPage.getExhibitionTitles().stream()
+                    .filter(exhibitionTitle ->  exhibitionTitle.getExhibitionLanguage().getId().equals(language.getId())).findAny().orElse(null);
+
+            if(title != null) {
+                aboutPageForm.getTitles().add(new LocalizedTextForm(title.getText(), title.getId(), title.getExhibitionLanguage().getId(), title.getExhibitionLanguage().getLabel() ));
+
+            }else {
+                aboutPageForm.getTitles().add(new LocalizedTextForm(null, null, language.getId(), language.getLabel() ));
+
+            }
+
+
+            ILocalizedText aboutPageText = exhibitionAboutPage.getExhibitionTextDescriptions().stream()
+                    .filter(exhibitionText -> language.getId().equals(exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
+
+
+
+            if(aboutPageText!= null) {
+                aboutPageForm.getAboutPageTexts().add(new LocalizedTextForm(aboutPageText.getText(), aboutPageText.getId(), aboutPageText.getExhibitionLanguage().getId(), aboutPageText.getExhibitionLanguage().getLabel()));
+
+            }else {
+                aboutPageForm.getAboutPageTexts().add(new LocalizedTextForm(null, null, language.getId(), language.getLabel()));
+
+            }
+
+
+        });
         model.addAttribute("aboutPage", aboutPageForm);
 
-        model.addAttribute("exhibitionLanguageList" , startExhibtion.getLanguages());
         return "staff/exhibit/aboutPage";
     }
 
