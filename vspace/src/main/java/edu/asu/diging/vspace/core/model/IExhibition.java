@@ -1,5 +1,10 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+import java.util.Set;
+
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+
 public interface IExhibition extends IVSpaceElement {
 
     /*
@@ -31,5 +36,7 @@ public interface IExhibition extends IVSpaceElement {
     IVSImage getSpacelinkImage();
     
     IVSImage getExternallinkImage();
+
+    List<IExhibitionLanguage> getLanguages();
 
 }

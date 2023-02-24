@@ -37,4 +37,6 @@ public interface IExhibitionManager {
     
     public IVSImage storeDefaultImage(byte[] image, String filename,String spacdeId);
 
+    void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
+
 }
