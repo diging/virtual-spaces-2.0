@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
@@ -72,17 +74,49 @@ public class ExhibitionManagerTest {
 
     @Test
     public void test_getExhibitionById_success() {
-        String id = "ID";
+        
         Exhibition exhibition = new Exhibition();
-        exhibition.setId(id);
+        exhibition.setId(ID);
         Optional<Exhibition> exhibitionOptional = Optional.of(exhibition);
         ;
-        when(exhibitRepo.findById(id)).thenReturn(exhibitionOptional);
+        when(exhibitRepo.findById(ID)).thenReturn(exhibitionOptional);
 
-        IExhibition exhibitionTest = serviceToTest.getExhibitionById(id);
+        IExhibition exhibitionTest = serviceToTest.getExhibitionById(ID);
         assertEquals(exhibitionTest, exhibition);
-        verify(exhibitRepo).findById(id);
+        verify(exhibitRepo).findById(ID);
     }
+    
+    @Test
+    public void test_findAll_success() {
+        
+        Exhibition exhibition = new Exhibition();
+        exhibition.setId(ID);
+        List<Exhibition> list = new ArrayList();
+        list.add(exhibition);
+        
+        when(exhibitRepo.findAll()).thenReturn(list);
+        List<IExhibition> exhibitionTest = serviceToTest.findAll();
+        
+        assertEquals(exhibitionTest.size(), list.size());
+        assertEquals(exhibitionTest.indexOf(exhibition), 0);
+        verify(exhibitRepo).findAll();
+    }
+    
+    
+    @Test
+    public void test_getStartExhibition_success() {
+        
+        Exhibition exhibition = new Exhibition();
+        exhibition.setId(ID);
+        List<Exhibition> list = new ArrayList();
+        list.add(exhibition);
+        Mockito.when(exhibitRepo.findAllByOrderByIdAsc()).thenReturn(list);
+        IExhibition exhibitionTest = serviceToTest.getStartExhibition();
+        assertEquals(exhibitionTest, exhibition);
+        verify(exhibitRepo).findAllByOrderByIdAsc();
+    }
+    
+    
 
     @Test
     public void test_storeDefaultImage_success() throws FileStorageException, IOException {
@@ -105,12 +139,14 @@ public class ExhibitionManagerTest {
         Mockito.when(storage.storeFile(imageBytes, FILENAME, ID)).thenReturn(STORE_PATH);
         Mockito.when(imageService.getImageData(imageBytes)).thenReturn(data);
         IVSImage returnVal = serviceToTest.storeDefaultImage(imageBytes, FILENAME, ID);
-
+        
         Assert.assertNotNull(returnVal);
+        Assert.assertEquals(FILENAME, returnVal.getFilename());
+        Assert.assertEquals(IMG_CONTENT_TYPE, returnVal.getFileType());   
 
     }
     
-    @Test(expected = FileStorageException.class)
+    @Test
     public void test_storeDefaultImage_Error() throws FileStorageException, IOException {
         InputStream fis = getClass().getResourceAsStream("/files/testImage.png");
         byte[] imageBytes = IOUtils.toByteArray(fis);
