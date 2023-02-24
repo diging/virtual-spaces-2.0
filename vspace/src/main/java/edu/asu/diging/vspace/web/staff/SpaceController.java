@@ -33,6 +33,7 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @Controller
 public class SpaceController {
@@ -69,12 +70,17 @@ public class SpaceController {
     private IExternalLinkManager externalLinkManager;
 
     @Autowired
+
     private IExhibitionManager exhibitManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(STAFF_SPACE_PATH + "{id}")
-    public String showSpace(@PathVariable String id, Model model) throws IOException {
+    
+    private ISpaceTextBlockManager spaceTextBlockManager;
+
+    @RequestMapping(STAFF_SPACE_PATH+"{id}")
+    public String showSpace(@PathVariable String id, Model model) {
+
 
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
@@ -86,6 +92,7 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
+        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return "staff/spaces/space";
     }
 
@@ -104,8 +111,10 @@ public class SpaceController {
 
         responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
+        responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
+
 
     @RequestMapping(value = API_DEFAULT_SPACEIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getSpaceId() {
@@ -119,7 +128,7 @@ public class SpaceController {
 
         try {
 
-            imageContent = storage.getImageContent(spaceImage.getId(), spaceImage.getFilename());
+            imageContent = storage.getMediaContent(spaceImage.getId(), spaceImage.getFilename());
 
         } catch (IOException e) {
             logger.error("Could not retrieve image.", e);
@@ -145,7 +154,7 @@ public class SpaceController {
 
         try {
 
-            imageContent = storage.getImageContent(moduleImage.getId(), moduleImage.getFilename());
+            imageContent = storage.getMediaContent(moduleImage.getId(), moduleImage.getFilename());
 
         } catch (IOException e) {
             logger.error("Could not retrieve default Module image.", e);
@@ -169,7 +178,7 @@ public class SpaceController {
 
         try {
 
-            imageContent = storage.getImageContent(externalLinkImage.getId(), externalLinkImage.getFilename());
+            imageContent = storage.getMediaContent(externalLinkImage.getId(), externalLinkImage.getFilename());
 
         } catch (IOException e) {
             logger.error("Could not retrieve default External Link image.", e);
@@ -217,5 +226,6 @@ public class SpaceController {
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
 
     }
+
 
 }

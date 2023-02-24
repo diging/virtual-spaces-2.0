@@ -165,46 +165,7 @@ public class ExhibitionConfigurationController {
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
     
-    @RequestMapping(value = "/staff/exhibit/config/images", method = RequestMethod.POST)
-    public RedirectView updateSpace( HttpServletRequest request, Model model, 
-    		@RequestParam("externalLinkImage") MultipartFile externalLinkImage,
-    		@RequestParam("spacelinkImage")  MultipartFile spacelinkImage,
-    		@RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
-    		@RequestParam("spaceParamExihibit") String spaceID,
-             RedirectAttributes attributes) throws IOException {
-    	
-        byte[] spaceImage = null;
-        String spaceLinkFilename = null;
-        if (spacelinkImage != null) {
-        	spaceImage = spacelinkImage.getBytes();
-        	spaceLinkFilename = spacelinkImage.getOriginalFilename();
-        	exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename,"SPACELINKIMAGE");
-        	
-        }
-        
-        byte[] moduleImage = null;
-        String moduleLinkFilename = null;
-        if (moduleLinkImage != null) {
-        	moduleImage = moduleLinkImage.getBytes();
-        	moduleLinkFilename = moduleLinkImage.getOriginalFilename();
-        	exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
-        	
-            
-        }
-    	
-        byte[] externalImage = null;
-        String externalLinkFilename = null;
-        if (externalLinkImage != null) {
-        	externalImage = externalLinkImage.getBytes();
-        	externalLinkFilename = externalLinkImage.getOriginalFilename();
-        	exhibitManager.storeDefaultImage(externalImage, externalLinkFilename,"EXTERNALLINKIMAGE");
-            
-        }
-       
- 
-        
-        return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
-    }
+    
     
     
     
