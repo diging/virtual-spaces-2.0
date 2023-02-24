@@ -12,6 +12,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
@@ -58,20 +59,22 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#storeAboutPageData()
      */
     @Override
-    public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm aboutPageForm) {
-			
+    public void storeAboutPageData(AboutPageForm aboutPageForm) {
+
+
+        ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
+        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+
         for(LocalizedTextForm title:aboutPageForm.getTitles())
-        {
-            
+        {        
             setAboutPageTitle(title,exhibitionAboutPage);
         }
         for(LocalizedTextForm aboutPageText:aboutPageForm.getAboutPageTexts())
         {
             setAboutPageDescription(aboutPageText,exhibitionAboutPage);
         }
-//        store(exhibitionAboutPage);
-        return exhibitionAboutPage;				
-		
+
     }
     
     /* (non-Javadoc)
@@ -107,10 +110,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         if(title!=null) {
             
          LocalizedText localizedText = localizedTextRepo.findById(title.getLocalisedTextId()).orElse(null);
-         if(localizedText != null) {
-            
-             localizedText.setText(title.getText());
-             
+         if(localizedText != null) {            
+             localizedText.setText(title.getText());            
          } else {
                           
              ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(title.getExhibitionLanguageId()).orElse(null);
@@ -134,18 +135,85 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             
             if(localizedText != null) {
                 localizedText.setText(aboutPageText.getText());
-                
+
             } else {
-                
+
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(aboutPageText.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
                     exhibitionAboutPage.getExhibitionTextDescriptions().add(new LocalizedText(exhibitionLanguage, aboutPageText.getText()));
                 }
             }
-            
-            
-           
+        
         }
 
+    }
+       
+    /**
+     * Creates About Page form object
+     */
+    @Override
+    public AboutPageForm createAboutPageForm() {
+        ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage(); 
+
+        AboutPageForm aboutPageForm=new AboutPageForm();
+        aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
+        aboutPageForm.setTitle(exhibitionAboutPage.getTitle());        
+        
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+
+        startExhibtion.getLanguages().forEach(language -> {
+            
+            aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, language));
+            
+            aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, language));
+
+        });
+        return aboutPageForm;
+    }
+    
+    /**
+     * Creates Localized title object for form 
+     * 
+     * @param exhibitionAboutPage
+     * @param language
+     * @return
+     */
+    @Override
+    public LocalizedTextForm createLocalizedAboutTextForm(ExhibitionAboutPage exhibitionAboutPage,
+            IExhibitionLanguage language) {
+
+        LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
+        ILocalizedText aboutPageText = exhibitionAboutPage.getExhibitionTextDescriptions().stream()
+                .filter(exhibitionText -> language.getId().equals(exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
+
+        if(aboutPageText != null) {
+            localizedAboutTextForm.setText(aboutPageText.getText());
+            localizedAboutTextForm.setLocalisedTextId( aboutPageText.getId());
+
+        } 
+
+        return localizedAboutTextForm;
+    }
+    
+    /**
+     * 
+     * Creates Localized about text object for form 
+     * @param exhibitionAboutPage
+     * @param language
+     * @return
+     */
+    @Override
+    public LocalizedTextForm createLocalizedTitleForm(ExhibitionAboutPage exhibitionAboutPage, IExhibitionLanguage language) {
+        LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
+
+        ILocalizedText title = exhibitionAboutPage.getExhibitionTitles().stream()
+                .filter(exhibitionTitle ->  exhibitionTitle.getExhibitionLanguage().getId().equals(language.getId())).findAny().orElse(null);
+
+        if(title != null) {
+            localizedTitleForm.setText(title.getText());
+            localizedTitleForm.setLocalisedTextId(title.getId());
+        } 
+        
+        return localizedTitleForm;
     }
 }
