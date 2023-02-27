@@ -16,11 +16,11 @@ public interface IImageService {
 
     ImageData getImageDimensions(IVSImage image, int width, int height);
 
-    List <IVSImage> getImages(int pageNo, ImageCategory filter);
+    List<IVSImage> getImages(int pageNo, ImageCategory filter);
 
-    List <IVSImage> getImages(int pageNo);
+    List<IVSImage> getImages(int pageNo);
 
-    List <IVSImage> getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
+    List<IVSImage> getImages(int pageNo, ImageCategory filter, String sortedBy, String order);
 
     long getTotalImageCount(ImageCategory filter);
 
@@ -36,7 +36,7 @@ public interface IImageService {
 
     void removeCategory(IVSImage image, ImageCategory category);
 
-    List <IVSImage> findByFilenameOrNameContains(String searchTerm);
+    List<IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    List <IVSImage> getImagesForPagination(int pageNo, ImageCategory category, String searchTerm);
+    List<IVSImage> getImagesForPagination(int pageNo, ImageCategory category, String searchTerm);
 }
