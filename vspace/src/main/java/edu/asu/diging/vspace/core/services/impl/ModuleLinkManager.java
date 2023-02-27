@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -30,7 +31,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModuleLinkDisplay> implements IModuleLinkManager {
+public class ModuleLinkManager extends LinkManager<IModuleLink, IModule, IModuleLinkDisplay> implements IModuleLinkManager {
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -51,7 +52,7 @@ public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModul
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;
 
     @Override
-    public List <IModuleLinkDisplay> getLinkDisplays(String spaceId) {
+    public List<IModuleLinkDisplay> getLinkDisplays(String spaceId) {
         return moduleLinkDisplayRepo.findModuleLinkDisplaysForSpace(spaceId);
     }
 
@@ -74,7 +75,7 @@ public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModul
 
     @Override
     protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId) {
-        Optional <ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
+        Optional<ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
         if (moduleLinkDisplay.isPresent()) {
             return moduleLinkDisplay.get();
         }
@@ -83,7 +84,7 @@ public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModul
 
     @Override
     protected IModuleLink getLink(String moduleLinkID) {
-        Optional <ModuleLink> moduleLink = moduleLinkRepo.findById(moduleLinkID);
+        Optional<ModuleLink> moduleLink = moduleLinkRepo.findById(moduleLinkID);
         if (moduleLink.isPresent()) {
             return moduleLink.get();
         }
@@ -111,11 +112,9 @@ public class ModuleLinkManager extends LinkManager <IModuleLink, IModule, IModul
     }
 
     @Override
-    public HashSet <ISpace> findSpaceLinksFromModuleId(String moduleId) {
-        List <ModuleLink> moduleLinks = moduleLinkRepo.getByModule(moduleId);
-        HashSet <ISpace> spaces = new HashSet <>(); 
-        moduleLinks.forEach(s -> spaces.add(s.getSpace()));
-        return spaces;
+    public HashSet<ISpace> findSpaceLinksFromModuleId(String moduleId) {
+        List<ModuleLink> moduleLinks = moduleLinkRepo.findByModuleId(moduleId);
+        return (HashSet<ISpace>) moduleLinks.stream().map(s->s.getSpace()).collect(Collectors.toSet());
     }
 
 }
