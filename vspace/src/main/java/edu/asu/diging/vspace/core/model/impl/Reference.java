@@ -55,6 +55,7 @@ public class Reference extends VSpaceElement implements IReference {
 
     private String note;
     
+    private String version;
     
     private String abstracts;
     
@@ -208,6 +209,17 @@ public class Reference extends VSpaceElement implements IReference {
     @Override
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+    
+    
+    @Override
+    public String getVersion() {
+        return version;
+    }
+
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override

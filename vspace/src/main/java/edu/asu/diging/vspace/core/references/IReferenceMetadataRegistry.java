@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.references;
 
 /**
- * This interface is responsible for getting the registered provider class to bring the metadata of references
+ *This instance of this interface is responsible for providing the metadata to the references.
  *
  */
 public interface IReferenceMetadataRegistry {

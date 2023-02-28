@@ -65,5 +65,9 @@ public interface IReference extends IVSpaceElement {
     void setCompanyName(String companyName);
     
     String getCompanyName();
+    
+    String getVersion();
+    
+    void setVersion(String version);
 
 }

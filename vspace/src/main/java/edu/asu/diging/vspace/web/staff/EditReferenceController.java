@@ -27,6 +27,7 @@ import edu.asu.diging.vspace.web.model.ReferenceBlock;
 public class EditReferenceController {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String REFERENCE_DEBUG_INFO = "Reference is coming as null";
 
     @Autowired
     private IReferenceManager referenceManager;
@@ -48,9 +49,9 @@ public class EditReferenceController {
     @RequestMapping(value = "/staff/reference/{referenceId}/edit", method = RequestMethod.POST)
     public String save(@ModelAttribute Reference refData, @PathVariable("referenceId") String referenceId, 
             RedirectAttributes attributes) {
-        System.out.println(attributes);
+        
         IReference reference = referenceManager.getReferenceById(referenceId);
-        System.out.println(reference);
+        
         if(reference!=null) {
             refData.setId(reference.getId());
             refData.setCreatedBy(reference.getCreatedBy());
@@ -61,6 +62,7 @@ public class EditReferenceController {
             attributes.addFlashAttribute("showAlert", "true");
             return "redirect:/staff/display/reference/{referenceId}";
         }
+        logger.info(REFERENCE_DEBUG_INFO);
         return "redirect:/404";
     }
     
@@ -72,17 +74,16 @@ public class EditReferenceController {
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
             @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
         IReference reference = referenceManager.getReference(refId);
-        System.out.println("*********-----------************"+ref);
         if(reference!=null) {
             ref.setId(reference.getId());
             ref.setCreatedBy(reference.getCreatedBy());
             ref.setCreationDate(reference.getCreationDate());
-            ref.setBiblios(reference.getBiblios());
             referenceManager.updateReference(ref);
             String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
             ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
             return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
         }
+        logger.info(REFERENCE_DEBUG_INFO);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
