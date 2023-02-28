@@ -37,16 +37,13 @@ import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 @Service
 public class ExhibitionManager implements IExhibitionManager {
 
+    @Autowired
+    private IImageFactory imageFactory;
 
-	
+    @Autowired
+    private IImageService imageService;
 
-	@Autowired
-	private IImageFactory imageFactory;
-
-	@Autowired
-	private IImageService imageService;
-
-	@Autowired
+    @Autowired
 	private ImageRepository imageRepo;
 	
 	
@@ -184,6 +181,14 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
+    /**
+     * Adds defaultImages to externallink, spaceLink and ModuleLink if not already present. 
+     * 
+     * @param image
+     * @param filename
+     * @param id
+     * @return
+     */
     @Override
     public IVSImage storeDefaultImage(byte[] image, String filename, String id) {
         
