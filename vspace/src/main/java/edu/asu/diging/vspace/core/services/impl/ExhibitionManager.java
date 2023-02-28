@@ -85,7 +85,7 @@ public class ExhibitionManager implements IExhibitionManager {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public List<IExhibition> findAll() {
 		Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
