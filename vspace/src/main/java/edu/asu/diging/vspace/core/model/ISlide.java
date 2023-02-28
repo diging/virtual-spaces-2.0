@@ -15,4 +15,12 @@ public interface ISlide extends IVSpaceElement {
     IImageBlock getFirstImageBlock();
     
     ITextBlock getFirstMatchedTextBlock(String searchTerm);
+    
+    List<ILanguageDescriptionObject> getSlideNames();
+
+    void setSlideNames(List<ILanguageDescriptionObject> slideNames);
+
+    void setSlideDescriptions(List<ILanguageDescriptionObject> slideDescriptions);
+
+    List<ILanguageDescriptionObject> getSlideDescriptions() ;
 }

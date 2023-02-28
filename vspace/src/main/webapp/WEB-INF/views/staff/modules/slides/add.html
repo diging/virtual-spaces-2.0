@@ -53,11 +53,30 @@ $(document).ready(function(){
         <h1>Add new Slide</h1>
         <form th:action="@{'/staff/module/'+${moduleId}+'/slide/add'}"
             method="POST" name="f" class="form-horizontal">
-            <div class="form-group row">
+            <!-- <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">Slide
                     Name:</label> <input type="text"
                     class="form-control col-md-10" id="name" name="name" />
-            </div>
+            </div> -->
+            
+            <div th:each= "exhibitionLanguage : ${languageObjectList}"  > 
+				<p >[[${exhibitionLanguage.label}]]</p>
+				<div class="form-group row">
+					<label for="name" class="col-md-2 col-form-label">Slide Name:</label>				
+	  				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+	 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field= "${slide.names[__${exhibitionLanguageStat.index}__].text}"></input>
+				</div>
+		
+				<div class="form-group row">
+					<label for="description" class="col-md-2 col-form-label">Description:</label>
+	 				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+	  				
+					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slide.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
+				</div>
+			</div>
+            
+            
+            
             <div class="form-group row">
                 <label for="type" class="col-md-2 col-form-label">Type:</label>
                 <select name="type" id="type"
@@ -82,11 +101,11 @@ $(document).ready(function(){
 
                 </select> <input type="hidden" id="choices" name="choices"></input>
             </div>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
                 <label for="description" class="col-md-2 col-form-label">Description:</label>
                 <textarea class="form-control col-md-10" rows="5"
                     cols="30" id="description" name="description"></textarea>
-            </div>
+            </div> -->
             <button type="submit" id="newSlide" class="btn primary-btn">Create Slide</button>
         </form>
     </div>

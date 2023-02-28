@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -46,28 +49,27 @@ public class Slide extends VSpaceElement implements ISlide {
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
     
-    @OneToMany(mappedBy = "slideText", targetEntity = SlideExhibitionLanguageObject.class)
-    private List<ISlideExhibitionLanguageObject> slideTitles;
-    
-    @OneToMany(mappedBy = "slideText", targetEntity = SlideExhibitionLanguageObject.class)
-    private List<ISlideExhibitionLanguageObject> slideDescriptions;
-    
-    
-    
+    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="Slide_LangObj_names")
+    private List<ILanguageDescriptionObject> slideNames = new ArrayList();
 
-    public List<ISlideExhibitionLanguageObject> getSlideTitles() {
-        return slideTitles;
+    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name="Slide_LangObj_descriptions")
+    private List<ILanguageDescriptionObject> slideDescriptions = new ArrayList();
+    
+    public List<ILanguageDescriptionObject> getSlideNames() {
+        return slideNames;
     }
 
-    public void setSlideTitles(List<ISlideExhibitionLanguageObject> slideTitles) {
-        this.slideTitles = slideTitles;
+    public void setSlideNames(List<ILanguageDescriptionObject> slideNames) {
+        this.slideNames = slideNames;
     }
 
-    public List<ISlideExhibitionLanguageObject> getSlideDescriptions() {
+    public List<ILanguageDescriptionObject> getSlideDescriptions() {
         return slideDescriptions;
     }
 
-    public void setSlideDescriptions(List<ISlideExhibitionLanguageObject> slideDescriptions) {
+    public void setSlideDescriptions(List<ILanguageDescriptionObject> slideDescriptions) {
         this.slideDescriptions = slideDescriptions;
     }
 
