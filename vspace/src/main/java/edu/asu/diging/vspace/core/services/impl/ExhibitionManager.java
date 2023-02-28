@@ -20,8 +20,8 @@ import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
-import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.factory.impl.ImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -30,7 +30,6 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Transactional
@@ -38,18 +37,6 @@ import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 public class ExhibitionManager implements IExhibitionManager {
 
     @Autowired
-    private IImageFactory imageFactory;
-
-    @Autowired
-    private IImageService imageService;
-
-    @Autowired
-	private ImageRepository imageRepo;
-	
-	@Autowired
-	private IStorageEngine storage;
-	
-	@Autowired
     private ExhibitionRepository exhibitRepo;
     
     @Autowired
@@ -58,51 +45,17 @@ public class ExhibitionManager implements IExhibitionManager {
     @Autowired
     private ExhibitionFactory exhibitFactory;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
-	 * asu.diging.vspace.core.model.impl.Exhibition)
-	 */
-	@Override
-	public IExhibition storeExhibition(Exhibition exhibition) {
-		return exhibitRepo.save(exhibition);
-	}
+    @Autowired
+    private ImageFactory imageFactory;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
-	 * .lang.String)
-	 */
-	@Override
-	public IExhibition getExhibitionById(String id) {
-		Optional<Exhibition> exhibition = exhibitRepo.findById(id);
-		if (exhibition.isPresent()) {
-			return exhibition.get();
-		}
-		return null;
-	}
-	
-	@Override
-	public List<IExhibition> findAll() {
-		Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
-		List<IExhibition> results = new ArrayList<>();
-		exhibitions.forEach(e -> results.add((IExhibition) e));
-		return results;
-	}
-	@Override
-	public IExhibition getStartExhibition() {
-		// for now we just take the first one created, there shouldn't be more than one
-		List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
-		if (exhibitions.size() > 0) {
-			return exhibitions.get(0);
-		}
-		return null;
-	}
+    @Autowired
+    private ImageRepository imageRepo;
 
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private IStorageEngine storage;
 
     /*
      * (non-Javadoc)
@@ -111,7 +64,10 @@ public class ExhibitionManager implements IExhibitionManager {
      * edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
-    
+    @Override
+    public IExhibition storeExhibition(Exhibition exhibition) {
+        return exhibitRepo.save(exhibition);
+    }
 
     /*
      * (non-Javadoc)
@@ -120,7 +76,37 @@ public class ExhibitionManager implements IExhibitionManager {
      * edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
      * .lang.String)
      */
-    
+    @Override
+    public IExhibition getExhibitionById(String id) {
+        Optional<Exhibition> exhibition = exhibitRepo.findById(id);
+        if (exhibition.isPresent()) {
+            return exhibition.get();
+        }
+        return null;
+    }
+
+    @Override
+    public List<IExhibition> findAll() {
+        Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
+        List<IExhibition> results = new ArrayList<>();
+        exhibitions.forEach(e -> results.add((IExhibition) e));
+        return results;
+    }
+
+    @Override
+    public IExhibition getStartExhibition() {
+        // for now we just take the first one created, there shouldn't be more than one
+        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        if (exhibitions.size() > 0) {
+            Exhibition exhibition = exhibitions.get(0);
+            String previewId = exhibition.getPreviewId();
+            if(previewId==null || previewId.isEmpty()) {
+                exhibitFactory.updatePreviewId(exhibition);
+            }
+            return exhibition;
+        }
+        return null;
+    }
 
     /**
      * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
@@ -178,14 +164,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
-    /**
-     * Adds defaultImages to externallink, spaceLink and ModuleLink if not already present. 
-     * 
-     * @param image
-     * @param filename
-     * @param id
-     * @return
-     */
+
     @Override
     public IVSImage storeDefaultImage(byte[] image, String filename, String id) {
         
@@ -193,6 +172,7 @@ public class ExhibitionManager implements IExhibitionManager {
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
+            
             
             defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
             defaultImage = imageRepo.save((VSImage) defaultImage);
@@ -220,6 +200,5 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return defaultImage;
     }
-
 
 }
