@@ -46,10 +46,17 @@ public class ExhibitionManager implements IExhibitionManager {
     @Autowired
 	private ImageRepository imageRepo;
 	
-	
-
 	@Autowired
 	private IStorageEngine storage;
+	
+	@Autowired
+    private ExhibitionRepository exhibitRepo;
+    
+    @Autowired
+    private ExhibitionLanguageConfig exhibitionLanguageConfig;
+    
+    @Autowired
+    private ExhibitionFactory exhibitFactory;
 
 	/*
 	 * (non-Javadoc)
@@ -97,15 +104,6 @@ public class ExhibitionManager implements IExhibitionManager {
 		return null;
 	}
 
-	
-    @Autowired
-    private ExhibitionRepository exhibitRepo;
-    
-    @Autowired
-    private ExhibitionLanguageConfig exhibitionLanguageConfig;
-    
-    @Autowired
-    private ExhibitionFactory exhibitFactory;
 
     /*
      * (non-Javadoc)
