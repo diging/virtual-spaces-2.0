@@ -75,7 +75,7 @@ public class SpaceController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    
+    @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
 
     @RequestMapping(STAFF_SPACE_PATH+"{id}")
@@ -92,7 +92,7 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
-        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
+       // model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return "staff/spaces/space";
     }
 
@@ -108,7 +108,7 @@ public class SpaceController {
         Map<String, Object> responseData = new HashMap<String, Object>();
 
         responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
-
+        
         responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
