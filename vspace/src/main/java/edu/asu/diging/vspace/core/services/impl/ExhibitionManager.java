@@ -93,7 +93,6 @@ public class ExhibitionManager implements IExhibitionManager {
 		exhibitions.forEach(e -> results.add((IExhibition) e));
 		return results;
 	}
-
 	@Override
 	public IExhibition getStartExhibition() {
 		// for now we just take the first one created, there shouldn't be more than one
