@@ -1,10 +1,16 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -25,6 +31,10 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     private String code;
     
     private boolean isDefault;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "EXH_LANG_LOC")
+    private List<LocalizedText> localizedTexts;
     
     public ExhibitionLanguage() {
         super();
@@ -80,6 +90,15 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
+    
+    public List<LocalizedText> getLocalizedTexts() {
+        return localizedTexts;
+    }
+
+    public void setLocalizedTexts(List<LocalizedText> localizedTexts) {
+        this.localizedTexts = localizedTexts;
+    }
+
     
     @Override
     public int hashCode() {

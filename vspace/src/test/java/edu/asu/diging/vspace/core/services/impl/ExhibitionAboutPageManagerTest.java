@@ -18,10 +18,14 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
@@ -47,6 +51,9 @@ public class ExhibitionAboutPageManagerTest {
     
     @Mock
     private LocalizedTextRepository localizedRextRepo;
+    
+    @Mock
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
 
     @Before
     public void init() {
@@ -113,4 +120,128 @@ public class ExhibitionAboutPageManagerTest {
 
     }
     
+    @Test
+    public void test_storeAboutPageData_failure() {
+        List<ExhibitionAboutPage> exhibitionAboutPageList = new ArrayList();
+
+        exhibitionAboutPageList.add(new ExhibitionAboutPage());
+
+        AboutPageForm aboutPageForm = new AboutPageForm();
+        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
+        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
+        List<LocalizedTextForm> aboutTextList = new ArrayList<LocalizedTextForm>();
+
+        aboutTextList.add(new LocalizedTextForm( "about text","ID2", "langId", "English"));
+
+        aboutPageForm.setTitles(titleList);
+        aboutPageForm.setAboutPageTexts(aboutTextList);
+        when(repo.findAll()).thenReturn(exhibitionAboutPageList);
+
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");
+
+
+        when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.empty());
+        when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.empty());
+        when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
+        serviceToTest.storeAboutPageData(aboutPageForm);
+        assertEquals(locText1.getText(), null);
+
+    } 
+    
+    @Test
+    public void test_createAboutPageForm_success() {
+        Exhibition exhibition = new Exhibition();
+        List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
+        ExhibitionLanguage  language1 = new ExhibitionLanguage();
+        
+        language1.setId("LANG_ID");
+        language1.setLabel("English");
+        languageList.add(language1);
+        exhibition.setLanguages(languageList);
+        
+        
+        
+        
+        List<ExhibitionAboutPage> exhibitionAboutPageList = new ArrayList();
+        ExhibitionAboutPage exhbitionAboutPage = new ExhibitionAboutPage();
+        
+        
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");
+        
+        List<ILocalizedText> titleList = new ArrayList<ILocalizedText>();     
+        titleList.add(new LocalizedText(language1, "title1"));
+        
+        List<ILocalizedText> aboutTextList = new ArrayList<ILocalizedText>();
+
+        aboutTextList.add(new LocalizedText( language1, "about text"));
+        
+        
+        exhbitionAboutPage.setExhibitionTitles(titleList);
+        
+        exhbitionAboutPage.setExhibitionTextDescriptions(aboutTextList);
+        exhibitionAboutPageList.add(exhbitionAboutPage);
+
+        when(repo.findAll()).thenReturn(exhibitionAboutPageList);
+        
+    
+        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);      
+        
+        AboutPageForm  aboutPageForm =   serviceToTest.createAboutPageForm();
+        assertEquals(aboutPageForm.getAboutPageTexts().size(), 1);
+        
+        assertEquals(aboutPageForm.getTitles().size(), 1);
+        
+        assertEquals(aboutPageForm.getAboutPageTexts().get(0).getText(), "about text");
+
+    }
+    
+    @Test
+    public void test_createAboutPageForm_failure() {
+        Exhibition exhibition = new Exhibition();
+        List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
+        ExhibitionLanguage  language = new ExhibitionLanguage("English", "ENG", exhibition);
+        language.setId("LANG_ID");
+        languageList.add(language);
+        exhibition.setLanguages(languageList);
+        
+        
+        
+        
+        List<ExhibitionAboutPage> exhibitionAboutPageList = new ArrayList();
+        ExhibitionAboutPage exhbitionAboutPage = new ExhibitionAboutPage();
+        
+        
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");
+        
+        List<ILocalizedText> titleList = new ArrayList<ILocalizedText>();     
+        titleList.add(new LocalizedText(language, "title1"));
+        
+        List<ILocalizedText> aboutTextList = new ArrayList<ILocalizedText>();
+
+        aboutTextList.add(new LocalizedText( language, "about text"));
+        
+        
+        exhbitionAboutPage.setExhibitionTitles(titleList);
+        
+        exhbitionAboutPage.setExhibitionTextDescriptions(aboutTextList);
+        exhibitionAboutPageList.add(exhbitionAboutPage);
+
+        when(repo.findAll()).thenReturn(exhibitionAboutPageList);
+        
+    
+        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
+        
+        
+        
+        AboutPageForm  aboutPageForm =   serviceToTest.createAboutPageForm();
+        assertEquals(aboutPageForm.getAboutPageTexts().size(), 1);
+        
+        assertEquals(aboutPageForm.getTitles().size(), 1);
+        
+        assertEquals(aboutPageForm.getAboutPageTexts().get(0).getText(), "about text");
+
+    }
 }

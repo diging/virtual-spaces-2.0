@@ -160,7 +160,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());        
         
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-
         startExhibtion.getLanguages().forEach(language -> {
             
             aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, language));
