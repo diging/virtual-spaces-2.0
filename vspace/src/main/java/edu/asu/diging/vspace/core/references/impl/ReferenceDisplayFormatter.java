@@ -1,6 +1,8 @@
-package edu.asu.diging.vspace.core.references;
+package edu.asu.diging.vspace.core.references.impl;
 
-public class ReferenceDisplayFormatter {
+import edu.asu.diging.vspace.core.references.IReferenceDisplayFormatter;
+
+public class ReferenceDisplayFormatter implements IReferenceDisplayFormatter{
     
     private StringBuilder referenceDisplayText;
     

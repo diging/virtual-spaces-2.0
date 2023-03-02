@@ -3,8 +3,8 @@ package edu.asu.diging.vspace.core.references.impl;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.references.IReferenceDisplayFormatter;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
-import edu.asu.diging.vspace.core.references.ReferenceDisplayFormatter;
 
 @Service
 public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
@@ -21,7 +21,7 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
         String pages = reference.getPages();
         String abstracts = reference.getAbstracts();
         String companyName = reference.getCompanyName();
-        ReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
+        IReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
         refFormatter.addType(
                 type).addAuthors(author).addYear(year).addTitle(title).addJournal(journal).addPages(pages).addVolume(volume).addIssue(issue).addUrl(url).addAbstracts(abstracts).addCompanyName(companyName);
         
