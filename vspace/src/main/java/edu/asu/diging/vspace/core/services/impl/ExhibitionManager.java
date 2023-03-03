@@ -120,10 +120,23 @@ public class ExhibitionManager implements IExhibitionManager {
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
             });  
 
-        // Removes exhibition langauge if unselected.
+        // Removes exhibition langauge if unselected. 
+        
+        //TODO: add check to see if Localized texts exists for this language
         exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
-                .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList()));
+                .filter(language -> !codes.contains(language.getCode()) && localizedTextDoesNotExist(language)).collect(Collectors.toList()));
 
+    }
+
+    
+    
+    private boolean localizedTextDoesNotExist(IExhibitionLanguage language) {
+        // TODO Auto-generated method stub
+        
+        
+        return CollectionUtils.isEmpty(language.getLocalizedTexts() );
+        
+        retur
     }
 
     /**

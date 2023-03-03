@@ -32,8 +32,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     
     private boolean isDefault;
     
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "EXH_LANG_LOC")
+    @OneToMany(targetEntity = LocalizedText.class ,  cascade= CascadeType.ALL)    
     private List<LocalizedText> localizedTexts;
     
     public ExhibitionLanguage() {
