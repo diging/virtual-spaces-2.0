@@ -113,12 +113,14 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
          if(localizedText != null) {            
              localizedText.setText(title.getText());            
          } else {
-                          
+
              ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(title.getExhibitionLanguageId()).orElse(null);
              if(exhibitionLanguage != null) {
-                 exhibitionAboutPage.getExhibitionTitles().add(new LocalizedText(exhibitionLanguage, title.getText()));
+                 localizedText = new LocalizedText(exhibitionLanguage, title.getText());
+                 exhibitionAboutPage.getExhibitionTitles().add(localizedText);
+                 exhibitionLanguage.getLocalizedTexts().add(localizedText);
              }
-            
+
          }
             
         }

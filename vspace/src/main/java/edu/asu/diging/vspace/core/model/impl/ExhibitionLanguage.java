@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,7 +34,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     private boolean isDefault;
     
     @OneToMany(targetEntity = LocalizedText.class ,  cascade= CascadeType.ALL)    
-    private List<LocalizedText> localizedTexts;
+    private List<LocalizedText> localizedTexts = new ArrayList<LocalizedText>();
     
     public ExhibitionLanguage() {
         super();

@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageCouldNotBeDeletedException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -99,7 +100,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @throws LanguageListConfigurationNotFoundException 
      */
     @Override
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
+    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageCouldNotBeDeletedException{
         if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
@@ -107,7 +108,7 @@ public class ExhibitionManager implements IExhibitionManager {
         if(CollectionUtils.isEmpty(codes) ) {
             return;
         }
-
+        
         // Adds defaultLanguage to codes list if not already exists.
         if(!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
@@ -120,23 +121,31 @@ public class ExhibitionManager implements IExhibitionManager {
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
             });  
 
-        // Removes exhibition langauge if unselected. 
+        // Removes exhibition language if unselected. 
         
-        //TODO: add check to see if Localized texts exists for this language
         exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
-                .filter(language -> !codes.contains(language.getCode()) && localizedTextDoesNotExist(language)).collect(Collectors.toList()));
+                .filter(language ->  
+                        
+                    return !codes.contains(language.getCode()) && localizedTextDoesNotExist(language);
+                                    
+//                    try {
+//                        return !codes.contains(language.getCode()) && localizedTextDoesNotExist(language);
+//                    } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                        throw new ExhibitionLanguageCouldNotBeDeletedException();
+//                    }
+//                    
+//                    return false;
+                ).collect(Collectors.toList()));
 
     }
+    
+    @Override
+    public boolean localizedTextDoesNotExist(IExhibitionLanguage language) throws ExhibitionLanguageCouldNotBeDeletedException {        
+        if(CollectionUtils.isEmpty(language.getLocalizedTexts())) return true;
+        else throw new ExhibitionLanguageCouldNotBeDeletedException();
 
-    
-    
-    private boolean localizedTextDoesNotExist(IExhibitionLanguage language) {
-        // TODO Auto-generated method stub
-        
-        
-        return CollectionUtils.isEmpty(language.getLocalizedTexts() );
-        
-        retur
     }
 
     /**
