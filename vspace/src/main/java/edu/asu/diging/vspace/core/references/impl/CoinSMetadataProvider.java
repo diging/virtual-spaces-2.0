@@ -54,7 +54,14 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
     @Override
     public String getReferenceMetadata(Reference reference) throws ReferenceMetadataEncodingException {
-
+        
+        String refTitleEncoded = getRefTitleEncoded(reference.getTitle(), reference.getType());
+        String refAuthorEncoded = getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear());
+        String refJournalEncoded = getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl());
+        String refVolumeEncoded = getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue());
+        String refPagesEncoded = getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors());
+        String refNoteEncoded = getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
+        String referenceTypeRFTValueString = getReferenceData(reference.getType());
         String urlEncodedReferenceMetaData = CoinSConstants.DEFAULT_URL_VERSION + "&"
                 + CoinSConstants.DEFAULT_CTX_VERSION;
         StringBuffer urlEncodedReferenceMetaDataStringBuffer = new StringBuffer(urlEncodedReferenceMetaData);
@@ -62,7 +69,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             urlEncodedReferenceMetaData += CoinSConstants.RFR_ID_TAG
                     + URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name());
             urlEncodedReferenceMetaData += CoinSConstants.RFT_VAL_FMT_TAG;
-            String referenceTypeRFTValueString = getReferenceData(reference.getType());
+            
             urlEncodedReferenceMetaData += URLEncoder.encode(referenceTypeRFTValueString);
             urlEncodedReferenceMetaData += getRefTitleEncoded(reference.getTitle(), reference.getType())
                     + getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
@@ -70,18 +77,20 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                     + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue())
                     + getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors())
                     + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
+            
             urlEncodedReferenceMetaDataStringBuffer.append(CoinSConstants.RFR_ID_TAG);
             urlEncodedReferenceMetaDataStringBuffer
                     .append(URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name()));
             urlEncodedReferenceMetaDataStringBuffer.append(URLEncoder.encode(referenceTypeRFTValueString));
-            urlEncodedReferenceMetaDataStringBuffer.append(getRefTitleEncoded(reference.getTitle(), reference.getType())
-                    + getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
-                    + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl())
-                    + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue())
-                    + getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors())
-                    + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType()));
-            System.out.println("StringBuffer : " + urlEncodedReferenceMetaDataStringBuffer);
-            System.out.println("String : " + urlEncodedReferenceMetaData);
+      
+            urlEncodedReferenceMetaDataStringBuffer.append(refTitleEncoded);
+            urlEncodedReferenceMetaDataStringBuffer.append(refAuthorEncoded);
+            urlEncodedReferenceMetaDataStringBuffer.append(refJournalEncoded);
+            urlEncodedReferenceMetaDataStringBuffer.append(refVolumeEncoded);
+            urlEncodedReferenceMetaDataStringBuffer.append(refPagesEncoded);
+            urlEncodedReferenceMetaDataStringBuffer.append(refNoteEncoded);
+            
+            
             
 
         } catch (UnsupportedEncodingException e) {
