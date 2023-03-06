@@ -2,7 +2,9 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.SlideExhibitionLanguageObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+
+
 
 public class SlideForm {
 
@@ -11,9 +13,9 @@ public class SlideForm {
     private String type;
     private List<String> choices;
     
-    private List<SlideExhibitionLanguageObject> names;
+    private List<LocalizedText> names;
 
-    private List<SlideExhibitionLanguageObject> descriptions;
+    private List<LocalizedText> descriptions;
     
     public String getName() {
         return name;
@@ -39,16 +41,16 @@ public class SlideForm {
     public void setChoices(List<String> choices) {
         this.choices = choices;
     }
-    public List<SlideExhibitionLanguageObject> getNames() {
+    public List<LocalizedText> getNames() {
         return names;
     }
-    public void setNames(List<SlideExhibitionLanguageObject> names) {
+    public void setNames(List<LocalizedText> names) {
         this.names = names;
     }
-    public List<SlideExhibitionLanguageObject> getDescriptions() {
+    public List<LocalizedText> getDescriptions() {
         return descriptions;
     }
-    public void setDescriptions(List<SlideExhibitionLanguageObject> descriptions) {
+    public void setDescriptions(List<LocalizedText> descriptions) {
         this.descriptions = descriptions;
     }
     

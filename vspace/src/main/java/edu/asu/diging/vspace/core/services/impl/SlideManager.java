@@ -16,17 +16,22 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -52,6 +57,12 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private ChoiceFactory choiceFactory;
+    
+    @Autowired
+    ExhibitionLanguageRepository exhibitionLanguageRepository;
+    
+    @Autowired
+    LocalizedTextRepository localizedTextRepository;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -167,4 +178,61 @@ public class SlideManager implements ISlideManager {
 
         return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
+
+    @Override
+    public void updateNameAndDescription(ISlide slide, SlideForm slideForm) {
+        // TODO Auto-generated method stub
+        
+        addSlideName(slide, slideForm.getNames());
+        addSlideDescription(slide, slideForm.getDescriptions()); 
+        
+    }
+    
+    /**
+     * 
+     * Adds name to spaceNames List
+     * 
+     * 
+     * @param slide
+     * @param names
+     */
+    @Override
+    public void addSlideName(ISlide slide, List<LocalizedText> names) {
+        // TODO Auto-generated method stub
+        
+        if(!CollectionUtils.isEmpty(names)) {
+            for(LocalizedText name : names )  {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
+                if(exhibitionLanguage != null) {
+                    name.setExhibitionLanguage(exhibitionLanguage); 
+                    Optional<ILocalizedText> slideTitle = slide.getSlideNames().stream()
+                            .filter(title -> exhibitionLanguage.getId().equals(title.getExhibitionLanguage().getId()))
+                            .findAny();
+                    if(slideTitle.isPresent()) {
+                        slideTitle.get().setText(name.getText()); 
+                    } else {
+                        slide.getSlideNames().add(name); 
+
+                    }
+                }
+
+            }
+
+        }
+       // setNameAsDefaultLanguage(slide);
+        
+    }
+    
+    /**
+     * Adds description to spaceDescription list.
+     * @param slide
+     * @param descriptions
+     */
+    @Override
+    public void addSlideDescription(ISlide slide, List<LocalizedText> descriptions) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    
 }
