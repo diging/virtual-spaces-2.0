@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @Controller
 public class ExhibitionSpaceController {
@@ -50,8 +51,11 @@ public class ExhibitionSpaceController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
+    
+    @Autowired
+    private ISpaceTextBlockManager spaceTextBlockManager;
 
-    @RequestMapping(value = "/exhibit/space/{id}")
+    @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/space/{id}" })
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
@@ -71,6 +75,7 @@ public class ExhibitionSpaceController {
         model.addAttribute("exhibitionConfig", exhibition);
         model.addAttribute("space", space);
         model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
+        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         if (space.isShowUnpublishedLinks()) {
             spaceLinks = spaceLinkManager.getLinkDisplays(id);
         } else {
