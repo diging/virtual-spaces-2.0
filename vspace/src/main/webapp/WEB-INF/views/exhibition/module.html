@@ -144,7 +144,6 @@
 	                	<div  th:each="contentRef: ${contents.references}">
 							<li class="list-group-item" style = "font-size: 15px" >
 								<div  th:id="${contentRef.id}" class="referenceDiv">
-								<!--  <p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>-->
 								<p  class="col-md-10">Reference Type : [[${contentRef.type}]]</p>
 								<p  class="col-md-10">Reference Title : [[${contentRef.title} ]] </p>
 								<p  class="col-md-10">Reference Author : [[${contentRef.author}]]</p>

@@ -23,6 +23,6 @@ public interface IReferenceMetadataProvider {
      * (edu.asu.diging.vspace.core.references.Reference)
      * throws edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException exception
      */
-    public String getReferenceMetadata(Reference reference) throws ReferenceMetadataEncodingException;
+    public StringBuffer getReferenceMetadata(Reference reference) throws ReferenceMetadataEncodingException;
     
 }

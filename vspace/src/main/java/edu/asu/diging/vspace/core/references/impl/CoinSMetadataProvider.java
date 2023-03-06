@@ -5,13 +5,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import org.hibernate.sql.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 import edu.asu.diging.vspace.core.references.CoinSConstants;
@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 @PropertySource({ "classpath:config_reference.properties" })
 public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String UNSUPPORTED_LOGGING_EXCEPTION= "Unsupported Encoding.";
     @Autowired
     private Environment env;
 
@@ -53,7 +54,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
 
     @Override
-    public String getReferenceMetadata(Reference reference) throws ReferenceMetadataEncodingException {
+    public StringBuffer getReferenceMetadata(Reference reference) throws ReferenceMetadataEncodingException {
         
         String refTitleEncoded = getRefTitleEncoded(reference.getTitle(), reference.getType());
         String refAuthorEncoded = getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear());
@@ -62,43 +63,32 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         String refPagesEncoded = getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors());
         String refNoteEncoded = getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
         String referenceTypeRFTValueString = getReferenceData(reference.getType());
-        String urlEncodedReferenceMetaData = CoinSConstants.DEFAULT_URL_VERSION + "&"
-                + CoinSConstants.DEFAULT_CTX_VERSION;
-        StringBuffer urlEncodedReferenceMetaDataStringBuffer = new StringBuffer(urlEncodedReferenceMetaData);
+        String defaultURL = CoinSConstants.DEFAULT_URL_VERSION ;
+       
+        StringBuffer urlEncodedReferenceMetaData = new StringBuffer(defaultURL);
         try {
-            urlEncodedReferenceMetaData += CoinSConstants.RFR_ID_TAG
-                    + URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name());
-            urlEncodedReferenceMetaData += CoinSConstants.RFT_VAL_FMT_TAG;
-            
-            urlEncodedReferenceMetaData += URLEncoder.encode(referenceTypeRFTValueString);
-            urlEncodedReferenceMetaData += getRefTitleEncoded(reference.getTitle(), reference.getType())
-                    + getRefAuthorEncoded(reference.getAuthor()) + getRefYearEncoded(reference.getYear())
-                    + getRefJournalEncoded(reference.getJournal()) + getRefUrlEncoded(reference.getUrl())
-                    + getRefVolumeEncoded(reference.getVolume()) + getRefIssueEncoded(reference.getIssue())
-                    + getRefPagesEncoded(reference.getPages()) + getRefEditorsEncoded(reference.getEditors())
-                    + getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
-            
-            urlEncodedReferenceMetaDataStringBuffer.append(CoinSConstants.RFR_ID_TAG);
-            urlEncodedReferenceMetaDataStringBuffer
+            urlEncodedReferenceMetaData.append("&");
+            urlEncodedReferenceMetaData.append( CoinSConstants.DEFAULT_CTX_VERSION);
+            urlEncodedReferenceMetaData.append(CoinSConstants.RFR_ID_TAG);
+            urlEncodedReferenceMetaData
                     .append(URLEncoder.encode(CoinSConstants.DEFAULT_RFR_ID, StandardCharsets.UTF_8.name()));
-            urlEncodedReferenceMetaDataStringBuffer.append(URLEncoder.encode(referenceTypeRFTValueString));
-      
-            urlEncodedReferenceMetaDataStringBuffer.append(refTitleEncoded);
-            urlEncodedReferenceMetaDataStringBuffer.append(refAuthorEncoded);
-            urlEncodedReferenceMetaDataStringBuffer.append(refJournalEncoded);
-            urlEncodedReferenceMetaDataStringBuffer.append(refVolumeEncoded);
-            urlEncodedReferenceMetaDataStringBuffer.append(refPagesEncoded);
-            urlEncodedReferenceMetaDataStringBuffer.append(refNoteEncoded);
+            urlEncodedReferenceMetaData.append(CoinSConstants.RFT_VAL_FMT_TAG);
+            urlEncodedReferenceMetaData.append(URLEncoder.encode(referenceTypeRFTValueString));
+            urlEncodedReferenceMetaData.append(refTitleEncoded);
+            urlEncodedReferenceMetaData.append(refAuthorEncoded);
+            urlEncodedReferenceMetaData.append(refJournalEncoded);
+            urlEncodedReferenceMetaData.append(refVolumeEncoded);
+            urlEncodedReferenceMetaData.append(refPagesEncoded);
+            urlEncodedReferenceMetaData.append(refNoteEncoded);
             
-            
-            
-
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
-        urlEncodedReferenceMetaData += CoinSConstants.RFT_DEFAULT_LANGUAGE;
+        urlEncodedReferenceMetaData.append( CoinSConstants.RFT_DEFAULT_LANGUAGE);
         return urlEncodedReferenceMetaData;
     }
+
 
     private String getRefTypeEncoded(String type) throws ReferenceMetadataEncodingException {
         if (type == null || type.trim().equals("")) {
@@ -114,6 +104,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             }
             return CoinSConstants.RFT_GENRE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -125,7 +116,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
         try {
             if (type.equals(CoinSConstants.BOOK_GENRE)) {
-                System.out.println(type + CoinSConstants.RFT_BOOKTITLE_TAG);
+                
                 return CoinSConstants.RFT_BOOKTITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
             } else if (type.equals(CoinSConstants.JOURNAL_ARTICLE_GENRE)
                     || type.equals(CoinSConstants.BOOK_SECTION_GENRE)) {
@@ -133,6 +124,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             }
             return CoinSConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -144,6 +136,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -155,6 +148,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_LASTAUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -166,6 +160,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -177,6 +172,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_JOURNAL_TAG + URLEncoder.encode(journal, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -188,6 +184,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -199,6 +196,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_VOLUME_TAG + URLEncoder.encode(volume, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -210,6 +208,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_ISSUE_TAG + URLEncoder.encode(issue, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -231,6 +230,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                             + URLEncoder.encode(tokens[1], StandardCharsets.UTF_8.name());
                 }
             } catch (UnsupportedEncodingException e) {
+                logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
                 throw new ReferenceMetadataEncodingException(e);
             }
         }
@@ -244,6 +244,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_EDITOR_TAG + URLEncoder.encode(editors, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -255,7 +256,9 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
+            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
+   
 }
