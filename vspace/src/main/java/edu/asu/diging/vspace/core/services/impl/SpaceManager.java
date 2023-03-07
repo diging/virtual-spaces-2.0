@@ -299,11 +299,5 @@ public class SpaceManager implements ISpaceManager {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
     
-    @Override
-    public String getSpaceId(String id) {
-        
-        System.out.println(spaceDisplayRepo.getSpaceId(id));
-        
-        return "";
-    }
+    
 }

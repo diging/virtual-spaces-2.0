@@ -45,17 +45,7 @@ public class ExhibitionManager implements IExhibitionManager {
     @Autowired
     private ExhibitionFactory exhibitFactory;
 
-    @Autowired
-    private ImageFactory imageFactory;
-
-    @Autowired
-    private ImageRepository imageRepo;
-
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private IStorageEngine storage;
+    
 
     /*
      * (non-Javadoc)
@@ -165,40 +155,6 @@ public class ExhibitionManager implements IExhibitionManager {
         return exhibitionLanguage;
     }
 
-    @Override
-    public IVSImage storeDefaultImage(byte[] image, String filename, String id) {
-        
-        IVSImage defaultImage = null;
-        if (image != null && image.length > 0) {
-            Tika tika = new Tika();
-            String contentType = tika.detect(image);
-            
-            
-            defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
-            defaultImage = imageRepo.save((VSImage) defaultImage);
-            
-        }
-
-        CreationReturnValue returnValue = new CreationReturnValue();
-        returnValue.setErrorMsgs(new ArrayList<>());
-        
-        if (defaultImage != null) {
-            String relativePath = null;
-            try {
-                relativePath = storage.storeFile(image, filename, defaultImage.getId());
-            } catch (FileStorageException e) {
-                returnValue.getErrorMsgs().add("Default image could not be stored: " + e.getMessage());
-            }
-            defaultImage.setParentPath(relativePath);
-            ImageData imageData = imageService.getImageData(image);
-            if (imageData != null) {
-                defaultImage.setHeight(imageData.getHeight());
-                defaultImage.setWidth(imageData.getWidth());
-            }
-            imageRepo.save((VSImage) defaultImage);
-            
-        }
-        return defaultImage;
-    }
+    
 
 }

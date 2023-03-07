@@ -34,8 +34,7 @@ public interface IExhibitionManager {
     List<IExhibition> findAll();
 
     IExhibition getStartExhibition();
-    
-    public IVSImage storeDefaultImage(byte[] image, String filename,String spacdeId);
+   
 
     void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
 

@@ -198,25 +198,18 @@ public class SpaceController {
         IVSImage defaultModuleImage = exhibition.getModulelinkImage();
         IVSImage defaultExternalLinkImage = exhibition.getExternallinkImage();
         
-        String defaultSpaceImageFlag = "";
-        String defaultModuleImageFlag = "";
-        String defaultExternalLinkImageFlag = "";
-        if (defaultSpaceImage == null) {
-            defaultSpaceImageFlag = "NO_IMAGE";
-        }else {
-            defaultSpaceImageFlag = "IMAGE";
+        boolean defaultSpaceImageFlag = false;
+        boolean defaultModuleImageFlag = false;
+        boolean defaultExternalLinkImageFlag = false;
+        if (defaultSpaceImage != null) {
+            defaultSpaceImageFlag = true;
         }
         
-        if (defaultModuleImage == null) {
-            defaultModuleImageFlag = "NO_IMAGE";
-        }else {
-            defaultModuleImageFlag = "IMAGE";
+        if (defaultModuleImage != null) {
+            defaultModuleImageFlag = true;
         }
-        
-        if (defaultExternalLinkImage == null) {
-            defaultExternalLinkImageFlag = "NO_IMAGE";
-        }else {
-            defaultExternalLinkImageFlag = "IMAGE";
+        if (defaultExternalLinkImage != null) {
+            defaultExternalLinkImageFlag = true;
         }
         
         JsonObject jsonObj = new JsonObject();

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.impl.ImageFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.model.SortByField;
@@ -36,9 +40,18 @@ public class ImageService implements IImageService {
 
     @Autowired
     private ImageRepository imageRepo;
+    
+    @Autowired
+    private ImageFactory imageFactory;
+
+
+    @Autowired
+    private IStorageEngine storage;
 
     @Value("${page_size}")
     private int pageSize;
+    
+    
 
     /*
      * (non-Javadoc)
@@ -259,5 +272,41 @@ public class ImageService implements IImageService {
         } else {
             throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
         }
+    }
+    
+    @Override
+    public IVSImage storeDefaultImage(byte[] image, String filename, String id) {
+        
+        IVSImage defaultImage = null;
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            
+            
+            defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
+            defaultImage = imageRepo.save((VSImage) defaultImage);
+            
+        }
+
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        
+        if (defaultImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, defaultImage.getId());
+            } catch (FileStorageException e) {
+                returnValue.getErrorMsgs().add("Default image could not be stored: " + e.getMessage());
+            }
+            defaultImage.setParentPath(relativePath);
+            ImageData imageData = getImageData(image);
+            if (imageData != null) {
+                defaultImage.setHeight(imageData.getHeight());
+                defaultImage.setWidth(imageData.getWidth());
+            }
+            imageRepo.save((VSImage) defaultImage);
+            
+        }
+        return defaultImage;
     }
 }
