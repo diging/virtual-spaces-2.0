@@ -22,10 +22,9 @@ public class ImageFactory implements IImageFactory {
         image.setFilename(filename);
         image.setFileType(fileType);
         return image;
-        
-        
+
     }
-    
+
     @Override
     public IVSImage createDefaultImage(String filename, String fileType, String id) {
         IVSImage defaultImage = new VSImage();
@@ -33,10 +32,7 @@ public class ImageFactory implements IImageFactory {
         defaultImage.setFileType(fileType);
         defaultImage.setDescription(id);
         return defaultImage;
-        
-        
-    }
-    
 
-    
+    }
+
 }

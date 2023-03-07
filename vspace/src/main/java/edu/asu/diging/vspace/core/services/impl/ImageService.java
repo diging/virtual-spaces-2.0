@@ -40,18 +40,18 @@ public class ImageService implements IImageService {
 
     @Autowired
     private ImageRepository imageRepo;
-    
+
     @Autowired
     private ImageFactory imageFactory;
-
 
     @Autowired
     private IStorageEngine storage;
 
     @Value("${page_size}")
     private int pageSize;
-    
-    
+
+    private static final String DEFAULTIMAGEEXCEPTION = "Default image could not be stored: ";
+    private static final String NOIMAGEEXCEPTION = "Image doesn't exist for image id";
 
     /*
      * (non-Javadoc)
@@ -63,7 +63,7 @@ public class ImageService implements IImageService {
     public ImageData getImageData(byte[] image) {
         try {
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(image));
-            if(bufferedImage!=null) {
+            if (bufferedImage != null) {
                 int imageHeight = bufferedImage.getHeight();
                 int imageWidth = bufferedImage.getWidth();
                 return new ImageData(imageHeight, imageWidth);
@@ -89,7 +89,7 @@ public class ImageService implements IImageService {
         int imageHeight = image.getHeight();
 
         Float newWidth = (new Float(height) / new Float(imageHeight)) * new Float(imageWidth);
-        if(newWidth<width) {
+        if (newWidth < width) {
             return new ImageData(height, newWidth.intValue());
         }
 
@@ -99,37 +99,36 @@ public class ImageService implements IImageService {
 
     private Sort getSortingParameters(String sortedBy, String order) {
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
-        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+        if (sortedBy != null && SortByField.getAllValues().contains(sortedBy)) {
             sortingParameters = Sort.by(sortedBy);
         }
-        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+        if (order != null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
             sortingParameters = sortingParameters.ascending();
         } else {
             sortingParameters = sortingParameters.descending();
         }
         return sortingParameters;
     }
-    
+
     /**
      * Method to return the requested images
      * 
-     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
-     *                page is returned
-     * @param category. if category value is not null image list is filtered using 
-     *                category value
+     * @param pageNo.   if pageNo<1, 1st page is returned, if pageNo>total
+     *                  pages,last page is returned
+     * @param category. if category value is not null image list is filtered using
+     *                  category value
      * @return list of images for the requested pageNo and category
      */
     @Override
     public List<IVSImage> getImages(int pageNo, ImageCategory category) {
         return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-    
-    
+
     @Override
     public List<IVSImage> getImages(int pageNo) {
         return getImages(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-    
+
     /**
      * Method to return the requested images
      * 
@@ -144,18 +143,18 @@ public class ImageService implements IImageService {
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         Page<VSImage> images;
-        if(category==null) {
+        if (category == null) {
             images = imageRepo.findAll(sortByRequestedField);
         } else {
             images = imageRepo.findByCategories(sortByRequestedField, category);
         }
         List<IVSImage> results = new ArrayList<>();
-        if(images != null) {
+        if (images != null) {
             images.getContent().forEach(i -> results.add(i));
         }
         return results;
     }
-    
+
     /**
      * Method to return the total image count
      * 
@@ -164,28 +163,28 @@ public class ImageService implements IImageService {
 
     @Override
     public long getTotalImageCount(ImageCategory category) {
-        if(category==null) {
+        if (category == null) {
             return imageRepo.count();
         }
         return imageRepo.countByCategories(category);
     }
-    
+
     /**
      * Method to return the total pages sufficient to display all images
      * 
      * @return totalPages required to display all images in DB
      */
 
-    
     @Override
     public long getTotalPages(ImageCategory category) {
-        if(category==null) {
-            return (imageRepo.count() % pageSize==0) ? imageRepo.count() / pageSize:(imageRepo.count() / pageSize) + 1;
+        if (category == null) {
+            return (imageRepo.count() % pageSize == 0) ? imageRepo.count() / pageSize
+                    : (imageRepo.count() / pageSize) + 1;
         }
         long count = imageRepo.countByCategories(category);
-        return (count%pageSize==0) ? count/pageSize : (count/pageSize)+1;
+        return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
     }
-    
+
     /**
      * Method to return page number after validation
      * 
@@ -197,10 +196,10 @@ public class ImageService implements IImageService {
     @Override
     public int validatePageNumber(int pageNo, ImageCategory category) {
         long totalPages = getTotalPages(category);
-        if(pageNo<1) {
+        if (pageNo < 1) {
             return 1;
-        } else if(pageNo>totalPages) {
-            return (totalPages==0) ? 1:(int) totalPages;
+        } else if (pageNo > totalPages) {
+            return (totalPages == 0) ? 1 : (int) totalPages;
         }
         return pageNo;
     }
@@ -230,10 +229,11 @@ public class ImageService implements IImageService {
     @Override
     public IVSImage getImageById(String imageId) throws ImageDoesNotExistException {
         Optional<VSImage> imageOptional = imageRepo.findById(imageId);
-        if(imageOptional.isPresent()) {
+        if (imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
-            throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
+            logger.error(NOIMAGEEXCEPTION);
+            throw new ImageDoesNotExistException(NOIMAGEEXCEPTION + imageId);
         }
     }
 
@@ -248,11 +248,11 @@ public class ImageService implements IImageService {
 
     @Override
     public void addCategory(IVSImage image, ImageCategory category) {
-        if(image.getCategories()==null) {
+        if (image.getCategories() == null) {
             image.setCategories(new ArrayList<>());
         }
 
-        if(!image.getCategories().contains(category)) {
+        if (!image.getCategories().contains(category)) {
             image.getCategories().add(category);
         }
         imageRepo.save((VSImage) image);
@@ -263,40 +263,42 @@ public class ImageService implements IImageService {
         image.getCategories().remove(category);
         imageRepo.save((VSImage) image);
     }
-    
+
     @Override
     public IVSImage getImageByDescription(String imageId) throws ImageDoesNotExistException {
         Optional<VSImage> imageOptional = imageRepo.findById(imageId);
-        if(imageOptional.isPresent()) {
+        if (imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
-            throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
+            logger.error(NOIMAGEEXCEPTION);
+            throw new ImageDoesNotExistException(NOIMAGEEXCEPTION + imageId);
         }
     }
-    
+
     @Override
-    public IVSImage storeDefaultImage(byte[] image, String filename, String id) {
-        
+    public IVSImage storeImage(byte[] image, String filename, String id) {
+
         IVSImage defaultImage = null;
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
-            
-            
+            System.out.println(contentType);
             defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
             defaultImage = imageRepo.save((VSImage) defaultImage);
-            
+
         }
 
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
-        
+
         if (defaultImage != null) {
             String relativePath = null;
             try {
+
                 relativePath = storage.storeFile(image, filename, defaultImage.getId());
             } catch (FileStorageException e) {
-                returnValue.getErrorMsgs().add("Default image could not be stored: " + e.getMessage());
+                logger.error(DEFAULTIMAGEEXCEPTION);
+                returnValue.getErrorMsgs().add(DEFAULTIMAGEEXCEPTION + e.getMessage());
             }
             defaultImage.setParentPath(relativePath);
             ImageData imageData = getImageData(image);
@@ -305,7 +307,7 @@ public class ImageService implements IImageService {
                 defaultImage.setWidth(imageData.getWidth());
             }
             imageRepo.save((VSImage) defaultImage);
-            
+
         }
         return defaultImage;
     }
