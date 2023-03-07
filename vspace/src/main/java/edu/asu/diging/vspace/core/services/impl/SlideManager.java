@@ -219,7 +219,7 @@ public class SlideManager implements ISlideManager {
             }
 
         }
-       // setNameAsDefaultLanguage(slide);
+        setNameAsDefaultLanguage(slide);
         
     }
     
@@ -232,6 +232,45 @@ public class SlideManager implements ISlideManager {
     public void addSlideDescription(ISlide slide, List<LocalizedText> descriptions) {
         // TODO Auto-generated method stub
         
+        if(!CollectionUtils.isEmpty(descriptions)) {
+            for(LocalizedText description : descriptions )  {               
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
+                if(exhibitionLanguage != null) {
+                    description.setExhibitionLanguage(exhibitionLanguage);
+                    Optional<ILocalizedText> spaceDescription = slide.getSlideDescriptions().stream()
+                            .filter(desc -> exhibitionLanguage.getId().equals(desc.getExhibitionLanguage().getId()))
+                            .findAny();
+                    if(spaceDescription.isPresent()) {
+                        spaceDescription.get().setText(description.getText());
+                    } else {
+                        slide.getSlideDescriptions().add(description);
+
+                    }
+                }
+            }
+        }
+        setDescriptionAsDefaultLanguage(slide); 
+        
+    }
+    
+    @Override
+    public void setNameAsDefaultLanguage(ISlide slide) {
+        String defaultSpaceName = slide.getSlideNames().stream()
+                .filter(title -> Boolean.TRUE.equals(title.getExhibitionLanguage().isDefault()))     
+                .map(ILocalizedText::getText)
+                .findAny().orElse(slide.getName()) ;
+        slide.setName(defaultSpaceName);
+
+    }
+
+    @Override
+    public void setDescriptionAsDefaultLanguage(ISlide slide) {
+        String defaultSpaceDescription = slide.getSlideDescriptions().stream()
+                .filter(description -> Boolean.TRUE.equals(description.getExhibitionLanguage().isDefault()))
+                .map(ILocalizedText::getText)
+                .findAny().orElse(slide.getDescription());       
+        slide.setDescription(defaultSpaceDescription);
+
     }
 
     

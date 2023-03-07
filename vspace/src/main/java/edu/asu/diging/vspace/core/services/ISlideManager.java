@@ -10,6 +10,7 @@ import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -33,4 +34,20 @@ public interface ISlideManager {
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
     Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
+    
+    void updateNameAndDescription(ISlide slide, SlideForm slideForm);
+
+    void setNameAsDefaultLanguage(ISlide slide);
+
+    void setDescriptionAsDefaultLanguage(ISlide slide);
+
+    void addSlideDescription(ISlide slide, List<LocalizedText> descriptions);
+
+    void addSlideName(ISlide slide, List<LocalizedText> names);
+
+//    Iterable<Slide> getSlideList();
+//
+//    void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList);
+//
+//    SlideForm getSlideForm(String slideId);
 }

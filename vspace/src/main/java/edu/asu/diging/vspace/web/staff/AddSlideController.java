@@ -65,6 +65,7 @@ public class AddSlideController {
         else {
             ISlide slide = slideManager.createSlide(module, slideForm, type);
             slideId = slide.getId();
+            slideManager.updateNameAndDescription(slide,slideForm);
         }
         
         return "redirect:/staff/module/{moduleId}/slide/" + slideId;

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -49,27 +49,27 @@ public class Slide extends VSpaceElement implements ISlide {
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
     
-    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Slide_LangObj_names")
-    private List<ILanguageDescriptionObject> slideNames = new ArrayList();
+    private List<ILocalizedText> slideNames = new ArrayList();
 
-    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Slide_LangObj_descriptions")
-    private List<ILanguageDescriptionObject> slideDescriptions = new ArrayList();
+    private List<ILocalizedText> slideDescriptions = new ArrayList();
     
-    public List<ILanguageDescriptionObject> getSlideNames() {
+    public List<ILocalizedText> getSlideNames() {
         return slideNames;
     }
 
-    public void setSlideNames(List<ILanguageDescriptionObject> slideNames) {
+    public void setSlideNames(List<ILocalizedText> slideNames) {
         this.slideNames = slideNames;
     }
 
-    public List<ILanguageDescriptionObject> getSlideDescriptions() {
+    public List<ILocalizedText> getSlideDescriptions() {
         return slideDescriptions;
     }
 
-    public void setSlideDescriptions(List<ILanguageDescriptionObject> slideDescriptions) {
+    public void setSlideDescriptions(List<ILocalizedText> slideDescriptions) {
         this.slideDescriptions = slideDescriptions;
     }
 
