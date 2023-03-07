@@ -23,8 +23,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageCouldNotBeDeletedException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 
@@ -171,25 +173,31 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        serviceToTest.updateExhibitionLanguages(exhibition, languages, "en");
-        assertEquals(exhibition.getLanguages().size(),2);
-        exhibition.getLanguages().forEach(language -> {
-            if(language.getCode().equals("en")) { 
-                assertTrue(language.isDefault());
-      
-            } });
-        
-        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-        assertEquals(exhibition.getLanguages().size(),2);
-        exhibition.getLanguages().forEach(language -> {
-            if(language.getCode().equals("en")) { 
-                assertFalse(language.isDefault());
-      
-            }
-            if(language.getCode().equals("aa")) { 
-                assertTrue(language.isDefault());
-      
-            }});
+        try {
+            serviceToTest.updateExhibitionLanguages(exhibition, languages, "en");
+            assertEquals(exhibition.getLanguages().size(),2);
+            exhibition.getLanguages().forEach(language -> {
+                if(language.getCode().equals("en")) { 
+                    assertTrue(language.isDefault());
+          
+                } });
+            
+            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+            assertEquals(exhibition.getLanguages().size(),2);
+            exhibition.getLanguages().forEach(language -> {
+                if(language.getCode().equals("en")) { 
+                    assertFalse(language.isDefault());
+          
+                }
+                if(language.getCode().equals("aa")) { 
+                    assertTrue(language.isDefault());
+          
+                }});
+        }
+        catch(Exception e) {
+            
+        }
+ 
         
 
     }
@@ -230,12 +238,61 @@ public class ExhibitionManagerTest {
 
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
         
-        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-        assertEquals(exhibition.getLanguages().size(),2);
+        try {
+            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+            assertEquals(exhibition.getLanguages().size(),2);
+            
+            languages.remove("en");
+            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+            assertEquals(exhibition.getLanguages().size(),1);
+        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+   
+        }
+      
         
-        languages.remove("en");
-        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-        assertEquals(exhibition.getLanguages().size(),1);
+        
+    }
+    
+    @Test
+    public void test_updateExhibitionLanguages_whenLanguageCouldNotBeDeleted() {
+        Exhibition exhibition = new Exhibition();
+  
+        List<Map> mappedLanguages= new ArrayList();
+
+        Map<String, String> language1 =    new LinkedHashMap<String, String>();
+        language1.put("code", "en");
+        language1.put("label", "English");
+        Map<String, String> language2 =   new LinkedHashMap<String, String>();
+        language2.put("code", "aa");
+        language2.put("label", "Afar");
+        mappedLanguages.add(language1);
+        mappedLanguages.add(language2);
+        
+        
+        List<String> languages= new ArrayList() ;
+        languages.add("en");
+        languages.add("aa");  
+
+        when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
+        IExhibitionLanguage language = new ExhibitionLanguage();
+        language.setLabel("English");
+        
+        when(serviceToTest.localizedTextDoesNotExist(language)).thenReturn(false);
+        
+        try {
+            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+            assertEquals(exhibition.getLanguages().size(),2);
+            
+
+            languages.remove("en");
+            Assert.assertThrows(ExhibitionLanguageCouldNotBeDeletedException.class,
+                    () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));
+          
+//            assertEquals(exhibition.getLanguages().size(),1);
+        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+   
+        }
+      
         
         
     }

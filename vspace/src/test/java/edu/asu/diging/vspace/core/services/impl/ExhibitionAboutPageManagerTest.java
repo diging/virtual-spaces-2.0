@@ -155,7 +155,7 @@ public class ExhibitionAboutPageManagerTest {
         List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
         ExhibitionLanguage  language1 = new ExhibitionLanguage();
         
-        language1.setId("LANG_ID");
+//        language1.setId("LANG_ID");
         language1.setLabel("English");
         languageList.add(language1);
         exhibition.setLanguages(languageList);

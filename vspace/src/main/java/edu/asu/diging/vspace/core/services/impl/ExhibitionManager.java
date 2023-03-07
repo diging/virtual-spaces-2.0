@@ -121,30 +121,24 @@ public class ExhibitionManager implements IExhibitionManager {
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
             });  
 
-        // Removes exhibition language if unselected. 
-        
-        exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
-                .filter(language ->  
-                        
-                    return !codes.contains(language.getCode()) && localizedTextDoesNotExist(language);
-                                    
-//                    try {
-//                        return !codes.contains(language.getCode()) && localizedTextDoesNotExist(language);
-//                    } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                        throw new ExhibitionLanguageCouldNotBeDeletedException();
-//                    }
-//                    
-//                    return false;
-                ).collect(Collectors.toList()));
+        // Finds exhibition language if unselected (to be deleted).
+        List<IExhibitionLanguage> exhibitionLanguageToBeRemoved = exhibition.getLanguages().stream()
+                .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
+
+        for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
+            if(!localizedTextDoesNotExist(language))  {
+                throw new ExhibitionLanguageCouldNotBeDeletedException() ;
+            }
+        }
+
+        exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
 
     }
     
     @Override
-    public boolean localizedTextDoesNotExist(IExhibitionLanguage language) throws ExhibitionLanguageCouldNotBeDeletedException {        
-        if(CollectionUtils.isEmpty(language.getLocalizedTexts())) return true;
-        else throw new ExhibitionLanguageCouldNotBeDeletedException();
+    public boolean localizedTextDoesNotExist(IExhibitionLanguage language)  {        
+     
+        return CollectionUtils.isEmpty(language.getLocalizedTexts());
 
     }
 

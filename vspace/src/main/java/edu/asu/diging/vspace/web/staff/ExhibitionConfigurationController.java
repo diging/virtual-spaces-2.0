@@ -22,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageCouldNotBeDeletedException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -78,6 +79,7 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
+     * @throws ExhibitionLanguageCouldNotBeDeletedException 
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
@@ -98,7 +100,15 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
+        try {
+            exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
+            
+        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+            attributes.addAttribute("alertType", "failure");
+            attributes.addAttribute("message", "Could not delete the Exhibition Language");
+            attributes.addAttribute("showAlert", "true");
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
     
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
 
