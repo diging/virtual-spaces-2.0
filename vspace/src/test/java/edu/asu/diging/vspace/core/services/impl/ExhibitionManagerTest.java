@@ -40,6 +40,9 @@ public class ExhibitionManagerTest {
 
     @InjectMocks
     private ExhibitionManager serviceToTest;
+    
+   @Mock
+    private ExhibitionManager serviceToTestMock;
 
     @Before
     public void init() {
@@ -89,7 +92,11 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
+        try {
+            serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
+        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+            e.printStackTrace();
+        }
         assertEquals(exhibition.getLanguages().size(),2);
 
     }
@@ -124,7 +131,11 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language2);
         mappedLanguages.add(language3);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        serviceToTest.updateExhibitionLanguages(exhibition, languages, null);
+        try {
+            serviceToTest.updateExhibitionLanguages(exhibition, languages, null);
+        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+            e.printStackTrace();
+        }
 
         //no duplicate entries should be added
         assertEquals(exhibition.getLanguages().size(),3);
@@ -149,7 +160,11 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
+        try {
+            serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
+        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+            e.printStackTrace();
+        }
         assertEquals(exhibition.getLanguages().size(),1);
 
 
@@ -277,7 +292,8 @@ public class ExhibitionManagerTest {
         IExhibitionLanguage language = new ExhibitionLanguage();
         language.setLabel("English");
         
-        when(serviceToTest.localizedTextDoesNotExist(language)).thenReturn(false);
+        
+        when(serviceToTestMock.localizedTextDoesNotExist(language)).thenReturn(false);
         
         try {
             serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");

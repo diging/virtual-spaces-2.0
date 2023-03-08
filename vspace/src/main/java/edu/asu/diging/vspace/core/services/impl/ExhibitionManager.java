@@ -138,7 +138,7 @@ public class ExhibitionManager implements IExhibitionManager {
     @Override
     public boolean localizedTextDoesNotExist(IExhibitionLanguage language)  {        
      
-        return CollectionUtils.isEmpty(language.getLocalizedTexts());
+        return !CollectionUtils.isEmpty(language.getLocalizedTexts());
 
     }
 

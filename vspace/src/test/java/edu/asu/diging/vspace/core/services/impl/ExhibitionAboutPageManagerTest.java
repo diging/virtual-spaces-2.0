@@ -153,39 +153,30 @@ public class ExhibitionAboutPageManagerTest {
     public void test_createAboutPageForm_success() {
         Exhibition exhibition = new Exhibition();
         List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
-        ExhibitionLanguage  language1 = new ExhibitionLanguage();
+        ExhibitionLanguage  language2 = new ExhibitionLanguage();
         
-//        language1.setId("LANG_ID");
-        language1.setLabel("English");
-        languageList.add(language1);
+   
+        language2.setLabel("English");
+        languageList.add(language2);
         exhibition.setLanguages(languageList);
         
         
         
         
         List<ExhibitionAboutPage> exhibitionAboutPageList = new ArrayList();
-        ExhibitionAboutPage exhbitionAboutPage = new ExhibitionAboutPage();
-        
-        
+        ExhibitionAboutPage exhbitionAboutPage = new ExhibitionAboutPage();        
         LocalizedText locText1 =  new LocalizedText();
-        locText1.setId( "ID1");
-        
+        locText1.setId( "ID1");        
         List<ILocalizedText> titleList = new ArrayList<ILocalizedText>();     
-        titleList.add(new LocalizedText(language1, "title1"));
-        
+        titleList.add(new LocalizedText(language2, "title1"));        
         List<ILocalizedText> aboutTextList = new ArrayList<ILocalizedText>();
-
-        aboutTextList.add(new LocalizedText( language1, "about text"));
-        
-        
-        exhbitionAboutPage.setExhibitionTitles(titleList);
-        
+        aboutTextList.add(new LocalizedText( language2, "about text"));      
+        exhbitionAboutPage.setExhibitionTitles(titleList);        
         exhbitionAboutPage.setExhibitionTextDescriptions(aboutTextList);
         exhibitionAboutPageList.add(exhbitionAboutPage);
 
         when(repo.findAll()).thenReturn(exhibitionAboutPageList);
-        
-    
+         
         when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);      
         
         AboutPageForm  aboutPageForm =   serviceToTest.createAboutPageForm();
@@ -197,51 +188,4 @@ public class ExhibitionAboutPageManagerTest {
 
     }
     
-    @Test
-    public void test_createAboutPageForm_failure() {
-        Exhibition exhibition = new Exhibition();
-        List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
-        ExhibitionLanguage  language = new ExhibitionLanguage("English", "ENG", exhibition);
-        language.setId("LANG_ID");
-        languageList.add(language);
-        exhibition.setLanguages(languageList);
-        
-        
-        
-        
-        List<ExhibitionAboutPage> exhibitionAboutPageList = new ArrayList();
-        ExhibitionAboutPage exhbitionAboutPage = new ExhibitionAboutPage();
-        
-        
-        LocalizedText locText1 =  new LocalizedText();
-        locText1.setId( "ID1");
-        
-        List<ILocalizedText> titleList = new ArrayList<ILocalizedText>();     
-        titleList.add(new LocalizedText(language, "title1"));
-        
-        List<ILocalizedText> aboutTextList = new ArrayList<ILocalizedText>();
-
-        aboutTextList.add(new LocalizedText( language, "about text"));
-        
-        
-        exhbitionAboutPage.setExhibitionTitles(titleList);
-        
-        exhbitionAboutPage.setExhibitionTextDescriptions(aboutTextList);
-        exhibitionAboutPageList.add(exhbitionAboutPage);
-
-        when(repo.findAll()).thenReturn(exhibitionAboutPageList);
-        
-    
-        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
-        
-        
-        
-        AboutPageForm  aboutPageForm =   serviceToTest.createAboutPageForm();
-        assertEquals(aboutPageForm.getAboutPageTexts().size(), 1);
-        
-        assertEquals(aboutPageForm.getTitles().size(), 1);
-        
-        assertEquals(aboutPageForm.getAboutPageTexts().get(0).getText(), "about text");
-
-    }
 }

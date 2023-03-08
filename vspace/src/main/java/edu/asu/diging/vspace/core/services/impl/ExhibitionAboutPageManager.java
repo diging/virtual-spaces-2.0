@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
+
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -185,7 +187,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 
         LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
         ILocalizedText aboutPageText = exhibitionAboutPage.getExhibitionTextDescriptions().stream()
-                .filter(exhibitionText -> language.getId().equals(exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
+                .filter(exhibitionText -> StringUtils.equals(language.getId(), exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
 
         if(aboutPageText != null) {
             localizedAboutTextForm.setText(aboutPageText.getText());
@@ -208,7 +210,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
 
         ILocalizedText title = exhibitionAboutPage.getExhibitionTitles().stream()
-                .filter(exhibitionTitle ->  exhibitionTitle.getExhibitionLanguage().getId().equals(language.getId())).findAny().orElse(null);
+                .filter(exhibitionTitle ->  StringUtils.equals(exhibitionTitle.getExhibitionLanguage().getId(), language.getId())).findAny().orElse(null);
 
         if(title != null) {
             localizedTitleForm.setText(title.getText());
