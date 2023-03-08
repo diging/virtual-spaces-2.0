@@ -261,7 +261,7 @@ public class ExhibitionManagerTest {
             serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
             assertEquals(exhibition.getLanguages().size(),1);
         } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
-   
+            e.printStackTrace();
         }
       
         
