@@ -22,7 +22,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedtext;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -62,13 +62,13 @@ public class Space extends VSpaceElement implements ISpace {
     @Transient
     private Boolean incomingLinks;
     
-    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_names")
-    private List<ILanguageDescriptionObject> spaceNames = new ArrayList();
+    private List<ILocalizedtext> spaceNames = new ArrayList();
     
-    @OneToMany( targetEntity = LanguageDescriptionObject.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_descriptions")
-    private List<ILanguageDescriptionObject> spaceDescriptions = new ArrayList();
+    private List<ILocalizedtext> spaceDescriptions = new ArrayList();
     
     /*
      * (non-Javadoc)
@@ -218,19 +218,19 @@ public class Space extends VSpaceElement implements ISpace {
         this.hideIncomingLinks = hideIncomingLinks;
     }
     
-    public List<ILanguageDescriptionObject> getSpaceNames() {
+    public List<ILocalizedtext> getSpaceNames() {
         return spaceNames;
     }
 
-    public void setSpaceNames(List<ILanguageDescriptionObject> spaceNames) {
+    public void setSpaceNames(List<ILocalizedtext> spaceNames) {
         this.spaceNames = spaceNames;
     }
 
-    public List<ILanguageDescriptionObject> getSpaceDescriptions() {
+    public List<ILocalizedtext> getSpaceDescriptions() {
         return spaceDescriptions;
     }
 
-    public void setSpaceDescriptions(List<ILanguageDescriptionObject> spaceDescriptions) {
+    public void setSpaceDescriptions(List<ILocalizedtext> spaceDescriptions) {
         
         this.spaceDescriptions = spaceDescriptions;
     }

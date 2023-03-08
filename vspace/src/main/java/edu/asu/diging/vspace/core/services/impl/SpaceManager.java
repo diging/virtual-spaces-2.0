@@ -31,14 +31,14 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedtext;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -328,13 +328,13 @@ public class SpaceManager implements ISpaceManager {
      * @param names
      */
     @Override
-    public void addSpaceName(ISpace space, List<LanguageDescriptionObject> names) {
+    public void addSpaceName(ISpace space, List<LocalizedText> names) {
         if(!CollectionUtils.isEmpty(names)) {
-            for(LanguageDescriptionObject name : names )  {
+            for(LocalizedText name : names )  {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
                 if(exhibitionLanguage != null) {
                     name.setExhibitionLanguage(exhibitionLanguage); 
-                    Optional<ILanguageDescriptionObject> spaceTitle = space.getSpaceNames().stream()
+                    Optional<ILocalizedtext> spaceTitle = space.getSpaceNames().stream()
                             .filter(title -> exhibitionLanguage.getId().equals(title.getExhibitionLanguage().getId()))
                             .findAny();
                     if(spaceTitle.isPresent()) {
@@ -358,13 +358,13 @@ public class SpaceManager implements ISpaceManager {
      * @param descriptions
      */
     @Override
-    public void addSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions) {
+    public void addSpaceDescription(ISpace space, List<LocalizedText> descriptions) {
         if(!CollectionUtils.isEmpty(descriptions)) {
-            for(LanguageDescriptionObject description : descriptions )  {               
+            for(LocalizedText description : descriptions )  {               
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
                 if(exhibitionLanguage != null) {
                     description.setExhibitionLanguage(exhibitionLanguage);
-                    Optional<ILanguageDescriptionObject> spaceDescription = space.getSpaceDescriptions().stream()
+                    Optional<ILocalizedtext> spaceDescription = space.getSpaceDescriptions().stream()
                             .filter(desc -> exhibitionLanguage.getId().equals(desc.getExhibitionLanguage().getId()))
                             .findAny();
                     if(spaceDescription.isPresent()) {
@@ -390,7 +390,7 @@ public class SpaceManager implements ISpaceManager {
     public void setNameAsDefaultLanguage(ISpace space) {
         String defaultSpaceName = space.getSpaceNames().stream()
                 .filter(title -> Boolean.TRUE.equals(title.getExhibitionLanguage().isDefault()))     
-                .map(ILanguageDescriptionObject::getText)
+                .map(ILocalizedtext::getText)
                 .findAny().orElse(space.getName()) ;
         space.setName(defaultSpaceName);
 
@@ -400,7 +400,7 @@ public class SpaceManager implements ISpaceManager {
     public void setDescriptionAsDefaultLanguage(ISpace space) {
         String defaultSpaceDescription = space.getSpaceDescriptions().stream()
                 .filter(description -> Boolean.TRUE.equals(description.getExhibitionLanguage().isDefault()))
-                .map(ILanguageDescriptionObject::getText)
+                .map(ILocalizedtext::getText)
                 .findAny().orElse(space.getDescription());       
         space.setDescription(defaultSpaceDescription);
 
@@ -429,11 +429,11 @@ public class SpaceManager implements ISpaceManager {
         spaceForm.setName(space.getName());
         spaceForm.setDescription(space.getDescription());
         space.getSpaceDescriptions().forEach(description -> {
-            spaceForm.getDescriptions().add((LanguageDescriptionObject) description);
+            spaceForm.getDescriptions().add((LocalizedText) description);
         });
 
         space.getSpaceNames().forEach(title -> {
-            spaceForm.getNames().add((LanguageDescriptionObject) title);
+            spaceForm.getNames().add((LocalizedText) title);
         });
 
         return spaceForm;

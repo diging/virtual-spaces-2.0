@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -47,9 +47,9 @@ public interface ISpaceManager {
 
     void setDescriptionAsDefaultLanguage(ISpace space);
 
-    void addSpaceDescription(ISpace space, List<LanguageDescriptionObject> descriptions);
+    void addSpaceDescription(ISpace space, List<LocalizedText> descriptions);
 
-    void addSpaceName(ISpace space, List<LanguageDescriptionObject> names);
+    void addSpaceName(ISpace space, List<LocalizedText> names);
 
     Iterable<Space> getSpaceList();
 

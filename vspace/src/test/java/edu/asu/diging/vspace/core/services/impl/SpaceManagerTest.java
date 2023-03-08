@@ -26,13 +26,13 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedtext;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -314,8 +314,8 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
 
-        List<LanguageDescriptionObject> descriptionList = new ArrayList();
-        LanguageDescriptionObject languageObj = new LanguageDescriptionObject();
+        List<LocalizedText> descriptionList = new ArrayList();
+        LocalizedText languageObj = new LocalizedText();
         languageObj.setText("Space description");
 
         ExhibitionLanguage lang = new ExhibitionLanguage();
@@ -335,8 +335,8 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
 
-        List<LanguageDescriptionObject> descriptionList = new ArrayList();
-        LanguageDescriptionObject languageObj = new LanguageDescriptionObject();
+        List<LocalizedText> descriptionList = new ArrayList();
+        LocalizedText languageObj = new LocalizedText();
         languageObj.setText("Space description");
 
         ExhibitionLanguage lang = new ExhibitionLanguage();
@@ -355,8 +355,8 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
         
-        List<LanguageDescriptionObject> nameList = new ArrayList();
-        LanguageDescriptionObject languageObj = new LanguageDescriptionObject();
+        List<LocalizedText> nameList = new ArrayList();
+        LocalizedText languageObj = new LocalizedText();
         languageObj.setText("Space Name");
 
         ExhibitionLanguage lang = new ExhibitionLanguage();
@@ -375,8 +375,8 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
         
-        List<LanguageDescriptionObject> nameList = new ArrayList();
-        LanguageDescriptionObject languageObj = new LanguageDescriptionObject();
+        List<LocalizedText> nameList = new ArrayList();
+        LocalizedText languageObj = new LocalizedText();
         languageObj.setText("Space Name");
 
         ExhibitionLanguage lang = new ExhibitionLanguage();
@@ -394,9 +394,9 @@ public class SpaceManagerTest {
     public void setNameAsDefaultLanguage_success() {
         Space space=new Space();
         space.setId(spaceId1);
-        List<ILanguageDescriptionObject> nameList = new ArrayList();
+        List<ILocalizedtext> nameList = new ArrayList();
         
-        LanguageDescriptionObject languageObj1 = new LanguageDescriptionObject();
+        LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
         ExhibitionLanguage lang1 = new ExhibitionLanguage();
         lang1.setLabel("English");
@@ -404,7 +404,7 @@ public class SpaceManagerTest {
         languageObj1.setExhibitionLanguage(lang1);
         nameList.add(languageObj1);
         
-        LanguageDescriptionObject languageObj2 = new LanguageDescriptionObject();
+        LocalizedText languageObj2 = new LocalizedText();
         languageObj2.setText("Raumname");
         ExhibitionLanguage lang2 = new ExhibitionLanguage();
         lang2.setLabel("German");
@@ -430,9 +430,9 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
         space.setName("Initial name");
-        List<ILanguageDescriptionObject> nameList = new ArrayList();
+        List<ILocalizedtext> nameList = new ArrayList();
         
-        LanguageDescriptionObject languageObj1 = new LanguageDescriptionObject();
+        LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
         ExhibitionLanguage lang1 = new ExhibitionLanguage();
         lang1.setLabel("English");
@@ -440,7 +440,7 @@ public class SpaceManagerTest {
         languageObj1.setExhibitionLanguage(lang1);
         nameList.add(languageObj1);
         
-        LanguageDescriptionObject languageObj2 = new LanguageDescriptionObject();
+        LocalizedText languageObj2 = new LocalizedText();
         languageObj2.setText("Raumname");
         ExhibitionLanguage lang2 = new ExhibitionLanguage();
         lang2.setLabel("German");
@@ -466,9 +466,9 @@ public class SpaceManagerTest {
     public void setDescriptionAsDefaultLanguage_success() {
         Space space=new Space();
         space.setId(spaceId1);
-        List<ILanguageDescriptionObject> descriptionList = new ArrayList();
+        List<ILocalizedtext> descriptionList = new ArrayList();
         
-        LanguageDescriptionObject languageObj1 = new LanguageDescriptionObject();
+        LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
         ExhibitionLanguage lang1 = new ExhibitionLanguage();
         lang1.setLabel("English");
@@ -476,7 +476,7 @@ public class SpaceManagerTest {
         languageObj1.setExhibitionLanguage(lang1);
         descriptionList.add(languageObj1);
         
-        LanguageDescriptionObject languageObj2 = new LanguageDescriptionObject();
+        LocalizedText languageObj2 = new LocalizedText();
         languageObj2.setText("Raumname");
         ExhibitionLanguage lang2 = new ExhibitionLanguage();
         lang2.setLabel("German");
@@ -500,9 +500,9 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
         space.setDescription("Initial Description");
-        List<ILanguageDescriptionObject> descriptionList = new ArrayList();
+        List<ILocalizedtext> descriptionList = new ArrayList();
         
-        LanguageDescriptionObject languageObj1 = new LanguageDescriptionObject();
+        LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
         ExhibitionLanguage lang1 = new ExhibitionLanguage();
         lang1.setLabel("English");
@@ -510,7 +510,7 @@ public class SpaceManagerTest {
         languageObj1.setExhibitionLanguage(lang1);
         descriptionList.add(languageObj1);
         
-        LanguageDescriptionObject languageObj2 = new LanguageDescriptionObject();
+        LocalizedText languageObj2 = new LocalizedText();
         languageObj2.setText("Raumname");
         ExhibitionLanguage lang2 = new ExhibitionLanguage();
         lang2.setLabel("German");
