@@ -282,8 +282,8 @@ public class ImageService implements IImageService {
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
-            System.out.println(contentType);
             defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
+            System.out.println(defaultImage);
             defaultImage = imageRepo.save((VSImage) defaultImage);
 
         }
