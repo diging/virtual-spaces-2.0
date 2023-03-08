@@ -26,6 +26,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
@@ -42,6 +43,9 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
+    
+    @Autowired
+    private IImageService imageService;
     
 
     @Autowired
@@ -87,7 +91,6 @@ public class ExhibitionConfigurationController {
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
-            @RequestParam("flag") String flag,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
 
             @RequestParam("externalLinkImage") MultipartFile externalLinkImage,
@@ -114,7 +117,7 @@ public class ExhibitionConfigurationController {
         if (spacelinkImage != null) {
             spaceImage = spacelinkImage.getBytes();
             spaceLinkFilename = spacelinkImage.getOriginalFilename();
-            spaceDefaultImage = exhibitManager.storeDefaultImage(spaceImage, spaceLinkFilename,"SPACELINKIMAGE");
+            spaceDefaultImage = imageService.storeImage(spaceImage, spaceLinkFilename,"SPACELINKIMAGE");
             
         }
         
@@ -124,7 +127,7 @@ public class ExhibitionConfigurationController {
         if (moduleLinkImage != null) {
             moduleImage = moduleLinkImage.getBytes();
             moduleLinkFilename = moduleLinkImage.getOriginalFilename();
-            moduleDefaultImage = exhibitManager.storeDefaultImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
+            moduleDefaultImage = imageService.storeImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
             
             
         }
@@ -134,7 +137,7 @@ public class ExhibitionConfigurationController {
         if (externalLinkImage != null) {
             externalImage = externalLinkImage.getBytes();
             externalLinkFilename = externalLinkImage.getOriginalFilename();
-            externalDefaultImage = exhibitManager.storeDefaultImage(externalImage, externalLinkFilename,"EXTERNALLINKIMAGE");
+            externalDefaultImage = imageService.storeImage(externalImage, externalLinkFilename,"EXTERNALLINKIMAGE");
             
         }
         

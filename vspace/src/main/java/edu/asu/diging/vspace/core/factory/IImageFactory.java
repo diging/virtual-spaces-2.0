@@ -6,6 +6,4 @@ public interface IImageFactory {
 
     IVSImage createImage(String filename, String fileType);
 
-    IVSImage createDefaultImage(String filename, String fileType, String spaceId);
-
 }

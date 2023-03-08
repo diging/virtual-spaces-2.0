@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
-import edu.asu.diging.vspace.core.factory.impl.ImageFactory;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
@@ -42,7 +42,7 @@ public class ImageService implements IImageService {
     private ImageRepository imageRepo;
 
     @Autowired
-    private ImageFactory imageFactory;
+    private IImageFactory imageFactory;
 
     @Autowired
     private IStorageEngine storage;
@@ -282,10 +282,8 @@ public class ImageService implements IImageService {
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
-            defaultImage = imageFactory.createDefaultImage(filename, contentType, id);
-            System.out.println(defaultImage);
+            defaultImage = imageFactory.createImage(filename, contentType);
             defaultImage = imageRepo.save((VSImage) defaultImage);
-
         }
 
         CreationReturnValue returnValue = new CreationReturnValue();
@@ -302,6 +300,7 @@ public class ImageService implements IImageService {
             }
             defaultImage.setParentPath(relativePath);
             ImageData imageData = getImageData(image);
+
             if (imageData != null) {
                 defaultImage.setHeight(imageData.getHeight());
                 defaultImage.setWidth(imageData.getWidth());

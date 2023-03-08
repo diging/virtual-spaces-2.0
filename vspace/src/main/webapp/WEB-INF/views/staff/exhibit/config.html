@@ -55,20 +55,17 @@
 		}
 		function defaultLinkSpaceImages() {
 			var spaceLinkImageUpload = $('#spaceLinkImageUpload');
-			flag = 'DEFAULT IMAGE' ;
 			spaceLinkImageUpload.show();
 
 		}
 
 		function defaultLinkModuleImages() {
 			var moduleLinkImageupload = $('#moduleLinkImageupload');
-			flag = 'DEFAULT IMAGE' ;
 			moduleLinkImageupload.show();
 		}
 
 		function defaultLinkExternalImages() {
 			var externalLinkImageupload = $('#externalLinkImageupload');
-			flag = 'DEFAULT IMAGE' ;
 			externalLinkImageupload.show();
 		}
 </script>
@@ -143,7 +140,6 @@
 		            <input type="text" class="form-control" name="customMessage"
 		                th:value="${exhibition.customMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
 		        </div>
-		        <input type="hidden" th:value="${exhibition.customMessage}" id="flag" name = "flag"  />
 				<div>
 		        <div style="padding-top: 20px;">
 						<button id="spaceLinkbtnDisplay" type="button"
