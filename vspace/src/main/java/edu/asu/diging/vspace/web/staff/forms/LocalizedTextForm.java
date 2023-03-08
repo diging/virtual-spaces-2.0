@@ -6,6 +6,16 @@ public class LocalizedTextForm {
     
     
         
+  
+
+    String text;
+    
+    String localisedTextId;
+    
+    String exhibitionLanguageId;
+    
+    String exhibitionLanguageLabel;  
+    
     public LocalizedTextForm() {
         super();
     }
@@ -18,14 +28,6 @@ public class LocalizedTextForm {
         this.exhibitionLanguageId = exhibitionLanguageId;
         this.exhibitionLanguageLabel = exhibitionLanguageLabel;
     }
-
-    String text;
-    
-    String localisedTextId;
-    
-    String exhibitionLanguageId;
-    
-    String exhibitionLanguageLabel;    
     
     public String getText() {
         return text;
