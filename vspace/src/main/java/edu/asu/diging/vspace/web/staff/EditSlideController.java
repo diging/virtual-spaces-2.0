@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -31,6 +33,9 @@ public class EditSlideController {
 
     @Autowired
     private IModuleManager moduleManager;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description,
@@ -56,6 +61,10 @@ public class EditSlideController {
         SlideForm slideForm = new SlideForm();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
+        
+        //model.addAttribute("spaceForm", slideManager.getSpaceForm(slideId));
+        model.addAttribute("slideId", slideId);
+        
         if(slide instanceof BranchingPoint) {
             slideForm.setType(SlideType.BRANCHING_POINT.toString());
             IBranchingPoint branchingPoint = (IBranchingPoint) slide;           
@@ -70,6 +79,10 @@ public class EditSlideController {
         model.addAttribute("slideId", slideId);
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();   
+
+        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
+        
         return "staff/modules/slides/edit";
     }
 

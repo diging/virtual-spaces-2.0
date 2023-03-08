@@ -272,6 +272,15 @@ public class SlideManager implements ISlideManager {
         slide.setDescription(defaultSpaceDescription);
 
     }
+    
+
+    @Override
+    public void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList) {
+        slideList.forEach(space -> {
+            setDescriptionAsDefaultLanguage(space);
+            setNameAsDefaultLanguage(space);
+        });
+    }
 
     
 }

@@ -45,9 +45,9 @@ public interface ISlideManager {
 
     void addSlideName(ISlide slide, List<LocalizedText> names);
 
-//    Iterable<Slide> getSlideList();
-//
-//    void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList);
-//
+ //   Iterable<Slide> getSlideList();
+
+    void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList);
+
 //    SlideForm getSlideForm(String slideId);
 }
