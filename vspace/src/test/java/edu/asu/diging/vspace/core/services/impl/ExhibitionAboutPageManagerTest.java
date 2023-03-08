@@ -146,7 +146,6 @@ public class ExhibitionAboutPageManagerTest {
         when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
         serviceToTest.storeAboutPageData(aboutPageForm);
         assertEquals(locText1.getText(), null);
-
     } 
     
     @Test
@@ -159,10 +158,7 @@ public class ExhibitionAboutPageManagerTest {
         language2.setLabel("English");
         languageList.add(language2);
         exhibition.setLanguages(languageList);
-        
-        
-        
-        
+               
         List<ExhibitionAboutPage> exhibitionAboutPageList = new ArrayList();
         ExhibitionAboutPage exhbitionAboutPage = new ExhibitionAboutPage();        
         LocalizedText locText1 =  new LocalizedText();

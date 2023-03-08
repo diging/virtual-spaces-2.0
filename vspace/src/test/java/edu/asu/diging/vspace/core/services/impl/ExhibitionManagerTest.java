@@ -41,7 +41,7 @@ public class ExhibitionManagerTest {
     @InjectMocks
     private ExhibitionManager serviceToTest;
     
-   @Mock
+    @Mock
     private ExhibitionManager serviceToTestMock;
 
     @Before
@@ -210,7 +210,7 @@ public class ExhibitionManagerTest {
                 }});
         }
         catch(Exception e) {
-            
+            e.printStackTrace();
         }
  
         
@@ -304,9 +304,9 @@ public class ExhibitionManagerTest {
             Assert.assertThrows(ExhibitionLanguageCouldNotBeDeletedException.class,
                     () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));
           
-//            assertEquals(exhibition.getLanguages().size(),1);
         } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
    
+            e.printStackTrace();
         }
       
         
