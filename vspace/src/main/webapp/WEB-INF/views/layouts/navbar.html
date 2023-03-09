@@ -59,6 +59,15 @@
 		      [[${exhibition?.title}]]</a>
 		        <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
+		        	<li th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} OR ${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" >
+		        		<div class="icon-info">[[${exhibitionConfig.mode}]]</div>
+		        	
+		        	</li>
+		        	<li >
+		        		<div class="primary-btn btn-sm">Preview</sdiv>
+		        	
+		        	</li>
+		      
 					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
 					        <a class="nav-link" th:href="@{'/preview/'+${previewId}}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
 			                </a>
