@@ -92,6 +92,7 @@ public class EditSlideController {
         slide.setName(slideForm.getName());
         slide.setDescription(slideForm.getDescription());
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
+        slideManager.updateNameAndDescription(slide, slideForm);
         if(type.equals(SlideType.BRANCHING_POINT)) {
             List<String> editedChoices = slideForm.getChoices();
             slideManager.updateBranchingPoint((IBranchingPoint)slide, editedChoices);
