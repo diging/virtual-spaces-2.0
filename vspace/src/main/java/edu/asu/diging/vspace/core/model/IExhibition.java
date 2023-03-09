@@ -31,11 +31,17 @@ public interface IExhibition extends IVSpaceElement {
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
     
-    IVSImage getModulelinkImage();
+    IVSImage getSpacelinkDefaultImage();
     
-    IVSImage getSpacelinkImage();
+    void setSpacelinkDefaultImage(IVSImage spacelinkDefaultImage);
     
-    IVSImage getExternallinkImage();
+    IVSImage getModulelinkDefaultImage();
+    
+    void setModulelinkDefaultImage(IVSImage modulelinkDefaultImage);
+    
+    IVSImage getExternallinkDefaultImage();
+    
+    void setExternallinkDefaultImage(IVSImage externallinkDefaultImage);
 
     List<IExhibitionLanguage> getLanguages();
 

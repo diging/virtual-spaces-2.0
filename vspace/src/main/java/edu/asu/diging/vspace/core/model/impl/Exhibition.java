@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,10 +19,8 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
-import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
@@ -54,17 +50,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage spacelinkImage;
+    private IVSImage spacelinkDefaultImage;
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage modulelinkImage;
+    private IVSImage modulelinkDefaultImage;
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage externallinkImage;
-    
-    
+    private IVSImage externallinkDefaultImage;
     
     private boolean aboutPageConfigured;
     
@@ -143,6 +137,31 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.customMessage = customMessage;
     }
     
+    
+    public IVSImage getSpacelinkDefaultImage() {
+        return spacelinkDefaultImage;
+    }
+
+    public void setSpacelinkDefaultImage(IVSImage spacelinkDefaultImage) {
+        this.spacelinkDefaultImage = spacelinkDefaultImage;
+    }
+
+    public IVSImage getModulelinkDefaultImage() {
+        return modulelinkDefaultImage;
+    }
+
+    public void setModulelinkDefaultImage(IVSImage modulelinkDefaultImage) {
+        this.modulelinkDefaultImage = modulelinkDefaultImage;
+    }
+
+    public IVSImage getExternallinkDefaultImage() {
+        return externallinkDefaultImage;
+    }
+
+    public void setExternallinkDefaultImage(IVSImage externallinkDefaultImage) {
+        this.externallinkDefaultImage = externallinkDefaultImage;
+    }
+
     @Override
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;
@@ -152,35 +171,6 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
     }
-
-
-    public IVSImage getModulelinkImage() {
-        return modulelinkImage;
-    }
-
-    public IVSImage getSpacelinkImage() {
-        return spacelinkImage;
-    }
-
-    public void setModulelinkImage(IVSImage modulelinkImage) {
-        this.modulelinkImage = modulelinkImage;
-    }
-
-    public IVSImage getExternallinkImage() {
-        return externallinkImage;
-    }
-
-    public void setExternallinkImage(IVSImage externallinkImage) {
-        this.externallinkImage = externallinkImage;
-    }
-
-    public void setSpacelinkImage(IVSImage spacelinkImage) {
-        this.spacelinkImage = spacelinkImage;
-    }
-
-	
-    
-
 
     public List<IExhibitionLanguage> getLanguages() {
         return languages;

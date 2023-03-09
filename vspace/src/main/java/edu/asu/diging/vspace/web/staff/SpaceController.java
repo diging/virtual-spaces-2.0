@@ -120,7 +120,7 @@ public class SpaceController {
     public ResponseEntity<byte[]> getSpaceId() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
 
-        IVSImage spaceImage = exhibition.getSpacelinkImage();
+        IVSImage spaceImage = exhibition.getSpacelinkDefaultImage();
         if (spaceImage == null) {
             return null;
         }
@@ -146,7 +146,7 @@ public class SpaceController {
     @RequestMapping(value = API_DEFAULT_MODULEIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultModuleImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        IVSImage moduleImage = exhibition.getModulelinkImage();
+        IVSImage moduleImage = exhibition.getModulelinkDefaultImage();
         if (moduleImage == null) {
             return null;
         }
@@ -170,7 +170,7 @@ public class SpaceController {
     @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultExternalImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        IVSImage externalLinkImage = exhibition.getExternallinkImage();
+        IVSImage externalLinkImage = exhibition.getExternallinkDefaultImage();
         if (externalLinkImage == null) {
             return null;
         }
@@ -194,9 +194,9 @@ public class SpaceController {
     @RequestMapping(value = API_DEFAULT_SPACEIMAGE, method = RequestMethod.GET)
     public ResponseEntity<String> getDefaultImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        IVSImage defaultSpaceImage = exhibition.getSpacelinkImage();
-        IVSImage defaultModuleImage = exhibition.getModulelinkImage();
-        IVSImage defaultExternalLinkImage = exhibition.getExternallinkImage();
+        IVSImage defaultSpaceImage = exhibition.getSpacelinkDefaultImage();
+        IVSImage defaultModuleImage = exhibition.getModulelinkDefaultImage();
+        IVSImage defaultExternalLinkImage = exhibition.getExternallinkDefaultImage();
         
         boolean defaultSpaceImageFlag = false;
         boolean defaultModuleImageFlag = false;
