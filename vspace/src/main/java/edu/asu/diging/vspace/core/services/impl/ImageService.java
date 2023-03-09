@@ -265,18 +265,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public IVSImage getImageByDescription(String imageId) throws ImageDoesNotExistException {
-        Optional<VSImage> imageOptional = imageRepo.findById(imageId);
-        if (imageOptional.isPresent()) {
-            return imageOptional.get();
-        } else {
-            logger.error(NOIMAGEEXCEPTION);
-            throw new ImageDoesNotExistException(NOIMAGEEXCEPTION + imageId);
-        }
-    }
-
-    @Override
-    public IVSImage storeImage(byte[] image, String filename, String id) {
+    public IVSImage storeImage(byte[] image, String filename) {
 
         IVSImage defaultImage = null;
         if (image != null && image.length > 0) {

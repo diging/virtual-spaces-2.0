@@ -43,33 +43,29 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
-    
+
     @Autowired
     private IImageService imageService;
-    
 
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
 
-    
-
-
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
-    
+
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
 
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        if(exhibition==null) {           
+        if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         }
-        if(exhibition.getLanguages() != null ) {
-            model.addAttribute("savedExhibitionLanguages",  exhibition.getLanguages()
-                    .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
-            model.addAttribute("defaultLanguage",exhibition.getLanguages().stream()
-                    .filter(language -> language.isDefault()).findFirst().orElse(null) );
-      
+        if (exhibition.getLanguages() != null) {
+            model.addAttribute("savedExhibitionLanguages", exhibition.getLanguages().stream()
+                    .map(language -> language.getLabel()).collect(Collectors.toList()));
+            model.addAttribute("defaultLanguage", exhibition.getLanguages().stream()
+                    .filter(language -> language.isDefault()).findFirst().orElse(null));
+
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
@@ -94,18 +90,18 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
 
             @RequestParam("externalLinkImage") MultipartFile externalLinkImage,
-            @RequestParam("spacelinkImage")  MultipartFile spacelinkImage,
-            @RequestParam("moduleLinkImage")  MultipartFile moduleLinkImage,
+            @RequestParam("spacelinkImage") MultipartFile spacelinkImage,
+            @RequestParam("moduleLinkImage") MultipartFile moduleLinkImage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
 
             RedirectAttributes attributes) throws IOException {
-    	
+
         ISpace startSpace = spaceManager.getSpace(spaceID);
         IVSImage spaceDefaultImage = null;
         IVSImage moduleDefaultImage = null;
         IVSImage externalDefaultImage = null;
-        
+
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
@@ -117,68 +113,48 @@ public class ExhibitionConfigurationController {
         if (spacelinkImage != null) {
             spaceImage = spacelinkImage.getBytes();
             spaceLinkFilename = spacelinkImage.getOriginalFilename();
-            spaceDefaultImage = imageService.storeImage(spaceImage, spaceLinkFilename,"SPACELINKIMAGE");
-            
+            spaceDefaultImage = imageService.storeImage(spaceImage, spaceLinkFilename);
+
         }
-        
+
         byte[] moduleImage = null;
         String moduleLinkFilename = null;
-        
+
         if (moduleLinkImage != null) {
             moduleImage = moduleLinkImage.getBytes();
             moduleLinkFilename = moduleLinkImage.getOriginalFilename();
-            moduleDefaultImage = imageService.storeImage(moduleImage, moduleLinkFilename,"MODULELINKIMAGE");
-            
-            
+            moduleDefaultImage = imageService.storeImage(moduleImage, moduleLinkFilename);
+
         }
-        
+
         byte[] externalImage = null;
         String externalLinkFilename = null;
         if (externalLinkImage != null) {
             externalImage = externalLinkImage.getBytes();
             externalLinkFilename = externalLinkImage.getOriginalFilename();
-            externalDefaultImage = imageService.storeImage(externalImage, externalLinkFilename,"EXTERNALLINKIMAGE");
-            
+            externalDefaultImage = imageService.storeImage(externalImage, externalLinkFilename);
+
         }
-        
+
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         exhibition.setSpacelinkDefaultImage(spaceDefaultImage);
         exhibition.setModulelinkDefaultImage(moduleDefaultImage);
         exhibition.setExternallinkDefaultImage(externalDefaultImage);
-           
 
-        exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
-    
+        exhibitManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
 
-        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+        if (exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
 
             exhibition.setCustomMessage(customMessage);
         }
-        
-        
-       
+
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
-        
-        
+
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
-    
-    
-    
-    
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
 }

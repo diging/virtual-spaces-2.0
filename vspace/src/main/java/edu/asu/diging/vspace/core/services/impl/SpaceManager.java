@@ -297,7 +297,5 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
-    }
-    
-    
+    }   
 }

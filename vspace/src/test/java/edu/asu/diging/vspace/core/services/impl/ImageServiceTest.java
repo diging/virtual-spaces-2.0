@@ -301,7 +301,7 @@ public class ImageServiceTest {
         ImageService imageService = Mockito.spy(serviceToTest);
         Mockito.when(imageService.getImageData(imageBytes)).thenReturn(data);
         Mockito.when(storage.storeFile(imageBytes, FILENAME, ID)).thenReturn(STORE_PATH);
-        IVSImage returnVal = serviceToTest.storeImage(imageBytes, FILENAME, ID);
+        IVSImage returnVal = serviceToTest.storeImage(imageBytes, FILENAME);
         Assert.assertEquals(FILENAME, returnVal.getFilename());
         Assert.assertEquals(IMG_CONTENT_TYPE, returnVal.getFileType());
 
@@ -328,7 +328,7 @@ public class ImageServiceTest {
         Mockito.when(storage.storeFile(imageBytes, FILENAME, ID)).thenThrow(FileStorageException.class);
         ImageService imageService = Mockito.spy(serviceToTest);
         Mockito.when(imageService.getImageData(imageBytes)).thenReturn(data);
-        IVSImage returnVal = serviceToTest.storeImage(imageBytes, FILENAME, ID);
+        IVSImage returnVal = serviceToTest.storeImage(imageBytes, FILENAME);
 
         Assert.assertNotNull(returnVal);
 

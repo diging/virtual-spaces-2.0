@@ -37,8 +37,6 @@ public interface IImageService {
 
     List<IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    IVSImage getImageByDescription(String imageId) throws ImageDoesNotExistException;
-    
-    public IVSImage storeImage(byte[] image, String filename, String id);
+    public IVSImage storeImage(byte[] image, String filename);
 
 }
