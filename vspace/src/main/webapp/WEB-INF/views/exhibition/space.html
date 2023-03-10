@@ -92,16 +92,6 @@
     visibility: visible;
 }
 
-.previewModeAlert {
-    position: absolute;
-    z-index: 1;
-    width: 50px;
-    height: 44px;
-    left: 80%;
-    top: 8%;
-    overflow: visible;
-    cursor: pointer;
-}
 
 .previewModeAlert:hover .tooltiptextforPreviewModeAlert {
     visibility: visible;
@@ -141,14 +131,6 @@
     background: rgba(0, 0, 0, 0.6);
 }
 
-.exhModeAlert {
-    position: relative;
-    z-index: 1;
-    width: 50px;
-    height: 44px;
-    overflow: visible;
-    cursor: pointer;
-}
 
 .tooltiptextforExhModeAlert {
     visibility: hidden;
@@ -557,13 +539,7 @@
 		</div>
 		
 		</div>
-	<!-- 	<div th:if="${isExhPreview} == true" class="previewModeAlert">
-                <button class="btn circle-btn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;">
-                    <span class="icon-info secondary"
-                         style="float:right;left: -4px;"></span> <span
-                        class="tooltiptextforPreviewModeAlert">You’re currently viewing a preview of this virtual space.</span>
-                </button>
-        </div>  -->
+
      
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
@@ -612,12 +588,6 @@
                   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
-                            <!-- <div th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} OR ${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" 
-								   class="exhModeAlert">
-                                <span class="icon-warning secondary" style="float: right; left: -4px;"></span> 
-                                <span class="tooltiptextforExhModeAlert">The virtual space is currently [[${exhibitionConfig.mode}]] and cannot be viewed via
-                                     its public url.</span>				
-                            </div> -->
                             </a>
                         </li>
                     </ul>

@@ -35,7 +35,92 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+<style> 	
 
+.previewModeAlert {
+    position: relative;
+    z-index: 1;
+   width: min-content;
+    height: 30px;
+    left: auto;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+    background-color: orange ;
+    color: black; 
+     border-radius: 10px;
+    margin: 5px 25px 5px 10px; 
+    padding: 5px 10px 5px 10px;
+}
+ 
+.previewModeAlert:hover .tooltiptextforPreviewModeAlert {
+    visibility: visible;
+}
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.tooltiptextforPreviewModeAlert {
+    visibility: hidden;
+        display: inline;
+    width: 250px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 6px 6pt;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+    left: -50px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.exhModeAlert {
+    position: relative;
+    z-index: 1;
+	width: min-content;
+    height: 30px;
+    overflow: visible;
+    cursor: pointer;
+    background-color: red; 
+    color:white;  
+    border-radius: 10px;
+    top:8%;
+    left:auto;
+   margin: 5px 25px 5px 10px; 
+   padding: 5px 10px 5px 10px;
+}
+
+.tooltiptextforExhModeAlert {
+    visibility: hidden;
+    width: 350px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 6px 6pt;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+    left: 70px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.exhModeAlert:hover .tooltiptextforExhModeAlert {
+    visibility: visible;
+}
+</style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
 <script th:src="@{/resources/bootstrap/js/main.js}"></script>
