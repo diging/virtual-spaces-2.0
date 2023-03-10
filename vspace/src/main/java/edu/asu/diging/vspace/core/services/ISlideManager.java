@@ -49,5 +49,7 @@ public interface ISlideManager {
 
     void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList);
 
-//    SlideForm getSlideForm(String slideId);
+    SlideForm getSlideForm(String slideId);
+    
+    
 }

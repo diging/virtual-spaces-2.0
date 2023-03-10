@@ -281,6 +281,25 @@ public class SlideManager implements ISlideManager {
             setNameAsDefaultLanguage(space);
         });
     }
+    
+    @Override
+    public SlideForm getSlideForm(String slideId) {
+        ISlide slide = getSlide(slideId);
+        SlideForm slideForm = new SlideForm();
+        slideForm.setName(slide.getName());
+        slideForm.setDescription(slide.getDescription());
+        slide.getSlideDescriptions().forEach(description -> {
+            slideForm.getDescriptions().add((LocalizedText) description);
+        });
+
+        slide.getSlideNames().forEach(title -> {
+            slideForm.getNames().add((LocalizedText) title);
+        });
+
+        return slideForm;
+
+        
+    }
 
     
 }
