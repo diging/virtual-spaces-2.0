@@ -25,8 +25,8 @@
     top: 0px;
 }
 
-.Icon_ionic_ios_arrow_back {
-    overflow: visible;
+.Icon_ionic_ios_arrow_back { 
+    overflow:  visible;
     position: absolute;
     width: 11.021px;
     height: 19.021px;
@@ -180,6 +180,11 @@ a, a:hover, a:focus {
     overflow: visible;
     text-align: justify;
     margin: auto;
+}
+
+.vidDiv {
+    position: relative;
+    overflow: visible;
 }
 
 .slideNumberClass {

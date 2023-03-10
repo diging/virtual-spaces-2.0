@@ -16,23 +16,24 @@ import edu.asu.diging.vspace.web.staff.forms.ModuleForm;
 
 @Controller
 public class AddModuleController {
-	
-	@Autowired
-	private IModuleFactory moduleFactory;
-	
-	@Autowired
-	private IModuleManager moduleManager;
 
-	@RequestMapping(value="/staff/module/add", method=RequestMethod.GET)
-	public String showAddModule(Model model) {
-		model.addAttribute("module", new ModuleForm());
-		return "staff/modules/add";
-	}
-	@RequestMapping(value="/staff/module/add", method=RequestMethod.POST)
-	public String addModule(Model model, @ModelAttribute ModuleForm moduleForm, Principal principal) {
-	    IModule module = moduleFactory.createModule(moduleForm);
-	    moduleManager.storeModule(module);
+    @Autowired
+    private IModuleFactory moduleFactory;
+
+    @Autowired
+    private IModuleManager moduleManager;
+
+    @RequestMapping(value = "/staff/module/add", method = RequestMethod.GET)
+    public String showAddModule(Model model) {
+        model.addAttribute("module", new ModuleForm());
+        return "staff/modules/add";
+    }
+
+    @RequestMapping(value = "/staff/module/add", method = RequestMethod.POST)
+    public String addModule(Model model, @ModelAttribute ModuleForm moduleForm, Principal principal) {
+        IModule module = moduleFactory.createModule(moduleForm);
+        moduleManager.storeModule(module);
         String moduleId = module.getId();
         return "redirect:/staff/module/" + moduleId;
-	}
+    }
 }
