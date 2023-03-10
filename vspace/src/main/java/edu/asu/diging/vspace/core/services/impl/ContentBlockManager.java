@@ -162,10 +162,11 @@ public class ContentBlockManager implements IContentBlockManager {
         return videoRepo.save((VSVideo) vidContent);
     }
 
-    private IVSVideo saveVideo(byte[] video, Long size, String filename, String title) {
+    public IVSVideo saveVideo(byte[] video, Long size, String filename, String title) {
         if (video != null && video.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(video);
+            System.out.println(contentType);
             IVSVideo slideContentVideo = videoFactory.createVideo(filename, size, contentType);
             slideContentVideo.setTitle(title);
             slideContentVideo = videoRepo.save((VSVideo) slideContentVideo);
