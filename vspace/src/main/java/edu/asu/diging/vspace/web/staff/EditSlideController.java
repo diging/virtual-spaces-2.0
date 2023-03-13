@@ -42,6 +42,8 @@ public class EditSlideController {
             @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
         slide.setDescription(description);
+        slideManager.setDescriptionAsDefaultLanguage(slide);
+        
         slideManager.updateSlide((Slide) slide);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -51,6 +53,7 @@ public class EditSlideController {
             @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
         slide.setName(title);
+        slideManager.setNameAsDefaultLanguage(slide);
         slideManager.updateSlide((Slide) slide);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -58,11 +61,9 @@ public class EditSlideController {
     @RequestMapping(value="/staff/module/{moduleId}/slide/{slideId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        SlideForm slideForm = new SlideForm();
-        slideForm.setName(slide.getName());
-        slideForm.setDescription(slide.getDescription());
-        
-        //model.addAttribute("spaceForm", slideManager.getSpaceForm(slideId));
+        SlideForm slideForm = slideManager.getSlideForm(slideId);
+      
+        model.addAttribute("slideForm", slideForm);
         model.addAttribute("slideId", slideId);
         
         if(slide instanceof BranchingPoint) {
@@ -82,6 +83,7 @@ public class EditSlideController {
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();   
 
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
+        
         
         return "staff/modules/slides/edit";
     }

@@ -298,7 +298,6 @@ public class SlideManager implements ISlideManager {
 
         return slideForm;
 
-        
     }
 
     
