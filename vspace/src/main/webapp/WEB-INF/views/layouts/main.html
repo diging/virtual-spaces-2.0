@@ -39,16 +39,17 @@
 
 .previewModeAlert {
     position: relative;
+    display: inline-block;
     z-index: 1;
-   width: min-content;
-    height: 30px;
-    left: auto;
-    top: 8%;
+  	width: 25%;
+    height: 30px;   
+    top: 20px;
+    left: 65%;
     overflow: visible;
     cursor: pointer;
     background-color: orange ;
     color: black; 
-     border-radius: 10px;
+    border-radius: 10px;
     margin: 5px 25px 5px 10px; 
     padding: 5px 10px 5px 10px;
 }
@@ -56,24 +57,12 @@
 .previewModeAlert:hover .tooltiptextforPreviewModeAlert {
     visibility: visible;
 }
-.tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    color: white;
-    text-align: center;
-    font-size: 12px;
-    padding: 3px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: -38px;
-    top: 46px;
-    background: rgba(0, 0, 0, 0.6);
-}
+
 
 .tooltiptextforPreviewModeAlert {
     visibility: hidden;
-        display: inline;
+    
+    display: inline-block;
     width: 250px;
     color: white;
     text-align: center;
@@ -83,29 +72,31 @@
     position: relative;
     z-index: 1;
     left: -50px;
-    top: 46px;
+    top: 20px;
     background: rgba(0, 0, 0, 0.6);
 }
 
 .exhModeAlert {
     position: relative;
     z-index: 1;
-	width: min-content;
+	width: 120px;
     height: 30px;
     overflow: visible;
     cursor: pointer;
     background-color: red; 
     color:white;  
     border-radius: 10px;
-    top:8%;
-    left:auto;
-   margin: 5px 25px 5px 10px; 
-   padding: 5px 10px 5px 10px;
+
+    display: inline-block;
+    left: 250px;
+    margin: 5px 25px 5px 10px; 
+    padding: 5px 10px 5px 10px;
 }
 
-.tooltiptextforExhModeAlert {
+.tooltiptextforExhModeAlert{
     visibility: hidden;
-    width: 350px;
+    display: inline-block;
+    width: 250px;
     color: white;
     text-align: center;
     font-size: 12px;
@@ -113,7 +104,8 @@
     border-radius: 6px;
     position: relative;
     z-index: 1;
-    left: 70px;
+    top: 20px;
+    left: -150px;
     background: rgba(0, 0, 0, 0.6);
 }
 

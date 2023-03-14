@@ -2,82 +2,6 @@
 	<head>
 
 	</head>
-		
-	<style >
- 	.previewModeAlert {
-    position: absolute;
-    z-index: 1;
-    width: 50px;
-    height: 40px;
-    left: 80%;
-    top: 8%;
-    overflow: visible;
-    cursor: pointer;
-}
- 
-.previewModeAlert:hover .tooltiptextforPreviewModeAlert {
-    visibility: visible;
-}
-.tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    color: white;
-    text-align: center;
-    font-size: 12px;
-    padding: 3px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    left: -38px;
-    top: 46px;
-    background: rgba(0, 0, 0, 0.6);
-}
-
-.tooltiptextforPreviewModeAlert {
-    visibility: hidden;
-    width: 250px;
-    color: white;
-    text-align: center;
-    font-size: 12px;
-    padding: 6px 6pt;
-    border-radius: 6px;
-    position: relative;
-    z-index: 1;
-    left: -50px;
-    top: 46px;
-    background: rgba(0, 0, 0, 0.6);
-}
-
-.exhModeAlert {
-    position: relative;
-    z-index: 1;
-    width: 50px;
-    height: 44px;
-    overflow: visible;
-    cursor: pointer;
-}
-
-.tooltiptextforExhModeAlert {
-    visibility: hidden;
-    display:inline;
-    width: 350px;
-    color: white;
-    text-align: center;
-    font-size: 12px;
-    padding: 6px 6pt;
-    border-radius: 6px;
-    position: relative;
-    z-index: 1;
-    left: 70px;
-    background: rgba(0, 0, 0, 0.6);
-}
-
-.exhModeAlert:hover .tooltiptextforExhModeAlert {
-    visibility: visible;
-}
-
-	
-	</style>
 	<body>
 		<div th:if="${isExhPreview} == null OR ${isExhPreview} == false" th:fragment="navbar">
 			<nav class="nav-bar" style="height:48px">
@@ -135,18 +59,17 @@
 		        <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
 		        	<li th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} " >
-		        		<div class="exhModeAlert" style="background-color: red; color:white;  border-radius: 10px;
-    						margin: 5px 25px 5px 10px; padding: 5px 10px 5px 10px;" > <b> Maintenance </b> <span class="tooltiptextforExhModeAlert">The virtual space is currently under Maintenance and cannot be viewed via
+		        		<div class="exhModeAlert" style="top:28px;" > <span> Maintenance </span> <span class="tooltiptextforExhModeAlert">The virtual space is currently under Maintenance and cannot be viewed via
                                      its public url.</span>	</div>
 		        	
 		        	</li>
 		        		<li th:if="${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" >
-		        		<div class="exhModeAlert" style="" > <b>Offline </b> <span class="tooltiptextforExhModeAlert">The virtual space is currently Offline and cannot be viewed via
+		        		<div class="exhModeAlert" style="top:20px;"  > <span>Offline </span> <span class="tooltiptextforExhModeAlert">The virtual space is currently Offline and cannot be viewed via
                                      its public url.</span>	</div>
 		        	
 		        	</li>
 		        	<li >
-		        		<div class="previewModeAlert" style="">Preview <span class="tooltiptextforPreviewModeAlert">You’re currently viewing a preview of this virtual space.</span> </div>
+		        		<div class="previewModeAlert" ><span> Preview  </span> <span class="tooltiptextforPreviewModeAlert">You’re currently viewing a preview of this virtual space.</span> </div>
 		        	
 		        	</li>
 		     
