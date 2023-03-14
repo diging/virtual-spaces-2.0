@@ -782,6 +782,25 @@ public class ContentBlockManagerTest {
         assertEquals(vblk.getId(), "videoBlock_1");
     }
 
-    
+    @Test
+    public void test_updateVideoBlock_success()
+            throws BlockDoesNotExistException, FileStorageException, VideoCouldNotBeStoredException, IOException {
+        ISlide slide = new Slide();
+        slide.setId("slideId_1");
+        when(slideManager.getSlide("slideId_1")).thenReturn(slide);
+        IVSVideo slideContentVideo = new VSVideo();
+        slideContentVideo.setId("videoId_1");
+        IVideoBlock vidBlock = new VideoBlock();
+        videoBlock.setId("videoBlock_1");
+        when(videoBlockFactory.createVideoBlock(slide, slideContentVideo)).thenReturn(vidBlock);
+        when(videoRepo.save((VSVideo) slideContentVideo)).thenReturn((VSVideo) slideContentVideo);
+        when(videoFactory.createVideo("newFile.mp4", 200L, "application/octet-stream")).thenReturn(slideContentVideo);        
+        ContentBlockManager contentBlockManager = Mockito.spy(managerToTest);
+        when(contentBlockManager.storeVideo(new byte[20], 200L,"newFile.mp4", "url", "title")).thenReturn(slideContentVideo);
+        when(contentBlockManager.saveVideo(new byte[20], 200L,"newFile.mp4", "title")).thenReturn(slideContentVideo);
+        when(videoBlockRepo.save((VideoBlock) vidBlock)).thenReturn( videoBlock);
+        managerToTest.updateVideoBlock(videoBlock, new byte[20], 200L, "url", "newFile.mp4", "video_title");
+
+    }
 
 }

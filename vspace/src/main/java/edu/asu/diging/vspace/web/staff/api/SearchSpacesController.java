@@ -23,10 +23,10 @@ public class SearchSpacesController {
     private ISpaceManager spaceManager;
     
     @RequestMapping("/staff/spaces/search")
-    public ResponseEntity<String> search(@RequestParam(value = "term", required = false) String searchTerm){
+    public ResponseEntity<String> search(@RequestParam(value = "term", required = false) String search){
         List<ISpace> spaces = null;
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            spaces = spaceManager.findByName(searchTerm);
+        if (search != null && !search.trim().isEmpty()) {
+            spaces = spaceManager.findByName(search);
         } else {
             spaces = spaceManager.getAllSpaces();
         }

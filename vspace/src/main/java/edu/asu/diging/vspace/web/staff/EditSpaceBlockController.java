@@ -40,7 +40,7 @@ public class EditSpaceBlockController {
         spaceBlock.setTitle(spaceBlockTitle);
         spaceBlock.setSpace(space);
         contentBlockManager.updateSpaceBlock( spaceBlock);
-
+        logger.debug("ContentBlock has been Updated");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
