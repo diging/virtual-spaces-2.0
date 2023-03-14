@@ -10,6 +10,7 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 public interface IStorageEngine {
 
     String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
+<<<<<<< HEAD
 
     byte[] getImageContent(String directory, String filename) throws IOException;
 
@@ -23,3 +24,10 @@ public interface IStorageEngine {
     
     File getDirectoryPath(String directory);
 }
+=======
+
+    byte[] getMediaContent(String directory, String filename) throws IOException;
+
+    boolean renameImage(IVSImage image, String newFileName);
+}
+>>>>>>> develop

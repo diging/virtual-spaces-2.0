@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model;
 import java.util.List;
 
 public interface IVSImage extends IVSMedia {
+<<<<<<< HEAD
 
 	String getFilename();
 
@@ -23,6 +24,8 @@ public interface IVSImage extends IVSMedia {
 	void setHeight(int height);
 
 	int getHeight();
+=======
+>>>>>>> develop
 
     void setCategories(List<ImageCategory> categories);
 

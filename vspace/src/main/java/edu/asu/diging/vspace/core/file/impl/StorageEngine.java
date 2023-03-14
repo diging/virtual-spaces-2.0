@@ -51,6 +51,7 @@ public class StorageEngine implements IStorageEngine {
         }
 
         return directory;
+<<<<<<< HEAD
     }
 
     @Override
@@ -74,6 +75,13 @@ public class StorageEngine implements IStorageEngine {
     }
 
     private byte[] getFileContent(File fileObject) throws IOException  {
+=======
+	}
+	
+	@Override
+	public byte[] getMediaContent(String directory, String filename) throws IOException {
+		File fileObject = new File(path + File.separator + directory + File.separator + filename);
+>>>>>>> develop
         URLConnection con = fileObject.toURI().toURL().openConnection();
 
         InputStream input = con.getInputStream();
