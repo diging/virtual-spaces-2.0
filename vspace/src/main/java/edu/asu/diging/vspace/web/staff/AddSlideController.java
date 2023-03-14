@@ -63,6 +63,7 @@ public class AddSlideController {
             slideId = branchingPoint.getId();
         } 
         else {
+            
             ISlide slide = slideManager.createSlide(module, slideForm, type);
             slideId = slide.getId();
             slideManager.updateNameAndDescription(slide,slideForm);

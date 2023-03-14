@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.impl.SlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
@@ -23,6 +24,9 @@ public class SlideFactory implements ISlideFactory {
     
     @Autowired
     private IChoiceFactory choiceFactory;
+    
+    @Autowired
+    private SlideManager slideManager;
 
     /*
      * (non-Javadoc)
@@ -40,7 +44,9 @@ public class SlideFactory implements ISlideFactory {
             slide = new BranchingPoint();            
             List<IChoice> choices = choiceFactory.createChoices(form.getChoices());
             ((IBranchingPoint) slide).setChoices(choices);
-        }        
+        }
+        slideManager.setDescriptionAsDefaultLanguage(slide);
+        slideManager.setNameAsDefaultLanguage(slide);
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         slide.setModule(module);

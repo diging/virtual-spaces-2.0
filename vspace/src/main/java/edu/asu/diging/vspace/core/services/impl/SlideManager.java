@@ -108,7 +108,10 @@ public class SlideManager implements ISlideManager {
     @Override
     public ISlide getSlide(String slideId) {
         Optional<Slide> slide = slideRepo.findById(slideId);
+        
         if (slide.isPresent()) {
+            setDescriptionAsDefaultLanguage(slide.get());
+            setNameAsDefaultLanguage(slide.get());
             return slide.get();
         }
         return null;
