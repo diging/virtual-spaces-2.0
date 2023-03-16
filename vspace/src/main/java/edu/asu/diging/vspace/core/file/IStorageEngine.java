@@ -6,11 +6,11 @@ import java.io.IOException;
 import org.springframework.core.io.Resource;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 public interface IStorageEngine {
 
     String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
-<<<<<<< HEAD
 
     byte[] getImageContent(String directory, String filename) throws IOException;
 
@@ -23,11 +23,9 @@ public interface IStorageEngine {
     File getFile(String fileUploadDir, String fileName);
     
     File getDirectoryPath(String directory);
-}
-=======
 
     byte[] getMediaContent(String directory, String filename) throws IOException;
 
     boolean renameImage(IVSImage image, String newFileName);
 }
->>>>>>> develop
+

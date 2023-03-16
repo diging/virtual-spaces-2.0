@@ -1,16 +1,5 @@
 package edu.asu.diging.vspace.core.model;
 
-<<<<<<< HEAD
-public interface IVSMedia extends IVSpaceElement {
-
-    public String getFilename() ;
-    
-    public void setFilename(String filename);
-    
-    public String getFileType();
-    
-    public void setFileType(String fileType);
-=======
 /**
  * @author skhar
  *
@@ -38,6 +27,5 @@ public interface IVSMedia extends IVSpaceElement{
     void setHeight(int height);
 
     int getHeight();
->>>>>>> develop
     
 }
