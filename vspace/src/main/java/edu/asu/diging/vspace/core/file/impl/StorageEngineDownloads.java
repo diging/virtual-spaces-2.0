@@ -37,7 +37,7 @@ public class StorageEngineDownloads implements IStorageEngine {
     private String path;
     
     @Autowired
-    @Qualifier("storageEnginerUploads")
+    @Qualifier("storageEngineUploads")
     StorageEngineUploads storageEngineUploads;
 
     /* (non-Javadoc)

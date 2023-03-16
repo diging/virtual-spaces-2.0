@@ -39,7 +39,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     private ImageRepository imageRepo;
 
     @Autowired
-    @Qualifier("storageEnginerUploads")
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Override

@@ -65,7 +65,7 @@ public class ModuleLinkManagerTest {
     private ImageRepository imageRepo;
     
     @Mock
-    @Qualifier("storageEnginerUploads")
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Mock

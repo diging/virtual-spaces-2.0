@@ -72,7 +72,7 @@ public class ContentBlockManager implements IContentBlockManager {
     private ChoiceContentBlockRepository choiceBlockRepo;
 
     @Autowired
-    @Qualifier("storageEnginerUploads")
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Autowired
