@@ -34,6 +34,27 @@
 				<div>
 					
 					<div style="padding-top: 20px;" th:each= "title,  stat : ${aboutPage.titles}" > 
+					  <div id="myTabGroup2" class="tabAccordion">
+						  <div class="row-tab">
+					     	 <input type="radio" name="myTabGroup2" id="tab4" class="tab4" checked="checked">
+					      		<label for="tab4" th:utext="${title.exhibitionLangaugeLabel}">tab4</label>
+					      		<div class="tab4" th:utext="${template.get('tab[0].content')}">
+					      		
+					      		</div>
+				  			</div>
+				 		 <div class="row-tab">	
+					   		 <input type="radio" name="myTabGroup2" id="tab5" class="tab5">
+					    	<label for="tab5" th:utext="${template.get('tab[1].title')}">tab5</label>
+					    	<div class="tab5" th:utext="${template.get('tab[1].content')}"></div>
+				  		</div>
+						  <div class="row-tab">	
+							    <input type="radio" name="myTabGroup2" id="tab6" class="tab6">
+							    <label for="tab6" th:utext="${template.get('tab[2].content')}">tab6</label>
+							    <div class="tab6" th:utext="${template.get('tab[2].content')}"></div>
+						    </div>
+				
+				
+					  </div>
 					<p>[[${title.exhibitionLanguageLabel}]]</p>
 					<label for="title">About Page Title:</label>
 					<input type="hidden" class="form-control"  id="title" th:value="${title.localisedTextId}" th:name="|titles[${stat.index}].localisedTextId|" ></input>
