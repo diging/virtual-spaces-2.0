@@ -29,25 +29,7 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
      * ModuleOverview
      * @return ModuleOverview which contains the module and the list of sequences and its slides
      */
-    public ModuleOverview showModuleMap(String id) {
-        IModule module = moduleManager.getModule(id);
-        ISequence startSequence = module.getStartSequence();
-        
-        List<ISequence> sequences = moduleManager.getModuleSequences(id);
-        
-        SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
-        List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
-        for(ISequence sequence : sequences) {
-            
-            if(sequence != startSequence) {
-                otherSequences.add(createSequenceOverviewNode(sequence));
-            }
-        }
-        ModuleOverview moduleOverviewJson = new ModuleOverview();
-        moduleOverviewJson.setStartSequence(startSequenceNode);
-        moduleOverviewJson.setOtherSequences(otherSequences);
-        return moduleOverviewJson;
-    }
+    
     
     private SequenceOverview createSequenceOverviewNode(ISequence sequence) {
         
@@ -79,5 +61,28 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
         } 
         return slideOverviews;
     }
-
+    
+    public ModuleOverview showModuleMap(String id) {
+        IModule module = moduleManager.getModule(id);
+        ISequence startSequence = module.getStartSequence();
+        
+        List<ISequence> sequences = moduleManager.getModuleSequences(id);
+        
+        SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
+        List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
+        for(ISequence sequence : sequences) {
+            
+            if(sequence != startSequence) {
+                otherSequences.add(createSequenceOverviewNode(sequence));
+            }
+        }
+        
+        ModuleOverview moduleOverviewJson = new ModuleOverview();
+        moduleOverviewJson.setStartSequence(startSequenceNode);
+        moduleOverviewJson.setOtherSequences(otherSequences);
+        moduleOverviewJson.setStartSlides(startSequence.getSlides());
+        //moduleOverviewJson.setOtherSlides(otherSequences);
+        return moduleOverviewJson;
+    }
+ 
 }
