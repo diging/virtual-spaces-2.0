@@ -45,8 +45,6 @@ public class SlideFactory implements ISlideFactory {
             List<IChoice> choices = choiceFactory.createChoices(form.getChoices());
             ((IBranchingPoint) slide).setChoices(choices);
         }
-        slideManager.setDescriptionAsDefaultLanguage(slide);
-        slideManager.setNameAsDefaultLanguage(slide);
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         slide.setModule(module);
