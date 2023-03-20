@@ -193,7 +193,7 @@ public class SlideManager implements ISlideManager {
     
     /**
      * 
-     * Adds name to spaceNames List
+     * Adds name to slideNames List
      * 
      * 
      * @param slide
@@ -227,7 +227,7 @@ public class SlideManager implements ISlideManager {
     }
     
     /**
-     * Adds description to spaceDescription list.
+     * Adds description to slideDescription list.
      * @param slide
      * @param descriptions
      */

@@ -63,8 +63,8 @@ public class EditSlideController {
         ISlide slide = slideManager.getSlide(slideId);
         SlideForm slideForm = slideManager.getSlideForm(slideId);
       
-        model.addAttribute("slideForm", slideForm);
-        model.addAttribute("slideId", slideId);
+//        model.addAttribute("slideForm", slideForm);
+//        model.addAttribute("slideId", slideId);
         
         if(slide instanceof BranchingPoint) {
             slideForm.setType(SlideType.BRANCHING_POINT.toString());
