@@ -83,7 +83,7 @@ public class EditReferenceController {
             ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
             return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
         }
-        logger.info(REFERENCE_DEBUG_INFO);
+        logger.warn(REFERENCE_DEBUG_INFO);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
