@@ -240,11 +240,11 @@ public class SlideManager implements ISlideManager {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
                 if(exhibitionLanguage != null) {
                     description.setExhibitionLanguage(exhibitionLanguage);
-                    Optional<ILocalizedText> spaceDescription = slide.getSlideDescriptions().stream()
+                    Optional<ILocalizedText> slideDescription = slide.getSlideDescriptions().stream()
                             .filter(desc -> exhibitionLanguage.getId().equals(desc.getExhibitionLanguage().getId()))
                             .findAny();
-                    if(spaceDescription.isPresent()) {
-                        spaceDescription.get().setText(description.getText());
+                    if(slideDescription.isPresent()) {
+                        slideDescription.get().setText(description.getText());
                     } else {
                         slide.getSlideDescriptions().add(description);
 
@@ -287,13 +287,29 @@ public class SlideManager implements ISlideManager {
     
     @Override
     public SlideForm getSlideForm(String slideId) {
+//        List<LocalizedText> descriptions = new ArrayList<>();
+//        List<LocalizedText> titles = new ArrayList<>();
         ISlide slide = getSlide(slideId);
         SlideForm slideForm = new SlideForm();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
+        System.out.println(slide.getSlideDescriptions());
+//        for(ILocalizedText description:slide.getSlideDescriptions())
+//        {
+//            descriptions.add((LocalizedText) description);
+//        }
+//        slideForm.setDescriptions(descriptions);
         slide.getSlideDescriptions().forEach(description -> {
+            
             slideForm.getDescriptions().add((LocalizedText) description);
+            
         });
+        
+//        for(ILocalizedText title:slide.getSlideDescriptions())
+//        {
+//            titles.add((LocalizedText) title);
+//        }
+//        slideForm.setNames(titles);
 
         slide.getSlideNames().forEach(title -> {
             slideForm.getNames().add((LocalizedText) title);

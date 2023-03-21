@@ -61,11 +61,7 @@ public class EditSlideController {
     @RequestMapping(value="/staff/module/{moduleId}/slide/{slideId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        SlideForm slideForm = slideManager.getSlideForm(slideId);
-      
-//        model.addAttribute("slideForm", slideForm);
-//        model.addAttribute("slideId", slideId);
-        
+        SlideForm slideForm = slideManager.getSlideForm(slideId);   
         if(slide instanceof BranchingPoint) {
             slideForm.setType(SlideType.BRANCHING_POINT.toString());
             IBranchingPoint branchingPoint = (IBranchingPoint) slide;           
