@@ -3,7 +3,13 @@ package edu.asu.diging.vspace.core.references;
 import edu.asu.diging.vspace.core.exception.ReferenceMetadataEncodingException;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
-
+/*
+ * (non-Javadoc)
+ * 
+ * IReferenceMetadataProvider allows to manage ReferenceMetadataProvider.
+ * 
+ * @see edu.asu.diging.vspace.core.model.IReference
+ */
 public interface IReferenceMetadataProvider {
     
     /*

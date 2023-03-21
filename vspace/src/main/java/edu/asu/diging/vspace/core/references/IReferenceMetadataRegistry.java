@@ -1,5 +1,12 @@
 package edu.asu.diging.vspace.core.references;
 
+/*
+ * (non-Javadoc)
+ * 
+ * IReferenceMetadataRegistry allows to manage ReferenceMetadataRegistry.
+ * 
+ * @see  edu.asu.diging.vspace.core.references.IReference
+ */
 
 public interface IReferenceMetadataRegistry {
     

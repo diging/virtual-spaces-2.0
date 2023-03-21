@@ -7,8 +7,8 @@ import edu.asu.diging.vspace.core.references.IReferenceDisplayFormatter;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
 
 @Service
-public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
-    
+public class ReferenceDisplayDefault implements IReferenceDisplayProvider {
+
     public String getReferenceDisplayText(IReference reference) {
         String title = reference.getTitle();
         String type = reference.getType();
@@ -22,10 +22,14 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider{
         String abstracts = reference.getAbstracts();
         String companyName = reference.getCompanyName();
         IReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
-        refFormatter.addType(
-                type).addAuthors(author).addYear(year).addTitle(title).addJournal(journal).addPages(pages).addVolume(volume).addIssue(issue).addUrl(url).addAbstracts(abstracts).addCompanyName(companyName);
-        
+        refFormatter.addType(type).addAuthors(
+        author).addYear(year).addTitle(
+        title).addJournal(journal).addPages(
+        pages).addVolume(volume).addIssue(
+        issue).addUrl(url).addAbstracts(
+        abstracts).addCompanyName(companyName);
+
         return refFormatter.getReferenceDisplayText();
     }
-    
+
 }

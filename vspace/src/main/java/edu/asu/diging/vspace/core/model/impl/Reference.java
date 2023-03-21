@@ -62,6 +62,26 @@ public class Reference extends VSpaceElement implements IReference {
     private String companyName;
     
     @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public List<BiblioBlock> getBiblios() {
+        return biblios;
+    }
+
+    @Override
+    public void setBiblios(List<BiblioBlock> biblios) {
+        this.biblios = biblios;
+    }
+
+    @Override
     public String getTitle() {
         return title;
     }
@@ -72,13 +92,13 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     @Override
-    public void setAuthor(String author) {
-        this.author = author;
+    public String getAuthor() {
+        return author;
     }
 
     @Override
-    public String getAuthor() {
-        return author;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     @Override
@@ -120,7 +140,7 @@ public class Reference extends VSpaceElement implements IReference {
     public void setVolume(String volume) {
         this.volume = volume;
     }
-
+    
     @Override
     public String getIssue() {
         return issue;
@@ -172,25 +192,15 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     @Override
-    public void setId(String id) {
-        this.id = id;
+    public String getVersion() {
+        return version;
     }
 
     @Override
-    public String getId() {
-        return id;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    public List<BiblioBlock> getBiblios() {
-        return biblios;
-    }
-
-    public void setBiblios(List<BiblioBlock> biblios) {
-        this.biblios = biblios;
-    }
-    
-    
-    
     @Override
     public String getAbstracts() {
         return abstracts;
@@ -210,17 +220,7 @@ public class Reference extends VSpaceElement implements IReference {
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
-    
-    
-    @Override
-    public String getVersion() {
-        return version;
-    }
 
-    @Override
-    public void setVersion(String version) {
-        this.version = version;
-    }
 
     @Override
     public String toString() {
