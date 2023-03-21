@@ -193,7 +193,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             localizedAboutTextForm.setLocalisedTextId( aboutPageText.getId());
 
         } 
-
+        localizedAboutTextForm.setIsDefaultExhibitionLanguage(language.isDefault());
         return localizedAboutTextForm;
     }
     
@@ -215,6 +215,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             localizedTitleForm.setText(title.getText());
             localizedTitleForm.setLocalisedTextId(title.getId());
         } 
+        localizedTitleForm.setIsDefaultExhibitionLanguage(language.isDefault());      
         
         return localizedTitleForm;
     }

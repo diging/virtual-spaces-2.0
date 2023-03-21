@@ -1,13 +1,7 @@
 package edu.asu.diging.vspace.web.staff.forms;
 
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-
 public class LocalizedTextForm {
     
-    
-        
-  
-
     String text;
     
     String localisedTextId;
@@ -16,6 +10,16 @@ public class LocalizedTextForm {
     
     String exhibitionLanguageLabel;  
     
+    Boolean isDefaultExhibitionLanguage;
+    
+    public Boolean getIsDefaultExhibitionLanguage() {
+        return isDefaultExhibitionLanguage;
+    }
+
+    public void setIsDefaultExhibitionLanguage(Boolean isDefaultExhibitionLanguage) {
+        this.isDefaultExhibitionLanguage = isDefaultExhibitionLanguage;
+    }
+
     public LocalizedTextForm() {
         super();
     }
