@@ -5,6 +5,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,25 @@ import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String UNSUPPORTED_LOGGING_EXCEPTION = "Unsupported Encoding.";
-    
+
     @Autowired
     private Environment env;
+
+    HashMap<String, String> referenceMap = new HashMap<>();
+
+    @PostConstruct
+    public void init() {
+        referenceMap.put(CoinSConstants.PRESENTATION, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.JOURNAL_ARTICLE_GENRE, CoinSConstants.ARTICLE_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.BLOGPOST_TYPE, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.ART_TYPE, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.PATENT_TYPE, CoinSConstants.PATENT_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.PODCAST, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.SOFTWARE_DOCUMENTATION, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.BOOK_GENRE, CoinSConstants.BOOK_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.BOOK_SECTION_GENRE, CoinSConstants.BOOK_RFT_VAL_FMT);
+        referenceMap.put(CoinSConstants.CONFERENCE_PAPER, CoinSConstants.BOOK_RFT_VAL_FMT);      
+    }
 
     @Override
     public ReferenceMetadataType getReferenceMetadataType() {
@@ -33,19 +51,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     }
 
     private String getReferenceData(String referenceType) {
-        HashMap<String, String> referenceMap = new HashMap<>();
-        referenceMap.put(CoinSConstants.BOOK_GENRE, CoinSConstants.BOOK_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.BOOK_SECTION_GENRE, CoinSConstants.BOOK_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.CONFERENCE_PAPER, CoinSConstants.BOOK_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.JOURNAL_ARTICLE_GENRE, CoinSConstants.ARTICLE_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.BLOGPOST_TYPE, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.ART_TYPE, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.PATENT_TYPE, CoinSConstants.PATENT_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.PODCAST, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.PRESENTATION, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.SOFTWARE_DOCUMENTATION, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
         return referenceMap.getOrDefault(referenceType, CoinSConstants.DEFAULT_RFT_VAL_FMT);
-
     }
 
     @Override
@@ -59,8 +65,8 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                 + getRefEditorsEncoded(reference.getEditors());
         String refNoteEncoded = getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
         String referenceTypeRFTValueString = getReferenceData(reference.getType());
-
-        StringBuffer urlEncodedReferenceMetaData = new StringBuffer(CoinSConstants.DEFAULT_URL_VERSION);
+        String defaultURL = CoinSConstants.DEFAULT_URL_VERSION;
+        StringBuffer urlEncodedReferenceMetaData = new StringBuffer(defaultURL);
         try {
             urlEncodedReferenceMetaData.append("&");
             urlEncodedReferenceMetaData.append(CoinSConstants.DEFAULT_CTX_VERSION);
