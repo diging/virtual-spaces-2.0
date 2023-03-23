@@ -70,6 +70,7 @@
 		  }
 		  document.getElementById(label).style.display = "block";
 		  evt.currentTarget.className += " active";
+		  evt.preventDefault();
 		}
 </script>
 </head>
@@ -78,57 +79,31 @@
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition About Page</h2>
 		<div style="padding: 30px 0;">
-			<form
-				th:action="@{/staff/exhibit/about?}"
-				method="POST" name="f" >
+			<form				
+			name="f" >
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 				
 				
 				<div>
-				<div class="tab" th:each= "title,  stat : ${aboutPage.titles}">
-  						<button class="tablinks" th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>
-
-				
-					
+				<div class="tab" >				
+					<div th:each= "title,  stat : ${aboutPage.titles}">
+					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					</div>
+				</div>
+				<div>		
 					<div style="padding-top: 20px;" th:each= "title,  stat : ${aboutPage.titles}" > 
-					<div id = "[[${title.exhibitionLanguageLabel}]]" class = "tabcontent">
-		
-					<p>[[${title.exhibitionLanguageLabel}]]</p>
-								
-				<!-- 	  <div id="myTabGroup2" class="tabAccordion">
-						  <div class="row-tab">
-					     	 <input type="radio" name="myTabGroup2" id="tab4" class="tab4" checked="checked">
-					      		<label for="tab4" th:utext="${title.exhibitionLangaugeLabel}">tab4</label>
-					      		<div class="tab4" th:utext="${template.get('tab[0].content')}">
-					      		
-					      		</div>
-				  			</div>
-				 		 <div class="row-tab">	
-					   		 <input type="radio" name="myTabGroup2" id="tab5" class="tab5">
-					    	<label for="tab5" th:utext="${template.get('tab[1].title')}">tab5</label>
-					    	<div class="tab5" th:utext="${template.get('tab[1].content')}"></div>
-				  		</div>
-						  <div class="row-tab">	
-							    <input type="radio" name="myTabGroup2" id="tab6" class="tab6">
-							    <label for="tab6" th:utext="${template.get('tab[2].content')}">tab6</label>
-							    <div class="tab6" th:utext="${template.get('tab[2].content')}"></div>
-						    </div>
-				
-				
-					  </div> -->
-					
+					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">About Page Title:</label>
 					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|titles[${stat.index}].localisedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|titles[${stat.index}].exhibitionLanguageId|" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|titles[${stat.index}].text|" ></input>
-						<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}"  > 
-								
+						<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}"  > 								
 								<label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">About Page Text:</label>
 								<textarea  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPageText.text}" th:name="|aboutPageTexts[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
 		 						<input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localisedTextId}" th:name="|aboutPageTexts[${stat.index}].localisedTextId|" ></input>
 								<input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|aboutPageTexts[${stat.index}].exhibitionLanguageId|" ></input>
- 					
-		 					
+ 						 					
 		 				</div>
 			
  						
@@ -137,7 +112,7 @@
 					</div>
 				</div>
 				<p style="padding-top: 20px;">
-					<button class="btn primary-btn" type="submit" value="submit">Submit</button>
+					<button th:action="@{/staff/exhibit/about?}"	method="POST"  class="btn primary-btn" type="submit" value="submit">Submit</button>
 				</p>
 	
 		

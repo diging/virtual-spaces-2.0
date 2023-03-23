@@ -163,11 +163,20 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());        
         
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+        
+        IExhibitionLanguage defaultLanguage = startExhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+        
+        aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, defaultLanguage));
+        
+        aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, defaultLanguage));
+        
         startExhibtion.getLanguages().forEach(language -> {
-            
-            aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, language));
-            
-            aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, language));
+            if(!language.isDefault()) {
+                aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, language));
+                
+                aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, language)); 
+            }
+
 
         });
         return aboutPageForm;
