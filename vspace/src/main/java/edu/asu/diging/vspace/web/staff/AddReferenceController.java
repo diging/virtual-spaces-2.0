@@ -41,5 +41,13 @@ public class AddReferenceController {
         ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
         return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/staff/module/showReference", method = RequestMethod.GET)
+    public ResponseEntity<String> showReference() throws JsonProcessingException {
+        System.out.println("Hello");
+        String refDisplayText = "";
+        //refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
+        return new ResponseEntity<String>(refDisplayText, HttpStatus.OK);
+    }
 
 }

@@ -33,6 +33,7 @@ public class ReferenceMetadataRegistry implements IReferenceMetadataRegistry {
     }
     
     public IReferenceMetadataProvider getProvider(String metadataType) {
+        //SEND ReferenceDisplayFormatter OBJECT
         ReferenceMetadataType refMetaDataType = ReferenceMetadataType.valueOf(metadataType.toUpperCase());
         return getProvider(refMetaDataType);
     }
