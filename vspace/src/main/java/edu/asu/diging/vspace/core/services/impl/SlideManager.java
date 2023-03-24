@@ -24,6 +24,8 @@ import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -34,7 +36,9 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
@@ -63,6 +67,9 @@ public class SlideManager implements ISlideManager {
     
     @Autowired
     LocalizedTextRepository localizedTextRepository;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -285,39 +292,28 @@ public class SlideManager implements ISlideManager {
         });
     }
     
+    /**
+     * Creates Slide Page form object
+     */
+    
     @Override
     public SlideForm getSlideForm(String slideId) {
-//        List<LocalizedText> descriptions = new ArrayList<>();
-//        List<LocalizedText> titles = new ArrayList<>();
         ISlide slide = getSlide(slideId);
         SlideForm slideForm = new SlideForm();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
-        System.out.println(slide.getSlideDescriptions());
-//        for(ILocalizedText description:slide.getSlideDescriptions())
-//        {
-//            descriptions.add((LocalizedText) description);
-//        }
-//        slideForm.setDescriptions(descriptions);
+            
         slide.getSlideDescriptions().forEach(description -> {
             
             slideForm.getDescriptions().add((LocalizedText) description);
             
         });
-        
-//        for(ILocalizedText title:slide.getSlideDescriptions())
-//        {
-//            titles.add((LocalizedText) title);
-//        }
-//        slideForm.setNames(titles);
-
         slide.getSlideNames().forEach(title -> {
             slideForm.getNames().add((LocalizedText) title);
         });
-
         return slideForm;
 
     }
-
-    
 }
+    
+    

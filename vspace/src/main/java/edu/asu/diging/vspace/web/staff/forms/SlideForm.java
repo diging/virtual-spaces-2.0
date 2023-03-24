@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.web.staff.forms;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
@@ -14,9 +13,9 @@ public class SlideForm {
     private String type;
     private List<String> choices;
     
-    private List<LocalizedText> names = new ArrayList();;
+    private List<LocalizedText> names;
 
-    private List<LocalizedText> descriptions = new ArrayList();;
+    private List<LocalizedText> descriptions;
     
     public String getName() {
         return name;
