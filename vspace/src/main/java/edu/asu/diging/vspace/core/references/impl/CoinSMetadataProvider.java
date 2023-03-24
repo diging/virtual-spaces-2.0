@@ -47,6 +47,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
 
     @Override
     public ReferenceMetadataType getReferenceMetadataType() {
+        
         return ReferenceMetadataType.DEFAULT;
     }
 

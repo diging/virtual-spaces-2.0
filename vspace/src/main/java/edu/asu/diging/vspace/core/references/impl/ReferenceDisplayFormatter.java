@@ -1,7 +1,10 @@
 package edu.asu.diging.vspace.core.references.impl;
 
+import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.references.IReferenceDisplayFormatter;
 
+@Service
 public class ReferenceDisplayFormatter implements IReferenceDisplayFormatter{
     
     private StringBuilder referenceDisplayText;
