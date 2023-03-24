@@ -79,7 +79,7 @@
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition About Page</h2>
 		<div style="padding: 30px 0;">
-			<form				
+			<form		method="POST" 			
 			name="f" >
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 				
@@ -112,7 +112,7 @@
 					</div>
 				</div>
 				<p style="padding-top: 20px;">
-					<button th:action="@{/staff/exhibit/about?}"	method="POST"  class="btn primary-btn" type="submit" value="submit">Submit</button>
+					<button th:formaction="@{/staff/exhibit/about?}" class="btn primary-btn" type="submit" value="submit">Submit</button>
 				</p>
 	
 		

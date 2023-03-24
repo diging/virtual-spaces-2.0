@@ -25,6 +25,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Transactional
@@ -138,8 +139,15 @@ public class ExhibitionManager implements IExhibitionManager {
     @Override
     public boolean localizedTextDoesNotExist(IExhibitionLanguage language)  {        
      
-        return !CollectionUtils.isEmpty(language.getLocalizedTexts());
+        return CollectionUtils.isEmpty(language.getLocalizedTexts()) || !CollectionUtils.isEmpty(language.getLocalizedTexts()) && checkIfTextIsEmpty(language.getLocalizedTexts());
 
+    }
+
+    private boolean checkIfTextIsEmpty(List<LocalizedText> localizedTexts) {
+        // TODO Auto-generated method stub
+        
+        localizedTexts.forEach(localizedText -> StringUtils.isEmpty(localizedTexts.getText())).;
+        return false;
     }
 
     /**
