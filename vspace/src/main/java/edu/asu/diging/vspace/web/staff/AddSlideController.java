@@ -44,7 +44,8 @@ public class AddSlideController {
         model.addAttribute("slide", new SlideForm());
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
         
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+        
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
 
         return "staff/modules/slides/add";

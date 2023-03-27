@@ -92,7 +92,7 @@ $(document).ready(function(){
 	});
 });
 
-	function openForm(evt, label) {
+	/* function openForm(evt, label) {
 		console.log(label);
 	  var i, tabcontent, tablinks;
 	  tabcontent = document.getElementsByClassName("tabcontent");
@@ -106,7 +106,7 @@ $(document).ready(function(){
 	  document.getElementById(label).style.display = "block";
 	  evt.currentTarget.className += " active";
 	}
-
+ */
 
 
 </script>
@@ -116,43 +116,26 @@ $(document).ready(function(){
     <div class="main-content" layout:fragment="content">
         <h1>Add new Slide</h1>
         <form th:action="@{'/staff/module/'+${moduleId}+'/slide/add'}"
-            method="POST" name="f" class="form-horizontal">
+            method="POST" name="f" th:object="${slide}"class="form-horizontal">
             
             <div>
-				<div class="tab" th:each= "title,  stat : ${slide.names}">
-  					<button class="tablinks" th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>
-  				</div>
-
-				<div>		
-					<div style="padding-top: 20px;" th:each= "title,  stat : ${slide.names}" > 
-					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
-						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
-					<label for="title">Slide Name:</label>
-					<input type="hidden" class="form-control" id="name" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
-					<input type="hidden" class="form-control" id="name" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
-					<input type="text" class="form-control" id="name" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
-					
-					
-						<div style="padding-top: 20px;" th:each= "description : ${slide.descriptions}"  > 								
-								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
-								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
-		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
-								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
- 						 					
-		 				</div>
+            <p></p>
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label">Slide Name:</label>				
+	  				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+	 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field= "${slide.name[__${exhibitionLanguageStat.index}__].text}"></input>
+				</div>
+		
+				<div class="form-group row">
+					<label class="col-md-2 col-form-label">Description:</label>
+	 				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+	  				
+					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slide.description[__${exhibitionLanguageStat.index}__].text}"></textarea>
+				</div>
+			</div>
 			
- 						
- 					</div>
- 				</div>
- 			</div>
- 			</div>
-					
-					
-         
-            
-            
-            
-           <!--  
+              
+           
             <div th:each= "exhibitionLanguage : ${languageObjectList}"  > 
 				<p >[[${exhibitionLanguage.label}]]</p>
 				<div class="form-group row">
@@ -167,8 +150,8 @@ $(document).ready(function(){
 	  				
 					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slide.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
 				</div>
-			</div> -->
-            
+			</div>
+             
             
             
             <div class="form-group row">
