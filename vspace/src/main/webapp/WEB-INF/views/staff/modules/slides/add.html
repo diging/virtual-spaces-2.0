@@ -118,24 +118,43 @@ $(document).ready(function(){
         <form th:action="@{'/staff/module/'+${moduleId}+'/slide/add'}"
             method="POST" name="f" th:object="${slide}"class="form-horizontal">
             
-            <div>
-            <p></p>
-				<div class="form-group row">
-					<label class="col-md-2 col-form-label">Slide Name:</label>				
-	  				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
-	 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field= "${slide.name[__${exhibitionLanguageStat.index}__].text}"></input>
-				</div>
-		
-				<div class="form-group row">
-					<label class="col-md-2 col-form-label">Description:</label>
-	 				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
-	  				
-					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slide.description[__${exhibitionLanguageStat.index}__].text}"></textarea>
-				</div>
-			</div>
+            
+		    <div class="tabs">
+			<ul class="nav nav-tabs">
+				<th:block th:each="exhibitionLanguage, exhibitionLanguageStat : ${languageObjectList}">
+					<li class="nav-item">
+						<a class="nav-link" th:classappend="${exhibitionLanguageStat.index == 0} ? 'active' : ''" data-toggle="tab" th:href="'#tab-' + ${exhibitionLanguageStat.index}">
+							[[${exhibitionLanguage.label}]]
+						</a>
+					</li>
+				</th:block>
+			</ul>
 			
-              
-           
+			<div class="tab-content">
+				<th:block th:each="exhibitionLanguage, exhibitionLanguageStat : ${languageObjectList}">
+					<div class="tab-pane fade show" th:classappend="${exhibitionLanguageStat.index == 0} ? 'active' : ''" th:id="'tab-' + ${exhibitionLanguageStat.index}">
+						<div class="form-group row">
+							<label for="name" class="col-md-2 col-form-label">Slide Name:</label>				
+			  				<input type="hidden" th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+			 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field="${slide.names[__${exhibitionLanguageStat.index}__].text}"></input>
+						</div>
+				
+						<div class="form-group row">
+							<label for="description" class="col-md-2 col-form-label">Description:</label>
+			 				<input type="hidden" th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+			  				
+							<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field="${slide.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
+						</div>
+					</div>
+				</th:block>
+			</div>
+		</div>
+
+            
+            
+            
+            
+           <!--   
             <div th:each= "exhibitionLanguage : ${languageObjectList}"  > 
 				<p >[[${exhibitionLanguage.label}]]</p>
 				<div class="form-group row">
@@ -151,7 +170,7 @@ $(document).ready(function(){
 					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slide.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
 				</div>
 			</div>
-             
+              -->
             
             
             <div class="form-group row">

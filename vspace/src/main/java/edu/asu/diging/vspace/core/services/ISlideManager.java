@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 public interface ISlideManager {
@@ -41,9 +42,9 @@ public interface ISlideManager {
 
     void setDescriptionAsDefaultLanguage(ISlide slide);
 
-    void addSlideDescription(ISlide slide, List<LocalizedText> descriptions);
+    void addSlideDescription(ISlide slide, List<LocalizedTextForm> descriptions);
 
-    void addSlideName(ISlide slide, List<LocalizedText> names);
+    void addSlideName(ISlide slide, List<LocalizedTextForm> names);
 
     void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList);
 
