@@ -152,7 +152,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
     private boolean checkIfTextIsEmpty(List<LocalizedText> localizedTexts) {
         
-       return !localizedTexts.stream().anyMatch( localizedText -> !StringUtils.isEmpty(localizedText.getText()) );
+        return !localizedTexts.stream().anyMatch( localizedText -> !StringUtils.isEmpty(localizedText.getText()) );
     }
 
     /**
