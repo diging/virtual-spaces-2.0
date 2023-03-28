@@ -134,6 +134,7 @@ public class ExhibitionManager implements IExhibitionManager {
             if(!localizedTextDoesNotExist(language))  {
                 throw new ExhibitionLanguageCouldNotBeDeletedException() ;
             }
+            language.getLocalizedTexts().clear();
             localizedTextRepo.deleteAll(language.getLocalizedTexts());
         }
 
