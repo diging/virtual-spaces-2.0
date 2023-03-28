@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionLanguageCouldNotBeDeletedException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
@@ -40,6 +41,9 @@ public class ExhibitionManager implements IExhibitionManager {
     
     @Autowired
     private ExhibitionFactory exhibitFactory;
+    
+    @Autowired
+    private LocalizedTextRepository localizedTextRepo;
 
     /*
      * (non-Javadoc)
@@ -130,8 +134,10 @@ public class ExhibitionManager implements IExhibitionManager {
             if(!localizedTextDoesNotExist(language))  {
                 throw new ExhibitionLanguageCouldNotBeDeletedException() ;
             }
+            localizedTextRepo.deleteAll(language.getLocalizedTexts());
         }
 
+        
         exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
 
     }
@@ -144,10 +150,8 @@ public class ExhibitionManager implements IExhibitionManager {
     }
 
     private boolean checkIfTextIsEmpty(List<LocalizedText> localizedTexts) {
-        // TODO Auto-generated method stub
         
-        localizedTexts.forEach(localizedText -> StringUtils.isEmpty(localizedTexts.getText())).;
-        return false;
+       return !localizedTexts.stream().anyMatch( localizedText -> !StringUtils.isEmpty(localizedText.getText()) );
     }
 
     /**
