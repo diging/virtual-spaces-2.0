@@ -18,7 +18,8 @@ public interface IExhibitionManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
+     * @see
+     * edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     IExhibition storeExhibition(Exhibition exhibit);
@@ -26,7 +27,8 @@ public interface IExhibitionManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
+     * @see
+     * edu.asu.diging.vspace.core.services.IExhibitionManager#getExhibitionById(java
      * .lang.String)
      */
     IExhibition getExhibitionById(String id);
@@ -34,7 +36,8 @@ public interface IExhibitionManager {
     List<IExhibition> findAll();
 
     IExhibition getStartExhibition();
-   
+
+    List<IVSImage> getDefaultImage();
 
     void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
 

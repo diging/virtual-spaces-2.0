@@ -26,6 +26,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.DefaultImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -97,6 +98,18 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return null;
     }
+    
+    @Override
+    public List<IVSImage> getDefaultImage(){
+        IExhibition exhibition = getStartExhibition();
+        List<IVSImage> defaultImages = new ArrayList<>();
+        defaultImages.add(exhibition.getSpacelinkDefaultImage());
+        defaultImages.add(exhibition.getModulelinkDefaultImage());
+        defaultImages.add(exhibition.getExternallinkDefaultImage());
+        return defaultImages;
+        
+        
+    }
 
     /**
      * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
@@ -154,7 +167,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
-
+ 
     
 
 }
