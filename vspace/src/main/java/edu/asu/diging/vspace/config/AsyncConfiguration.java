@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 
 @Configuration
-
 public class AsyncConfiguration implements AsyncConfigurer  {
     
     @Bean(name="asyncExecutor")

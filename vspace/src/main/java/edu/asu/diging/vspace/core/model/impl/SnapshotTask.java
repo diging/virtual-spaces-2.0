@@ -24,7 +24,7 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "exhibitionDownloadId", referencedColumnName = "id")
-    ExhibitionDownload exhibitionDownload;
+    private ExhibitionDownload exhibitionDownload;
 
     public String getId() {
         return id;
@@ -37,16 +37,18 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
     public boolean isTaskComplete() {
         return isTaskComplete;
     }
-
+    
+    @Override
     public void setTaskComplete(boolean isTaskComplete) {
         this.isTaskComplete = isTaskComplete;
     }
     
-    
+    @Override
     public ExhibitionDownload getExhibitionDownload() {
         return exhibitionDownload;
     }
 
+    @Override
     public void setExhibitionDownload(ExhibitionDownload exhibitionDownload) {
         this.exhibitionDownload = exhibitionDownload;
     }

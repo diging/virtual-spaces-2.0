@@ -34,19 +34,13 @@ public class StorageEngineUploads implements IStorageEngine {
 
     @Value("${uploads_path}")
     private String path;
-
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
-     */
     @Override
     public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
+        File parent = new File(path + File.separator + directory);
         if (!parent.exists()) {
             parent.mkdir();
         }
         File file = new File(parent.getAbsolutePath() + File.separator + filename);
-
-
         BufferedOutputStream stream;
         try {
             stream = new BufferedOutputStream(new FileOutputStream(file));
@@ -66,6 +60,7 @@ public class StorageEngineUploads implements IStorageEngine {
     /**
      * Get the given image content as a byte array 
      */
+
     @Override
     public byte[] getImageContent(String directory, String filename) throws IOException {
         File fileObject = new File(path + File.separator + directory + File.separator + filename);
@@ -91,7 +86,7 @@ public class StorageEngineUploads implements IStorageEngine {
         byteOutput.close();
         return bytes;
     }
-
+    
     /**
      * Method to rename image   
      * 

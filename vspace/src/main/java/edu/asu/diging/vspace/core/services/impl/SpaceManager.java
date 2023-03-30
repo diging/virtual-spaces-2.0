@@ -58,7 +58,7 @@ public class SpaceManager implements ISpaceManager {
     private ImageRepository imageRepo;
 
     @Autowired
-    @Qualifier("storageEnginerUploads")
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Autowired
