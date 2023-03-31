@@ -106,9 +106,7 @@ public class ExhibitionManager implements IExhibitionManager {
         defaultImages.add(exhibition.getSpacelinkDefaultImage());
         defaultImages.add(exhibition.getModulelinkDefaultImage());
         defaultImages.add(exhibition.getExternallinkDefaultImage());
-        return defaultImages;
-        
-        
+        return defaultImages;            
     }
 
     /**
