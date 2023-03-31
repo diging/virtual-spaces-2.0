@@ -268,19 +268,6 @@ public class SlideManager implements ISlideManager {
                         
                     
                 }
-                
-//                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
-//                if(exhibitionLanguage != null) {
-//                    description.setExhibitionLanguage(exhibitionLanguage);
-//                    Optional<ILocalizedText> slideDescription = slide.getSlideDescriptions().stream()
-//                            .filter(desc -> exhibitionLanguage.getId().equals(desc.getExhibitionLanguage().getId()))
-//                            .findAny();
-//                    if(slideDescription.isPresent()) {
-//                        slideDescription.get().setText(description.getText());
-//                    } else {
-//                        slide.getSlideDescriptions().add(description);
-//
-//                    }
                 }
             }
         }
@@ -369,7 +356,7 @@ public class SlideManager implements ISlideManager {
      * @param language
      * @return
      */
-
+    @Override
     public LocalizedTextForm createLocalizedNameForm(ISlide slide, IExhibitionLanguage language) {
         // TODO Auto-generated method stub
         
@@ -396,21 +383,21 @@ public class SlideManager implements ISlideManager {
      * @param language
      * @return
      */
-
+    @Override
     public LocalizedTextForm createLocalizedDescriptionForm(ISlide slide, IExhibitionLanguage language) {
         // TODO Auto-generated method stub
         
-        LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
+        LocalizedTextForm localizedDescriptionForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
         ILocalizedText description = slide.getSlideDescriptions().stream()
                 .filter(slideDescription -> StringUtils.equals(language.getId(), slideDescription.getExhibitionLanguage().getId())).findAny().orElse(null);
 
         if(description != null) {
-            localizedAboutTextForm.setText(description.getText());
-            localizedAboutTextForm.setLocalisedTextId( description.getId());
+            localizedDescriptionForm.setText(description.getText());
+            localizedDescriptionForm.setLocalisedTextId( description.getId());
 
         } 
-        localizedAboutTextForm.setIsDefaultExhibitionLanguage(language.isDefault());
-        return localizedAboutTextForm;
+        localizedDescriptionForm.setIsDefaultExhibitionLanguage(language.isDefault());
+        return localizedDescriptionForm;
         
     }
 }

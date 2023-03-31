@@ -51,11 +51,11 @@ public class Slide extends VSpaceElement implements ISlide {
     
     @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Slide_LangObj_names")
-    private List<ILocalizedText> slideNames = new ArrayList();
+    private List<ILocalizedText> slideNames = new ArrayList<ILocalizedText>();
 
     @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Slide_LangObj_descriptions")
-    private List<ILocalizedText> slideDescriptions = new ArrayList();
+    private List<ILocalizedText> slideDescriptions = new ArrayList<ILocalizedText>();
     
     public List<ILocalizedText> getSlideNames() {
         return slideNames;
