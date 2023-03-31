@@ -1,3 +1,4 @@
+
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
@@ -27,11 +28,8 @@
 function deleteFile(fileid){
 	var token = [[${_csrf.token}]];
 	$.ajax({
-        url: "[(@{'/staff/files/'})]"+fileid +'/delete',
+        url: "[(@{'/staff/files/'})]"+fileid +'/delete?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]] ,
         type: 'POST',
-        headers:{
-			'X-CSRF-Token':token
-		},
         cache: false,
         contentType : false,
         success: function(data) {
@@ -64,8 +62,8 @@ $(document).ready(function($) {
     
   	var fileId;
     $(".deleteFileTooltip").on("click", function() {
+		fileId = $(this).attr("value");
 		$('#deleteFileAlert').modal('show');
-		 fileId = $(this).attr("value");
 	});
     
     $("#deleteFileButtonConfirm").on("click", function() {
@@ -82,22 +80,21 @@ $(document).ready(function($) {
     
 	$("#files").addClass("active");	
 	$('.filePage-selection').bootpag({
-	total: [[${filesTotalPages}]],
-	page: [[${filesCurrentPageNumber}]],
-	maxVisible: 10,
-	leaps: true,
-	firstLastUse: true,
-	first: '|<',
-	last: '>|',
-	wrapClass: 'pagination',
-	activeClass: 'active',
-	disabledClass: 'disabled',
-	nextClass: 'next',
-	prevClass: 'prev',
-	lastClass: 'last',
-	firstClass: 'first'
+		total: [[${filesTotalPages}]],
+		page: [[${filesCurrentPageNumber}]],
+		maxVisible: 10,
+		leaps: true,
+		firstLastUse: true,
+		first: '|<',
+		last: '>|',
+		wrapClass: 'pagination',
+		activeClass: 'active',
+		disabledClass: 'disabled',
+		nextClass: 'next',
+		prevClass: 'prev',
+		lastClass: 'last',
+		firstClass: 'first'
 	}).on("page", function(event, num){
-		console.log(num);
 		window.location.assign("[(@{'/staff/files/list'})]"+'?'+"filesPagenum="+num);
 	});
 	
