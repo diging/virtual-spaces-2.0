@@ -92,22 +92,21 @@ $(document).ready(function(){
 	});
 });
 
-function openForm(evt, label) {
-	console.log(label);
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(label).style.display = "block";
-  evt.currentTarget.className += " active";
-  evt.preventDefault();
-}
- 
+	/* function openForm(evt, label) {
+		console.log(label);
+	  var i, tabcontent, tablinks;
+	  tabcontent = document.getElementsByClassName("tabcontent");
+	  for (i = 0; i < tabcontent.length; i++) {
+	    tabcontent[i].style.display = "none";
+	  }
+	  tablinks = document.getElementsByClassName("tablinks");
+	  for (i = 0; i < tablinks.length; i++) {
+	    tablinks[i].className = tablinks[i].className.replace(" active", "");
+	  }
+	  document.getElementById(label).style.display = "block";
+	  evt.currentTarget.className += " active";
+	}
+ */
 
 
 </script>
@@ -117,67 +116,50 @@ function openForm(evt, label) {
     <div class="main-content" layout:fragment="content">
         <h1>Add new Slide</h1>
         <form th:action="@{'/staff/module/'+${moduleId}+'/slide/add'}"
-            method="POST" name="f" class="form-horizontal">
+            method="POST" name="f" th:object="${slide}"class="form-horizontal">
+             
+            <div th:each= "exhibitionLanguage : ${languageObjectList}"  > 
+				<p >[[${exhibitionLanguage.label}]]</p>
+				<div class="form-group row">
+					<label for="name" class="col-md-2 col-form-label">Slide Name:</label>				
+	  				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+	 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field= "${slide.names[__${exhibitionLanguageStat.index}__].text}"></input>
+				</div>
+		
+				<div class="form-group row">
+					<label for="description" class="col-md-2 col-form-label">Description:</label>
+	 				<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
+	  				
+					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slide.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
+				</div>
+			</div>
+             
             
             
-		    <div>
-    <!-- Tab navigation -->
-			    <ul class="nav nav-tabs">
-			        <li class="nav-item" th:classappend="${exhibitionLanguageStat.index == 0} ? 'active'">
-			            <a class="nav-link" data-toggle="tab" th:href="'#tab-' + ${exhibitionLanguage.label}">
-			                [[${exhibitionLanguage.label}]]
-			            </a>
-			        </li>
-			        <li class="nav-item" th:each="exhibitionLanguage : ${languageObjectList}" th:unless="${exhibitionLanguageStat.index == 0}">
-			            <a class="nav-link" data-toggle="tab" th:href="'#tab-' + ${exhibitionLanguage.label}">
-			                [[${exhibitionLanguage.label}]]
-			            </a>
-			        </li>
-			    </ul>
+            <div class="form-group row">
+                <label for="type" class="col-md-2 col-form-label">Type:</label>
+                <select name="type" id="type"
+                    class="form-control-xs target"
+                    style="height: 50px; width: 300px;">
+                    <option id="slide" selected value="SLIDE"
+                        label="Slide">Slide</option>
+                    <option id="branchingPoint" value="BRANCHING_POINT"
+                        label="BranchingPoint">Branching Point</option>
+                </select>
+            </div>
+            <div class="form-group row" id="sequences"
+                style="display: none;">
+                <label for="choices" class="col-md-2 col-form-label">Add
+                    Choices:</label> <select multiple="multiple"
+                    id="selectSequence" name="selectSequence"
+                    class="form-control form-control-sm"
+                    style="width: 68px;">
 
-    <!-- Tab content -->
-			    <div class="tab-content">
-			        <div th:classappend="${exhibitionLanguageStat.index == 0} ? 'tab-pane active' : 'tab-pane'"
-			             th:id="'tab-' + ${exhibitionLanguage.label}" th:each="exhibitionLanguage : ${languageObjectList}">
-			            <div class="form-group row">
-			                <label for="name" class="col-md-2 col-form-label">Slide Name:</label>
-			                <input type="hidden" th:value="${exhibitionLanguage.label}"
-			                       th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'">
-			                <input type="text" class="form-control col-md-10" name="name" id="name"
-			                       th:field="${slide.names[__${exhibitionLanguageStat.index}__].text}">
-			            </div>
-			
-			            <div class="form-group row">
-			                <label for="description" class="col-md-2 col-form-label">Description:</label>
-			                <input type="hidden" th:value="${exhibitionLanguage.label}"
-			                       th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'">
-			                <textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description"
-			                          th:field="${slide.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
-			            </div>
-			        </div>
-			    </div>
+                    <option th:each="sequence: ${sequences}"
+                        th:value=${sequence.id} th:id=${sequence.id}>[[${sequence.name}]]</option>
 
-			    <div class="form-group row">
-			        <label for="type" class="col-md-2 col-form-label">Type:</label>
-			        <select name="type" id="type" class="form-control-xs target" style="height: 50px; width: 300px;">
-			            <option id="slide" selected value="SLIDE" label="Slide">Slide</option>
-			            <option id="branchingPoint" value="BRANCHING_POINT" label="BranchingPoint">Branching Point</option>
-			        </select>
-			    </div>
-			
-			    <div class="form-group row" id="sequences" style="display: none;">
-			        <label for="choices" class="col-md-2 col-form-label">Add Choices:</label>
-			        <select multiple="multiple" id="selectSequence" name="selectSequence"
-			                class="form-control form-control-sm" style="width: 68px;">
-			            <option th:each="sequence: ${sequences}" th:value=${sequence.id} th:id=${sequence.id}>
-			                [[${sequence.name}]]
-			            </option>
-			        </select>
-			        <input type="hidden" id="choices" name="choices">
-			    </div>
-			
-			    
-
+                </select> <input type="hidden" id="choices" name="choices"></input>
+            </div>
             <button type="submit" id="newSlide" class="btn primary-btn">Create Slide</button>
         </form>
     </div>

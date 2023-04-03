@@ -79,7 +79,10 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
+        SlideForm sf = createNewSlideForm(slideForm);
         ISlide slide = slideFactory.createSlide(module, slideForm, type);
+       
+        
         return slideRepo.save((Slide) slide);
     }
 
@@ -211,13 +214,15 @@ public class SlideManager implements ISlideManager {
      */
     @Override
     public void addSlideName(ISlide slide, List<LocalizedTextForm> names) {
+                
                
         if(!CollectionUtils.isEmpty(names)) {
             
-            for(LocalizedTextForm name : names )  {
+            for(LocalizedTextForm name : names )  
                 if(name!=null) {
+                    
+                    LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
                 
-                LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
                 
                 if(localizedText != null) {            
                     localizedText.setText(name.getText());            
@@ -236,9 +241,7 @@ public class SlideManager implements ISlideManager {
 
             }
             }
-            
-
-        }
+           
         setNameAsDefaultLanguage(slide);
         
     }
@@ -252,6 +255,7 @@ public class SlideManager implements ISlideManager {
     public void addSlideDescription(ISlide slide, List<LocalizedTextForm> descriptions) {
         // TODO Auto-generated method stub
         
+        
         if(!CollectionUtils.isEmpty(descriptions)) {
             for(LocalizedTextForm description : descriptions )  { 
                 LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
@@ -259,7 +263,7 @@ public class SlideManager implements ISlideManager {
                 if(localizedText != null) {            
                     localizedText.setText(description.getText());            
                 } else {
-                    ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
+                    ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguageId());
                     if(exhibitionLanguage != null) {
                         
                         localizedText = new LocalizedText(exhibitionLanguage, description.getText());
@@ -303,50 +307,25 @@ public class SlideManager implements ISlideManager {
             setNameAsDefaultLanguage(slide);
         });
     }
-    
-    /**
-     * Creates Slide Page form object
-     */
+   
     
     @Override
     public SlideForm getSlideForm(String slideId) {
         ISlide slide = getSlide(slideId);
         SlideForm slideForm = new SlideForm();
+        LocalizedText localizedText = new LocalizedText();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription()); 
-        
-
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        
-        IExhibitionLanguage defaultLanguage = startExhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
-        
-        slideForm.getNames().add(createLocalizedNameForm(slide, defaultLanguage));
-        
-        slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, defaultLanguage));
-        
-        startExhibtion.getLanguages().forEach(language -> {
-            if(!language.isDefault()) {
-                slideForm.getNames().add(createLocalizedNameForm(slide, language));
-                
-                slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, language)); 
-            }
-
-
+        slide.getSlideDescriptions().forEach(description -> {
+           
+            slideForm.getDescriptions().add((LocalizedTextForm) description);
+            
         });
-       
+        slide.getSlideNames().forEach(title -> {
+            slideForm.getNames().add((LocalizedTextForm) title);
+        });
+        return slideForm;     
         
-        
-        
-//        slide.getSlideDescriptions().forEach(description -> {
-//            
-//            slideForm.getDescriptions().add((LocalizedTextForm) description);
-//            
-//        });
-//        slide.getSlideNames().forEach(title -> {
-//            slideForm.getNames().add((LocalizedTextForm) title);
-//        });
-        return slideForm;
-
     }
     
     /**
@@ -368,7 +347,8 @@ public class SlideManager implements ISlideManager {
         if(title != null) {
             localizedTitleForm.setText(title.getText());
             localizedTitleForm.setLocalisedTextId(title.getId());
-        } 
+        }
+        localizedTitleForm.setExhibitionLanguageId(language.getId());
         localizedTitleForm.setIsDefaultExhibitionLanguage(language.isDefault());      
         
         return localizedTitleForm;
@@ -395,9 +375,35 @@ public class SlideManager implements ISlideManager {
             localizedDescriptionForm.setText(description.getText());
             localizedDescriptionForm.setLocalisedTextId( description.getId());
 
-        } 
+        }
+        localizedDescriptionForm.setExhibitionLanguageId(language.getId());
         localizedDescriptionForm.setIsDefaultExhibitionLanguage(language.isDefault());
         return localizedDescriptionForm;
+        
+    }
+    @Override
+    public SlideForm createNewSlideForm(SlideForm slideForm) {
+        Slide slide = new Slide();
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+        
+//        IExhibitionLanguage defaultLanguage = startExhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+//        slideForm.getNames().add(createLocalizedNameForm(slide, defaultLanguage));
+//        
+//        slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, defaultLanguage));
+//        slideForm.setName(createLocalizedNameForm(slide, defaultLanguage).getText());
+//        slideForm.setDescription(createLocalizedDescriptionForm(slide, defaultLanguage).getText());
+        
+        startExhibtion.getLanguages().forEach(language -> {
+            
+                slideForm.getNames().add(createLocalizedNameForm(slide, language));
+                
+                
+                slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, language)); 
+            
+
+
+        });
+        return slideForm;
         
     }
 }
