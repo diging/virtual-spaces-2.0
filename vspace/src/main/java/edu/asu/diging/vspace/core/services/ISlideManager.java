@@ -55,6 +55,7 @@ public interface ISlideManager {
     
     LocalizedTextForm createLocalizedNameForm(ISlide slide, IExhibitionLanguage language);
 
-    SlideForm createNewSlideForm(SlideForm slideorm);
+    SlideForm createNewSlideForm(ISlide slide);
+
     
 }
