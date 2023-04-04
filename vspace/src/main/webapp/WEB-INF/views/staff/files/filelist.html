@@ -102,8 +102,11 @@ $(document).ready(function($) {
 	const urlParams = new URLSearchParams(window.location.search);
 
 	if(urlParams.has('uploadFileSuccess') && urlParams.get('uploadFileSuccess') ) {
-		var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>File uploaded successfully.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		$('.successAlert').append(alert); 		
+		var showAlert = true;
+	/* 	var alert = $(''); */
+/* 	var successAlert = document.getElementByClass('successAlert');
+ *//* 	successAlert.style.display = 'block'; */
+	/* 	$('.successAlert').append(alert); 		 */
 	}
 
 });
@@ -131,13 +134,18 @@ a.nav-link.active.show {
 	background: transparent;
 	font-weight: 600;
 }
+
+
 </style>
 </head>
 <body>
     <div layout:fragment="content" class="main-content">
+    <span class = "alert"></span>
      <span class = "errorDelete"></span>
-      <span class = "successAlert"></span>
-    <a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ Upload File</a>
+      <span th:if="${showAlert == true}" class = "successAlert" >
+      	<div class="alert alert-success alert-dismissible fade show" role="alert"><p>[[${message}]]</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+       </span>
+    	<a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ Upload File</a>
         <h2>Files</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following files.</div>

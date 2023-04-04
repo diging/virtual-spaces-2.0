@@ -40,8 +40,13 @@ public class AddFileController {
                 fileBytes = file.getBytes();
                 originalFileName = file.getOriginalFilename();
                 returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
+                model.addAttribute("showAlert", true);
+                model.addAttribute("message", "File added successfully");
             } catch (IOException e) {
                 logger.error("Error occured while creating file", e);  
+                model.addAttribute("showAlert", true);
+                model.addAttribute("message", "Could not add file");
+
                 return new ResponseEntity<String>("Could not create file", HttpStatus.BAD_REQUEST);
             }
             
