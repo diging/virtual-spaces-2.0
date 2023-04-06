@@ -47,18 +47,6 @@ $(document).ready(function($) {
    	$(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
 	});
-        
-	
-    var editFileTooltips = document.getElementsByClassName('editFileTooltip'); 
-    var deleteFileTooltips = document.getElementsByClassName('deleteFileTooltip'); 
-    var downloadFileTooltips = document.getElementsByClassName('downloadFileTooltip');    
-
-    
-    for (let i = 0; i < editFileTooltips.length; i++) {
-    	  editFileTooltips[i].title =  "Edit File";
-    	  deleteFileTooltips[i].title = "Delete File";
-    	  downloadFileTooltips[i].title = "Download File";
-    }
     
   	var fileId;
     $(".deleteFileTooltip").on("click", function() {
@@ -99,16 +87,6 @@ $(document).ready(function($) {
 	});
 	
 
-	const urlParams = new URLSearchParams(window.location.search);
-
-	if(urlParams.has('uploadFileSuccess') && urlParams.get('uploadFileSuccess') ) {
-		var showAlert = true;
-	/* 	var alert = $(''); */
-/* 	var successAlert = document.getElementByClass('successAlert');
- *//* 	successAlert.style.display = 'block'; */
-	/* 	$('.successAlert').append(alert); 		 */
-	}
-
 });
 
 </script>
@@ -142,8 +120,8 @@ a.nav-link.active.show {
     <div layout:fragment="content" class="main-content">
     <span class = "alert"></span>
      <span class = "errorDelete"></span>
-      <span th:if="${showAlert == true}" class = "successAlert" >
-      	<div class="alert alert-success alert-dismissible fade show" role="alert"><p>[[${message}]]</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+      <span th:if="${param.uploadFileSuccess}" class = "successAlert" >
+      	<div class="alert alert-success alert-dismissible fade show" role="alert"><p>[[${param.message}]]</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
        </span>
     	<a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ Upload File</a>
         <h2>Files</h2>
@@ -176,9 +154,9 @@ a.nav-link.active.show {
                     <td>[[${file.createdBy}]]</td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
                     <td><span class="date">[[${file.creationDate}]]</span></td>
-                    <td><a data-toggle="tooltip" class="editFileTooltip" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}} +'/edit'" ><span class="icon-write secondary" ></span> </a></td>
-                    <td><a data-toggle="tooltip" class="deleteFileTooltip"  th:value=${file.getId()}  data-html="true" data-placement="top"  href="#" ><span id= "deleteFileButton" class="icon-trash secondary" ></span></a></td>
-                    <td><a data-toggle="tooltip" class="downloadFileTooltip" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}+'/download?id='+${file.id}}" ><span class="icon-arrow-down secondary" ></span> </a></td>
+                    <td><a data-toggle="tooltip" class="editFileTooltip" title="Edit File"  data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}} +'/edit'" ><span class="icon-write secondary" ></span> </a></td>
+                    <td><a data-toggle="tooltip" class="deleteFileTooltip" title="Delete File"  th:value=${file.getId()}  data-html="true" data-placement="top"  href="#" ><span id= "deleteFileButton" class="icon-trash secondary" ></span></a></td>
+                    <td><a data-toggle="tooltip" class="downloadFileTooltip" title="Download File" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}+'/download?id='+${file.id}}" ><span class="icon-arrow-down secondary" ></span> </a></td>
                 
                 </tr>
             </tbody>

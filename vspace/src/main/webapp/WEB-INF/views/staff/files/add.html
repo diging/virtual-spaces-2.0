@@ -21,7 +21,7 @@
 				processData : false,
 				data : formData,
 				success : function(data) {
-					window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"uploadFileSuccess=true";
+					window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"uploadFileSuccess=true&message=File uploaded successfully";
 				},
 				error : function(data) {
 					var alert = $('');
