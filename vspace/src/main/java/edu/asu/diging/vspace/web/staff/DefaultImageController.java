@@ -135,20 +135,6 @@ public class DefaultImageController {
 
     }
     
-    @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH+"test", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getDefaultImages() {
-        IExhibition exhibition = exhibitManager.getStartExhibition();
-        List<IVSImage> defaultImageList = new ArrayList<>();
-        defaultImageList = exhibitManager.getDefaultImage();
-        byte[] imageContent = null;
-        for (IVSImage image : defaultImageList) {
-            System.out.println(image);
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-        
-
-    }
+    
 
 }

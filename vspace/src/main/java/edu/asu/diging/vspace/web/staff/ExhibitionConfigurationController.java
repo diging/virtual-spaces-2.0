@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.DefaultImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -135,13 +137,18 @@ public class ExhibitionConfigurationController {
             externalDefaultImage = imageService.storeImage(externalImage, externalLinkFilename);
 
         }
-
+        List<IVSImage> defaultImagelist = new ArrayList<>();
+        defaultImagelist.add(spaceDefaultImage);
+        defaultImagelist.add(moduleDefaultImage);
+        defaultImagelist.add(externalDefaultImage);
+        
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         exhibition.setSpacelinkDefaultImage(spaceDefaultImage);
         exhibition.setModulelinkDefaultImage(moduleDefaultImage);
         exhibition.setExternallinkDefaultImage(externalDefaultImage);
+        exhibition.setDefaultImage(defaultImagelist);
 
         exhibitManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
 

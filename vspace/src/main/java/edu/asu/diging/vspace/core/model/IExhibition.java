@@ -42,6 +42,10 @@ public interface IExhibition extends IVSpaceElement {
     IVSImage getExternallinkDefaultImage();
     
     void setExternallinkDefaultImage(IVSImage externallinkDefaultImage);
+    
+    List<IVSImage> getDefaultImage();
+     
+    void setDefaultImage(List<IVSImage> defaultImage);
 
     List<IExhibitionLanguage> getLanguages();
 

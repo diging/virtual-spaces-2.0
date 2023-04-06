@@ -98,6 +98,12 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return null;
     }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.services.IExhibitionManager#getDefaultImage()
+     */
     
     @Override
     public List<IVSImage> getDefaultImage(){

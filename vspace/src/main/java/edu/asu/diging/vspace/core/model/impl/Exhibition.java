@@ -60,6 +60,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externallinkDefaultImage;
     
+    @OneToMany(targetEntity = IVSImage.class)
+    private List<IVSImage> defaultImage;
+    
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval=true)
@@ -187,12 +190,23 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setPreviewId(String previewId) {
         this.previewId = previewId;
     }
-    
+    @Override
+    public List<IVSImage> getDefaultImage() {
+        return defaultImage;
+    }
+    @Override
+    public void setDefaultImage(List<IVSImage> defaultImage) {
+        this.defaultImage = defaultImage;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
+    
+    
 
+   
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
