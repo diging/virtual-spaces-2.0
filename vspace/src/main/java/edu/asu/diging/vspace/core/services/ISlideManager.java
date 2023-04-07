@@ -46,9 +46,7 @@ public interface ISlideManager {
     void addSlideDescription(ISlide slide, List<LocalizedTextForm> descriptions);
 
     void addSlideName(ISlide slide, List<LocalizedTextForm> names);
-
-    void updateSlideWithDefaultNameAndDescription(Iterable<Slide> slideList);
-
+    
     SlideForm getSlideForm(String slideId);
 
     LocalizedTextForm createLocalizedDescriptionForm(ISlide slide, IExhibitionLanguage language);

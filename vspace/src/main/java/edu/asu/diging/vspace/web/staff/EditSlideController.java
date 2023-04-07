@@ -76,11 +76,8 @@ public class EditSlideController {
         model.addAttribute("slideId", slideId);
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();   
-
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
         model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
-        
-        
         return "staff/modules/slides/edit";
     }
 
