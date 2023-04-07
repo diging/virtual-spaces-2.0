@@ -127,11 +127,46 @@ public class DefaultImageController {
         if (defaultExternalLinkImage != null) {
             defaultExternalLinkImageFlag = true;
         }
+        
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("defaultSpaceImageFlag", defaultSpaceImageFlag);
         jsonObj.addProperty("defaultModuleImageFlag", defaultModuleImageFlag);
         jsonObj.addProperty("defaultExternalLinkImageFlag", defaultExternalLinkImageFlag);
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
+
+    }
+    
+    //testing image
+    @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH+"Image", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getDefaultImages() {
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IVSImage externalLinkImage = exhibition.getExternallinkDefaultImage();
+        List<IVSImage> defaultImageList = new ArrayList<>();
+        defaultImageList = exhibitManager.getDefaultImage();
+        IVSImage defaultSpaceImage = defaultImageList.get(0);
+        IVSImage defaultModuleImage = defaultImageList.get(1);
+        IVSImage defaultExternalLinkImage = defaultImageList.get(2);
+        if (defaultExternalLinkImage == null) {
+            return null;
+        }
+        byte[] imageContent1 = null;
+        byte[] imageContent2 = null;
+        byte[] imageContent3 = null;
+
+        try {
+
+            imageContent1 = storage.getMediaContent(defaultSpaceImage.getId(), defaultSpaceImage.getFilename());
+            imageContent2 = storage.getMediaContent(defaultModuleImage.getId(), defaultModuleImage.getFilename());
+            imageContent3 = storage.getMediaContent(defaultExternalLinkImage.getId(), defaultExternalLinkImage.getFilename());
+
+        } catch (IOException e) {
+            logger.error("Could not retrieve default External Link image.", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
+        return new ResponseEntity<>(imageContent1, headers, HttpStatus.OK);
 
     }
     
