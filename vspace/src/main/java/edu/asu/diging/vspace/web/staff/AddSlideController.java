@@ -41,7 +41,7 @@ public class AddSlideController {
     @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
-        model.addAttribute("slide", new SlideForm());
+        model.addAttribute("slide", slideManager.createNewSlideForm(null));
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
         
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
