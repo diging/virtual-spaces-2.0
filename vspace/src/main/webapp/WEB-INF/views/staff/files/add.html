@@ -21,17 +21,18 @@
 				processData : false,
 				data : formData,
 				success : function(data) {
-					window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"uploadFileSuccess=true&message=File uploaded successfully";
+					window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"uploadFileSuccess=true&message="+data;
 				},
 				error : function(data) {
-					var alert = $('');
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>File upload failed. Please try again after sometime.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 					$('.errorAdd').append(alert);
 				}
 			});
 		
 		} else {
-			var alert = $('');
-			$('.errorAdd').append(alert);
+	
+			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>File name and File cannot be empty.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			$('.errorAdd').append(alert); 
 		}		
 		
 	}
@@ -48,7 +49,7 @@
 </head>
 <body>
 <div class="main-content" layout:fragment="content">
-    <span th:if="${showAlert == true}" class = "errorAdd"><div class="alert alert-danger alert-dismissible fade show" role="alert"><p>File name and File cannot be empty.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div></span>
+    <span class = "errorAdd" ></span>
 
 	<h2>Upload new File</h2>
 	 	

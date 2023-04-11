@@ -31,7 +31,7 @@ public class AddFileController {
     
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
     public ResponseEntity<String> createFile( Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
-            Principal principal, RedirectAttributes redirectAttrs) {
+            Principal principal) {
         byte[] fileBytes = null;
         String originalFileName = null;
         CreationReturnValue returnVal = null;
@@ -40,19 +40,14 @@ public class AddFileController {
                 fileBytes = file.getBytes();
                 originalFileName = file.getOriginalFilename();
                 returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
-                redirectAttrs.addAttribute("showAlert", true);
-                redirectAttrs.addAttribute("message", "File added successfully");
+              
             } catch (IOException e) {
                 logger.error("Error occured while creating file", e);  
-                redirectAttrs.addAttribute("showAlert", true);
-                redirectAttrs.addAttribute("message", "Could not add file");
-
                 return new ResponseEntity<String>("Could not create file", HttpStatus.BAD_REQUEST);
             }
             
-        }
-        
-        return new ResponseEntity<String>("File created", HttpStatus.OK);
+        }      
+        return new ResponseEntity<String>("File uploaded successfully", HttpStatus.OK);
     }
     
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.GET)
