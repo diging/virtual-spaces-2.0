@@ -15,27 +15,40 @@ import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Service
 public class ReferenceMetadataRegistry implements IReferenceMetadataRegistry {
-    
+
     @Autowired
     private List<IReferenceMetadataProvider> referenceMetadataProviders;
-    
+
     private Map<ReferenceMetadataType, IReferenceMetadataProvider> map = new HashMap<>();
-    
+
     @PostConstruct
     public void init() {
-        for(IReferenceMetadataProvider refMetaData : referenceMetadataProviders) {
+        for (IReferenceMetadataProvider refMetaData : referenceMetadataProviders) {
             map.put(refMetaData.getReferenceMetadataType(), refMetaData);
         }
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.references.IReferenceMetadataRegistry#getProvider
+     * (edu.asu.diging.vspace.core.references .ReferenceMetadataType)
+     */
     public IReferenceMetadataProvider getProvider(ReferenceMetadataType refMetaDataType) {
         return map.get(refMetaDataType);
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.references.IReferenceMetadataRegistry#getProvider(
+     * String metadataType)
+     */
     public IReferenceMetadataProvider getProvider(String metadataType) {
-        //SEND ReferenceDisplayFormatter OBJECT
         ReferenceMetadataType refMetaDataType = ReferenceMetadataType.valueOf(metadataType.toUpperCase());
         return getProvider(refMetaDataType);
     }
-    
+
 }

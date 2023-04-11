@@ -24,7 +24,6 @@ import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 @PropertySource({ "classpath:config_reference.properties" })
 public class CoinSMetadataProvider implements IReferenceMetadataProvider {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final String UNSUPPORTED_LOGGING_EXCEPTION = "Unsupported Encoding.";
 
     @Autowired
     private Environment env;
@@ -42,12 +41,11 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         referenceMap.put(CoinSConstants.SOFTWARE_DOCUMENTATION, CoinSConstants.BLOGPOST_RFT_VAL_FMT);
         referenceMap.put(CoinSConstants.BOOK_GENRE, CoinSConstants.BOOK_RFT_VAL_FMT);
         referenceMap.put(CoinSConstants.BOOK_SECTION_GENRE, CoinSConstants.BOOK_RFT_VAL_FMT);
-        referenceMap.put(CoinSConstants.CONFERENCE_PAPER, CoinSConstants.BOOK_RFT_VAL_FMT);      
+        referenceMap.put(CoinSConstants.CONFERENCE_PAPER, CoinSConstants.BOOK_RFT_VAL_FMT);
     }
 
     @Override
     public ReferenceMetadataType getReferenceMetadataType() {
-        
         return ReferenceMetadataType.DEFAULT;
     }
 
@@ -84,7 +82,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             urlEncodedReferenceMetaData.append(refNoteEncoded);
 
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
         urlEncodedReferenceMetaData.append(CoinSConstants.RFT_DEFAULT_LANGUAGE);
@@ -96,15 +93,12 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             return "";
         }
         try {
-
             if (type.equals(CoinSConstants.BLOGPOST_TYPE) || type.equals(CoinSConstants.PODCAST)
                     || type.equals(CoinSConstants.PRESENTATION) || type.equals(CoinSConstants.SOFTWARE_DOCUMENTATION)) {
                 return CoinSConstants.RFT_TYPE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
-
             }
             return CoinSConstants.RFT_GENRE_TAG + URLEncoder.encode(type, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -122,7 +116,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             }
             return CoinSConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -134,7 +127,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_AUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -146,7 +138,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_LASTAUTHOR_TAG + URLEncoder.encode(author, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -158,7 +149,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_DATE_TAG + URLEncoder.encode(year, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -170,7 +160,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_JOURNAL_TAG + URLEncoder.encode(journal, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -182,7 +171,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_ID_TAG + URLEncoder.encode(url, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -194,7 +182,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_VOLUME_TAG + URLEncoder.encode(volume, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -240,7 +227,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_EDITOR_TAG + URLEncoder.encode(editors, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
@@ -252,7 +238,6 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
         try {
             return CoinSConstants.RFT_NOTE_TAG + URLEncoder.encode(note, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            logger.error(UNSUPPORTED_LOGGING_EXCEPTION, e);
             throw new ReferenceMetadataEncodingException(e);
         }
     }
