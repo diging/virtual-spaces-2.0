@@ -19,7 +19,7 @@ import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
-import edu.asu.diging.vspace.core.exception.ExhibitionLanguageCouldNotBeDeletedException;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -105,7 +105,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @throws LanguageListConfigurationNotFoundException 
      */
     @Override
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageCouldNotBeDeletedException{
+    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageDeletionException{
         if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
@@ -132,7 +132,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
             if(!localizedTextDoesNotExist(language))  {
-                throw new ExhibitionLanguageCouldNotBeDeletedException() ;
+                throw new ExhibitionLanguageDeletionException() ;
             }
             language.getLocalizedTexts().clear();
             localizedTextRepo.deleteAll(language.getLocalizedTexts());

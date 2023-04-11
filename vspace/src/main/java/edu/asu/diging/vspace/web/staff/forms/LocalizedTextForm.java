@@ -2,24 +2,16 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 public class LocalizedTextForm {
     
-    String text;
+    private String text;
     
-    String localisedTextId;
+    private String localisedTextId;
     
-    String exhibitionLanguageId;
+    private String exhibitionLanguageId;
     
-    String exhibitionLanguageLabel;  
+    private String exhibitionLanguageLabel;  
     
-    Boolean isDefaultExhibitionLanguage;
+    private Boolean isDefaultExhibitionLanguage;
     
-    public Boolean getIsDefaultExhibitionLanguage() {
-        return isDefaultExhibitionLanguage;
-    }
-
-    public void setIsDefaultExhibitionLanguage(Boolean isDefaultExhibitionLanguage) {
-        this.isDefaultExhibitionLanguage = isDefaultExhibitionLanguage;
-    }
-
     public LocalizedTextForm() {
         super();
     }
@@ -32,6 +24,8 @@ public class LocalizedTextForm {
         this.exhibitionLanguageId = exhibitionLanguageId;
         this.exhibitionLanguageLabel = exhibitionLanguageLabel;
     }
+    
+
     
     public String getText() {
         return text;
@@ -64,5 +58,14 @@ public class LocalizedTextForm {
     public void setExhibitionLanguageLabel(String exhibitionLanguageLabel) {
         this.exhibitionLanguageLabel = exhibitionLanguageLabel;
     }
+
+    public Boolean getIsDefaultExhibitionLanguage() {
+        return isDefaultExhibitionLanguage;
+    }
+
+    public void setIsDefaultExhibitionLanguage(Boolean isDefaultExhibitionLanguage) {
+        this.isDefaultExhibitionLanguage = isDefaultExhibitionLanguage;
+    }
+
 
 }

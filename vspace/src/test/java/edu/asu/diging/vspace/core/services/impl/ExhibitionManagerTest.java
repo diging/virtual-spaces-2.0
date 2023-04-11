@@ -23,7 +23,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
-import edu.asu.diging.vspace.core.exception.ExhibitionLanguageCouldNotBeDeletedException;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -94,7 +94,7 @@ public class ExhibitionManagerTest {
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
         try {
             serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
-        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+        } catch (ExhibitionLanguageDeletionException e) {
             e.printStackTrace();
         }
         assertEquals(exhibition.getLanguages().size(),2);
@@ -133,7 +133,7 @@ public class ExhibitionManagerTest {
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
         try {
             serviceToTest.updateExhibitionLanguages(exhibition, languages, null);
-        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+        } catch (ExhibitionLanguageDeletionException e) {
             e.printStackTrace();
         }
 
@@ -162,7 +162,7 @@ public class ExhibitionManagerTest {
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
         try {
             serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
-        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+        } catch (ExhibitionLanguageDeletionException e) {
             e.printStackTrace();
         }
         assertEquals(exhibition.getLanguages().size(),1);
@@ -260,7 +260,7 @@ public class ExhibitionManagerTest {
             languages.remove("en");
             serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
             assertEquals(exhibition.getLanguages().size(),1);
-        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+        } catch (ExhibitionLanguageDeletionException e) {
             e.printStackTrace();
         }
       
@@ -301,10 +301,10 @@ public class ExhibitionManagerTest {
             
 
             languages.remove("en");
-            Assert.assertThrows(ExhibitionLanguageCouldNotBeDeletedException.class,
+            Assert.assertThrows(ExhibitionLanguageDeletionException.class,
                     () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));
           
-        } catch (ExhibitionLanguageCouldNotBeDeletedException e) {
+        } catch (ExhibitionLanguageDeletionException e) {
    
             e.printStackTrace();
         }

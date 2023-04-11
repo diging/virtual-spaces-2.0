@@ -42,11 +42,11 @@ public class ExhibitionAboutPage {
     
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="AboutPage_LocText_titles")
-    private List<ILocalizedText> exhibitionTitles = new ArrayList<ILocalizedText>();
+    private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="AboutPage_LocText_descriptions")
-    private List<ILocalizedText> exhibitionTextDescriptions = new ArrayList<ILocalizedText>();
+    private List<ILocalizedText> localizedDescriptions = new ArrayList<ILocalizedText>();
 
     public String getId() {
         return id;
@@ -74,19 +74,19 @@ public class ExhibitionAboutPage {
     }
 	
     public List<ILocalizedText> getExhibitionTitles() {
-        return exhibitionTitles;
+        return localizedTitles;
     }
 
     public void setExhibitionTitles(List<ILocalizedText> exhibitionTitles) {
-        this.exhibitionTitles = exhibitionTitles;
+        this.localizedTitles = exhibitionTitles;
     }
 
     public List<ILocalizedText> getExhibitionTextDescriptions() {
-        return exhibitionTextDescriptions;
+        return localizedDescriptions;
     }
 
     public void setExhibitionTextDescriptions(List<ILocalizedText> exhibitionTextDescriptions) {
-        this.exhibitionTextDescriptions = exhibitionTextDescriptions;
+        this.localizedDescriptions = exhibitionTextDescriptions;
     }
 
     /*
