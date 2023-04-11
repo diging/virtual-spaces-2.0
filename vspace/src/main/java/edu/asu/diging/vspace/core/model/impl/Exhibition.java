@@ -60,9 +60,6 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externallinkDefaultImage;
     
-    @OneToMany(targetEntity = IVSImage.class)
-    private List<IVSImage> defaultImage;
-    
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval=true)
@@ -122,7 +119,6 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.title = title;
     }
 
-
     public ExhibitionModes getMode() {
 
         return mode;
@@ -140,41 +136,39 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.customMessage = customMessage;
     }
     
-    
+    @Override
     public IVSImage getSpacelinkDefaultImage() {
         return spacelinkDefaultImage;
     }
-
+    @Override
     public void setSpacelinkDefaultImage(IVSImage spacelinkDefaultImage) {
         this.spacelinkDefaultImage = spacelinkDefaultImage;
     }
-
+    @Override
     public IVSImage getModulelinkDefaultImage() {
         return modulelinkDefaultImage;
     }
-
+    @Override
     public void setModulelinkDefaultImage(IVSImage modulelinkDefaultImage) {
         this.modulelinkDefaultImage = modulelinkDefaultImage;
     }
-
+    @Override
     public IVSImage getExternallinkDefaultImage() {
         return externallinkDefaultImage;
     }
-
+    @Override
     public void setExternallinkDefaultImage(IVSImage externallinkDefaultImage) {
         this.externallinkDefaultImage = externallinkDefaultImage;
     }
-
     @Override
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;
     }
-    
     @Override
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
     }
-
+    
     public List<IExhibitionLanguage> getLanguages() {
         return languages;
     }
@@ -190,23 +184,12 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public void setPreviewId(String previewId) {
         this.previewId = previewId;
     }
-    @Override
-    public List<IVSImage> getDefaultImage() {
-        return defaultImage;
-    }
-    @Override
-    public void setDefaultImage(List<IVSImage> defaultImage) {
-        this.defaultImage = defaultImage;
-    }
-
+    
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
     
-    
-
-   
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

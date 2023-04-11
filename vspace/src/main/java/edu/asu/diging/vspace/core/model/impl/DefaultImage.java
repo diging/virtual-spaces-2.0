@@ -22,38 +22,6 @@ public class DefaultImage implements IDefaultImage{
     private String id;
     
     
-    private IVSImage spacelinkDefaultImage;
-    
-    
-    private IVSImage modulelinkDefaultImage;
-    
-    
-    private IVSImage externallinkDefaultImage;
-    
-    @Override
-    public IVSImage getSpacelinkDefaultImage() {
-        return spacelinkDefaultImage;
-    }
-    @Override
-    public void setSpacelinkDefaultImage(IVSImage spacelinkDefaultImage) {
-        this.spacelinkDefaultImage = spacelinkDefaultImage;
-    }
-    @Override
-    public IVSImage getModulelinkDefaultImage() {
-        return modulelinkDefaultImage;
-    }
-    @Override
-    public void setModulelinkDefaultImage(IVSImage modulelinkDefaultImage) {
-        this.modulelinkDefaultImage = modulelinkDefaultImage;
-    }
-    @Override
-    public IVSImage getExternallinkDefaultImage() {
-        return externallinkDefaultImage;
-    }
-    @Override
-    public void setExternallinkDefaultImage(IVSImage externallinkDefaultImage) {
-        this.externallinkDefaultImage = externallinkDefaultImage;
-    }
     
     
 

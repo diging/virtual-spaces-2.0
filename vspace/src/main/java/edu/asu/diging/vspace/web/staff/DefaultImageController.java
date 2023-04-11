@@ -25,19 +25,18 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Controller
 public class DefaultImageController {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
     public static final String API_DEFAULT_SPACEIMAGE_PATH = "/api/defaultSpaceImage/";
     public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/defaultModuleImage/";
     public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/defaultExternalLinkImage/";
-    public static final String API_DEFAULT_SPACEIMAGE = "/api/getdefaultImage/";
-    
+
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private IExhibitionManager exhibitManager;
-    
+
     @RequestMapping(value = API_DEFAULT_SPACEIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getSpaceId() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
@@ -66,11 +65,8 @@ public class DefaultImageController {
             return null;
         }
         byte[] imageContent = null;
-
         try {
-
             imageContent = storage.getMediaContent(moduleImage.getId(), moduleImage.getFilename());
-
         } catch (IOException e) {
             logger.error("Could not retrieve default Module image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -79,7 +75,6 @@ public class DefaultImageController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(moduleImage.getFileType()));
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-
     }
 
     @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH, method = RequestMethod.GET)
@@ -90,9 +85,7 @@ public class DefaultImageController {
             return null;
         }
         byte[] imageContent = null;
-
         try {
-
             imageContent = storage.getMediaContent(externalLinkImage.getId(), externalLinkImage.getFilename());
 
         } catch (IOException e) {
@@ -103,73 +96,5 @@ public class DefaultImageController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-
     }
-
-    @RequestMapping(value = API_DEFAULT_SPACEIMAGE, method = RequestMethod.GET)
-    public ResponseEntity<String> getDefaultImage() {
-        IExhibition exhibition = exhibitManager.getStartExhibition();
-        List<IVSImage> defaultImageList = new ArrayList<>();
-        defaultImageList = exhibitManager.getDefaultImage();
-        IVSImage defaultSpaceImage = defaultImageList.get(0);
-        IVSImage defaultModuleImage = defaultImageList.get(1);
-        IVSImage defaultExternalLinkImage = defaultImageList.get(2);
-
-        boolean defaultSpaceImageFlag = false;
-        boolean defaultModuleImageFlag = false;
-        boolean defaultExternalLinkImageFlag = false;
-        if (defaultSpaceImage != null) {
-            defaultSpaceImageFlag = true;
-        }
-        if (defaultModuleImage != null) {
-            defaultModuleImageFlag = true;
-        }
-        if (defaultExternalLinkImage != null) {
-            defaultExternalLinkImageFlag = true;
-        }
-        
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("defaultSpaceImageFlag", defaultSpaceImageFlag);
-        jsonObj.addProperty("defaultModuleImageFlag", defaultModuleImageFlag);
-        jsonObj.addProperty("defaultExternalLinkImageFlag", defaultExternalLinkImageFlag);
-        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
-
-    }
-    
-    //testing image
-    @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH+"Image", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getDefaultImages() {
-        IExhibition exhibition = exhibitManager.getStartExhibition();
-        IVSImage externalLinkImage = exhibition.getExternallinkDefaultImage();
-        List<IVSImage> defaultImageList = new ArrayList<>();
-        defaultImageList = exhibitManager.getDefaultImage();
-        IVSImage defaultSpaceImage = defaultImageList.get(0);
-        IVSImage defaultModuleImage = defaultImageList.get(1);
-        IVSImage defaultExternalLinkImage = defaultImageList.get(2);
-        if (defaultExternalLinkImage == null) {
-            return null;
-        }
-        byte[] imageContent1 = null;
-        byte[] imageContent2 = null;
-        byte[] imageContent3 = null;
-
-        try {
-
-            imageContent1 = storage.getMediaContent(defaultSpaceImage.getId(), defaultSpaceImage.getFilename());
-            imageContent2 = storage.getMediaContent(defaultModuleImage.getId(), defaultModuleImage.getFilename());
-            imageContent3 = storage.getMediaContent(defaultExternalLinkImage.getId(), defaultExternalLinkImage.getFilename());
-
-        } catch (IOException e) {
-            logger.error("Could not retrieve default External Link image.", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
-        return new ResponseEntity<>(imageContent1, headers, HttpStatus.OK);
-
-    }
-    
-    
-
 }

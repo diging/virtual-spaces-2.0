@@ -148,7 +148,7 @@ public class ExhibitionConfigurationController {
         exhibition.setSpacelinkDefaultImage(spaceDefaultImage);
         exhibition.setModulelinkDefaultImage(moduleDefaultImage);
         exhibition.setExternallinkDefaultImage(externalDefaultImage);
-        exhibition.setDefaultImage(defaultImagelist);
+        
 
         exhibitManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
 

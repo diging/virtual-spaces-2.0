@@ -37,6 +37,6 @@ public interface IImageService {
 
     List<IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    public IVSImage storeImage(byte[] image, String filename);
+    IVSImage storeImage(byte[] image, String filename);
 
 }
