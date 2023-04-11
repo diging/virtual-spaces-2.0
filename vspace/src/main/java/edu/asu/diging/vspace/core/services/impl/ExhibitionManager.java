@@ -98,23 +98,7 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return null;
     }
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.IExhibitionManager#getDefaultImage()
-     */
-    
-    @Override
-    public List<IVSImage> getDefaultImage(){
-        IExhibition exhibition = getStartExhibition();
-        List<IVSImage> defaultImages = new ArrayList<>();
-        defaultImages.add(exhibition.getSpacelinkDefaultImage());
-        defaultImages.add(exhibition.getModulelinkDefaultImage());
-        defaultImages.add(exhibition.getExternallinkDefaultImage());
-        return defaultImages;            
-    }
-
+   
     /**
      * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
      *  

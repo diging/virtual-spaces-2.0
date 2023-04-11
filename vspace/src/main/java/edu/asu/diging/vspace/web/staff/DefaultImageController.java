@@ -30,6 +30,7 @@ public class DefaultImageController {
     public static final String API_DEFAULT_SPACEIMAGE_PATH = "/api/defaultSpaceImage/";
     public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/defaultModuleImage/";
     public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/defaultExternalLinkImage/";
+    public static final String API_DEFAULT_SPACEIMAGE = "/api/getdefaultImage/";
 
     @Autowired
     private IStorageEngine storage;
@@ -65,8 +66,11 @@ public class DefaultImageController {
             return null;
         }
         byte[] imageContent = null;
+
         try {
+
             imageContent = storage.getMediaContent(moduleImage.getId(), moduleImage.getFilename());
+
         } catch (IOException e) {
             logger.error("Could not retrieve default Module image.", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,6 +79,7 @@ public class DefaultImageController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(moduleImage.getFileType()));
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+
     }
 
     @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH, method = RequestMethod.GET)
@@ -85,7 +90,9 @@ public class DefaultImageController {
             return null;
         }
         byte[] imageContent = null;
+
         try {
+
             imageContent = storage.getMediaContent(externalLinkImage.getId(), externalLinkImage.getFilename());
 
         } catch (IOException e) {
@@ -96,5 +103,35 @@ public class DefaultImageController {
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+
     }
+
+    @RequestMapping(value = API_DEFAULT_SPACEIMAGE, method = RequestMethod.GET)
+    public ResponseEntity<String> getDefaultImage() {
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IVSImage defaultSpaceImage = exhibition.getSpacelinkDefaultImage();
+        IVSImage defaultModuleImage = exhibition.getModulelinkDefaultImage();
+        IVSImage defaultExternalLinkImage = exhibition.getExternallinkDefaultImage();
+
+        boolean defaultSpaceImageFlag = false;
+        boolean defaultModuleImageFlag = false;
+        boolean defaultExternalLinkImageFlag = false;
+        if (defaultSpaceImage != null) {
+            defaultSpaceImageFlag = true;
+        }
+        if (defaultModuleImage != null) {
+            defaultModuleImageFlag = true;
+        }
+        if (defaultExternalLinkImage != null) {
+            defaultExternalLinkImageFlag = true;
+        }
+
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("defaultSpaceImageFlag", defaultSpaceImageFlag);
+        jsonObj.addProperty("defaultModuleImageFlag", defaultModuleImageFlag);
+        jsonObj.addProperty("defaultExternalLinkImageFlag", defaultExternalLinkImageFlag);
+        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
+
+    }
+
 }

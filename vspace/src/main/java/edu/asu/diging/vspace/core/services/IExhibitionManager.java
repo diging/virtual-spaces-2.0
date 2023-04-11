@@ -37,8 +37,6 @@ public interface IExhibitionManager {
 
     IExhibition getStartExhibition();
 
-    List<IVSImage> getDefaultImage();
-
     void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
 
 }
