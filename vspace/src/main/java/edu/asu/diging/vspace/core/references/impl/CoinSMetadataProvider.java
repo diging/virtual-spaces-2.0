@@ -108,13 +108,15 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
             return "";
         }
         try {
+            String tag;
             if (type.equals(CoinSConstants.BOOK_GENRE)) {
-                return CoinSConstants.RFT_BOOKTITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
-            } else if (type.equals(CoinSConstants.JOURNAL_ARTICLE_GENRE)
-                    || type.equals(CoinSConstants.BOOK_SECTION_GENRE)) {
-                return CoinSConstants.RFT_ARTICLETITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+                tag = CoinSConstants.RFT_BOOKTITLE_TAG;
+            } else if (type.equals(CoinSConstants.JOURNAL_ARTICLE_GENRE) || type.equals(CoinSConstants.BOOK_SECTION_GENRE)) {
+                tag = CoinSConstants.RFT_ARTICLETITLE_TAG;
+            } else {
+                tag = CoinSConstants.RFT_TITLE_TAG;
             }
-            return CoinSConstants.RFT_TITLE_TAG + URLEncoder.encode(title, StandardCharsets.UTF_8.name());
+            return String.format("%s%s", tag, URLEncoder.encode(title, StandardCharsets.UTF_8.name()));
         } catch (UnsupportedEncodingException e) {
             throw new ReferenceMetadataEncodingException(e);
         }
