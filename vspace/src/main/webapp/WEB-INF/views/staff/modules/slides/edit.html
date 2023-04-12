@@ -3,6 +3,52 @@
 <link th:href="@{/resources/multiselect/css/multiselect.css}"
     type="text/css" rel="stylesheet">
 <script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+
+<style type="text/css">
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
 	<script th:inline="javascript">
 		$(window).on("load", function() {
 		    var vals = [];
@@ -46,6 +92,24 @@
 		             $('#sequences').hide();
 		         }
 		});
+		
+		
+		 function openForm(evt, label) {
+			console.log(label);
+		  var i, tabcontent, tablinks;
+		  tabcontent = document.getElementsByClassName("tabcontent");
+		  for (i = 0; i < tabcontent.length; i++) {
+		    tabcontent[i].style.display = "none";
+		  }
+		  tablinks = document.getElementsByClassName("tablinks");
+		  for (i = 0; i < tablinks.length; i++) {
+		    tablinks[i].className = tablinks[i].className.replace(" active", "");
+		  }
+		  document.getElementById(label).style.display = "block";
+		  evt.currentTarget.className += " active";
+		  evt.preventDefault();
+		}
+
 	</script>
 </head>
 
@@ -53,24 +117,38 @@
 	<div layout:fragment="content" class="main-content">
 		<h2>Edit Slide: [[${slideForm.name}]]</h2>
 
-		<form th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" method="POST" style="margin-top: 40px"
+		<form method="POST" style="margin-top: 40px"
 			th:object="${slideForm}" enctype="multipart/form-data">
 			
-			<div th:each= "exhibitionLanguage : ${languageObjectList}"  > 
-			<p >[[${exhibitionLanguage.label}]]</p>
-				<div class="form-group row">
-					<label for="name" class="col-md-2 col-form-label">Slide Name:</label> 
-					<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='names'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>
-	 				<input type="text" class="form-control col-md-10" name="name" id="name" th:field= "${slideForm.names[__${exhibitionLanguageStat.index}__].text}"></input>
-
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <div>
+				<div class="tab" >				
+					<div th:each= "title,  stat : ${slideForm.names}">
+					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					</div>
 				</div>
-	
-				<div class="form-group row">
-					<label for="description" class="col-md-2 col-form-label">Description:</label>
- 					<input type="hidden"  th:value="${exhibitionLanguage.label}" th:attr="name='descriptions'+[__${exhibitionLanguageStat.index}__]+'.exhibitionLanguage.label'"></input>				
-					<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:field= "${slideForm.descriptions[__${exhibitionLanguageStat.index}__].text}"></textarea>
+				<div>		
+					<div style="padding-top: 20px;" th:each= "title,  stat : ${slideForm.names}" > 
+					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
+					<label for="title">Slide Name:</label>
+					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
+					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
+						<div style="padding-top: 20px;" th:each= "description : ${slideForm.descriptions}"  > 								
+								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
+								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
+		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
+								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
+ 						 					
+		 				</div>
+			
+ 						
+ 					</div>
+ 				    </div>				
 				</div>
 			</div>
+				
 			
 			
 		     <div class="form-group row">
@@ -89,9 +167,12 @@
 		           </select>
 		    <input type="hidden" id="choices" name="choices"/>
 		    </div> 
-		    		
-			<button class="btn primary-btn" type="submit" value="submit" style="margin-right: 20px">Save Slide</button>
-			<a th:href="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}}" class="btn btn-light">Cancel</a>
+		    
+		    <p style="padding-top: 20px;">
+					<button class="btn primary-btn" th:formaction="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" type="submit" value="submit">Save Slide</button>
+					<a th:href="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}}" class="btn btn-light">Cancel</a>
+			</p>
+			
 		</form>
 	</div>
 </body>

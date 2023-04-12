@@ -191,21 +191,8 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void updateNameAndDescription(ISlide slide, SlideForm slideForm) {
-        SlideForm mappedLocalizedTextForm = createNewSlideForm(slide);
-        int i=0;
-        for(LocalizedTextForm  name: mappedLocalizedTextForm.getNames())
-        {
-            name.setText(slideForm.getNames().get(i).getText());
-            i++;
-        }
-        int j=0;
-        for(LocalizedTextForm  name: mappedLocalizedTextForm.getDescriptions())
-        {
-            name.setText(slideForm.getDescriptions().get(j).getText());
-            j++;
-        }
-        addSlideName(slide, mappedLocalizedTextForm.getNames());
-        addSlideDescription(slide, mappedLocalizedTextForm.getDescriptions());
+        addSlideName(slide, slideForm.getNames());
+        addSlideDescription(slide, slideForm.getDescriptions());
     }
     
     /**
@@ -217,17 +204,17 @@ public class SlideManager implements ISlideManager {
     public void addSlideName(ISlide slide, List<LocalizedTextForm> names) {
         if(!CollectionUtils.isEmpty(names)) {
             for(LocalizedTextForm name : names ) {
-                if(name.getLocalisedTextId()!=null) {
-                    LocalizedText localizedTextUpdate = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
-                    if(localizedTextUpdate != null) {            
-                        localizedTextUpdate.setText(name.getText());
+                
+                    LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
+                    if(localizedText != null) {            
+                        localizedText.setText(name.getText());
                         }
-                }
+                
                 else {
                     ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
                     if(exhibitionLanguage != null) {
                         
-                        LocalizedText  localizedText = new LocalizedText(exhibitionLanguage, name.getText());
+                        localizedText = new LocalizedText(exhibitionLanguage, name.getText());
                         slide.getSlideNames().add(localizedText);
                         exhibitionLanguage.getLocalizedTexts().add(localizedText);
                     }
@@ -244,21 +231,20 @@ public class SlideManager implements ISlideManager {
      */
     @Override
     public void addSlideDescription(ISlide slide, List<LocalizedTextForm> descriptions) {
-        if(!CollectionUtils.isEmpty(descriptions)) {  
+        if(!CollectionUtils.isEmpty(descriptions)) { 
                 for(LocalizedTextForm description : descriptions ) {
-                    if (description.getLocalisedTextId()!=null) {
-                        LocalizedText localizedTextUpdate = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
-                        if(localizedTextUpdate != null) {            
-                            localizedTextUpdate.setText(description.getText());  
+                        LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
+                        if(localizedText != null) {            
+                            localizedText.setText(description.getText());  
                         }
-                    }
+                    
                     else {
                         ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
                         if(exhibitionLanguage != null) {
-                            
-                            LocalizedText  localizedText = new LocalizedText(exhibitionLanguage, description.getText());
+                            localizedText = new LocalizedText(exhibitionLanguage, description.getText());
                             slide.getSlideDescriptions().add(localizedText);
                             exhibitionLanguage.getLocalizedTexts().add(localizedText);
+                            
                         }
                     }
                 }
@@ -288,21 +274,9 @@ public class SlideManager implements ISlideManager {
     @Override
     public SlideForm getSlideForm(String slideId) {
         ISlide slide = getSlide(slideId);
-        SlideForm slideForm = new SlideForm();
+        SlideForm slideForm = createNewSlideForm(slide);   
         slideForm.setName(slide.getName());
-        slideForm.setDescription(slide.getDescription()); 
-        slide.getSlideDescriptions().forEach(description -> {
-        LocalizedTextForm localizedDescriptionForm = new LocalizedTextForm();
-        localizedDescriptionForm.setText(description.getText());
-        localizedDescriptionForm.setLocalisedTextId( description.getId());
-        slideForm.getDescriptions().add(localizedDescriptionForm);
-        });
-        slide.getSlideNames().forEach(title -> {
-            LocalizedTextForm localizedtitleForm = new LocalizedTextForm();
-            localizedtitleForm.setText(title.getText());
-            localizedtitleForm.setLocalisedTextId( title.getId());
-            slideForm.getNames().add(localizedtitleForm);
-        });
+        slideForm.setDescription(slide.getDescription());
         return slideForm; 
     }
     
@@ -316,11 +290,13 @@ public class SlideManager implements ISlideManager {
     @Override
     public LocalizedTextForm createLocalizedNameForm(ISlide slide, IExhibitionLanguage language) {
         LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
+        if(slide!=null) {
         ILocalizedText title = slide.getSlideNames().stream()
                 .filter(name -> StringUtils.equals(language.getId(), name.getExhibitionLanguage().getId())).findAny().orElse(null);
         if(title != null) {
             localizedTitleForm.setText(title.getText());
-            localizedTitleForm.setLocalisedTextId( title.getId());
+            localizedTitleForm.setLocalisedTextId(title.getId());
+        }
         }
         localizedTitleForm.setExhibitionLanguageId(language.getId());
         localizedTitleForm.setIsDefaultExhibitionLanguage(language.isDefault());     
@@ -337,12 +313,15 @@ public class SlideManager implements ISlideManager {
     @Override
     public LocalizedTextForm createLocalizedDescriptionForm(ISlide slide, IExhibitionLanguage language) {
         LocalizedTextForm localizedDescriptionForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
+        if(slide!=null) {
         ILocalizedText text = slide.getSlideDescriptions().stream()
                 .filter(description -> StringUtils.equals(language.getId(), description.getExhibitionLanguage().getId())).findAny().orElse(null);
+        
         if(text != null) {
             localizedDescriptionForm.setText(text.getText());
-            localizedDescriptionForm.setLocalisedTextId( text.getId());
+            localizedDescriptionForm.setLocalisedTextId(text.getId());
         } 
+        }
         localizedDescriptionForm.setExhibitionLanguageId(language.getId());
         localizedDescriptionForm.setIsDefaultExhibitionLanguage(language.isDefault());
         return localizedDescriptionForm;

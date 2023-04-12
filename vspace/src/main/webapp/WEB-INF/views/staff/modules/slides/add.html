@@ -130,11 +130,11 @@ function openForm(evt, label) {
 					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
-						<div style="padding-top: 20px;" th:each= "aboutPageText : ${slide.descriptions}"  > 								
-								<label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">Description:</label>
-								<textarea  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPageText.text}" th:name="|descriptions[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
-		 						<input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
-								<input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
+						<div style="padding-top: 20px;" th:each= "description : ${slide.descriptions}"  > 								
+								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
+								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
+		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
+								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
  						 					
 		 				</div>
 			
