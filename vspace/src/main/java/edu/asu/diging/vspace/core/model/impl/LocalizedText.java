@@ -20,7 +20,7 @@ public class LocalizedText implements ILocalizedText {
     @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
 

@@ -47,7 +47,7 @@ public class ExhibitionAboutPageController {
     
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
     public String createOrUpdateAboutPage(@ModelAttribute AboutPageForm aboutPageForm, RedirectAttributes attributes) throws IOException {
-        aboutPageManager.storeAboutPageData(aboutPageForm);
+        aboutPageManager.store(aboutPageForm);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");

@@ -38,6 +38,6 @@ public interface IExhibitionManager {
 
     void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage) throws ExhibitionLanguageDeletionException;
     
-    boolean localizedTextDoesNotExist(IExhibitionLanguage language);
+    boolean checkIfLocalizedTextExists(IExhibitionLanguage language);
 
 }

@@ -57,38 +57,30 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         return results;
     }
     
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#storeAboutPageData()
-     */
-    @Override
-    public void storeAboutPageData(AboutPageForm aboutPageForm) {
-
-
-        ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
-        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
-        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-
-        for(LocalizedTextForm title:aboutPageForm.getTitles())
-        {        
-            setAboutPageTitle(title,exhibitionAboutPage);
-        }
-        for(LocalizedTextForm aboutPageText:aboutPageForm.getAboutPageTexts())
-        {
-            setAboutPageDescription(aboutPageText,exhibitionAboutPage);
-        }
-
-    }
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
      */
     @Override
-    public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
+    public ExhibitionAboutPage store(AboutPageForm aboutPageForm) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if(!exhibition.isAboutPageConfigured()) {
             exhibition.setAboutPageConfigured(true);
             exhibitionManager.storeExhibition((Exhibition)exhibition);
         }
+        
+
+        ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
+        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+
+        for(LocalizedTextForm title:aboutPageForm.getTitles()) {        
+            setAboutPageTitle(title,exhibitionAboutPage);
+        }
+        for(LocalizedTextForm aboutPageText:aboutPageForm.getAboutPageTexts()) {
+            setAboutPageDescription(aboutPageText,exhibitionAboutPage);
+        }
+        
         return repo.save(exhibitionAboutPage);
     }
     
@@ -138,17 +130,13 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             
             if(localizedText != null) {
                 localizedText.setText(aboutPageText.getText());
-
             } else {
-
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(aboutPageText.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
                     exhibitionAboutPage.getExhibitionTextDescriptions().add(new LocalizedText(exhibitionLanguage, aboutPageText.getText()));
                 }
-            }
-        
+            }        
         }
-
     }
        
     /**

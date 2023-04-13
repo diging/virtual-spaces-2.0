@@ -293,7 +293,7 @@ public class ExhibitionManagerTest {
         language.setLabel("English");
         
         
-        when(serviceToTestMock.localizedTextDoesNotExist(language)).thenReturn(false);
+        when(serviceToTestMock.checkIfLocalizedTextExists(language)).thenReturn(false);
         
         try {
             serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
