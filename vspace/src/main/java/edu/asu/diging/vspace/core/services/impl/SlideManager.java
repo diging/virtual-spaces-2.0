@@ -337,9 +337,17 @@ public class SlideManager implements ISlideManager {
     public SlideForm createNewSlideForm(ISlide slide) {
         SlideForm slideForm = new SlideForm();      
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+        IExhibitionLanguage defaultLanguage = startExhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+        slideForm.getNames().add(createLocalizedNameForm(slide, defaultLanguage));
+        slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, defaultLanguage)); 
+
         startExhibtion.getLanguages().forEach(language -> {
-            slideForm.getNames().add(createLocalizedNameForm(slide, language));
-            slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, language)); 
+            if(!language.isDefault()) {
+                slideForm.getNames().add(createLocalizedNameForm(slide, language));
+                slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, language)); 
+            }
+
+
         });
         return slideForm;      
     }
