@@ -152,7 +152,11 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
         
-        IExhibitionLanguage defaultLanguage = startExhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+        
+        
+        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibtion);
+                
+               
         
         aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, defaultLanguage));
         
@@ -177,8 +181,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @param language
      * @return
      */
-    @Override
-    public LocalizedTextForm createLocalizedAboutTextForm(ExhibitionAboutPage exhibitionAboutPage,
+    private LocalizedTextForm createLocalizedAboutTextForm(ExhibitionAboutPage exhibitionAboutPage,
             IExhibitionLanguage language) {
 
         LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
@@ -201,8 +204,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @param language
      * @return
      */
-    @Override
-    public LocalizedTextForm createLocalizedTitleForm(ExhibitionAboutPage exhibitionAboutPage, IExhibitionLanguage language) {
+    private LocalizedTextForm createLocalizedTitleForm(ExhibitionAboutPage exhibitionAboutPage, IExhibitionLanguage language) {
         LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
 
         ILocalizedText title = exhibitionAboutPage.getExhibitionTitles().stream()

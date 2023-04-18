@@ -29,9 +29,4 @@ public interface IExhibitionAboutPageManager {
 
     AboutPageForm createAboutPageForm();
 
-    LocalizedTextForm createLocalizedAboutTextForm(ExhibitionAboutPage exhibitionAboutPage, IExhibitionLanguage language) ;
-
-    LocalizedTextForm createLocalizedTitleForm(ExhibitionAboutPage exhibitionAboutPage, IExhibitionLanguage language);
-
-
 }

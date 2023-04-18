@@ -131,10 +131,11 @@ public class ExhibitionManager implements IExhibitionManager {
                 .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
-            if(!checkIfLocalizedTextExists(language))  {
+            if(checkIfLocalizedTextExists(language))  {
                 throw new ExhibitionLanguageDeletionException() ;
             }
             language.getLocalizedTexts().clear();
+            //delete the empty localized texts
             localizedTextRepo.deleteAll(language.getLocalizedTexts());
         }
 
@@ -144,14 +145,16 @@ public class ExhibitionManager implements IExhibitionManager {
     }
     
     /**
+     * Return true if given exhibition language has non empty localized texts linked to it
      * 
      */
     @Override
     public boolean checkIfLocalizedTextExists(IExhibitionLanguage language)  {        
 
-        return CollectionUtils.isEmpty(language.getLocalizedTexts()) || !CollectionUtils.isEmpty(language.getLocalizedTexts()) && checkIfTextIsEmpty(language.getLocalizedTexts());
+        return !CollectionUtils.isEmpty(language.getLocalizedTexts()) || !CollectionUtils.isEmpty(language.getLocalizedTexts()) && !checkIfTextIsEmpty(language.getLocalizedTexts());
 
     }
+    
     /**
      * 
      * @param localizedTexts
@@ -159,7 +162,7 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     private boolean checkIfTextIsEmpty(List<LocalizedText> localizedTexts) {
 
-        return !localizedTexts.stream().anyMatch( localizedText -> !StringUtils.isEmpty(localizedText.getText()) );
+        return !localizedTexts.stream().anyMatch( localizedText -> !StringUtils.hasText(localizedText.getText()));
     }
 
     /**
@@ -181,6 +184,15 @@ public class ExhibitionManager implements IExhibitionManager {
         }
 
         return exhibitionLanguage;
+    }
+
+    /**
+     * 
+     * Returns the default language of the given exhibition
+     */
+    @Override
+    public IExhibitionLanguage getDefaultLanguage(IExhibition exhibtion) {
+        return  exhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
     }
 
 }

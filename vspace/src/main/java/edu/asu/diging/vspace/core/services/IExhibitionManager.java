@@ -40,4 +40,6 @@ public interface IExhibitionManager {
     
     boolean checkIfLocalizedTextExists(IExhibitionLanguage language);
 
+    IExhibitionLanguage getDefaultLanguage(IExhibition startExhibtion);
+
 }
