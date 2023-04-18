@@ -32,6 +32,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.FolderType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
@@ -143,11 +144,11 @@ public class SnapshotManager implements ISnapshotManager {
     @Override
     public void downloadSpace(Space space, String exhibitionFolderPath,  SequenceHistory sequenceHistory) {
 
-        String spaceFolderPath = storageEngineDownloads.createFolder(space.getId(), exhibitionFolderPath);
+        String spaceFolderPath = storageEngineDownloads.createFolder(space.getId(), exhibitionFolderPath, FolderType.SPACE);
 
         storeTemplateForSpace(space.getId(), spaceFolderPath , sequenceHistory);
 
-        String imagesFolderPath = storageEngineDownloads.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath); 
+        String imagesFolderPath = storageEngineDownloads.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath, FolderType.IMAGE); 
 
         //Copies the space image
         storageEngineDownloads.copyImageToFolder(space.getImage(),imagesFolderPath) ;

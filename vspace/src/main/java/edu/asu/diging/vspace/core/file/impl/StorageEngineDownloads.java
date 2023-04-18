@@ -133,7 +133,7 @@ public class StorageEngineDownloads implements IStorageEngine {
      * Creates folder given path
      */
     @Override
-    public String createFolder(String folderName, String path) {
+    public String createFolder(String folderName, String path, String folderType) {
         File folder = new File(path + File.separator + folderName);
         if (!folder.exists()) {
             folder.mkdir();

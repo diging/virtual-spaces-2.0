@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.FolderType;
 
 @Component("storageEngineUploads")
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
@@ -104,7 +105,7 @@ public class StorageEngineUploads implements IStorageEngine {
 
 
     @Override
-    public String createFolder(String folderName, String path ) {
+    public String createFolder(String folderName, String path, FolderType folderType ) {
         File folder = new File(path + File.separator + folderName);
         if (!folder.exists()) {
             folder.mkdir();
