@@ -67,32 +67,29 @@
 
 		<form method="POST" th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" style="margin-top: 40px"
 			th:object="${slideForm}" enctype="multipart/form-data">
-			
-			
-				<div>
-				    <ul class="nav nav-tabs" id="slideTabs" role="tablist">
-				        <li th:each="title, tabStat : ${slideForm.names}" th:class="${tabStat.index == 0} ? 'nav-item active' : 'nav-item'">
-				            <a class="nav-link" id="tab-[[${tabStat.index}]]" data-toggle="tab" href="#slide-[[${tabStat.index}]]" role="tab" aria-controls="slide-[[${tabStat.index}]]" aria-selected="${tabStat.index == 0}">[[${title.exhibitionLanguageLabel}]]</a>
-				        </li>
-				    </ul>
-				    <div class="tab-content" id="slideContent">
-				        <div th:each="title, contentStat : ${slideForm.names}" th:class="${contentStat.index == 0} ? 'tab-pane fade show active' : 'tab-pane fade'" th:id="'slide-' + ${contentStat.index}" role="tabpanel" aria-labelledby="tab-[[${contentStat.index}]]">
-				            <label for="title">Slide Name:</label>
-				            <input type="hidden" th:id="'title-' + ${contentStat.index}" th:value="${title.localisedTextId}" th:name="|names[${contentStat.index}].localisedTextId|"></input>
-				            <input type="hidden" th:id="'title-exhibitionLanguageId-' + ${contentStat.index}" th:value="${title.exhibitionLanguageId}" th:name="|names[${contentStat.index}].exhibitionLanguageId|"></input>
-				            <input type="text" class="form-control" th:id="'title-text-' + ${contentStat.index}" th:value="${title.text}" th:name="|names[${contentStat.index}].text|"></input>
-				            <div th:each="description : ${slideForm.descriptions}">
-				                <label th:if="${description.exhibitionLanguageId == title.exhibitionLanguageId}" for="description">Description:</label>
-				                <textarea th:if="${description.exhibitionLanguageId == title.exhibitionLanguageId}" class="form-control" rows="5" cols="30" th:id="'description-' + ${contentStat.index}" th:value="${description.text}" th:name="|descriptions[${contentStat.index}].text|">[[${description.text}]]</textarea>
-				                <input type="hidden" th:if="${description.exhibitionLanguageId == title.exhibitionLanguageId}" th:id="'description-localisedTextId-' + ${contentStat.index}" th:value="${description.localisedTextId}" th:name="|descriptions[${contentStat.index}].localisedTextId|"></input>
-				                <input type="hidden" th:if="${description.exhibitionLanguageId == title.exhibitionLanguageId}" th:id="'description-exhibitionLanguageId-' + ${contentStat.index}" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${contentStat.index}].exhibitionLanguageId|"></input>
-				            </div>
-				        </div>
-				    </div>
-				</div>
-						
 
-				
+			<div>
+			    <ul class="nav nav-tabs" id="slideTabs" role="tablist">
+			        <li th:each="title, tabStat : ${slideForm.names}" th:class="${tabStat.index == 0} ? 'nav-item active' : 'nav-item'">
+			            <a class="nav-link" id="tab-[[${tabStat.index}]]" data-toggle="tab" href="#slide-[[${tabStat.index}]]" role="tab" aria-controls="slide-[[${tabStat.index}]]" aria-selected="${tabStat.index == 0}">[[${title.exhibitionLanguageLabel}]]</a>
+			        </li>
+			    </ul>
+			    <div class="tab-content" id="slideContent">
+			        <div th:each="title, contentStat : ${slideForm.names}" th:class="${contentStat.index == 0} ? 'tab-pane fade show active' : 'tab-pane fade'" th:id="'slide-' + ${contentStat.index}" role="tabpanel" aria-labelledby="tab-[[${contentStat.index}]]">
+			            <label for="title">Slide Name:</label>
+			            <input type="hidden" th:id="'title-' + ${contentStat.index}" th:value="${title.localisedTextId}" th:name="|names[${contentStat.index}].localisedTextId|"></input>
+			            <input type="hidden" th:id="'title-exhibitionLanguageId-' + ${contentStat.index}" th:value="${title.exhibitionLanguageId}" th:name="|names[${contentStat.index}].exhibitionLanguageId|"></input>
+			            <input type="text" class="form-control" th:id="'title-text-' + ${contentStat.index}" th:value="${title.text}" th:name="|names[${contentStat.index}].text|"></input>
+			            <div th:each="description : ${slideForm.descriptions}" th:if="${description.exhibitionLanguageId == title.exhibitionLanguageId}">
+			                <label for="description">Description:</label>
+			                <textarea class="form-control" rows="5" cols="30" th:id="'description-' + ${contentStat.index}" th:value="${description.text}" th:name="|descriptions[${contentStat.index}].text|">[[${description.text}]]</textarea>
+			                <input type="hidden" th:id="'description-localisedTextId-' + ${contentStat.index}" th:value="${description.localisedTextId}" th:name="|descriptions[${contentStat.index}].localisedTextId|"></input>
+			                <input type="hidden" th:id="'description-exhibitionLanguageId-' + ${contentStat.index}" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${contentStat.index}].exhibitionLanguageId|"></input>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+										
 			
 		     <div class="form-group row">
 		     <label for="type" class="col-md-2 col-form-label">Type</label>
