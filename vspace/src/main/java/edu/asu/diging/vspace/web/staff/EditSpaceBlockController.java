@@ -21,26 +21,23 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class EditSpaceBlockController {
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
+
     @Autowired
     private ISpaceManager spaceManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editSpaceBlock(@PathVariable("id") String slideId,
             @RequestParam("spaceBlockId") String blockId, @PathVariable("moduleId") String moduleId,
-            @RequestParam("spaceBlockTitle") String spaceBlockTitle,
-            @RequestParam("spaceId") String spaceId) throws IOException {
+            @RequestParam("spaceBlockTitle") String spaceBlockTitle, @RequestParam("spaceId") String spaceId)
+            throws IOException {
         ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
         ISpace space = spaceManager.getSpace(spaceId);
         spaceBlock.setTitle(spaceBlockTitle);
         spaceBlock.setSpace(space);
-        contentBlockManager.updateSpaceBlock( spaceBlock);
-        logger.debug("ContentBlock has been Updated");
+        contentBlockManager.updateSpaceBlock(spaceBlock);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
