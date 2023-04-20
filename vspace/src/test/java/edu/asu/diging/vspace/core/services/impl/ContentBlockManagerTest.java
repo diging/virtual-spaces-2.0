@@ -326,14 +326,6 @@ public class ContentBlockManagerTest {
     }
 
     @Test
-    public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
-        String imageBlockId = null;
-        managerToTest.deleteImageBlockById(null, "slideId_1");
-        Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
-
-    }
-
-    @Test
     public void test_updateContentOrder_success() throws BlockDoesNotExistException {
         ContentBlock firstContentBlock = new ContentBlock();
         firstContentBlock.setId("contentBlockId1");
@@ -405,6 +397,14 @@ public class ContentBlockManagerTest {
         String slideId = "realSlideId";
         managerToTest.deleteChoiceBlockById(blockId, slideId);
         Mockito.verify(choiceBlockRepo, Mockito.never()).deleteById(blockId);
+
+    }
+
+    @Test
+    public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
+        String imageBlockId = null;
+        managerToTest.deleteImageBlockById(null, "slideId_1");
+        Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
 
     }
 
@@ -794,11 +794,12 @@ public class ContentBlockManagerTest {
         videoBlock.setId("videoBlock_1");
         when(videoBlockFactory.createVideoBlock(slide, slideContentVideo)).thenReturn(vidBlock);
         when(videoRepo.save((VSVideo) slideContentVideo)).thenReturn((VSVideo) slideContentVideo);
-        when(videoFactory.createVideo("newFile.mp4", 200L, "application/octet-stream")).thenReturn(slideContentVideo);        
+        when(videoFactory.createVideo("newFile.mp4", 200L, "application/octet-stream")).thenReturn(slideContentVideo);
         ContentBlockManager contentBlockManager = Mockito.spy(managerToTest);
-        when(contentBlockManager.storeVideo(new byte[20], 200L,"newFile.mp4", "url", "title")).thenReturn(slideContentVideo);
-        when(contentBlockManager.saveVideo(new byte[20], 200L,"newFile.mp4", "title")).thenReturn(slideContentVideo);
-        when(videoBlockRepo.save((VideoBlock) vidBlock)).thenReturn( videoBlock);
+        when(contentBlockManager.storeVideo(new byte[20], 200L, "newFile.mp4", "url", "title"))
+                .thenReturn(slideContentVideo);
+        when(contentBlockManager.saveVideo(new byte[20], 200L, "newFile.mp4", "title")).thenReturn(slideContentVideo);
+        when(videoBlockRepo.save((VideoBlock) vidBlock)).thenReturn(videoBlock);
         managerToTest.updateVideoBlock(videoBlock, new byte[20], 200L, "url", "newFile.mp4", "video_title");
 
     }
