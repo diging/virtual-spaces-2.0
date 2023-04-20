@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.file.IStorageManager;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -94,6 +95,9 @@ public class SnapshotManager implements ISnapshotManager {
     @Autowired
     private SnapshotTaskRepository snapshotTaskRepository;
     
+    @Autowired
+    private IStorageManager storageManager;
+    
     
     public final static String IMAGES_FOLDER_NAME = "images";
 
@@ -104,11 +108,11 @@ public class SnapshotManager implements ISnapshotManager {
     @Transactional
     public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
-        Thread.sleep(5000);
+
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderPath, sequenceHistory);                
+            downloadSpace(space, exhibitionFolderName, sequenceHistory);                
         }         
 
         SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
@@ -142,16 +146,16 @@ public class SnapshotManager implements ISnapshotManager {
      * @param context
      */
     @Override
-    public void downloadSpace(Space space, String exhibitionFolderPath,  SequenceHistory sequenceHistory) {
+    public void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) {
 
-        String spaceFolderPath = storageEngineDownloads.createFolder(space.getId(), exhibitionFolderPath, FolderType.SPACE);
+        String spaceFolderPath = storageEngineDownloads.createFolder( exhibitionFolderName + File.separator +space.getId(), FolderType.SPACE);
 
         storeTemplateForSpace(space.getId(), spaceFolderPath , sequenceHistory);
 
-        String imagesFolderPath = storageEngineDownloads.createFolder(IMAGES_FOLDER_NAME, spaceFolderPath, FolderType.IMAGE); 
+        String imagesFolderPath = storageEngineDownloads.createFolder(exhibitionFolderName + File.separator +space.getId() + File.separator  + IMAGES_FOLDER_NAME, FolderType.IMAGE); 
 
         //Copies the space image
-        storageEngineDownloads.copyImageToFolder(space.getImage(),imagesFolderPath) ;
+        storageManager.copyImageUploadsToDownloads(space.getImage(),imagesFolderPath) ;
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 
@@ -240,7 +244,7 @@ public class SnapshotManager implements ISnapshotManager {
                 IContentBlock contentBlock = slide.getFirstImageBlock();
                 if(contentBlock!= null) {
                     IVSImage image = slide.getFirstImageBlock().getImage();
-                    storageEngineDownloads.copyImageToFolder(image, imagesFolderPath);
+                    storageManager.copyImageUploadsToDownloads(image, imagesFolderPath);
 
                 } 
                 storeTemplateForSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());

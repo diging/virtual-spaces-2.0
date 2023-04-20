@@ -105,13 +105,13 @@ public class StorageEngineUploads implements IStorageEngine {
 
 
     @Override
-    public String createFolder(String folderName, String path, FolderType folderType ) {
-        File folder = new File(path + File.separator + folderName);
+    public String createFolder( String relativePath, FolderType folderType ) {
+        File folder = new File(path + File.separator + relativePath);
         if (!folder.exists()) {
             folder.mkdir();
         }
-        return folder.getAbsolutePath();
-
+//        return folder.getAbsolutePath();
+        return relativePath;
     }
 
 
@@ -187,10 +187,5 @@ public class StorageEngineUploads implements IStorageEngine {
         return directory;
     }
 
-
-    @Override
-    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-        
-    }
 
 }

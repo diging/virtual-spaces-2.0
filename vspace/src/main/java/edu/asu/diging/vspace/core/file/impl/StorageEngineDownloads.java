@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.FolderType;
 
 @Component
 @Qualifier("storageEngineDownloads")
@@ -44,7 +45,7 @@ public class StorageEngineDownloads implements IStorageEngine {
      * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
      */
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException {
+    public String storeFile(byte[] fileContent, String filename, String directory, String relativePath) throws FileStorageException {
         File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
         if (!parent.exists()) {
             parent.mkdir();
@@ -113,32 +114,16 @@ public class StorageEngineDownloads implements IStorageEngine {
 
 
     /**
-     * Copies given image to imagesFolderPath
-     * 
-     * @param image
-     * @param imagesFolderPath
-     */
-    @Override
-    public void copyImageToFolder(IVSImage image, String imagesFolderPath) {
-        try {
-            byte[] byteArray = storageEngineUploads.getImageContent(image.getId(), image.getFilename());
-            storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath);
-
-        } catch (IOException | FileStorageException e) {
-            logger.error("Could not copy images" , e);
-        }     
-    }
-
-    /**
      * Creates folder given path
      */
     @Override
-    public String createFolder(String folderName, String path, String folderType) {
-        File folder = new File(path + File.separator + folderName);
+    public String createFolder(String relativePath, FolderType folderType) {
+        File folder = new File(path + File.separator + relativePath);
         if (!folder.exists()) {
             folder.mkdir();
         }
-        return folder.getAbsolutePath();
+        return relativePath;
+//        return folder.getAbsolutePath();
     }
 
     /**

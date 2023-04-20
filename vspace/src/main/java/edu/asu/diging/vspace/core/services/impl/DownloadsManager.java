@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
+import edu.asu.diging.vspace.core.model.display.FolderType;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
@@ -41,9 +42,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
 
-    @Autowired
-    @Qualifier("storageEngineUploads")
-    private IStorageEngine storageEngineUploads;
+ 
 
     @Autowired
     private ISnapshotManager snapshotManager;
@@ -112,7 +111,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @return
      */
     private String createFolderAndUpdateExhibitionDownload(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
-        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName);
+        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionDownload.getFolderName(), FolderType.EXHIBITION);
         exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
         exhibitionDownloadRepository.save(exhibitionDownload); 
