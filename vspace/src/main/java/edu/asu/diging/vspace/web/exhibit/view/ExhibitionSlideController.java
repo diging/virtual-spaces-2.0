@@ -54,12 +54,13 @@ public class ExhibitionSlideController {
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
         "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}"
         }, method = RequestMethod.GET)
-    public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
+    public String slide(Model model, @PathVariable("slideId") String slideId, 
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,
             @RequestParam(required = false, name = "back") boolean back,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
-            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
+            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId,
+            @PathVariable("moduleId") String moduleId)
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
             SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
@@ -149,4 +150,5 @@ public class ExhibitionSlideController {
         model.addAttribute("message", "Sorry, module has not been configured yet.");
         return "/exhibition/module";
     }
+    
 }
