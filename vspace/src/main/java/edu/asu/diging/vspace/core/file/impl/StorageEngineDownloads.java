@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class StorageEngineDownloads implements IStorageEngine {
      */
     @Override
     public String storeFile(byte[] fileContent, String filename, String directory, String relativePath) throws FileStorageException {
-        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
+        File parent = new File(path + File.separator +  relativePath +  (directory!= null ? File.separator + directory : "" ));
         if (!parent.exists()) {
             parent.mkdir();
         }
@@ -194,6 +195,19 @@ public class StorageEngineDownloads implements IStorageEngine {
         }   
         return byteArrayOutputStreamResult.toByteArray();
 
+    }
+    
+    @Override
+    public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
+        try {
+//            FileUtils.copyDirectory(new File(folderToCopy), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
+            FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath)); 
+
+        } catch (IOException e) {
+            logger.error("Could not copy resources" , e);
+            throw new IOException(e);
+            
+        } 
     }
     
 }

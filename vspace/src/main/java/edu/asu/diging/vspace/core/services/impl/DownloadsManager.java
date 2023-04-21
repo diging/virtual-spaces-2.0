@@ -111,7 +111,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @return
      */
     private String createFolderAndUpdateExhibitionDownload(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
-        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionDownload.getFolderName(), FolderType.EXHIBITION);
+        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName, FolderType.EXHIBITION);
         exhibitionDownload.setFolderPath(exhibitionFolderPath);
         exhibitionDownload.setFolderName(exhibitionFolderName);
         exhibitionDownloadRepository.save(exhibitionDownload); 

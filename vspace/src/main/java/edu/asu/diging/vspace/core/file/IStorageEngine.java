@@ -21,6 +21,8 @@ public interface IStorageEngine {
     String createFolder(String exhibitionFolderName);
 
     byte[] generateZipFolder(String exhibitionFolderPath) throws IOException;
+
+    void copyToFolder(String relativePath, String folderToCopy) throws IOException;
     
 	
 }
