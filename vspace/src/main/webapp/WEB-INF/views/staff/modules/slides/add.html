@@ -117,20 +117,20 @@ function openForm(evt, label) {
         <form method="POST" name="f" class="form-horizontal">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <div>
-				<div class="tab" >				
+				<div class="tab" style="padding-top: 20px;">				
 					<div th:each= "title,  stat : ${slide.names}">
 					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
 					</div>
 				</div>
 				<div>		
-					<div style="padding-top: 20px;" th:each= "title,  stat : ${slide.names}" > 
+					<div th:each= "title,  stat : ${slide.names}" > 
 					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
 						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Slide Name:</label>
 					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
-						<div style="padding-top: 20px;" th:each= "description : ${slide.descriptions}"  > 								
+						<div th:each= "description : ${slide.descriptions}"  > 								
 								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
 								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
 		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>

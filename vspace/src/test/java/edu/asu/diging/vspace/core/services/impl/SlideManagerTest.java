@@ -208,15 +208,43 @@ public class SlideManagerTest {
         when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.of(locText2));
         
         IModule module = moduleManager.getModule(moduleId);
-       
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
 
         slideManagerToTest.createSlide(module, slideForm, type);
         assertEquals(locText1.getText(), "title");
         assertEquals(locText2.getText(), "slide text");
-
-
-
     }
+    
+    @Test
+    public void test_createSlide_failure() {
+        List<Slide> slidePageList = new ArrayList();
+
+        slidePageList.add(new Slide());
+
+        SlideForm slideForm = new SlideForm();
+        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
+        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
+        List<LocalizedTextForm> slideTextList = new ArrayList<LocalizedTextForm>();
+
+        slideTextList.add(new LocalizedTextForm( "about text","ID2", "langId", "English"));
+
+        slideForm.setNames(titleList);
+        slideForm.setDescriptions(slideTextList);
+        slideForm.setType("Slide");
+        when(slideRepo.findAll()).thenReturn(slidePageList);
+
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");
+
+
+        when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.empty());
+        when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.empty());
+        IModule module = moduleManager.getModule(moduleId);
+        SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
+
+        when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
+        slideManagerToTest.createSlide(module, slideForm, type);
+        assertEquals(locText1.getText(), null);
+    } 
 
 }

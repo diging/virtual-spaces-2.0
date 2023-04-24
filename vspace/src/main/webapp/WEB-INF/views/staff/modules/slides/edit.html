@@ -2,6 +2,7 @@
 <head>
 <link th:href="@{/resources/multiselect/css/multiselect.css}"
     type="text/css" rel="stylesheet">
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
 <style>
 
 /* Style the tab */
@@ -48,7 +49,7 @@
 		$(window).on("load", function() {
 		    var vals = [];
 		    var choices = [];
-		    var selectedchoices = [];
+		    var selectedchoices = [(${choices})];
 		    var selectedType =  $('select[id="type"]');
 		    if (selectedType.val() == "BRANCHING_POINT"){
 		            $('#sequences').show();
@@ -101,11 +102,9 @@
 	  for (i = 0; i < tablinks.length; i++) {
 	    tablinks[i].className = tablinks[i].className.replace(" active", "");
 	  }
-	  console.log("sweta");
 	  document.getElementById(label).style.display = "block";
 	  evt.currentTarget.className += " active";
 	  evt.preventDefault();
-	  console.log("megha");
 	} 
 	</script>
 	
@@ -115,43 +114,35 @@
 <body>
 	<div layout:fragment="content" class="main-content">
 		<h2>Edit Slide: [[${slideForm.name}]]</h2>
-
 		<form method="POST" th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" style="margin-top: 40px"
 			th:object="${slideForm}" enctype="multipart/form-data">
 
 			<div>
-			    <ul class="nav nav-tabs" id="slideTabs" role="tablist">
-			        <li th:each="title, tabStat : ${slideForm.names}" th:class="${tabStat.index == 0} ? 'nav-item active' : 'nav-item'">
-			            <a class="nav-link" id="tab-[[${tabStat.index}]]" data-toggle="tab" href="#slide-[[${tabStat.index}]]" role="tab" aria-controls="slide-[[${tabStat.index}]]" aria-selected="${tabStat.index == 0}" th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</a>
-			        </li>
-			    </ul>
-			    
-			    
+			    <div class="tab" style="padding-top: 20px;" >				
+					<div th:each= "title,  stat : ${slideForm.names}">
+					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					</div>
+				</div>
 			    <div>		
-					<div style="padding-top: 20px;" th:each= "title,  stat : ${slideForm.names}" > 
+					<div th:each= "title,  stat : ${slideForm.names}" > 
 					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
 						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Slide Name:</label>
 					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
-						<div style="padding-top: 20px;" th:each= "description : ${slideForm.descriptions}"  > 								
+						<div th:each= "description : ${slideForm.descriptions}"  > 								
 								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
 								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
 		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
 								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
  						 					
 		 				</div>
-			
- 						
  					</div>
- 				</div>				
+ 					</div>				
+			 	</div>
 			 </div>
-			 </div>
-			    
-			   
-										
-			
+			 
 		     <div class="form-group row">
 		     <label for="type" class="col-md-2 col-form-label">Type</label>
 		         <select id="type" class="form-control col-md-6" disabled="true">
