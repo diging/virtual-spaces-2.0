@@ -80,7 +80,6 @@ public class DownloadsManagerTest {
 
         String filePath = "/path"; 
         String fileContent =  "file content"; 
-        exhibitionDownload.setFolderPath(filePath);
         byte[] byteArray = fileContent.getBytes();   
         when(exhibitionDownloadRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
         when(storageEngine.generateZipFolder(filePath)).thenReturn(byteArray);
@@ -108,7 +107,7 @@ public class DownloadsManagerTest {
 
             Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
 
-            Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null, exhibitionFolderName, null);
+            Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null,  null);
         } catch(Exception e) {
 
         }

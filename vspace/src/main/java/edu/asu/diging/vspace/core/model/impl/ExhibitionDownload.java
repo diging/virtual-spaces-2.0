@@ -22,8 +22,6 @@ public class ExhibitionDownload extends VSpaceElement implements IExhibitionDown
     @GenericGenerator(name = "exhibit_download_id_generator", parameters = @Parameter(name = "prefix", value = "EXHDWNLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    private String folderPath;
-
     private String folderName;
    
     @OneToOne(cascade = CascadeType.ALL, mappedBy="exhibitionDownload")
@@ -49,16 +47,6 @@ public class ExhibitionDownload extends VSpaceElement implements IExhibitionDown
     public void setId(String id) {
         this.id = id;
 
-    }
-    
-    @Override
-    public String getFolderPath() {
-        return folderPath;
-    }
-
-    @Override
-    public void setFolderPath(String folderPath) {
-        this.folderPath = folderPath;
     }
 
     @Override

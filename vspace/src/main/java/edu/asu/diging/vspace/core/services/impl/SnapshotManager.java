@@ -106,9 +106,8 @@ public class SnapshotManager implements ISnapshotManager {
     @Async
     @Override
     @Transactional
-    public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, String exhibitionFolderPath, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
-//        copyResourcesToExhibition(exhibitionFolderPath,resourcesPath ); 
-        storageEngineDownloads.copyToFolder(exhibitionFolderPath + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
+    public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
+        storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
@@ -120,23 +119,23 @@ public class SnapshotManager implements ISnapshotManager {
         snapshotTaskRepository.save(snapshotTask);   
     }
     
-    /**
-     * Copies the resources folder into the exhibitionFolderPath
-     * @param exhibitionFolderPath
-     * @param resourcesPath
-     * @throws IOException 
-     */
-    @Override
-    public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException {
-//TODO MOVE TO STORAGE ENGINE
-        try {
-            FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
-        } catch (IOException e) {
-            logger.error("Could not copy resources" , e);
-            throw new IOException(e);
-            
-        } 
-    }
+//    /**
+//     * Copies the resources folder into the exhibitionFolderPath
+//     * @param exhibitionFolderPath
+//     * @param resourcesPath
+//     * @throws IOException 
+//     */
+//    @Override
+//    public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException {
+////TODO MOVE TO STORAGE ENGINE
+//        try {
+//            FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
+//        } catch (IOException e) {
+//            logger.error("Could not copy resources" , e);
+//            throw new IOException(e);
+//            
+//        } 
+//    }
     
     /**
      * 
@@ -155,7 +154,7 @@ public class SnapshotManager implements ISnapshotManager {
         String imagesFolderPath = storageEngineDownloads.createFolder(exhibitionFolderName + File.separator +space.getId() + File.separator  + IMAGES_FOLDER_NAME, FolderType.IMAGE); 
 
         //Copies the space image
-        storageManager.copyImageUploadsToDownloads(space.getImage(),imagesFolderPath) ;
+        storageManager.copyImageUploadsToDownloads(space.getImage(), imagesFolderPath) ;
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 

@@ -168,8 +168,8 @@ public class StorageEngineDownloads implements IStorageEngine {
     }
 
     @Override
-    public byte[] generateZipFolder(String folderPath) throws IOException {
-        Path zipFile = Paths.get(folderPath);
+    public byte[] generateZipFolder(String folderName) throws IOException {
+        Path zipFile = Paths.get(path + File.separator + folderName);
         ByteArrayOutputStream byteArrayOutputStreamResult = null;
 
         try (ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
@@ -200,9 +200,7 @@ public class StorageEngineDownloads implements IStorageEngine {
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
         try {
-//            FileUtils.copyDirectory(new File(folderToCopy), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
             FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath)); 
-
         } catch (IOException e) {
             logger.error("Could not copy resources" , e);
             throw new IOException(e);

@@ -187,5 +187,11 @@ public class StorageEngineUploads implements IStorageEngine {
         return directory;
     }
 
+    @Override
+    public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
+
 
 }

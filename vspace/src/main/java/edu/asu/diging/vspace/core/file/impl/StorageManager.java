@@ -34,13 +34,15 @@ public class StorageManager implements IStorageManager{
      */
     @Override
     public void copyImageUploadsToDownloads(IVSImage image, String imagesFolderPath) {
-        try {
-            byte[] byteArray = storageEngineUploads.getImageContent(image.getId(), image.getFilename());
-            storageEngineDownloads.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath);
+        if(image!=null) {
+            try {
+                byte[] byteArray = storageEngineUploads.getImageContent(image.getId(), image.getFilename());
+                storageEngineDownloads.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath);
 
-        } catch (IOException | FileStorageException e) {
-            logger.error("Could not copy images" , e);
-        }     
+            } catch (IOException | FileStorageException e) {
+                logger.error("Could not copy images" , e);
+            }     
+        }
     }
 
 }

@@ -78,14 +78,14 @@ public class DownloadsManager  implements  IDownloadsManager {
             exhibitionDownload = new ExhibitionDownload();
         }
 
-        String exhibitionFolderPath = createFolderAndUpdateExhibitionDownload(exhibitionDownload, exhibitionFolderName);
+        createFolderAndUpdateExhibitionDownload(exhibitionDownload, exhibitionFolderName);
 
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionDownload);
 
         exhibitionDownload.setSnapshotTask(snapshotTask); 
         exhibitionDownloadRepository.save(exhibitionDownload);
 
-        snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionFolderPath, exhibitionDownload);
+        snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
         return exhibitionDownload;
 
     }
@@ -111,11 +111,10 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @return
      */
     private String createFolderAndUpdateExhibitionDownload(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
-        String exhibitionFolderPath =  storageEngineDownloads.createFolder(exhibitionFolderName, FolderType.EXHIBITION);
-        exhibitionDownload.setFolderPath(exhibitionFolderPath);
+        storageEngineDownloads.createFolder(exhibitionFolderName, FolderType.EXHIBITION);
         exhibitionDownload.setFolderName(exhibitionFolderName);
         exhibitionDownloadRepository.save(exhibitionDownload); 
-        return exhibitionFolderPath;
+        return exhibitionFolderName;
     }
 
 
@@ -134,7 +133,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         if(exhibitionDownlaod.isPresent()) {
             
             try {
-                return storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderPath());                
+                return storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
                 logger.error("Zip folder not yet created", e);
                 throw new ExhibitionDownloadNotFoundException(id);
