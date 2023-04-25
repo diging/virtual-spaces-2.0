@@ -287,8 +287,8 @@ public class SlideManager implements ISlideManager {
      * @param language
      * @return
      */
-    @Override
-    public LocalizedTextForm createLocalizedNameForm(ISlide slide, IExhibitionLanguage language) {
+   
+    private LocalizedTextForm createLocalizedNameForm(ISlide slide, IExhibitionLanguage language) {
         LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
         if(slide!=null) {
         ILocalizedText title = slide.getSlideNames().stream()
@@ -310,8 +310,8 @@ public class SlideManager implements ISlideManager {
      * @param language
      * @return
      */
-    @Override
-    public LocalizedTextForm createLocalizedDescriptionForm(ISlide slide, IExhibitionLanguage language) {
+    
+    private LocalizedTextForm createLocalizedDescriptionForm(ISlide slide, IExhibitionLanguage language) {
         LocalizedTextForm localizedDescriptionForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
         if(slide!=null) {
         ILocalizedText text = slide.getSlideDescriptions().stream()
@@ -337,7 +337,7 @@ public class SlideManager implements ISlideManager {
     public SlideForm createNewSlideForm(ISlide slide) {
         SlideForm slideForm = new SlideForm();      
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        IExhibitionLanguage defaultLanguage = startExhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibtion);
         slideForm.getNames().add(createLocalizedNameForm(slide, defaultLanguage));
         slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, defaultLanguage)); 
 
