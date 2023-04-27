@@ -6,16 +6,19 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ChoiceFactoryTest {
     
     @Mock
@@ -25,7 +28,7 @@ public class ChoiceFactoryTest {
     private ChoiceFactory choiceFactoryToTest = new ChoiceFactory();
     
     @Before
-    public void init() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
     
