@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import edu.asu.diging.vspace.core.factory.impl.ChoiceBlockFactory;
 import edu.asu.diging.vspace.core.model.IChoice;
@@ -12,8 +15,10 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ChoiceBlockFactoryTest {
 
+    @InjectMocks
     private ChoiceBlockFactory choiceBlockFactoryToTest = new ChoiceBlockFactory();
 
     @Test
