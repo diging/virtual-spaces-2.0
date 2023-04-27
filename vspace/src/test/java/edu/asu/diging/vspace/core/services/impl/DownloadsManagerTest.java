@@ -77,12 +77,11 @@ public class DownloadsManagerTest {
     public void test_downloadExhibitionFolder_success() throws Exception {
         ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
         exhibitionDownload.setId("ID1");
-
-        String filePath = "/path"; 
+        exhibitionDownload.setFolderName("Name");
         String fileContent =  "file content"; 
         byte[] byteArray = fileContent.getBytes();   
         when(exhibitionDownloadRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
-        when(storageEngine.generateZipFolder(filePath)).thenReturn(byteArray);
+        when(storageEngine.generateZipFolder("Name")).thenReturn(byteArray);
 
         byte[] response = serviceToTest.downloadExhibitionFolder("ID1") ;
         assertEquals(response, byteArray);
